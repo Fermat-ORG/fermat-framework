@@ -30,7 +30,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
-
+import com.bitdubai.smartwallet.wallets.teens.DiscountsFragment;
 import com.bitdubai.smartwallet.wallets.teens.SendFragment;
 //import com.bitdubai.smartwallet.wallets.kids.BalanceFragment;
 
@@ -510,7 +510,7 @@ public class FrameworkActivity extends FragmentActivity
                     currentFragment =  RefillFragment.newInstance(position);
                     break;
                 default:
-                    currentFragment =   EmptyFragment.newInstance(position);
+                    currentFragment =   DiscountsFragment.newInstance(position);
                     break;
             }
             return currentFragment;
