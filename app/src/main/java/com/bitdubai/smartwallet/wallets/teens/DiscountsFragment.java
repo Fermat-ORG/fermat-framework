@@ -250,7 +250,7 @@ public class DiscountsFragment extends ListFragment implements LoaderManager.Loa
             View view;
 
             //if (convertView == null) {
-            view = mInflater.inflate(R.layout.wallets_teens_discountslist_item, parent, false);
+            view = mInflater.inflate(R.layout.wallets_teens_fragment_discounts_list_item, parent, false);
             //} else {
             //    view = convertView;
             //}

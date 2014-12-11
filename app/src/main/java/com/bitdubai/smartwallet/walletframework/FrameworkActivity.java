@@ -30,6 +30,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
+
 import com.bitdubai.smartwallet.wallets.teens.DiscountsFragment;
 import com.bitdubai.smartwallet.wallets.teens.HomeFragment;
 import com.bitdubai.smartwallet.wallets.teens.SendFragment;
@@ -73,6 +74,8 @@ public class FrameworkActivity extends FragmentActivity
 
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -103,7 +106,9 @@ public class FrameworkActivity extends FragmentActivity
         Intent i=getIntent();
         String walletId =i.getStringExtra( "Wallet Id");
 
-        int Id = Integer.parseInt(walletId);
+
+        ((MyApplication) this.getApplication()).setWalletId(Integer.parseInt(walletId));
+
         String color = "";
 
         Drawable bg = getResources().getDrawable(R.drawable.transparent);
@@ -112,7 +117,7 @@ public class FrameworkActivity extends FragmentActivity
         Drawable wallpaper = getResources().getDrawable(R.drawable.transparent);
 
 
-        switch (Id )
+        switch (((MyApplication) this.getApplication()).getWalletId() )
         {
             case 1:
                 mTitle = "Girl's savings";
@@ -286,11 +291,9 @@ public class FrameworkActivity extends FragmentActivity
     //***
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-        // update the main content by replacing fragments
-        android.app.FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
-                .commit();
+
+
+
     }
 
     //***

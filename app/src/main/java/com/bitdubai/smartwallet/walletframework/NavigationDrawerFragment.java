@@ -3,6 +3,7 @@ package com.bitdubai.smartwallet.walletframework;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.bitdubai.smartwallet.R;
+import com.bitdubai.smartwallet.walletframework.ContactsActivity;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -210,6 +212,15 @@ public class NavigationDrawerFragment extends Fragment {
         if (mCallbacks != null) {
             mCallbacks.onNavigationDrawerItemSelected(position);
         }
+
+        if (position == 1)
+        {
+            Intent intent;
+            intent = new Intent(super.getActivity(), ContactsActivity.class);
+
+            startActivity(intent);
+        }
+
     }
 
     @Override

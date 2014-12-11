@@ -250,7 +250,7 @@ public class BalanceFragment extends ListFragment implements LoaderManager.Loade
             View view;
 
             //if (convertView == null) {
-            view = mInflater.inflate(R.layout.wallets_teens_balancelist_item, parent, false);
+            view = mInflater.inflate(R.layout.wallets_teens_fragment_balance_list_item, parent, false);
             //} else {
             //    view = convertView;
             //}

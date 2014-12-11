@@ -1,8 +1,6 @@
 package com.bitdubai.smartwallet.wallets.teens;
 
-
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +13,10 @@ import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.walletframework.MyApplication;
 
 
-public  class SendFragment extends Fragment {
+
+
+
+public  class ContactsFragment extends android.app.Fragment {
 
     private static final String ARG_POSITION = "position";
 
@@ -27,16 +28,13 @@ public  class SendFragment extends Fragment {
     private String[] notes;
     private String[] pictures;
     private String[][] transactions;
-    String[][] transactions_amounts;
+    private String[][] transactions_amounts;
     private String[][] transactions_whens;
 
 
 
-    public static SendFragment newInstance(int position) {
-        SendFragment f = new SendFragment();
-        Bundle b = new Bundle();
-        b.putInt(ARG_POSITION, position);
-        f.setArguments(b);
+    public static ContactsFragment newInstance() {
+        ContactsFragment f = new ContactsFragment();
         return f;
     }
 
@@ -44,42 +42,56 @@ public  class SendFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        contacts = new String[]{ "Luis Fernando Molina", "Guillermo Villanueva", "Pedro Perrotta", "Mariana Duyos"};
-        amounts = new String[]{ "$325.00", "$1,400.00", "$0.50", "$25.00"};
-        whens = new String[]{ "3 min ago", "2 hours ago", "today 9:24 AM", "yesterday"};
-        notes = new String[]{ "Electricity bill", "Flat rent", "Test address", "More pictures"};
+        contacts = new String[]{"Lucia Alarcon De Zamacona", "Juan Luis R. Pons", "Karina Rodríguez", "Simon Cushing","Céline Begnis","Taylor Backus","Stephanie Himonidis","Kimberly Brown" };
+        amounts = new String[]{"$200.00", "$3,000.00", "$400.00", "$3.00","$45.00","$600.00","50.00","$80,000.00"};
+        whens = new String[]{"4 hours ago", "5 hours ago", "yesterday 11:00 PM", "24 Mar 14","3 Feb 14","1 year ago","1 year ago","2 year ago"};
+        notes = new String[]{"New telephone", "Old desk", "Car oil", "Sandwich","Headphones","Computer monitor","Pen","Apartment in Dubai"};
 
-        pictures = new String[]{"", "luis_profile_picture", "guillermo_profile_picture", "pedro_profile_picture", "mariana_profile_picture"};
+        //pictures = new String[]{"luis_profile_picture", "guillermo_profile_picture", "pedro_profile_picture", "mariana_profile_picture"};
 
         transactions = new String[][]{
 
-                {"Electricity bill","New chair","New desk"},
-                {"Flat rent","Flat rent","Flat rent","interest paid :(","Flat rent","Car repair","Invoice #2,356 that should have been paid on August"},
-                {"Test address"},
-                {"More pictures"}
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
         };
-
         transactions_amounts = new String[][]{
 
-                {"$325.00","$55.00","$420.00"},
-                {"$1,400.00","$1,200.00","$1,400.00","$40.00","$1,900.00","$10,550.00","$1.00"},
-                {"$0.50"},
-                {"$25.00"}
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+
         };
 
         transactions_whens = new String[][]{
 
-                {"3 min ago","15 min ago","yesterday"},
-                {"2 hours ago","yesterday","last Friday","last Friday","14 May 14","11 May 14","5 Jan 14"},
-                {"today 9:24 AM"},
-                {"yesterday"}
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+                {},
+
+
         };
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.wallets_teens_fragment_receive, container, false);
+        rootView = inflater.inflate(R.layout.wallets_teens_fragment_contacts, container, false);
 
         TextView tv;
 
@@ -204,30 +216,40 @@ public  class SendFragment extends Fragment {
 
 
 
-
-
-
             //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
             // if (convertView == null) {
             if (1 == 1) {
-                convertView = inf.inflate(R.layout.wallets_teens_fragment_receive_list_header, parent, false);
+                convertView = inf.inflate(R.layout.wallets_teens_fragment_contacts_list_item, parent, false);
 
                 profile_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
 
-                switch (groupPosition)
-                {
+                switch (groupPosition) {
                     case 0:
-                        profile_picture.setImageResource(R.drawable.luis_profile_picture);
+                        profile_picture.setImageResource(R.drawable.lucia_profile_picture);
                         break;
                     case 1:
-                        profile_picture.setImageResource(R.drawable.guillermo_profile_picture);
+                        profile_picture.setImageResource(R.drawable.juan_profile_picture);
                         break;
                     case 2:
-                        profile_picture.setImageResource(R.drawable.pedro_profile_picture);
+                        profile_picture.setImageResource(R.drawable.karina_profile_picture);
                         break;
                     case 3:
-                        profile_picture.setImageResource(R.drawable.mariana_profile_picture);
+                        profile_picture.setImageResource(R.drawable.simon_profile_picture);
                         break;
+                    case 4:
+                        profile_picture.setImageResource(R.drawable.celine_profile_picture);
+                        break;
+                    case 5:
+                        profile_picture.setImageResource(R.drawable.taylor_profile_picture);
+                        break;
+                    case 6:
+                        profile_picture.setImageResource(R.drawable.stephani_profile_picture);
+                        break;
+                    case 7:
+                        profile_picture.setImageResource(R.drawable.kimberly_profile_picture);
+                        break;
+
+
                 }
 
 
@@ -259,10 +281,10 @@ public  class SendFragment extends Fragment {
                 holder = (ViewHolder) convertView.getTag();
             }
 
+
+
+
             holder.text.setText(getGroup(groupPosition).toString());
-
-
-
 
             return convertView;
         }
@@ -276,7 +298,4 @@ public  class SendFragment extends Fragment {
             TextView text;
         }
     }
-
-
-
 }
