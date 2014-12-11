@@ -43,14 +43,15 @@ public  class ReceiveFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        contacts = new String[]{"Lucia Alarcon De Zamacona", "Juan Luis R. Pons", "Karina Rodríguez", "Simon Cushing","Céline Begnis","Taylor Backus","Stephanie Himonidis","Kimberly Brown" };
-        amounts = new String[]{"$200.00", "$3,000.00", "$400.00", "$3.00","$45.00","$600.00","50.00","$80,000.00"};
-        whens = new String[]{"4 hours ago", "5 hours ago", "yesterday 11:00 PM", "24 Mar 14","3 Feb 14","1 year ago","1 year ago","2 year ago"};
-        notes = new String[]{"New telephone", "Old desk", "Car oil", "Sandwich","Headphones","Computer monitor","Pen","Apartment in Dubai"};
+        contacts = new String[]{"","Lucia Alarcon De Zamacona", "Juan Luis R. Pons", "Karina Rodríguez", "Simon Cushing","Céline Begnis","Taylor Backus","Stephanie Himonidis","Kimberly Brown" };
+        amounts = new String[]{"","$200.00", "$3,000.00", "$400.00", "$3.00","$45.00","$600.00","50.00","$80,000.00"};
+        whens = new String[]{"","4 hours ago", "5 hours ago", "yesterday 11:00 PM", "24 Mar 14","3 Feb 14","1 year ago","1 year ago","2 year ago"};
+        notes = new String[]{"","New telephone", "Old desk", "Car oil", "Sandwich","Headphones","Computer monitor","Pen","Apartment in Dubai"};
 
         //pictures = new String[]{"luis_profile_picture", "guillermo_profile_picture", "pedro_profile_picture", "mariana_profile_picture"};
 
         transactions = new String[][]{
+                {},
                 {"New telephone","Hot dog","Telephone credit","Coffee"},
                 {"Old desk","Flat rent","New glasses","House in Europe","Coffee","Gum"},
                 {"Car oil","Headphones","Apartment"},
@@ -61,6 +62,7 @@ public  class ReceiveFragment extends Fragment {
                 {"Apartment in Dubai"}
         };
         transactions_amounts = new String[][]{
+                {},
                 {"$200.00", "$3.00", "$460.00", "$2.00", "$1.5"},
                 {"$3,000.00", "$34,200.00", "$4,500.00", "$4,000,000", "$2,00.00", "$0.50"},
                 {"$400,00", "$43.00", "$350,000.00"},
@@ -73,6 +75,7 @@ public  class ReceiveFragment extends Fragment {
         };
 
         transactions_whens = new String[][]{
+                {},
                 {"4 hours ago","8 hours ago","yesterday 10:33 PM","yesterday 9:33 PM"},
                 {"5 hours ago","yesterday","20 Sep 14","16 Sep 14","13 Sep 14","12 Sep 14"},
                 {"yesterday 11:00 PM","23 May 14", "12 May 14"},
@@ -198,44 +201,12 @@ public  class ReceiveFragment extends Fragment {
             ViewHolder note;
             ImageView profile_picture;
 
-            //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
-            // if (convertView == null) {
-            if (1 == 1) {
-                convertView = inf.inflate(R.layout.wallet_framework_twolevellist_header, parent, false);
-
-                profile_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
-
-                switch (groupPosition)
-                {
-                    case 0:
-                        profile_picture.setImageResource(R.drawable.lucia_profile_picture);
-                        break;
-                    case 1:
-                        profile_picture.setImageResource(R.drawable.juan_profile_picture);
-                        break;
-                    case 2:
-                        profile_picture.setImageResource(R.drawable.karina_profile_picture);
-                        break;
-                    case 3:
-                        profile_picture.setImageResource(R.drawable.simon_profile_picture);
-                        break;
-                    case 4:
-                        profile_picture.setImageResource(R.drawable.celine_profile_picture);
-                        break;
-                    case 5:
-                        profile_picture.setImageResource(R.drawable.taylor_profile_picture);
-                        break;
-                    case 6:
-                        profile_picture.setImageResource(R.drawable.stephani_profile_picture);
-                        break;
-                    case 7:
-                        profile_picture.setImageResource(R.drawable.kimberly_profile_picture);
-                        break;
 
 
-                }
 
-
+            if (groupPosition == 0)
+            {
+                convertView = inf.inflate(R.layout.wallets_teens_receive_form, parent, false);
 
                 holder = new ViewHolder();
                 holder.text = (TextView) convertView.findViewById(R.id.contact_name);
@@ -246,23 +217,87 @@ public  class ReceiveFragment extends Fragment {
                 amount.text = (TextView) convertView.findViewById(R.id.amount);
                 amount.text.setTypeface(MyApplication.getDefaultTypeface());
 
-                amount.text.setText(amounts[groupPosition].toString());
-
                 when = new ViewHolder();
                 when.text = (TextView) convertView.findViewById(R.id.when);
                 when.text.setTypeface(MyApplication.getDefaultTypeface());
-
-                when.text.setText(whens[groupPosition].toString());
 
                 note = new ViewHolder();
                 note.text = (TextView) convertView.findViewById(R.id.notes);
                 note.text.setTypeface(MyApplication.getDefaultTypeface());
 
-                note.text.setText(notes[groupPosition].toString());
 
-            } else {
-                holder = (ViewHolder) convertView.getTag();
             }
+            else
+            {
+
+                //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
+                // if (convertView == null) {
+                if (1 == 1) {
+                    convertView = inf.inflate(R.layout.wallet_framework_twolevellist_header, parent, false);
+
+                    profile_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
+
+                    switch (groupPosition)
+                    {
+                        case 1:
+                            profile_picture.setImageResource(R.drawable.lucia_profile_picture);
+                            break;
+                        case 2:
+                            profile_picture.setImageResource(R.drawable.juan_profile_picture);
+                            break;
+                        case 3:
+                            profile_picture.setImageResource(R.drawable.karina_profile_picture);
+                            break;
+                        case 4:
+                            profile_picture.setImageResource(R.drawable.simon_profile_picture);
+                            break;
+                        case 5:
+                            profile_picture.setImageResource(R.drawable.celine_profile_picture);
+                            break;
+                        case 6:
+                            profile_picture.setImageResource(R.drawable.taylor_profile_picture);
+                            break;
+                        case 7:
+                            profile_picture.setImageResource(R.drawable.stephani_profile_picture);
+                            break;
+                        case 8:
+                            profile_picture.setImageResource(R.drawable.kimberly_profile_picture);
+                            break;
+
+
+                    }
+
+
+
+                    holder = new ViewHolder();
+                    holder.text = (TextView) convertView.findViewById(R.id.contact_name);
+                    holder.text.setTypeface(MyApplication.getDefaultTypeface());
+                    convertView.setTag(holder);
+
+                    amount = new ViewHolder();
+                    amount.text = (TextView) convertView.findViewById(R.id.amount);
+                    amount.text.setTypeface(MyApplication.getDefaultTypeface());
+
+                    amount.text.setText(amounts[groupPosition].toString());
+
+                    when = new ViewHolder();
+                    when.text = (TextView) convertView.findViewById(R.id.when);
+                    when.text.setTypeface(MyApplication.getDefaultTypeface());
+
+                    when.text.setText(whens[groupPosition].toString());
+
+                    note = new ViewHolder();
+                    note.text = (TextView) convertView.findViewById(R.id.notes);
+                    note.text.setTypeface(MyApplication.getDefaultTypeface());
+
+                    note.text.setText(notes[groupPosition].toString());
+
+                } else {
+                    holder = (ViewHolder) convertView.getTag();
+                }
+
+            }
+
 
             holder.text.setText(getGroup(groupPosition).toString());
 

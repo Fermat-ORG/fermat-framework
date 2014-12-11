@@ -32,7 +32,9 @@
         </activity>
         <activity
             android:name="com.bitdubai.smartwallet.walletframework.FrameworkActivity"
-            android:label="@string/app_name" >
+            android:label="Wallet"
+            android:windowSoftInputMode="adjustPan"
+            >
 
         </activity>
 

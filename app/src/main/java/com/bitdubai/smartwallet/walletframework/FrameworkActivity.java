@@ -31,6 +31,7 @@ import android.widget.TextView;
 
 
 import com.bitdubai.smartwallet.wallets.teens.DiscountsFragment;
+import com.bitdubai.smartwallet.wallets.teens.HomeFragment;
 import com.bitdubai.smartwallet.wallets.teens.SendFragment;
 //import com.bitdubai.smartwallet.wallets.kids.BalanceFragment;
 
@@ -489,7 +490,7 @@ public class FrameworkActivity extends FragmentActivity
             Fragment currentFragment;
             switch (position) {
                 case 0:
-                    currentFragment =   EmptyFragment.newInstance(position);
+                    currentFragment =   HomeFragment.newInstance(position);
                     break;
                 case 1:
                     if (walletStyle == "Kids")
@@ -562,6 +563,8 @@ public class FrameworkActivity extends FragmentActivity
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
     }
+
+
 
 
 }

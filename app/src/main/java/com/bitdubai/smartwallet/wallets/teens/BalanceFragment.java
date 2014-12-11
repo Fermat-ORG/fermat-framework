@@ -262,13 +262,13 @@ public class BalanceFragment extends ListFragment implements LoaderManager.Loade
             switch (position)
             {
                 case 0:
-                    account_picture.setImageResource(R.drawable.account_type_savings_1);
+                    account_picture.setImageResource(R.drawable.account_type_savings_1_small);
                     break;
                 case 1:
-                    account_picture.setImageResource(R.drawable.account_type_current);
+                    account_picture.setImageResource(R.drawable.account_type_current_small);
                     break;
                 case 2:
-                    account_picture.setImageResource(R.drawable.account_type_savings_2);
+                    account_picture.setImageResource(R.drawable.account_type_savings_2_small);
                     break;
             }
 

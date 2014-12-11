@@ -11,10 +11,15 @@
     tools:context="com.bitdubai.smartwallet.Balance">
 
 
+
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/theListView"
-        android:entries="@array/sports_array"></ListView>
+        android:entries="@array/sports_array"
+        android:descendantFocusability="afterDescendants"
+        ></ListView>
+
+
 
 </LinearLayout>

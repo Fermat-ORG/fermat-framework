@@ -12,28 +12,24 @@
     >
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="159dp"
-        android:layout_height="159dp"
+        android:layout_width="106dp"
+        android:layout_height="106dp"
 
         >
 
-        <RelativeLayout
+
+
+        <ImageView
+            android:id="@+id/profile_picture"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center">
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:src="@drawable/new_contact_profile_picture"
+            android:layout_gravity="center"
 
-            <ImageView
-                android:id="@+id/account_picture"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scaleType="fitCenter"
-                android:src="@drawable/account_type_current"
-                android:layout_gravity="center"
+            />
 
 
-                />
-
-        </RelativeLayout>
 
 
         <ImageView
@@ -48,7 +44,6 @@
             android:paddingRight="7dp"
             android:paddingBottom="7dp"
             android:paddingTop="7dp"
-
             />
 
 
@@ -77,6 +72,22 @@
 
         >
 
+        <EditText
+            android:id="@+id/amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:paddingLeft="7dip"
+            android:paddingRight="7dip"
+            android:paddingTop="3dip"
+            android:paddingBottom="3dip"
+            android:textColor="#FF666666"
+            android:textSize="25sp"
+            android:textStyle="normal"
+            android:hint="$0.00"
+
+            android:layout_gravity="right" />
+
 
 
 
@@ -87,71 +98,73 @@
 
             >
 
-            <TextView
-                android:id="@+id/account_type"
-                android:layout_width="wrap_content"
+
+
+            <EditText
+                android:id="@+id/notes"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:paddingLeft="7dip"
-                android:paddingRight="7dip"
-                android:paddingTop="3dip"
-                android:paddingBottom="3dip"
+
                 android:textColor="#FF666666"
-                android:textSize="20sp"
+                android:textSize="15sp"
                 android:textStyle="normal"
-                android:text="notes"
-                android:layout_gravity="left" />
+                android:hint="Notes"
+                android:layout_gravity="left"
 
-
-
-
-        </LinearLayout>
-        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-
-            >
-
-            <TextView
-                android:id="@+id/balance"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
+                android:paddingTop="3dip"
                 android:paddingLeft="7dip"
                 android:paddingRight="7dip"
-                android:paddingTop="3dip"
-                android:paddingBottom="3dip"
-                android:textColor="#FF666666"
-                android:textSize="45sp"
-                android:textStyle="bold"
-                android:text="$0.00"
-
-
-
-
                 />
 
 
-            <TextView
-                android:id="@+id/balance_available"
-                android:layout_width="wrap_content"
-                android:layout_height="46dp"
 
+
+
+            <TextView
+                android:id="@+id/when"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:paddingLeft="7dip"
                 android:paddingRight="7dip"
                 android:paddingTop="3dip"
                 android:paddingBottom="3dip"
                 android:textColor="#FF666666"
-                android:textSize="20sp"
-                android:textStyle="bold"
+                android:textSize="15sp"
+                android:textStyle="normal"
+                android:text="now"
+                android:gravity="right" />
 
 
-                android:text="New contact"
-                android:layout_gravity="center_horizontal"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true" />
+        </LinearLayout>
 
-        </RelativeLayout>
+
+        <EditText
+            android:id="@+id/contact_name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+
+            android:textColor="#FF666666"
+            android:textSize="20sp"
+            android:textStyle="bold"
+
+
+            android:hint="New contact"
+            android:gravity="right"
+
+            android:paddingLeft="7dip"
+            android:paddingRight="7dip"
+
+            android:paddingTop="3dip"
+            android:paddingBottom="3dip"
+
+
+
+            />
+
+
+
     </LinearLayout>
 
 </LinearLayout>

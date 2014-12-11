@@ -20,10 +20,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
+
 import com.bitdubai.smartwallet.walletframework.MyApplication;
 
 
-public class DiscountsFragment extends ListFragment implements LoaderManager.LoaderCallbacks<List<DiscountsFragment.Model>> {
+public class HomeFragment extends ListFragment implements LoaderManager.LoaderCallbacks<List<HomeFragment.Model>> {
 
     CustomArrayAdapter mAdapter;
 
@@ -31,8 +32,8 @@ public class DiscountsFragment extends ListFragment implements LoaderManager.Loa
 
     private int position;
 
-    public static DiscountsFragment newInstance(int position) {
-        DiscountsFragment f = new DiscountsFragment();
+    public static HomeFragment newInstance(int position) {
+        HomeFragment f = new HomeFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -44,7 +45,7 @@ public class DiscountsFragment extends ListFragment implements LoaderManager.Loa
     @Override public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        System.out.println("DiscountsFragment.onActivityCreated");
+        System.out.println("HomeFragment.onActivityCreated");
 
         // Initially there is no data
         setEmptyText("No Data Here");
@@ -64,19 +65,19 @@ public class DiscountsFragment extends ListFragment implements LoaderManager.Loa
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         // Insert desired behavior here.
-        Log.i("DiscountsFragment", "Item clicked: " + id);
+        Log.i("HomeFragment", "Item clicked: " + id);
     }
 
     @Override
     public Loader<List<Model>> onCreateLoader(int arg0, Bundle arg1) {
-        System.out.println("DiscountsFragment.onCreateLoader");
+        System.out.println("HomeFragment.onCreateLoader");
         return new DataListLoader(getActivity());
     }
 
     @Override
     public void onLoadFinished(Loader<List<Model>> arg0, List<Model> data) {
         mAdapter.setData(data);
-        System.out.println("DiscountsFragment.onLoadFinished");
+        System.out.println("HomeFragment.onLoadFinished");
         // The list should now be shown.
         if (isResumed()) {
             setListShown(true);
@@ -112,8 +113,12 @@ public class DiscountsFragment extends ListFragment implements LoaderManager.Loa
             // Create corresponding array of entries and load with data.
             List<Model> entries = new ArrayList<Model>(5);
             entries.add(new Model("Java", "2"));
-            entries.add(new Model("C++", "9"));
-            entries.add(new Model("Python", "6"));
+            entries.add(new Model("Java", "2"));
+            entries.add(new Model("Java", "2"));
+            entries.add(new Model("Java", "2"));
+            entries.add(new Model("Java", "2"));
+            entries.add(new Model("Java", "2"));
+            entries.add(new Model("Java", "2"));
 
 
             return entries;
@@ -241,57 +246,151 @@ public class DiscountsFragment extends ListFragment implements LoaderManager.Loa
             String[] balances_available;
             String[] account_aliases;
 
+            String[] contacts;
+            String[] amounts;
+            String[] whens;
+            String[] notes;
 
-            account_types = new String[]{"This week discounts", "This month discounts", "This year discounts"};
-            account_aliases = new String[]{"My savings", "Pocket money", "Holiday savings"};
-            balances = new String[]{"$129.00", "$735.20", "$3,211.80"};
-            balances_available = new String[]{"7.50 % average", "12.32 % average", "10.05 % average"};
+            contacts = new String[]{"", "", "", "Simon Cushing","Céline Begnis","Taylor Backus","Stephanie Himonidis","Kimberly Brown" };
+            amounts = new String[]{"","", "",  "$300.00", "$20.00", "$3.00","$290.00","$600.00","50.00","$80,000.00"};
+            whens = new String[]{"", "", "", "5 hours ago", "yesterday 10:22 AM", "24 Mar 14","3 Feb 14","1 year ago","1 year ago","2 year ago"};
+            notes = new String[]{"","", "",  "Tickets to the opera", "Bus Ticket", "Sandwich","Conference ticket","Computer monitor","Pen","Apartment in Dubai"};
+
+
+
+            account_types = new String[]{"1 current and 2 saving accounts"};
+
+            balances = new String[]{"$2,934.50"};
+            balances_available = new String[]{"$2,467.00 available"};
 
             View view;
-
+            view = mInflater.inflate(R.layout.wallets_teens_homelist_item, parent, false);
             //if (convertView == null) {
-            view = mInflater.inflate(R.layout.wallets_teens_discountslist_item, parent, false);
+
             //} else {
             //    view = convertView;
             //}
 
             ImageView account_picture;
+            ViewHolder holder;
+            ViewHolder amount;
+            ViewHolder when;
+            ViewHolder note;
 
-            account_picture = (ImageView) view.findViewById(R.id.account_picture);
+
+            TextView tv;
 
             switch (position)
             {
                 case 0:
-                    account_picture.setImageResource(R.drawable.discounts_week);
+                    view = mInflater.inflate(R.layout.wallets_teens_home_titles_row, parent, false);
+
+                    tv = ((TextView)view.findViewById(R.id.title));
+                    tv.setText("Total balance");
+                    tv.setTypeface(MyApplication.getDefaultTypeface());
+
                     break;
+
                 case 1:
-                    account_picture.setImageResource(R.drawable.discounts_month);
+                    //never gets here
+
+                    view = mInflater.inflate(R.layout.wallets_teens_homelist_item, parent, false);
+
+                    tv = ((TextView)view.findViewById(R.id.balance));
+                    tv.setText(balances[position-1]);
+                    tv.setTypeface(MyApplication.getDefaultTypeface());
+
+                    tv = ((TextView)view.findViewById(R.id.balance_available));
+                    tv.setText(balances_available[position-1]);
+                    tv.setTypeface(MyApplication.getDefaultTypeface());
+
+
+
+                    tv = ((TextView)view.findViewById(R.id.account_type));
+                    tv.setText(account_types[position-1]);
+                    tv.setTypeface(MyApplication.getDefaultTypeface());
+
                     break;
+
                 case 2:
-                    account_picture.setImageResource(R.drawable.discounts_year);
+                    view = mInflater.inflate(R.layout.wallets_teens_home_titles_row, parent, false);
+
+                    tv = ((TextView)view.findViewById(R.id.title));
+                    tv.setText("Requests received");
+                    tv.setTypeface(MyApplication.getDefaultTypeface());
+
                     break;
+
+                case 3: case 4:case 6:
+
+                    view = mInflater.inflate(R.layout.wallets_teens_home_requests_received_item, parent, false);
+                    account_picture = (ImageView) view.findViewById(R.id.profile_picture);
+
+
+                    holder = new ViewHolder();
+                    holder.text = (TextView) view.findViewById(R.id.contact_name);
+                    holder.text.setTypeface(MyApplication.getDefaultTypeface());
+                    holder.text.setText(contacts[position].toString());
+
+                    amount = new ViewHolder();
+                    amount.text = (TextView) view.findViewById(R.id.amount);
+                    amount.text.setTypeface(MyApplication.getDefaultTypeface());
+
+                    amount.text.setText(amounts[position].toString());
+
+                    when = new ViewHolder();
+                    when.text = (TextView) view.findViewById(R.id.when);
+                    when.text.setTypeface(MyApplication.getDefaultTypeface());
+
+                    when.text.setText(whens[position].toString());
+
+                    note = new ViewHolder();
+                    note.text = (TextView) view.findViewById(R.id.notes);
+                    note.text.setTypeface(MyApplication.getDefaultTypeface());
+
+                    note.text.setText(notes[position].toString());
+
+                    switch (position)
+                    {
+                        case 3:
+                            account_picture.setImageResource(R.drawable.simon_profile_picture);
+
+                            break;
+                        case 4:
+                            account_picture.setImageResource(R.drawable.celine_profile_picture);
+                            break;
+
+                        case 6:
+                            account_picture.setImageResource(R.drawable.stephani_profile_picture);
+                            break;
+
+                    }
+
+                    break;
+
+                case 5:
+                    view = mInflater.inflate(R.layout.wallets_teens_home_titles_row, parent, false);
+
+                    tv = ((TextView)view.findViewById(R.id.title));
+                    tv.setText("Requests sent");
+                    tv.setTypeface(MyApplication.getDefaultTypeface());
+
+                    break;
+
+
+
             }
 
-            TextView tv;
-
-            tv = ((TextView)view.findViewById(R.id.balance));
-            tv.setText(balances[position]);
-            tv.setTypeface(MyApplication.getDefaultTypeface());
-
-            tv = ((TextView)view.findViewById(R.id.balance_available));
-            tv.setText(balances_available[position]);
-            tv.setTypeface(MyApplication.getDefaultTypeface());
 
 
-
-            tv = ((TextView)view.findViewById(R.id.account_type));
-            tv.setText(account_types[position]);
-            tv.setTypeface(MyApplication.getDefaultTypeface());
 
             return view;
         }
     }
 
+    private class ViewHolder {
+        TextView text;
+    }
 
     public static class Model {
 
