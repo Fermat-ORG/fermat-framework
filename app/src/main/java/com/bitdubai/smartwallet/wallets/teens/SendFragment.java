@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
@@ -214,6 +215,8 @@ public  class SendFragment extends Fragment {
             }
             else
             {
+
+
 
                 //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
                 // if (convertView == null) {
