@@ -80,7 +80,7 @@ public class FrameworkActivity extends FragmentActivity
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.wallet_framework_activity);
+        setContentView(R.layout.wallet_framework_activity_framework);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
 
@@ -332,7 +332,7 @@ public class FrameworkActivity extends FragmentActivity
     public boolean onCreateOptionsMenu(Menu menu) {
 
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.wallet_framework_menu, menu);
+        inflater.inflate(R.menu.wallet_framework_framework_activity_menu, menu);
 
         LayoutInflater inflaterClone = getLayoutInflater().cloneInContext(getLayoutInflater().getContext());
         LayoutInflater.Factory lif = new MyLayoutInflaterFactory();
@@ -353,9 +353,9 @@ public class FrameworkActivity extends FragmentActivity
                 dialog.show(getSupportFragmentManager(), "QuickContactFragment");
                 return true;
 
-            case R.id.action_send_remittance_wallet:
+            case R.id.action_requests_sent:
                 Intent intent;
-                //intent = new Intent(this, ExpandableListMainActivity.class);
+                intent = new Intent(this, ExpandableListMainActivity.class);
                // startActivity(intent);
                 return true;
 

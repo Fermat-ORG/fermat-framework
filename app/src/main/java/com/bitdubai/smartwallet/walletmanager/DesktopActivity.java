@@ -22,7 +22,7 @@ public class DesktopActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.wallet_manager_desktop_activity);
+        setContentView(R.layout.wallet_manager_activity_desktop);
         getActionBar().hide();
 
     }
@@ -31,7 +31,7 @@ public class DesktopActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.wallet_manager_menu, menu);
+        getMenuInflater().inflate(R.menu.wallet_manager_desktop_activity_menu, menu);
         return true;
     }
 

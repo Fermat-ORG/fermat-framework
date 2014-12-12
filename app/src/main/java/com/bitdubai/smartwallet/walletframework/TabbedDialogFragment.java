@@ -39,7 +39,7 @@ public class TabbedDialogFragment extends DialogFragment {
 			getDialog().getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 		}
 
-		View root = inflater.inflate(R.layout.wallet_framework_tabbed_dialog, container, false);
+		View root = inflater.inflate(R.layout.wallet_framework_activity_framework_tabbed_dialog, container, false);
 
 		tabs = (PagerSlidingTabStrip) root.findViewById(R.id.tabs);
 		pager = (ViewPager) root.findViewById(R.id.pager);

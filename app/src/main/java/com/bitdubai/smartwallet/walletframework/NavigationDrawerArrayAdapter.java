@@ -18,7 +18,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String> {
     private final String[] values;
 
     public NavigationDrawerArrayAdapter(Context context, String[] values) {
-        super(context, R.layout.wallet_framework_navigation_drawer_row_layout, values);
+        super(context, R.layout.wallet_framework_activity_framework_navigation_drawer_row_layout, values);
         this.context = context;
         this.values = values;
     }
@@ -32,7 +32,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String> {
         {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            rowView = inflater.inflate(R.layout.wallet_framework_navigation_drawer_first_row, parent, false);
+            rowView = inflater.inflate(R.layout.wallet_framework_activity_framework_navigation_drawer_first_row, parent, false);
 
             TextView textView = (TextView) rowView.findViewById(R.id.label);
 
@@ -45,7 +45,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String> {
         {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            rowView = inflater.inflate(R.layout.wallet_framework_navigation_drawer_row_layout, parent, false);
+            rowView = inflater.inflate(R.layout.wallet_framework_activity_framework_navigation_drawer_row_layout, parent, false);
 
             TextView textView = (TextView) rowView.findViewById(R.id.label);
 

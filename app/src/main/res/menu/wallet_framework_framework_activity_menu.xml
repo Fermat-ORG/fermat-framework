@@ -18,14 +18,14 @@
                 android:icon="@drawable/ic_action_flash_off"
                 android:title="Last received"
                 />
-            <item android:id="@+id/action_contact"
+            <item android:id="@+id/action_requests_sent"
                 android:icon="@drawable/ic_action_brightness_medium"
                 android:title="Requests sent"
                 />
-            <item android:id="@+id/action_young_wallet"
+            <item android:id="@+id/action_requests_received"
                 android:icon="@drawable/ic_action_favorite"
                 android:title="Requests received"
-                android:actionLayout="@layout/wallet_framework_menu_item"
+                android:actionLayout="@layout/wallet_framework_activity_framework_menu_item"
                 />
         </menu>
     </item>
@@ -37,7 +37,7 @@
         android:title="Lent and owed"
         android:showAsAction="ifRoom">
         <menu>
-            <item android:id="@+id/action_store_wallet"
+            <item android:id="@+id/action_contact"
                 android:icon="@drawable/ic_action_call"
                 android:title="Money lent"
                 />

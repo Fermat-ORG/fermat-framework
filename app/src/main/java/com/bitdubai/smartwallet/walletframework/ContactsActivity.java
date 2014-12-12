@@ -1,7 +1,6 @@
 package com.bitdubai.smartwallet.walletframework;
 
 import android.app.Activity;
-import android.app.ActionBar;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
 
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.wallets.teens.ContactsFragment;
@@ -31,7 +29,7 @@ public class ContactsActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.wallet_framework_menu_contacts, menu);
+        getMenuInflater().inflate(R.menu.wallet_framework_contacts_activity_menu, menu);
         return true;
     }
 
