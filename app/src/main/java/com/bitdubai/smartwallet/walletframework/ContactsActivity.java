@@ -28,7 +28,7 @@ public class ContactsActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        // Inflate the menu; this adds items to the action bar if it is present. Natalia Cortez
         getMenuInflater().inflate(R.menu.wallet_framework_contacts_activity_menu, menu);
         return true;
     }
