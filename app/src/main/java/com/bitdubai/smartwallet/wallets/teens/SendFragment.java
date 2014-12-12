@@ -106,6 +106,7 @@ public  class SendFragment extends Fragment {
         lv.setAdapter(new ExpandableListAdapter(contacts, transactions));
         lv.setGroupIndicator(null);
 
+
     }
 
     public class ExpandableListAdapter extends BaseExpandableListAdapter {
@@ -119,6 +120,7 @@ public  class SendFragment extends Fragment {
             this.transactions = transactions;
             inf = LayoutInflater.from(getActivity());
         }
+
 
         @Override
         public int getGroupCount() {
@@ -271,6 +273,10 @@ public  class SendFragment extends Fragment {
         public boolean isChildSelectable(int groupPosition, int childPosition) {
             return true;
         }
+
+
+
+
 
         private class ViewHolder {
             TextView text;
