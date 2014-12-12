@@ -104,10 +104,9 @@ public class FrameworkActivity extends FragmentActivity
         abTitle.setTextColor(Color.WHITE);
 
         Intent i=getIntent();
-        String walletId =i.getStringExtra( "Wallet Id");
+       // String walletId =i.getStringExtra( "Wallet Id");
 
-
-        ((MyApplication) this.getApplication()).setWalletId(Integer.parseInt(walletId));
+       //  ((MyApplication) this.getApplication()).setWalletId(Integer.parseInt(walletId));
 
         String color = "";
 

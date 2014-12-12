@@ -9,9 +9,7 @@ import android.view.View;
 
 import com.bitdubai.smartwallet.walletframework.FrameworkActivity;
 import com.bitdubai.smartwallet.R;
-
-
-
+import com.bitdubai.smartwallet.walletframework.MyApplication;
 
 
 public class DesktopActivity extends Activity {
@@ -58,7 +56,13 @@ public class DesktopActivity extends Activity {
 
         intent = new Intent(this, FrameworkActivity.class);
 
-        intent.putExtra("Wallet Id", tag );
+       // Intent i=getIntent();
+       // String walletId =i.getStringExtra( "Wallet Id");
+
+
+        ((MyApplication) this.getApplication()).setWalletId(Integer.parseInt(tag));
+
+       // intent.putExtra("Wallet Id", tag );
         startActivity(intent);
 
     }
