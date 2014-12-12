@@ -146,7 +146,7 @@
 
 
             android:textColor="#FF666666"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textStyle="bold"
 
 

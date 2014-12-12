@@ -220,7 +220,7 @@
 
         android:textColor="#aaaaaa"
         android:textStyle="italic"
-        android:textSize="10sp"
+        android:textSize="8sp"
 
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"

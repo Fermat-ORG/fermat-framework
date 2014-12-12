@@ -20,7 +20,7 @@
         android:paddingRight="14dp"
         android:paddingTop="14dp"
         android:textSize="22sp"
-        android:text="1 min ago a la 10:34 AM"
+        android:text="1 min ago at 10:34 AM"
         android:gravity="left"
         android:textColor="#FFDDDDDD"
         android:textStyle="bold"
