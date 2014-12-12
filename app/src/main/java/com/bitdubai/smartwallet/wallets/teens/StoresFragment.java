@@ -5,6 +5,7 @@ package com.bitdubai.smartwallet.wallets.teens;
  */
 import android.app.Service;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
@@ -15,11 +16,14 @@ import android.view.ViewGroup;
 import com.bitdubai.smartwallet.R;
 
 import com.bitdubai.smartwallet.walletframework.MyApplication;
+import com.bitdubai.smartwallet.walletframework.SentDetailActivity;
+import com.bitdubai.smartwallet.walletframework.StoreActivity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
 import android.content.res.Configuration;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -236,6 +240,22 @@ public class StoresFragment extends Fragment {
         //@SuppressWarnings("unchecked")
         //ArrayList<App> list = (ArrayList<App>) getArguments().get("list");
         gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.item_app, mlist));
+
+
+
+
+
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v,
+                                    int position, long id) {
+                Intent intent;
+                intent = new Intent(getActivity(), StoreActivity.class);
+                startActivity(intent);
+
+                return ;
+            }
+        });
+
 
         return gridView;
     }

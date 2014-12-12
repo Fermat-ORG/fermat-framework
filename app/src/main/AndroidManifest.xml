@@ -66,6 +66,70 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
         </activity>
+        <activity
+            android:name=".walletframework.AccountDetailActivity"
+            android:label="@string/title_activity_account_detail"
+            android:parentActivityName=".walletframework.FrameworkActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+        </activity>
+        <activity
+            android:name=".walletframework.StoreActivity"
+            android:label="@string/title_activity_store"
+            android:parentActivityName=".walletframework.FrameworkActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+        </activity>
+        <activity
+            android:name=".walletframework.RefillPointActivity"
+            android:label="@string/title_activity_refill_point"
+            android:parentActivityName=".walletframework.FrameworkActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+        </activity>
+        <activity
+            android:name=".walletframework.DailyDiscountsActivity"
+            android:label="@string/title_activity_daily_discounts"
+            android:parentActivityName=".walletframework.FrameworkActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+        </activity>
+        <activity
+            android:name=".walletframework.WeeklyDiscountsActivity"
+            android:label="@string/title_activity_weekly_discount"
+            android:parentActivityName=".walletframework.FrameworkActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+        </activity>
+        <activity
+            android:name=".walletframework.MonthlyDiscountsActivity"
+            android:label="@string/title_activity_monthly_discounts"
+            android:parentActivityName=".walletframework.FrameworkActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+        </activity>
+        <activity
+            android:name=".walletframework.AccountsActivity"
+            android:label="@string/title_activity_accounts"
+            android:parentActivityName=".walletframework.FrameworkActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+        </activity>
+        <activity
+            android:name=".walletframework.EditPersonalProfileActivity"
+            android:label="@string/title_activity_edit_personal_profile"
+            android:parentActivityName=".walletframework.FrameworkActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+        </activity>
     </application>
 
 </manifest>
