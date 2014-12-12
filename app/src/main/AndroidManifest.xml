@@ -44,11 +44,11 @@
         <activity
             android:name=".walletframework.ContactsActivity"
             android:label="@string/title_activity_contacts"
-            android:parentActivityName=".walletframework.FrameworkActivity"
+            android:parentActivityName=".walletmanager.DesktopActivity"
             android:windowSoftInputMode="adjustPan" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+                android:value="com.bitdubai.smartwallet.walletmanager.DesktopActivity" />
         </activity>
         <activity
             android:name=".walletframework.RequestsSentActivity"
