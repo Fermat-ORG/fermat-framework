@@ -31,7 +31,7 @@ public class GridViewFragment extends Fragment {
 
         @SuppressWarnings("unchecked")
         ArrayList<App> list = (ArrayList<App>) getArguments().get("list");
-        gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.item_app, list));
+        gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.wallets_teens_stores_item, list));
 
         return gridView;
     }

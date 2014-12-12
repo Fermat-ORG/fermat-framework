@@ -86,7 +86,7 @@
             android:textStyle="normal"
             android:text="$0.00"
 
-            android:layout_gravity="right" />
+            android:layout_gravity="end" />
 
 
         <LinearLayout
@@ -109,7 +109,7 @@
                 android:textSize="15sp"
                 android:textStyle="normal"
                 android:text="notes"
-                android:layout_gravity="left" />
+                android:layout_gravity="start" />
 
 
             <TextView
@@ -124,27 +124,25 @@
                 android:textSize="15sp"
                 android:textStyle="normal"
                 android:text="yesterday"
-                android:gravity="right" />
+                android:gravity="end" />
 
 
             </LinearLayout>
 
+
         <TextView
             android:id="@+id/contact_name"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center|end"
             android:paddingLeft="7dip"
             android:paddingRight="7dip"
             android:paddingTop="3dip"
             android:paddingBottom="3dip"
             android:textColor="#FF666666"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textStyle="bold"
-
-
-            android:text="New contact"
-            android:layout_gravity="right" />
+            android:text="New contact"/>
 
     </LinearLayout>
 

@@ -92,25 +92,25 @@ android:paddingTop="7dip"
             android:paddingTop="3dip"
             android:paddingBottom="3dip"
             android:textColor="#FF666666"
-            android:textSize="15sp"
+            android:textSize="13sp"
             android:textStyle="normal"
             android:text="notes"
-            android:layout_gravity="left" />
+            android:layout_gravity="start" />
 
 
         <TextView
             android:id="@+id/account_alias"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="7dip"
             android:paddingRight="7dip"
             android:paddingTop="3dip"
             android:paddingBottom="3dip"
             android:textColor="#FF666666"
-            android:textSize="15sp"
+            android:textSize="13sp"
             android:textStyle="normal"
             android:text="yesterday"
-            android:gravity="right" />
+            android:gravity="end" />
 
 
     </LinearLayout>
@@ -130,7 +130,7 @@ android:paddingTop="7dip"
             android:paddingTop="3dip"
             android:paddingBottom="3dip"
             android:textColor="#FF666666"
-            android:textSize="45sp"
+            android:textSize="25sp"
             android:textStyle="bold"
             android:text="$0.00"
 
@@ -142,22 +142,23 @@ android:paddingTop="7dip"
 
         <TextView
             android:id="@+id/balance_available"
-            android:layout_width="wrap_content"
-            android:layout_height="46dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
 
             android:paddingLeft="7dip"
             android:paddingRight="7dip"
             android:paddingTop="3dip"
             android:paddingBottom="3dip"
             android:textColor="#FF666666"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textStyle="bold"
 
 
             android:text="New contact"
             android:layout_gravity="center_horizontal"
             android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:gravity="bottom|center"/>
 
     </RelativeLayout>
 </LinearLayout>
