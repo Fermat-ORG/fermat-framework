@@ -355,8 +355,8 @@ public class FrameworkActivity extends FragmentActivity
 
             case R.id.action_requests_sent:
                 Intent intent;
-                intent = new Intent(this, ExpandableListMainActivity.class);
-               // startActivity(intent);
+                intent = new Intent(this, RequestsSentActivity.class);
+                startActivity(intent);
                 return true;
 
 

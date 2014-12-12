@@ -45,7 +45,23 @@
             android:name=".walletframework.ContactsActivity"
             android:label="@string/title_activity_contacts"
             android:parentActivityName=".walletframework.FrameworkActivity"
-            android:windowSoftInputMode="adjustPan">
+            android:windowSoftInputMode="adjustPan" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+        </activity>
+        <activity
+            android:name=".walletframework.RequestsSentActivity"
+            android:label="@string/title_activity_requests_sent"
+            android:parentActivityName=".walletframework.FrameworkActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+        </activity>
+        <activity
+            android:name=".walletframework.SentDetailActivity"
+            android:label="@string/title_activity_sent_detail"
+            android:parentActivityName=".walletframework.FrameworkActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
