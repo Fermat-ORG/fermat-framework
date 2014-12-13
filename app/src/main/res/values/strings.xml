@@ -79,5 +79,7 @@
     <string name="title_activity_pay_to_new_contact">Pay To New Contact Activity</string>
     <string name="title_activity_received_detail">ReceivedDetailActivity</string>
     <string name="title_activity_receive_from_new_contact">ReceiveFromNewContactActivity</string>
+    <string name="title_activity_receive_from_contact">Receive From Contact Activity</string>
+    <string name="title_activity_chat_over_trx">Chat Over Trx Activity</string>
 
 </resources>

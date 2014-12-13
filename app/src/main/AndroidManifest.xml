@@ -131,7 +131,7 @@
                 android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
         </activity>
         <activity
-            android:name=".walletframework.SendToContact"
+            android:name=".walletframework.SendToContactActivity"
             android:label="Send To Contact Activity"
             android:parentActivityName=".walletframework.FrameworkActivity" >
             <meta-data
@@ -157,6 +157,22 @@
         <activity
             android:name=".walletframework.ReceiveFromNewContactActivity"
             android:label="Receive From New Contact Activity"
+            android:parentActivityName=".walletframework.FrameworkActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+        </activity>
+        <activity
+            android:name=".walletframework.ReceiveFromContactActivity"
+            android:label="@string/title_activity_receive_from_contact"
+            android:parentActivityName=".walletframework.FrameworkActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+        </activity>
+        <activity
+            android:name=".walletframework.ChatOverTrxActivity"
+            android:label="@string/title_activity_chat_over_trx"
             android:parentActivityName=".walletframework.FrameworkActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

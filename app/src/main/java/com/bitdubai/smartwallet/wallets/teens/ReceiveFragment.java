@@ -15,8 +15,6 @@ import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.walletframework.MyApplication;
 import com.bitdubai.smartwallet.walletframework.ReceiveFromNewContactActivity;
 import com.bitdubai.smartwallet.walletframework.ReceivedDetailActivity;
-import com.bitdubai.smartwallet.walletframework.SendToNewContactActivity;
-import com.bitdubai.smartwallet.walletframework.SentDetailActivity;
 
 
 public  class ReceiveFragment extends Fragment {
@@ -202,7 +200,7 @@ public  class ReceiveFragment extends Fragment {
             //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
             // if (convertView == null) {
             if (1 == 1) {
-                convertView = inf.inflate(R.layout.wallets_teens_fragment_send_and_receive_list_detail, parent, false);
+                convertView = inf.inflate(R.layout.wallets_teens_fragment_receive_list_detail, parent, false);
                 holder = new ViewHolder();
 
                 holder.text = (TextView) convertView.findViewById(R.id.notes);
@@ -263,7 +261,7 @@ public  class ReceiveFragment extends Fragment {
                 //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
                 // if (convertView == null) {
                 if (1 == 1) {
-                    convertView = inf.inflate(R.layout.wallets_teens_fragment_send_and_receive_list_header, parent, false);
+                    convertView = inf.inflate(R.layout.wallets_teens_fragment_receive_list_header, parent, false);
 
                     profile_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
 

@@ -84,6 +84,38 @@ public class FrameworkActivity extends FragmentActivity
     }
 
 
+    public void onSendToContactIconClicked(View v) {
+
+        Intent intent;
+        intent = new Intent(this, SendToContactActivity.class);
+        startActivity(intent);
+
+        return;
+
+    }
+
+    public void onReceiveFromContactIconClicked(View v) {
+
+        Intent intent;
+        intent = new Intent(this, ReceiveFromContactActivity.class);
+        startActivity(intent);
+
+        return;
+
+    }
+
+
+    public void onChatOverTrxIconClicked(View v) {
+
+        Intent intent;
+        intent = new Intent(this, ChatOverTrxActivity.class);
+        startActivity(intent);
+
+        return;
+
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 

@@ -11,19 +11,35 @@
 
 
 
+        <ImageView
+            android:id="@+id/icon_send_to_contact"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_action_send_now"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:paddingLeft="11dp"
+            android:paddingRight="0dp"
+            android:paddingBottom="7dp"
+            android:paddingTop="7dp"
+            android:onClick="onSendToContactIconClicked"
+
+        />
+
         <TextView
             android:id="@+id/when"
             android:layout_width="106dp"
             android:layout_height="match_parent"
             android:paddingBottom="2dp"
-            android:paddingLeft="14dp"
-            android:paddingRight="14dp"
+            android:paddingLeft="7dp"
+            android:paddingRight="7dp"
             android:paddingTop="14dp"
             android:textSize="15sp"
             android:text="1 min ago a la 10:34 AM"
             android:gravity="right"
             android:textColor="#FFDDDDDD"
-
+            android:layout_toRightOf="@+id/icon_send_to_contact"
             />
 
         <TextView
@@ -31,7 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:paddingBottom="2dp"
-            android:paddingLeft="14dp"
+            android:paddingLeft="7dp"
             android:paddingRight="7dp"
             android:paddingTop="14dp"
             android:textSize="15sp"
@@ -51,8 +67,8 @@
         android:layout_height="match_parent"
 
         android:paddingBottom="2dp"
-        android:paddingLeft="5dp"
-        android:paddingRight="14dp"
+        android:paddingLeft="7dp"
+        android:paddingRight="9dp"
         android:paddingTop="14dp"
         android:textSize="15sp"
         android:text="$3,300.00"

@@ -7,7 +7,7 @@ import android.view.MenuItem;
 
 import com.bitdubai.smartwallet.R;
 
-public class SendToContact extends Activity {
+public class SendToContactActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

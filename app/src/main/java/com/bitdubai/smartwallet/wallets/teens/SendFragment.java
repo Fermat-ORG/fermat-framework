@@ -193,7 +193,7 @@ public  class SendFragment extends Fragment {
             //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
             // if (convertView == null) {
             if (1 == 1) {
-                convertView = inf.inflate(R.layout.wallets_teens_fragment_send_and_receive_list_detail, parent, false);
+                convertView = inf.inflate(R.layout.wallets_teens_fragment_send_list_detail, parent, false);
                 holder = new ViewHolder();
 
                 holder.text = (TextView) convertView.findViewById(R.id.notes);
@@ -256,7 +256,7 @@ public  class SendFragment extends Fragment {
                 //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
                 // if (convertView == null) {
                 if (1 == 1) {
-                    convertView = inf.inflate(R.layout.wallets_teens_fragment_send_and_receive_list_header, parent, false);
+                    convertView = inf.inflate(R.layout.wallets_teens_fragment_send_list_header, parent, false);
 
                     profile_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
 
