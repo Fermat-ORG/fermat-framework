@@ -73,7 +73,15 @@ public class FrameworkActivity extends FragmentActivity
     private Menu menu;
 
 
+    public void onNavigationDrawerEditProfileIconClicked(View v) {
 
+        Intent intent;
+        intent = new Intent(this, EditPersonalProfileActivity.class);
+        startActivity(intent);
+
+        return;
+
+    }
 
 
     @Override
@@ -331,7 +339,7 @@ public class FrameworkActivity extends FragmentActivity
     public boolean onCreateOptionsMenu(Menu menu) {
 
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.wallet_framework_framework_activity_menu, menu);
+        inflater.inflate(R.menu.wallet_framework_activity_framework_menu, menu);
 
         LayoutInflater inflaterClone = getLayoutInflater().cloneInContext(getLayoutInflater().getContext());
         LayoutInflater.Factory lif = new MyLayoutInflaterFactory();

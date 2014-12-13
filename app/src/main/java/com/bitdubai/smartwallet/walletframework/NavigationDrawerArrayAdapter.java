@@ -1,6 +1,7 @@
 package com.bitdubai.smartwallet.walletframework;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,7 @@ import com.bitdubai.smartwallet.R;
 
 
 
-public class NavigationDrawerArrayAdapter extends ArrayAdapter<String> {
+public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
     private final Context context;
     private final String[] values;
 
@@ -23,6 +24,8 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String> {
         this.values = values;
     }
 
+
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -30,8 +33,9 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String> {
 
         if (position == 0)
         {
-            LayoutInflater inflater = (LayoutInflater) context
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             rowView = inflater.inflate(R.layout.wallet_framework_activity_framework_navigation_drawer_first_row, parent, false);
 
             TextView textView = (TextView) rowView.findViewById(R.id.label);
@@ -40,6 +44,17 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String> {
 
             ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
             textView.setText(values[position]);
+
+    //        ImageView iconEdit = (ImageView) rowView.findViewById(R.id.icon_edit_profile);
+    //        iconEdit.setOnClickListener(new View.OnClickListener() {
+
+    //            @Override
+    //            public void onClick(View v) {
+    //                Intent intent;
+
+    //            }
+     //       });
+
         }
         else
         {

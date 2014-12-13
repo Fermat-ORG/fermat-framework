@@ -1,6 +1,7 @@
 package com.bitdubai.smartwallet.wallets.teens;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,7 +13,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
+import com.bitdubai.smartwallet.walletframework.FrameworkActivity;
 import com.bitdubai.smartwallet.walletframework.MyApplication;
+import com.bitdubai.smartwallet.walletframework.SentDetailActivity;
 
 
 public  class SendFragment extends Fragment {
@@ -106,6 +109,18 @@ public  class SendFragment extends Fragment {
         lv.setAdapter(new ExpandableListAdapter(contacts, transactions));
         lv.setGroupIndicator(null);
 
+        lv.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+
+                Intent intent;
+                intent = new Intent(getActivity(), SentDetailActivity.class);
+                startActivity(intent);
+
+                return true;
+            }
+        });
 
     }
 
@@ -286,3 +301,4 @@ public  class SendFragment extends Fragment {
 
 
 }
+

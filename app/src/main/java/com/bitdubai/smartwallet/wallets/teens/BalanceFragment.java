@@ -4,6 +4,7 @@ package com.bitdubai.smartwallet.wallets.teens;
 import java.util.ArrayList;
 import java.util.List;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
@@ -20,7 +21,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
+import com.bitdubai.smartwallet.walletframework.AccountDetailActivity;
 import com.bitdubai.smartwallet.walletframework.MyApplication;
+import com.bitdubai.smartwallet.walletframework.SentDetailActivity;
 
 
 public class BalanceFragment extends ListFragment implements LoaderManager.LoaderCallbacks<List<BalanceFragment.Model>> {
@@ -63,8 +66,11 @@ public class BalanceFragment extends ListFragment implements LoaderManager.Loade
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        // Insert desired behavior here.
-        Log.i("BalanceFragment", "Item clicked: " + id);
+        Intent intent;
+        intent = new Intent(getActivity(), AccountDetailActivity.class);
+        startActivity(intent);
+
+        return;
     }
 
     @Override

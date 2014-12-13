@@ -63,6 +63,8 @@ public class NavigationDrawerFragment extends Fragment {
     public NavigationDrawerFragment() {
     }
 
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +82,10 @@ public class NavigationDrawerFragment extends Fragment {
         // Select either the default item (0) or the last selected item.
         selectItem(mCurrentSelectedPosition);
     }
+
+
+
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -103,7 +109,7 @@ public class NavigationDrawerFragment extends Fragment {
 
 
         mDrawerListView.setAdapter(new NavigationDrawerArrayAdapter(
-                getActionBar().getThemedContext(),
+                getActivity(),
                 new String[]{
                         getString(R.string.title_section1),
                         getString(R.string.title_section2),
@@ -115,6 +121,7 @@ public class NavigationDrawerFragment extends Fragment {
                         getString(R.string.title_section8),
                         getString(R.string.title_section9),
                         getString(R.string.title_section10),
+                        getString(R.string.title_section11),
                 }));
 
 
@@ -221,7 +228,18 @@ public class NavigationDrawerFragment extends Fragment {
             startActivity(intent);
         }
 
+        if (position == 2)
+        {
+            Intent intent;
+            intent = new Intent(super.getActivity(), AccountsActivity.class);
+
+            startActivity(intent);
+        }
+
     }
+
+
+
 
     @Override
     public void onAttach(Activity activity) {
@@ -251,6 +269,11 @@ public class NavigationDrawerFragment extends Fragment {
         // Forward the new configuration the drawer toggle component.
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
+
+
+
+
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

@@ -11,14 +11,15 @@
     <string name="action_wallet_store">Wallet Store</string>
     <string name="title_section1">Luis Fernando Molina</string>
     <string name="title_section2">Contacts</string>
-    <string name="title_section3">Banks</string>
-    <string name="title_section4">Clones</string>
-    <string name="title_section5">Childs</string>
+    <string name="title_section3">Accounts</string>
+    <string name="title_section4">Banks</string>
+    <string name="title_section5">Coupons</string>
     <string name="title_section6">Discounts</string>
     <string name="title_section7">Vouchers</string>
     <string name="title_section8">Gift cards</string>
-    <string name="title_section9">Coupons</string>
-    <string name="title_section10">Exit</string>
+    <string name="title_section9">Clones</string>
+    <string name="title_section10">Childs</string>
+    <string name="title_section11">Exit</string>
     <string name="app_name">Wallet Manager</string>
     <string name="button_send">Send</string>
     <string name="title_activity_main">Young Wallet</string>
@@ -66,5 +67,13 @@
     <string name="title_activity_contacts">Contacts Activity</string>
     <string name="title_activity_requests_sent">Requests Sent Activity</string>
     <string name="title_activity_sent_detail">Sent Detail Activity</string>
+    <string name="title_activity_account_detail">Account Detail Activity</string>
+    <string name="title_activity_store">Store Activity</string>
+    <string name="title_activity_refill_point">Refill Point Activity</string>
+    <string name="title_activity_daily_discounts">Daily Discounts Activity</string>
+    <string name="title_activity_weekly_discount">Weekly Discount Activity</string>
+    <string name="title_activity_monthly_discounts">Monthly Discounts Activity</string>
+    <string name="title_activity_accounts">Accounts Activity</string>
+    <string name="title_activity_edit_personal_profile">Edit Personal Profile Activity</string>
 
 </resources>

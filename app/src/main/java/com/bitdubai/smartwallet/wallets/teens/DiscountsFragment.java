@@ -4,12 +4,12 @@ package com.bitdubai.smartwallet.wallets.teens;
 import java.util.ArrayList;
 import java.util.List;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
@@ -20,7 +20,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
+import com.bitdubai.smartwallet.walletframework.DailyDiscountsActivity;
+import com.bitdubai.smartwallet.walletframework.MonthlyDiscountsActivity;
 import com.bitdubai.smartwallet.walletframework.MyApplication;
+import com.bitdubai.smartwallet.walletframework.WeeklyDiscountsActivity;
 
 
 public class DiscountsFragment extends ListFragment implements LoaderManager.LoaderCallbacks<List<DiscountsFragment.Model>> {
@@ -63,8 +66,30 @@ public class DiscountsFragment extends ListFragment implements LoaderManager.Loa
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        // Insert desired behavior here.
-        Log.i("DiscountsFragment", "Item clicked: " + id);
+
+        Intent intent;
+
+        switch (position) {
+
+            case 0:
+                intent = new Intent(getActivity(), DailyDiscountsActivity.class);
+                startActivity(intent);
+                break;
+
+            case 1:
+                intent = new Intent(getActivity(), WeeklyDiscountsActivity.class);
+                startActivity(intent);
+                break;
+
+            case 2:
+                intent = new Intent(getActivity(), MonthlyDiscountsActivity.class);
+                startActivity(intent);
+                break;
+        }
+
+
+
+        return;
     }
 
     @Override
