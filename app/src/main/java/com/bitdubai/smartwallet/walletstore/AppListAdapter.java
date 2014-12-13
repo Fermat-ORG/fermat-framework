@@ -37,7 +37,7 @@ public class AppListAdapter extends ArrayAdapter<App> {
         ViewHolder holder;
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.wallets_teens_stores_item, parent, false);
+            convertView = inflater.inflate(R.layout.wallets_teens_fragment_stores_item, parent, false);
             holder = new ViewHolder();
             holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
             holder.titleTextView = (TextView) convertView.findViewById(R.id.title_text_view);

@@ -17,7 +17,6 @@ import com.bitdubai.smartwallet.R;
 
 import com.bitdubai.smartwallet.walletframework.MyApplication;
 import com.bitdubai.smartwallet.walletframework.RefillPointActivity;
-import com.bitdubai.smartwallet.walletframework.StoreActivity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -139,7 +138,7 @@ public class RefillFragment extends Fragment {
 
         //@SuppressWarnings("unchecked")
         //ArrayList<App> list = (ArrayList<App>) getArguments().get("list");
-        gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.wallets_teens_stores_item, mlist));
+        gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.wallets_teens_fragment_stores_item, mlist));
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
@@ -205,7 +204,7 @@ public class RefillFragment extends Fragment {
             ViewHolder holder;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.wallets_teens_stores_item, parent, false);
+                convertView = inflater.inflate(R.layout.wallets_teens_fragment_stores_item, parent, false);
                 holder = new ViewHolder();
 
                 holder.star1= (ImageView) convertView.findViewById(R.id.star_1);

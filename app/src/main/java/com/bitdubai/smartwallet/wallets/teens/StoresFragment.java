@@ -16,7 +16,6 @@ import android.view.ViewGroup;
 import com.bitdubai.smartwallet.R;
 
 import com.bitdubai.smartwallet.walletframework.MyApplication;
-import com.bitdubai.smartwallet.walletframework.SentDetailActivity;
 import com.bitdubai.smartwallet.walletframework.StoreActivity;
 
 import java.io.Serializable;
@@ -239,7 +238,7 @@ public class StoresFragment extends Fragment {
 
         //@SuppressWarnings("unchecked")
         //ArrayList<App> list = (ArrayList<App>) getArguments().get("list");
-        gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.wallets_teens_stores_item, mlist));
+        gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.wallets_teens_fragment_stores_item, mlist));
 
 
 
@@ -309,7 +308,7 @@ public class StoresFragment extends Fragment {
             ViewHolder holder;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.wallets_teens_stores_item, parent, false);
+                convertView = inflater.inflate(R.layout.wallets_teens_fragment_stores_item, parent, false);
                 holder = new ViewHolder();
 
                 holder.star1= (ImageView) convertView.findViewById(R.id.star_1);

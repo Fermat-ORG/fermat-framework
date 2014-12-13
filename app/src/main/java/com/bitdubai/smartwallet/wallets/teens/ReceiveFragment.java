@@ -1,5 +1,6 @@
 package com.bitdubai.smartwallet.wallets.teens;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,6 +13,10 @@ import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.walletframework.MyApplication;
+import com.bitdubai.smartwallet.walletframework.ReceiveFromNewContactActivity;
+import com.bitdubai.smartwallet.walletframework.ReceivedDetailActivity;
+import com.bitdubai.smartwallet.walletframework.SendToNewContactActivity;
+import com.bitdubai.smartwallet.walletframework.SentDetailActivity;
 
 
 public  class ReceiveFragment extends Fragment {
@@ -43,15 +48,15 @@ public  class ReceiveFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        contacts = new String[]{"Lucia Alarcon De Zamacona", "Juan Luis R. Pons", "Karina Rodríguez", "Simon Cushing","Céline Begnis","Taylor Backus","Stephanie Himonidis","Kimberly Brown" };
-        amounts = new String[]{"$200.00", "$3,000.00", "$400.00", "$3.00","$45.00","$600.00","50.00","$80,000.00"};
-        whens = new String[]{"4 hours ago", "5 hours ago", "yesterday 11:00 PM", "24 Mar 14","3 Feb 14","1 year ago","1 year ago","2 year ago"};
-        notes = new String[]{"New telephone", "Old desk", "Car oil", "Sandwich","Headphones","Computer monitor","Pen","Apartment in Dubai"};
+        contacts = new String[]{"","Lucia Alarcon De Zamacona", "Juan Luis R. Pons", "Karina Rodríguez", "Simon Cushing","Céline Begnis","Taylor Backus","Stephanie Himonidis","Kimberly Brown" };
+        amounts = new String[]{"","$200.00", "$3,000.00", "$400.00", "$3.00","$45.00","$600.00","50.00","$80,000.00"};
+        whens = new String[]{"","4 hours ago", "5 hours ago", "yesterday 11:00 PM", "24 Mar 14","3 Feb 14","1 year ago","1 year ago","2 year ago"};
+        notes = new String[]{"","New telephone", "Old desk", "Car oil", "Sandwich","Headphones","Computer monitor","Pen","Apartment in Dubai"};
 
         //pictures = new String[]{"luis_profile_picture", "guillermo_profile_picture", "pedro_profile_picture", "mariana_profile_picture"};
 
         transactions = new String[][]{
-
+                {},
                 {"New telephone","Hot dog","Telephone credit","Coffee"},
                 {"Old desk","Flat rent","New glasses","House in Europe","Coffee","Gum"},
                 {"Car oil","Headphones","Apartment"},
@@ -63,6 +68,7 @@ public  class ReceiveFragment extends Fragment {
         };
         transactions_amounts = new String[][]{
 
+                {},
                 {"$200.00", "$3.00", "$460.00", "$2.00", "$1.5"},
                 {"$3,000.00", "$34,200.00", "$4,500.00", "$4,000,000", "$2,00.00", "$0.50"},
                 {"$400,00", "$43.00", "$350,000.00"},
@@ -76,6 +82,7 @@ public  class ReceiveFragment extends Fragment {
 
         transactions_whens = new String[][]{
 
+                {},
                 {"4 hours ago","8 hours ago","yesterday 10:33 PM","yesterday 9:33 PM"},
                 {"5 hours ago","yesterday","20 Sep 14","16 Sep 14","13 Sep 14","12 Sep 14"},
                 {"yesterday 11:00 PM","23 May 14", "12 May 14"},
@@ -92,21 +99,7 @@ public  class ReceiveFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.wallets_teens_fragment_receive, container, false);
-
-        TextView tv;
-
-        tv = (TextView) rootView.findViewById(R.id.notes);
-        tv.setTypeface(MyApplication.getDefaultTypeface());
-
-        tv = (TextView) rootView.findViewById(R.id.amount);
-        tv.setTypeface(MyApplication.getDefaultTypeface());
-
-        tv = (TextView) rootView.findViewById(R.id.when);
-        tv.setTypeface(MyApplication.getDefaultTypeface());
-
-        tv = (TextView) rootView.findViewById(R.id.contact_name);
-        tv.setTypeface(MyApplication.getDefaultTypeface());
+        rootView = inflater.inflate(R.layout.wallets_teens_fragment_send_and_receive, container, false);
 
         return rootView;
     }
@@ -119,6 +112,36 @@ public  class ReceiveFragment extends Fragment {
         lv.setAdapter(new ExpandableListAdapter(contacts, transactions));
         lv.setGroupIndicator(null);
 
+        lv.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+
+                Intent intent;
+                intent = new Intent(getActivity(), ReceivedDetailActivity.class);
+                startActivity(intent);
+
+                return true;
+            }
+        });
+
+        lv.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+
+                if (groupPosition == 0) {
+                    Intent intent;
+                    intent = new Intent(getActivity(), ReceiveFromNewContactActivity.class);
+                    startActivity(intent);
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        });
     }
 
     public class ExpandableListAdapter extends BaseExpandableListAdapter {
@@ -179,7 +202,7 @@ public  class ReceiveFragment extends Fragment {
             //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
             // if (convertView == null) {
             if (1 == 1) {
-                convertView = inf.inflate(R.layout.wallets_teens_fragment_receive_list_detail, parent, false);
+                convertView = inf.inflate(R.layout.wallets_teens_fragment_send_and_receive_list_detail, parent, false);
                 holder = new ViewHolder();
 
                 holder.text = (TextView) convertView.findViewById(R.id.notes);
@@ -215,40 +238,60 @@ public  class ReceiveFragment extends Fragment {
             ViewHolder note;
             ImageView profile_picture;
 
+            if (groupPosition == 0)
+            {
+                convertView = inf.inflate(R.layout.wallets_teens_fragment_send_and_receive_first_row, parent, false);
 
+                TextView tv;
 
-            //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
-            // if (convertView == null) {
-            if (1 == 1) {
-                convertView = inf.inflate(R.layout.wallets_teens_fragment_receive_list_header, parent, false);
+                tv = (TextView) convertView.findViewById(R.id.notes);
+                tv.setTypeface(MyApplication.getDefaultTypeface());
 
-                profile_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
+                tv = (TextView) convertView.findViewById(R.id.amount);
+                tv.setTypeface(MyApplication.getDefaultTypeface());
 
-                switch (groupPosition) {
-                    case 0:
-                        profile_picture.setImageResource(R.drawable.lucia_profile_picture);
-                        break;
-                    case 1:
-                        profile_picture.setImageResource(R.drawable.juan_profile_picture);
-                        break;
-                    case 2:
-                        profile_picture.setImageResource(R.drawable.karina_profile_picture);
-                        break;
-                    case 3:
-                        profile_picture.setImageResource(R.drawable.simon_profile_picture);
-                        break;
-                    case 4:
-                        profile_picture.setImageResource(R.drawable.celine_profile_picture);
-                        break;
-                    case 5:
-                        profile_picture.setImageResource(R.drawable.taylor_profile_picture);
-                        break;
-                    case 6:
-                        profile_picture.setImageResource(R.drawable.stephani_profile_picture);
-                        break;
-                    case 7:
-                        profile_picture.setImageResource(R.drawable.kimberly_profile_picture);
-                        break;
+                tv = (TextView) convertView.findViewById(R.id.when);
+                tv.setTypeface(MyApplication.getDefaultTypeface());
+
+                tv = (TextView) convertView.findViewById(R.id.contact_name);
+                tv.setTypeface(MyApplication.getDefaultTypeface());
+                tv.setText("Receive from new contact");
+            }
+            else
+            {
+
+                //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
+                // if (convertView == null) {
+                if (1 == 1) {
+                    convertView = inf.inflate(R.layout.wallets_teens_fragment_send_and_receive_list_header, parent, false);
+
+                    profile_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
+
+                    switch (groupPosition) {
+                        case 1:
+                            profile_picture.setImageResource(R.drawable.lucia_profile_picture);
+                            break;
+                        case 2:
+                            profile_picture.setImageResource(R.drawable.juan_profile_picture);
+                            break;
+                        case 3:
+                            profile_picture.setImageResource(R.drawable.karina_profile_picture);
+                            break;
+                        case 4:
+                            profile_picture.setImageResource(R.drawable.simon_profile_picture);
+                            break;
+                        case 5:
+                            profile_picture.setImageResource(R.drawable.celine_profile_picture);
+                            break;
+                        case 6:
+                            profile_picture.setImageResource(R.drawable.taylor_profile_picture);
+                            break;
+                        case 7:
+                            profile_picture.setImageResource(R.drawable.stephani_profile_picture);
+                            break;
+                        case 8:
+                            profile_picture.setImageResource(R.drawable.kimberly_profile_picture);
+                            break;
 
 
                     }
@@ -278,14 +321,17 @@ public  class ReceiveFragment extends Fragment {
 
                     note.text.setText(notes[groupPosition].toString());
 
-            } else {
-                holder = (ViewHolder) convertView.getTag();
+                } else {
+                    holder = (ViewHolder) convertView.getTag();
+                }
+
+
+
+
+                holder.text.setText(getGroup(groupPosition).toString());
+
             }
 
-
-
-
-            holder.text.setText(getGroup(groupPosition).toString());
 
             return convertView;
         }

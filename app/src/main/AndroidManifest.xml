@@ -44,7 +44,7 @@
         <activity
             android:name=".walletframework.ContactsActivity"
             android:label="@string/title_activity_contacts"
-            android:parentActivityName=".walletmanager.DesktopActivity"
+            android:parentActivityName=".walletframework.FrameworkActivity"
             android:windowSoftInputMode="adjustPan" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -125,6 +125,38 @@
         <activity
             android:name=".walletframework.EditPersonalProfileActivity"
             android:label="@string/title_activity_edit_personal_profile"
+            android:parentActivityName=".walletframework.FrameworkActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+        </activity>
+        <activity
+            android:name=".walletframework.SendToContact"
+            android:label="Send To Contact Activity"
+            android:parentActivityName=".walletframework.FrameworkActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+        </activity>
+        <activity
+            android:name=".walletframework.SendToNewContactActivity"
+            android:label="Sent to New Contact Activity"
+            android:parentActivityName=".walletframework.FrameworkActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+        </activity>
+        <activity
+            android:name=".walletframework.ReceivedDetailActivity"
+            android:label="Received Detail Activity"
+            android:parentActivityName=".walletframework.FrameworkActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+        </activity>
+        <activity
+            android:name=".walletframework.ReceiveFromNewContactActivity"
+            android:label="Receive From New Contact Activity"
             android:parentActivityName=".walletframework.FrameworkActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

@@ -75,5 +75,9 @@
     <string name="title_activity_monthly_discounts">Monthly Discounts Activity</string>
     <string name="title_activity_accounts">Accounts Activity</string>
     <string name="title_activity_edit_personal_profile">Edit Personal Profile Activity</string>
+    <string name="title_activity_pay_to_contact">Pay To Contact</string>
+    <string name="title_activity_pay_to_new_contact">Pay To New Contact Activity</string>
+    <string name="title_activity_received_detail">ReceivedDetailActivity</string>
+    <string name="title_activity_receive_from_new_contact">ReceiveFromNewContactActivity</string>
 
 </resources>
