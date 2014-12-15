@@ -116,6 +116,16 @@ public class FrameworkActivity extends FragmentActivity
     }
 
 
+    public void onAvailableBalanceIconClicked(View v) {
+
+        Intent intent;
+        intent = new Intent(this, AvailableBalanceActivity.class);
+        startActivity(intent);
+
+        return;
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 

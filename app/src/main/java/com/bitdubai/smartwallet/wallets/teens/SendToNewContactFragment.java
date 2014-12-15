@@ -101,7 +101,7 @@ public  class SendToNewContactFragment extends android.app.Fragment {
         tv = (TextView) rootView.findViewById(R.id.amount);
         tv.setTypeface(MyApplication.getDefaultTypeface());
 
-        tv = (TextView) rootView.findViewById(R.id.when);
+        tv = (TextView) rootView.findViewById(R.id.send_button);
         tv.setTypeface(MyApplication.getDefaultTypeface());
 
         tv = (TextView) rootView.findViewById(R.id.contact_name);
