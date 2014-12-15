@@ -44,7 +44,13 @@ android:paddingTop="7dip"
         android:paddingRight="7dp"
         android:paddingBottom="7dp"
         android:paddingTop="7dp"
+
+
+
+
         />
+
+
 
 
     <ImageView
@@ -143,7 +149,7 @@ android:paddingTop="7dip"
         <TextView
             android:id="@+id/balance_available"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
 
             android:paddingLeft="7dip"
             android:paddingRight="7dip"
@@ -160,8 +166,10 @@ android:paddingTop="7dip"
             android:layout_centerHorizontal="true"
             android:gravity="bottom|center"
 
-            android:onClick="onAvailableBalanceIconClicked"
 
+            android:clickable="true"
+
+            android:onClick="onAvailableBalanceIconClicked"
 
             />
 
