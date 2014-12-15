@@ -1,0 +1,26 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.bitdubai.smartwallet.walletframework.BalanceAvailableActivity"
+
+
+    android:orientation="vertical"
+    >
+
+    <TextView android:text="Se accede a esta actividad tocando en el balance disponible. Puede que se toque en el balance disponible sumarizado de varias cuentas o en el de una cuenta en particular"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView android:text="En ambos casos en el action bar se presenta la informacion de la cuenta (imagen y datos) seleccionada o una imagen que representa una seleccion multiple de cuentas. Con datos me refiero al nombre y tipo y balance total y el disponible."
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView android:text="Abajo de esto se debe listar en un listview como se compone el balance total en funcion de la cryptocurrency que lo soporta. Cada transaccion mostrara su fecha, monto en $, monto en crypto, el % por encima o por debajo del precio actual del mercado en rojo o verde."
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+</LinearLayout>

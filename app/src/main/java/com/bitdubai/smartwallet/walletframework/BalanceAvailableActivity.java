@@ -6,26 +6,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.bitdubai.smartwallet.R;
-import com.bitdubai.smartwallet.wallets.teens.SendToNewContactFragment;
 
-public class SendToNewContactActivity extends Activity {
+public class BalanceAvailableActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.wallet_framework_activity_send_to_new_contact);
-        if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
-                    .add(R.id.container, new SendToNewContactFragment())
-                    .commit();
-        }
+        setContentView(R.layout.wallet_framework_activity_balance_available);
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.wallet_framework_activity_send_to_new_contact_menu, menu);
+        getMenuInflater().inflate(R.menu.wallet_framework_activity_balance_available_menu, menu);
         return true;
     }
 

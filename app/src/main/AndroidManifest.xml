@@ -44,8 +44,7 @@
         <activity
             android:name=".walletframework.ContactsActivity"
             android:label="@string/title_activity_contacts"
-            android:parentActivityName=".walletframework.FrameworkActivity"
-            android:windowSoftInputMode="adjustPan" >
+            android:parentActivityName=".walletframework.FrameworkActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.bitdubai.smartwallet.walletmanager.DesktopActivity" />
@@ -141,7 +140,8 @@
         <activity
             android:name=".walletframework.SendToNewContactActivity"
             android:label="Sent to New Contact Activity"
-            android:parentActivityName=".walletframework.FrameworkActivity" >
+            android:parentActivityName=".walletframework.FrameworkActivity"
+            android:windowSoftInputMode="stateVisible" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
@@ -173,6 +173,22 @@
         <activity
             android:name=".walletframework.ChatOverTrxActivity"
             android:label="@string/title_activity_chat_over_trx"
+            android:parentActivityName=".walletframework.FrameworkActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+        </activity>
+        <activity
+            android:name=".walletframework.BlankActivityWithFragment"
+            android:label="@string/title_activity_blank_activity_with_fragment"
+            android:parentActivityName=".walletframework.FrameworkActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+        </activity>
+        <activity
+            android:name=".walletframework.BalanceAvailableActivity"
+            android:label="@string/title_activity_balance_available"
             android:parentActivityName=".walletframework.FrameworkActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

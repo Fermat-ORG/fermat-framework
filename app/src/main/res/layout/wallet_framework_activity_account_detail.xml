@@ -1,12 +1,24 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.bitdubai.smartwallet.walletframework.AccountDetailActivity">
+    tools:context="com.bitdubai.smartwallet.walletframework.AccountDetailActivity"
 
-    <TextView android:text="@string/hello_world" android:layout_width="wrap_content"
+    android:orientation="vertical"
+    >
+
+    <TextView android:text="El detalle de la cuenta representa el perfil de esa cuenta. Se va a implementar como una actividad con 4 tabs. El primero llamado Account va a mostrar el perfil de ese producto y tendra links a editAccount si se quiere modificar dicho perfil. Mostrara el total de la informacion mostrable que llevemos a nivel de una cuenta."
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
-</RelativeLayout>
+    <TextView android:text="El segundo tab Credits mostrara una lista ordenada del mas reciente al menos reciente de los creditos recibidos en dicha cuenta. Tocando en cada uno se iria al detalle de dicha transaccion. Un tab casi identico seria de Debits y uno adicional de All donde estarian juntos debitos y creditos."
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView android:text="El icono de la cuenta mas el alias y tipo de cuenta debe aparaecer en el action bar. Tambien el balance total y el disponible."
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

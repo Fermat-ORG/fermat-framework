@@ -81,5 +81,7 @@
     <string name="title_activity_receive_from_new_contact">ReceiveFromNewContactActivity</string>
     <string name="title_activity_receive_from_contact">Receive From Contact Activity</string>
     <string name="title_activity_chat_over_trx">Chat Over Trx Activity</string>
+    <string name="title_activity_blank_activity_with_fragment">BlankActivityWithFragment</string>
+    <string name="title_activity_balance_available">BalanceAvailableActivity</string>
 
 </resources>
