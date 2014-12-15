@@ -49,9 +49,7 @@ import com.bitdubai.smartwallet.wallets.teens.StoresFragment;
 public class FrameworkActivity extends FragmentActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
-    private final Handler handler = new Handler();
-
-    private PagerSlidingTabStrip tabs;
+        private PagerSlidingTabStrip tabs;
     private ViewPager pager;
     private MyPagerAdapter adapter;
 
@@ -145,8 +143,6 @@ public class FrameworkActivity extends FragmentActivity
 
 
 
-        // Change the title of the action bar and the typeface
-        SpannableString s = new SpannableString("Unidentified wallet");
 
         // I get the action bar title id and put it on a text view in order to later change its color
         int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
@@ -154,158 +150,73 @@ public class FrameworkActivity extends FragmentActivity
         abTitle.setTextColor(Color.WHITE);
 
         Intent i=getIntent();
-       // String walletId =i.getStringExtra( "Wallet Id");
 
-       //  ((MyApplication) this.getApplication()).setWalletId(Integer.parseInt(walletId));
+        tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
 
-        String color = "";
-
-        Drawable bg = getResources().getDrawable(R.drawable.transparent);
-        bg.setVisible(false,false);
-
-        Drawable wallpaper = getResources().getDrawable(R.drawable.transparent);
-
-
-        switch (((MyApplication) this.getApplication()).getWalletId() )
+        switch ( ((MyApplication) this.getApplication()).getWalletId() )
         {
             case 1:
                 mTitle = "Girl's savings";
-                s = new SpannableString(mTitle);
-                color = "#FFC2F1";
-                getActionBar().setIcon(getResources().getDrawable(R.drawable.icono_piggy_pink));
-                bg = getResources().getDrawable(R.drawable.wallet_wallpaper_pink);
-                bg.setVisible(true,false);
-                wallpaper = getResources().getDrawable(R.drawable.wallet_wallpaper_pink);
-                abTitle.setTextColor(Color.BLACK);
-                walletStyle = "Kids";
+
                 break;
 
             case 2:
                 mTitle = "Boy's savings";
-                s = new SpannableString(mTitle);
-                color = "#84DCF5";
-                getActionBar().setIcon(getResources().getDrawable(R.drawable.icono_piggy_yellow));
-                bg = getResources().getDrawable(R.drawable.banner_kid_yellow_blue);
-                bg.setVisible(true,false);
-                wallpaper = getResources().getDrawable(R.drawable.wallet_wallpaper_yellow);
-                abTitle.setTextColor(Color.BLACK);
-                walletStyle = "Kids";
+
                 break;
 
             case 3:
                 mTitle = "Ladies";
-                s = new SpannableString(mTitle);
-                color = "#F0E173";
-                getActionBar().setIcon(getResources().getDrawable(R.drawable.wallet_1));
-                wallpaper = getResources().getDrawable(R.drawable.background_tabs_diagonal_rotated);
-                abTitle.setTextColor(Color.BLACK);
-                walletStyle = "Young";
+
                 break;
 
             case 4:
                 mTitle = "Young";
-                s = new SpannableString(mTitle);
-                color = "#1EE635";
-                getActionBar().setIcon(getResources().getDrawable(R.drawable.wallet_3));
-                wallpaper = getResources().getDrawable(R.drawable.background_tiled_diagonal_light);
-                abTitle.setTextColor(Color.BLACK);
-                walletStyle = "Club";
+
                 break;
 
             case 5:
                 mTitle = "Professional";
-                s = new SpannableString(mTitle);
-                color = "#F0C64A";
-                getActionBar().setIcon(getResources().getDrawable(R.drawable.wallet_3));
-                wallpaper = getResources().getDrawable(R.drawable.background_tiled_diagonal_light);
-                abTitle.setTextColor(Color.BLACK);
-                walletStyle = "Club";
+
                 break;
 
             case 6:
                 mTitle = "Gucci";
-                s = new SpannableString(mTitle);
-                color = "#9B80FF";
-                getActionBar().setIcon(getResources().getDrawable(R.drawable.wallet_3));
-                wallpaper = getResources().getDrawable(R.drawable.background_tiled_diagonal_light);
-                abTitle.setTextColor(Color.BLACK);
-                walletStyle = "Club";
+
                 break;
 
             case 7:
                 mTitle = "Carrefour";
-                s = new SpannableString(mTitle);
-                color = "#E8E8E8";
-                getActionBar().setIcon(getResources().getDrawable(R.drawable.icono_retailer_1));
-                wallpaper = getResources().getDrawable(R.drawable.background_tiled_diagonal_light);
-                abTitle.setTextColor(Color.BLUE);
-                walletStyle = "Club";
+
                 break;
 
             case 8:
                 mTitle = "Banco Itau";
-                s = new SpannableString(mTitle);
-                color = "#AB0A80";
-                getActionBar().setIcon(getResources().getDrawable(R.drawable.icono_banco_1));
-                wallpaper = getResources().getDrawable(R.drawable.background_tiled_diagonal_light);
-                abTitle.setTextColor(Color.YELLOW);
-                walletStyle = "Club";
+
                 break;
 
             case 9:
                 mTitle = "Banco Popular";
-                s = new SpannableString(mTitle);
-                color = "#FF0004";
-                getActionBar().setIcon(getResources().getDrawable(R.drawable.icono_banco_2));
-                wallpaper = getResources().getDrawable(R.drawable.background_tiled_diagonal_light);
-                abTitle.setTextColor(Color.WHITE);
-                walletStyle = "Club";
+
                 break;
 
             case 10:
                 mTitle = "Boca Juniors";
-                s = new SpannableString(mTitle);
-                color = "#3864F5";
-                getActionBar().setIcon(getResources().getDrawable(R.drawable.icono_club_1));
-                wallpaper = getResources().getDrawable(R.drawable.background_tiled_diagonal_light);
-                abTitle.setTextColor(Color.YELLOW);
-                bg = getResources().getDrawable(R.drawable.banner_club_1);
-                bg.setVisible(true,false);
-                walletStyle = "Club";
+
                 break;
 
             case 11:
                 mTitle = "Barcelona";
-                s = new SpannableString(mTitle);
-                color = "#DE186B";
-                getActionBar().setIcon(getResources().getDrawable(R.drawable.icono_club_2));
 
-                abTitle.setTextColor(Color.WHITE);
-                wallpaper = getResources().getDrawable(R.drawable.wallet_wallpaper_club_2);
-                bg = getResources().getDrawable(R.drawable.banner_club_2);
-                bg.setVisible(true,false);
-                walletStyle = "Club";
                 break;
         }
 
-
-        s.setSpan(new MyTypefaceSpan(this, "CaviarDreams.ttf"), 0, s.length(),
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        // Update the action bar title with the TypefaceSpan instance
-        getActionBar().setTitle(s);
-
-
+        ((MyApplication) this.getApplication()).setActionBarProperties(this,getWindow(),tabs, getActionBar(), getResources(),abTitle, mTitle.toString());
         //super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_main);
 
-        getWindow().getDecorView().setBackground(wallpaper);
-
         //getWindow().getDecorView().setBackgroundResource(R.drawable.wallet_wallpaper_yellow);
 
-
-
-        tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         pager = (ViewPager) findViewById(R.id.pager);
         adapter = new MyPagerAdapter(getSupportFragmentManager());
 
@@ -326,16 +237,7 @@ public class FrameworkActivity extends FragmentActivity
         tabs.setDividerColor(0xFFBBBBBB);
 
 
-        changeColor(Color.parseColor(color));
-
-        if (bg.isVisible() == true) {getActionBar().setBackgroundDrawable(bg);}
-
-
-
     }
-
-
-
 
     //***
     @Override
@@ -414,58 +316,12 @@ public class FrameworkActivity extends FragmentActivity
         return super.onOptionsItemSelected(item);
     }
 
-    private void changeColor(int newColor) {
 
-        tabs.setIndicatorColor(newColor);
-
-        // change ActionBar color just if an ActionBar is available
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-
-            Drawable colorDrawable = new ColorDrawable(newColor);
-            Drawable bottomDrawable = getResources().getDrawable(R.drawable.actionbar_bottom);
-            LayerDrawable ld = new LayerDrawable(new Drawable[] { colorDrawable, bottomDrawable });
-
-            if (oldBackground == null) {
-
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                    ld.setCallback(drawableCallback);
-                } else {
-                    getActionBar().setBackgroundDrawable(ld);
-                }
-
-            } else {
-
-                TransitionDrawable td = new TransitionDrawable(new Drawable[] { oldBackground, ld });
-
-                // workaround for broken ActionBarContainer drawable handling on
-                // pre-API 17 builds
-                // https://github.com/android/platform_frameworks_base/commit/a7cc06d82e45918c37429a59b14545c6a57db4e4
-                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                    td.setCallback(drawableCallback);
-                } else {
-                    getActionBar().setBackgroundDrawable(td);
-                }
-
-                td.startTransition(200);
-
-            }
-
-            oldBackground = ld;
-
-            // http://stackoverflow.com/questions/11002691/actionbar-setbackgrounddrawable-nulling-background-from-thread-handler
-            getActionBar().setDisplayShowTitleEnabled(false);
-            getActionBar().setDisplayShowTitleEnabled(true);
-
-        }
-
-        currentColor = newColor;
-
-    }
 
     public void onColorClicked(View v) {
 
         int color = Color.parseColor(v.getTag().toString());
-        changeColor(color);
+        ((MyApplication) this.getApplication()).changeColor(color,getResources());
 
     }
 
@@ -479,25 +335,10 @@ public class FrameworkActivity extends FragmentActivity
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         currentColor = savedInstanceState.getInt("currentColor");
-        changeColor(currentColor);
+        ((MyApplication) this.getApplication()).changeColor(currentColor,getResources());
     }
 
-    private Drawable.Callback drawableCallback = new Drawable.Callback() {
-        @Override
-        public void invalidateDrawable(Drawable who) {
-            getActionBar().setBackgroundDrawable(who);
-        }
 
-        @Override
-        public void scheduleDrawable(Drawable who, Runnable what, long when) {
-            handler.postAtTime(what, when);
-        }
-
-        @Override
-        public void unscheduleDrawable(Drawable who, Runnable what) {
-            handler.removeCallbacks(what);
-        }
-    };
 
     public class MyPagerAdapter extends FragmentPagerAdapter {
 

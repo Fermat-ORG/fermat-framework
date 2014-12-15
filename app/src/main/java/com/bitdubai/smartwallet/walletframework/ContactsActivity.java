@@ -2,12 +2,15 @@ package com.bitdubai.smartwallet.walletframework;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.wallets.teens.ContactsFragment;
@@ -23,6 +26,17 @@ public class ContactsActivity extends Activity {
                     .add(R.id.container, new ContactsFragment())
                     .commit();
         }
+
+        // I get the action bar title id and put it on a text view in order to later change its color
+        int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
+        TextView abTitle = (TextView) findViewById(titleId);
+        abTitle.setTextColor(Color.WHITE);
+
+        Intent i=getIntent();
+         PagerSlidingTabStrip  tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+
+        ((MyApplication) this.getApplication()).setActionBarProperties(this,getWindow(),tabs, getActionBar(), getResources(),abTitle, "Contacts");
+
     }
 
 
