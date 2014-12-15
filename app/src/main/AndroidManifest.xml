@@ -187,7 +187,7 @@
                 android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
         </activity>
         <activity
-            android:name=".walletframework.BalanceAvailableActivity"
+            android:name=".walletframework.AvailableBalanceActivity"
             android:label="@string/title_activity_balance_available"
             android:parentActivityName=".walletframework.FrameworkActivity" >
             <meta-data

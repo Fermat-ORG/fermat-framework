@@ -110,7 +110,7 @@ android:paddingTop="7dip"
             android:textSize="13sp"
             android:textStyle="normal"
             android:text="yesterday"
-            android:gravity="end" />
+            android:gravity="right" />
 
 
     </LinearLayout>
@@ -154,11 +154,16 @@ android:paddingTop="7dip"
             android:textStyle="bold"
 
 
-            android:text="New contact"
+            android:text="available"
             android:layout_gravity="center_horizontal"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:gravity="bottom|center"/>
+            android:gravity="bottom|center"
+
+            android:onClick="onAvailableBalanceIconClicked"
+
+
+            />
 
     </RelativeLayout>
 </LinearLayout>

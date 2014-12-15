@@ -7,19 +7,19 @@ import android.view.MenuItem;
 
 import com.bitdubai.smartwallet.R;
 
-public class BalanceAvailableActivity extends Activity {
+public class AvailableBalanceActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.wallet_framework_activity_balance_available);
+        setContentView(R.layout.wallet_framework_activity_available_balance);
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.wallet_framework_activity_balance_available_menu, menu);
+        getMenuInflater().inflate(R.menu.wallet_framework_activity_available_balance_menu, menu);
         return true;
     }
 

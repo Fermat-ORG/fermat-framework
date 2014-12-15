@@ -1,37 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+
+
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+
     android:background="@drawable/background_tabs_diagonal_rotated"
-    android:orientation="horizontal"
-    android:paddingLeft="7dip"
-    android:paddingRight="7dip"
-    android:paddingBottom="7dip"
-    android:paddingTop="7dip"
-    android:id="@+id/send_form"
+
     >
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="106dp"
-        android:layout_height="106dp"
 
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+
+        android:orientation="horizontal"
+        android:paddingLeft="7dip"
+        android:paddingRight="7dip"
+        android:paddingBottom="7dip"
+        android:paddingTop="7dip"
+        android:id="@+id/send_form"
         >
 
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="106dp"
+            android:layout_height="106dp"
+
+            >
 
 
-        <ImageView
-            android:id="@+id/profile_picture"
+
+            <ImageView
+                android:id="@+id/profile_picture"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
+                android:src="@drawable/new_contact_profile_picture"
+                android:layout_gravity="center"
+
+                />
+
+
+        </RelativeLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:src="@drawable/new_contact_profile_picture"
-            android:layout_gravity="center"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_alignParentRight="true"
 
-            />
-
+            >
 
 
+
+            <EditText
+                android:id="@+id/contact_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+
+                android:textColor="#FF666666"
+                android:textSize="20sp"
+                android:textStyle="bold"
+
+
+                android:hint="New contact"
+                android:gravity="right"
+
+                android:paddingLeft="7dip"
+                android:paddingRight="7dip"
+
+                android:paddingTop="3dip"
+                android:paddingBottom="3dip"
+
+                android:layout_alignParentBottom="true"
+
+                />
+
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/icon_edit_profile"
@@ -47,37 +106,55 @@
             android:paddingTop="7dp"
             />
 
-
         <ImageView
             android:id="@+id/icon_edit_picture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_menu_gallery"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
             android:paddingLeft="7dp"
             android:paddingRight="7dp"
             android:paddingBottom="7dp"
             android:paddingTop="7dp"
-            />
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
 
 
-    </RelativeLayout>
+
+    </LinearLayout>
+
+
+
+    <EditText
+        android:id="@+id/notes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+
+        android:textColor="#FF666666"
+        android:textSize="15sp"
+        android:textStyle="normal"
+        android:hint="Notes"
+
+        android:paddingTop="3dip"
+        android:paddingLeft="7dip"
+        android:paddingRight="7dip"
+        android:layout_gravity="right" />
+
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_alignParentRight="true"
-
+        android:layout_height="wrap_content"
         >
 
         <EditText
             android:id="@+id/amount"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
+            android:gravity="right"
             android:paddingLeft="7dip"
             android:paddingRight="7dip"
             android:paddingTop="3dip"
@@ -87,85 +164,26 @@
             android:textStyle="normal"
             android:hint="$0.00"
 
-            android:layout_gravity="right" />
 
+            android:layout_weight="0.54" />
 
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-
-            >
-
-
-
-            <EditText
-                android:id="@+id/notes"
-                android:layout_width="150dp"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-
-                android:textColor="#FF666666"
-                android:textSize="15sp"
-                android:textStyle="normal"
-                android:hint="Notes"
-                android:layout_gravity="left"
-
-                android:paddingTop="3dip"
-                android:paddingLeft="7dip"
-                android:paddingRight="7dip"
-                />
-
-
-
-
-
-            <TextView
-                android:id="@+id/when"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="7dip"
-                android:paddingRight="7dip"
-                android:paddingTop="3dip"
-                android:paddingBottom="3dip"
-                android:textColor="#FF666666"
-                android:textSize="15sp"
-                android:textStyle="normal"
-                android:text="now"
-                android:gravity="right" />
-
-
-        </LinearLayout>
-
-
-        <EditText
-            android:id="@+id/contact_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-
-
+        <TextView
+            android:id="@+id/send_button"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
             android:textColor="#FF666666"
+            android:background="@drawable/button_background"
+            android:paddingLeft="7dp"
+            android:paddingRight="7dp"
+            android:paddingBottom="7dp"
+            android:paddingTop="7dp"
+            android:text="Send"
             android:textSize="20sp"
-            android:textStyle="bold"
-
-
-            android:hint="New contact"
-            android:gravity="right"
-
-            android:paddingLeft="7dip"
-            android:paddingRight="7dip"
-
-            android:paddingTop="3dip"
-            android:paddingBottom="3dip"
-
 
 
             />
 
+        </LinearLayout>
 
-
-    </LinearLayout>
 
 </LinearLayout>
