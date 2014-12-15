@@ -32,7 +32,6 @@ public  class ContactsFragment extends android.app.Fragment {
     private String[][] transactions_whens;
 
 
-
     public static ContactsFragment newInstance() {
         ContactsFragment f = new ContactsFragment();
         return f;
@@ -162,6 +161,7 @@ public  class ContactsFragment extends android.app.Fragment {
             ViewHolder when;
 
 
+
             //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
             // if (convertView == null) {
             if (1 == 1) {
@@ -171,6 +171,9 @@ public  class ContactsFragment extends android.app.Fragment {
                 holder.text = (TextView) convertView.findViewById(R.id.notes);
                 holder.text.setTypeface(MyApplication.getDefaultTypeface());
                 convertView.setTag(holder);
+
+
+
 
                 amount = new ViewHolder();
                 amount.text = (TextView) convertView.findViewById(R.id.amount);

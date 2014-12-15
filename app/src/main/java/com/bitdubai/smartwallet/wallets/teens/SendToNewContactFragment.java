@@ -8,10 +8,8 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.walletframework.MyApplication;
-
 
 
 
@@ -98,11 +96,12 @@ public  class SendToNewContactFragment extends android.app.Fragment {
         tv = (TextView) rootView.findViewById(R.id.notes);
         tv.setTypeface(MyApplication.getDefaultTypeface());
 
+        tv = (TextView) rootView.findViewById(R.id.address);
+        tv.setTypeface(MyApplication.getDefaultTypeface());
+
         tv = (TextView) rootView.findViewById(R.id.amount);
         tv.setTypeface(MyApplication.getDefaultTypeface());
 
-        tv = (TextView) rootView.findViewById(R.id.send_button);
-        tv.setTypeface(MyApplication.getDefaultTypeface());
 
         tv = (TextView) rootView.findViewById(R.id.contact_name);
         tv.setTypeface(MyApplication.getDefaultTypeface());
