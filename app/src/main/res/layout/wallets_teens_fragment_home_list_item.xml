@@ -117,10 +117,18 @@
                 android:textStyle="bold"
 
 
-                android:text="New contact"
+                android:text="available"
                 android:layout_gravity="center_horizontal"
                 android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true" />
+                android:layout_centerHorizontal="true"
+
+
+                android:clickable="true"
+
+                android:onClick="onAvailableBalanceIconClicked"
+
+
+                />
 
         </RelativeLayout>
     </LinearLayout>

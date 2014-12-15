@@ -6,14 +6,24 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.bitdubai.smartwallet.R;
+import com.bitdubai.smartwallet.wallets.teens.AvailableBalanceFragment;
+import com.bitdubai.smartwallet.wallets.teens.SendToNewContactFragment;
 
 public class AvailableBalanceActivity extends Activity {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.wallet_framework_activity_available_balance);
+        if (savedInstanceState == null) {
+            getFragmentManager().beginTransaction()
+                    .add(R.id.container, new AvailableBalanceFragment())
+                    .commit();
+        }
     }
+
+
 
 
     @Override

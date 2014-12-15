@@ -67,6 +67,7 @@ public class BalanceFragment extends ListFragment implements LoaderManager.Loade
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         Intent intent;
+        View clickedView = v;
         intent = new Intent(getActivity(), AccountDetailActivity.class);
         startActivity(intent);
 
