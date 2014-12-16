@@ -1,25 +1,10 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context="com.bitdubai.smartwallet.walletframework.SendToContactActivity"
+    tools:ignore="MergeRootFrame"
 
-    android:orientation="vertical"
-    >
-
-    <TextView android:text="Esta actividad debe presentar un formulario para hacer un envio al contacto que ya queda seleccionado a partir del lugar desde donde se entro a la actividad. El monto a enviar y las notas tambien vendran pre-seleccionadas y el usuario podra sobre escribirlos. La Foto del contacto y su nombre estaran fijos en la action bar. El resto de la informacion en el fragmento de la actividad."
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <TextView android:text="Para implementar esto en el prototipo vamos a copiar los arrays que tenemos con datos al fragmento de esta actividad y vamos a cerrar el circuito desde que se aprieta el icono hasta que se muestran los datos asi: a cada ViewImage que tiene cada icono clicleable, hay que setearle la propiedad TAG con el id del registro de la transaccion. "
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <TextView android:text="Luego se captura dicho TAG en el evento disparado por el click y se lo mete en el intent que abre esta actividad junto con un parametro que indica si se toco en un send o un receive. Basandose en esas dos cosas la actividad toma de array apropiado harcodeado en si misma los valores para completar el form setea la foto del contacto de manera apropiada tambien. (no importa a nivel del prototipo si hay duplicacion de codigo)"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-
-</LinearLayout>
+    />

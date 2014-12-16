@@ -49,7 +49,7 @@ import com.bitdubai.smartwallet.wallets.teens.StoresFragment;
 public class FrameworkActivity extends FragmentActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
-        private PagerSlidingTabStrip tabs;
+    private PagerSlidingTabStrip tabs;
     private ViewPager pager;
     private MyPagerAdapter adapter;
 
@@ -84,6 +84,8 @@ public class FrameworkActivity extends FragmentActivity
 
     public void onSendToContactIconClicked(View v) {
 
+        int tagId = (int)v.getTag();
+        MyApplication.setTagId(tagId);
         Intent intent;
         intent = new Intent(this, SendToContactActivity.class);
         startActivity(intent);

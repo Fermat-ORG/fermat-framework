@@ -6,6 +6,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.bitdubai.smartwallet.R;
+import com.bitdubai.smartwallet.wallets.teens.SendToContactFragment;
+
 
 public class SendToContactActivity extends Activity {
 
@@ -13,6 +15,11 @@ public class SendToContactActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.wallet_framework_activity_send_to_contact);
+        if (savedInstanceState == null) {
+            getFragmentManager().beginTransaction()
+                    .add(R.id.container, new SendToContactFragment())
+                    .commit();
+        }
     }
 
 

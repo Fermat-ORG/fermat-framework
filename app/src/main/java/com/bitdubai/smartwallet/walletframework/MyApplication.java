@@ -26,12 +26,13 @@ import com.bitdubai.smartwallet.R;
 public class MyApplication extends Application {
     private final static Handler handler = new Handler();
     public static Typeface mDefaultTypeface;
+    public static int mTAGID;
     public  static int mWalletId;
 
     private static CharSequence mTitle;
     private static Drawable oldBackground = null;
     private static int currentColor = 0xFF666666;
-private static ActionBar actionBar;
+    private static ActionBar actionBar;
     private static String walletStyle = "";
     private static PagerSlidingTabStrip tabs;
 
@@ -46,6 +47,13 @@ private static ActionBar actionBar;
     public static Typeface getDefaultTypeface() {
         return mDefaultTypeface;
     }
+
+    public static int getTagId() {
+        return mTAGID;
+    }
+
+    public static void setTagId(int TagId) { mTAGID = TagId; }
+
 
     public static void setDefaultTypeface(Typeface DefaultTypeface) {
         mDefaultTypeface = DefaultTypeface;
@@ -200,7 +208,7 @@ private static ActionBar actionBar;
     public static void changeColor(int newColor, Resources context) {
 
         if(tabs != null)
-         tabs.setIndicatorColor(newColor);
+            tabs.setIndicatorColor(newColor);
 
         // change ActionBar color just if an ActionBar is available
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
