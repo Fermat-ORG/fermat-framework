@@ -18,6 +18,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
+import android.support.v4.widget.DrawerLayout;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.util.TypedValue;
@@ -74,238 +75,56 @@ public class AccountDetailActivity extends FragmentActivity
 
 
 
-    public void onSendToContactIconClicked(View v) {
 
-        Intent intent;
-        intent = new Intent(this, SendToContactActivity.class);
-        startActivity(intent);
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
 
-        return;
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.wallet_framework_activity_account_detail);
 
-    }
+            // I get the action bar title id and put it on a text view in order to later change its color
+            int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
+            TextView abTitle = (TextView) findViewById(titleId);
+            abTitle.setTextColor(Color.WHITE);
 
-    public void onReceiveFromContactIconClicked(View v) {
+            Intent i=getIntent();
 
-        Intent intent;
-        intent = new Intent(this, ReceiveFromContactActivity.class);
-        startActivity(intent);
+            tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
 
-        return;
+            mTitle = "Account details";
 
-    }
+            ((MyApplication) this.getApplication()).setActionBarProperties(this, getWindow(), tabs, getActionBar(), getResources(), abTitle, mTitle.toString());
+            //super.onCreate(savedInstanceState);
+            //setContentView(R.layout.activity_main);
 
+            //getWindow().getDecorView().setBackgroundResource(R.drawable.wallet_wallpaper_yellow);
 
-    public void onChatOverTrxIconClicked(View v) {
+            pager = (ViewPager) findViewById(R.id.pager);
+            adapter = new MyPagerAdapter(getSupportFragmentManager());
 
-        Intent intent;
-        intent = new Intent(this, ChatOverTrxActivity.class);
-        startActivity(intent);
+            pager.setAdapter(adapter);
 
-        return;
+            final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
+                    .getDisplayMetrics());
+            pager.setPageMargin(pageMargin);
 
-    }
+            tabs.setViewPager(pager);
 
+            Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/CaviarDreams.ttf");
+            ((MyApplication) this.getApplication()).setDefaultTypeface(tf);
+            tabs.setTypeface(tf, 1);
+            //changeColor(currentColor);
 
-    public void onAvailableBalanceIconClicked(View v) {
-
-        Intent intent;
-        intent = new Intent(this, AvailableBalanceActivity.class);
-        startActivity(intent);
-
-        return;
-
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.wallet_framework_activity_framework);
+            tabs.setBackgroundResource(R.drawable.background_tiled_diagonal_light);
+            tabs.setDividerColor(0xFFBBBBBB);
 
 
-
-        // Change the title of the action bar and the typeface
-        SpannableString s = new SpannableString("Unidentified wallet");
-
-        // I get the action bar title id and put it on a text view in order to later change its color
-        int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
-        TextView abTitle = (TextView) findViewById(titleId);
-        abTitle.setTextColor(Color.WHITE);
-
-        Intent i=getIntent();
-        // String walletId =i.getStringExtra( "Wallet Id");
-
-        //  ((MyApplication) this.getApplication()).setWalletId(Integer.parseInt(walletId));
-
-        String color = "";
-
-        Drawable bg = getResources().getDrawable(R.drawable.transparent);
-        bg.setVisible(false,false);
-
-        Drawable wallpaper = getResources().getDrawable(R.drawable.transparent);
-
-
-        switch (((MyApplication) this.getApplication()).getWalletId() )
-        {
-            case 1:
-                mTitle = "Girl's savings";
-                s = new SpannableString(mTitle);
-                color = "#FFC2F1";
-                getActionBar().setIcon(getResources().getDrawable(R.drawable.icono_piggy_pink));
-                bg = getResources().getDrawable(R.drawable.wallet_wallpaper_pink);
-                bg.setVisible(true,false);
-                wallpaper = getResources().getDrawable(R.drawable.wallet_wallpaper_pink);
-                abTitle.setTextColor(Color.BLACK);
-                walletStyle = "Kids";
-                break;
-
-            case 2:
-                mTitle = "Boy's savings";
-                s = new SpannableString(mTitle);
-                color = "#84DCF5";
-                getActionBar().setIcon(getResources().getDrawable(R.drawable.icono_piggy_yellow));
-                bg = getResources().getDrawable(R.drawable.banner_kid_yellow_blue);
-                bg.setVisible(true,false);
-                wallpaper = getResources().getDrawable(R.drawable.wallet_wallpaper_yellow);
-                abTitle.setTextColor(Color.BLACK);
-                walletStyle = "Kids";
-                break;
-
-            case 3:
-                mTitle = "Ladies";
-                s = new SpannableString(mTitle);
-                color = "#F0E173";
-                getActionBar().setIcon(getResources().getDrawable(R.drawable.wallet_1));
-                wallpaper = getResources().getDrawable(R.drawable.background_tabs_diagonal_rotated);
-                abTitle.setTextColor(Color.BLACK);
-                walletStyle = "Young";
-                break;
-
-            case 4:
-                mTitle = "Young";
-                s = new SpannableString(mTitle);
-                color = "#1EE635";
-                getActionBar().setIcon(getResources().getDrawable(R.drawable.wallet_3));
-                wallpaper = getResources().getDrawable(R.drawable.background_tiled_diagonal_light);
-                abTitle.setTextColor(Color.BLACK);
-                walletStyle = "Club";
-                break;
-
-            case 5:
-                mTitle = "Professional";
-                s = new SpannableString(mTitle);
-                color = "#F0C64A";
-                getActionBar().setIcon(getResources().getDrawable(R.drawable.wallet_3));
-                wallpaper = getResources().getDrawable(R.drawable.background_tiled_diagonal_light);
-                abTitle.setTextColor(Color.BLACK);
-                walletStyle = "Club";
-                break;
-
-            case 6:
-                mTitle = "Gucci";
-                s = new SpannableString(mTitle);
-                color = "#9B80FF";
-                getActionBar().setIcon(getResources().getDrawable(R.drawable.wallet_3));
-                wallpaper = getResources().getDrawable(R.drawable.background_tiled_diagonal_light);
-                abTitle.setTextColor(Color.BLACK);
-                walletStyle = "Club";
-                break;
-
-            case 7:
-                mTitle = "Carrefour";
-                s = new SpannableString(mTitle);
-                color = "#E8E8E8";
-                getActionBar().setIcon(getResources().getDrawable(R.drawable.icono_retailer_1));
-                wallpaper = getResources().getDrawable(R.drawable.background_tiled_diagonal_light);
-                abTitle.setTextColor(Color.BLUE);
-                walletStyle = "Club";
-                break;
-
-            case 8:
-                mTitle = "Banco Itau";
-                s = new SpannableString(mTitle);
-                color = "#AB0A80";
-                getActionBar().setIcon(getResources().getDrawable(R.drawable.icono_banco_1));
-                wallpaper = getResources().getDrawable(R.drawable.background_tiled_diagonal_light);
-                abTitle.setTextColor(Color.YELLOW);
-                walletStyle = "Club";
-                break;
-
-            case 9:
-                mTitle = "Banco Popular";
-                s = new SpannableString(mTitle);
-                color = "#FF0004";
-                getActionBar().setIcon(getResources().getDrawable(R.drawable.icono_banco_2));
-                wallpaper = getResources().getDrawable(R.drawable.background_tiled_diagonal_light);
-                abTitle.setTextColor(Color.WHITE);
-                walletStyle = "Club";
-                break;
-
-            case 10:
-                mTitle = "Boca Juniors";
-                s = new SpannableString(mTitle);
-                color = "#3864F5";
-                getActionBar().setIcon(getResources().getDrawable(R.drawable.icono_club_1));
-                wallpaper = getResources().getDrawable(R.drawable.background_tiled_diagonal_light);
-                abTitle.setTextColor(Color.YELLOW);
-                bg = getResources().getDrawable(R.drawable.banner_club_1);
-                bg.setVisible(true,false);
-                walletStyle = "Club";
-                break;
-
-            case 11:
-                mTitle = "Barcelona";
-                s = new SpannableString(mTitle);
-                color = "#DE186B";
-                getActionBar().setIcon(getResources().getDrawable(R.drawable.icono_club_2));
-
-                abTitle.setTextColor(Color.WHITE);
-                wallpaper = getResources().getDrawable(R.drawable.wallet_wallpaper_club_2);
-                bg = getResources().getDrawable(R.drawable.banner_club_2);
-                bg.setVisible(true,false);
-                walletStyle = "Club";
-                break;
         }
 
 
-        s.setSpan(new MyTypefaceSpan(this, "CaviarDreams.ttf"), 0, s.length(),
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
 
-
-        tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-        pager = (ViewPager) findViewById(R.id.pager);
-        adapter = new MyPagerAdapter(getSupportFragmentManager());
-
-        pager.setAdapter(adapter);
-
-        final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
-                .getDisplayMetrics());
-        pager.setPageMargin(pageMargin);
-
-        tabs.setViewPager(pager);
-
-        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/CaviarDreams.ttf");
-        ((MyApplication) this.getApplication()).setDefaultTypeface(tf);
-        tabs.setTypeface(tf,1 );
-        //changeColor(currentColor);
-
-        tabs.setBackgroundResource(R.drawable.background_tiled_diagonal_light);
-        tabs.setDividerColor(0xFFBBBBBB);
-
-
-        changeColor(Color.parseColor(color));
-
-        if (bg.isVisible() == true) {getActionBar().setBackgroundDrawable(bg);}
-
-
-
-    }
-
-
-
-
-    //***
+            //***
     public void onSectionAttached(int number) {
         switch (number) {
             case 1:
