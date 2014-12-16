@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bitdubai.smartwallet.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -34,12 +35,11 @@ public class StoreMapFragment extends Fragment {
     }
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // inflat and return the layout
-        View v = inflater.inflate(R.layout.fragment_location_info, container,
+        View v = inflater.inflate(R.layout.wallets_teens_fragment_store_map, container,
                 false);
         mMapView = (MapView) v.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
@@ -54,8 +54,8 @@ public class StoreMapFragment extends Fragment {
 
         googleMap = mMapView.getMap();
         // latitude and longitude
-        double latitude = 17.385044;
-        double longitude = 78.486671;
+        double latitude = 47.497912;
+        double longitude = 19.040235;
 
         // create marker
         MarkerOptions marker = new MarkerOptions().position(
@@ -68,7 +68,7 @@ public class StoreMapFragment extends Fragment {
         // adding marker
         googleMap.addMarker(marker);
         CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(17.385044, 78.486671)).zoom(12).build();
+                .target(new LatLng(47.497912, 19.040235)).zoom(12).build();
         googleMap.animateCamera(CameraUpdateFactory
                 .newCameraPosition(cameraPosition));
 
@@ -99,3 +99,6 @@ public class StoreMapFragment extends Fragment {
         super.onLowMemory();
         mMapView.onLowMemory();
     }
+
+
+}
