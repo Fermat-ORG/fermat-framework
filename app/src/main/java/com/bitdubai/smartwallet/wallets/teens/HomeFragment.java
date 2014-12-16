@@ -260,8 +260,8 @@ public class HomeFragment extends ListFragment implements LoaderManager.LoaderCa
 
             account_types = new String[]{"1 current and 2 saving accounts"};
 
-            balances = new String[]{"$2,934.50"};
-            balances_available = new String[]{"$2,467.00 available"};
+            balances = new String[]{"$5,693.50"};
+            balances_available = new String[]{"$1,970.00 available"};
 
             View view;
             view = mInflater.inflate(R.layout.wallets_teens_fragment_home_list_item, parent, false);
