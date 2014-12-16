@@ -102,12 +102,17 @@ public  class AccountDetailFiltersFragment extends Fragment {
         tv = (TextView) rootView.findViewById(R.id.notes);
         tv.setTypeface(MyApplication.getDefaultTypeface());
 
+        tv = (TextView) rootView.findViewById(R.id.search_parameters);
+        tv.setTypeface(MyApplication.getDefaultTypeface());
+
         tv = (TextView) rootView.findViewById(R.id.address);
         tv.setTypeface(MyApplication.getDefaultTypeface());
 
         tv = (TextView) rootView.findViewById(R.id.amount);
         tv.setTypeface(MyApplication.getDefaultTypeface());
 
+        tv = (TextView) rootView.findViewById(R.id.amount2);
+        tv.setTypeface(MyApplication.getDefaultTypeface());
 
         tv = (TextView) rootView.findViewById(R.id.contact_name);
         tv.setTypeface(MyApplication.getDefaultTypeface());

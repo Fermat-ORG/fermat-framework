@@ -99,7 +99,7 @@ public  class AccountDetailAccountFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.wallets_teens_fragment_home_list_item, container, false);
+        rootView = inflater.inflate(R.layout.wallets_teens_fragment_account_detail_account, container, false);
 
 
            TextView tv;
@@ -113,6 +113,8 @@ public  class AccountDetailAccountFragment extends Fragment {
         tv = (TextView) rootView.findViewById(R.id.balance_available);
         tv.setTypeface(MyApplication.getDefaultTypeface());
 
+        tv = (TextView) rootView.findViewById(R.id.account_alias);
+        tv.setTypeface(MyApplication.getDefaultTypeface());
 
         return rootView;
     }

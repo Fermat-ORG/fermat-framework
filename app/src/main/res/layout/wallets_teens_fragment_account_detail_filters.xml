@@ -3,111 +3,47 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/background_tabs_diagonal_rotated"
-    >
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/background_tabs_diagonal_rotated">
+    <TextView android:id="@+id/search_parameters"
         android:layout_width="match_parent"
-        android:layout_height="166dp"
-        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        android:text="Seach parameters"
+        android:textSize="20sp"
         android:paddingLeft="7dip"
         android:paddingRight="7dip"
-        android:paddingBottom="7dip"
-        android:paddingTop="7dip"
-        android:id="@+id/send_form"
-        >
-        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="106dp"
-            android:layout_height="150dp"
-            >
-            <ImageView
-                android:id="@+id/profile_picture"
-                android:layout_width="106dp"
-                android:layout_height="106dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/new_contact_profile_picture"
-                android:layout_gravity="center"
-                />
-            <ImageView
-                android:id="@+id/icon_edit_profile"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_menu_camera"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true" />
-            <ImageView
-                android:id="@+id/icon_edit_picture"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_menu_gallery"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentBottom="true"
-                />
-        </RelativeLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:layout_alignParentRight="true"
-            android:gravity="center|end" >
+        android:paddingTop="3dip"
+        android:paddingBottom="3dip"/>
             <EditText
                 android:id="@+id/contact_name"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:textColor="#FF666666"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:hint="New contact name"
-                android:gravity="right"
+                android:hint="Contact name"
+                android:gravity="left"
                 android:paddingLeft="7dip"
                 android:paddingRight="7dip"
                 android:paddingTop="3dip"
                 android:paddingBottom="3dip"
-                android:layout_alignParentBottom="true"
-                />
-        </LinearLayout>
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingLeft="7dip" >
-
+                android:layout_alignParentBottom="true"/>
         <EditText android:id="@+id/address"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:textColor="#FF666666"
             android:textSize="20sp"
             android:textStyle="normal"
-            android:hint="Crypto Address"
+            android:hint="Transaction type"
             android:paddingTop="7dip"
             android:paddingLeft="7dip"
-            android:paddingRight="7dip"
+            android:paddingRight="14dip"
             android:paddingBottom="7dip"
-            android:layout_gravity="end"
-            android:layout_weight="1"/>
-
-        <ImageView
-            android:id="@+id/scan_qr"
-            android:layout_width="50dp"
-            android:layout_height="40dp"
-            android:src="@drawable/ic_menu_camera"
-            />
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="7dip"
-        android:paddingRight="7dip">
+            android:layout_gravity="end"/>
         <EditText
             android:id="@+id/notes"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:textColor="#FF666666"
             android:textSize="20sp"
@@ -115,23 +51,14 @@
             android:hint="Notes"
             android:paddingTop="7dip"
             android:paddingLeft="14dip"
-            android:paddingRight="14dip"
+            android:paddingRight="7dip"
             android:paddingBottom="7dip"
             android:layout_gravity="end" />
-    </LinearLayout>
-
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="7dip"
-        >
         <EditText
             android:id="@+id/amount"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:gravity="end"
+            android:layout_height="wrap_content"
+            android:gravity="start"
             android:paddingLeft="14dip"
             android:paddingRight="7dip"
             android:paddingTop="7dip"
@@ -139,14 +66,20 @@
             android:textColor="#FF666666"
             android:textSize="20sp"
             android:textStyle="normal"
-            android:hint="$0.00"
-            android:layout_weight="0.54"
+            android:hint="Higher than $0.00"
             android:inputType="number"/>
-        <ImageView
-            android:id="@+id/send_button"
-            android:layout_width="50dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            android:src="@drawable/ic_menu_send"/>
-    </LinearLayout>
+    <EditText
+        android:id="@+id/amount2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:paddingLeft="14dip"
+        android:paddingRight="7dip"
+        android:paddingTop="7dip"
+        android:paddingBottom="7dip"
+        android:textColor="#FF666666"
+        android:textSize="20sp"
+        android:textStyle="normal"
+        android:hint="Lower than $0.00"
+        android:inputType="number"/>
 </LinearLayout>

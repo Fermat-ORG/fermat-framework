@@ -28,8 +28,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-
 import com.bitdubai.smartwallet.wallets.teens.AccountDetailAccountFragment;
 import com.bitdubai.smartwallet.wallets.teens.AccountDetailAllFragment;
 import com.bitdubai.smartwallet.wallets.teens.AccountDetailCreditsFragment;
@@ -38,18 +36,11 @@ import com.bitdubai.smartwallet.wallets.teens.AccountDetailFiltersFragment;
 import com.bitdubai.smartwallet.wallets.teens.DiscountsFragment;
 import com.bitdubai.smartwallet.wallets.teens.HomeFragment;
 import com.bitdubai.smartwallet.wallets.teens.SendFragment;
-
-
-
 import com.bitdubai.smartwallet.wallets.teens.BalanceFragment;
-
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.wallets.teens.ReceiveFragment;
 import com.bitdubai.smartwallet.wallets.teens.RefillFragment;
 import com.bitdubai.smartwallet.wallets.teens.StoresFragment;
-
-
-
 public class AccountDetailActivity extends FragmentActivity
         {
 

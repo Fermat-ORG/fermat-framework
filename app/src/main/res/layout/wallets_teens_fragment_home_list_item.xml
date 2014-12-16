@@ -46,11 +46,7 @@
                 android:src="@drawable/account_type_savings_2_small"
                 android:layout_gravity="center"
                 />
-
-
-
         </LinearLayout>
-
 
     <LinearLayout
         android:layout_width="match_parent"
