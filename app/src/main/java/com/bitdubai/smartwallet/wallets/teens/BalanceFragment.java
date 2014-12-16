@@ -251,8 +251,8 @@ public class BalanceFragment extends ListFragment implements LoaderManager.Loade
 
             account_types = new String[]{"Saving account", "Current account", "Saving account"};
             account_aliases = new String[]{"My savings", "Pocket money", "Holiday savings"};
-            balances = new String[]{"$2,356.00", "$78.50", "$500.00"};
-            balances_available = new String[]{"$2,112.00 available", "$55.00 available", "$300.00 available"};
+            balances = new String[]{"$4,615.00", "$78.50", "$500.00"};
+            balances_available = new String[]{"$1,615.00 available", "$55.00 available", "$300.00 available"};
 
             View view;
 

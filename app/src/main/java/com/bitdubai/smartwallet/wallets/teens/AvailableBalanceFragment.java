@@ -17,6 +17,8 @@ import com.bitdubai.smartwallet.walletframework.MyApplication;
 import com.bitdubai.smartwallet.walletframework.SendToNewContactActivity;
 import com.bitdubai.smartwallet.walletframework.SentDetailActivity;
 
+import org.w3c.dom.Text;
+
 
 public  class AvailableBalanceFragment extends android.app.Fragment {
 
@@ -24,16 +26,18 @@ public  class AvailableBalanceFragment extends android.app.Fragment {
 
     View rootView;
     ExpandableListView lv;
-    private String[] availability;
+    private String[] availabilities;
     private String[] types;
     private String[] contacts;
     private String[] amounts;
     private String[] whens;
+    private String[] crypto_amounts;
     private String[] notes;
     private String[] pictures;
     private String[][] transactions;
     String[][] transactions_amounts;
     private String[][] transactions_whens;
+
 
 
 
@@ -46,43 +50,43 @@ public  class AvailableBalanceFragment extends android.app.Fragment {
     }
 
 
-    public void onCreate(Bundle savedInstanceState) {
+     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        availability = new String[]{ "10.05", "5.23", "7.30", "-2.25", "-7.04"};
-        types = new String[]{ "received", "received", "refill", "received", "transfer"};
-        contacts = new String[]{ "", "Luis Fernando Molina", "Guillermo Villanueva", "Pedro Perrotta", "Mariana Duyos"};
-        amounts = new String[]{ "", "$25.00 of $325.00", "$1,400.00", "$0.50", "$25.00"};
-        whens = new String[]{ "", "3 min ago", "2 hours ago", "today 9:24 AM", "yesterday"};
-        notes = new String[]{"",  "Electricity bill", "Flat rent", "Test address", "More pictures"};
-
-        pictures = new String[]{"", "luis_profile_picture", "guillermo_profile_picture", "pedro_profile_picture", "mariana_profile_picture"};
+        availabilities = new String[]{ "10.05%", "-1.23%", "7.30%", "2.25%", "-7.04%","11.84%","-5.52%"};
+        types = new String[]{ "Received $200.00 ", "Received $3,000.00", "Refill $350.00", "Refill $1,500.00", "Received $400.00","Refill $250.00","received $600.00"};
+        contacts = new String[]{"Lucia Alarcon De Zam...", "Juan Luis R. Pons","Kalustyan´s","Kings Super Market", "Karina Rodriguez","D´Agostino", "Taylor Backus"};
+        amounts = new String[]{"90.00", "$2,000.00", "$25.00", "$1,500.00","$400.00","$0.00","$600.00"};
+        whens = new String[]{"4 hours ago", "5 hours ago", "yesterday", "yesterday","31 dec 14","5 sep 14","1 year ago"};
+        notes = new String[]{"New telephone", "Old desk", "For electricity bill", "for this week expenses","Car oil", "Refill test","Computer monitor"};
+        pictures = new String[]{"lucia_profile_picture", "juan_profile_picture", "refill_2", "refill_4","karina_profile_picture","refill_1","taylor_profile_picture"};
+        crypto_amounts = new String[]{"mBTC 10.3475","mBTC 150.8347 ","mBTC 15.9304","mBTC 8.1923","mBTC 20.5743","mBTC 12.8724","mBTC 30.4365"};
 
         transactions = new String[][]{
 
+
                 {},
-                {"Electricity bill","New chair","New desk"},
-                {"Flat rent","Flat rent","Flat rent","interest paid :(","Flat rent","Car repair","Invoice #2,356 that should have been paid on August"},
-                {"Test address"},
-                {"More pictures"}
+                {},
+                {},
+                {}
         };
 
         transactions_amounts = new String[][]{
 
+
                 {},
-                {"mBTC 2.4322","mBTC 6.4255","mBTC 4.1266"},
-                {"$1,400.00","$1,200.00","$1,400.00","$40.00","$1,900.00","$10,550.00","$1.00"},
-                {"$0.50"},
-                {"$25.00"}
+                {},
+                {},
+                {}
         };
 
         transactions_whens = new String[][]{
 
+
                 {},
-                {"3 min ago","15 min ago","yesterday"},
-                {"2 hours ago","yesterday","last Friday","last Friday","14 May 14","11 May 14","5 Jan 14"},
-                {"today 9:24 AM"},
-                {"yesterday"}
+                {},
+                {},
+                {}
         };
 
     }
@@ -123,10 +127,7 @@ public  class AvailableBalanceFragment extends android.app.Fragment {
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
 
                 if (groupPosition == 0) {
-                    Intent intent;
-                    intent = new Intent(getActivity(), SendToNewContactActivity.class);
-                    startActivity(intent);
-                    return true;
+                    return false;
                 }
                 else
                 {
@@ -194,6 +195,7 @@ public  class AvailableBalanceFragment extends android.app.Fragment {
             ViewHolder when;
 
 
+
             //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
             // if (convertView == null) {
             if (1 == 1) {
@@ -232,10 +234,12 @@ public  class AvailableBalanceFragment extends android.app.Fragment {
             ViewHolder when;
             ViewHolder note;
             ImageView profile_picture;
+            ViewHolder type;
+            ViewHolder availability;
+            ViewHolder crypto_amount;
 
 
-
-            //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
+            //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototipo
             // if (convertView == null) {
             if (1 == 1) {
                 convertView = inf.inflate(R.layout.wallets_teens_fragment_available_balance_list_header, parent, false);
@@ -244,17 +248,26 @@ public  class AvailableBalanceFragment extends android.app.Fragment {
 
                 switch (groupPosition)
                 {
+                    case 0:
+                        profile_picture.setImageResource(R.drawable.lucia_profile_picture);
+                        break;
                     case 1:
-                        profile_picture.setImageResource(R.drawable.luis_profile_picture);
+                        profile_picture.setImageResource(R.drawable.juan_profile_picture);
                         break;
                     case 2:
-                        profile_picture.setImageResource(R.drawable.guillermo_profile_picture);
+                        profile_picture.setImageResource(R.drawable.refill_2);
                         break;
                     case 3:
-                        profile_picture.setImageResource(R.drawable.pedro_profile_picture);
+                        profile_picture.setImageResource(R.drawable.refill_4);
                         break;
                     case 4:
-                        profile_picture.setImageResource(R.drawable.mariana_profile_picture);
+                        profile_picture.setImageResource(R.drawable.karina_profile_picture);
+                        break;
+                    case 5:
+                        profile_picture.setImageResource(R.drawable.refill_1);
+                        break;
+                    case 6:
+                        profile_picture.setImageResource(R.drawable.taylor_profile_picture);
                         break;
                 }
 
@@ -270,6 +283,21 @@ public  class AvailableBalanceFragment extends android.app.Fragment {
                 amount.text.setTypeface(MyApplication.getDefaultTypeface());
 
                 amount.text.setText(amounts[groupPosition].toString());
+
+                availability = new ViewHolder();
+                availability.text = (TextView) convertView.findViewById(R.id.availability);
+                availability.text.setTypeface(MyApplication.getDefaultTypeface());
+                availability.text.setText(availabilities[groupPosition].toString());
+
+                type = new ViewHolder();
+                type.text = (TextView) convertView.findViewById(R.id.type);
+                type.text.setTypeface(MyApplication.getDefaultTypeface());
+                type.text.setText(types[groupPosition].toString());
+
+                crypto_amount = new ViewHolder();
+                crypto_amount.text = (TextView) convertView.findViewById(R.id.crypto_amount);
+                crypto_amount.text.setTypeface(MyApplication.getDefaultTypeface());
+                crypto_amount.text.setText(crypto_amounts[groupPosition].toString());
 
                 when = new ViewHolder();
                 when.text = (TextView) convertView.findViewById(R.id.when);
