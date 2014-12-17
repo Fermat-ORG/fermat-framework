@@ -8,16 +8,12 @@
     android:paddingLeft="7dip"
     android:paddingRight="7dip"
     android:paddingBottom="7dip"
-    android:paddingTop="7dip"
-    >
+    android:paddingTop="7dip">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="106dp"
         android:layout_height="106dp"
-        android:background="#77000000"
-        >
-
-
+        android:background="#77000000">
 
         <ImageView
             android:id="@+id/profile_picture"
@@ -25,12 +21,7 @@
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
             android:src="@drawable/luis_profile_picture"
-            android:layout_gravity="center"
-
-            />
-
-
-
+            android:layout_gravity="center"/>
 
         <ImageView
             android:id="@+id/icon_edit_profile"
@@ -43,26 +34,20 @@
             android:paddingLeft="7dp"
             android:paddingRight="7dp"
             android:paddingBottom="7dp"
-            android:paddingTop="7dp"
-            android:onClick="onChatOverTrxIconClicked"
-            />
-
+            android:paddingTop="7dp"/>
 
         <ImageView
-            android:id="@+id/icon_receive_from_contact"
+            android:id="@+id/icon_send_to_contact"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_action_receive_now"
+            android:src="@drawable/ic_action_send_now"
             android:layout_alignParentLeft="true"
             android:layout_alignParentBottom="true"
             android:paddingLeft="7dp"
             android:paddingRight="7dp"
             android:paddingBottom="7dp"
-            android:paddingTop="7dp"
-            android:onClick="onReceiveFromContactIconClicked"
-            />
-
+            android:paddingTop="7dp"/>
 
     </RelativeLayout>
 
@@ -70,33 +55,47 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentRight="true">
 
-        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/amount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:paddingLeft="7dip"
-            android:paddingRight="7dip"
-            android:paddingTop="3dip"
-            android:paddingBottom="3dip"
-            android:textColor="#FF666666"
-            android:textSize="25sp"
-            android:textStyle="normal"
-            android:text="$0.00"
+            <TextView
+                android:id="@+id/availability"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center|end"
+                android:paddingLeft="7dip"
+                android:paddingRight="7dip"
+                android:paddingTop="3dip"
+                android:paddingBottom="3dip"
+                android:textColor="#FF666666"
+                android:textSize="12sp"
+                android:textStyle="normal"
+                android:text="+7.22%"/>
 
-            android:layout_gravity="end" />
+            <TextView
+                android:id="@+id/amount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center|end"
+                android:paddingLeft="7dip"
+                android:paddingRight="7dip"
+                android:paddingTop="3dip"
+                android:paddingBottom="3dip"
+                android:textColor="#FF666666"
+                android:textSize="25sp"
+                android:textStyle="normal"
+                android:text="$0.00"
+                android:layout_gravity="end" />
 
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-
-            >
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/notes"
@@ -108,11 +107,10 @@
                 android:paddingTop="3dip"
                 android:paddingBottom="3dip"
                 android:textColor="#FF666666"
-                android:textSize="15sp"
+                android:textSize="14sp"
                 android:textStyle="normal"
                 android:text="notes"
                 android:layout_gravity="start" />
-
 
             <TextView
                 android:id="@+id/when"
@@ -123,28 +121,68 @@
                 android:paddingTop="3dip"
                 android:paddingBottom="3dip"
                 android:textColor="#FF666666"
-                android:textSize="15sp"
+                android:textSize="14sp"
                 android:textStyle="normal"
                 android:text="yesterday"
-                android:gravity="end" />
-
+                android:gravity="center|end" />
 
         </LinearLayout>
 
-
-        <TextView
-            android:id="@+id/contact_name"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center|end"
-            android:paddingLeft="7dip"
-            android:paddingRight="7dip"
-            android:paddingTop="3dip"
-            android:paddingBottom="3dip"
-            android:textColor="#FF666666"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:text="New contact"/>
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/contact_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center|end"
+                android:paddingLeft="7dip"
+                android:paddingRight="7dip"
+                android:paddingTop="3dip"
+                android:paddingBottom="3dip"
+                android:textColor="#FF666666"
+                android:textSize="18sp"
+                android:textStyle="normal"
+                android:text="New contact"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:paddingLeft="7dip"
+                android:paddingRight="7dip"
+                android:paddingTop="3dip"
+                android:paddingBottom="3dip"
+                android:textColor="#FF666666"
+                android:textSize="12sp"
+                android:textStyle="normal"
+                android:text="type"/>
+
+            <TextView
+                android:id="@+id/crypto_amount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="7dip"
+                android:paddingRight="7dip"
+                android:paddingTop="3dip"
+                android:paddingBottom="3dip"
+                android:textColor="#FF666666"
+                android:textSize="12sp"
+                android:textStyle="normal"
+                android:text="mBTC 13.5434"
+                android:gravity="end" />
+
+        </LinearLayout>
 
     </LinearLayout>
 

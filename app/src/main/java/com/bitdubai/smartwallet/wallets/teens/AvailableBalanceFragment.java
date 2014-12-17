@@ -328,16 +328,8 @@ public  class AvailableBalanceFragment extends android.app.Fragment {
             return true;
         }
 
-
-
-
-
         private class ViewHolder {
             TextView text;
         }
     }
-
-
-
 }
-

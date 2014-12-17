@@ -105,6 +105,12 @@ public  class AccountDetailFiltersFragment extends Fragment {
         tv = (TextView) rootView.findViewById(R.id.search_parameters);
         tv.setTypeface(MyApplication.getDefaultTypeface());
 
+        tv = (TextView) rootView.findViewById(R.id.between);
+        tv.setTypeface(MyApplication.getDefaultTypeface());
+
+        tv = (TextView) rootView.findViewById(R.id.and);
+        tv.setTypeface(MyApplication.getDefaultTypeface());
+
         tv = (TextView) rootView.findViewById(R.id.address);
         tv.setTypeface(MyApplication.getDefaultTypeface());
 
