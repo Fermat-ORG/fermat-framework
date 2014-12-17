@@ -56,7 +56,7 @@ public  class AvailableBalanceFragment extends android.app.Fragment {
         availabilities = new String[]{ "10.05%", "-1.23%", "7.30%", "2.25%", "-7.04%","11.84%","-5.52%"};
         types = new String[]{ "Received $200.00 ", "Received $3,000.00", "Refill $350.00", "Refill $1,500.00", "Received $400.00","Refill $250.00","received $600.00"};
         contacts = new String[]{"Lucia Alarcon De Zam...", "Juan Luis R. Pons","Kalustyan´s","Kings Super Market", "Karina Rodriguez","D´Agostino", "Taylor Backus"};
-        amounts = new String[]{"90.00", "$2,000.00", "$25.00", "$1,500.00","$400.00","$0.00","$600.00"};
+        amounts = new String[]{"$90.00", "$2,000.00", "$25.00", "$1,500.00","$400.00","$0.00","$600.00"};
         whens = new String[]{"4 hours ago", "5 hours ago", "yesterday", "yesterday","31 dec 14","5 sep 14","1 year ago"};
         notes = new String[]{"New telephone", "Old desk", "For electricity bill", "for this week expenses","Car oil", "Refill test","Computer monitor"};
         pictures = new String[]{"lucia_profile_picture", "juan_profile_picture", "refill_2", "refill_4","karina_profile_picture","refill_1","taylor_profile_picture"};
@@ -287,7 +287,7 @@ public  class AvailableBalanceFragment extends android.app.Fragment {
                 availability = new ViewHolder();
                 availability.text = (TextView) convertView.findViewById(R.id.availability);
                 availability.text.setTypeface(MyApplication.getDefaultTypeface());
-                availability.text.setText(availabilities[groupPosition].toString());
+
 
                 type = new ViewHolder();
                 type.text = (TextView) convertView.findViewById(R.id.type);
