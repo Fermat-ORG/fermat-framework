@@ -1,15 +1,20 @@
 package com.bitdubai.smartwallet.walletframework;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.wallets.teens.SendToContactFragment;
 
 
 public class SendToContactActivity extends Activity {
+
+    private PagerSlidingTabStrip tabs;
+    private CharSequence mTitle = "Send to contact";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +25,13 @@ public class SendToContactActivity extends Activity {
                     .add(R.id.container, new SendToContactFragment())
                     .commit();
         }
+        tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+
+        int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
+        TextView abTitle = (TextView) findViewById(titleId);
+        abTitle.setTextColor(Color.WHITE);
+        ((MyApplication) this.getApplication()).setActionBarProperties(this,getWindow(),tabs, getActionBar(), getResources(),abTitle, mTitle.toString());
+
     }
 
 
