@@ -1,7 +1,6 @@
 package com.bitdubai.smartwallet.walletstore;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -23,7 +22,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
@@ -41,7 +39,7 @@ import com.bitdubai.smartwallet.wallets.teens.StoreStoreFragment;
 
 
 
-public class StoreFrontActivity extends FragmentActivity
+public class WalletActivity extends FragmentActivity
 {
 
     private final Handler handler = new Handler();
@@ -70,7 +68,7 @@ public class StoreFrontActivity extends FragmentActivity
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.wallet_store_activity_store_front);
+        setContentView(R.layout.wallet_framework_activity_store);
 
         // I get the action bar title id and put it on a text view in order to later change its color
         int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
@@ -82,7 +80,7 @@ public class StoreFrontActivity extends FragmentActivity
         tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
 
 
-       // ((MyApplication) this.getApplication()).setActionBarProperties(this, getWindow(), tabs, getActionBar(), getResources(), abTitle, mTitle.toString());
+        //((MyApplication) this.getApplication()).setActionBarProperties(this, getWindow(), tabs, getActionBar(), getResources(), abTitle, mTitle.toString());
         //super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_main);
 
@@ -104,13 +102,11 @@ public class StoreFrontActivity extends FragmentActivity
         tabs.setTypeface(tf, 1);
         //changeColor(currentColor);
 
-        //tabs.setBackgroundResource(R.drawable.background_tiled_cross_light);
         tabs.setDividerColor(0xFFFFFFFF);
         tabs.setIndicatorColor(0xFFFFFFFF);
         tabs.setIndicatorHeight(9);
         tabs.setBackgroundColor(0xFF87D2FA);
         tabs.setTextColor(0xFFFFFFFF);
-
     }
 
 
@@ -268,7 +264,7 @@ public class StoreFrontActivity extends FragmentActivity
 
         private String[] titles;
         private String[] titles_1 = { };
-        private String[] titles_2 = { "All", "Free", "Paid", "Accepted nearby"};
+        private String[] titles_2 = { "Wallet", "Reviews", "Cost", "Company", "Statistics"};
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -307,16 +303,22 @@ public class StoreFrontActivity extends FragmentActivity
             Fragment currentFragment;
             switch (position) {
                 case 0:
-                    currentFragment =   AllFragment.newInstance(position);
+                    currentFragment =   StoreStoreFragment.newInstance(position);
                     break;
                 case 1:
-                    currentFragment =   FreeFragment.newInstance(position);
+                    currentFragment =   RefillFragment.newInstance(position);
                     break;
                 case 2:
-                    currentFragment =  PaidFragment.newInstance(position);
+                    currentFragment =  SendFragment.newInstance(position);
                     break;
                 case 3:
-                    currentFragment =  AcceptedNearbyFragment.newInstance(position);
+                    currentFragment =  StoreChatFragment.newInstance(position);
+                    break;
+                case 4:
+                    currentFragment =  AccountDetailFiltersFragment.newInstance(position);
+                    break;
+                case 5:
+                    currentFragment =  StoreMapFragment.newInstance(position);
                     break;
 
                 default:
@@ -327,6 +329,8 @@ public class StoreFrontActivity extends FragmentActivity
         }
 
     }
+
+
 
 
 

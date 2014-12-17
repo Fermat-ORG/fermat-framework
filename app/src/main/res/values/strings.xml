@@ -20,9 +20,7 @@
     <string name="title_section9">Clones</string>
     <string name="title_section10">Childs</string>
     <string name="title_section11">Exit</string>
-
     <string name="app_name">Smart Wallet</string>
-
     <string name="button_send">Send</string>
     <string name="title_activity_main">Young Wallet</string>
     <string name="action_search">Buscar</string>
@@ -85,5 +83,6 @@
     <string name="title_activity_chat_over_trx">Chat Over Trx Activity</string>
     <string name="title_activity_blank_activity_with_fragment">BlankActivityWithFragment</string>
     <string name="title_activity_balance_available">BalanceAvailableActivity</string>
+    <string name="title_activity_wallet">Wallet Activity</string>
 
 </resources>
