@@ -85,4 +85,11 @@
     <string name="title_activity_balance_available">BalanceAvailableActivity</string>
     <string name="title_activity_wallet">Wallet Activity</string>
 
+    <string-array name="account_name">
+        <item>Saving account: My savings</item>
+        <item>Current account: Pocket money</item>
+        <item>Saving account: Holiday saving</item>
+
+    </string-array>
+
 </resources>
