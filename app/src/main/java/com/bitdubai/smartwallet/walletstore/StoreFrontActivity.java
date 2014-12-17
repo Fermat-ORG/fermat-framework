@@ -265,7 +265,7 @@ public class StoreFrontActivity extends FragmentActivity
 
         private String[] titles;
         private String[] titles_1 = { };
-        private String[] titles_2 = { "Store", "Products", "Reviews", "Chat", "History", "Map"};
+        private String[] titles_2 = { "All", "Free", "Paid", "Accepted nearby"};
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -304,22 +304,16 @@ public class StoreFrontActivity extends FragmentActivity
             Fragment currentFragment;
             switch (position) {
                 case 0:
-                    currentFragment =   StoreStoreFragment.newInstance(position);
+                    currentFragment =   AllFragment.newInstance(position);
                     break;
                 case 1:
-                    currentFragment =   RefillFragment.newInstance(position);
+                    currentFragment =   FreeFragment.newInstance(position);
                     break;
                 case 2:
-                    currentFragment =  SendFragment.newInstance(position);
+                    currentFragment =  PaidFragment.newInstance(position);
                     break;
                 case 3:
-                    currentFragment =  StoreChatFragment.newInstance(position);
-                    break;
-                case 4:
-                    currentFragment =  AccountDetailFiltersFragment.newInstance(position);
-                    break;
-                case 5:
-                    currentFragment =  StoreMapFragment.newInstance(position);
+                    currentFragment =  AcceptedNearbyFragment.newInstance(position);
                     break;
 
                 default:
