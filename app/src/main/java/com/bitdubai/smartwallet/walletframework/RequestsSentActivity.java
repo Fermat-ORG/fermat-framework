@@ -1,20 +1,55 @@
 package com.bitdubai.smartwallet.walletframework;
 
 import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
+import com.bitdubai.smartwallet.wallets.teens.RequestsSentFragment;
+import com.bitdubai.smartwallet.wallets.teens.SendToNewContactFragment;
 
 public class RequestsSentActivity extends Activity {
+
+
+    public void onChatOverTrxIconClicked(View v) {
+
+        Intent intent;
+        intent = new Intent(this, ChatOverTrxActivity.class);
+        startActivity(intent);
+
+        return;
+
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.wallet_framework_activity_requests_sent);
-    }
+        if (savedInstanceState == null) {
+            getFragmentManager().beginTransaction()
+                    .add(R.id.container, new RequestsSentFragment())
+                    .commit();
+        }
 
+        // I get the action bar title id and put it on a text view in order to later change its color
+        int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
+        TextView abTitle = (TextView) findViewById(titleId);
+        abTitle.setTextColor(Color.WHITE);
+
+
+        PagerSlidingTabStrip  tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+
+        ((MyApplication) this.getApplication()).setActionBarProperties(this,getWindow(),tabs, getActionBar(), getResources(),abTitle, "Resquests sent");
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
