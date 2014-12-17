@@ -1,4 +1,4 @@
-package com.bitdubai.smartwallet.walletframework;
+package com.bitdubai.smartwallet.walletstore;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -17,10 +17,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-
-import android.support.v4.widget.DrawerLayout;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -30,29 +26,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-
-import com.bitdubai.smartwallet.wallets.teens.AccountDetailAccountFragment;
-import com.bitdubai.smartwallet.wallets.teens.AccountDetailAllFragment;
-import com.bitdubai.smartwallet.wallets.teens.AccountDetailCreditsFragment;
-import com.bitdubai.smartwallet.wallets.teens.AccountDetailDebitsFragment;
-import com.bitdubai.smartwallet.wallets.teens.AccountDetailFiltersFragment;
-import com.bitdubai.smartwallet.wallets.teens.DiscountsFragment;
-import com.bitdubai.smartwallet.wallets.teens.HomeFragment;
-import com.bitdubai.smartwallet.wallets.teens.SendFragment;
-
-
-
-import com.bitdubai.smartwallet.wallets.teens.BalanceFragment;
-
 import com.bitdubai.smartwallet.R;
-import com.bitdubai.smartwallet.wallets.teens.ReceiveFragment;
+import com.bitdubai.smartwallet.walletframework.MyApplication;
+import com.bitdubai.smartwallet.walletframework.MyLayoutInflaterFactory;
+import com.bitdubai.smartwallet.walletframework.PagerSlidingTabStrip;
+import com.bitdubai.smartwallet.walletframework.RequestsSentActivity;
+import com.bitdubai.smartwallet.walletframework.TabbedDialogFragment;
+import com.bitdubai.smartwallet.wallets.teens.AccountDetailFiltersFragment;
 import com.bitdubai.smartwallet.wallets.teens.RefillFragment;
-import com.bitdubai.smartwallet.wallets.teens.StoresFragment;
+import com.bitdubai.smartwallet.wallets.teens.SendFragment;
+import com.bitdubai.smartwallet.wallets.teens.StoreChatFragment;
+import com.bitdubai.smartwallet.wallets.teens.StoreMapFragment;
+import com.bitdubai.smartwallet.wallets.teens.StoreStoreFragment;
 
 
 
-public class AccountDetailActivity extends FragmentActivity
-        {
+public class StoreFrontActivity extends FragmentActivity
+{
 
     private final Handler handler = new Handler();
 
@@ -65,10 +55,10 @@ public class AccountDetailActivity extends FragmentActivity
 
     private String walletStyle = "";
 
-        /**
+    /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
-    private CharSequence mTitle;
+    private CharSequence mTitle = "Store";
     private Menu menu;
 
 
@@ -76,55 +66,54 @@ public class AccountDetailActivity extends FragmentActivity
 
 
 
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
 
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.wallet_framework_activity_account_detail);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.wallet_framework_activity_store);
 
-            // I get the action bar title id and put it on a text view in order to later change its color
-            int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
-            TextView abTitle = (TextView) findViewById(titleId);
-            abTitle.setTextColor(Color.WHITE);
+        // I get the action bar title id and put it on a text view in order to later change its color
+        int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
+        TextView abTitle = (TextView) findViewById(titleId);
+        abTitle.setTextColor(Color.WHITE);
 
-            Intent i=getIntent();
+        Intent i=getIntent();
 
-            tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-
-            mTitle = "Account details";
-
-            ((MyApplication) this.getApplication()).setActionBarProperties(this, getWindow(), tabs, getActionBar(), getResources(), abTitle, mTitle.toString());
-            //super.onCreate(savedInstanceState);
-            //setContentView(R.layout.activity_main);
-
-            //getWindow().getDecorView().setBackgroundResource(R.drawable.wallet_wallpaper_yellow);
-
-            pager = (ViewPager) findViewById(R.id.pager);
-            adapter = new MyPagerAdapter(getSupportFragmentManager());
-
-            pager.setAdapter(adapter);
-
-            final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
-                    .getDisplayMetrics());
-            pager.setPageMargin(pageMargin);
-
-            tabs.setViewPager(pager);
-
-            Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/CaviarDreams.ttf");
-            ((MyApplication) this.getApplication()).setDefaultTypeface(tf);
-            tabs.setTypeface(tf, 1);
-            //changeColor(currentColor);
-
-            tabs.setBackgroundResource(R.drawable.background_tiled_diagonal_light);
-            tabs.setDividerColor(0xFFBBBBBB);
+        tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
 
 
-        }
+       // ((MyApplication) this.getApplication()).setActionBarProperties(this, getWindow(), tabs, getActionBar(), getResources(), abTitle, mTitle.toString());
+        //super.onCreate(savedInstanceState);
+        //setContentView(R.layout.activity_main);
 
+        //getWindow().getDecorView().setBackgroundResource(R.drawable.wallet_wallpaper_yellow);
+
+        pager = (ViewPager) findViewById(R.id.pager);
+        adapter = new MyPagerAdapter(getSupportFragmentManager());
+
+        pager.setAdapter(adapter);
+
+        final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
+                .getDisplayMetrics());
+        pager.setPageMargin(pageMargin);
+
+        tabs.setViewPager(pager);
+
+        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/CaviarDreams.ttf");
+        ((MyApplication) this.getApplication()).setDefaultTypeface(tf);
+        tabs.setTypeface(tf, 1);
+        //changeColor(currentColor);
+
+        tabs.setBackgroundResource(R.drawable.background_tiled_diagonal_light);
+        tabs.setDividerColor(0xFFBBBBBB);
+
+
+    }
 
 
 
-            //***
+
+    //***
     public void onSectionAttached(int number) {
         switch (number) {
             case 1:
@@ -276,7 +265,7 @@ public class AccountDetailActivity extends FragmentActivity
 
         private String[] titles;
         private String[] titles_1 = { };
-        private String[] titles_2 = { "Account", "Debits", "Credits", "All", "Filters"};
+        private String[] titles_2 = { "Store", "Products", "Reviews", "Chat", "History", "Map"};
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -315,19 +304,22 @@ public class AccountDetailActivity extends FragmentActivity
             Fragment currentFragment;
             switch (position) {
                 case 0:
-                    currentFragment =   AccountDetailAccountFragment.newInstance(position);
+                    currentFragment =   StoreStoreFragment.newInstance(position);
                     break;
                 case 1:
-                    currentFragment =   AccountDetailDebitsFragment.newInstance(position);
+                    currentFragment =   RefillFragment.newInstance(position);
                     break;
                 case 2:
-                    currentFragment =  AccountDetailCreditsFragment.newInstance(position);
+                    currentFragment =  SendFragment.newInstance(position);
                     break;
                 case 3:
-                    currentFragment =  AccountDetailAllFragment.newInstance(position);
+                    currentFragment =  StoreChatFragment.newInstance(position);
                     break;
                 case 4:
                     currentFragment =  AccountDetailFiltersFragment.newInstance(position);
+                    break;
+                case 5:
+                    currentFragment =  StoreMapFragment.newInstance(position);
                     break;
 
                 default:
@@ -338,8 +330,6 @@ public class AccountDetailActivity extends FragmentActivity
         }
 
     }
-
-
 
 
 

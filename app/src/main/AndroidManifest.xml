@@ -70,6 +70,14 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".walletstore.StoreFrontActivity"
+            android:label="Wallet Store"
+             >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.bitdubai.smartwallet.walletmanager.DesktopActivity" />
+        </activity>
+        <activity
             android:name=".walletframework.FrameworkActivity"
             android:label="Wallet"
             android:windowSoftInputMode="adjustPan" >

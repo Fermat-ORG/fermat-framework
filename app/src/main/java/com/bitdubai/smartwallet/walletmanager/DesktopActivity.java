@@ -10,6 +10,7 @@ import android.view.View;
 import com.bitdubai.smartwallet.walletframework.FrameworkActivity;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.walletframework.MyApplication;
+import com.bitdubai.smartwallet.walletstore.StoreFrontActivity;
 
 
 public class DesktopActivity extends Activity {
@@ -42,6 +43,15 @@ public class DesktopActivity extends Activity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            return true;
+        }
+
+        if (id == R.id.action_wallet_store) {
+
+            Intent intent;
+            intent = new Intent(this, StoreFrontActivity.class);
+            startActivity(intent);
+
             return true;
         }
 

@@ -234,7 +234,7 @@ public  class AccountDetailAllFragment extends Fragment {
             //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
             // if (convertView == null) {
             if (1 == 1) {
-                convertView = inf.inflate(R.layout.wallet_teens_fragment_account_detail_credits, parent, false);
+                convertView = inf.inflate(R.layout.wallets_teens_fragment_account_detail_credits, parent, false);
 
                 profile_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
 
