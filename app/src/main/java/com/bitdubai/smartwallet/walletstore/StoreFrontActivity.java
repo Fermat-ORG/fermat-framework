@@ -70,7 +70,7 @@ public class StoreFrontActivity extends FragmentActivity
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.wallet_framework_activity_store);
+        setContentView(R.layout.wallet_store_activity_store_front);
 
         // I get the action bar title id and put it on a text view in order to later change its color
         int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
@@ -104,9 +104,12 @@ public class StoreFrontActivity extends FragmentActivity
         tabs.setTypeface(tf, 1);
         //changeColor(currentColor);
 
-        tabs.setBackgroundResource(R.drawable.background_tiled_diagonal_light);
-        tabs.setDividerColor(0xFFBBBBBB);
-
+        //tabs.setBackgroundResource(R.drawable.background_tiled_cross_light);
+        tabs.setDividerColor(0xFFFFFFFF);
+        tabs.setIndicatorColor(0xFFFFFFFF);
+        tabs.setIndicatorHeight(9);
+        tabs.setBackgroundColor(0xFF87D2FA);
+        tabs.setTextColor(0xFFFFFFFF);
 
     }
 

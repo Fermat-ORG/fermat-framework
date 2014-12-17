@@ -44,9 +44,10 @@ public class AllFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        String[] company_names = {"The New York Times Store",
-                "NYC Fine Cigars",
-                "Fat Sal's Pizza",
+        String[] company_names =
+               {"Girl's wallet",
+                "Boy's wallet",
+                "Ladies",
                 "Pomodoro Restaurant",
                 "Snack EOS",
                 "Beba Blue Salon",
@@ -69,9 +70,10 @@ public class AllFragment extends Fragment {
                 "aaa",
                 "aaa",
                 "aaa" };
-        String[] company_addresses = {"620 8th Ave",
-                "506 9th Ave",
-                "510 9th Ave",
+        String[] company_addresses =
+               {"by bitDubai",
+                "by bitDubai",
+                "by bitDubai",
                 "518 9th Ave #1",
                 "522 9th Ave",
                 "502 9th Ave",
@@ -93,9 +95,9 @@ public class AllFragment extends Fragment {
                 "aaa",
                 "aaa",
                 "aaa" };
-        String[] company_horario = {"Today 8:00 am – 9:00 pm",
-                "Today 10:30 am – 8:00 pm",
-                "Today 11:00 am – 10:30 pm",
+        String[] company_horario = {"Free",
+                "Free",
+                "$1.00 / month",
                 "Today 11:00 am – 10:30 pm",
                 "Today 11:30 am – 11:00 pm",
                 "Today 9:30 am – 7:30 pm",
@@ -118,9 +120,10 @@ public class AllFragment extends Fragment {
                 "aaa",
                 "aaa",
                 "aaa" };
-        String[] company_telefono = {"+1 800-671-4332",
-                "+1 212-714-0858",
-                "+1 212-594-9462",
+        String[] company_telefono =
+               {"No transaction fees",
+                "No transaction fees",
+                "0.10% transaction fees",
                 "+1 212-239-7019",
                 "+1 646-964-4964",
                 "+1 212-792-6999",
@@ -168,9 +171,9 @@ public class AllFragment extends Fragment {
                 "aaa",
                 "aaa",
                 "aaa" };
-        String[] company_sites = {"nytstore.com",
-                "nycfinecigars.com",
-                "fatsals.com",
+        String[] company_sites = {"bitDubai.com",
+                "bitDubai.com",
+                "bitDubai.com",
                 "delivery.com",
                 "snackeos.com",
                 "bebablue.com",
@@ -201,7 +204,7 @@ public class AllFragment extends Fragment {
 
             mlist = new ArrayList<App>();
 
-            for (int i = 0; i < 17; i++) {
+            for (int i = 0; i < 3; i++) {
                 App item = new App();
                 item.title = company_sites[i];
                 item.description = company_descriptions[i];
@@ -212,6 +215,7 @@ public class AllFragment extends Fragment {
                 item.rate = (float) Math.random() * 5;
                 item.value = (int) Math.floor((Math.random() * (500 - 80 + 1))) + 80;
                 item.favorite = (float) Math.random() * 5;
+                item.timetoarraive = (float) Math.random() * 5;
                 item.sale = (float) Math.random() * 5;
                 mlist.add(item);
             }
@@ -278,6 +282,8 @@ public class AllFragment extends Fragment {
 
         public float sale;
 
+        public float timetoarraive;
+
     }
 
 
@@ -327,6 +333,8 @@ public class AllFragment extends Fragment {
                 holder.openHours = (TextView) convertView.findViewById(R.id.open_hours);
                 holder.timeToArrive = (TextView) convertView.findViewById(R.id.time_to_arrive);
 
+                holder.downloadIcon = (ImageView) convertView.findViewById(R.id.download);
+
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -344,8 +352,18 @@ public class AllFragment extends Fragment {
 
             holder.openHours.setText(  item.Open_hours);
 
+            if (item.timetoarraive > 3)
+            {
+                holder.timeToArrive.setText( "Installed");
+                holder.downloadIcon.setVisibility(View.INVISIBLE);
+            }
+            else
+            {
+                holder.timeToArrive.setText( "Download now");
+                holder.downloadIcon.setVisibility(View.VISIBLE);
+            }
 
-            holder.timeToArrive.setText( position + " min");
+
 
 
             holder.openHours.setTypeface(MyApplication.getDefaultTypeface());
@@ -395,17 +413,21 @@ public class AllFragment extends Fragment {
                 holder.sale.setImageResource(R.drawable.grid_background_sale_flipped);
             }
 
+            // favorite and sale icons set to invisible
+
+            holder.favorite.setVisibility(View.INVISIBLE);
+            holder.sale.setVisibility(View.INVISIBLE);
 
             switch (position)
             {
                 case 0:
-                    holder.imageView.setImageResource(R.drawable.store_1);
+                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_girl);
                     break;
                 case 1:
-                    holder.imageView.setImageResource(R.drawable.store_2);
+                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_boy);
                     break;
                 case 2:
-                    holder.imageView.setImageResource(R.drawable.store_3);
+                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_lady);
                     break;
                 case 3:
                     holder.imageView.setImageResource(R.drawable.store_4);
@@ -492,6 +514,7 @@ public class AllFragment extends Fragment {
 
             public TextView valueTextView;
 
+            public ImageView downloadIcon;
         }
 
     }
