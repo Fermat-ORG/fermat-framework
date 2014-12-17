@@ -49,7 +49,7 @@ import com.bitdubai.smartwallet.wallets.teens.StoresFragment;
 public class FrameworkActivity extends FragmentActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
-        private PagerSlidingTabStrip tabs;
+    private PagerSlidingTabStrip tabs;
     private ViewPager pager;
     private MyPagerAdapter adapter;
 
@@ -84,6 +84,8 @@ public class FrameworkActivity extends FragmentActivity
 
     public void onSendToContactIconClicked(View v) {
 
+        int tagId = (int)v.getTag();
+        MyApplication.setTagId(tagId);
         Intent intent;
         intent = new Intent(this, SendToContactActivity.class);
         startActivity(intent);
@@ -411,53 +413,6 @@ public class FrameworkActivity extends FragmentActivity
         }
 
     }
-
-
-
-    //***
-
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends android.app.Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.util_fragment_navegation_drawler, container, false);
-            return rootView;
-        }
-
-
-        @Override
-        public void onAttach(Activity activity) {
-            super.onAttach(activity);
-            ((FrameworkActivity) activity).onSectionAttached(
-                    getArguments().getInt(ARG_SECTION_NUMBER));
-        }
-    }
-
-
 
 
 }

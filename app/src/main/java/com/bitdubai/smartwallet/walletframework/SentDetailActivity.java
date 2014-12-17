@@ -19,7 +19,7 @@ public class SentDetailActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.wallet_framework_sent_detail_menu, menu);
+        getMenuInflater().inflate(R.menu.wallet_framework_activity_sent_detail_menu, menu);
         return true;
     }
 
