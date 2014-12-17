@@ -243,7 +243,7 @@ public class AllFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
                 Intent intent;
-                intent = new Intent(getActivity(), StoreActivity.class);
+                intent = new Intent(getActivity(), WalletActivity.class);
                 startActivity(intent);
 
                 return ;
