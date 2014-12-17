@@ -34,7 +34,8 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/colors"
             android:layout_below="@+id/tabs"
-            tools:context=".MainActivity" />
+            tools:context=".MainActivity"
+            android:background="@drawable/background_tabs_diagonal_rotated"/>
 
 
     </RelativeLayout>

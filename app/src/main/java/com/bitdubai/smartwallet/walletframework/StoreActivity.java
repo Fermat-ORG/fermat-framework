@@ -36,6 +36,7 @@ import com.bitdubai.smartwallet.wallets.teens.AccountDetailAllFragment;
 import com.bitdubai.smartwallet.wallets.teens.AccountDetailCreditsFragment;
 import com.bitdubai.smartwallet.wallets.teens.AccountDetailDebitsFragment;
 import com.bitdubai.smartwallet.wallets.teens.AccountDetailFiltersFragment;
+import com.bitdubai.smartwallet.wallets.teens.ContactsFragment;
 import com.bitdubai.smartwallet.wallets.teens.DiscountsFragment;
 import com.bitdubai.smartwallet.wallets.teens.HomeFragment;
 import com.bitdubai.smartwallet.wallets.teens.SendFragment;
@@ -47,7 +48,9 @@ import com.bitdubai.smartwallet.wallets.teens.BalanceFragment;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.wallets.teens.ReceiveFragment;
 import com.bitdubai.smartwallet.wallets.teens.RefillFragment;
+import com.bitdubai.smartwallet.wallets.teens.StoreChatFragment;
 import com.bitdubai.smartwallet.wallets.teens.StoreMapFragment;
+import com.bitdubai.smartwallet.wallets.teens.StoreStoreFragment;
 import com.bitdubai.smartwallet.wallets.teens.StoresFragment;
 
 
@@ -276,7 +279,7 @@ public class StoreActivity extends FragmentActivity
 
         private String[] titles;
         private String[] titles_1 = { };
-        private String[] titles_2 = { "Store", "Products", "Map", "Chat", "History"};
+        private String[] titles_2 = { "Store", "Products", "Reviews", "Chat", "History", "Map"};
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -315,19 +318,22 @@ public class StoreActivity extends FragmentActivity
             Fragment currentFragment;
             switch (position) {
                 case 0:
-                    currentFragment =   AccountDetailAccountFragment.newInstance(position);
+                    currentFragment =   StoreStoreFragment.newInstance(position);
                     break;
                 case 1:
-                    currentFragment =   AccountDetailDebitsFragment.newInstance(position);
+                    currentFragment =   RefillFragment.newInstance(position);
                     break;
                 case 2:
-                    currentFragment =  StoreMapFragment.newInstance(position);
+                    currentFragment =  SendFragment.newInstance(position);
                     break;
                 case 3:
-                    currentFragment =  AccountDetailAllFragment.newInstance(position);
+                    currentFragment =  StoreChatFragment.newInstance(position);
                     break;
                 case 4:
                     currentFragment =  AccountDetailFiltersFragment.newInstance(position);
+                    break;
+                case 5:
+                    currentFragment =  StoreMapFragment.newInstance(position);
                     break;
 
                 default:
