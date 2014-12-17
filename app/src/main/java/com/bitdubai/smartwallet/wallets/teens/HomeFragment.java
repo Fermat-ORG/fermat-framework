@@ -283,7 +283,7 @@ public class HomeFragment extends ListFragment implements LoaderManager.LoaderCa
             switch (position)
             {
                 case 0:
-                    view = mInflater.inflate(R.layout.wallets_teens_fragment_home_titles_list_item, parent, false);
+                    view = mInflater.inflate(R.layout.wallets_teens_multiple_fragments_titles_list_item, parent, false);
 
                     tv = ((TextView)view.findViewById(R.id.title));
                     tv.setText("Total balance");
@@ -313,7 +313,7 @@ public class HomeFragment extends ListFragment implements LoaderManager.LoaderCa
                     break;
 
                 case 2:
-                    view = mInflater.inflate(R.layout.wallets_teens_fragment_home_titles_list_item, parent, false);
+                    view = mInflater.inflate(R.layout.wallets_teens_multiple_fragments_titles_list_item, parent, false);
 
                     tv = ((TextView)view.findViewById(R.id.title));
                     tv.setText("Requests received");
@@ -369,7 +369,7 @@ public class HomeFragment extends ListFragment implements LoaderManager.LoaderCa
                     break;
 
                 case 5:
-                    view = mInflater.inflate(R.layout.wallets_teens_fragment_home_titles_list_item, parent, false);
+                    view = mInflater.inflate(R.layout.wallets_teens_multiple_fragments_titles_list_item, parent, false);
 
                     tv = ((TextView)view.findViewById(R.id.title));
                     tv.setText("Requests sent");
