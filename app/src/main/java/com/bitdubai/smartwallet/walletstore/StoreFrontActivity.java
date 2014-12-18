@@ -310,13 +310,13 @@ public class StoreFrontActivity extends FragmentActivity
                     currentFragment =   AllFragment.newInstance(position);
                     break;
                 case 1:
-                    currentFragment =   FreeFragment.newInstance(position);
+                    currentFragment =   AllFragment.newInstance(position);
                     break;
                 case 2:
-                    currentFragment =  PaidFragment.newInstance(position);
+                    currentFragment =  AllFragment.newInstance(position);
                     break;
                 case 3:
-                    currentFragment =  AcceptedNearbyFragment.newInstance(position);
+                    currentFragment =  AllFragment.newInstance(position);
                     break;
 
                 default:
