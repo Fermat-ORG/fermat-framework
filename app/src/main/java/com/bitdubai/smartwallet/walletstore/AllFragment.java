@@ -30,6 +30,7 @@ public class AllFragment extends Fragment {
 
     private static final String ARG_POSITION = "position";
     private ArrayList<App> mlist;
+    private static int tabId;
 
     private int position;
 
@@ -38,11 +39,53 @@ public class AllFragment extends Fragment {
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
+        tabId = position;
         return f;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        String[] free_paid =
+                {"free",
+                        "free",
+                        "paid",
+                        "free",
+                        "free",
+                        "free",
+                        "free",
+                        "free",
+                        "free",
+                        "free",
+                        "free",
+                        "free",
+                        "free",
+                        "paid",
+                        "free",
+                        "paid",
+                        "paid",
+                        "paid"
+                        };
+        String[] accepted_nearby =
+                {"yes",
+                        "yes",
+                        "yes",
+                        "yes",
+                        "yes",
+                        "yes",
+                        "yes",
+                        "no",
+                        "yes",
+                        "no",
+                        "yes",
+                        "no",
+                        "no",
+                        "no",
+                        "no",
+                        "no",
+                        "no",
+                        "yes"
+                };
 
         String[] company_names =
                {"Girl's wallet",
@@ -62,14 +105,28 @@ public class AllFragment extends Fragment {
                 "Butterfield 8",
                 "Havana New York",
                 "Culture Espresso",
-                "Speedy's",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa" };
+                "Speedy's"};
+
+        String[] company_picture =
+                {"wallet_store_cover_photo_girl",
+                        "wallet_store_cover_photo_boy",
+                        "wallet_store_cover_photo_lady",
+                        "store_4",
+                        "store_5",
+                        "store_6",
+                        "store_7",
+                        "store_8",
+                        "store_9",
+                        "store_10",
+                        "store_11",
+                        "store_12",
+                        "store_13",
+                        "store_14",
+                        "store_15",
+                        "store_16",
+                        "store_17",
+                        "store_18"};
+
         String[] company_addresses =
                {"by bitDubai",
                 "by bitDubai",
@@ -88,13 +145,8 @@ public class AllFragment extends Fragment {
                 "5 E 38th St",
                 "27 W 38th St",
                 "72 W 38th St",
-                "1271 Broadway #1",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa" };
+                "1271 Broadway #1" };
+
         String[] company_horario = {"Free",
                 "Free",
                 "$1.00 / month",
@@ -112,14 +164,8 @@ public class AllFragment extends Fragment {
                 "Today 11:30 am – 10:00 pm",
                 "Today 11:30 am – 10:30 pm",
                 "Today 7:00 am – 7:00 pm",
-                "Today Open 24 hours",
-                "Today",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa" };
+                "Today Open 24 hours"
+        };
         String[] company_telefono =
                {"No transaction fees",
                 "No transaction fees",
@@ -138,14 +184,8 @@ public class AllFragment extends Fragment {
                 "+1 212-679-0646",
                 "+1 212-944-0990",
                 "+1 212-302-0200",
-                "+1 212-683-8997",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa" };
+                "+1 212-683-8997"};
+
         String[] company_descriptions = {"Classic, redefined. See what's new at our Westchester location!.",
                 "Smoking is allowed inside this clubby shop known for its hand-rolled cigars made ...",
                 "Basic pizzeria serving a variety of NYC-style slices in a small, counter-service space.",
@@ -163,14 +203,8 @@ public class AllFragment extends Fragment {
                 "Buzzy after-work-geared bar/eatery serving drinks & American fare in a cozy, ... ",
                 "A bar pours mojitos up front & a brick-lined dining room in the back serves traditional ...",
                 "Tiny, art-adorned coffeehouse pairing its brews with baked goods, sandwiches & a ...",
-                "All-day breakfast, sandwiches & other basic American fare are offered for takeout ...",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa" };
+                "All-day breakfast, sandwiches & other basic American fare are offered for takeout ..."
+               };
         String[] company_sites = {"bitDubai.com",
                 "bitDubai.com",
                 "bitDubai.com",
@@ -188,36 +222,103 @@ public class AllFragment extends Fragment {
                 "butterfield8nyc.com",
                 "havanany.com",
                 "cultureespresso.com",
-                "speedys.com",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa", };
+                "speedys.com"
+               };
 
 
 
-        if (mlist == null)
+       if (mlist == null)
         {
-
+//tab = 0 all, tab = 1 free, tab = 2 paid, tab 3 =  Nearby
             mlist = new ArrayList<App>();
 
-            for (int i = 0; i < 3; i++) {
-                App item = new App();
-                item.title = company_sites[i];
-                item.description = company_descriptions[i];
-                item.company = company_names[i];
-                item.Open_hours = company_horario[i];
-                item.Phone = company_telefono[i];
-                item.Address = company_addresses[i];
-                item.rate = (float) Math.random() * 5;
-                item.value = (int) Math.floor((Math.random() * (500 - 80 + 1))) + 80;
-                item.favorite = (float) Math.random() * 5;
-                item.timetoarraive = (float) Math.random() * 5;
-                item.sale = (float) Math.random() * 5;
-                mlist.add(item);
+            if(tabId == 0) {
+                for (int i = 0; i < company_names.length; i++) {
+
+                    App item = new App();
+                    item.title = company_sites[i];
+                    item.description = company_descriptions[i];
+                    item.picture = company_picture[i];
+                    item.company = company_names[i];
+                    item.Open_hours = company_horario[i];
+                    item.Phone = company_telefono[i];
+                    item.Address = company_addresses[i];
+                    item.rate = (float) Math.random() * 5;
+                    item.value = (int) Math.floor((Math.random() * (500 - 80 + 1))) + 80;
+                    item.favorite = (float) Math.random() * 5;
+                    item.timetoarraive = (float) Math.random() * 5;
+                    item.sale = (float) Math.random() * 5;
+                    mlist.add(item);
+                }
+            }
+
+            if(tabId == 1) {
+                for (int i = 0; i < free_paid.length; i++) {
+
+                    if(free_paid[i] == "free") {
+                        App item = new App();
+                        item.title = company_sites[i];
+                        item.description = company_descriptions[i];
+                        item.picture = company_picture[i];
+                        item.company = company_names[i];
+                        item.Open_hours = company_horario[i];
+                        item.Phone = company_telefono[i];
+                        item.Address = company_addresses[i];
+                        item.rate = (float) Math.random() * 5;
+                        item.value = (int) Math.floor((Math.random() * (500 - 80 + 1))) + 80;
+                        item.favorite = (float) Math.random() * 5;
+                        item.timetoarraive = (float) Math.random() * 5;
+                        item.sale = (float) Math.random() * 5;
+                        mlist.add(item);
+                    }
+
+
+
+                }
+            }
+
+            if(tabId == 2) {
+                for (int i = 0; i < free_paid.length; i++) {
+
+                    if(free_paid[i] == "paid") {
+                        App item = new App();
+                        item.title = company_sites[i];
+                        item.description = company_descriptions[i];
+                        item.picture = company_picture[i];
+                        item.company = company_names[i];
+                        item.Open_hours = company_horario[i];
+                        item.Phone = company_telefono[i];
+                        item.Address = company_addresses[i];
+                        item.rate = (float) Math.random() * 5;
+                        item.value = (int) Math.floor((Math.random() * (500 - 80 + 1))) + 80;
+                        item.favorite = (float) Math.random() * 5;
+                        item.timetoarraive = (float) Math.random() * 5;
+                        item.sale = (float) Math.random() * 5;
+                        mlist.add(item);
+                    }
+                }
+            }
+
+            if(tabId == 3) {
+                for (int i = 0; i < company_names.length; i++) {
+                  int nearby =  (int) Math.floor((Math.random() * (2))) ;
+                    if(nearby == 1) {
+                        App item = new App();
+                        item.title = company_sites[i];
+                        item.description = company_descriptions[i];
+                        item.picture = company_picture[i];
+                        item.company = company_names[i];
+                        item.Open_hours = company_horario[i];
+                        item.Phone = company_telefono[i];
+                        item.Address = company_addresses[i];
+                        item.rate = (float) Math.random() * 5;
+                        item.value = (int) Math.floor((Math.random() * (500 - 80 + 1))) + 80;
+                        item.favorite = (float) Math.random() * 5;
+                        item.timetoarraive = (float) Math.random() * 5;
+                        item.sale = (float) Math.random() * 5;
+                        mlist.add(item);
+                    }
+                }
             }
         }
 
@@ -265,6 +366,8 @@ public class AllFragment extends Fragment {
         public String title;
 
         public String description;
+
+        public String picture;
 
         public String company;
 
@@ -418,60 +521,60 @@ public class AllFragment extends Fragment {
             holder.favorite.setVisibility(View.INVISIBLE);
             holder.sale.setVisibility(View.INVISIBLE);
 
-            switch (position)
+            switch (item.picture)
             {
-                case 0:
+                case "wallet_store_cover_photo_girl":
                     holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_girl);
                     break;
-                case 1:
+                case "wallet_store_cover_photo_boy":
                     holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_boy);
                     break;
-                case 2:
+                case "wallet_store_cover_photo_lady":
                     holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_lady);
                     break;
-                case 3:
+                case "store_4":
                     holder.imageView.setImageResource(R.drawable.store_4);
                     break;
-                case 4:
+                case "store_5":
                     holder.imageView.setImageResource(R.drawable.store_5);
                     break;
-                case 5:
+                case "store_6":
                     holder.imageView.setImageResource(R.drawable.store_6);
                     break;
-                case 6:
+                case "store_7":
                     holder.imageView.setImageResource(R.drawable.store_7);
                     break;
-                case 7:
+                case "store_8":
                     holder.imageView.setImageResource(R.drawable.store_8);
                     break;
-                case 8:
+                case "store_9":
                     holder.imageView.setImageResource(R.drawable.store_9);
                     break;
-                case 9:
+                case "store_10":
                     holder.imageView.setImageResource(R.drawable.store_10);
                     break;
-                case 10:
+                case "store_11":
                     holder.imageView.setImageResource(R.drawable.store_11);
                     break;
-                case 11:
+                case "store_12":
                     holder.imageView.setImageResource(R.drawable.store_12);
                     break;
-                case 12:
+                case "store_13":
                     holder.imageView.setImageResource(R.drawable.store_13);
                     break;
-                case 13:
+                case "store_14":
                     holder.imageView.setImageResource(R.drawable.store_14);
                     break;
-                case 14:
+                case "store_15":
                     holder.imageView.setImageResource(R.drawable.store_15);
                     break;
-                case 15:
+                case "store_16":
                     holder.imageView.setImageResource(R.drawable.store_16);
                     break;
-                case 16:
+                case "store_17":
                     holder.imageView.setImageResource(R.drawable.store_17);
                     break;
-                case 17:
+                case "store_18":
                     holder.imageView.setImageResource(R.drawable.store_18);
                     break;
 
