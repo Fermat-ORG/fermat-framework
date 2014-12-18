@@ -26,7 +26,9 @@ public  class ReceiveFragment extends Fragment {
     private String[] contacts;
     private String[] amounts;
     private String[] whens;
+    private String[] historyCount;
     private String[] notes;
+    private String[] totalAmount;
     private String[] pictures;
     private String[][] transactions;
     private String[][] transactions_amounts;
@@ -50,7 +52,8 @@ public  class ReceiveFragment extends Fragment {
         amounts = new String[]{"","$200.00", "$3,000.00", "$400.00", "$3.00","$45.00","$600.00","50.00","$80,000.00"};
         whens = new String[]{"","4 hours ago", "5 hours ago", "yesterday 11:00 PM", "24 Mar 14","3 Feb 14","1 year ago","1 year ago","2 year ago"};
         notes = new String[]{"","New telephone", "Old desk", "Car oil", "Sandwich","Headphones","Computer monitor","Pen","Apartment in Dubai"};
-
+        totalAmount = new String[]{"","$" + "17,485.00","$" + "156,340.00","$" + "422,545","$" + "62,735.00","$" + "45.00","$" + "12,360.00","$" + "75.00","$"+ "80,000"};
+        historyCount = new String[] {"","9 records","19 records","32 records","11 records","1 record","11 records","2 records","1 record"};
         //pictures = new String[]{"luis_profile_picture", "guillermo_profile_picture", "pedro_profile_picture", "mariana_profile_picture"};
 
         transactions = new String[][]{
@@ -235,6 +238,8 @@ public  class ReceiveFragment extends Fragment {
             ViewHolder when;
             ViewHolder note;
             ImageView profile_picture;
+            ViewHolder total;
+            ViewHolder history;
 
             if (groupPosition == 0)
             {
@@ -306,6 +311,16 @@ public  class ReceiveFragment extends Fragment {
                     amount.text.setTypeface(MyApplication.getDefaultTypeface());
 
                     amount.text.setText(amounts[groupPosition].toString());
+
+                    total = new ViewHolder();
+                    total.text = (TextView) convertView.findViewById(R.id.total_amount);
+                    total.text.setTypeface(MyApplication.getDefaultTypeface());
+                    total.text.setText(totalAmount[groupPosition].toString());
+
+                    history = new ViewHolder();
+                    history.text = (TextView) convertView.findViewById(R.id.history_count);
+                    history.text.setTypeface(MyApplication.getDefaultTypeface());
+                    history.text.setText(historyCount[groupPosition].toString());
 
                     when = new ViewHolder();
                     when.text = (TextView) convertView.findViewById(R.id.when);

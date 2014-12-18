@@ -69,23 +69,43 @@
 
             >
 
+            <TextView
+                android:id="@+id/contact_name"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+
+
+                android:textColor="#FF666666"
+                android:textSize="20sp"
+                android:textStyle="bold"
+
+
+                android:hint="New contact"
+                android:gravity="right"
+
+                android:paddingLeft="7dip"
+                android:paddingRight="7dip"
+
+                android:paddingTop="3dip"
+                android:paddingBottom="3dip"
+
+
+
+                />
+
+
+
+        </LinearLayout>
 
 
             <TextView
                 android:id="@+id/notes"
-                android:layout_width="150dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
 
                 android:textColor="#FF666666"
-                android:textSize="15sp"
                 android:textStyle="normal"
-                android:hint=""
-                android:layout_gravity="left"
-
-                android:paddingTop="3dip"
-                android:paddingLeft="7dip"
-                android:paddingRight="7dip"
                 />
 
 
@@ -94,48 +114,15 @@
 
             <TextView
                 android:id="@+id/when"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="7dip"
-                android:paddingRight="7dip"
-                android:paddingTop="3dip"
-                android:paddingBottom="3dip"
                 android:textColor="#FF666666"
-                android:textSize="15sp"
                 android:textStyle="normal"
-                android:text=""
                 android:gravity="right" />
 
 
         </LinearLayout>
 
 
-        <TextView
-            android:id="@+id/contact_name"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-
-
-            android:textColor="#FF666666"
-            android:textSize="20sp"
-            android:textStyle="bold"
-
-
-            android:hint="New contact"
-            android:gravity="right"
-
-            android:paddingLeft="7dip"
-            android:paddingRight="7dip"
-
-            android:paddingTop="3dip"
-            android:paddingBottom="3dip"
-
-
-
-            />
-
-
-
-    </LinearLayout>
 
 </LinearLayout>
