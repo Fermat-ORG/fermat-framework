@@ -35,15 +35,15 @@ import java.util.List;
 
 
 
-public class StoreStoreFragment extends Fragment {
+public class StoreProductsFragment extends Fragment {
 
     private static final String ARG_POSITION = "position";
     private ArrayList<App> mlist;
 
     private int position;
 
-    public static StoreStoreFragment newInstance(int position) {
-        StoreStoreFragment f = new StoreStoreFragment();
+    public static StoreProductsFragment newInstance(int position) {
+        StoreProductsFragment f = new StoreProductsFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -210,7 +210,7 @@ public class StoreStoreFragment extends Fragment {
 
             mlist = new ArrayList<App>();
 
-            for (int i = 0; i <5; i++) {
+            for (int i = 0; i < 17; i++) {
                 App item = new App();
                 item.title = company_sites[i];
                 item.description = company_descriptions[i];
@@ -231,14 +231,14 @@ public class StoreStoreFragment extends Fragment {
 
         Configuration config = getResources().getConfiguration();
         if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            gridView.setNumColumns(1);
+            gridView.setNumColumns(3);
         } else {
-            gridView.setNumColumns(1);
+            gridView.setNumColumns(2);
         }
 
         //@SuppressWarnings("unchecked")
         //ArrayList<App> list = (ArrayList<App>) getArguments().get("list");
-        gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.wallets_teens_fragment_store_store, mlist));
+        gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.wallets_teens_fragment_stores_item, mlist));
 
 
 
@@ -308,7 +308,7 @@ public class StoreStoreFragment extends Fragment {
             ViewHolder holder;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.wallets_teens_fragment_stores_item, parent, false);
+                convertView = inflater.inflate(R.layout.wallets_teens_fragment_store_products_item, parent, false);
                 holder = new ViewHolder();
 
                 holder.star1= (ImageView) convertView.findViewById(R.id.star_1);
