@@ -53,24 +53,24 @@ public class StoreProductsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        String[] company_names = {"The New York Times Store",
-                "NYC Fine Cigars",
-                "Fat Sal's Pizza",
-                "Pomodoro Restaurant",
-                "Snack EOS",
-                "Beba Blue Salon",
-                "Tick Tock Diner",
-                "The New Yorker Hotel",
-                "Dunkin' Donuts",
-                "The Australian",
-                "Panera Bread",
-                "Mustang Cafe",
-                "Pret A Manger",
-                "Subway",
-                "Butterfield 8",
-                "Havana New York",
-                "Culture Espresso",
-                "Speedy's",
+        String[] company_names = {"Sweet Heart",
+                "Classic Iced Pink",
+                "Classic Glazed Chocolate",
+                "Classic Glazed Strawberry",
+                "Chocolate Custard Filled",
+                "Peanut Butter Combo",
+                "Caramel Kreme Crunch",
+                "Chocolate With Sprinkles",
+                "Caramel Chocolate Crunch",
+                "Authentic Goodness",
+                "Chocolate Chip",
+                "Honey Bran Raisin",
+                "Cinnamon Cake",
+                "French Roll",
+                "",
+                "",
+                "",
+                "",
                 "aaa",
                 "aaa",
                 "aaa",
@@ -78,20 +78,20 @@ public class StoreProductsFragment extends Fragment {
                 "aaa",
                 "aaa",
                 "aaa" };
-        String[] company_addresses = {"620 8th Ave",
-                "506 9th Ave",
-                "510 9th Ave",
-                "518 9th Ave #1",
-                "522 9th Ave",
-                "502 9th Ave",
-                "481 8th Ave",
-                "481 8th Ave",
-                "240 W 40th St",
-                "20 W 38th St",
-                "452 5th Ave",
-                "22 W 38th St",
-                "389 5th Ave",
-                "32 W 39th St",
+        String[] company_addresses = {"Donut",
+                "Donut",
+                "Donut",
+                "Donut",
+                "Donut",
+                "Donut",
+                "Donut",
+                "Donut",
+                "Donut",
+                "Bagels",
+                "Cookies",
+                "Muffins",
+                "Munchkins",
+                "Other Bakery",
                 "5 E 38th St",
                 "27 W 38th St",
                 "72 W 38th St",
@@ -177,20 +177,20 @@ public class StoreProductsFragment extends Fragment {
                 "aaa",
                 "aaa",
                 "aaa" };
-        String[] company_sites = {"nytstore.com",
-                "nycfinecigars.com",
-                "fatsals.com",
-                "delivery.com",
-                "snackeos.com",
-                "bebablue.com",
-                "ticktockdinerny.com",
-                "newyorkerhotel.com",
+        String[] company_sites = {"dunkindonuts.com",
                 "dunkindonuts.com",
-                "theaustraliannyc.com",
-                "panerabread.com",
-                "mustangcafe.com",
-                "pret.com",
-                "subway.com",
+                "dunkindonuts.com",
+                "dunkindonuts.com",
+                "dunkindonuts.com",
+                "dunkindonuts.com",
+                "dunkindonuts.com",
+                "dunkindonuts.com",
+                "dunkindonuts.com",
+                "dunkindonuts.com",
+                "dunkindonuts.com",
+                "dunkindonuts.com",
+                "dunkindonuts.com",
+                "dunkindonuts.com",
                 "butterfield8nyc.com",
                 "havanany.com",
                 "cultureespresso.com",
@@ -210,7 +210,7 @@ public class StoreProductsFragment extends Fragment {
 
             mlist = new ArrayList<App>();
 
-            for (int i = 0; i < 17; i++) {
+            for (int i = 0; i < 14; i++) {
                 App item = new App();
                 item.title = company_sites[i];
                 item.description = company_descriptions[i];
@@ -408,59 +408,49 @@ public class StoreProductsFragment extends Fragment {
             switch (position)
             {
                 case 0:
-                    holder.imageView.setImageResource(R.drawable.store_1);
+                    holder.imageView.setImageResource(R.drawable.product_1);
                     break;
                 case 1:
-                    holder.imageView.setImageResource(R.drawable.store_2);
+                    holder.imageView.setImageResource(R.drawable.product_2);
                     break;
                 case 2:
-                    holder.imageView.setImageResource(R.drawable.store_3);
+                    holder.imageView.setImageResource(R.drawable.product_3);
                     break;
                 case 3:
-                    holder.imageView.setImageResource(R.drawable.store_4);
+                    holder.imageView.setImageResource(R.drawable.product_4);
                     break;
                 case 4:
-                    holder.imageView.setImageResource(R.drawable.store_5);
+                    holder.imageView.setImageResource(R.drawable.product_5);
                     break;
                 case 5:
-                    holder.imageView.setImageResource(R.drawable.store_6);
+                    holder.imageView.setImageResource(R.drawable.product_6);
                     break;
                 case 6:
-                    holder.imageView.setImageResource(R.drawable.store_7);
+                    holder.imageView.setImageResource(R.drawable.product_7);
                     break;
                 case 7:
-                    holder.imageView.setImageResource(R.drawable.store_8);
+                    holder.imageView.setImageResource(R.drawable.product_8);
                     break;
                 case 8:
-                    holder.imageView.setImageResource(R.drawable.store_9);
+                    holder.imageView.setImageResource(R.drawable.product_9);
                     break;
                 case 9:
-                    holder.imageView.setImageResource(R.drawable.store_10);
+                    holder.imageView.setImageResource(R.drawable.product_10);
                     break;
                 case 10:
-                    holder.imageView.setImageResource(R.drawable.store_11);
+                    holder.imageView.setImageResource(R.drawable.product_11);
                     break;
                 case 11:
-                    holder.imageView.setImageResource(R.drawable.store_12);
+                    holder.imageView.setImageResource(R.drawable.product_12);
                     break;
                 case 12:
-                    holder.imageView.setImageResource(R.drawable.store_13);
+                    holder.imageView.setImageResource(R.drawable.product_13);
                     break;
                 case 13:
-                    holder.imageView.setImageResource(R.drawable.store_14);
+                    holder.imageView.setImageResource(R.drawable.product_14);
                     break;
-                case 14:
-                    holder.imageView.setImageResource(R.drawable.store_15);
-                    break;
-                case 15:
-                    holder.imageView.setImageResource(R.drawable.store_16);
-                    break;
-                case 16:
-                    holder.imageView.setImageResource(R.drawable.store_17);
-                    break;
-                case 17:
-                    holder.imageView.setImageResource(R.drawable.store_18);
-                    break;
+
+
 
 
             }

@@ -80,14 +80,14 @@
         android:paddingRight="0dp"
         android:paddingTop="4dp"
         android:paddingBottom="0dp"
-
+android:visibility="gone"
         />
 
     <ImageView
         android:id="@+id/sale"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
+android:visibility="gone"
         android:src="@drawable/grid_background_sale_flipped"
 
         android:scaleType="fitCenter"
@@ -195,12 +195,12 @@
         android:layout_height="wrap_content"
         android:text="App name"
         android:textAlignment="center"
+        android:visibility="visible"
 
 
         android:textColor="@color/black_overlay"
         android:textStyle="bold"
-        android:textSize="13sp"
-
+        android:textSize="12sp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
 
@@ -261,7 +261,7 @@
         android:text="horario"
         android:textSize="10sp"
         android:textStyle="normal"
-
+android:visibility="gone"
         android:gravity="center"
 
         android:layout_alignParentBottom="true"
@@ -307,7 +307,7 @@
 
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-
+android:visibility="gone"
         android:paddingLeft="0dp"
         android:paddingRight="14dp"
         android:paddingTop="0dp"
