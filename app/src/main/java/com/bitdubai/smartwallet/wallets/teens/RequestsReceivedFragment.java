@@ -41,10 +41,10 @@ public  class RequestsReceivedFragment extends android.app.Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        contacts = new String[]{"Taylor Backus","Stephanie Himonidis","Kimberly Brown",  "Florence Kerns","Kevin Helms","Teddy Truchot","Hélène Derosier","John Smith","Caroline Mignaux","Guillaume Thery","Brant Cryder","Thomas Levy","Verena Stenz"};
-        amounts = new String[]{ "$3.00","$290.00","$600.00",                             "$00.50","$40.00","$20.00","$125.00","$250.00","$75.00","$50.00","$5.00","$100.00","$40.00"};
-        whens = new String[]{ "24 Mar 14","3 Feb 14","1 year ago",                       "1 year ago","2 year ago","2 year ago","2 year ago","3 year ago","3 year ago","3 year ago","3 year ago","4 year ago","4 year ago"};
-        notes = new String[]{ "Sandwich","Conference ticket","Computer monitor",         "Pen","Headphones","Computer mouse","New Chair","Tablet","Sun glasses","Sport shoes","Charger cable","Biclyclete","Camera"};
+        contacts = new String[]{"Taylor Backus","Stephanie Himonidis","Kimberly Brown",  "Ginny Kaltabanis","Piper Faust","Deniz Caglar","Helen Nisbet","Dea Vanagan","Tim Hunter","Madeleine Jordan","Kate Bryan","Victoria Gandit","Jennifer Johnson","Robert Wint","Adrian Smith"};
+        amounts = new String[]{ "$3.00","$290.00","$600.00",                             "$50.00","$30.00","$500.00","$25.00","$250.00","$75.00","$300.00","$5.00","$100.00","$45.00","$35.00","$40.00"};
+        whens = new String[]{ "24 Mar 14","3 Feb 14","1 year ago",                       "1 year ago","2 years ago","2 years ago","2 years ago","3 years ago","3 years ago","3 years ago","3 years ago","4 years ago","4 years ago","5 years ago","5 years ago"};
+        notes = new String[]{ "Sandwich","Conference ticket","Computer monitor",         "Bag","Computer Keyboard","New TV","T-shirt","Pendrive","Shoes","Bed","Color pencils","Speakers","Microphone","Magazine","Book"};
 
 
         //pictures = new String[]{"luis_profile_picture", "guillermo_profile_picture", "pedro_profile_picture", "mariana_profile_picture"};
@@ -197,7 +197,7 @@ public  class RequestsReceivedFragment extends android.app.Fragment {
 
                     break;
 
-                case 1: case 3:case 4:case 5:case 6:case 7:case 8:case 9:case 10:case 11:case 12:
+                case 1: case 3:case 4:case 5:case 6:case 7:case 8:case 9:case 10:case 11:case 12:case 13:case 14:case 15:
 
                 convertView = mInflater.inflate(R.layout.wallets_teens_multiple_fragments_request_received_list_item, parent, false);
                 account_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
@@ -236,34 +236,43 @@ public  class RequestsReceivedFragment extends android.app.Fragment {
                         account_picture.setImageResource(R.drawable.kevin_profile_picture);
                         break;
                     case 3:
-                        account_picture.setImageResource(R.drawable.florence_profile_picture);
+                        account_picture.setImageResource(R.drawable.ginny_profile_picture);
                         break;
                     case 4:
-                        account_picture.setImageResource(R.drawable.kevin_profile_picture);
+                        account_picture.setImageResource(R.drawable.piper_profile_picture);
                         break;
                     case 5:
-                        account_picture.setImageResource(R.drawable.teddy_profile_picture);
+                        account_picture.setImageResource(R.drawable.deniz_profile_picture);
                         break;
                     case 6:
-                        account_picture.setImageResource(R.drawable.helene_profile_picture);
+                        account_picture.setImageResource(R.drawable.helen_profile_picture);
                         break;
                     case 7:
-                        account_picture.setImageResource(R.drawable.john_profile_picture);
+                        account_picture.setImageResource(R.drawable.dea_profile_picture);
                         break;
                     case 8:
-                        account_picture.setImageResource(R.drawable.caroline_profile_picture);
+                        account_picture.setImageResource(R.drawable.tim_profile_picture);
                         break;
                     case 9:
-                        account_picture.setImageResource(R.drawable.guillaume_profile_picture);
+                        account_picture.setImageResource(R.drawable.alexandra_profile_picture);
                         break;
                     case 10:
-                        account_picture.setImageResource(R.drawable.brant_profile_picture);
+                        account_picture.setImageResource(R.drawable.madaleine_profile_picture);
                         break;
                     case 11:
-                        account_picture.setImageResource(R.drawable.thomas_profile_picture);
+                        account_picture.setImageResource(R.drawable.kate_profile_picture);
                         break;
                     case 12:
-                        account_picture.setImageResource(R.drawable.verena_profile_picture);
+                        account_picture.setImageResource(R.drawable.victoria_profile_picture);
+                        break;
+                    case 13:
+                        account_picture.setImageResource(R.drawable.richard_profile_picture);
+                        break;
+                    case 14:
+                        account_picture.setImageResource(R.drawable.robert_profile_picture);
+                        break;
+                    case 15:
+                        account_picture.setImageResource(R.drawable.adrian_profile_picture);
                         break;
 
 

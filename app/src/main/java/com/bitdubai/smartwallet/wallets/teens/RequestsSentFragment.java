@@ -43,7 +43,7 @@ public  class RequestsSentFragment extends android.app.Fragment {
 
         contacts = new String[]{"Taylor Backus","Stephanie Himonidis","Kimberly Brown",  "Florence Kerns","Kevin Helms","Teddy Truchot","Hélène Derosier","John Smith","Caroline Mignaux","Guillaume Thery","Brant Cryder","Thomas Levy","Verena Stenz"};
         amounts = new String[]{ "$3.00","$290.00","$600.00",                             "$00.50","$40.00","$20.00","$125.00","$250.00","$75.00","$50.00","$5.00","$100.00","$40.00"};
-        whens = new String[]{ "24 Mar 14","3 Feb 14","1 year ago",                       "1 year ago","2 year ago","2 year ago","2 year ago","3 year ago","3 year ago","3 year ago","3 year ago","4 year ago","4 year ago"};
+        whens = new String[]{ "24 Mar 14","3 Feb 14","1 year ago",                       "1 year ago","2 years ago","2 years ago","2 years ago","3 years ago","3 years ago","3 years ago","3 years ago","4 years ago","4 years ago"};
         notes = new String[]{ "Sandwich","Conference ticket","Computer monitor",         "Pen","Headphones","Computer mouse","New Chair","Tablet","Sun glasses","Sport shoes","Charger cable","Biclyclete","Camera"};
 
 
