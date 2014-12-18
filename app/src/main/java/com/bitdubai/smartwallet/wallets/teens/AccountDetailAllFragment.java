@@ -16,6 +16,9 @@ import com.bitdubai.smartwallet.walletframework.MyApplication;
 import com.bitdubai.smartwallet.walletframework.SendToNewContactActivity;
 import com.bitdubai.smartwallet.walletframework.SentDetailActivity;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+
 
 public  class AccountDetailAllFragment extends Fragment {
 
@@ -25,7 +28,13 @@ public  class AccountDetailAllFragment extends Fragment {
     View rootView;
     ExpandableListView lv;
     private String[] types;
-    private String[] contacts;
+    private String[] contacts  = new String[]{};
+    private ArrayList<String> contact_list = new ArrayList<>();
+    private ArrayList<String> amounts_list = new ArrayList<>();
+    private ArrayList<String> whens_list = new ArrayList<>();
+    private ArrayList<String> pictures_list = new ArrayList<>();
+    private ArrayList<String> notes_list = new ArrayList<>();
+    private ArrayList<String> types_list = new ArrayList<>();
     private String[] amounts;
     private String[] whens;
     private String[] notes;
@@ -34,6 +43,13 @@ public  class AccountDetailAllFragment extends Fragment {
     String[][] transactions_amounts;
     private String[][] transactions_whens;
     private String[] debit_credit;
+    private String[] types_all;
+    private String[] contacts_all;
+    private String[] amounts_all;
+    private String[] whens_all;
+    private String[] notes_all;
+    private String[] pictures_all;
+    private static int tabId;
 
 
 
@@ -43,21 +59,103 @@ public  class AccountDetailAllFragment extends Fragment {
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
+        tabId = position;
         return f;
     }
 
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+String debits = "";
+        types_all = new String[]{ "Received", "Received", "sent", "Refill","sent", "Refill" , "Received", "sent","received", "Refill"};
+        debit_credit = new String[]{"credit",
+                "credit",
+                "debit",
+                "credit",
+                "debit",
+                "credit",
+                "credit",
+                "debit",
+                "credit",
+                "credit"};
+        contacts_all = new String[]{"Lucia Alarcon De Zam...",
+                "Juan Luis R. Pons",
+                "Luis Fernando Molina",
+                "Kalustyan´s",
+                "Guillermo Villanueva",
+                "Kings Super Market",
+                "Karina Rodriguez",
+                "Mariana Duyos",
+                "Taylor Backus",
+                "D´Agostino"};
+        amounts_all = new String[]{"$200.00", "$3,000.00", "$325.00", "$350.00", "$1,400.00", "$1,500.00", "$400.00"," $25.00","$600.00", "$250.00"};
+        whens_all = new String[]{"4 hours ago", "5 hours ago", "yesterday", "yesterday", "yesterday", "yesterday", "31 dec 14", "23 may 14", "1 year ago", "5 sep 14"};
+        notes_all = new String[]{"New telephone", "Old desk", "electricity bill ", "For electricity bill", "Flat rent", "for this week expenses","Car oil", "More pictures","Computer monitor", "Refill test"};
+        pictures_all = new String[]{"lucia_profile_picture", "juan_profile_picture", "luis_profile_picture", "refill_2", "guillermo_profile_picture", "refill_4","karina_profile_picture","mariana_profile_picture","taylor_profile_picture","refill_1"};
 
-        types = new String[]{ "Received", "Received", "sent", "Refill","sent", "Refill" , "Received", "sent","received", "Refill"};
-        contacts = new String[]{"Lucia Alarcon De Zam...", "Juan Luis R. Pons", "Luis Fernando Molina","Kalustyan´s","Guillermo Villanueva","Kings Super Market", "Karina Rodriguez", "Mariana Duyos", "Taylor Backus", "D´Agostino"};
-        amounts = new String[]{"$200.00", "$3,000.00", "$325.00", "$350.00", "$1,400.00", "$1,500.00", "$400.00"," $25.00","$600.00", "$250.00"};
-        whens = new String[]{"4 hours ago", "5 hours ago", "yesterday", "yesterday", "yesterday", "yesterday", "31 dec 14", "23 may 14", "1 year ago", "5 sep 14"};
-        notes = new String[]{"New telephone", "Old desk", "electricity bill ", "For electricity bill", "Flat rent", "for this week expenses","Car oil", "More pictures","Computer monitor", "Refill test"};
-        pictures = new String[]{"lucia_profile_picture", "juan_profile_picture", "luis_profile_picture", "refill_2", "Guillermo_profile_picture", "refill_4","karina_profile_picture","mariana_profile_picture","taylor_profile_picture","refill_1"};
-        debit_credit = new String[]{"credit", "credit","debit","credit","credit","debit","credit","debit"};
+        //tab credit
+        if(tabId == 2) {
+            for (int i = 0; i < debit_credit.length; i++) {
+                if (debit_credit[i] == "credit") {
+                    contact_list.add(contacts_all[i]);
+                    amounts_list.add(amounts_all[i]);
+                    whens_list.add(whens_all[i]);
+                    pictures_list.add(pictures_all[i]);
+                    notes_list.add(notes_all[i]);
+                    types_list.add(types_all[i]);
 
+                    }
+            }
+            try
+            {
+               types = (String[])types_list.toArray(new String[types_list.size()]);
+                contacts = (String[])contact_list.toArray(new String[contact_list.size()]);
+                amounts = (String[])amounts_list.toArray(new String[amounts_list.size()]);
+                whens = (String[])whens_list.toArray(new String[whens_list.size()]);
+                notes = (String[])notes_list.toArray(new String[notes_list.size()]);
+                pictures = (String[])pictures_list.toArray(new String[pictures_list.size()]);
+            }
+            catch(Exception e){
+                String error = e.getMessage();
+            }
+
+        }
+        //tab debit
+        if(tabId == 1) {
+            for (int i = 0; i < debit_credit.length; i++) {
+                if (debit_credit[i] == "debit") {
+                    contact_list.add(contacts_all[i]);
+                    amounts_list.add(amounts_all[i]);
+                    whens_list.add(whens_all[i]);
+                    pictures_list.add(pictures_all[i]);
+                    notes_list.add(notes_all[i]);
+                    types_list.add(types_all[i]);
+                }
+            }
+            try
+            {
+                types = (String[])types_list.toArray(new String[types_list.size()]);
+                contacts = (String[])contact_list.toArray(new String[contact_list.size()]);
+                amounts = (String[])amounts_list.toArray(new String[amounts_list.size()]);
+                whens = (String[])whens_list.toArray(new String[whens_list.size()]);
+                notes = (String[])notes_list.toArray(new String[notes_list.size()]);
+                pictures = (String[])pictures_list.toArray(new String[pictures_list.size()]);
+            }
+            catch(Exception e){
+                String error = e.getMessage();
+            }
+
+        }
+
+        //tab all
+        if(tabId == 3) {
+            types = types_all;
+            contacts = contacts_all;
+            amounts = amounts_all;
+            whens = whens_all;
+            notes = notes_all;
+            pictures = pictures_all;
+        }
 
         transactions = new String[][]{
 
@@ -248,7 +346,41 @@ public  class AccountDetailAllFragment extends Fragment {
 
                 profile_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
 
-                switch (groupPosition)
+
+                    switch (pictures[groupPosition])
+                    {
+                        case "lucia_profile_picture":
+                            profile_picture.setImageResource(R.drawable.lucia_profile_picture);
+                            break;
+                        case "juan_profile_picture":
+                            profile_picture.setImageResource(R.drawable.juan_profile_picture);
+                            break;
+                        case "luis_profile_picture":
+                            profile_picture.setImageResource(R.drawable.luis_profile_picture);
+                            break;
+                        case "refill_2":
+                            profile_picture.setImageResource(R.drawable.refill_2);
+                            break;
+                        case "guillermo_profile_picture":
+                            profile_picture.setImageResource(R.drawable.guillermo_profile_picture);
+                            break;
+                        case "refill_4":
+                            profile_picture.setImageResource(R.drawable.refill_4);
+                            break;
+                        case "karina_profile_picture":
+                            profile_picture.setImageResource(R.drawable.karina_profile_picture);
+                            break;
+                        case "mariana_profile_picture":
+                            profile_picture.setImageResource(R.drawable.mariana_profile_picture);
+                            break;
+                        case "taylor_profile_picture":
+                            profile_picture.setImageResource(R.drawable.taylor_profile_picture);
+                            break;
+                        case "refill_1":
+                            profile_picture.setImageResource(R.drawable.refill_1);
+                    }
+
+             /*   switch (groupPosition)
                 {
                     case 0:
                         profile_picture.setImageResource(R.drawable.lucia_profile_picture);
@@ -279,7 +411,7 @@ public  class AccountDetailAllFragment extends Fragment {
                         break;
                     case 9:
                         profile_picture.setImageResource(R.drawable.refill_1);
-                }
+                }*/
 
 
 
