@@ -298,7 +298,7 @@ public class FrameworkActivity extends FragmentActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
+        Intent intent;
         switch (item.getItemId()) {
 
             case R.id.action_contact:
@@ -307,11 +307,16 @@ public class FrameworkActivity extends FragmentActivity
                 return true;
 
             case R.id.action_requests_sent:
-                Intent intent;
+
                 intent = new Intent(this, RequestsSentActivity.class);
                 startActivity(intent);
                 return true;
 
+            case R.id.action_requests_received:
+
+                intent = new Intent(this, RequestsReceivedActivity.class);
+                startActivity(intent);
+                return true;
 
         }
 

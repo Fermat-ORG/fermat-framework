@@ -89,7 +89,8 @@
         <item>Saving account: My savings</item>
         <item>Current account: Pocket money</item>
         <item>Saving account: Holiday saving</item>
-
     </string-array>
+
+    <string name="title_activity_requests_received">Requests Received</string>
 
 </resources>

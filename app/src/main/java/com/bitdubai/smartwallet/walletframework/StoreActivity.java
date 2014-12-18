@@ -50,6 +50,7 @@ import com.bitdubai.smartwallet.wallets.teens.ReceiveFragment;
 import com.bitdubai.smartwallet.wallets.teens.RefillFragment;
 import com.bitdubai.smartwallet.wallets.teens.StoreChatFragment;
 import com.bitdubai.smartwallet.wallets.teens.StoreMapFragment;
+import com.bitdubai.smartwallet.wallets.teens.StoreProductsFragment;
 import com.bitdubai.smartwallet.wallets.teens.StoreStoreFragment;
 import com.bitdubai.smartwallet.wallets.teens.StoresFragment;
 
@@ -321,7 +322,7 @@ public class StoreActivity extends FragmentActivity
                     currentFragment =   StoreStoreFragment.newInstance(position);
                     break;
                 case 1:
-                    currentFragment =   RefillFragment.newInstance(position);
+                    currentFragment =   StoreProductsFragment.newInstance(position);
                     break;
                 case 2:
                     currentFragment =  SendFragment.newInstance(position);

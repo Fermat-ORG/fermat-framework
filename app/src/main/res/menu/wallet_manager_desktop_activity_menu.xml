@@ -28,12 +28,6 @@
         android:showAsAction="never"
         android:icon="@drawable/ic_action_undo"/>
     <item
-        android:id="@+id/action_viewt_type"
-        android:title="@string/action_view_type"
-        android:orderInCategory="97"
-        android:showAsAction="never"
-        android:icon="@drawable/ic_action_view_as_grid"/>
-    <item
         android:id="@+id/action_share"
         android:title="@string/action_share"
         android:orderInCategory="98"

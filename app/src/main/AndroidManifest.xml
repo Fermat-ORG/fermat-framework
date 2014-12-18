@@ -54,15 +54,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".fragmenttransition.MainActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity
             android:name=".walletstore.StoreFrontActivity"
             android:label="Wallet Store" >
@@ -212,14 +204,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
         </activity>
-        <activity
-            android:name=".walletframework.BlankActivityWithFragment"
-            android:label="@string/title_activity_blank_activity_with_fragment"
-            android:parentActivityName=".walletframework.FrameworkActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
-        </activity>
+
         <activity
             android:name=".walletframework.AvailableBalanceActivity"
             android:label="@string/title_activity_balance_available"
@@ -236,6 +221,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.bitdubai.smartwallet.walletstore.StoreFrontActivity" />
         </activity>
+        <activity
+            android:name=".walletframework.RequestsReceivedActivity"
+            android:label="@string/title_activity_requests_received"
+            android:parentActivityName=".walletframework.FrameworkActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+        </activity>
+
     </application>
 
 </manifest>
