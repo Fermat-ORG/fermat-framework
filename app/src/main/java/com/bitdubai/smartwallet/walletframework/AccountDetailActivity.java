@@ -309,10 +309,10 @@ public class AccountDetailActivity extends FragmentActivity
                     currentFragment =   AccountDetailAccountFragment.newInstance(position);
                     break;
                 case 1:
-                    currentFragment =   AccountDetailDebitsFragment.newInstance(position);
+                    currentFragment =   AccountDetailAllFragment.newInstance(position);
                     break;
                 case 2:
-                    currentFragment =  AccountDetailCreditsFragment.newInstance(position);
+                    currentFragment =  AccountDetailAllFragment.newInstance(position);
                     break;
                 case 3:
                     currentFragment =  AccountDetailAllFragment.newInstance(position);
