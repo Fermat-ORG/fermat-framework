@@ -210,7 +210,7 @@ public class StoreStoreFragment extends Fragment {
 
             mlist = new ArrayList<App>();
 
-            for (int i = 0; i <5; i++) {
+            for (int i = 0; i <1; i++) {
                 App item = new App();
                 item.title = company_sites[i];
                 item.description = company_descriptions[i];
@@ -308,7 +308,7 @@ public class StoreStoreFragment extends Fragment {
             ViewHolder holder;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.wallets_teens_fragment_stores_item, parent, false);
+                convertView = inflater.inflate(R.layout.wallets_teens_fragment_store_store, parent, false);
                 holder = new ViewHolder();
 
                 holder.star1= (ImageView) convertView.findViewById(R.id.star_1);
@@ -330,6 +330,7 @@ public class StoreStoreFragment extends Fragment {
                 holder.titleTextView = (TextView) convertView.findViewById(R.id.title_text_view);
                 holder.companyTextView = (TextView) convertView.findViewById(R.id.company_text_view);
                 holder.companyDescription = (TextView) convertView.findViewById(R.id.company_description);
+                holder.companyAddress = (TextView) convertView.findViewById(R.id.company_address);
                 //holder.ratingBar = (RatingBar) convertView.findViewById(R.id.rating_bar);
                 holder.valueTextView = (TextView) convertView.findViewById(R.id.value_text_view);
 
@@ -347,7 +348,8 @@ public class StoreStoreFragment extends Fragment {
 
             holder.titleTextView.setText(item.title);
             holder.companyTextView.setText(item.company);
-            holder.companyDescription.setText(item.Address);
+            holder.companyDescription.setText(item.description);
+            holder.companyAddress.setText(item.Address);
             //holder.ratingBar.setRating(item.rate);
             holder.valueTextView.setText(  item.value + " reviews");
 
@@ -362,6 +364,7 @@ public class StoreStoreFragment extends Fragment {
             holder.titleTextView.setTypeface(MyApplication.getDefaultTypeface());
             holder.companyTextView.setTypeface(MyApplication.getDefaultTypeface());
             holder.companyDescription.setTypeface(MyApplication.getDefaultTypeface());
+            holder.companyAddress.setTypeface(MyApplication.getDefaultTypeface());
             holder.valueTextView.setTypeface(MyApplication.getDefaultTypeface());
 
             if (item.rate >= 0)
@@ -496,6 +499,8 @@ public class StoreStoreFragment extends Fragment {
             public TextView companyTextView;
 
             public TextView companyDescription;
+
+            public TextView companyAddress;
 
             public RatingBar ratingBar;
 

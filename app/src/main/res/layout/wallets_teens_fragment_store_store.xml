@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="170dp"
+    android:layout_height="340dp"
 
 
     >
@@ -18,7 +18,7 @@
         <ImageView
             android:id="@+id/image_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
 
 
             android:src="@drawable/store_1"
@@ -126,7 +126,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:paddingBottom="28dp"
+            android:paddingBottom="14dp"
             android:gravity="center"
             >
 
@@ -193,13 +193,14 @@
         android:id="@+id/company_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:typeface="normal"
         android:text="App name"
         android:textAlignment="center"
 
 
         android:textColor="@color/black_overlay"
         android:textStyle="bold"
-        android:textSize="13sp"
+        android:textSize="15sp"
 
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
@@ -207,11 +208,30 @@
         android:paddingLeft="14dp"
         android:paddingRight="14dp"
         android:paddingTop="0dp"
-        android:paddingBottom="52dp"
+        android:paddingBottom="216dp"
         />
 
     <TextView
         android:id="@+id/company_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text=" company description"
+        android:textAlignment="center"
+        android:textColor="@color/black_overlay"
+        android:textStyle="normal"
+        android:textSize="10sp"
+
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+
+        android:paddingLeft="10dp"
+        android:paddingRight="14dp"
+        android:paddingTop="128dp"
+        android:paddingBottom="0dp"
+        />
+
+    <TextView
+        android:id="@+id/company_address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="descripcion direccion"
@@ -219,7 +239,7 @@
 
 
         android:textColor="#aaaaaa"
-        android:textStyle="italic"
+        android:textStyle="normal"
         android:textSize="8sp"
 
         android:layout_alignParentBottom="true"
@@ -228,7 +248,7 @@
         android:paddingLeft="14dp"
         android:paddingRight="14dp"
         android:paddingTop="0dp"
-        android:paddingBottom="42dp"
+        android:paddingBottom="32dp"
         />
 
     <TextView
