@@ -236,6 +236,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.bitdubai.smartwallet.walletstore.StoreFrontActivity" />
         </activity>
+        <activity
+            android:name=".walletframework.RequestsReceivedActivity"
+            android:label="@string/title_activity_requests_received"
+            android:parentActivityName=".walletframework.FrameworkActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+        </activity>
     </application>
 
 </manifest>

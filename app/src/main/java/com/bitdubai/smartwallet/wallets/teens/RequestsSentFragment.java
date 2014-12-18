@@ -91,7 +91,7 @@ public  class RequestsSentFragment extends android.app.Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.wallets_teens_fragment_requests_sent, container, false);
+        rootView = inflater.inflate(R.layout.wallets_teens_multiple_fragments_expandable_list_view, container, false);
 
 
         return rootView;
