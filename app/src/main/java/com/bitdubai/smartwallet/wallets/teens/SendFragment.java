@@ -26,6 +26,8 @@ public  class SendFragment extends Fragment {
     ExpandableListView lv;
     private String[] contacts;
     private String[] amounts;
+    private String[] totalAmount;
+    private String[] historyCount;
     private String[] whens;
     private String[] notes;
     private String[] pictures;
@@ -51,7 +53,8 @@ public  class SendFragment extends Fragment {
         amounts = new String[]{ "", "$325.00", "$1,400.00", "$0.50", "$25.00"};
         whens = new String[]{ "", "3 min ago", "2 hours ago", "today 9:24 AM", "yesterday"};
         notes = new String[]{"",  "Electricity bill", "Flat rent", "Test address", "More pictures"};
-
+        totalAmount = new String[]{"","","","",""};
+        historyCount = new String[] {"","","","",""};
         pictures = new String[]{"", "luis_profile_picture", "guillermo_profile_picture", "pedro_profile_picture", "mariana_profile_picture"};
 
         transactions = new String[][]{
@@ -212,8 +215,6 @@ public  class SendFragment extends Fragment {
 
                 when.text.setText(transactions_whens[groupPosition][childPosition].toString());
 
-                ImageView send_picture_detail = (ImageView) convertView.findViewById(R.id.icon_send_to_contact);
-                send_picture_detail.setTag(groupPosition);
 
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -232,6 +233,8 @@ public  class SendFragment extends Fragment {
             ViewHolder note;
             ImageView profile_picture;
             ImageView send_picture;
+            ViewHolder total;
+            ViewHolder history;
 
             if (groupPosition == 0)
             {
@@ -263,24 +266,19 @@ public  class SendFragment extends Fragment {
                     convertView = inf.inflate(R.layout.wallets_teens_fragment_send_list_header, parent, false);
 
                     profile_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
-                    send_picture = (ImageView) convertView.findViewById(R.id.icon_send_to_contact);
                     switch (groupPosition)
                     {
                         case 1:
                             profile_picture.setImageResource(R.drawable.luis_profile_picture);
-                            send_picture.setTag(1);
                             break;
                         case 2:
                             profile_picture.setImageResource(R.drawable.guillermo_profile_picture);
-                            send_picture.setTag(2);
                             break;
                         case 3:
                             profile_picture.setImageResource(R.drawable.pedro_profile_picture);
-                            send_picture.setTag(3);
                             break;
                         case 4:
                             profile_picture.setImageResource(R.drawable.mariana_profile_picture);
-                            send_picture.setTag(4);
                             break;
                     }
 
@@ -302,6 +300,16 @@ public  class SendFragment extends Fragment {
                     when.text.setTypeface(MyApplication.getDefaultTypeface());
 
                     when.text.setText(whens[groupPosition].toString());
+
+                    total = new ViewHolder();
+                    total.text = (TextView) convertView.findViewById(R.id.total_amount);
+                    total.text.setTypeface(MyApplication.getDefaultTypeface());
+                    total.text.setText(totalAmount[groupPosition].toString());
+
+                    history = new ViewHolder();
+                    history.text = (TextView) convertView.findViewById(R.id.history_count);
+                    history.text.setTypeface(MyApplication.getDefaultTypeface());
+                    history.text.setText(historyCount[groupPosition].toString());
 
                     note = new ViewHolder();
                     note.text = (TextView) convertView.findViewById(R.id.notes);
