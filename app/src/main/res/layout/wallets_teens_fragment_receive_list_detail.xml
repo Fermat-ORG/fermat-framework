@@ -15,10 +15,10 @@
         android:id="@+id/frame_tx_record"
         android:layout_width="match_parent"
         android:layout_height="106dp"
-        android:scaleType="centerCrop"
-
+        android:scaleType="fitXY"
+        android:src="@drawable/object_frame_4x05_filled_white"
         android:layout_gravity="center"
-        android:background="@drawable/object_frame_4x05_filled"
+
         />
 
     <ImageView
