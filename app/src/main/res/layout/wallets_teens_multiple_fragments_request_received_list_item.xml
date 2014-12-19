@@ -228,14 +228,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_menu_upload"
+                    android:src="@drawable/ic_action_accept_grey"
                     android:layout_alignParentRight="true"/>
                 <ImageView
                     android:id="@+id/action_cancel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_menu_save"
+                    android:src="@drawable/ic_action_cancel_grey"
                     android:layout_alignParentLeft="true"/>
             </RelativeLayout>
         </LinearLayout>
