@@ -12,7 +12,6 @@ import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
-
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -286,7 +285,7 @@ public class HomeFragment extends ListFragment implements LoaderManager.LoaderCa
                     view = mInflater.inflate(R.layout.wallets_teens_multiple_fragments_titles_list_item, parent, false);
 
                     tv = ((TextView)view.findViewById(R.id.title));
-                    tv.setText("Total balance");
+                    tv.setText("Total balance in all accounts");
                     tv.setTypeface(MyApplication.getDefaultTypeface());
 
                     break;
@@ -316,14 +315,14 @@ public class HomeFragment extends ListFragment implements LoaderManager.LoaderCa
                     view = mInflater.inflate(R.layout.wallets_teens_multiple_fragments_titles_list_item, parent, false);
 
                     tv = ((TextView)view.findViewById(R.id.title));
-                    tv.setText("Requests received");
+                    tv.setText("Requests received waiting to be accepted");
                     tv.setTypeface(MyApplication.getDefaultTypeface());
 
                     break;
 
                 case 3: case 4:case 6:
 
-                    view = mInflater.inflate(R.layout.wallets_teens_fragment_home_requests_received_list_item, parent, false);
+                    view = mInflater.inflate(R.layout.wallets_teens_multiple_fragments_request_received_list_item, parent, false);
                     account_picture = (ImageView) view.findViewById(R.id.profile_picture);
 
 
@@ -363,27 +362,15 @@ public class HomeFragment extends ListFragment implements LoaderManager.LoaderCa
                         case 6:
                             account_picture.setImageResource(R.drawable.stephani_profile_picture);
                             break;
-
                     }
-
                     break;
-
                 case 5:
                     view = mInflater.inflate(R.layout.wallets_teens_multiple_fragments_titles_list_item, parent, false);
-
                     tv = ((TextView)view.findViewById(R.id.title));
-                    tv.setText("Requests sent");
+                    tv.setText("Requests sent waiting to be accepted");
                     tv.setTypeface(MyApplication.getDefaultTypeface());
-
                     break;
-
-
-
             }
-
-
-
-
             return view;
         }
     }
@@ -421,4 +408,3 @@ public class HomeFragment extends ListFragment implements LoaderManager.LoaderCa
     }
 
 }
-

@@ -47,7 +47,7 @@ public class RequestsReceivedActivity extends Activity {
 
         PagerSlidingTabStrip  tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
 
-        ((MyApplication) this.getApplication()).setActionBarProperties(this,getWindow(),tabs, getActionBar(), getResources(),abTitle, "Resquests received");
+        ((MyApplication) this.getApplication()).setActionBarProperties(this,getWindow(),tabs, getActionBar(), getResources(),abTitle, "Requests received");
 
     }
 

@@ -67,7 +67,7 @@ public  class AccountDetailAllFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 String debits = "";
-        types_all = new String[]{ "Received", "Received", "sent", "Refill","sent", "Refill" , "Received", "sent","received", "Refill"};
+        types_all = new String[]{ "received", "received", "sent", "refill","sent", "refill" , "received", "sent","received", "refill"};
         debit_credit = new String[]{"credit",
                 "credit",
                 "debit",
@@ -78,7 +78,7 @@ String debits = "";
                 "debit",
                 "credit",
                 "credit"};
-        contacts_all = new String[]{"Lucia Alarcon De Zam...",
+        contacts_all = new String[]{"Lucia Alarcon De Zamacona",
                 "Juan Luis R. Pons",
                 "Luis Fernando Molina",
                 "Kalustyan´s",
@@ -90,7 +90,7 @@ String debits = "";
                 "D´Agostino"};
         amounts_all = new String[]{"$200.00", "$3,000.00", "$325.00", "$350.00", "$1,400.00", "$1,500.00", "$400.00"," $25.00","$600.00", "$250.00"};
         whens_all = new String[]{"4 hours ago", "5 hours ago", "yesterday", "yesterday", "yesterday", "yesterday", "31 dec 14", "23 may 14", "1 year ago", "5 sep 14"};
-        notes_all = new String[]{"New telephone", "Old desk", "electricity bill ", "For electricity bill", "Flat rent", "for this week expenses","Car oil", "More pictures","Computer monitor", "Refill test"};
+        notes_all = new String[]{"new telephone", "old desk", "electricity bill ", "for electricity bill", "flat rent", "for this week expenses","car oil", "more pictures","computer monitor", "refill test"};
         pictures_all = new String[]{"lucia_profile_picture", "juan_profile_picture", "luis_profile_picture", "refill_2", "guillermo_profile_picture", "refill_4","karina_profile_picture","mariana_profile_picture","taylor_profile_picture","refill_1"};
 
         //tab credit
@@ -205,11 +205,11 @@ String debits = "";
         lv.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
 
             @Override
-            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+           public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
 
-                Intent intent;
-                intent = new Intent(getActivity(), SentDetailActivity.class);
-                startActivity(intent);
+              //  Intent intent;
+               // intent = new Intent(getActivity(), SentDetailActivity.class);
+                //startActivity(intent);
 
                 return true;
             }
@@ -220,16 +220,16 @@ String debits = "";
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
 
-                if (groupPosition == 0) {
-                    Intent intent;
-                    intent = new Intent(getActivity(), SendToNewContactActivity.class);
-                    startActivity(intent);
+               // if (groupPosition == 0) {
+                //    Intent intent;
+                 //   intent = new Intent(getActivity(), SendToNewContactActivity.class);
+                  //  startActivity(intent);
+                   // return false;
+                //}
+                //else
+                //{
                     return false;
-                }
-                else
-                {
-                    return false;
-                }
+                //}
             }
         });
 
