@@ -53,8 +53,8 @@ public  class SendFragment extends Fragment {
         amounts = new String[]{ "", "$325.00", "$1,400.00", "$0.50", "$25.00"};
         whens = new String[]{ "", "3 min ago", "2 hours ago", "today 9:24 AM", "yesterday"};
         notes = new String[]{"",  "Electricity bill", "Flat rent", "Test address", "More pictures"};
-        totalAmount = new String[]{"","","","",""};
-        historyCount = new String[] {"","","","",""};
+        totalAmount = new String[]{"","$785.00","$22,730.00","$0.50","$125.00"};
+        historyCount = new String[] {"","7 records","16 records","1 record","6 records"};
         pictures = new String[]{"", "luis_profile_picture", "guillermo_profile_picture", "pedro_profile_picture", "mariana_profile_picture"};
 
         transactions = new String[][]{

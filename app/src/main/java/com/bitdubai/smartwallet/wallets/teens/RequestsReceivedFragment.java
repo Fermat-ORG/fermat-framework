@@ -42,9 +42,9 @@ public  class RequestsReceivedFragment extends android.app.Fragment {
         super.onCreate(savedInstanceState);
 
         contacts = new String[]{"Taylor Backus","Stephanie Himonidis","Kimberly Brown",  "Ginny Kaltabanis","Piper Faust","Deniz Caglar","Helen Nisbet","Dea Vanagan","Tim Hunter","Madeleine Jordan","Kate Bryan","Victoria Gandit","Jennifer Johnson","Robert Wint","Adrian Smith"};
-        amounts = new String[]{ "$3.00","$290.00","$600.00",                             "$50.00","$30.00","$500.00","$25.00","$250.00","$75.00","$300.00","$5.00","$100.00","$45.00","$35.00","$40.00"};
-        whens = new String[]{ "24 Mar 14","3 Feb 14","1 year ago",                       "1 year ago","2 years ago","2 years ago","2 years ago","3 years ago","3 years ago","3 years ago","3 years ago","4 years ago","4 years ago","5 years ago","5 years ago"};
-        notes = new String[]{ "Sandwich","Conference ticket","Computer monitor",         "Bag","Computer Keyboard","New TV","T-shirt","Pendrive","Shoes","Bed","Color pencils","Speakers","Microphone","Magazine","Book"};
+        amounts = new String[]{ "$3.00","$290.00","$600.00","$50.00","$30.00","$500.00","$25.00","$250.00","$75.00","$300.00","$5.00","$100.00","$45.00","$35.00","$40.00"};
+        whens = new String[]{ "24 Mar 14","3 Feb 14","1 year ago","1 year ago","2 years ago","2 years ago","2 years ago","3 years ago","3 years ago","3 years ago","3 years ago","4 years ago","4 years ago","5 years ago","5 years ago"};
+        notes = new String[]{ "sandwich","conference ticket","computer monitor","bag","computer keyboard","new tv","t-shirt","pendrive","shoes","bed","color pencils","speakers","microphone","magazine","book"};
 
 
         //pictures = new String[]{"luis_profile_picture", "guillermo_profile_picture", "pedro_profile_picture", "mariana_profile_picture"};
@@ -188,7 +188,7 @@ public  class RequestsReceivedFragment extends android.app.Fragment {
                     break;
 
 
-                case 2:
+                case 5:
                     convertView = mInflater.inflate(R.layout.wallets_teens_multiple_fragments_titles_list_item, parent, false);
 
                     tv = ((TextView)convertView.findViewById(R.id.title));
@@ -197,7 +197,7 @@ public  class RequestsReceivedFragment extends android.app.Fragment {
 
                     break;
 
-                case 1: case 3:case 4:case 5:case 6:case 7:case 8:case 9:case 10:case 11:case 12:case 13:case 14:case 15:
+                case 1: case 2: case 3:case 4 :case 6:case 7:case 8:case 9:case 10:case 11:case 12:case 13:case 14:case 15:
 
                 convertView = mInflater.inflate(R.layout.wallets_teens_multiple_fragments_request_received_list_item, parent, false);
                 account_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
@@ -233,7 +233,7 @@ public  class RequestsReceivedFragment extends android.app.Fragment {
                         account_picture.setImageResource(R.drawable.stephani_profile_picture);
                         break;
                     case 2:
-                        account_picture.setImageResource(R.drawable.kevin_profile_picture);
+                        account_picture.setImageResource(R.drawable.kimberly_profile_picture);
                         break;
                     case 3:
                         account_picture.setImageResource(R.drawable.ginny_profile_picture);
@@ -283,7 +283,7 @@ public  class RequestsReceivedFragment extends android.app.Fragment {
                 }
 
 
-                if (groupPosition > 1 )
+                if (groupPosition > 5 )
                 {
                     ImageView iv;
                     iv = (ImageView) convertView.findViewById(R.id.action_accept);

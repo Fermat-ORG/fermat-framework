@@ -19,12 +19,14 @@
         android:paddingLeft="14dp"
         android:paddingRight="14dp"
         android:paddingTop="14dp"
-        android:textSize="22sp"
+        android:textSize="12sp"
         android:text="1 min ago at 10:34 AM"
-        android:gravity="left"
+        android:gravity="center_vertical"
         android:textColor="#FFDDDDDD"
         android:textStyle="bold"
-
-        />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginBottom="12dp" />
 
 </RelativeLayout>

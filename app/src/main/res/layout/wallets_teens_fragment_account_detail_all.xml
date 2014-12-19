@@ -3,25 +3,78 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/background_tabs_diagonal_rotated"
     android:orientation="horizontal"
     android:paddingLeft="7dip"
     android:paddingRight="7dip"
-    android:paddingBottom="7dip"
-    android:paddingTop="7dip">
+    android:paddingBottom="0dip"
+    android:paddingTop="0dip"
+    android:gravity="end|right">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="106dp"
         android:layout_height="106dp"
-        android:background="#77000000">
+
+        >
+
+
 
         <ImageView
             android:id="@+id/profile_picture"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
+            android:scaleType="fitXY"
             android:src="@drawable/luis_profile_picture"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+
+            android:padding="6dp"
+            />
+
+        <ImageView
+            android:id="@+id/frame_contact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:src="@drawable/object_frame_1x1"
+            android:layout_gravity="center"
+
+            />
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:paddingLeft="8dip"
+            android:paddingRight="8dip"
+            android:paddingTop="3dip"
+            android:paddingBottom="8dip"
+
+            >
+
+
+            <TextView
+                android:id="@+id/contact_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+
+                android:textColor="#FFFFFFFF"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:text="New contact name"
+
+                android:background="@color/black_overlay"
+                android:layout_gravity="center"
+
+                android:paddingLeft="8dip"
+                android:paddingRight="8dip"
+                />
+        </FrameLayout>
+
+
+
+
 
         <ImageView
             android:id="@+id/icon_edit_profile"
@@ -29,127 +82,148 @@
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_action_email"
+            android:layout_alignParentTop="true"
             android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
             android:paddingLeft="7dp"
             android:paddingRight="7dp"
             android:paddingBottom="7dp"
-            android:paddingTop="7dp"/>
+            android:paddingTop="7dp"
+            android:onClick="onChatOverTrxIconClicked"
 
-        <ImageView
-            android:id="@+id/icon_send_to_contact"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_action_send_now"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentBottom="true"
-            android:paddingLeft="7dp"
-            android:paddingRight="7dp"
-            android:paddingBottom="7dp"
-            android:paddingTop="7dp"/>
+            />
+
+
+
 
     </RelativeLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_alignParentRight="true">
+        android:layout_height="106dp"
+
+
+        >
+
+        <ImageView
+            android:id="@+id/frame_tx_record"
+            android:layout_width="match_parent"
+            android:layout_height="106dp"
+            android:scaleType="centerCrop"
+
+            android:layout_gravity="center"
+            android:background="@drawable/object_frame_3x1_filled"
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_alignParentRight="true"
+
+            >
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingLeft="10dip"
+                android:paddingRight="10dip"
+                android:paddingTop="10dip">
+                <TextView
+                    android:id="@+id/type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FF666666"
+                    android:textSize="12sp"
+                    android:textStyle="normal"
+                    android:text="type"
+                    />
+
+                <TextView
+                    android:id="@+id/amount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:textColor="#FF666666"
+                    android:textSize="12sp"
+                    android:textStyle="normal"
+                    android:text="$0.00"
+                    android:paddingBottom="2dip"
+                    android:paddingTop="2dip"
+                    android:layout_gravity="start" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingLeft="10dip"
+                android:paddingRight="10dip"
+                android:weightSum="1">
+                <TextView
+                    android:id="@+id/when"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FF666666"
+                    android:textSize="12sp"
+                    android:textStyle="normal"
+                    android:text="yesterday"
+                    android:gravity="start" android:paddingBottom="2dip"
+                    android:paddingTop="2dip"/>
+
+                <TextView android:id="@+id/history_count"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="history count"
+                    android:textColor="#FF666666"
+                    android:visibility="gone"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:textSize="12sp"
+                    android:textStyle="normal"
+                    android:paddingBottom="2dip"
+                    android:paddingTop="2dip"
+                    android:gravity="end"
+
+                    />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingLeft="10dip"
+                android:paddingRight="10dip" android:paddingBottom="2dip" android:paddingTop="2dip">
+
+                <TextView
+                    android:id="@+id/notes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:textColor="#FF666666"
+                    android:textSize="12sp"
+                    android:textStyle="normal"
+                    android:text="notes"
+                    android:layout_gravity="start"
+                    android:paddingBottom="2dip"
+                    android:paddingTop="2dip" />
+            </LinearLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <TextView
-                android:id="@+id/type"
+            android:paddingBottom="10dip"
+            android:paddingRight="10dip">
+
+            <ImageView android:id="@+id/send_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:paddingLeft="7dip"
-                android:paddingRight="7dip"
-                android:paddingTop="3dip"
-                android:paddingBottom="3dip"
-                android:textColor="#FF666666"
-                android:textSize="12sp"
-                android:textStyle="normal"
-                android:text="type"/>
-
-
-            <TextView
-                android:id="@+id/amount"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center|end"
-                android:paddingLeft="7dip"
-                android:paddingRight="7dip"
-                android:paddingTop="3dip"
-                android:paddingBottom="3dip"
-                android:textColor="#FF666666"
-                android:textSize="25sp"
-                android:textStyle="normal"
-                android:text="$0.00"
-                android:layout_gravity="end" />
-
+                android:src="@drawable/ic_menu_send"
+                android:layout_alignParentRight="true"/>
+            </RelativeLayout>
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/notes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:paddingLeft="7dip"
-                android:paddingRight="7dip"
-                android:paddingTop="3dip"
-                android:paddingBottom="3dip"
-                android:textColor="#FF666666"
-                android:textSize="14sp"
-                android:textStyle="normal"
-                android:text="notes"
-                android:layout_gravity="start" />
-
-            <TextView
-                android:id="@+id/when"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingLeft="7dip"
-                android:paddingRight="7dip"
-                android:paddingTop="3dip"
-                android:paddingBottom="3dip"
-                android:textColor="#FF666666"
-                android:textSize="14sp"
-                android:textStyle="normal"
-                android:text="yesterday"
-                android:gravity="center|end" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/contact_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center|end"
-                android:paddingLeft="7dip"
-                android:paddingRight="7dip"
-                android:paddingTop="3dip"
-                android:paddingBottom="3dip"
-                android:textColor="#FF666666"
-                android:textSize="18sp"
-                android:textStyle="normal"
-                android:text="New contact"/>
-
-        </LinearLayout>
-
-    </LinearLayout>
-
+    </RelativeLayout>
 </LinearLayout>

@@ -173,12 +173,12 @@ public class StoreActivity extends FragmentActivity
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-
+/*
             case R.id.action_contact:
                 TabbedDialogFragment dialog = new TabbedDialogFragment();
                 dialog.show(getSupportFragmentManager(), "QuickContactFragment");
                 return true;
-
+*/
             case R.id.action_requests_sent:
                 Intent intent;
                 intent = new Intent(this, RequestsSentActivity.class);
