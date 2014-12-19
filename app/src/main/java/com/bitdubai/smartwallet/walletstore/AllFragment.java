@@ -47,17 +47,17 @@ public class AllFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         String[] free_paid =
-                {"free",
+                {"paid",
                         "free",
                         "paid",
                         "free",
                         "free",
                         "free",
+                        "paid",
                         "free",
                         "free",
                         "free",
-                        "free",
-                        "free",
+                        "paid",
                         "free",
                         "free",
                         "paid",
@@ -86,7 +86,26 @@ public class AllFragment extends Fragment {
                         "no",
                         "yes"
                 };
-
+        String[] installed =
+                {"false",
+                        "false",
+                        "false",
+                        "false",
+                        "true",
+                        "true",
+                        "true",
+                        "true",
+                        "true",
+                        "false",
+                        "true",
+                        "false",
+                        "true",
+                        "false",
+                        "true",
+                        "false",
+                        "false",
+                        "true"
+                };
         String[] company_names =
                {"Girl's wallet",
                 "Boy's wallet",
@@ -248,6 +267,7 @@ public class AllFragment extends Fragment {
                     item.favorite = (float) Math.random() * 5;
                     item.timetoarraive = (float) Math.random() * 5;
                     item.sale = (float) Math.random() * 5;
+                    item.installed = (installed[i]=="true") ? true : false;
                     mlist.add(item);
                 }
             }
@@ -269,6 +289,7 @@ public class AllFragment extends Fragment {
                         item.favorite = (float) Math.random() * 5;
                         item.timetoarraive = (float) Math.random() * 5;
                         item.sale = (float) Math.random() * 5;
+                        item.installed = (installed[i]=="true") ? true : false;
                         mlist.add(item);
                     }
 
@@ -294,6 +315,7 @@ public class AllFragment extends Fragment {
                         item.favorite = (float) Math.random() * 5;
                         item.timetoarraive = (float) Math.random() * 5;
                         item.sale = (float) Math.random() * 5;
+                        item.installed = (installed[i]=="true") ? true : false;
                         mlist.add(item);
                     }
                 }
@@ -316,6 +338,7 @@ public class AllFragment extends Fragment {
                         item.favorite = (float) Math.random() * 5;
                         item.timetoarraive = (float) Math.random() * 5;
                         item.sale = (float) Math.random() * 5;
+                        item.installed = (installed[i]=="true") ? true : false;
                         mlist.add(item);
                     }
                 }
@@ -386,6 +409,7 @@ public class AllFragment extends Fragment {
         public float sale;
 
         public float timetoarraive;
+        public boolean installed;
 
     }
 
@@ -455,7 +479,7 @@ public class AllFragment extends Fragment {
 
             holder.openHours.setText(  item.Open_hours);
 
-            if (item.timetoarraive > 3)
+            if (item.installed )
             {
                 holder.timeToArrive.setText( "Installed");
                 holder.downloadIcon.setVisibility(View.INVISIBLE);
