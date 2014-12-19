@@ -31,28 +31,20 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 
-import com.bitdubai.smartwallet.wallets.teens.AccountDetailAccountFragment;
-import com.bitdubai.smartwallet.wallets.teens.AccountDetailAllFragment;
-import com.bitdubai.smartwallet.wallets.teens.AccountDetailCreditsFragment;
-import com.bitdubai.smartwallet.wallets.teens.AccountDetailDebitsFragment;
+
 import com.bitdubai.smartwallet.wallets.teens.AccountDetailFiltersFragment;
-import com.bitdubai.smartwallet.wallets.teens.ContactsFragment;
-import com.bitdubai.smartwallet.wallets.teens.DiscountsFragment;
-import com.bitdubai.smartwallet.wallets.teens.HomeFragment;
-import com.bitdubai.smartwallet.wallets.teens.SendFragment;
 
+import com.bitdubai.smartwallet.wallets.teens.HistoryFragment;
+import com.bitdubai.smartwallet.wallets.teens.ReviewsFragment;
 
-
-import com.bitdubai.smartwallet.wallets.teens.BalanceFragment;
 
 import com.bitdubai.smartwallet.R;
-import com.bitdubai.smartwallet.wallets.teens.ReceiveFragment;
-import com.bitdubai.smartwallet.wallets.teens.RefillFragment;
+
 import com.bitdubai.smartwallet.wallets.teens.StoreChatFragment;
 import com.bitdubai.smartwallet.wallets.teens.StoreMapFragment;
 import com.bitdubai.smartwallet.wallets.teens.StoreProductsFragment;
 import com.bitdubai.smartwallet.wallets.teens.StoreStoreFragment;
-import com.bitdubai.smartwallet.wallets.teens.StoresFragment;
+
 
 
 
@@ -325,13 +317,13 @@ public class StoreActivity extends FragmentActivity
                     currentFragment =   StoreProductsFragment.newInstance(position);
                     break;
                 case 2:
-                    currentFragment =  SendFragment.newInstance(position);
+                    currentFragment =   ReviewsFragment.newInstance(position);
                     break;
                 case 3:
                     currentFragment =  StoreChatFragment.newInstance(position);
                     break;
                 case 4:
-                    currentFragment =  AccountDetailFiltersFragment.newInstance(position);
+                    currentFragment =  HistoryFragment.newInstance(position);
                     break;
                 case 5:
                     currentFragment =  StoreMapFragment.newInstance(position);
