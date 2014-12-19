@@ -256,6 +256,10 @@ public  class ReceiveFragment extends Fragment {
                 tv = (TextView) convertView.findViewById(R.id.when);
                 tv.setTypeface(MyApplication.getDefaultTypeface());
 
+
+                tv = (TextView) convertView.findViewById(R.id.new_contact_name);
+                tv.setTypeface(MyApplication.getDefaultTypeface());
+
                 tv = (TextView) convertView.findViewById(R.id.contact_name);
                 tv.setTypeface(MyApplication.getDefaultTypeface());
                 tv.setText("Receive from new contact");
