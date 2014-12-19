@@ -1,6 +1,7 @@
 package com.bitdubai.smartwallet.wallets.teens;
 
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +16,7 @@ import com.bitdubai.smartwallet.walletframework.MyApplication;
 
 
 
-public  class AccountDetailFiltersFragment extends Fragment {
+public  class AccountDetailFiltersFragment extends DialogFragment {
 
     private static final String ARG_POSITION = "position";
 

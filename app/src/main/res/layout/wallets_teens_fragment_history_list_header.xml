@@ -221,14 +221,14 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dip"
                 android:paddingRight="10dip"
-                android:paddingBottom="10dip"
+                android:paddingBottom="8dip"
                 android:layout_gravity="bottom">
                 <ImageView
                     android:id="@+id/recent_transactions"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_menu_view"
+                    android:src="@drawable/ic_action_add_to_queue_grey"
                     />
                 <ImageView
                     android:layout_width="wrap_content"

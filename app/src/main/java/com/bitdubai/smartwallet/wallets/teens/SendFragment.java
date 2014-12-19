@@ -235,6 +235,7 @@ public  class SendFragment extends Fragment {
             ImageView send_picture;
             ViewHolder total;
             ViewHolder history;
+            ViewHolder new_name;
 
             if (groupPosition == 0)
             {
@@ -246,6 +247,9 @@ public  class SendFragment extends Fragment {
                 tv.setTypeface(MyApplication.getDefaultTypeface());
 
                 tv = (TextView) convertView.findViewById(R.id.amount);
+                tv.setTypeface(MyApplication.getDefaultTypeface());
+
+                tv = (TextView) convertView.findViewById(R.id.new_contact_name);
                 tv.setTypeface(MyApplication.getDefaultTypeface());
 
                 tv = (TextView) convertView.findViewById(R.id.when);

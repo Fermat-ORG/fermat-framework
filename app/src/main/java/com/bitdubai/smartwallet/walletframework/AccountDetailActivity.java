@@ -160,12 +160,12 @@ public class AccountDetailActivity extends FragmentActivity
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
-/*
+
             case R.id.action_contact:
-                TabbedDialogFragment dialog = new TabbedDialogFragment();
+                AccountDetailFiltersFragment dialog = new AccountDetailFiltersFragment();
                 dialog.show(getSupportFragmentManager(), "QuickContactFragment");
                 return true;
-*/
+
             case R.id.action_requests_sent:
                 Intent intent;
                 intent = new Intent(this, RequestsSentActivity.class);
@@ -267,7 +267,7 @@ public class AccountDetailActivity extends FragmentActivity
 
         private String[] titles;
         private String[] titles_1 = { };
-        private String[] titles_2 = { "Account", "Debits", "Credits", "All", "Filters"};
+        private String[] titles_2 = { "Account", "Debits", "Credits", "All"};
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -317,12 +317,9 @@ public class AccountDetailActivity extends FragmentActivity
                 case 3:
                     currentFragment =  AccountDetailAllFragment.newInstance(position);
                     break;
-                case 4:
-                    currentFragment =  AccountDetailFiltersFragment.newInstance(position);
-                    break;
 
                 default:
-                    currentFragment =   AccountDetailFiltersFragment.newInstance(position);
+                    currentFragment =   AccountDetailAllFragment.newInstance(position);
                     break;
             }
             return currentFragment;
