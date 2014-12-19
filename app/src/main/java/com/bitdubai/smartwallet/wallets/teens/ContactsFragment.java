@@ -23,9 +23,11 @@ public  class ContactsFragment extends android.app.Fragment {
     View rootView;
     ExpandableListView lv;
     private String[] contacts;
-    private String[] amounts;
-    private String[] whens;
-    private String[] notes;
+    private String[] countries;
+    private String[] states;
+    private String[] when;
+    private String[] amount;
+    private String[] cities;
     private String[] pictures;
     private String[][] transactions;
     private String[][] transactions_amounts;
@@ -42,9 +44,9 @@ public  class ContactsFragment extends android.app.Fragment {
         super.onCreate(savedInstanceState);
 
         contacts = new String[]{"Céline Begnis", "Guillermo Villanueva", "Juan Luis R. Pons", "Karina Rodríguez","Kimberly Brown","Lucia Alarcon De Zamacona", "Luis Fernando Molina", "Mariana Duyos", "Pedro Perrotta", "Simon Cushing","Stephanie Himonidis","Taylor Backus" };
-        amounts = new String[]{"$200.00", "$3,000.00", "$400.00", "$3.00","$45.00","$600.00","50.00","$80,000.00"};
-        whens = new String[]{"4 hours ago", "5 hours ago", "yesterday 11:00 PM", "24 Mar 14","3 Feb 14","1 year ago","1 year ago","2 year ago"};
-        notes = new String[]{"New telephone", "Old desk", "Car oil", "Sandwich","Headphones","Computer monitor","Pen","Apartment in Dubai"};
+        countries = new String[]{"United States","United States","United States","United States","United States","United States","United States","United States","United States","United States","United States","United States","United States","United States","United States","United States","United States","United States"};
+        states = new String[]{"FL","NY","NY","NY","NY","NY","NY","NY","NY","NY","NY","NY","NY","NY","NY","NY","NY","NY","NY","NY","NY","NY","NY","NY","NY","NY","NY","NY","NY","NY","NY","NY"};
+        cities = new String[]{"Miami","New York","New York","New York","New York","New York","New York","New York","New York","New York","New York","New York","New York","New York","New York","New York","New York","New York","New York"};
 
         //pictures = new String[]{"luis_profile_picture", "guillermo_profile_picture", "pedro_profile_picture", "mariana_profile_picture"};
 
@@ -157,8 +159,6 @@ public  class ContactsFragment extends android.app.Fragment {
         public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
             ViewHolder holder;
-            ViewHolder amount;
-            ViewHolder when;
 
 
 
@@ -168,24 +168,11 @@ public  class ContactsFragment extends android.app.Fragment {
                 convertView = inf.inflate(R.layout.wallets_teens_fragment_send_and_receive_list_detail, parent, false);
                 holder = new ViewHolder();
 
-                holder.text = (TextView) convertView.findViewById(R.id.notes);
+                holder.text = (TextView) convertView.findViewById(R.id.city);
                 holder.text.setTypeface(MyApplication.getDefaultTypeface());
                 convertView.setTag(holder);
 
 
-
-
-                amount = new ViewHolder();
-                amount.text = (TextView) convertView.findViewById(R.id.amount);
-                amount.text.setTypeface(MyApplication.getDefaultTypeface());
-
-                amount.text.setText(transactions_amounts[groupPosition][childPosition].toString());
-
-                when = new ViewHolder();
-                when.text = (TextView) convertView.findViewById(R.id.when);
-                when.text.setTypeface(MyApplication.getDefaultTypeface());
-
-                when.text.setText(transactions_whens[groupPosition][childPosition].toString());
 
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -199,9 +186,10 @@ public  class ContactsFragment extends android.app.Fragment {
         @Override
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
             ViewHolder holder;
-            ViewHolder amount;
-            ViewHolder when;
-            ViewHolder note;
+            ViewHolder country;
+            ViewHolder state;
+            ViewHolder city;
+
             ImageView profile_picture;
 
 
@@ -256,6 +244,22 @@ public  class ContactsFragment extends android.app.Fragment {
 
                 }
 
+                city= new ViewHolder();
+                city.text = (TextView) convertView.findViewById(R.id.city);
+                city.text.setTypeface(MyApplication.getDefaultTypeface());
+                city.text.setText(cities[groupPosition].toString());
+
+
+                country = new ViewHolder();
+                country.text = (TextView) convertView.findViewById(R.id.country);
+                country.text.setTypeface(MyApplication.getDefaultTypeface());
+                country.text.setText(countries[groupPosition].toString());
+
+
+                state = new ViewHolder();
+                state.text = (TextView) convertView.findViewById(R.id.state);
+                state.text.setTypeface(MyApplication.getDefaultTypeface());
+                state.text.setText(states[groupPosition].toString());
 
 
                 holder = new ViewHolder();

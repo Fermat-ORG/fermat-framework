@@ -140,7 +140,7 @@ android:layout_height="106dp"
             android:textSize="12sp"
             android:textStyle="normal"
             android:text="$0.00"
-            android:paddingBottom="2dip"
+            android:paddingBottom="1dip"
             android:paddingTop="2dip"
             android:layout_gravity="start" />
 
@@ -154,7 +154,7 @@ android:layout_height="106dp"
 
             android:textStyle="normal"
             android:textSize="12sp"
-            android:paddingBottom="2dip"
+            android:paddingBottom="1dip"
             android:paddingTop="2dip"/>
     </LinearLayout>
 
@@ -173,8 +173,8 @@ android:layout_height="106dp"
             android:textSize="12sp"
             android:textStyle="normal"
             android:text="yesterday"
-            android:gravity="start" android:paddingBottom="2dip"
-            android:paddingTop="2dip"/>
+            android:gravity="start" android:paddingBottom="1dip"
+            android:paddingTop="1dip"/>
 
         <TextView android:id="@+id/history_count"
             android:layout_width="match_parent"
@@ -186,8 +186,8 @@ android:layout_height="106dp"
             android:layout_alignParentRight="true"
             android:textSize="12sp"
             android:textStyle="normal"
-            android:paddingBottom="2dip"
-            android:paddingTop="2dip"
+            android:paddingBottom="1dip"
+            android:paddingTop="1dip"
             android:gravity="end"
 
             />
@@ -210,8 +210,8 @@ android:layout_height="106dp"
             android:textStyle="normal"
             android:text="notes"
             android:layout_gravity="start"
-            android:paddingBottom="2dip"
-            android:paddingTop="2dip" />
+            android:paddingBottom="1dip"
+            android:paddingTop="1dip"/>
 
     </LinearLayout>
 

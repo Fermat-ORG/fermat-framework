@@ -6,8 +6,6 @@
     android:orientation="horizontal"
     android:paddingLeft="7dip"
     android:paddingRight="7dip"
-    android:paddingBottom="0dip"
-    android:paddingTop="0dip"
     android:gravity="end|right">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -116,7 +114,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_alignParentRight="true"
 
@@ -140,7 +138,7 @@
                     android:textSize="12sp"
                     android:textStyle="normal"
                     android:text="$0.00"
-                    android:paddingBottom="2dip"
+                    android:paddingBottom="1dip"
                     android:paddingTop="2dip"
                     android:layout_gravity="start" />
 
@@ -154,7 +152,7 @@
 
                     android:textStyle="normal"
                     android:textSize="12sp"
-                    android:paddingBottom="2dip"
+                    android:paddingBottom="1dip"
                     android:paddingTop="2dip"/>
             </LinearLayout>
 
@@ -173,8 +171,8 @@
                     android:textSize="12sp"
                     android:textStyle="normal"
                     android:text="yesterday"
-                    android:gravity="start" android:paddingBottom="2dip"
-                    android:paddingTop="2dip"/>
+                    android:gravity="start" android:paddingBottom="1dip"
+                    android:paddingTop="1dip"/>
 
                 <TextView android:id="@+id/history_count"
                     android:layout_width="match_parent"
@@ -186,8 +184,8 @@
                     android:layout_alignParentRight="true"
                     android:textSize="12sp"
                     android:textStyle="normal"
-                    android:paddingBottom="2dip"
-                    android:paddingTop="2dip"
+                    android:paddingBottom="1dip"
+                    android:paddingTop="1dip"
                     android:gravity="end"
 
                     />
@@ -210,8 +208,8 @@
                     android:textStyle="normal"
                     android:text="notes"
                     android:layout_gravity="start"
-                    android:paddingBottom="2dip"
-                    android:paddingTop="2dip" />
+                    android:paddingBottom="1dip"
+                    android:paddingTop="1dip" />
 
                 </LinearLayout>
 
