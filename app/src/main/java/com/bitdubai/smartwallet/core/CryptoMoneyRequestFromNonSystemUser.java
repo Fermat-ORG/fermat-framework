@@ -3,5 +3,5 @@ package com.bitdubai.smartwallet.core;
 /**
  * Created by ciencias on 21.12.14.
  */
-public class TxFromOutsideTheSystem extends MoneyIn {
+public class CryptoMoneyRequestFromNonSystemUser  extends  CryptoMoneyRequest{
 }
