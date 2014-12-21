@@ -6,5 +6,6 @@ package com.bitdubai.smartwallet.core;
 public class Account {
 
     private FiatCurrency mFiatCurrency;
+    private BalanceChunk[] mBalanceChunks;
 
 }
