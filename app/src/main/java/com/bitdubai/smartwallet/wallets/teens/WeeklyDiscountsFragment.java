@@ -20,10 +20,8 @@ public class WeeklyDiscountsFragment extends android.app.Fragment {
 
     View rootView;
     ExpandableListView lv;
-    private String[] contacts;
-    private String[] countries;
-    private String[] states;
-    private String[] cities;
+    private String[] dates;
+    private String[] adiscount_count;
     private String[] pictures;
     private String[][] transactions;
     private String[][] transactions_amounts;
@@ -36,15 +34,12 @@ public class WeeklyDiscountsFragment extends android.app.Fragment {
     }
 
 
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        contacts = new String[]{"Céline Begnis", "Kimberly Brown", "Juan Luis R. Pons", "Karina Rodríguez","Guillermo Villanueva","Lucia Alarcon De Zamacona", "Luis Fernando Molina", "Mariana Duyos", "Pedro Perrotta", "Simon Cushing","Stephanie Himonidis","Taylor Backus", "Ginny Kaltabanis","Piper Faust","Deniz Caglar","Helen Nisbet","Dea Vanagan","Tim Hunter","Madeleine Jordan","Kate Bryan","Victoria Gandit","Jennifer Johnson","Robert Wint","Kevin Helms","Teddy Truchot","Hélène Derosier","John Smith","Caroline Mignaux","Guillaume Thery","Brant Cryder","Thomas Levy","Louis Stenz" };
-        countries = new String[]{"United States","United States","United States","Canada","United States","Spain","Hungary","United States","Turkey","United States","United States","United States","Mexico","United States","Australia","Brazil","United States","United States","United Kingdom","Germany","United States","United States","United States","Hungary","United States","United States","United States","United Kingdom","United States","United States","Canda","United States",};
-        states = new String[]{"FL"       ,"CA",         "NY"      ,"AB",    "FL",  "Andalusia",   "Pest",       "NY",    "Istambul"   ,"MS",   "NY",     "UT",   "JAL",     "KY"      ,"WA",   "ES",     "NY",       "KY",     "London",  "Berlin",  "NY",      "NY",     "TX",     "Pest",     "NY",      "NV"    ,"London"   ,"NY",        "OH",      "NY"      ,"ON"      ,"NY"     ,"La",       "ON"      ,"NY"};
-        cities = new String[]{"Miami","San Francisco","Buffalo","Calgary","Orlando","Córdoba",   "Budapest",  "New York","Adalar", "Jackson","New York","Provo","Guadalajara","Lexigton","Perth","Vitoria","New York","Louisville","Sutton",  "Berlin","New York","New York","Dallas","Budapest","New York","Las Vegas","Croydon","New York","Pittsburgh","New York","Sudbury","New York","New Orleans","Sudbury","Kingston"};
-
-        //pictures = new String[]{"luis_profile_picture", "guillermo_profile_picture", "pedro_profile_picture", "mariana_profile_picture"};
+        dates = new String[]{"Week 1", "Week 2", "Week 3", "Week 4","Week5" };
+        adiscount_count = new String[]{"6","-9","0","10","2","5","-1"};
 
         transactions = new String[][]{
 
@@ -99,7 +94,7 @@ public class WeeklyDiscountsFragment extends android.app.Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         lv = (ExpandableListView) view.findViewById(R.id.expListView);
-        lv.setAdapter(new ExpandableListAdapter(contacts, transactions));
+        lv.setAdapter(new ExpandableListAdapter(dates, transactions));
         lv.setGroupIndicator(null);
 
     }
@@ -107,18 +102,18 @@ public class WeeklyDiscountsFragment extends android.app.Fragment {
     public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         private final LayoutInflater inf;
-        private String[] contacts;
+        private String[] dates;
         private String[][] transactions;
 
-        public ExpandableListAdapter(String[] contacts, String[][] transactions) {
-            this.contacts = contacts;
+        public ExpandableListAdapter(String[] dates, String[][] transactions) {
+            this.dates = dates;
             this.transactions = transactions;
             inf = LayoutInflater.from(getActivity());
         }
 
         @Override
         public int getGroupCount() {
-            return contacts.length;
+            return dates.length;
         }
 
         @Override
@@ -128,7 +123,7 @@ public class WeeklyDiscountsFragment extends android.app.Fragment {
 
         @Override
         public Object getGroup(int groupPosition) {
-            return contacts[groupPosition];
+            return dates[groupPosition];
         }
 
         @Override
@@ -154,23 +149,14 @@ public class WeeklyDiscountsFragment extends android.app.Fragment {
         @Override
         public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
-            ViewHolder holder;
+            ViewHolder  holder = new ViewHolder();
 
 
 
             //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
             // if (convertView == null) {
-            if (1 == 1) {
-                // convertView = inf.inflate(R.layout.wallets_teens_fragment_send_and_receive_list_detail, parent, false);
-                holder = new ViewHolder();
+            if (1 != 1) {
 
-                holder.text = (TextView) convertView.findViewById(R.id.city);
-                holder.text.setTypeface(MyApplication.getDefaultTypeface());
-                convertView.setTag(holder);
-
-
-
-            } else {
                 holder = (ViewHolder) convertView.getTag();
             }
 
@@ -182,140 +168,45 @@ public class WeeklyDiscountsFragment extends android.app.Fragment {
         @Override
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
             ViewHolder holder;
-            ViewHolder country;
-            ViewHolder state;
-            ViewHolder city;
+            ViewHolder count;
+            ViewHolder date;
 
-            ImageView profile_picture;
-
-
+            ImageView discount_picture;
 
             //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
             // if (convertView == null) {
             if (1 == 1) {
                 convertView = inf.inflate(R.layout.wallets_teens_fragment_weekly_discounts_list_item, parent, false);
 
-                profile_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
+                discount_picture = (ImageView) convertView.findViewById(R.id.discount_picture);
 
-                switch (groupPosition) {
-                    case 0:
-                        profile_picture.setImageResource(R.drawable.celine_profile_picture);
-                        break;
-                    case 1:
-                        profile_picture.setImageResource(R.drawable.kimberly_profile_picture);
-                        break;
-                    case 2:
-                        profile_picture.setImageResource(R.drawable.juan_profile_picture);
-                        break;
-                    case 3:
-                        profile_picture.setImageResource(R.drawable.karina_profile_picture);
-                        break;
-                    case 4:
-                        profile_picture.setImageResource(R.drawable.guillermo_profile_picture);
-                        break;
-                    case 5:
-                        profile_picture.setImageResource(R.drawable.lucia_profile_picture);
-                        break;
-                    case 6:
-                        profile_picture.setImageResource(R.drawable.luis_profile_picture);
-                        break;
-                    case 7:
-                        profile_picture.setImageResource(R.drawable.mariana_profile_picture);
-                        break;
-                    case 8:
-                        profile_picture.setImageResource(R.drawable.pedro_profile_picture);
-                        break;
-                    case 9:
-                        profile_picture.setImageResource(R.drawable.simon_profile_picture);
-                        break;
-                    case 10:
-                        profile_picture.setImageResource(R.drawable.stephani_profile_picture);
-                        break;
-                    case 11:
-                        profile_picture.setImageResource(R.drawable.taylor_profile_picture);
-                        break;
-                    case 12:
-                        profile_picture.setImageResource(R.drawable.ginny_profile_picture);
-                        break;
-                    case 13:
-                        profile_picture.setImageResource(R.drawable.piper_profile_picture);
-                        break;
-                    case 14:
-                        profile_picture.setImageResource(R.drawable.deniz_profile_picture);
-                        break;
-                    case 15:
-                        profile_picture.setImageResource(R.drawable.helen_profile_picture);
-                        break;
-                    case 16:
-                        profile_picture.setImageResource(R.drawable.dea_profile_picture);
-                        break;
-                    case 17:
-                        profile_picture.setImageResource(R.drawable.tim_profile_picture);
-                        break;
-                    case 18:
-                        profile_picture.setImageResource(R.drawable.madaleine_profile_picture);
-                        break;
-                    case 19:
-                        profile_picture.setImageResource(R.drawable.kate_profile_picture);
-                        break;
-                    case 20:
-                        profile_picture.setImageResource(R.drawable.victoria_profile_picture);
-                        break;
-                    case 21:
-                        profile_picture.setImageResource(R.drawable.jennifer_profile_picture);
-                        break;
-                    case 22:
-                        profile_picture.setImageResource(R.drawable.robert_profile_picture);
-                        break;
-                    case 23:
-                        profile_picture.setImageResource(R.drawable.kevin_profile_picture);
-                        break;
-                    case 24:
-                        profile_picture.setImageResource(R.drawable.teddy_profile_picture);
-                        break;
-                    case 25:
-                        profile_picture.setImageResource(R.drawable.helene_profile_picture);
-                        break;
-                    case 26:
-                        profile_picture.setImageResource(R.drawable.john_profile_picture);
-                        break;
-                    case 27:
-                        profile_picture.setImageResource(R.drawable.caroline_profile_picture);
-                        break;
-                    case 28:
-                        profile_picture.setImageResource(R.drawable.guillaume_profile_picture);
-                        break;
-                    case 29:
-                        profile_picture.setImageResource(R.drawable.brant_profile_picture);
-                        break;
-                    case 30:
-                        profile_picture.setImageResource(R.drawable.thomas_profile_picture);
-                        break;
-                    case 31:
-                        profile_picture.setImageResource(R.drawable.louis_profile_picture);
-                        break;
+                if(Integer.parseInt(adiscount_count[groupPosition]) > 0) {
+
+                    discount_picture.setImageResource(R.drawable.account_type_current_small);
 
 
-
-
+                }else {
+                    if(Integer.parseInt(adiscount_count[groupPosition]) < 0) {
+                        discount_picture.setImageResource(R.drawable.account_type_savings_1_small);
+                    }
+                    else
+                    {
+                        if(Integer.parseInt(adiscount_count[groupPosition]) == 0) {
+                            discount_picture.setImageResource(R.drawable.account_type_savings_2_small);
+                        }
+                    }
                 }
 
-                city= new ViewHolder();
-                city.text = (TextView) convertView.findViewById(R.id.city);
-                city.text.setTypeface(MyApplication.getDefaultTypeface());
-                city.text.setText(cities[groupPosition].toString());
 
+                date= new ViewHolder();
+                date.text = (TextView) convertView.findViewById(R.id.date);
+                date.text.setTypeface(MyApplication.getDefaultTypeface());
+                date.text.setText(dates[groupPosition].toString());
 
-                country = new ViewHolder();
-                country.text = (TextView) convertView.findViewById(R.id.country);
-                country.text.setTypeface(MyApplication.getDefaultTypeface());
-                country.text.setText(countries[groupPosition].toString());
-
-
-                state = new ViewHolder();
-                state.text = (TextView) convertView.findViewById(R.id.state);
-                state.text.setTypeface(MyApplication.getDefaultTypeface());
-                state.text.setText(states[groupPosition].toString());
+                count = new ViewHolder();
+                count.text = (TextView) convertView.findViewById(R.id.discount_count);
+                count.text.setTypeface(MyApplication.getDefaultTypeface());
+                count.text.setText(adiscount_count[groupPosition].toString());
 
 
                 holder = new ViewHolder();
