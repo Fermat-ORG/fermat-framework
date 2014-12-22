@@ -6,6 +6,7 @@ import java.util.List;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
@@ -23,6 +24,7 @@ import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.walletframework.DailyDiscountsActivity;
 import com.bitdubai.smartwallet.walletframework.MonthlyDiscountsActivity;
 import com.bitdubai.smartwallet.walletframework.MyApplication;
+import com.bitdubai.smartwallet.walletframework.RequestsSentActivity;
 import com.bitdubai.smartwallet.walletframework.WeeklyDiscountsActivity;
 
 
@@ -74,6 +76,7 @@ public class DiscountsFragment extends ListFragment implements LoaderManager.Loa
             case 0:
                 intent = new Intent(getActivity(), DailyDiscountsActivity.class);
                 startActivity(intent);
+
                 break;
 
             case 1:
