@@ -1,4 +1,4 @@
-package com.bitdubai.smartwallet.core;
+package com.bitdubai.smartwallet.core.enums;
 
 /**
  * Created by ciencias on 20.12.14.

@@ -1,7 +1,7 @@
 package com.bitdubai.smartwallet.core;
 
 /**
- * Created by ciencias on 20.12.14.
+ * Created by ciencias on 22.12.14.
  */
-public class Contact extends People {
+public interface Contact {
 }

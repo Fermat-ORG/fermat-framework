@@ -1,7 +1,7 @@
 package com.bitdubai.smartwallet.core.money.request;
 
-import com.bitdubai.smartwallet.core.CryptoCurrency;
-import com.bitdubai.smartwallet.core.FiatCurrency;
+import com.bitdubai.smartwallet.core.enums.CryptoCurrency;
+import com.bitdubai.smartwallet.core.enums.FiatCurrency;
 
 /**
  * Created by ciencias on 20.12.14.

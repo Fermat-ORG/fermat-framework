@@ -6,5 +6,5 @@ package com.bitdubai.smartwallet.core;
 public class Wallet {
 
 private Account[] mAccounts;
-
+private Contact[] mContacts;
 }

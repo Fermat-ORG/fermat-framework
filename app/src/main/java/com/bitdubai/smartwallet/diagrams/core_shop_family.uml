@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="562.0" y="200.0">com.bitdubai.smartwallet.core.shop.BrickAndMortarShopInSystem</node>
+    <node x="0.0" y="210.5">com.bitdubai.smartwallet.core.shop.P2PShop</node>
+    <node x="420.50000000000006" y="100.0">com.bitdubai.smartwallet.core.shop.BrickAndMortarShop</node>
+    <node x="71.00000000000006" y="110.5">com.bitdubai.smartwallet.core.shop.OnlineShop</node>
+    <node x="110.0" y="200.0">com.bitdubai.smartwallet.core.shop.WebShop</node>
+    <node x="314.0" y="210.5">com.bitdubai.smartwallet.core.shop.BrickAndMortarShopOutSystem</node>
+    <node x="261.75000000000006" y="0.0">com.bitdubai.smartwallet.core.shop.Shop</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="com.bitdubai.smartwallet.core.shop.BrickAndMortarShop" target="com.bitdubai.smartwallet.core.shop.Shop">
+      <point x="0.0" y="-25.0" />
+      <point x="558.0" y="75.0" />
+      <point x="387.00000000000006" y="75.0" />
+      <point x="41.75" y="25.0" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.shop.P2PShop" target="com.bitdubai.smartwallet.core.shop.OnlineShop">
+      <point x="2.8421709430404007E-14" y="-14.5" />
+      <point x="45.00000000000006" y="175.0" />
+      <point x="97.25000000000006" y="175.0" />
+      <point x="-26.25" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.shop.OnlineShop" target="com.bitdubai.smartwallet.core.shop.Shop">
+      <point x="0.0" y="-14.5" />
+      <point x="123.50000000000006" y="75.0" />
+      <point x="303.50000000000006" y="75.0" />
+      <point x="-41.75" y="25.0" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.shop.WebShop" target="com.bitdubai.smartwallet.core.shop.OnlineShop">
+      <point x="2.8421709430404007E-14" y="-25.0" />
+      <point x="202.00000000000003" y="175.0" />
+      <point x="149.75000000000006" y="175.0" />
+      <point x="26.25" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.shop.BrickAndMortarShopInSystem" target="com.bitdubai.smartwallet.core.shop.BrickAndMortarShop">
+      <point x="0.0" y="-25.0" />
+      <point x="688.0" y="175.0" />
+      <point x="626.75" y="175.0" />
+      <point x="68.75" y="25.0" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.shop.BrickAndMortarShopOutSystem" target="com.bitdubai.smartwallet.core.shop.BrickAndMortarShop">
+      <point x="5.6843418860808015E-14" y="-14.5" />
+      <point x="428.0000000000001" y="175.0" />
+      <point x="489.25000000000006" y="175.0" />
+      <point x="-68.75" y="25.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="407.0" y="125.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Fields</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
