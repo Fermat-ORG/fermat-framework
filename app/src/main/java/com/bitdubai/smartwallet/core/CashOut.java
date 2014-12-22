@@ -1,17 +1,11 @@
 package com.bitdubai.smartwallet.core;
 
+import com.bitdubai.smartwallet.core.transaction.FiatCryptoExternalTransaction;
+
 /**
  * Created by ciencias on 21.12.14.
  */
-public class CashOut extends ExternalTransaction  {
-
-    private long mTimestamp;
-
-    private FiatCurrency mFiatCurrency;
-    private double mFiatAmount;
-
-    private CryptoCurrency mCryptoCurrency;
-    private double mCryptoAmount;
+public class CashOut extends FiatCryptoExternalTransaction {
 
     private BalanceChunk mBalanceChunk = new BalanceChunk();
 
