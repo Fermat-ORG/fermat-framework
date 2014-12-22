@@ -3,62 +3,14 @@
   <ID>JAVA</ID>
   <OriginalElement />
   <nodes>
-    <node x="165.0" y="563.0">com.bitdubai.smartwallet.core.UserInterface</node>
-    <node x="805.75" y="0.0">com.bitdubai.smartwallet.core.BalanceChunk</node>
-    <node x="235.5" y="42.0">com.bitdubai.smartwallet.core.interfaces.Contact</node>
-    <node x="0.0" y="563.0">com.bitdubai.smartwallet.core.MoneyInEvent</node>
-    <node x="550.0" y="42.0">com.bitdubai.smartwallet.core.Account</node>
-    <node x="752.0" y="163.0">com.bitdubai.smartwallet.core.FiatAccount</node>
-    <node x="248.0" y="315.5">com.bitdubai.smartwallet.core.WalletOwner</node>
-    <node x="91.5" y="447.0">com.bitdubai.smartwallet.core.CurrentDevice</node>
-    <node x="225.0" y="163.0">com.bitdubai.smartwallet.core.wallet.Wallet</node>
-    <node x="0.0" y="284.0">com.bitdubai.smartwallet.core.shop.Shop</node>
-    <node x="453.0" y="163.0">com.bitdubai.smartwallet.core.CryptoAccount</node>
+    <node x="165.0" y="274.0">com.bitdubai.smartwallet.core.interfaces.Contact</node>
+    <node x="0.0" y="274.0">com.bitdubai.smartwallet.core.MoneyInEvent</node>
+    <node x="0.0" y="158.0">com.bitdubai.smartwallet.core.wallet.Wallet</node>
+    <node x="0.0" y="0.0">com.bitdubai.smartwallet.core.shop.Shop</node>
   </nodes>
   <notes />
-  <edges>
-    <edge source="com.bitdubai.smartwallet.core.wallet.Wallet" target="com.bitdubai.smartwallet.core.interfaces.Contact">
-      <point x="-52.0" y="-35.5" />
-      <point x="0.0" y="14.5" />
-    </edge>
-    <edge source="com.bitdubai.smartwallet.core.CurrentDevice" target="com.bitdubai.smartwallet.core.shop.Shop">
-      <point x="-65.0" y="-35.5" />
-      <point x="156.5" y="422.0" />
-      <point x="114.0" y="422.0" />
-      <point x="0.0" y="56.5" />
-    </edge>
-    <edge source="com.bitdubai.smartwallet.core.wallet.Wallet" target="com.bitdubai.smartwallet.core.Account">
-      <point x="52.0" y="-35.5" />
-      <point x="381.0" y="138.0" />
-      <point x="564.1666666666666" y="138.0" />
-      <point x="-28.33333333333337" y="14.5" />
-    </edge>
-    <edge source="com.bitdubai.smartwallet.core.CryptoAccount" target="com.bitdubai.smartwallet.core.Account">
-      <point x="0.0" y="-35.5" />
-      <point x="0.0" y="14.5" />
-    </edge>
-    <edge source="com.bitdubai.smartwallet.core.FiatAccount" target="com.bitdubai.smartwallet.core.Account">
-      <point x="-61.25" y="-35.5" />
-      <point x="813.25" y="138.0" />
-      <point x="620.8333333333334" y="138.0" />
-      <point x="28.33333333333337" y="14.5" />
-    </edge>
-    <edge source="com.bitdubai.smartwallet.core.WalletOwner" target="com.bitdubai.smartwallet.core.wallet.Wallet">
-      <point x="0.0" y="-25.0" />
-      <point x="0.0" y="35.5" />
-    </edge>
-    <edge source="com.bitdubai.smartwallet.core.CurrentDevice" target="com.bitdubai.smartwallet.core.WalletOwner">
-      <point x="65.0" y="-35.5" />
-      <point x="286.5" y="422.0" />
-      <point x="329.0" y="422.0" />
-      <point x="0.0" y="25.0" />
-    </edge>
-    <edge source="com.bitdubai.smartwallet.core.FiatAccount" target="com.bitdubai.smartwallet.core.BalanceChunk">
-      <point x="61.25" y="-35.5" />
-      <point x="0.0" y="56.5" />
-    </edge>
-  </edges>
-  <settings layout="Hierarchic Group" zoom="1.0" x="533.0" y="296.0" />
+  <edges />
+  <settings layout="Hierarchic Group" zoom="1.0" x="184.5" y="228.0" />
   <SelectedNodes />
   <Categories>
     <Category>Fields</Category>

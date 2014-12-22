@@ -3,5 +3,8 @@ package com.bitdubai.smartwallet.core.transaction;
 /**
  * Created by ciencias on 21.12.14.
  */
-public class MoneyInFromMoneyRequestToSystemUser extends MoneyInFromSystemUser {
+public abstract class ExtraUserTransaction extends Transaction {
+
+
+
 }
