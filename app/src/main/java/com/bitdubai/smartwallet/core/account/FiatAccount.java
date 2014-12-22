@@ -1,4 +1,4 @@
-package com.bitdubai.smartwallet.core;
+package com.bitdubai.smartwallet.core.account;
 
 import com.bitdubai.smartwallet.core.enums.FiatCurrency;
 

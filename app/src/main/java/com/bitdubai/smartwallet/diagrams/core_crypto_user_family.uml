@@ -3,242 +3,138 @@
   <ID>JAVA</ID>
   <OriginalElement />
   <nodes>
-    <node x="769.609375" y="110.5">com.bitdubai.smartwallet.core.NonSystemUser</node>
-    <node x="0.0" y="261.0">com.bitdubai.smartwallet.core.crypto.user.NonSystemUserApp</node>
-    <node x="425.453125" y="261.0">com.bitdubai.smartwallet.core.crypto.user.NonSystemUserPerson</node>
-    <node x="933.078125" y="0.0">com.bitdubai.smartwallet.core.crypto.user.CryptoUser</node>
-    <node x="1521.453125" y="370.0">com.bitdubai.smartwallet.core.crypto.user.NonSystemUserIoTDeviceContact</node>
-    <node x="1411.578125" y="110.5">com.bitdubai.smartwallet.core.crypto.user.SoftwarePackage</node>
-    <node x="254.515625" y="370.0">com.bitdubai.smartwallet.core.crypto.user.SystemUserAppContact</node>
-    <node x="884.203125" y="261.0">com.bitdubai.smartwallet.core.Contact</node>
-    <node x="233.765625" y="261.0">com.bitdubai.smartwallet.core.crypto.user.SystemUserApp</node>
-    <node x="457.453125" y="370.0">com.bitdubai.smartwallet.core.crypto.user.NonSystemUserPersonContact</node>
-    <node x="1857.2369791666665" y="110.5">com.bitdubai.smartwallet.core.crypto.user.IoTDevice</node>
-    <node x="353.53385416666663" y="79.0">com.bitdubai.smartwallet.core.crypto.user.Person</node>
-    <node x="1235.453125" y="370.0">com.bitdubai.smartwallet.core.crypto.user.SystemUserSoftwarePackageContact</node>
-    <node x="1860.953125" y="261.0">com.bitdubai.smartwallet.core.crypto.user.SystemUserIoTDevice</node>
-    <node x="703.453125" y="370.0">com.bitdubai.smartwallet.core.crypto.user.SystemUserPersonContact</node>
-    <node x="1782.453125" y="370.0">com.bitdubai.smartwallet.core.crypto.user.SystemUserIoTDeviceContact</node>
-    <node x="27.0" y="370.0">com.bitdubai.smartwallet.core.crypto.user.NonSystemUserAppContact</node>
-    <node x="924.453125" y="370.0">com.bitdubai.smartwallet.core.crypto.user.NonSystemUserSoftwarePackageContact</node>
-    <node x="1037.609375" y="261.0">com.bitdubai.smartwallet.core.crypto.user.NonSystemUserSoftwarePackage</node>
-    <node x="661.796875" y="261.0">com.bitdubai.smartwallet.core.crypto.user.SystemUserPerson</node>
-    <node x="56.04947916666663" y="110.5">com.bitdubai.smartwallet.core.crypto.user.App</node>
-    <node x="1606.203125" y="261.0">com.bitdubai.smartwallet.core.crypto.user.NonSystemUserIoTDevice</node>
-    <node x="1016.921875" y="110.5">com.bitdubai.smartwallet.core.SystemUser</node>
-    <node x="1328.953125" y="261.0">com.bitdubai.smartwallet.core.crypto.user.SystemUserSofwarePackage</node>
+    <node x="521.5" y="221.0">com.bitdubai.smartwallet.core.crypto.user.NonSystemUserApp</node>
+    <node x="948.5" y="221.0">com.bitdubai.smartwallet.core.crypto.user.NonSystemUserPerson</node>
+    <node x="867.375" y="0.0">com.bitdubai.smartwallet.core.crypto.user.CryptoUser</node>
+    <node x="0.0" y="300.0">com.bitdubai.smartwallet.core.crypto.user.NonSystemUserIoTDeviceContact</node>
+    <node x="1599.5416666666665" y="110.5">com.bitdubai.smartwallet.core.crypto.user.SoftwarePackage</node>
+    <node x="723.0" y="300.0">com.bitdubai.smartwallet.core.crypto.user.SystemUserAppContact</node>
+    <node x="747.5" y="221.0">com.bitdubai.smartwallet.core.crypto.user.SystemUserApp</node>
+    <node x="0.0" y="374.0">com.bitdubai.smartwallet.core.system.user.SystemUser</node>
+    <node x="924.0" y="300.0">com.bitdubai.smartwallet.core.crypto.user.NonSystemUserPersonContact</node>
+    <node x="196.04166666666663" y="110.5">com.bitdubai.smartwallet.core.crypto.user.IoTDevice</node>
+    <node x="1057.0416666666665" y="79.0">com.bitdubai.smartwallet.core.crypto.user.Person</node>
+    <node x="1391.0" y="300.0">com.bitdubai.smartwallet.core.crypto.user.SystemUserSoftwarePackageContact</node>
+    <node x="285.5" y="221.0">com.bitdubai.smartwallet.core.crypto.user.SystemUserIoTDevice</node>
+    <node x="1170.0" y="300.0">com.bitdubai.smartwallet.core.crypto.user.SystemUserPersonContact</node>
+    <node x="261.0" y="300.0">com.bitdubai.smartwallet.core.crypto.user.SystemUserIoTDeviceContact</node>
+    <node x="497.0" y="300.0">com.bitdubai.smartwallet.core.crypto.user.NonSystemUserAppContact</node>
+    <node x="1677.0" y="300.0">com.bitdubai.smartwallet.core.crypto.user.NonSystemUserSoftwarePackageContact</node>
+    <node x="1701.5" y="221.0">com.bitdubai.smartwallet.core.crypto.user.NonSystemUserSoftwarePackage</node>
+    <node x="1194.5" y="221.0">com.bitdubai.smartwallet.core.crypto.user.SystemUserPerson</node>
+    <node x="675.5416666666666" y="110.5">com.bitdubai.smartwallet.core.crypto.user.App</node>
+    <node x="24.5" y="221.0">com.bitdubai.smartwallet.core.crypto.user.NonSystemUserIoTDevice</node>
+    <node x="1418.0" y="221.0">com.bitdubai.smartwallet.core.crypto.user.SystemUserSofwarePackage</node>
   </nodes>
   <notes />
   <edges>
     <edge source="com.bitdubai.smartwallet.core.crypto.user.NonSystemUserSoftwarePackageContact" target="com.bitdubai.smartwallet.core.crypto.user.NonSystemUserSoftwarePackage">
-      <point x="72.75" y="-14.5" />
-      <point x="1142.703125" y="350.0" />
-      <point x="1158.609375" y="350.0" />
+      <point x="0.0" y="-14.5" />
       <point x="0.0" y="14.5" />
     </edge>
     <edge source="com.bitdubai.smartwallet.core.crypto.user.SystemUserAppContact" target="com.bitdubai.smartwallet.core.crypto.user.SystemUserApp">
-      <point x="-45.25" y="-14.5" />
+      <point x="0.0" y="-14.5" />
       <point x="0.0" y="14.5" />
     </edge>
-    <edge source="com.bitdubai.smartwallet.core.crypto.user.NonSystemUserApp" target="com.bitdubai.smartwallet.core.NonSystemUser">
-      <point x="39.25" y="-14.5" />
-      <point x="117.75" y="211.0" />
-      <point x="786.234375" y="211.0" />
-      <point x="-49.875" y="14.5" />
-    </edge>
-    <edge source="com.bitdubai.smartwallet.core.crypto.user.NonSystemUserSoftwarePackageContact" target="com.bitdubai.smartwallet.core.Contact">
-      <point x="-72.75" y="-14.5" />
-      <point x="997.203125" y="350.0" />
-      <point x="930.890625" y="350.0" />
-      <point x="5.1875" y="14.5" />
-    </edge>
-    <edge source="com.bitdubai.smartwallet.core.crypto.user.SystemUserPersonContact" target="com.bitdubai.smartwallet.core.Contact">
-      <point x="50.25" y="-14.5" />
-      <point x="854.203125" y="350.0" />
-      <point x="920.515625" y="350.0" />
-      <point x="-5.1875" y="14.5" />
-    </edge>
     <edge source="com.bitdubai.smartwallet.core.crypto.user.NonSystemUserIoTDevice" target="com.bitdubai.smartwallet.core.crypto.user.IoTDevice">
-      <point x="48.0" y="-14.5" />
-      <point x="1750.203125" y="241.0" />
-      <point x="1880.4869791666665" y="241.0" />
+      <point x="0.0" y="-14.5" />
+      <point x="120.5" y="196.0" />
+      <point x="219.29166666666663" y="196.0" />
       <point x="-23.25" y="14.5" />
     </edge>
     <edge source="com.bitdubai.smartwallet.core.crypto.user.SystemUserIoTDevice" target="com.bitdubai.smartwallet.core.crypto.user.IoTDevice">
-      <point x="41.75" y="-14.5" />
-      <point x="1986.203125" y="241.0" />
-      <point x="1926.9869791666665" y="241.0" />
+      <point x="0.0" y="-14.5" />
+      <point x="369.0" y="196.0" />
+      <point x="265.79166666666663" y="196.0" />
       <point x="23.25" y="14.5" />
     </edge>
     <edge source="com.bitdubai.smartwallet.core.crypto.user.NonSystemUserPersonContact" target="com.bitdubai.smartwallet.core.crypto.user.NonSystemUserPerson">
-      <point x="-56.5" y="-14.5" />
+      <point x="0.0" y="-14.5" />
       <point x="0.0" y="14.5" />
     </edge>
     <edge source="com.bitdubai.smartwallet.core.crypto.user.SystemUserPersonContact" target="com.bitdubai.smartwallet.core.crypto.user.SystemUserPerson">
-      <point x="-50.25" y="-14.5" />
-      <point x="753.703125" y="310.0" />
-      <point x="737.796875" y="310.0" />
+      <point x="0.0" y="-14.5" />
       <point x="0.0" y="14.5" />
     </edge>
-    <edge source="com.bitdubai.smartwallet.core.crypto.user.SystemUserPerson" target="com.bitdubai.smartwallet.core.SystemUser">
-      <point x="38.0" y="-14.5" />
-      <point x="775.796875" y="241.0" />
-      <point x="1057.421875" y="241.0" />
-      <point x="-13.5" y="14.5" />
-    </edge>
-    <edge source="com.bitdubai.smartwallet.core.crypto.user.SystemUserSoftwarePackageContact" target="com.bitdubai.smartwallet.core.Contact">
-      <point x="-66.5" y="-14.5" />
-      <point x="1301.953125" y="340.0" />
-      <point x="941.265625" y="340.0" />
-      <point x="15.5625" y="14.5" />
-    </edge>
-    <edge source="com.bitdubai.smartwallet.core.crypto.user.NonSystemUserAppContact" target="com.bitdubai.smartwallet.core.Contact">
-      <point x="51.5" y="-14.5" />
-      <point x="181.5" y="320.0" />
-      <point x="889.390625" y="320.0" />
-      <point x="-36.3125" y="14.5" />
-    </edge>
-    <edge source="com.bitdubai.smartwallet.core.crypto.user.NonSystemUserPersonContact" target="com.bitdubai.smartwallet.core.Contact">
-      <point x="56.5" y="-14.5" />
-      <point x="626.953125" y="340.0" />
-      <point x="910.140625" y="340.0" />
-      <point x="-15.5625" y="14.5" />
-    </edge>
     <edge source="com.bitdubai.smartwallet.core.crypto.user.SystemUserApp" target="com.bitdubai.smartwallet.core.crypto.user.App">
-      <point x="-33.0" y="-14.5" />
-      <point x="266.765625" y="201.0" />
-      <point x="99.54947916666663" y="201.0" />
+      <point x="0.0" y="-14.5" />
+      <point x="813.5" y="196.0" />
+      <point x="719.0416666666666" y="196.0" />
       <point x="14.5" y="14.5" />
     </edge>
     <edge source="com.bitdubai.smartwallet.core.crypto.user.Person" target="com.bitdubai.smartwallet.core.crypto.user.CryptoUser">
       <point x="0.0" y="-46.0" />
-      <point x="448.03385416666663" y="59.0" />
-      <point x="971.703125" y="59.0" />
-      <point x="-12.875" y="14.5" />
+      <point x="1151.5416666666665" y="59.0" />
+      <point x="931.75" y="59.0" />
+      <point x="12.875" y="14.5" />
     </edge>
     <edge source="com.bitdubai.smartwallet.core.crypto.user.NonSystemUserIoTDeviceContact" target="com.bitdubai.smartwallet.core.crypto.user.NonSystemUserIoTDevice">
-      <point x="60.25" y="-14.5" />
+      <point x="0.0" y="-14.5" />
       <point x="0.0" y="14.5" />
     </edge>
     <edge source="com.bitdubai.smartwallet.core.crypto.user.NonSystemUserPerson" target="com.bitdubai.smartwallet.core.crypto.user.Person">
-      <point x="-44.25" y="-14.5" />
-      <point x="469.703125" y="201.0" />
-      <point x="400.78385416666663" y="201.0" />
+      <point x="0.0" y="-14.5" />
+      <point x="1037.0" y="196.0" />
+      <point x="1104.2916666666665" y="196.0" />
       <point x="-47.25" y="46.0" />
     </edge>
-    <edge source="com.bitdubai.smartwallet.core.crypto.user.SystemUserAppContact" target="com.bitdubai.smartwallet.core.Contact">
-      <point x="45.25" y="-14.5" />
-      <point x="390.265625" y="330.0" />
-      <point x="899.765625" y="330.0" />
-      <point x="-25.9375" y="14.5" />
-    </edge>
     <edge source="com.bitdubai.smartwallet.core.crypto.user.SystemUserSoftwarePackageContact" target="com.bitdubai.smartwallet.core.crypto.user.SystemUserSofwarePackage">
-      <point x="66.5" y="-14.5" />
+      <point x="0.0" y="-14.5" />
       <point x="0.0" y="14.5" />
     </edge>
     <edge source="com.bitdubai.smartwallet.core.crypto.user.SoftwarePackage" target="com.bitdubai.smartwallet.core.crypto.user.CryptoUser">
       <point x="0.0" y="-14.5" />
-      <point x="1483.078125" y="59.0" />
-      <point x="997.453125" y="59.0" />
-      <point x="12.875" y="14.5" />
-    </edge>
-    <edge source="com.bitdubai.smartwallet.core.crypto.user.SystemUserIoTDeviceContact" target="com.bitdubai.smartwallet.core.Contact">
-      <point x="-54.0" y="-14.5" />
-      <point x="1836.453125" y="320.0" />
-      <point x="962.015625" y="320.0" />
-      <point x="36.3125" y="14.5" />
+      <point x="1671.0416666666665" y="49.0" />
+      <point x="957.5" y="49.0" />
+      <point x="38.625" y="14.5" />
     </edge>
     <edge source="com.bitdubai.smartwallet.core.crypto.user.NonSystemUserSoftwarePackage" target="com.bitdubai.smartwallet.core.crypto.user.SoftwarePackage">
-      <point x="60.5" y="-14.5" />
-      <point x="1219.109375" y="241.0" />
-      <point x="1447.328125" y="241.0" />
-      <point x="-35.75" y="14.5" />
-    </edge>
-    <edge source="com.bitdubai.smartwallet.core.crypto.user.SystemUserIoTDevice" target="com.bitdubai.smartwallet.core.SystemUser">
-      <point x="-41.75" y="-14.5" />
-      <point x="1902.703125" y="191.0" />
-      <point x="1111.421875" y="191.0" />
-      <point x="40.5" y="14.5" />
-    </edge>
-    <edge source="com.bitdubai.smartwallet.core.crypto.user.NonSystemUserApp" target="com.bitdubai.smartwallet.core.crypto.user.App">
-      <point x="-39.25" y="-14.5" />
-      <point x="39.25" y="241.0" />
-      <point x="70.54947916666663" y="241.0" />
-      <point x="-14.5" y="14.5" />
-    </edge>
-    <edge source="com.bitdubai.smartwallet.core.crypto.user.NonSystemUserSoftwarePackage" target="com.bitdubai.smartwallet.core.NonSystemUser">
-      <point x="-60.5" y="-14.5" />
-      <point x="1098.109375" y="221.0" />
-      <point x="852.734375" y="221.0" />
-      <point x="16.625" y="14.5" />
-    </edge>
-    <edge source="com.bitdubai.smartwallet.core.crypto.user.SystemUserApp" target="com.bitdubai.smartwallet.core.SystemUser">
-      <point x="33.0" y="-14.5" />
-      <point x="332.765625" y="231.0" />
-      <point x="1030.421875" y="231.0" />
-      <point x="-40.5" y="14.5" />
-    </edge>
-    <edge source="com.bitdubai.smartwallet.core.crypto.user.NonSystemUserPerson" target="com.bitdubai.smartwallet.core.NonSystemUser">
-      <point x="44.25" y="-14.5" />
-      <point x="558.203125" y="221.0" />
-      <point x="819.484375" y="221.0" />
-      <point x="-16.625" y="14.5" />
-    </edge>
-    <edge source="com.bitdubai.smartwallet.core.crypto.user.SystemUserSofwarePackage" target="com.bitdubai.smartwallet.core.crypto.user.SoftwarePackage">
-      <point x="53.0" y="-14.5" />
-      <point x="1487.953125" y="241.0" />
-      <point x="1518.828125" y="241.0" />
+      <point x="0.0" y="-14.5" />
+      <point x="1822.5" y="196.0" />
+      <point x="1706.7916666666665" y="196.0" />
       <point x="35.75" y="14.5" />
     </edge>
-    <edge source="com.bitdubai.smartwallet.core.crypto.user.NonSystemUserIoTDevice" target="com.bitdubai.smartwallet.core.NonSystemUser">
-      <point x="-48.0" y="-14.5" />
-      <point x="1654.203125" y="201.0" />
-      <point x="885.984375" y="201.0" />
-      <point x="49.875" y="14.5" />
+    <edge source="com.bitdubai.smartwallet.core.crypto.user.NonSystemUserApp" target="com.bitdubai.smartwallet.core.crypto.user.App">
+      <point x="0.0" y="-14.5" />
+      <point x="600.0" y="196.0" />
+      <point x="690.0416666666666" y="196.0" />
+      <point x="-14.5" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.crypto.user.SystemUserSofwarePackage" target="com.bitdubai.smartwallet.core.crypto.user.SoftwarePackage">
+      <point x="0.0" y="-14.5" />
+      <point x="1524.0" y="196.0" />
+      <point x="1635.2916666666665" y="196.0" />
+      <point x="-35.75" y="14.5" />
     </edge>
     <edge source="com.bitdubai.smartwallet.core.crypto.user.NonSystemUserAppContact" target="com.bitdubai.smartwallet.core.crypto.user.NonSystemUserApp">
-      <point x="-51.5" y="-14.5" />
+      <point x="0.0" y="-14.5" />
       <point x="0.0" y="14.5" />
-    </edge>
-    <edge source="com.bitdubai.smartwallet.core.crypto.user.SystemUserSofwarePackage" target="com.bitdubai.smartwallet.core.SystemUser">
-      <point x="-53.0" y="-14.5" />
-      <point x="1381.953125" y="211.0" />
-      <point x="1084.421875" y="211.0" />
-      <point x="13.5" y="14.5" />
-    </edge>
-    <edge source="com.bitdubai.smartwallet.core.crypto.user.NonSystemUserIoTDeviceContact" target="com.bitdubai.smartwallet.core.Contact">
-      <point x="-60.25" y="-14.5" />
-      <point x="1581.703125" y="330.0" />
-      <point x="951.640625" y="330.0" />
-      <point x="25.9375" y="14.5" />
     </edge>
     <edge source="com.bitdubai.smartwallet.core.crypto.user.App" target="com.bitdubai.smartwallet.core.crypto.user.CryptoUser">
       <point x="0.0" y="-14.5" />
-      <point x="85.04947916666663" y="49.0" />
-      <point x="945.953125" y="49.0" />
-      <point x="-38.625" y="14.5" />
+      <point x="704.5416666666666" y="59.0" />
+      <point x="906.0" y="59.0" />
+      <point x="-12.875" y="14.5" />
     </edge>
     <edge source="com.bitdubai.smartwallet.core.crypto.user.SystemUserPerson" target="com.bitdubai.smartwallet.core.crypto.user.Person">
-      <point x="-38.0" y="-14.5" />
-      <point x="699.796875" y="201.0" />
-      <point x="495.28385416666663" y="201.0" />
+      <point x="0.0" y="-14.5" />
+      <point x="1270.5" y="196.0" />
+      <point x="1198.7916666666665" y="196.0" />
       <point x="47.25" y="46.0" />
     </edge>
     <edge source="com.bitdubai.smartwallet.core.crypto.user.SystemUserIoTDeviceContact" target="com.bitdubai.smartwallet.core.crypto.user.SystemUserIoTDevice">
-      <point x="54.0" y="-14.5" />
+      <point x="0.0" y="-14.5" />
       <point x="0.0" y="14.5" />
     </edge>
     <edge source="com.bitdubai.smartwallet.core.crypto.user.IoTDevice" target="com.bitdubai.smartwallet.core.crypto.user.CryptoUser">
       <point x="0.0" y="-14.5" />
-      <point x="1903.7369791666665" y="49.0" />
-      <point x="1023.203125" y="49.0" />
-      <point x="38.625" y="14.5" />
+      <point x="242.54166666666663" y="49.0" />
+      <point x="880.25" y="49.0" />
+      <point x="-38.625" y="14.5" />
     </edge>
   </edges>
-  <settings layout="Hierarchic Group" zoom="0.64990234375" x="1014.0" y="199.5" />
-  <SelectedNodes>
-    <node>com.bitdubai.smartwallet.core.crypto.user.NonSystemUserPerson</node>
-  </SelectedNodes>
+  <settings layout="Hierarchic Group" zoom="0.64990234375" x="1014.0" y="180.76634109691952" />
+  <SelectedNodes />
   <Categories>
     <Category>Fields</Category>
   </Categories>

@@ -3,83 +3,85 @@
   <ID>JAVA</ID>
   <OriginalElement />
   <nodes>
-    <node x="1684.0" y="221.0">com.bitdubai.smartwallet.core.money.request.CryptoMoneyRequestToNonSystemUser</node>
+    <node x="1848.0" y="221.0">com.bitdubai.smartwallet.core.money.request.CryptoMoneyRequestToNonSystemUser</node>
     <node x="0.0" y="221.0">com.bitdubai.smartwallet.core.money.request.FiatMoneyRequestFromSystemUser</node>
-    <node x="1027.625" y="0.0">com.bitdubai.smartwallet.core.money.request.MoneyRequest</node>
-    <node x="532.0" y="221.0">com.bitdubai.smartwallet.core.money.request.FiatMoneyRequestFromNonSystemUser</node>
-    <node x="831.0" y="221.0">com.bitdubai.smartwallet.core.money.request.FiatMoneyRequestToNonSystemUser</node>
-    <node x="1409.0" y="221.0">com.bitdubai.smartwallet.core.money.request.CryptoMoneyRequestToSystemUser</node>
-    <node x="274.0" y="221.0">com.bitdubai.smartwallet.core.money.request.FiatMoneyRequestToSystemUser</node>
-    <node x="1984.0" y="221.0">com.bitdubai.smartwallet.core.money.request.CryptoMoneyRequestFromNonSystemUser</node>
-    <node x="409.75" y="100.0">com.bitdubai.smartwallet.core.money.request.FiatMoneyRequest</node>
-    <node x="1118.0" y="221.0">com.bitdubai.smartwallet.core.money.request.CryptoMoneyRequestFromSystemUser</node>
-    <node x="1550.75" y="110.5">com.bitdubai.smartwallet.core.money.request.CryptoMoneyRequest</node>
+    <node x="1128.375" y="0.0">com.bitdubai.smartwallet.core.money.request.MoneyRequest</node>
+    <node x="531.9999999999999" y="221.0">com.bitdubai.smartwallet.core.money.request.FiatMoneyRequestFromNonSystemUser</node>
+    <node x="906.9999999999999" y="221.0">com.bitdubai.smartwallet.core.money.request.FiatMoneyRequestToNonSystemUser</node>
+    <node x="1573.0" y="221.0">com.bitdubai.smartwallet.core.money.request.CryptoMoneyRequestToSystemUser</node>
+    <node x="273.9999999999999" y="221.0">com.bitdubai.smartwallet.core.money.request.FiatMoneyRequestToSystemUser</node>
+    <node x="2223.0" y="221.0">com.bitdubai.smartwallet.core.money.request.CryptoMoneyRequestFromNonSystemUser</node>
+    <node x="428.7499999999999" y="100.0">com.bitdubai.smartwallet.core.money.request.FiatMoneyRequest</node>
+    <node x="1282.0" y="221.0">com.bitdubai.smartwallet.core.money.request.CryptoMoneyRequestFromSystemUser</node>
+    <node x="1733.5" y="110.5">com.bitdubai.smartwallet.core.money.request.CryptoMoneyRequest</node>
   </nodes>
   <notes />
   <edges>
     <edge source="com.bitdubai.smartwallet.core.money.request.FiatMoneyRequest" target="com.bitdubai.smartwallet.core.money.request.MoneyRequest">
       <point x="0.0" y="-35.5" />
-      <point x="532.25" y="75.0" />
-      <point x="1067.625" y="75.0" />
+      <point x="551.2499999999999" y="75.0" />
+      <point x="1168.375" y="75.0" />
       <point x="-40.0" y="25.0" />
     </edge>
     <edge source="com.bitdubai.smartwallet.core.money.request.CryptoMoneyRequestToNonSystemUser" target="com.bitdubai.smartwallet.core.money.request.CryptoMoneyRequest">
       <point x="0.0" y="-25.0" />
-      <point x="1824.0" y="201.0" />
-      <point x="1712.625" y="201.0" />
+      <point x="2025.5" y="201.0" />
+      <point x="1895.375" y="201.0" />
       <point x="32.375" y="25.0" />
     </edge>
     <edge source="com.bitdubai.smartwallet.core.money.request.FiatMoneyRequestToNonSystemUser" target="com.bitdubai.smartwallet.core.money.request.FiatMoneyRequest">
       <point x="0.0" y="-25.0" />
-      <point x="964.5" y="191.0" />
-      <point x="624.125" y="191.0" />
+      <point x="1084.5" y="191.0" />
+      <point x="643.1249999999999" y="191.0" />
       <point x="91.875" y="35.5" />
     </edge>
     <edge source="com.bitdubai.smartwallet.core.money.request.CryptoMoneyRequestFromSystemUser" target="com.bitdubai.smartwallet.core.money.request.CryptoMoneyRequest">
       <point x="0.0" y="-25.0" />
-      <point x="1253.5" y="191.0" />
-      <point x="1583.125" y="191.0" />
+      <point x="1417.5" y="191.0" />
+      <point x="1765.875" y="191.0" />
       <point x="-97.125" y="25.0" />
     </edge>
     <edge source="com.bitdubai.smartwallet.core.money.request.FiatMoneyRequestToSystemUser" target="com.bitdubai.smartwallet.core.money.request.FiatMoneyRequest">
       <point x="0.0" y="-25.0" />
-      <point x="393.0" y="201.0" />
-      <point x="501.625" y="201.0" />
+      <point x="392.9999999999999" y="201.0" />
+      <point x="520.6249999999999" y="201.0" />
       <point x="-30.625" y="35.5" />
     </edge>
     <edge source="com.bitdubai.smartwallet.core.money.request.CryptoMoneyRequestToSystemUser" target="com.bitdubai.smartwallet.core.money.request.CryptoMoneyRequest">
       <point x="0.0" y="-25.0" />
-      <point x="1536.5" y="201.0" />
-      <point x="1647.875" y="201.0" />
+      <point x="1700.5" y="201.0" />
+      <point x="1830.625" y="201.0" />
       <point x="-32.375" y="25.0" />
     </edge>
     <edge source="com.bitdubai.smartwallet.core.money.request.FiatMoneyRequestFromSystemUser" target="com.bitdubai.smartwallet.core.money.request.FiatMoneyRequest">
       <point x="0.0" y="-25.0" />
       <point x="127.0" y="191.0" />
-      <point x="440.375" y="191.0" />
+      <point x="459.3749999999999" y="191.0" />
       <point x="-91.875" y="35.5" />
-    </edge>
-    <edge source="com.bitdubai.smartwallet.core.money.request.CryptoMoneyRequestFromNonSystemUser" target="com.bitdubai.smartwallet.core.money.request.CryptoMoneyRequest">
-      <point x="0.0" y="-25.0" />
-      <point x="2132.0" y="191.0" />
-      <point x="1777.375" y="191.0" />
-      <point x="97.125" y="25.0" />
     </edge>
     <edge source="com.bitdubai.smartwallet.core.money.request.CryptoMoneyRequest" target="com.bitdubai.smartwallet.core.money.request.MoneyRequest">
       <point x="0.0" y="-25.0" />
-      <point x="1680.25" y="75.0" />
-      <point x="1147.625" y="75.0" />
+      <point x="1863.0" y="75.0" />
+      <point x="1248.375" y="75.0" />
       <point x="40.0" y="25.0" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.money.request.CryptoMoneyRequestFromNonSystemUser" target="com.bitdubai.smartwallet.core.money.request.CryptoMoneyRequest">
+      <point x="0.0" y="-25.0" />
+      <point x="2400.5" y="191.0" />
+      <point x="1960.125" y="191.0" />
+      <point x="97.125" y="25.0" />
     </edge>
     <edge source="com.bitdubai.smartwallet.core.money.request.FiatMoneyRequestFromNonSystemUser" target="com.bitdubai.smartwallet.core.money.request.FiatMoneyRequest">
       <point x="0.0" y="-25.0" />
-      <point x="671.5" y="201.0" />
-      <point x="562.875" y="201.0" />
+      <point x="709.4999999999999" y="201.0" />
+      <point x="581.8749999999999" y="201.0" />
       <point x="30.625" y="35.5" />
     </edge>
   </edges>
-  <settings layout="Hierarchic Group" zoom="1.0" x="1140.0" y="135.5" />
-  <SelectedNodes />
+  <settings layout="Hierarchic Group" zoom="0.5123171670515781" x="1289.0" y="135.5" />
+  <SelectedNodes>
+    <node>com.bitdubai.smartwallet.core.money.request.CryptoMoneyRequestFromSystemUser</node>
+  </SelectedNodes>
   <Categories>
     <Category>Constructors</Category>
     <Category>Fields</Category>

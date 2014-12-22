@@ -8,6 +8,7 @@ import com.bitdubai.smartwallet.core.crypto.user.Person;
 public class Shop {
 
     private Person mManager;
-
-
+    private Product[] mProducts;
+    private Service[] mServices;
+    private String mPicture;
 }
