@@ -7,6 +7,6 @@ import com.bitdubai.smartwallet.core.account.BalanceChunk;
  */
 public abstract class MoneyOut extends FiatCryptoTransaction {
 
-    private MoneySource[] mMoneySource = new BalanceChunk();
+    private MoneySource[] mMoneySource;
     private Discount mDiscount;
 }
