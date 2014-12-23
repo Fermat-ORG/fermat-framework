@@ -74,8 +74,6 @@
 
 
 
-
-
         <ImageView
             android:id="@+id/icon_edit_profile"
             android:layout_width="wrap_content"
@@ -89,6 +87,22 @@
             android:paddingBottom="7dp"
             android:paddingTop="7dp"
             android:onClick="onChatOverTrxIconClicked"
+
+            />
+
+        <ImageView
+            android:id="@+id/icon_send_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_menu_send"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:paddingLeft="7dp"
+            android:paddingRight="7dp"
+            android:paddingBottom="7dp"
+            android:paddingTop="7dp"
+            android:onClick="onSendIconClicked"
 
             />
 
@@ -237,7 +251,9 @@ android:layout_height="106dp"
             android:scaleType="centerCrop"
             android:id="@+id/open_history"
             android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"/>
+            android:layout_alignParentBottom="true"
+            android:onClick="onSendAllIconClicked"
+            />
     </RelativeLayout>
 </LinearLayout>
 </RelativeLayout>

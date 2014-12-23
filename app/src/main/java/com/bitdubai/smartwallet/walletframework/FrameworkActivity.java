@@ -115,6 +115,34 @@ public class FrameworkActivity extends FragmentActivity
 
     }
 
+    public void onSendIconClicked(View v) {
+
+            int tagId = (int)v.getTag();
+            MyApplication.setTagId(tagId);
+
+        Intent intent;
+        intent = new Intent(this, SendToContactActivity.class);
+        startActivity(intent);
+
+        return;
+
+    }
+
+    public void onSendAllIconClicked(View v) {
+try {
+    int tagId = (int) v.getTag();
+    MyApplication.setTagId(tagId);
+    Intent intent;
+    intent = new Intent(this, SendAllHistoryActivity.class);
+    startActivity(intent);
+}
+catch(Exception ex)
+        {
+            String strError = ex.getMessage();
+        }
+        return;
+
+    }
 
     public void onAvailableBalanceIconClicked(View v) {
 

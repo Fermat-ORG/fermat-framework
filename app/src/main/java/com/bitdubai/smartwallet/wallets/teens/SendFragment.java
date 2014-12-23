@@ -122,6 +122,7 @@ public  class SendFragment extends Fragment {
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
 
                 if (groupPosition == 0) {
+
                     Intent intent;
                     intent = new Intent(getActivity(), SendToNewContactActivity.class);
                     startActivity(intent);
@@ -193,9 +194,12 @@ public  class SendFragment extends Fragment {
             ViewHolder when;
 
 
+
             //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
             // if (convertView == null) {
             if (1 == 1) {
+
+
                 convertView = inf.inflate(R.layout.wallets_teens_fragment_send_list_detail, parent, false);
                 holder = new ViewHolder();
 
@@ -215,6 +219,8 @@ public  class SendFragment extends Fragment {
 
                 when.text.setText(transactions_whens[groupPosition][childPosition].toString());
 
+                ImageView send_to_contact =  (ImageView) convertView.findViewById(R.id.icon_send_to_contact);
+                send_to_contact.setTag(groupPosition);
 
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -270,6 +276,17 @@ public  class SendFragment extends Fragment {
                     convertView = inf.inflate(R.layout.wallets_teens_fragment_send_list_header, parent, false);
 
                     profile_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
+//asigned tagId at icons action
+                    ImageView  send_profile_picture = (ImageView) convertView.findViewById(R.id.icon_send_profile);
+
+                    send_profile_picture.setTag(groupPosition);
+
+                    ImageView  history_picture = (ImageView) convertView.findViewById(R.id.open_history);
+
+                    history_picture.setTag(groupPosition);
+
+
+
                     switch (groupPosition)
                     {
                         case 1:
