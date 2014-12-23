@@ -8,10 +8,12 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
-import com.bitdubai.smartwallet.wallets.teens.SendToContactFragment;
+import com.bitdubai.smartwallet.wallets.teens.SendAllFragment;
 
-
-public class SendToContactActivity extends Activity {
+/**
+ * Created by Natalia on 23/12/2014.
+ */
+public class SendAllHistoryActivity extends Activity {
 
     private PagerSlidingTabStrip tabs;
     private CharSequence mTitle = "Send History";
@@ -19,10 +21,10 @@ public class SendToContactActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.wallet_framework_activity_send_to_contact);
+        setContentView(R.layout.wallet_framework_activity_send_all);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, new SendToContactFragment())
+                    .add(R.id.container, new SendAllFragment())
                     .commit();
         }
         tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
@@ -38,7 +40,7 @@ public class SendToContactActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.wallet_framework_activity_send_to_contact_menu, menu);
+        getMenuInflater().inflate(R.menu.wallet_framework_activity_sent_all_menu, menu);
         return true;
     }
 
