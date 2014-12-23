@@ -121,71 +121,6 @@
 
         >
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:paddingBottom="28dp"
-            android:gravity="center"
-            >
-
-            <ImageView
-                android:id="@+id/star_1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/grid_background_star_empty"
-                android:scaleType="fitCenter"
-                android:scaleX="0.8"
-                android:scaleY="0.8"
-                android:gravity="center"
-                />
-            <ImageView
-                android:id="@+id/star_2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/grid_background_star_empty"
-                android:scaleType="fitCenter"
-                android:scaleX="0.8"
-                android:scaleY="0.8"
-                android:gravity="center"
-                />
-            <ImageView
-                android:id="@+id/star_3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/grid_background_star_empty"
-                android:scaleType="fitCenter"
-                android:scaleX="0.8"
-                android:scaleY="0.8"
-                android:gravity="center"
-                />
-            <ImageView
-                android:id="@+id/star_4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/grid_background_star_empty"
-                android:scaleType="fitCenter"
-                android:scaleX="0.8"
-                android:scaleY="0.8"
-                android:gravity="center"
-
-                />
-            <ImageView
-                android:id="@+id/star_5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/grid_background_star_empty"
-                android:scaleType="fitCenter"
-                android:scaleX="0.8"
-                android:scaleY="0.8"
-                android:gravity="center"
-                />
-
-
-        </LinearLayout>
-
-
     </RelativeLayout>
 
 
@@ -230,7 +165,26 @@
         android:paddingTop="0dp"
         android:paddingBottom="42dp"
         />
-    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:paddingBottom="32dip"
+        android:gravity="center">
+        <TextView android:id="@+id/percentage"
+            android:layout_width="wrap_content"
+            android:textColor="#aaaaaa"
+            android:layout_height="wrap_content"
+            android:text="%14"
+            android:textSize="8sp"
+            android:textStyle="normal"
+            />
+        <ImageView android:id="@+id/triangle"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:src="@drawable/red_triangle"/>
+
+        </LinearLayout>
     <TextView 
         android:id="@+id/title_text_view"
         android:layout_width="wrap_content"
@@ -279,11 +233,11 @@
 
 
     <TextView
-        android:id="@+id/value_text_view"
+        android:id="@+id/availability"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="right"
-        android:text="reviews"
+        android:text="available"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:textColor="#aaaaaa"

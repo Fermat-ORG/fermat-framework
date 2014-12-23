@@ -110,7 +110,7 @@ public class HomeFragment extends ListFragment implements LoaderManager.LoaderCa
             // Here, we are generating some Sample data
 
             // Create corresponding array of entries and load with data.
-            List<Model> entries = new ArrayList<Model>(5);
+            List<Model> entries = new ArrayList<Model>(8);
             entries.add(new Model("Java", "2"));
             entries.add(new Model("Java", "2"));
             entries.add(new Model("Java", "2"));
@@ -118,6 +118,9 @@ public class HomeFragment extends ListFragment implements LoaderManager.LoaderCa
             entries.add(new Model("Java", "2"));
             entries.add(new Model("Java", "2"));
             entries.add(new Model("Java", "2"));
+            entries.add(new Model("Java", "2"));
+            entries.add(new Model("Java", "2"));
+
 
 
             return entries;
@@ -250,10 +253,10 @@ public class HomeFragment extends ListFragment implements LoaderManager.LoaderCa
             String[] whens;
             String[] notes;
 
-            contacts = new String[]{"", "", "", "Simon Cushing","Céline Begnis","Taylor Backus","Stephanie Himonidis","Kimberly Brown" };
-            amounts = new String[]{"","", "",  "$300.00", "$20.00", "$3.00","$290.00","$600.00","50.00","$80,000.00"};
-            whens = new String[]{"", "", "", "5 hours ago", "yesterday 10:22 AM", "24 Mar 14","3 Feb 14","1 year ago","1 year ago","2 year ago"};
-            notes = new String[]{"","", "",  "Tickets to the opera", "Bus Ticket", "Sandwich","Conference ticket","Computer monitor","Pen","Apartment in Dubai"};
+            contacts = new String[]{"","","","Stephanie Himonidis","Kimberly Brown","Ginny Kaltabanis","Piper Faust","Taylor Backus","Stephanie Himonidis","Kimberly Brown" ,"","","",""};
+            amounts = new String[]{"","", "", "$290.00","$600.00","$50.00","$30.00","$600.00","50.00","$80,000.00","","","","",""};
+            whens = new String[]{"", "", "", "3 Feb 14","1 year ago","1 year ago","2 years ago","1 year ago","1 year ago","2 year ago","","","",""};
+            notes = new String[]{"","", "",  "conference ticket","computer monitor","bag","computer keyboard","Computer monitor","Pen","Apartment in Dubai","","","",""};
 
 
 
@@ -320,7 +323,7 @@ public class HomeFragment extends ListFragment implements LoaderManager.LoaderCa
 
                     break;
 
-                case 3: case 4:case 6:
+                case 3: case 4:case 5:case 6:case 8:
 
                     view = mInflater.inflate(R.layout.wallets_teens_multiple_fragments_request_received_list_item, parent, false);
                     account_picture = (ImageView) view.findViewById(R.id.profile_picture);
@@ -351,20 +354,26 @@ public class HomeFragment extends ListFragment implements LoaderManager.LoaderCa
 
                     switch (position)
                     {
-                        case 3:
-                            account_picture.setImageResource(R.drawable.simon_profile_picture);
 
+                        case 3:
+                            account_picture.setImageResource(R.drawable.stephani_profile_picture);
                             break;
                         case 4:
-                            account_picture.setImageResource(R.drawable.celine_profile_picture);
+                            account_picture.setImageResource(R.drawable.kimberly_profile_picture);
+                            break;
+                        case 5:
+                            account_picture.setImageResource(R.drawable.ginny_profile_picture);
+                            break;
+                        case 6:
+                            account_picture.setImageResource(R.drawable.piper_profile_picture);
                             break;
 
-                        case 6:
+                        case 8:
                             account_picture.setImageResource(R.drawable.stephani_profile_picture);
                             break;
                     }
                     break;
-                case 5:
+                case 7:
                     view = mInflater.inflate(R.layout.wallets_teens_multiple_fragments_titles_list_item, parent, false);
                     tv = ((TextView)view.findViewById(R.id.title));
                     tv.setText("Requests sent waiting to be accepted");
