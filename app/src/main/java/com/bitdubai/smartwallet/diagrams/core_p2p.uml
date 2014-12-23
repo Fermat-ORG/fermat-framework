@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="286.5" y="154.0">com.bitdubai.smartwallet.core.p2p.NodeRim</node>
+    <node x="0.0" y="361.0">com.bitdubai.smartwallet.core.p2p.NodeRanks</node>
+    <node x="252.0" y="440.0">com.bitdubai.smartwallet.core.p2p.UnstableToStable</node>
+    <node x="417.0" y="440.0">com.bitdubai.smartwallet.core.p2p.StableToStable</node>
+    <node x="143.5" y="154.0">com.bitdubai.smartwallet.core.p2p.UnstableNode</node>
+    <node x="91.25" y="287.0">com.bitdubai.smartwallet.core.p2p.RimLeader</node>
+    <node x="198.5" y="233.0">com.bitdubai.smartwallet.core.p2p.RimMember</node>
+    <node x="210.25" y="287.0">com.bitdubai.smartwallet.core.p2p.RimDeputy</node>
+    <node x="0.0" y="54.0">com.bitdubai.smartwallet.core.p2p.Node</node>
+    <node x="135.5" y="0.0">com.bitdubai.smartwallet.core.p2p.PhysicalLocation</node>
+    <node x="350.5" y="361.0">com.bitdubai.smartwallet.core.p2p.Connection</node>
+    <node x="16.5" y="154.0">com.bitdubai.smartwallet.core.p2p.StableNode</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="com.bitdubai.smartwallet.core.p2p.StableNode" target="com.bitdubai.smartwallet.core.p2p.Node">
+      <point x="0.0" y="-14.5" />
+      <point x="70.0" y="129.0" />
+      <point x="68.75" y="129.0" />
+      <point x="-68.75" y="25.0" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.p2p.Node" target="com.bitdubai.smartwallet.core.p2p.PhysicalLocation">
+      <point x="0.0" y="-25.0" />
+      <point x="0.0" y="2.0" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.p2p.UnstableNode" target="com.bitdubai.smartwallet.core.p2p.Node">
+      <point x="0.0" y="-14.5" />
+      <point x="205.0" y="129.0" />
+      <point x="206.25" y="129.0" />
+      <point x="68.75" y="25.0" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.p2p.RimMember" target="com.bitdubai.smartwallet.core.p2p.StableNode">
+      <point x="-1.0" y="-2.0" />
+      <point x="199.5" y="208.0" />
+      <point x="70.0" y="208.0" />
+      <point x="0.0" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.p2p.RimDeputy" target="com.bitdubai.smartwallet.core.p2p.RimMember">
+      <point x="0.0" y="-14.5" />
+      <point x="260.25" y="257.0" />
+      <point x="201.5" y="257.0" />
+      <point x="1.0" y="2.0" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.p2p.UnstableToStable" target="com.bitdubai.smartwallet.core.p2p.Connection">
+      <point x="0.0" y="-14.5" />
+      <point x="324.5" y="415.0" />
+      <point x="376.75" y="415.0" />
+      <point x="-26.25" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.p2p.RimLeader" target="com.bitdubai.smartwallet.core.p2p.RimMember">
+      <point x="0.0" y="-14.5" />
+      <point x="140.75" y="267.0" />
+      <point x="199.5" y="267.0" />
+      <point x="-1.0" y="2.0" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.p2p.StableToStable" target="com.bitdubai.smartwallet.core.p2p.Connection">
+      <point x="0.0" y="-14.5" />
+      <point x="481.5" y="415.0" />
+      <point x="429.25" y="415.0" />
+      <point x="26.25" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.p2p.RimMember" target="com.bitdubai.smartwallet.core.p2p.NodeRim">
+      <point x="1.0" y="-2.0" />
+      <point x="201.5" y="208.0" />
+      <point x="331.0" y="208.0" />
+      <point x="0.0" y="14.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="273.0" y="268.5" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Inner Classes</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

@@ -3,35 +3,103 @@
   <ID>JAVA</ID>
   <OriginalElement />
   <nodes>
-    <node x="290.0" y="253.0">com.bitdubai.smartwallet.core.wallet.Wallet</node>
-    <node x="82.0" y="0.0">com.bitdubai.smartwallet.core.interfaces.SystemUser</node>
-    <node x="80.0" y="253.0">com.bitdubai.smartwallet.core.account.Account</node>
-    <node x="0.0" y="158.0">com.bitdubai.smartwallet.core.system.user.PersonalUser</node>
-    <node x="328.5" y="374.0">com.bitdubai.smartwallet.core.wallet.PersonalWallet</node>
-    <node x="82.0" y="79.0">com.bitdubai.smartwallet.core.system.user.SystemUser</node>
-    <node x="0.0" y="332.0">com.bitdubai.smartwallet.core.account.FiatAccount</node>
-    <node x="0.0" y="448.0">com.bitdubai.smartwallet.core.LocalDevice</node>
+    <node x="489.0" y="363.0">com.bitdubai.smartwallet.core.system.user.LocalUser.LoginType</node>
+    <node x="215.54947916666663" y="526.0">com.bitdubai.smartwallet.core.device.Device</node>
+    <node x="471.42447916666663" y="505.0">com.bitdubai.smartwallet.core.system.user.LocalPersonalUser</node>
+    <node x="17.92447916666663" y="384.0">com.bitdubai.smartwallet.core.system.user.MerchantUser</node>
+    <node x="534.1744791666666" y="284.0">com.bitdubai.smartwallet.core.system.user.LocalUser</node>
+    <node x="0.0" y="742.0">com.bitdubai.smartwallet.core.system.user.NonSystemUser</node>
+    <node x="65.92447916666663" y="284.0">com.bitdubai.smartwallet.core.system.user.SystemUser</node>
+    <node x="315.79947916666663" y="626.0">com.bitdubai.smartwallet.core.device.LocalDevice</node>
+    <node x="0.0" y="163.0">com.bitdubai.smartwallet.core.account.CryptoAccount</node>
+    <node x="197.0" y="384.0">com.bitdubai.smartwallet.core.system.user.PersonalUser</node>
+    <node x="349.42447916666663" y="42.0">com.bitdubai.smartwallet.core.account.Account</node>
+    <node x="576.75" y="0.0">com.bitdubai.smartwallet.core.account.BalanceChunk</node>
+    <node x="172.79947916666663" y="647.0">com.bitdubai.smartwallet.core.device.RemoteDevice</node>
+    <node x="299.0" y="163.0">com.bitdubai.smartwallet.core.wallet.Wallet</node>
+    <node x="523.0" y="163.0">com.bitdubai.smartwallet.core.account.FiatAccount</node>
+    <node x="337.5" y="284.0">com.bitdubai.smartwallet.core.wallet.PersonalWallet</node>
   </nodes>
   <notes />
   <edges>
-    <edge source="com.bitdubai.smartwallet.core.account.FiatAccount" target="com.bitdubai.smartwallet.core.account.Account">
+    <edge source="com.bitdubai.smartwallet.core.system.user.MerchantUser" target="com.bitdubai.smartwallet.core.system.user.SystemUser">
+      <point x="0.0" y="-25.0" />
+      <point x="-27.0" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.account.CryptoAccount" target="com.bitdubai.smartwallet.core.account.Account">
       <point x="0.0" y="-35.5" />
+      <point x="139.5" y="138.0" />
+      <point x="363.59114583333326" y="138.0" />
+      <point x="-28.333333333333343" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.system.user.PersonalUser" target="com.bitdubai.smartwallet.core.wallet.PersonalWallet">
+      <point x="68.0" y="-25.0" />
       <point x="0.0" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.account.FiatAccount" target="com.bitdubai.smartwallet.core.account.BalanceChunk">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.account.FiatAccount" target="com.bitdubai.smartwallet.core.account.Account">
+      <point x="-61.25" y="-35.5" />
+      <point x="584.25" y="138.0" />
+      <point x="420.25781249999994" y="138.0" />
+      <point x="28.333333333333314" y="14.5" />
     </edge>
     <edge source="com.bitdubai.smartwallet.core.wallet.PersonalWallet" target="com.bitdubai.smartwallet.core.wallet.Wallet">
       <point x="0.0" y="-14.5" />
       <point x="0.0" y="35.5" />
     </edge>
-    <edge source="com.bitdubai.smartwallet.core.system.user.SystemUser" target="com.bitdubai.smartwallet.core.interfaces.SystemUser">
+    <edge source="com.bitdubai.smartwallet.core.system.user.LocalPersonalUser" target="com.bitdubai.smartwallet.core.system.user.LocalUser">
+      <point x="49.99999999999997" y="-35.5" />
+      <point x="596.4244791666666" y="480.0" />
+      <point x="614.5" y="480.0" />
+      <point x="614.5" y="338.0" />
+      <point x="605.4244791666666" y="338.0" />
+      <point x="23.75" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.device.LocalDevice" target="com.bitdubai.smartwallet.core.device.Device">
+      <point x="-138.375" y="-35.5" />
+      <point x="361.92447916666663" y="601.0" />
+      <point x="271.79947916666663" y="601.0" />
+      <point x="18.75" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.device.LocalDevice" target="com.bitdubai.smartwallet.core.system.user.LocalPersonalUser">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.system.user.LocalUser.LoginType" target="com.bitdubai.smartwallet.core.system.user.LocalUser">
+      <point x="0.0" y="-46.0" />
+      <point x="546.5" y="338.0" />
+      <point x="557.9244791666666" y="338.0" />
+      <point x="-23.75" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.system.user.LocalPersonalUser" target="com.bitdubai.smartwallet.core.system.user.PersonalUser">
+      <point x="-50.00000000000003" y="-35.5" />
+      <point x="496.42447916666663" y="480.0" />
+      <point x="333.0" y="480.0" />
+      <point x="0.0" y="25.0" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.system.user.LocalPersonalUser" target="com.bitdubai.smartwallet.core.system.user.LocalUser.LoginType">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.wallet.Wallet" target="com.bitdubai.smartwallet.core.account.Account">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.device.RemoteDevice" target="com.bitdubai.smartwallet.core.device.Device">
       <point x="0.0" y="-14.5" />
-      <point x="0.0" y="14.5" />
+      <point x="-18.75" y="14.5" />
     </edge>
     <edge source="com.bitdubai.smartwallet.core.system.user.PersonalUser" target="com.bitdubai.smartwallet.core.system.user.SystemUser">
-      <point x="0.0" y="-25.0" />
-      <point x="0.0" y="14.5" />
+      <point x="-68.0" y="-25.0" />
+      <point x="265.0" y="338.0" />
+      <point x="146.92447916666663" y="338.0" />
+      <point x="27.0" y="14.5" />
     </edge>
   </edges>
-  <settings layout="Hierarchic Group" zoom="1.0" x="247.0" y="259.5" />
+  <settings layout="Hierarchic Group" zoom="1.0" x="456.5" y="417.0" />
   <SelectedNodes />
   <Categories>
     <Category>Fields</Category>

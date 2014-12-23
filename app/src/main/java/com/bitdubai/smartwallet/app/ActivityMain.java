@@ -21,9 +21,10 @@ public class ActivityMain extends Activity {
         LocalDevice localDevice = new LocalDevice();
 
         /**
-         * Initially, the APP will run with no user explicitly declared. During this situation
-         * the system will bypass this first activity and navigate directly into the
-         * {@link DesktopActivity}
+         * Initially, the APP will run with one user created when the APP run for the
+         * first time and the user was asked which was his intended use of the APP was.
+         * During this situation the system will bypass this first activity and navigate
+         * directly into the {@link DesktopActivity}
          */
         if (localDevice.getLocalPersonalUsers().size() == 1 ) {
             if (localDevice.getLocalPersonalUsers().get(0).getLoginType() == LocalUser.LoginType.NONE)  {
