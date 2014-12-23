@@ -3,34 +3,49 @@
   <ID>JAVA</ID>
   <OriginalElement />
   <nodes>
-    <node x="0.0" y="158.0">com.bitdubai.smartwallet.core.system.user.PersonalUser</node>
-    <node x="292.0" y="158.0">com.bitdubai.smartwallet.core.system.user.MerchantUser</node>
-    <node x="197.5" y="79.0">com.bitdubai.smartwallet.core.system.user.SystemUser</node>
-    <node x="197.5" y="0.0">com.bitdubai.smartwallet.core.interfaces.SystemUser</node>
+    <node x="409.5" y="0.0">com.bitdubai.smartwallet.core.interfaces.SystemUser</node>
+    <node x="212.0" y="179.0">com.bitdubai.smartwallet.core.system.user.PersonalUser</node>
+    <node x="0.0" y="158.0">com.bitdubai.smartwallet.core.interfaces.LocalUser</node>
+    <node x="409.5" y="79.0">com.bitdubai.smartwallet.core.system.user.SystemUser</node>
+    <node x="95.5" y="300.0">com.bitdubai.smartwallet.core.system.user.LocalPersonalUser</node>
+    <node x="504.0" y="179.0">com.bitdubai.smartwallet.core.system.user.MerchantUser</node>
   </nodes>
   <notes />
   <edges>
     <edge source="com.bitdubai.smartwallet.core.system.user.MerchantUser" target="com.bitdubai.smartwallet.core.system.user.SystemUser">
       <point x="0.0" y="-25.0" />
-      <point x="367.0" y="133.0" />
-      <point x="278.5" y="133.0" />
+      <point x="579.0" y="133.0" />
+      <point x="490.5" y="133.0" />
       <point x="27.0" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.system.user.LocalPersonalUser" target="com.bitdubai.smartwallet.core.system.user.PersonalUser">
+      <point x="63.25" y="-57.0" />
+      <point x="285.25" y="275.0" />
+      <point x="348.0" y="275.0" />
+      <point x="0.0" y="25.0" />
     </edge>
     <edge source="com.bitdubai.smartwallet.core.system.user.SystemUser" target="com.bitdubai.smartwallet.core.interfaces.SystemUser">
       <point x="0.0" y="-14.5" />
       <point x="0.0" y="14.5" />
     </edge>
+    <edge source="com.bitdubai.smartwallet.core.system.user.LocalPersonalUser" target="com.bitdubai.smartwallet.core.interfaces.LocalUser">
+      <point x="-63.25" y="-57.0" />
+      <point x="158.75" y="275.0" />
+      <point x="96.0" y="275.0" />
+      <point x="0.0" y="46.0" />
+    </edge>
     <edge source="com.bitdubai.smartwallet.core.system.user.PersonalUser" target="com.bitdubai.smartwallet.core.system.user.SystemUser">
       <point x="0.0" y="-25.0" />
-      <point x="136.0" y="133.0" />
-      <point x="224.5" y="133.0" />
+      <point x="348.0" y="133.0" />
+      <point x="436.5" y="133.0" />
       <point x="-27.0" y="14.5" />
     </edge>
   </edges>
-  <settings layout="Hierarchic Group" zoom="1.0" x="221.0" y="104.0" />
+  <settings layout="Hierarchic Group" zoom="1.0" x="327.0" y="207.0" />
   <SelectedNodes />
   <Categories>
     <Category>Fields</Category>
+    <Category>Methods</Category>
   </Categories>
   <SCOPE>All</SCOPE>
   <VISIBILITY>private</VISIBILITY>

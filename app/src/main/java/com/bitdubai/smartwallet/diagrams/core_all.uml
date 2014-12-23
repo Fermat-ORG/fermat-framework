@@ -3,14 +3,12 @@
   <ID>JAVA</ID>
   <OriginalElement />
   <nodes>
-    <node x="165.0" y="274.0">com.bitdubai.smartwallet.core.interfaces.Contact</node>
-    <node x="0.0" y="274.0">com.bitdubai.smartwallet.core.MoneyInEvent</node>
     <node x="0.0" y="158.0">com.bitdubai.smartwallet.core.wallet.Wallet</node>
     <node x="0.0" y="0.0">com.bitdubai.smartwallet.core.shop.Shop</node>
   </nodes>
   <notes />
   <edges />
-  <settings layout="Hierarchic Group" zoom="1.0" x="184.5" y="228.0" />
+  <settings layout="Hierarchic Group" zoom="0.30000000000000016" x="184.99999999999955" y="288.0" />
   <SelectedNodes />
   <Categories>
     <Category>Fields</Category>

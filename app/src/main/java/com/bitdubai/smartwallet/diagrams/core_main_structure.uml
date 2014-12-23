@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="290.0" y="253.0">com.bitdubai.smartwallet.core.wallet.Wallet</node>
+    <node x="82.0" y="0.0">com.bitdubai.smartwallet.core.interfaces.SystemUser</node>
+    <node x="80.0" y="253.0">com.bitdubai.smartwallet.core.account.Account</node>
+    <node x="0.0" y="158.0">com.bitdubai.smartwallet.core.system.user.PersonalUser</node>
+    <node x="328.5" y="374.0">com.bitdubai.smartwallet.core.wallet.PersonalWallet</node>
+    <node x="82.0" y="79.0">com.bitdubai.smartwallet.core.system.user.SystemUser</node>
+    <node x="0.0" y="332.0">com.bitdubai.smartwallet.core.account.FiatAccount</node>
+    <node x="0.0" y="448.0">com.bitdubai.smartwallet.core.LocalDevice</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="com.bitdubai.smartwallet.core.account.FiatAccount" target="com.bitdubai.smartwallet.core.account.Account">
+      <point x="0.0" y="-35.5" />
+      <point x="0.0" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.wallet.PersonalWallet" target="com.bitdubai.smartwallet.core.wallet.Wallet">
+      <point x="0.0" y="-14.5" />
+      <point x="0.0" y="35.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.system.user.SystemUser" target="com.bitdubai.smartwallet.core.interfaces.SystemUser">
+      <point x="0.0" y="-14.5" />
+      <point x="0.0" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.system.user.PersonalUser" target="com.bitdubai.smartwallet.core.system.user.SystemUser">
+      <point x="0.0" y="-25.0" />
+      <point x="0.0" y="14.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="247.0" y="259.5" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Inner Classes</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

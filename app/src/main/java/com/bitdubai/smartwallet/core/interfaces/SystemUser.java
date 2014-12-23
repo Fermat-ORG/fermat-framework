@@ -5,4 +5,6 @@ package com.bitdubai.smartwallet.core.interfaces;
  */
 public interface SystemUser {
 
+
+
 }
