@@ -92,5 +92,6 @@
     </string-array>
 
     <string name="title_activity_requests_received">Requests Received</string>
+    <string name="title_activity_activity_main">Main Activity</string>
 
 </resources>

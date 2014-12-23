@@ -1,4 +1,4 @@
-package com.bitdubai.smartwallet.core.interfaces;
+package com.bitdubai.smartwallet.core.system.user;
 
 /**
  * Created by ciencias on 23.12.14.

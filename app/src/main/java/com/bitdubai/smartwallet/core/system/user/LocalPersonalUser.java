@@ -1,13 +1,21 @@
 package com.bitdubai.smartwallet.core.system.user;
 
-import com.bitdubai.smartwallet.core.interfaces.LocalUser;
-
 /**
  * Created by ciencias on 23.12.14.
  */
-public class LocalPersonalUser extends PersonalUser implements LocalUser{
+public class LocalPersonalUser extends PersonalUser implements  LocalUser{
 
+    private String mId;
     private LoginType mLoginType;
+
+    public LocalPersonalUser(String userId) {
+        mId = userId;
+        mLoginType = LoginType.NONE;
+    }
+
+    public LoginType getLoginType() {
+        return mLoginType;
+    }
 
     @java.lang.Override
     public boolean Login() {
@@ -23,4 +31,6 @@ public class LocalPersonalUser extends PersonalUser implements LocalUser{
     public boolean Login(String pPassword) {
         return false;
     }
+
+
 }
