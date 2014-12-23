@@ -46,6 +46,15 @@
             android:value="AIzaSyDr98sVKnkeB-C26gU3Yu0HHpoVHETwdKo" />
 
         <activity
+                android:name="com.bitdubai.smartwallet.app.ActivityMain"
+                android:label="@string/title_activity_activity_main" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".walletmanager.DesktopActivity"
             android:label="@string/title_activity_blank" >
             <intent-filter>
