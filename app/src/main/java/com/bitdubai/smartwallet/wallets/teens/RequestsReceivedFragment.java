@@ -41,7 +41,7 @@ public  class RequestsReceivedFragment extends android.app.Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        contacts = new String[]{"Taylor Backus","Stephanie Himonidis","Kimberly Brown",      "Ginny Kaltabanis","Piper Faust","Deniz Caglar","Helen Nisbet","Dea Vanagan","Tim Hunter","Madeleine Jordan","Kate Bryan","Victoria Gandit","Jennifer Johnson","Robert Wint","Adrian Smith","Florence Kerns",};
+        contacts = new String[]{"Taylor Backus","Stephanie Himonidis","Kimberly Brown","Ginny Kaltabanis","Piper Faust","Deniz Caglar","Helen Nisbet","Dea Vanagan","Tim Hunter","Madeleine Jordan","Kate Bryan","Victoria Gandit","Jennifer Johnson","Robert Wint","Adrian Smith","Florence Kerns",};
         amounts = new String[]{ "$3.00","$290.00","$600.00","$50.00","$30.00","$500.00","$25.00","$250.00","$75.00","$300.00","$5.00","$100.00","$45.00","$35.00","$40.00"};
         whens = new String[]{ "24 Mar 14","3 Feb 14","1 year ago","1 year ago","2 years ago","2 years ago","2 years ago","3 years ago","3 years ago","3 years ago","3 years ago","4 years ago","4 years ago","5 years ago","5 years ago"};
         notes = new String[]{ "sandwich","conference ticket","computer monitor","bag","computer keyboard","new tv","t-shirt","pendrive","shoes","bed","color pencils","speakers","microphone","magazine","book"};
