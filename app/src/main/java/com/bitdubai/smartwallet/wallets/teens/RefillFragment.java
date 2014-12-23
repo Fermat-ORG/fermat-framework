@@ -28,8 +28,6 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-
-
 import java.util.List;
 
 
@@ -102,7 +100,28 @@ public class RefillFragment extends Fragment {
                 "fairwaymarket.com",
                 "t-mobile.com",
                 "att.com", };
-
+        String[] available_amount = {"+ $5,000.00",
+                "+ $5,000.00",
+                "+ $1,000.00",
+                "+ $100.00",
+                "+ $5,000.00",
+                "+ $10,000.00",
+                "+ $10,000.00",
+                "",
+                "",
+                "",
+                "",
+                ""};
+        String[] percentage_amount = {
+                "-12.56%",
+                "+2.24%",
+                "+4.42%",
+                "-7.42%",
+                "+8.23%",
+                "-15.34%",
+                "-5.53%",
+                "3%",
+                "",};
 
 
         if (mlist == null)
@@ -121,8 +140,10 @@ public class RefillFragment extends Fragment {
                 item.rate = (float) Math.random() * 5;
                 item.value = (int) Math.floor((Math.random() * (500 - 80 + 1))) + 80;
                 item.favorite = (float) Math.random() * 5;
-                item.sale = (float) Math.random() * 5;
+                item.Available = available_amount[i];
+                item.percentage = percentage_amount[i];
                 mlist.add(item);
+
             }
         }
 
@@ -138,7 +159,7 @@ public class RefillFragment extends Fragment {
 
         //@SuppressWarnings("unchecked")
         //ArrayList<App> list = (ArrayList<App>) getArguments().get("list");
-        gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.wallets_teens_fragment_stores_item, mlist));
+        gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.wallets_teens_fragment_refills_item, mlist));
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
@@ -165,6 +186,10 @@ public class RefillFragment extends Fragment {
 
         public String title;
 
+        public String percentage;
+
+        public String Available;
+
         public String description;
 
         public String company;
@@ -181,7 +206,10 @@ public class RefillFragment extends Fragment {
 
         public float favorite;
 
-        public float sale;
+        public String sale;
+
+        public String triangle;
+
 
     }
 
@@ -204,31 +232,19 @@ public class RefillFragment extends Fragment {
             ViewHolder holder;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.wallets_teens_fragment_stores_item, parent, false);
+                convertView = inflater.inflate(R.layout.wallets_teens_fragment_refills_item, parent, false);
                 holder = new ViewHolder();
-
-                holder.star1= (ImageView) convertView.findViewById(R.id.star_1);
-                holder.star2= (ImageView) convertView.findViewById(R.id.star_2);
-                holder.star3= (ImageView) convertView.findViewById(R.id.star_3);
-                holder.star4= (ImageView) convertView.findViewById(R.id.star_4);
-                holder.star5= (ImageView) convertView.findViewById(R.id.star_5);
-
-                holder.star1.setAdjustViewBounds(true);
-                holder.star2.setAdjustViewBounds(true);
-                holder.star3.setAdjustViewBounds(true);
-                holder.star4.setAdjustViewBounds(true);
-                holder.star5.setAdjustViewBounds(true);
-
                 holder.sale = (ImageView) convertView.findViewById(R.id.sale);
+                holder.triangle = (ImageView) convertView.findViewById(R.id.triangle);
                 holder.favorite = (ImageView) convertView.findViewById(R.id.favorite);
 
                 holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
                 holder.titleTextView = (TextView) convertView.findViewById(R.id.title_text_view);
                 holder.companyTextView = (TextView) convertView.findViewById(R.id.company_text_view);
                 holder.companyDescription = (TextView) convertView.findViewById(R.id.company_description);
+                holder.availableAmount = (TextView) convertView.findViewById(R.id.availability);
+                holder.percentageAmount = (TextView) convertView.findViewById(R.id.percentage);
                 //holder.ratingBar = (RatingBar) convertView.findViewById(R.id.rating_bar);
-                holder.valueTextView = (TextView) convertView.findViewById(R.id.value_text_view);
-
                 holder.openHours = (TextView) convertView.findViewById(R.id.open_hours);
                 holder.timeToArrive = (TextView) convertView.findViewById(R.id.time_to_arrive);
 
@@ -244,8 +260,9 @@ public class RefillFragment extends Fragment {
             holder.titleTextView.setText(item.title);
             holder.companyTextView.setText(item.company);
             holder.companyDescription.setText(item.Address);
+            holder.availableAmount.setText(item.Available);
+            holder.percentageAmount.setText(item.percentage);
             //holder.ratingBar.setRating(item.rate);
-            holder.valueTextView.setText(  item.value + " reviews");
 
             holder.openHours.setText(  item.Open_hours);
 
@@ -258,28 +275,8 @@ public class RefillFragment extends Fragment {
             holder.titleTextView.setTypeface(MyApplication.getDefaultTypeface());
             holder.companyTextView.setTypeface(MyApplication.getDefaultTypeface());
             holder.companyDescription.setTypeface(MyApplication.getDefaultTypeface());
-            holder.valueTextView.setTypeface(MyApplication.getDefaultTypeface());
+            holder.percentageAmount.setTypeface(MyApplication.getDefaultTypeface());
 
-            if (item.rate >= 0)
-            {
-                holder.star1.setImageResource(R.drawable.grid_background_star_full);
-            }
-            if (item.rate >= 1)
-            {
-                holder.star2.setImageResource(R.drawable.grid_background_star_full);
-            }
-            if (item.rate >= 2)
-            {
-                holder.star3.setImageResource(R.drawable.grid_background_star_full);
-            }
-            if (item.rate >= 3)
-            {
-                holder.star4.setImageResource(R.drawable.grid_background_star_full);
-            }
-            if (item.rate >= 4)
-            {
-                holder.star5.setImageResource(R.drawable.grid_background_star_full);
-            }
 
             if (item.favorite > 2)
             {
@@ -291,13 +288,58 @@ public class RefillFragment extends Fragment {
             }
 
 
-            if (item.sale > 3)
+            switch (position)
             {
-                holder.sale.setImageResource(R.drawable.transparent);
+                case 0:
+                    holder.sale.setImageResource(R.drawable.tag_5_refills);
+                    break;
+                case 1:
+                    holder.sale.setImageResource(R.drawable.tag_3_refills);
+                    break;
+                case 2:
+                    holder.sale.setImageResource(R.drawable.tag_6_refills);
+                    break;
+                case 3:
+                    holder.sale.setImageResource(R.drawable.tag_3_refills);
+                    break;
+                case 4:
+                    holder.sale.setImageResource(R.drawable.tag_2_refills);
+                    break;
+                case 5:
+                    holder.sale.setImageResource(R.drawable.tag_5_refills);
+                    break;
+                case 6:
+                    holder.sale.setImageResource(R.drawable.transparent);
+                    break;
+
+
             }
-            else
+
+            switch (position)
             {
-                holder.sale.setImageResource(R.drawable.grid_background_sale_flipped);
+                case 0:
+                    holder.triangle.setImageResource(R.drawable.green_triangle);
+                    break;
+                case 1:
+                    holder.triangle.setImageResource(R.drawable.red_triangle);
+                    break;
+                case 2:
+                    holder.triangle.setImageResource(R.drawable.red_triangle);
+                    break;
+                case 3:
+                    holder.triangle.setImageResource(R.drawable.green_triangle);
+                    break;
+                case 4:
+                    holder.triangle.setImageResource(R.drawable.red_triangle);
+                    break;
+                case 5:
+                    holder.triangle.setImageResource(R.drawable.green_triangle);
+                    break;
+                case 6:
+                    holder.triangle.setImageResource(R.drawable.green_triangle);
+                    break;
+
+
             }
 
 
@@ -338,27 +380,23 @@ public class RefillFragment extends Fragment {
          */
         private class ViewHolder {
 
-
-            public ImageView star1;
-            public ImageView star2;
-            public ImageView star3;
-            public ImageView star4;
-            public ImageView star5;
-
             public ImageView sale;
             public ImageView favorite;
-
+            public ImageView triangle;
             public TextView openHours;
             public TextView timeToArrive;
             public TextView Phone;
             public TextView Address;
+            public TextView Available;
+
 
             public ImageView imageView;
 
             public TextView titleTextView;
 
             public TextView companyTextView;
-
+            public TextView availableAmount;
+            public TextView percentageAmount;
             public TextView companyDescription;
 
             public RatingBar ratingBar;
