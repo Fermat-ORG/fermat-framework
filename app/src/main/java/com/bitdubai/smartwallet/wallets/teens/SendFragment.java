@@ -90,8 +90,6 @@ public  class SendFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.wallets_teens_fragment_send_and_receive, container, false);
 
-
-
         return rootView;
     }
 
@@ -238,7 +236,6 @@ public  class SendFragment extends Fragment {
             ViewHolder when;
             ViewHolder note;
             ImageView profile_picture;
-            ImageView send_picture;
             ViewHolder total;
             ViewHolder history;
             ViewHolder new_name;
@@ -284,9 +281,6 @@ public  class SendFragment extends Fragment {
                     ImageView  history_picture = (ImageView) convertView.findViewById(R.id.open_history);
 
                     history_picture.setTag(groupPosition);
-
-
-
                     switch (groupPosition)
                     {
                         case 1:

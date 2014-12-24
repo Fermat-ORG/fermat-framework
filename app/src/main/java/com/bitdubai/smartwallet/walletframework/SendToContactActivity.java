@@ -14,7 +14,7 @@ import com.bitdubai.smartwallet.wallets.teens.SendToContactFragment;
 public class SendToContactActivity extends Activity {
 
     private PagerSlidingTabStrip tabs;
-    private CharSequence mTitle = "Send History";
+    private CharSequence mTitle = "Send To Contact";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
