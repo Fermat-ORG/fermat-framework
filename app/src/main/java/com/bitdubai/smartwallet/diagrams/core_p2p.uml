@@ -3,78 +3,289 @@
   <ID>JAVA</ID>
   <OriginalElement />
   <nodes>
-    <node x="286.5" y="154.0">com.bitdubai.smartwallet.core.p2p.NodeRim</node>
-    <node x="0.0" y="361.0">com.bitdubai.smartwallet.core.p2p.NodeRanks</node>
-    <node x="252.0" y="440.0">com.bitdubai.smartwallet.core.p2p.UnstableToStable</node>
-    <node x="417.0" y="440.0">com.bitdubai.smartwallet.core.p2p.StableToStable</node>
-    <node x="143.5" y="154.0">com.bitdubai.smartwallet.core.p2p.UnstableNode</node>
-    <node x="91.25" y="287.0">com.bitdubai.smartwallet.core.p2p.RimLeader</node>
-    <node x="198.5" y="233.0">com.bitdubai.smartwallet.core.p2p.RimMember</node>
-    <node x="210.25" y="287.0">com.bitdubai.smartwallet.core.p2p.RimDeputy</node>
-    <node x="0.0" y="54.0">com.bitdubai.smartwallet.core.p2p.Node</node>
-    <node x="135.5" y="0.0">com.bitdubai.smartwallet.core.p2p.PhysicalLocation</node>
-    <node x="350.5" y="361.0">com.bitdubai.smartwallet.core.p2p.Connection</node>
-    <node x="16.5" y="154.0">com.bitdubai.smartwallet.core.p2p.StableNode</node>
+    <node x="730.875" y="759.5">com.bitdubai.smartwallet.core.p2p.Band</node>
+    <node x="400.75" y="1192.0">com.bitdubai.smartwallet.core.p2p.StableToStable</node>
+    <node x="610.328947368421" y="265.0">com.bitdubai.smartwallet.core.p2p.BandMember</node>
+    <node x="202.0" y="1018.0">com.bitdubai.smartwallet.core.p2p.FederationMember</node>
+    <node x="507.82894736842104" y="465.0">com.bitdubai.smartwallet.core.p2p.ClanLeader</node>
+    <node x="10.0" y="286.0">com.bitdubai.smartwallet.core.p2p.BandGuest</node>
+    <node x="1582.875" y="759.5">com.bitdubai.smartwallet.core.p2p.Clan</node>
+    <node x="0.0" y="1387.0">com.bitdubai.smartwallet.core.p2p.PhysicalLocation</node>
+    <node x="696.578947368421" y="386.0">com.bitdubai.smartwallet.core.p2p.BandDeputy</node>
+    <node x="772.0546875" y="1028.5">com.bitdubai.smartwallet.core.p2p.NeighboringBand</node>
+    <node x="477.0" y="1271.0">com.bitdubai.smartwallet.core.p2p.ClanLeaderToLeader</node>
+    <node x="454.375" y="1028.5">com.bitdubai.smartwallet.core.p2p.NeighboringFederation</node>
+    <node x="1146.875" y="749.0">com.bitdubai.smartwallet.core.p2p.Tribe</node>
+    <node x="569.578947368421" y="544.0">com.bitdubai.smartwallet.core.p2p.TribeDeputy</node>
+    <node x="934.0546875" y="1028.5">com.bitdubai.smartwallet.core.p2p.ClanMember</node>
+    <node x="0.0" y="1271.0">com.bitdubai.smartwallet.core.p2p.BandLeaderToLeader</node>
+    <node x="712.0" y="1271.0">com.bitdubai.smartwallet.core.p2p.TribeLeaderToLeader</node>
+    <node x="1710.875" y="1028.5">com.bitdubai.smartwallet.core.p2p.NonTribeMember</node>
+    <node x="182.1640625" y="618.0">com.bitdubai.smartwallet.core.p2p.InterestBasedGroup</node>
+    <node x="441.57894736842104" y="544.0">com.bitdubai.smartwallet.core.p2p.TribeLeader</node>
+    <node x="40.25" y="738.5">com.bitdubai.smartwallet.core.p2p.Association</node>
+    <node x="74.82894736842104" y="386.0">com.bitdubai.smartwallet.core.p2p.AssociationDeputy</node>
+    <node x="398.125" y="286.0">com.bitdubai.smartwallet.core.p2p.NonBandMember</node>
+    <node x="598.0" y="1387.0">com.bitdubai.smartwallet.core.p2p.Profile</node>
+    <node x="567.578947368421" y="386.0">com.bitdubai.smartwallet.core.p2p.BandLeader</node>
+    <node x="375.875" y="728.0">com.bitdubai.smartwallet.core.p2p.Federation</node>
+    <node x="0.0" y="1028.5">com.bitdubai.smartwallet.core.p2p.NeighboringAssociation</node>
+    <node x="341.82894736842104" y="465.0">com.bitdubai.smartwallet.core.p2p.FederationDeputy</node>
+    <node x="1509.609375" y="1028.5">com.bitdubai.smartwallet.core.p2p.NeighboringClan</node>
+    <node x="456.45394736842104" y="0.0">com.bitdubai.smartwallet.core.p2p.Node</node>
+    <node x="491.25" y="1113.0">com.bitdubai.smartwallet.core.p2p.Connection</node>
+    <node x="1284.375" y="1028.5">com.bitdubai.smartwallet.core.p2p.NeighboringTribe</node>
+    <node x="806.375" y="618.0">com.bitdubai.smartwallet.core.p2p.LocationBasedGroup</node>
+    <node x="244.82894736842107" y="386.0">com.bitdubai.smartwallet.core.p2p.AssociationPresident</node>
+    <node x="437.0" y="1387.0">com.bitdubai.smartwallet.core.p2p.TribeNetwork</node>
+    <node x="549.75" y="1192.0">com.bitdubai.smartwallet.core.p2p.UnstableToStable</node>
+    <node x="159.82894736842104" y="465.0">com.bitdubai.smartwallet.core.p2p.FederationPresident</node>
+    <node x="0.0" y="164.5">com.bitdubai.smartwallet.core.p2p.UnstableNode</node>
+    <node x="631.828947368421" y="465.0">com.bitdubai.smartwallet.core.p2p.ClanDeputy</node>
+    <node x="1870.875" y="1018.0">com.bitdubai.smartwallet.core.p2p.TribeMember</node>
+    <node x="655.453947368421" y="143.0">com.bitdubai.smartwallet.core.p2p.Seeder</node>
+    <node x="783.328947368421" y="286.0">com.bitdubai.smartwallet.core.p2p.NonAssociationMember</node>
+    <node x="133.0" y="275.5">com.bitdubai.smartwallet.core.p2p.AssociationMember</node>
+    <node x="235.0" y="1271.0">com.bitdubai.smartwallet.core.p2p.BandMemberToMember</node>
+    <node x="467.45394736842104" y="154.0">com.bitdubai.smartwallet.core.p2p.StableNode</node>
+    <node x="239.0" y="1387.0">com.bitdubai.smartwallet.core.p2p.FederationNetwork</node>
   </nodes>
   <notes />
   <edges>
+    <edge source="com.bitdubai.smartwallet.core.p2p.NeighboringAssociation" target="com.bitdubai.smartwallet.core.p2p.Association">
+      <point x="0.0" y="-14.5" />
+      <point x="91.0" y="993.0" />
+      <point x="119.0" y="993.0" />
+      <point x="-78.75" y="109.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.p2p.ClanMember" target="com.bitdubai.smartwallet.core.p2p.Band">
+      <point x="0.0" y="-14.5" />
+      <point x="989.5546875" y="993.0" />
+      <point x="1027.875" y="993.0" />
+      <point x="99.0" y="88.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.p2p.ClanDeputy" target="com.bitdubai.smartwallet.core.p2p.BandLeader">
+      <point x="0.0" y="-14.5" />
+      <point x="684.328947368421" y="440.0" />
+      <point x="649.328947368421" y="440.0" />
+      <point x="27.25" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.p2p.NeighboringFederation" target="com.bitdubai.smartwallet.core.p2p.Federation">
+      <point x="0.0" y="-14.5" />
+      <point x="0.0" y="120.0" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.p2p.ClanLeader" target="com.bitdubai.smartwallet.core.p2p.BandLeader">
+      <point x="0.0" y="-14.5" />
+      <point x="559.828947368421" y="440.0" />
+      <point x="594.828947368421" y="440.0" />
+      <point x="-27.25" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.p2p.AssociationPresident" target="com.bitdubai.smartwallet.core.p2p.AssociationMember">
+      <point x="0.0" y="-14.5" />
+      <point x="327.82894736842104" y="361.0" />
+      <point x="292.75" y="361.0" />
+      <point x="53.25" y="25.0" />
+    </edge>
     <edge source="com.bitdubai.smartwallet.core.p2p.StableNode" target="com.bitdubai.smartwallet.core.p2p.Node">
-      <point x="0.0" y="-14.5" />
-      <point x="70.0" y="129.0" />
-      <point x="68.75" y="129.0" />
-      <point x="-68.75" y="25.0" />
-    </edge>
-    <edge source="com.bitdubai.smartwallet.core.p2p.Node" target="com.bitdubai.smartwallet.core.p2p.PhysicalLocation">
       <point x="0.0" y="-25.0" />
-      <point x="0.0" y="2.0" />
+      <point x="0.0" y="46.5" />
     </edge>
-    <edge source="com.bitdubai.smartwallet.core.p2p.UnstableNode" target="com.bitdubai.smartwallet.core.p2p.Node">
+    <edge source="com.bitdubai.smartwallet.core.p2p.NonTribeMember" target="com.bitdubai.smartwallet.core.p2p.Clan">
       <point x="0.0" y="-14.5" />
-      <point x="205.0" y="129.0" />
-      <point x="206.25" y="129.0" />
-      <point x="68.75" y="25.0" />
+      <point x="0.0" y="88.5" />
     </edge>
-    <edge source="com.bitdubai.smartwallet.core.p2p.RimMember" target="com.bitdubai.smartwallet.core.p2p.StableNode">
-      <point x="-1.0" y="-2.0" />
-      <point x="199.5" y="208.0" />
-      <point x="70.0" y="208.0" />
+    <edge source="com.bitdubai.smartwallet.core.p2p.BandDeputy" target="com.bitdubai.smartwallet.core.p2p.BandMember">
+      <point x="0.0" y="-14.5" />
+      <point x="751.578947368421" y="361.0" />
+      <point x="725.078947368421" y="361.0" />
+      <point x="38.25" y="35.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.p2p.BandGuest" target="com.bitdubai.smartwallet.core.p2p.UnstableNode">
+      <point x="0.0" y="-14.5" />
       <point x="0.0" y="14.5" />
     </edge>
-    <edge source="com.bitdubai.smartwallet.core.p2p.RimDeputy" target="com.bitdubai.smartwallet.core.p2p.RimMember">
-      <point x="0.0" y="-14.5" />
-      <point x="260.25" y="257.0" />
-      <point x="201.5" y="257.0" />
-      <point x="1.0" y="2.0" />
+    <edge source="com.bitdubai.smartwallet.core.p2p.Association" target="com.bitdubai.smartwallet.core.p2p.LocationBasedGroup">
+      <point x="78.75" y="-109.5" />
+      <point x="276.5" y="698.0" />
+      <point x="830.875" y="698.0" />
+      <point x="-98.0" y="25.0" />
     </edge>
-    <edge source="com.bitdubai.smartwallet.core.p2p.UnstableToStable" target="com.bitdubai.smartwallet.core.p2p.Connection">
-      <point x="0.0" y="-14.5" />
-      <point x="324.5" y="415.0" />
-      <point x="376.75" y="415.0" />
-      <point x="-26.25" y="14.5" />
+    <edge source="com.bitdubai.smartwallet.core.p2p.BandLeaderToLeader" target="com.bitdubai.smartwallet.core.p2p.StableToStable">
+      <point x="0.0" y="-35.5" />
+      <point x="107.5" y="1241.0" />
+      <point x="416.875" y="1241.0" />
+      <point x="-48.375" y="14.5" />
     </edge>
-    <edge source="com.bitdubai.smartwallet.core.p2p.RimLeader" target="com.bitdubai.smartwallet.core.p2p.RimMember">
+    <edge source="com.bitdubai.smartwallet.core.p2p.Band" target="com.bitdubai.smartwallet.core.p2p.LocationBasedGroup">
+      <point x="0.0" y="-88.5" />
+      <point x="0.0" y="25.0" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.p2p.Association" target="com.bitdubai.smartwallet.core.p2p.InterestBasedGroup">
+      <point x="-78.75" y="-109.5" />
+      <point x="119.0" y="708.0" />
+      <point x="225.9140625" y="708.0" />
+      <point x="-43.75" y="25.0" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.p2p.NonAssociationMember" target="com.bitdubai.smartwallet.core.p2p.StableNode">
       <point x="0.0" y="-14.5" />
-      <point x="140.75" y="267.0" />
-      <point x="199.5" y="267.0" />
-      <point x="-1.0" y="2.0" />
+      <point x="873.828947368421" y="235.0" />
+      <point x="614.453947368421" y="235.0" />
+      <point x="63.0" y="25.0" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.p2p.AssociationDeputy" target="com.bitdubai.smartwallet.core.p2p.AssociationMember">
+      <point x="0.0" y="-14.5" />
+      <point x="149.82894736842104" y="361.0" />
+      <point x="186.25" y="361.0" />
+      <point x="-53.25" y="25.0" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.p2p.Clan" target="com.bitdubai.smartwallet.core.p2p.LocationBasedGroup">
+      <point x="0.0" y="-88.5" />
+      <point x="1780.875" y="698.0" />
+      <point x="1026.875" y="698.0" />
+      <point x="98.0" y="25.0" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.p2p.TribeMember" target="com.bitdubai.smartwallet.core.p2p.Clan">
+      <point x="0.0" y="-25.0" />
+      <point x="1936.375" y="993.0" />
+      <point x="1912.875" y="993.0" />
+      <point x="132.0" y="88.5" />
     </edge>
     <edge source="com.bitdubai.smartwallet.core.p2p.StableToStable" target="com.bitdubai.smartwallet.core.p2p.Connection">
       <point x="0.0" y="-14.5" />
-      <point x="481.5" y="415.0" />
-      <point x="429.25" y="415.0" />
+      <point x="465.25" y="1167.0" />
+      <point x="517.5" y="1167.0" />
+      <point x="-26.25" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.p2p.TribeLeaderToLeader" target="com.bitdubai.smartwallet.core.p2p.StableToStable">
+      <point x="0.0" y="-35.5" />
+      <point x="819.5" y="1241.0" />
+      <point x="513.625" y="1241.0" />
+      <point x="48.375" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.p2p.BandMemberToMember" target="com.bitdubai.smartwallet.core.p2p.StableToStable">
+      <point x="0.0" y="-35.5" />
+      <point x="346.0" y="1251.0" />
+      <point x="449.125" y="1251.0" />
+      <point x="-16.125" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.p2p.NeighboringClan" target="com.bitdubai.smartwallet.core.p2p.Clan">
+      <point x="0.0" y="-14.5" />
+      <point x="1578.109375" y="993.0" />
+      <point x="1648.875" y="993.0" />
+      <point x="-132.0" y="88.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.p2p.Federation" target="com.bitdubai.smartwallet.core.p2p.InterestBasedGroup">
+      <point x="-83.75" y="-120.0" />
+      <point x="459.625" y="688.0" />
+      <point x="313.4140625" y="688.0" />
+      <point x="43.75" y="25.0" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.p2p.BandMember" target="com.bitdubai.smartwallet.core.p2p.StableNode">
+      <point x="0.0" y="-35.5" />
+      <point x="686.828947368421" y="245.0" />
+      <point x="572.453947368421" y="245.0" />
+      <point x="21.0" y="25.0" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.p2p.TribeLeader" target="com.bitdubai.smartwallet.core.p2p.ClanLeader">
+      <point x="0.0" y="-14.5" />
+      <point x="495.57894736842104" y="519.0" />
+      <point x="533.828947368421" y="519.0" />
+      <point x="-26.0" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.p2p.NonBandMember" target="com.bitdubai.smartwallet.core.p2p.StableNode">
+      <point x="0.0" y="-14.5" />
+      <point x="468.625" y="245.0" />
+      <point x="530.453947368421" y="245.0" />
+      <point x="-21.0" y="25.0" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.p2p.Seeder" target="com.bitdubai.smartwallet.core.p2p.Node">
+      <point x="0.0" y="-36.0" />
+      <point x="796.953947368421" y="118.0" />
+      <point x="614.7872807017544" y="118.0" />
+      <point x="63.33333333333337" y="46.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.p2p.NeighboringTribe" target="com.bitdubai.smartwallet.core.p2p.Tribe">
+      <point x="0.0" y="-14.5" />
+      <point x="0.0" y="99.0" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.p2p.NeighboringBand" target="com.bitdubai.smartwallet.core.p2p.Band">
+      <point x="0.0" y="-14.5" />
+      <point x="843.0546875" y="993.0" />
+      <point x="829.875" y="993.0" />
+      <point x="-99.0" y="88.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.p2p.Federation" target="com.bitdubai.smartwallet.core.p2p.LocationBasedGroup">
+      <point x="83.75" y="-120.0" />
+      <point x="627.125" y="708.0" />
+      <point x="879.875" y="708.0" />
+      <point x="-49.0" y="25.0" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.p2p.AssociationMember" target="com.bitdubai.smartwallet.core.p2p.StableNode">
+      <point x="0.0" y="-25.0" />
+      <point x="239.5" y="235.0" />
+      <point x="488.45394736842104" y="235.0" />
+      <point x="-63.0" y="25.0" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.p2p.FederationPresident" target="com.bitdubai.smartwallet.core.p2p.AssociationPresident">
+      <point x="0.0" y="-14.5" />
+      <point x="240.82894736842104" y="440.0" />
+      <point x="286.32894736842104" y="440.0" />
+      <point x="-41.5" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.p2p.UnstableToStable" target="com.bitdubai.smartwallet.core.p2p.Connection">
+      <point x="0.0" y="-14.5" />
+      <point x="622.25" y="1167.0" />
+      <point x="570.0" y="1167.0" />
       <point x="26.25" y="14.5" />
     </edge>
-    <edge source="com.bitdubai.smartwallet.core.p2p.RimMember" target="com.bitdubai.smartwallet.core.p2p.NodeRim">
-      <point x="1.0" y="-2.0" />
-      <point x="201.5" y="208.0" />
-      <point x="331.0" y="208.0" />
-      <point x="0.0" y="14.5" />
+    <edge source="com.bitdubai.smartwallet.core.p2p.TribeDeputy" target="com.bitdubai.smartwallet.core.p2p.ClanLeader">
+      <point x="0.0" y="-14.5" />
+      <point x="624.078947368421" y="519.0" />
+      <point x="585.828947368421" y="519.0" />
+      <point x="26.0" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.p2p.BandLeader" target="com.bitdubai.smartwallet.core.p2p.BandMember">
+      <point x="0.0" y="-14.5" />
+      <point x="622.078947368421" y="361.0" />
+      <point x="648.578947368421" y="361.0" />
+      <point x="-38.25" y="35.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.p2p.ClanLeaderToLeader" target="com.bitdubai.smartwallet.core.p2p.StableToStable">
+      <point x="0.0" y="-35.5" />
+      <point x="584.5" y="1251.0" />
+      <point x="481.375" y="1251.0" />
+      <point x="16.125" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.p2p.UnstableNode" target="com.bitdubai.smartwallet.core.p2p.Node">
+      <point x="0.0" y="-14.5" />
+      <point x="61.5" y="118.0" />
+      <point x="488.1206140350878" y="118.0" />
+      <point x="-63.333333333333314" y="46.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.p2p.FederationDeputy" target="com.bitdubai.smartwallet.core.p2p.AssociationPresident">
+      <point x="0.0" y="-14.5" />
+      <point x="414.82894736842104" y="440.0" />
+      <point x="369.32894736842104" y="440.0" />
+      <point x="41.5" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.p2p.FederationMember" target="com.bitdubai.smartwallet.core.p2p.Association">
+      <point x="0.0" y="-25.0" />
+      <point x="304.5" y="993.0" />
+      <point x="276.5" y="993.0" />
+      <point x="78.75" y="109.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.p2p.Tribe" target="com.bitdubai.smartwallet.core.p2p.LocationBasedGroup">
+      <point x="0.0" y="-99.0" />
+      <point x="1354.875" y="708.0" />
+      <point x="977.875" y="708.0" />
+      <point x="49.0" y="25.0" />
     </edge>
   </edges>
-  <settings layout="Hierarchic Group" zoom="1.0" x="273.0" y="268.5" />
+  <settings layout="Hierarchic Group" zoom="0.631935047361299" x="1001.0824411134904" y="789.0" />
   <SelectedNodes />
   <Categories>
     <Category>Fields</Category>
+    <Category>Methods</Category>
     <Category>Inner Classes</Category>
   </Categories>
   <SCOPE>All</SCOPE>

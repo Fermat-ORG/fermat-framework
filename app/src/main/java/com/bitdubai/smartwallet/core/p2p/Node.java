@@ -5,6 +5,10 @@ package com.bitdubai.smartwallet.core.p2p;
  */
 public class Node {
 
-    PhysicalLocation mPhysicalLocation;
+    private String mNodeId;
+    private PhysicalLocation mPhysicalLocation;
 
+    public Profile profileMe() {
+        return null;
+    }
 }
