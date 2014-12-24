@@ -129,17 +129,34 @@ public class FrameworkActivity extends FragmentActivity
     }
 
     public void onSendAllIconClicked(View v) {
-try {
+
     int tagId = (int) v.getTag();
     MyApplication.setTagId(tagId);
     Intent intent;
     intent = new Intent(this, SendAllHistoryActivity.class);
     startActivity(intent);
-}
-catch(Exception ex)
-        {
-            String strError = ex.getMessage();
-        }
+        return;
+
+    }
+
+    public void onReceiveIconClicked(View v) {
+
+        int tagId = (int) v.getTag();
+        MyApplication.setTagId(tagId);
+       /* Intent intent;
+        intent = new Intent(this, ReceiveFromContactActivity.class);
+        startActivity(intent);*/
+        return;
+
+    }
+
+    public void onReceiveAllIconClicked(View v) {
+
+        int tagId = (int) v.getTag();
+        MyApplication.setTagId(tagId);
+        Intent intent;
+        intent = new Intent(this, ReceiveAllHistoryActivity.class);
+        startActivity(intent);
         return;
 
     }

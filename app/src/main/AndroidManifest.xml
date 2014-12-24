@@ -214,6 +214,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
         </activity>
+
+        <activity
+            android:name=".walletframework.ReceiveAllHistoryActivity"
+            android:label="@string/title_activity_receive_from_contact"
+            android:parentActivityName=".walletframework.FrameworkActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+        </activity>
         <activity
             android:name=".walletframework.ChatOverTrxActivity"
             android:label="@string/title_activity_chat_over_trx"
