@@ -53,15 +53,15 @@ public class StoreStoreFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        String[] company_names = {"The New York Times Store",
+        String[] company_names = {"Dunkin' Donuts","The New York Times Store",
                 "NYC Fine Cigars",
                 "Fat Sal's Pizza",
                 "Pomodoro Restaurant",
                 "Snack EOS",
                 "Beba Blue Salon",
                 "Tick Tock Diner",
-                "The New Yorker Hotel",
-                "Dunkin' Donuts",
+                "The New Yorker Hotel"
+                ,
                 "The Australian",
                 "Panera Bread",
                 "Mustang Cafe",
@@ -152,7 +152,7 @@ public class StoreStoreFragment extends Fragment {
                 "aaa",
                 "aaa",
                 "aaa" };
-        String[] company_descriptions = {"Classic, redefined. See what's new at our Westchester location!.",
+        String[] company_descriptions = {"Long-running chain serving signature donuts, breakfast sandwiches & a variety of coffee ...","Classic, redefined. See what's new at our Westchester location!.",
                 "Smoking is allowed inside this clubby shop known for its hand-rolled cigars made ...",
                 "Basic pizzeria serving a variety of NYC-style slices in a small, counter-service space.",
                 "Pasta dishes, sandwiches & salads for take-out or eating in at this pint-sized Italian deli.",
@@ -160,7 +160,7 @@ public class StoreStoreFragment extends Fragment {
                 "Hair Salon, Day Spa",
                 "Standard 24/7 diner with retro looks, basic fare & close proximity to Madison Square...",
                 "Huge historic Jazz Age (1929) hotel offers over 900 rooms and suites across from Penn Station.",
-                "Long-running chain serving signature donuts, breakfast sandwiches & a variety of coffee ...",
+
                 "Home-away-from-home Australian pub offering grilled kangaroo, Aussie beers & rugby ...",
                 "Counter-serve bakery/cafe chain serving sandwiches, salads & more, known for its ...",
                 "Counter-serve setup offering deli sandwiches & wraps, hot entrees, salads & breakfast items.",
@@ -177,7 +177,7 @@ public class StoreStoreFragment extends Fragment {
                 "aaa",
                 "aaa",
                 "aaa" };
-        String[] company_sites = {"nytstore.com",
+        String[] company_sites = {"dunkindonuts.com","nytstore.com",
                 "nycfinecigars.com",
                 "fatsals.com",
                 "delivery.com",
@@ -185,7 +185,7 @@ public class StoreStoreFragment extends Fragment {
                 "bebablue.com",
                 "ticktockdinerny.com",
                 "newyorkerhotel.com",
-                "dunkindonuts.com",
+
                 "theaustraliannyc.com",
                 "panerabread.com",
                 "mustangcafe.com",
@@ -411,7 +411,7 @@ public class StoreStoreFragment extends Fragment {
             switch (position)
             {
                 case 0:
-                    holder.imageView.setImageResource(R.drawable.store_1);
+                    holder.imageView.setImageResource(R.drawable.dunkin_donuts);
                     break;
                 case 1:
                     holder.imageView.setImageResource(R.drawable.store_2);
@@ -435,7 +435,7 @@ public class StoreStoreFragment extends Fragment {
                     holder.imageView.setImageResource(R.drawable.store_8);
                     break;
                 case 8:
-                    holder.imageView.setImageResource(R.drawable.store_9);
+                    holder.imageView.setImageResource(R.drawable.store_1);
                     break;
                 case 9:
                     holder.imageView.setImageResource(R.drawable.store_10);

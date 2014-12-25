@@ -75,15 +75,16 @@
 
 
         <ImageView
-            android:id="@+id/icon_edit_profile"
+            android:id="@+id/icon_send_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_action_email"
             android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
             android:paddingLeft="7dp"
             android:paddingRight="7dp"
+            android:layout_alignParentLeft="true"
+
             android:paddingBottom="7dp"
             android:paddingTop="7dp"
             android:onClick="onChatOverTrxIconClicked"
@@ -96,8 +97,9 @@
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_action_send_now"
+            android:layout_alignParentRight="true"
+
             android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
             android:paddingLeft="7dp"
             android:paddingRight="7dp"
             android:paddingBottom="7dp"

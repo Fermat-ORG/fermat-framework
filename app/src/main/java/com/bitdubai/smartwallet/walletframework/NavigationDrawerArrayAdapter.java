@@ -72,31 +72,34 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
             switch (position)
             {
                 case 1:
-                    imageView.setImageResource(R.drawable.ic_action_airplane_mode_off);
+                    imageView.setImageResource(R.drawable.ic_action_user);
                     break;
                 case 2:
-                    imageView.setImageResource(R.drawable.ic_action_about);
-                    break;
-                case 3:
                     imageView.setImageResource(R.drawable.ic_action_accounts);
                     break;
+                case 3:
+                    imageView.setImageResource(R.drawable.ic_action_bank);
+                    break;
                 case 4:
-                    imageView.setImageResource(R.drawable.ic_action_battery);
+                    imageView.setImageResource(R.drawable.ic_action_coupon);
                     break;
                 case 5:
-                    imageView.setImageResource(R.drawable.ic_action_add_alarm);
+                    imageView.setImageResource(R.drawable.ic_action_discount);
                     break;
                 case 6:
-                    imageView.setImageResource(R.drawable.ic_action_favorite);
+                    imageView.setImageResource(R.drawable.ic_action_voucher);
                     break;
                 case 7:
-                    imageView.setImageResource(R.drawable.ic_action_overflow);
+                    imageView.setImageResource(R.drawable.ic_action_gift_card);
                     break;
                 case 8:
                     imageView.setImageResource(R.drawable.ic_action_add_person);
                     break;
                 case 9:
-                    imageView.setImageResource(R.drawable.ic_action_collection);
+                    imageView.setImageResource(R.drawable.ic_action_about_grey);
+                    break;
+                case 10:
+                    imageView.setImageResource(R.drawable.ic_action_exit);
                     break;
             }
         }

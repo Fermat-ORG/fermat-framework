@@ -3,13 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/background_tabs_diagonal_rotated"
     android:orientation="horizontal"
     android:paddingLeft="7dip"
     android:paddingRight="7dip"
-    android:paddingBottom="7dip"
-    android:paddingTop="7dip"
-    >
+    android:paddingBottom="0dip"
+    android:paddingTop="0dip"
+    android:gravity="end|right">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="106dp"
@@ -27,49 +26,48 @@
             android:src="@drawable/new_contact_profile_picture"
             android:layout_gravity="center"
 
+            android:padding="6dp"
             />
-
-
-
 
         <ImageView
-            android:id="@+id/icon_edit_profile"
-            android:layout_width="wrap_content"
+            android:id="@+id/frame_contact"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_action_email"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:paddingLeft="7dp"
-            android:paddingRight="7dp"
-            android:paddingBottom="7dp"
-            android:paddingTop="7dp"
+            android:src="@drawable/object_frame_1x1"
+            android:layout_gravity="center"
+
             />
 
-
-        <ImageView
-            android:id="@+id/icon_edit_picture"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_action_add_to_queue"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentBottom="true"
-            android:paddingLeft="7dp"
-            android:paddingRight="7dp"
-            android:paddingBottom="7dp"
-            android:paddingTop="7dp"
-            />
 
 
     </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="106dp"
+
+
+        >
+
+    <ImageView
+        android:id="@+id/frame_tx_record"
+        android:layout_width="match_parent"
+        android:layout_height="106dp"
+        android:scaleType="centerCrop"
+
+        android:layout_gravity="center"
+        android:background="@drawable/object_frame_3x1_filled"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_alignParentRight="true"
-
+android:paddingTop="8dip"
+        android:paddingBottom="8dip"
+        android:paddingRight="8dip"
+        android:paddingLeft="8dip"
         >
 
         <EditText
@@ -77,9 +75,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:paddingLeft="7dip"
-            android:paddingRight="7dip"
-            android:paddingTop="3dip"
+            android:paddingTop="1dip"
             android:paddingBottom="3dip"
             android:textColor="#FF666666"
             android:textSize="25sp"
@@ -113,8 +109,8 @@
                 android:layout_gravity="left"
 
                 android:paddingTop="3dip"
-                android:paddingLeft="7dip"
-                android:paddingRight="7dip"
+                android:paddingLeft="4dip"
+                android:paddingRight="4dip"
                 />
 
 
@@ -126,7 +122,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="7dip"
-                android:paddingRight="7dip"
+                android:paddingRight="4dip"
                 android:paddingTop="3dip"
                 android:paddingBottom="3dip"
                 android:textColor="#FF666666"
@@ -153,8 +149,8 @@
             android:hint="New contact"
             android:gravity="right"
 
-            android:paddingLeft="7dip"
-            android:paddingRight="7dip"
+            android:paddingLeft="4dip"
+            android:paddingRight="4dip"
 
             android:paddingTop="3dip"
             android:paddingBottom="3dip"
@@ -166,5 +162,5 @@
 
 
     </LinearLayout>
-
+ </RelativeLayout>
 </LinearLayout>
