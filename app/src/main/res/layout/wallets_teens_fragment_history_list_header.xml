@@ -228,12 +228,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_action_add_to_queue_grey"
+                    android:src="@drawable/ic_action_expand_grey"
                     />
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_menu_add"
+                    android:src="@drawable/ic_action_view_as_list_grey"
                     android:scaleType="centerCrop"
                     android:id="@+id/open_history"
                     android:layout_alignParentRight="true"

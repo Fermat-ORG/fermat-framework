@@ -25,15 +25,11 @@ public class ReviewsFragment extends Fragment {
     View rootView;
     ExpandableListView lv;
     private String[] contacts;
-    private String[] amounts;
-    private String[] totalAmount;
-    private String[] historyCount;
-    private String[] whens;
-    private String[] notes;
+    private String[] reviews;
+    private String[] dislikes;
+    private String[] likes;
     private String[] pictures;
     private String[][] transactions;
-    String[][] transactions_amounts;
-    private String[][] transactions_whens;
 
 
 
@@ -49,39 +45,14 @@ public class ReviewsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        contacts = new String[]{ "", "Luis Fernando Molina", "Guillermo Villanueva", "Pedro Perrotta", "Mariana Duyos"};
-        amounts = new String[]{ "", "$325.00", "$1,400.00", "$0.50", "$25.00"};
-        whens = new String[]{ "", "3 min ago", "2 hours ago", "today 9:24 AM", "yesterday"};
-        notes = new String[]{"",  "Electricity bill", "Flat rent", "Test address", "More pictures"};
-        totalAmount = new String[]{"","$785.00","$22,730.00","$0.50","$125.00"};
-        historyCount = new String[] {"","7 records","16 records","1 record","6 records"};
-        pictures = new String[]{"", "luis_profile_picture", "guillermo_profile_picture", "pedro_profile_picture", "mariana_profile_picture"};
+        contacts = new String[]{"Luis Fernando Molina", "Guillermo Villanueva", "Pedro Perrotta", "Mariana Duyos"};
+        reviews = new String[]{ "Insert review here", "Insert review here", "Insert review here", "Insert review here", "Insert review here", "Insert review here", "Insert review here", "Insert review here",};
+        likes = new String[]{"Insert like","Insert like","Insert like","Insert like","Insert like","Insert like",};
+        dislikes = new String[]{"Insert dislike","Insert dislike","Insert dislike ","Insert dislike","Insert dislike",};
+        pictures = new String[]{"luis_profile_picture", "guillermo_profile_picture", "pedro_profile_picture", "mariana_profile_picture"};
 
         transactions = new String[][]{
 
-                {},
-                {"Electricity bill","New chair","New desk"},
-                {"Flat rent","Flat rent","Flat rent","interest paid :(","Flat rent","Car repair","Invoice #2,356 that should have been paid on August"},
-                {"Test address"},
-                {"More pictures"}
-        };
-
-        transactions_amounts = new String[][]{
-
-                {},
-                {"$325.00","$55.00","$420.00"},
-                {"$1,400.00","$1,200.00","$1,400.00","$40.00","$1,900.00","$10,550.00","$1.00"},
-                {"$0.50"},
-                {"$25.00"}
-        };
-
-        transactions_whens = new String[][]{
-
-                {},
-                {"3 min ago","15 min ago","yesterday"},
-                {"2 hours ago","yesterday","last Friday","last Friday","14 May 14","11 May 14","5 Jan 14"},
-                {"today 9:24 AM"},
-                {"yesterday"}
         };
 
     }
@@ -189,8 +160,8 @@ public class ReviewsFragment extends Fragment {
         public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
             ViewHolder holder;
-            ViewHolder amount;
-            ViewHolder when;
+            ViewHolder review;
+
 
 
             //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
@@ -199,21 +170,12 @@ public class ReviewsFragment extends Fragment {
                 convertView = inf.inflate(R.layout.wallets_teens_fragment_reviews_list_detail, parent, false);
                 holder = new ViewHolder();
 
-                holder.text = (TextView) convertView.findViewById(R.id.notes);
-                holder.text.setTypeface(MyApplication.getDefaultTypeface());
-                convertView.setTag(holder);
 
-                amount = new ViewHolder();
-                amount.text = (TextView) convertView.findViewById(R.id.amount);
-                amount.text.setTypeface(MyApplication.getDefaultTypeface());
+                review = new ViewHolder();
+                review.text = (TextView) convertView.findViewById(R.id.review);
+                review.text.setTypeface(MyApplication.getDefaultTypeface());
 
-                amount.text.setText(transactions_amounts[groupPosition][childPosition].toString());
 
-                when = new ViewHolder();
-                when.text = (TextView) convertView.findViewById(R.id.when);
-                when.text.setTypeface(MyApplication.getDefaultTypeface());
-
-                when.text.setText(transactions_whens[groupPosition][childPosition].toString());
 
 
             } else {
@@ -228,13 +190,11 @@ public class ReviewsFragment extends Fragment {
         @Override
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
             ViewHolder holder;
-            ViewHolder amount;
-            ViewHolder when;
-            ViewHolder note;
+            ViewHolder review;
+            ViewHolder like;
+            ViewHolder dislike;
             ImageView profile_picture;
             ImageView send_picture;
-            ViewHolder total;
-            ViewHolder history;
 
 
 
@@ -246,16 +206,16 @@ public class ReviewsFragment extends Fragment {
                 profile_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
                 switch (groupPosition)
                 {
-                    case 1:
+                    case 0:
                         profile_picture.setImageResource(R.drawable.luis_profile_picture);
                         break;
-                    case 2:
+                    case 1:
                         profile_picture.setImageResource(R.drawable.guillermo_profile_picture);
                         break;
-                    case 3:
+                    case 2:
                         profile_picture.setImageResource(R.drawable.pedro_profile_picture);
                         break;
-                    case 4:
+                    case 3:
                         profile_picture.setImageResource(R.drawable.mariana_profile_picture);
                         break;
                 }
@@ -267,33 +227,21 @@ public class ReviewsFragment extends Fragment {
                 holder.text.setTypeface(MyApplication.getDefaultTypeface());
                 convertView.setTag(holder);
 
-                amount = new ViewHolder();
-                amount.text = (TextView) convertView.findViewById(R.id.amount);
-                amount.text.setTypeface(MyApplication.getDefaultTypeface());
+                review = new ViewHolder();
+                review.text = (TextView) convertView.findViewById(R.id.review);
+                review.text.setTypeface(MyApplication.getDefaultTypeface());
 
-                amount.text.setText(amounts[groupPosition].toString());
+                review.text.setText(reviews[groupPosition].toString());
 
-                when = new ViewHolder();
-                when.text = (TextView) convertView.findViewById(R.id.when);
-                when.text.setTypeface(MyApplication.getDefaultTypeface());
+                like = new ViewHolder();
+                like.text = (TextView) convertView.findViewById(R.id.like_amount);
+                like.text.setTypeface(MyApplication.getDefaultTypeface());
+                like.text.setText(likes[groupPosition].toString());
 
-                when.text.setText(whens[groupPosition].toString());
-
-                total = new ViewHolder();
-                total.text = (TextView) convertView.findViewById(R.id.total_amount);
-                total.text.setTypeface(MyApplication.getDefaultTypeface());
-                total.text.setText(totalAmount[groupPosition].toString());
-
-                history = new ViewHolder();
-                history.text = (TextView) convertView.findViewById(R.id.history_count);
-                history.text.setTypeface(MyApplication.getDefaultTypeface());
-                history.text.setText(historyCount[groupPosition].toString());
-
-                note = new ViewHolder();
-                note.text = (TextView) convertView.findViewById(R.id.notes);
-                note.text.setTypeface(MyApplication.getDefaultTypeface());
-
-                note.text.setText(notes[groupPosition].toString());
+                dislike = new ViewHolder();
+                dislike.text = (TextView) convertView.findViewById(R.id.dislike_amount);
+                dislike.text.setTypeface(MyApplication.getDefaultTypeface());
+                dislike.text.setText(dislikes[groupPosition].toString());
 
             } else {
                 holder = (ViewHolder) convertView.getTag();

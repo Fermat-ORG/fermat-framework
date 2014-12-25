@@ -71,30 +71,6 @@
                 android:paddingRight="8dip"
                 />
         </FrameLayout>
-
-
-
-
-
-        <ImageView
-            android:id="@+id/icon_edit_profile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_action_email"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
-            android:paddingLeft="7dp"
-            android:paddingRight="7dp"
-            android:paddingBottom="7dp"
-            android:paddingTop="7dp"
-            android:onClick="onChatOverTrxIconClicked"
-
-            />
-
-
-
-
     </RelativeLayout>
 
     <RelativeLayout
@@ -123,97 +99,22 @@
             >
 
 
-
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingLeft="10dip"
-                android:paddingRight="10dip"
-                android:paddingTop="10dip">
-                <TextView
-                    android:id="@+id/amount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:textColor="#FF666666"
-                    android:textSize="12sp"
-                    android:textStyle="normal"
-                    android:text="$0.00"
-                    android:paddingBottom="2dip"
-                    android:paddingTop="2dip"
-                    android:layout_gravity="start" />
-
-
-                <TextView android:id="@+id/total_amount"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:paddingTop="8dip"
+                android:paddingLeft="8dip"
+                android:paddingRight="8dip">
+                <TextView android:id="@+id/review"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="$amount"
-                    android:gravity="end"
-                    android:textColor="#FF666666"
-
+                    android:layout_height="match_parent"
+                    android:text="reviews"
                     android:textStyle="normal"
                     android:textSize="12sp"
-                    android:paddingBottom="2dip"
-                    android:paddingTop="2dip"/>
+                    android:gravity="center|top"/>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingLeft="10dip"
-                android:paddingRight="10dip"
-                android:weightSum="1">
-                <TextView
-                    android:id="@+id/when"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#FF666666"
-                    android:textSize="12sp"
-                    android:textStyle="normal"
-                    android:text="yesterday"
-                    android:gravity="start" android:paddingBottom="2dip"
-                    android:paddingTop="2dip"/>
-
-                <TextView android:id="@+id/history_count"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="history count"
-                    android:textColor="#FF666666"
-
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:textSize="12sp"
-                    android:textStyle="normal"
-                    android:paddingBottom="2dip"
-                    android:paddingTop="2dip"
-                    android:gravity="end"
-
-                    />
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingLeft="10dip"
-                android:paddingRight="10dip" android:paddingBottom="2dip" android:paddingTop="2dip">
-
-                <TextView
-                    android:id="@+id/notes"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:textColor="#FF666666"
-                    android:textSize="12sp"
-                    android:textStyle="normal"
-                    android:text="notes"
-                    android:layout_gravity="start"
-                    android:paddingBottom="2dip"
-                    android:paddingTop="2dip" />
-
-            </LinearLayout>
 
 
             <RelativeLayout
@@ -223,21 +124,48 @@
                 android:paddingRight="10dip"
                 android:paddingBottom="10dip"
                 android:layout_gravity="bottom">
-                <ImageView
-                    android:id="@+id/recent_transactions"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_menu_view"
-                    />
-                <ImageView
+                    android:orientation="vertical">
+                    <TextView android:id="@+id/like_amount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1234"
+                        android:layout_gravity="center"
+                        android:textSize="12sp"
+                        android:textStyle="normal"/>
+                    <ImageView
+                        android:id="@+id/good"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_action_good_grey"
+                        />
+
+                    </LinearLayout>
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_menu_add"
+                    android:orientation="vertical"
+                    android:layout_alignParentRight="true">
+                    <TextView android:id="@+id/dislike_amount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1234"
+                        android:layout_gravity="center"
+                        android:textSize="12sp"
+                        android:textStyle="normal"/>
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:src="@drawable/ic_action_bad_grey"
                     android:scaleType="centerCrop"
-                    android:id="@+id/open_history"
+                    android:id="@+id/bad"
                     android:layout_alignParentRight="true"
                     />
+
+                </LinearLayout>
             </RelativeLayout>
         </LinearLayout>
     </RelativeLayout>

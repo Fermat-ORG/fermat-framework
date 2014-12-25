@@ -331,7 +331,7 @@ public class StoreProductsFragment extends Fragment {
                 holder.companyTextView = (TextView) convertView.findViewById(R.id.company_text_view);
                 holder.companyDescription = (TextView) convertView.findViewById(R.id.company_description);
                 //holder.ratingBar = (RatingBar) convertView.findViewById(R.id.rating_bar);
-              //  holder.valueTextView = (TextView) convertView.findViewById(R.id.value_text_view);
+                holder.valueTextView = (TextView) convertView.findViewById(R.id.value_text_view);
 
                 holder.openHours = (TextView) convertView.findViewById(R.id.open_hours);
                 holder.timeToArrive = (TextView) convertView.findViewById(R.id.time_to_arrive);

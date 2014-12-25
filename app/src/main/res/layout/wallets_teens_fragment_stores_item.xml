@@ -289,8 +289,6 @@
         android:textColor="#aaaaaa"
         android:textSize="10sp"
         android:textStyle="bold"
-
-
         android:paddingLeft="0dp"
         android:paddingRight="14dp"
         android:paddingTop="0dp"
