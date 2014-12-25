@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="0.0" y="153.0">com.bitdubai.smartwallet.core.chat.ChatSubject</node>
+    <node x="155.0" y="153.0">com.bitdubai.smartwallet.core.chat.Chat</node>
+    <node x="284.0" y="79.0">com.bitdubai.smartwallet.core.chat.SoundMessage</node>
+    <node x="0.0" y="79.0">com.bitdubai.smartwallet.core.chat.ImageMessage</node>
+    <node x="148.0" y="79.0">com.bitdubai.smartwallet.core.chat.TextMessage</node>
+    <node x="161.0" y="0.0">com.bitdubai.smartwallet.core.chat.Message</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="com.bitdubai.smartwallet.core.chat.ImageMessage" target="com.bitdubai.smartwallet.core.chat.Message">
+      <point x="0.0" y="-14.5" />
+      <point x="64.0" y="54.0" />
+      <point x="176.0" y="54.0" />
+      <point x="-30.0" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.chat.TextMessage" target="com.bitdubai.smartwallet.core.chat.Message">
+      <point x="0.0" y="-14.5" />
+      <point x="0.0" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.chat.SoundMessage" target="com.bitdubai.smartwallet.core.chat.Message">
+      <point x="0.0" y="-14.5" />
+      <point x="349.0" y="54.0" />
+      <point x="236.0" y="54.0" />
+      <point x="30.0" y="14.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="0.0" y="0.0" />
+  <SelectedNodes />
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+
