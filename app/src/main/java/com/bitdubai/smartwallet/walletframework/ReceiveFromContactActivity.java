@@ -1,18 +1,34 @@
 package com.bitdubai.smartwallet.walletframework;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
+import com.bitdubai.smartwallet.wallets.teens.ReceiveFromContactFragment;
 
 public class ReceiveFromContactActivity extends Activity {
-
+    private CharSequence mTitle = "Receive From Contact";
+    private PagerSlidingTabStrip tabs;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.wallet_framework_activity_receive_from_contact);
+        if (savedInstanceState == null) {
+            getFragmentManager().beginTransaction()
+                    .add(R.id.container, new ReceiveFromContactFragment())
+                    .commit();
+        }
+        tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+
+        int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
+        TextView abTitle = (TextView) findViewById(titleId);
+        abTitle.setTextColor(Color.WHITE);
+        ((MyApplication) this.getApplication()).setActionBarProperties(this,getWindow(),tabs, getActionBar(), getResources(),abTitle, mTitle.toString());
+
     }
 
 

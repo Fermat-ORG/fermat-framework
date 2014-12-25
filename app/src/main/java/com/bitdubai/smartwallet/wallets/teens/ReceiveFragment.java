@@ -273,6 +273,14 @@ public  class ReceiveFragment extends Fragment {
                     convertView = inf.inflate(R.layout.wallets_teens_fragment_receive_list_header, parent, false);
 
                     profile_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
+//asigned tagId at icons action
+                    ImageView  send_profile_picture = (ImageView) convertView.findViewById(R.id.icon_send_profile);
+
+                    send_profile_picture.setTag(groupPosition);
+
+                    ImageView  history_picture = (ImageView) convertView.findViewById(R.id.open_history);
+
+                    history_picture.setTag(groupPosition);
 
                     switch (groupPosition) {
                         case 1:
