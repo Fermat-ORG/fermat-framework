@@ -127,6 +127,6 @@
             android:layout_width="50dp"
             android:layout_height="40dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_menu_send"/>
+            android:src="@drawable/ic_action_send_now_grey"/>
     </LinearLayout>
 </LinearLayout>

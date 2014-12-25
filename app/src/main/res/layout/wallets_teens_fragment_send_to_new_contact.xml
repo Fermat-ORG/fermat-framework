@@ -32,7 +32,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_menu_camera"
+                android:src="@drawable/ic_action_camera_grey"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true" />
             <ImageView
@@ -40,7 +40,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_menu_gallery"
+                android:src="@drawable/ic_action_picture_grey"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentBottom="true"
                  />
@@ -95,7 +95,7 @@
             android:id="@+id/scan_qr"
             android:layout_width="50dp"
             android:layout_height="40dp"
-            android:src="@drawable/ic_menu_camera"
+            android:src="@drawable/ic_action_camera_grey"
             />
 
     </LinearLayout>
@@ -147,6 +147,6 @@
             android:layout_width="50dp"
             android:layout_height="40dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_menu_send"/>
+            android:src="@drawable/ic_action_send_now_grey"/>
         </LinearLayout>
 </LinearLayout>
