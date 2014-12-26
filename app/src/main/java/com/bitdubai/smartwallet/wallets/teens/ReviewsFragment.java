@@ -45,11 +45,11 @@ public class ReviewsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        contacts = new String[]{"Luis Fernando Molina", "Guillermo Villanueva", "Pedro Perrotta", "Mariana Duyos"};
-        reviews = new String[]{ "Insert review here", "Insert review here", "Insert review here", "Insert review here", "Insert review here", "Insert review here", "Insert review here", "Insert review here",};
-        likes = new String[]{"Insert like","Insert like","Insert like","Insert like","Insert like","Insert like",};
-        dislikes = new String[]{"Insert dislike","Insert dislike","Insert dislike ","Insert dislike","Insert dislike",};
-        pictures = new String[]{"luis_profile_picture", "guillermo_profile_picture", "pedro_profile_picture", "mariana_profile_picture"};
+        contacts = new String[]{"Brant Cryder", "Teddy Truchot", "Helene Derosier","Piper faust"};
+        reviews = new String[]{ "Cheap and tasty. Get the coffee with donuts.", "The service was wonderful.I love it.", "they constantly mess up orders if there was another dunkin donuts around I'd never go back .", " I don't like the service at this particular Dunkin store. ", "Insert review here", "Insert review here", "Insert review here", "Insert review here",};
+        likes = new String[]{"5","3","0","4","Insert like","Insert like",};
+        dislikes = new String[]{"0","1","2 ","0","Insert dislike",};
+        pictures = new String[]{"brant_profile_picture", "teddy_profile_picture", "helene_profile_picture", "piper_profile_picture"};
 
         transactions = new String[][]{
 
@@ -96,7 +96,7 @@ public class ReviewsFragment extends Fragment {
                     Intent intent;
                     intent = new Intent(getActivity(), SendToNewContactActivity.class);
                     startActivity(intent);
-                    return true;
+                    return false;
                 }
                 else
                 {
@@ -207,16 +207,16 @@ public class ReviewsFragment extends Fragment {
                 switch (groupPosition)
                 {
                     case 0:
-                        profile_picture.setImageResource(R.drawable.luis_profile_picture);
+                        profile_picture.setImageResource(R.drawable.brant_profile_picture);
                         break;
                     case 1:
-                        profile_picture.setImageResource(R.drawable.guillermo_profile_picture);
+                        profile_picture.setImageResource(R.drawable.teddy_profile_picture);
                         break;
                     case 2:
-                        profile_picture.setImageResource(R.drawable.pedro_profile_picture);
+                        profile_picture.setImageResource(R.drawable.helene_profile_picture);
                         break;
                     case 3:
-                        profile_picture.setImageResource(R.drawable.mariana_profile_picture);
+                        profile_picture.setImageResource(R.drawable.piper_profile_picture);
                         break;
                 }
 

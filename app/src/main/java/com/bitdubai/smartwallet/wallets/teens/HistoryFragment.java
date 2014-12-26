@@ -49,13 +49,13 @@ public class HistoryFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        contacts = new String[]{"cambiar ", "todas ", "las personas", "por productos "};
-        amounts = new String[]{"montos", "como este", "este", "y este"};
-        whens = new String[]{"todas la fechas", "2 hours ago", "today 9:24 AM", "yesterday"};
-        notes = new String[]{ "pone algo aca ", "aca", "aca", "y aca"};
-        totalAmount = new String[]{"aca van los precios de lo que se compro ","en todos ","este","este tambien"};
-        historyCount = new String[] {"","","",""}; //queda vacio aca, borra esto despues
-        pictures = new String[]{"luis_profile_picture", "guillermo_profile_picture", "pedro_profile_picture", "mariana_profile_picture"};
+        contacts = new String[]{"French Roll", "Caramel Chocolate Crunch", "Cinnamon Cake", "Classic Iced Pink"};
+        amounts = new String[]{"$5.89", "$2.00", "$3.49", "$2.49"};
+        whens = new String[]{"1 hour ago", "2 hours ago", "today 9:24 AM", "yesterday"};
+        notes = new String[]{ "", "aca", "aca", "y aca"};
+        totalAmount = new String[]{"$7.89","$2.00'","$7.00","$4.00"};
+        historyCount = new String[] {"","","",""};
+        pictures = new String[]{"product_14", "product_8", "product_13", "product_2"};
 
         transactions = new String[][]{
 
@@ -246,19 +246,19 @@ public class HistoryFragment extends Fragment {
                     switch (groupPosition)
                     {
                         case 0:
-                            profile_picture.setImageResource(R.drawable.new_contact_profile_picture);
+                            profile_picture.setImageResource(R.drawable.product_14);
                             break;
                         case 1:
-                            profile_picture.setImageResource(R.drawable.luis_profile_picture);
+                            profile_picture.setImageResource(R.drawable.product_8);
                             break;
                         case 2:
-                            profile_picture.setImageResource(R.drawable.guillermo_profile_picture);
+                            profile_picture.setImageResource(R.drawable.product_13);
                             break;
                         case 3:
-                            profile_picture.setImageResource(R.drawable.pedro_profile_picture);
+                            profile_picture.setImageResource(R.drawable.product_2);
                             break;
                         case 4:
-                            profile_picture.setImageResource(R.drawable.mariana_profile_picture);
+                            profile_picture.setImageResource(R.drawable.product_1);
                             break;
 
                     }
