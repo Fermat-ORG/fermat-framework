@@ -152,7 +152,10 @@ public class StoreStoreFragment extends Fragment {
                 "aaa",
                 "aaa",
                 "aaa" };
-        String[] company_descriptions = {"Long-running chain serving signature donuts, breakfast sandwiches & a variety of coffee ...","Classic, redefined. See what's new at our Westchester location!.",
+        String[] company_descriptions = {"Long-running chain serving signature donuts, breakfast sandwiches & a variety of coffee.Dunkin' Donuts is an American global doughnut company and coffeehouse chain based in Canton, Massachusetts. It was founded in 1950 by William Rosenberg in Quincy, Massachusetts.",
+
+
+                "Classic, redefined. See what's new at our Westchester location!.",
                 "Smoking is allowed inside this clubby shop known for its hand-rolled cigars made ...",
                 "Basic pizzeria serving a variety of NYC-style slices in a small, counter-service space.",
                 "Pasta dishes, sandwiches & salads for take-out or eating in at this pint-sized Italian deli.",
