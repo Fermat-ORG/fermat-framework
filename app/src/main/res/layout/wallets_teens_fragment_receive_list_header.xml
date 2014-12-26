@@ -91,11 +91,11 @@
             />
 
         <ImageView
-            android:id="@+id/icon_send_profile"
+            android:id="@+id/icon_receive_profile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_action_send_now"
+            android:src="@drawable/ic_action_receive_now"
             android:layout_alignParentRight="true"
 
             android:layout_alignParentTop="true"
@@ -103,7 +103,7 @@
             android:paddingRight="7dp"
             android:paddingBottom="7dp"
             android:paddingTop="7dp"
-            android:onClick="onSendIconClicked"
+            android:onClick="onReceiveIconClicked"
 
             />
 

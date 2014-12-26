@@ -225,14 +225,14 @@ public class NavigationDrawerFragment extends Fragment {
 
             startActivity(intent);
         }
-
+/*
         if (position == 2)
         {
             Intent intent;
             intent = new Intent(super.getActivity(), AccountsActivity.class);
 
             startActivity(intent);
-        }
+        } */
 
     }
 

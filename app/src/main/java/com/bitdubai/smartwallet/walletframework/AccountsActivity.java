@@ -37,4 +37,5 @@ public class AccountsActivity extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }

@@ -34,7 +34,6 @@
                     android:scaleType="centerCrop"
                     android:src="@drawable/new_contact_profile_picture"
                     android:layout_gravity="center"
-
                     android:padding="6dp"
                     />
 
