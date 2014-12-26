@@ -50,10 +50,10 @@ public class HistoryFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         contacts = new String[]{"French Roll", "Caramel Chocolate Crunch", "Cinnamon Cake", "Classic Iced Pink"};
-        amounts = new String[]{"$5.89", "$2.00", "$3.49", "$2.49"};
-        whens = new String[]{"1 hour ago", "2 hours ago", "today 9:24 AM", "yesterday"};
-        notes = new String[]{ "", "aca", "aca", "y aca"};
-        totalAmount = new String[]{"$7.89","$2.00'","$7.00","$4.00"};
+        amounts = new String[]{"", "", "", ""};
+        whens = new String[]{"", "", "", ""};
+        notes = new String[]{ "2 units", "12 units", "6 units", "24 units"};
+        totalAmount = new String[]{"$5.89", "$2.00", "$3.49", "$2.49"};
         historyCount = new String[] {"","","",""};
         pictures = new String[]{"product_14", "product_8", "product_13", "product_2"};
 

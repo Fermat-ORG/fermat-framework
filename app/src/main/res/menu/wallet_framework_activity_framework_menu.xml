@@ -6,16 +6,16 @@
 
 
     <item android:id="@+id/menu_wallets"
-        android:icon="@drawable/ic_action_read"
+        android:icon="@drawable/ic_action_bell"
         android:title="All requests"
         android:showAsAction="ifRoom">
         <menu>
             <item android:id="@+id/action_requests_sent"
-                android:icon="@drawable/ic_action_brightness_medium"
+                android:icon="@drawable/ic_action_send_now"
                 android:title="Requests sent"
                 />
             <item android:id="@+id/action_requests_received"
-                android:icon="@drawable/ic_action_favorite"
+                android:icon="@drawable/ic_action_receive_now"
                 android:title="Requests received"
                 android:actionLayout="@layout/wallet_framework_activity_framework_menu_item"
                 />

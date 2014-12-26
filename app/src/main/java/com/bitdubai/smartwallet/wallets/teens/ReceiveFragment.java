@@ -274,7 +274,7 @@ public  class ReceiveFragment extends Fragment {
 
                     profile_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
 //asigned tagId at icons action
-                    ImageView  send_profile_picture = (ImageView) convertView.findViewById(R.id.icon_send_profile);
+                    ImageView  send_profile_picture = (ImageView) convertView.findViewById(R.id.icon_receive_profile);
 
                     send_profile_picture.setTag(groupPosition);
 
