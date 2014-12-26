@@ -4,6 +4,9 @@ package com.bitdubai.smartwallet.core.p2p;
  * Created by ciencias on 24.12.14.
  */
 
+import com.bitdubai.smartwallet.core.p2p.node.ClanDeputy;
+import com.bitdubai.smartwallet.core.p2p.node.ClanLeader;
+
 import java.util.List;
 
 /**

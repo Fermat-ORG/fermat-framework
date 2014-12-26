@@ -1,5 +1,8 @@
 package com.bitdubai.smartwallet.core.p2p;
 
+import com.bitdubai.smartwallet.core.p2p.node.AssociationDeputy;
+import com.bitdubai.smartwallet.core.p2p.node.AssociationPresident;
+
 import java.util.List;
 
 /**
