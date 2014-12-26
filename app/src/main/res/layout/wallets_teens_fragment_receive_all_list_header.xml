@@ -113,7 +113,7 @@
                 android:paddingBottom="8dip"
                 android:layout_gravity="bottom">
                 <ImageView
-                    android:id="@+id/icon_send_to_contact"
+                    android:id="@+id/icon_receive_form_contact"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:scaleType="centerCrop"
@@ -124,7 +124,7 @@
                     android:paddingRight="0dp"
                     android:paddingBottom="7dp"
                     android:paddingTop="7dp"
-                    android:onClick="onSendToContactIconClicked"
+                    android:onClick="onReceiveIconClicked"
 
                     />
                 <ImageView

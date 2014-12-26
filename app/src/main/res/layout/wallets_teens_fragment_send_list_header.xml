@@ -16,8 +16,6 @@
 
         >
 
-
-
         <ImageView
             android:id="@+id/profile_picture"
             android:layout_width="match_parent"

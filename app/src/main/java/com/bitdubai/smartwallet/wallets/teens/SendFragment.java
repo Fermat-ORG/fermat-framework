@@ -101,7 +101,7 @@ public  class SendFragment extends Fragment {
         lv.setAdapter(new ExpandableListAdapter(contacts, transactions));
         lv.setGroupIndicator(null);
 
-        lv.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+       lv.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
 
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {

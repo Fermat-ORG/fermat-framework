@@ -143,9 +143,9 @@ public class FrameworkActivity extends FragmentActivity
 
         int tagId = (int) v.getTag();
         MyApplication.setTagId(tagId);
-       /* Intent intent;
+        Intent intent;
         intent = new Intent(this, ReceiveFromContactActivity.class);
-        startActivity(intent);*/
+        startActivity(intent);
         return;
 
     }

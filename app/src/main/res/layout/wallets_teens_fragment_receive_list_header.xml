@@ -103,7 +103,7 @@
             android:paddingRight="7dp"
             android:paddingBottom="7dp"
             android:paddingTop="7dp"
-            android:onClick="onSendIconClicked"
+            android:onClick="onReceiveIconClicked"
 
             />
 
