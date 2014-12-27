@@ -221,7 +221,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dip"
                 android:paddingRight="10dip"
-                android:paddingBottom="10dip"
+                android:paddingBottom="7dip"
                 android:layout_gravity="bottom">
                 <ImageView
                     android:id="@+id/action_accept"
@@ -229,14 +229,16 @@
                     android:layout_height="wrap_content"
                     android:scaleType="centerCrop"
                     android:src="@drawable/ic_action_accept_grey"
-                    android:layout_alignParentRight="true"/>
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentBottom="true"/>
                 <ImageView
                     android:id="@+id/action_cancel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:scaleType="centerCrop"
                     android:src="@drawable/ic_action_cancel_grey"
-                    android:layout_alignParentLeft="true"/>
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentBottom="true"/>
             </RelativeLayout>
         </LinearLayout>
     </RelativeLayout>
