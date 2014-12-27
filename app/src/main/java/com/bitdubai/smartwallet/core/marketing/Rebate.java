@@ -18,5 +18,5 @@ package com.bitdubai.smartwallet.core.marketing;
  * immediately without a trip to the bank, or even PayPal payout.
  */
 
-public class Rebate implements Scrip{
+public interface Rebate extends Scrip{
 }
