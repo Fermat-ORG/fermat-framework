@@ -38,33 +38,6 @@
             />
 
 
-        <ImageView android:id="@+id/receive_from_contact"
-            android:paddingTop="7dp"
-            android:paddingLeft="7dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:src="@drawable/ic_action_receive_now"/>
-
-
-
-        <ImageView
-            android:id="@+id/icon_send_message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_action_email"
-            android:layout_alignParentTop="true"
-            android:paddingLeft="7dp"
-            android:paddingRight="7dp"
-            android:layout_alignParentRight="true"
-
-            android:paddingBottom="7dp"
-            android:paddingTop="7dp"
-            android:onClick="onChatOverTrxIconClicked"
-
-            />
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -147,16 +120,18 @@
                     android:layout_gravity="start" />
 
 
-                <TextView
+                <TextView android:id="@+id/city"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="end"
                     android:textColor="#FF666666"
-
-                    android:textStyle="normal"
                     android:textSize="12sp"
+                    android:text="city"
+                    android:textStyle="normal"
+                    android:layout_gravity="end"
                     android:paddingBottom="1dip"
-                    android:paddingTop="2dip"/>
+                    android:paddingTop="1dip" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -199,61 +174,60 @@
                 android:paddingLeft="10dip"
                 android:paddingRight="10dip" android:paddingBottom="2dip" android:paddingTop="2dip">
 
-                <TextView android:id="@+id/city"
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:textColor="#FF666666"
                     android:textSize="12sp"
-                    android:text="city"
                     android:textStyle="normal"
                     android:layout_gravity="start"
                     android:paddingBottom="1dip"
                     android:paddingTop="1dip" />
-
             </LinearLayout>
-
-
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dip"
                 android:paddingRight="10dip"
                 android:paddingBottom="10dip"
-                android:layout_gravity="bottom">
-                <ImageView
-                    android:id="@+id/icon_send_profile"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_action_send_now_grey"
-                    android:layout_alignParentRight="true"
-
-                    android:layout_alignParentTop="true"
-                    android:paddingLeft="7dp"
-                    android:paddingRight="7dp"
-                    android:paddingBottom="7dp"
-                    android:paddingTop="7dp"
-                    android:onClick="onSendIconClicked"
-
-                    />
-
-
+                android:layout_gravity="bottom"
+                android:baselineAligned="false"
+                android:gravity="center">
                 <ImageView
                     android:id="@+id/icon_edit_picture"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:scaleType="centerCrop"
                     android:src="@drawable/ic_action_edit_grey"
                     android:layout_alignParentLeft="true"
-                    android:layout_alignParentBottom="true"
-                    android:paddingLeft="7dp"
-                    android:paddingRight="7dp"
-                    android:paddingBottom="7dp"
-                    android:paddingTop="7dp"
-                    />
-
-            </RelativeLayout>
+                    android:layout_gravity="start"
+                    android:layout_weight="1"/>
+                <ImageView
+                    android:id="@+id/icon_send_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_action_email_grey"
+                    android:onClick="onChatOverTrxIconClicked"
+                    android:layout_alignParentLeft="true"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"/>
+                <ImageView android:id="@+id/request_payment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_action_request_receive_grey"
+                    android:layout_alignParentRight="true"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"/>
+                <ImageView
+                    android:id="@+id/icon_send_profile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_action_send_now_grey"
+                    android:onClick="onSendIconClicked"
+                    android:layout_alignParentRight="true"
+                    android:layout_gravity="end"
+                    android:layout_weight="1"/>
+            </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
 </LinearLayout>

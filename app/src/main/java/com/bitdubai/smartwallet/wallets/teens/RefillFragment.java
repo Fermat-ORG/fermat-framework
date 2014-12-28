@@ -161,16 +161,15 @@ public class RefillFragment extends Fragment {
         //ArrayList<App> list = (ArrayList<App>) getArguments().get("list");
         gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.wallets_teens_fragment_refills_item, mlist));
 
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v,
-                                    int position, long id) {
-                Intent intent;
-                intent = new Intent(getActivity(), RefillPointActivity.class);
-                startActivity(intent);
-
-                return ;
-            }
-        });
+        //        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        //  public void onItemClick(AdapterView<?> parent, View v,
+        //                         int position, long id) {
+        //      Intent intent;
+        //      intent = new Intent(getActivity(), RefillPointActivity.class);
+        //      startActivity(intent);
+        //      return ;
+        //  }
+        // });
 
 
         return gridView;
