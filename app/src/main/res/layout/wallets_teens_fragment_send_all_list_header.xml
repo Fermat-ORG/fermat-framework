@@ -9,36 +9,21 @@
     android:paddingBottom="0dip"
     android:paddingTop="0dip"
     android:gravity="end|right">
-
-
-
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="106dp"
-
-
-        >
-
+        android:layout_height="106dp">
         <ImageView
             android:id="@+id/frame_tx_record"
             android:layout_width="match_parent"
             android:layout_height="106dp"
             android:scaleType="centerCrop"
-
             android:layout_gravity="center"
-            android:background="@drawable/object_frame_3x1_filled"
-            />
-
+            android:background="@drawable/object_frame_3x1_filled"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:layout_alignParentRight="true"
-
-            >
-
-
-
+            android:layout_alignParentRight="true">
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -58,10 +43,7 @@
                     android:paddingBottom="1dip"
                     android:paddingTop="2dip"
                     android:layout_gravity="start" />
-
-
             </LinearLayout>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -77,18 +59,18 @@
                     android:textSize="12sp"
                     android:textStyle="normal"
                     android:text="yesterday"
-                    android:gravity="start" android:paddingBottom="1dip"
+                    android:gravity="start"
+                    android:paddingBottom="1dip"
                     android:paddingTop="1dip"/>
-
-
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingLeft="10dip"
-                android:paddingRight="10dip" android:paddingBottom="2dip" android:paddingTop="2dip">
-
+                android:paddingRight="10dip"
+                android:paddingBottom="2dip"
+                android:paddingTop="2dip">
                 <TextView
                     android:id="@+id/notes"
                     android:layout_width="wrap_content"
@@ -101,11 +83,8 @@
                     android:layout_gravity="start"
                     android:paddingBottom="1dip"
                     android:paddingTop="1dip"/>
-
             </LinearLayout>
-
-
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dip"
@@ -116,32 +95,17 @@
                     android:id="@+id/icon_send_to_contact"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_menu_send"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentBottom="true"
-                    android:paddingLeft="11dp"
-                    android:paddingRight="0dp"
-                    android:paddingBottom="7dp"
-                    android:paddingTop="7dp"
+                    android:src="@drawable/ic_action_send_now_grey"
                     android:onClick="onSendToContactIconClicked"
-
-                    />
+                    android:layout_weight="1"/>
                 <ImageView
+                    android:src="@drawable/ic_action_email_grey"
+                    android:layout_weight="1"
                     android:id="@+id/icon_chat_over_trx"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_action_replay_grey"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentBottom="true"
-                    android:paddingLeft="7dp"
-                    android:paddingRight="7dp"
-                    android:paddingBottom="7dp"
-                    android:paddingTop="7dp"
-                    android:onClick="onChatOverTrxIconClicked"
-                    />
-            </RelativeLayout>
+                    android:onClick="onChatOverTrxIconClicked"/>
+            </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
 </LinearLayout>

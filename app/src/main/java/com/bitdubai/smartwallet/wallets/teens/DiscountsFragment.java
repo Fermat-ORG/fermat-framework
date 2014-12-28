@@ -273,7 +273,7 @@ public class DiscountsFragment extends ListFragment implements LoaderManager.Loa
             account_types = new String[]{"This week discounts", "This month discounts", "This year discounts"};
             account_aliases = new String[]{"My savings", "Pocket money", "Holiday savings"};
             balances = new String[]{"$129.00", "$735.20", "$3,211.80"};
-            balances_available = new String[]{"7.50 % average", "12.32 % average", "10.05 % average"};
+            balances_available = new String[]{"2.36% average", "3.32 % average", "9.05 % average"};
 
             View view;
 

@@ -1,6 +1,7 @@
 package com.bitdubai.smartwallet.wallets.teens;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -46,7 +47,7 @@ public class ReviewsFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         contacts = new String[]{"Brant Cryder", "Teddy Truchot", "Helene Derosier","Piper faust"};
-        reviews = new String[]{ "Cheap and tasty. Get the coffee with donuts.", "The service was wonderful.I love it.", "they constantly mess up orders if there was another dunkin donuts around I'd never go back .", " I don't like the service at this particular Dunkin store. ", "Insert review here", "Insert review here", "Insert review here", "Insert review here",};
+        reviews = new String[]{ "\"Cheap and tasty. Get the coffee with donuts.\"", "\"The service was wonderful.I love it.\"", "\"they constantly mess up orders if there was another dunkin donuts around I'd never go back.\"", " \"I don't like the service at this particular Dunkin store.\" ", "Insert review here", "Insert review here", "Insert review here", "Insert review here",};
         likes = new String[]{"5","3","0","4","Insert like","Insert like",};
         dislikes = new String[]{"0","1","2 ","0","Insert dislike",};
         pictures = new String[]{"brant_profile_picture", "teddy_profile_picture", "helene_profile_picture", "piper_profile_picture"};
@@ -173,8 +174,7 @@ public class ReviewsFragment extends Fragment {
 
                 review = new ViewHolder();
                 review.text = (TextView) convertView.findViewById(R.id.review);
-                review.text.setTypeface(MyApplication.getDefaultTypeface());
-
+                review.text.setTypeface(Typeface.defaultFromStyle(Typeface.ITALIC));
 
 
 

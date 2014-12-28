@@ -223,19 +223,17 @@
                 android:gravity="end" />
 
         </LinearLayout>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="4dip">
-        <ImageView
-            android:id="@+id/icon_send_to_contact"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="center"
-            android:src="@drawable/ic_action_send_now_grey"
-            android:layout_alignParentRight="true"
-    />
-        </RelativeLayout>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/icon_send_to_contact"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_action_send_now_grey"
+        android:layout_weight="1"/>
+    </LinearLayout>
+
     </LinearLayout>
     </RelativeLayout>
 

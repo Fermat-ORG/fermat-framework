@@ -213,19 +213,16 @@
                     android:paddingBottom="1dip"
                     android:paddingTop="1dip" />
             </LinearLayout>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="8dip"
-            android:paddingRight="10dip">
-
-            <ImageView android:id="@+id/send_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_action_send_now_grey"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"/>
-            </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/send_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_action_send_now_grey"
+                    android:layout_weight="1"/>
+            </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
 </LinearLayout>
