@@ -42,8 +42,8 @@ public class DailyDiscountsFragment extends android.app.Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        dates = new String[]{"Monday, 5", "Tuesday, 6", "Wednesday, 7", "Thursday, 8","Friday, 9","Saturday, 10", "Sunday, 11" };
-        adiscount_count = new String[]{"0","5","-8","0","2","7","-1"};
+        dates = new String[]{"Fri 23 Feb", "Thu 22 Feb", "Wed 21 Feb", "Tue 20 Feb","Mon 19 Feb","Sun 18 Feb", "Sat 17 Feb" };
+        adiscount_count = new String[]{"1","2","12","-3","8","9","-1"};
 
         transactions = new String[][]{
 
