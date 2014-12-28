@@ -1,7 +1,7 @@
 package com.bitdubai.smartwallet.core.wallet.factory;
 
 /**
- * Created by ciencias on 23.12.14.
+ * Created by ciencias on 28.12.14.
  */
-public class WalletMaster {
+public interface Resource {
 }
