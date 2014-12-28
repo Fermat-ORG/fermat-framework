@@ -1,5 +1,10 @@
 package com.bitdubai.smartwallet.core.wallet.factory;
 
+import com.bitdubai.smartwallet.core.wallet.license.BrandUserLicense;
+import com.bitdubai.smartwallet.core.wallet.license.SourceForkLicense;
+import com.bitdubai.smartwallet.core.wallet.license.SourceRebrandLicense;
+import com.bitdubai.smartwallet.core.wallet.license.SourceUserLicense;
+
 import java.util.List;
 
 /**
@@ -29,5 +34,10 @@ public class AndroidBrandedWallet implements BrandedWallet {
     @Override
     public SourceUserLicense getUseLicense() {
         return null;
+    }
+
+    @Override
+    public boolean uploadToWalletStore() {
+        return false;
     }
 }

@@ -1,6 +1,10 @@
 package com.bitdubai.smartwallet.core.wallet.factory;
 
 
+import com.bitdubai.smartwallet.core.wallet.license.SourceForkLicense;
+import com.bitdubai.smartwallet.core.wallet.license.SourceRebrandLicense;
+import com.bitdubai.smartwallet.core.wallet.license.SourceUserLicense;
+
 import java.util.List;
 
 /**
@@ -39,5 +43,10 @@ public class AndroidSourceWallet implements SourceWallet, Brandable {
     @Override
     public BrandedWallet rebrand() {
         return null;
+    }
+
+    @Override
+    public boolean uploadToWalletStore() {
+        return false;
     }
 }

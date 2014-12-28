@@ -2,10 +2,78 @@
 <Diagram>
   <ID>JAVA</ID>
   <OriginalElement />
-  <nodes />
+  <nodes>
+    <node x="422.2500000000001" y="0.0">com.bitdubai.smartwallet.core.wallet.store.Wallet</node>
+    <node x="159.0" y="311.0">com.bitdubai.smartwallet.core.wallet.store.Publisher</node>
+    <node x="400.2916666666667" y="79.0">com.bitdubai.smartwallet.core.wallet.store.PublisherWallet</node>
+    <node x="0.0" y="158.0">com.bitdubai.smartwallet.core.wallet.store.CommercialWallet</node>
+    <node x="550.2916666666667" y="79.0">com.bitdubai.smartwallet.core.wallet.store.PersonalNotInstalledWallet</node>
+    <node x="164.00000000000003" y="158.0">com.bitdubai.smartwallet.core.wallet.store.PersonalWallet</node>
+    <node x="106.29166666666669" y="79.0">com.bitdubai.smartwallet.core.wallet.store.UserWallet</node>
+    <node x="464.0" y="158.0">com.bitdubai.smartwallet.core.wallet.store.UnpublishedWallet</node>
+    <node x="296.0" y="311.0">com.bitdubai.smartwallet.core.wallet.store.Store</node>
+    <node x="137.50000000000006" y="237.0">com.bitdubai.smartwallet.core.wallet.store.PersonalInstalledWallet</node>
+    <node x="311.0" y="158.0">com.bitdubai.smartwallet.core.wallet.store.PublishedWallet</node>
+    <node x="0.0" y="311.0">com.bitdubai.smartwallet.core.wallet.store.WalletReview</node>
+  </nodes>
   <notes />
-  <edges />
-  <settings layout="Hierarchic Group" zoom="0.20000000000000015" x="2302.0" y="-35.76035502958575" />
+  <edges>
+    <edge source="com.bitdubai.smartwallet.core.wallet.store.PersonalInstalledWallet" target="com.bitdubai.smartwallet.core.wallet.store.PersonalWallet">
+      <point x="-2.8421709430404007E-14" y="-14.5" />
+      <point x="0.0" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.wallet.store.UnpublishedWallet" target="com.bitdubai.smartwallet.core.wallet.store.PublisherWallet">
+      <point x="0.0" y="-14.5" />
+      <point x="539.0" y="133.0" />
+      <point x="497.7916666666667" y="133.0" />
+      <point x="32.5" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.wallet.store.PublishedWallet" target="com.bitdubai.smartwallet.core.wallet.store.PublisherWallet">
+      <point x="0.0" y="-14.5" />
+      <point x="377.5" y="133.0" />
+      <point x="432.7916666666667" y="133.0" />
+      <point x="-32.5" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.wallet.store.PersonalWallet" target="com.bitdubai.smartwallet.core.wallet.store.UserWallet">
+      <point x="-2.8421709430404007E-14" y="-14.5" />
+      <point x="227.5" y="133.0" />
+      <point x="182.04166666666669" y="133.0" />
+      <point x="25.25" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.wallet.store.Store" target="com.bitdubai.smartwallet.core.wallet.store.Wallet">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.wallet.store.PublisherWallet" target="com.bitdubai.smartwallet.core.wallet.store.Wallet">
+      <point x="5.6843418860808015E-14" y="-14.5" />
+      <point x="465.29166666666674" y="54.0" />
+      <point x="458.2500000000001" y="54.0" />
+      <point x="0.0" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.wallet.store.UserWallet" target="com.bitdubai.smartwallet.core.wallet.store.Wallet">
+      <point x="0.0" y="-14.5" />
+      <point x="156.79166666666669" y="54.0" />
+      <point x="434.2500000000001" y="54.0" />
+      <point x="-24.0" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.wallet.store.CommercialWallet" target="com.bitdubai.smartwallet.core.wallet.store.UserWallet">
+      <point x="0.0" y="-14.5" />
+      <point x="72.0" y="133.0" />
+      <point x="131.54166666666669" y="133.0" />
+      <point x="-25.25" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.wallet.store.PersonalNotInstalledWallet" target="com.bitdubai.smartwallet.core.wallet.store.Wallet">
+      <point x="0.0" y="-14.5" />
+      <point x="651.2916666666667" y="54.0" />
+      <point x="482.2500000000001" y="54.0" />
+      <point x="24.0" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.core.wallet.store.Publisher" target="com.bitdubai.smartwallet.core.wallet.store.Store">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="376.5" y="170.0" />
   <SelectedNodes />
   <Categories />
   <SCOPE>All</SCOPE>
