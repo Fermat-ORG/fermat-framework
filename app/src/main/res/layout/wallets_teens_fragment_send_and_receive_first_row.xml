@@ -11,21 +11,22 @@
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="106dp"
         android:layout_height="106dp">
-        <ImageView
-            android:id="@+id/profile_picture"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:src="@drawable/new_contact_profile_picture"
-            android:layout_gravity="center"
-            android:padding="6dp"/>
+
         <ImageView
             android:id="@+id/frame_contact"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
-            android:src="@drawable/object_frame_1x1"
+            android:src="@drawable/object_frame_1x1_white_background"
             android:layout_gravity="center"/>
+        <ImageView
+                android:id="@+id/profile_picture"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
+                android:src="@drawable/new_contact_profile_picture"
+                android:layout_gravity="center"
+                android:padding="6dp"/>
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
