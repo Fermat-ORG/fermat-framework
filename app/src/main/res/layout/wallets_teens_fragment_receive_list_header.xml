@@ -91,11 +91,11 @@
             />
 
         <ImageView
-            android:id="@+id/icon_send_profile"
+            android:id="@+id/icon_receive_profile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_action_send_now"
+            android:src="@drawable/ic_action_receive_now"
             android:layout_alignParentRight="true"
 
             android:layout_alignParentTop="true"
@@ -231,7 +231,7 @@
                 </LinearLayout>
 
 
-<RelativeLayout
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingLeft="10dip"
@@ -242,20 +242,16 @@
         android:id="@+id/recent_transactions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:scaleType="centerCrop"
         android:src="@drawable/ic_action_expand_grey"
-        android:layout_alignParentBottom="true"/>
+        android:layout_weight="1"/>
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_action_view_as_list_grey"
-        android:scaleType="centerCrop"
         android:id="@+id/open_history"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
         android:onClick="onReceiveAllIconClicked"
-        />
-</RelativeLayout>
+        android:layout_weight="1"/>
+</LinearLayout>
         </LinearLayout>
     </RelativeLayout>
 </LinearLayout>

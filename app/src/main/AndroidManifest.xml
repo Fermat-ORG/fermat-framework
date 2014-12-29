@@ -182,7 +182,7 @@
                 android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
         </activity>
         <activity
-            android:name=".walletframework.SendAllHistoryActivity"
+            android:name=".walletframework.SentHistoryActivity"
             android:label="Sent History"
             android:parentActivityName=".walletframework.FrameworkActivity"
             android:windowSoftInputMode="stateVisible" >

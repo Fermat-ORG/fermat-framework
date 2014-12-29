@@ -110,6 +110,34 @@ public class AccountDetailActivity extends FragmentActivity
             tabs.setDividerColor(0xFFBBBBBB);
 
 
+
+            /* Custom Action Bar with Icon and Text */
+
+            final ViewGroup actionBarLayout = (ViewGroup) getLayoutInflater().inflate(
+                    R.layout.wallets_teens_fragment_account_detail_action_bar,
+                    null);
+
+            // Set up your ActionBar
+            final ActionBar actionBar = getActionBar();
+            actionBar.setDisplayShowHomeEnabled(false);
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setDisplayShowCustomEnabled(true);
+            actionBar.setCustomView(actionBarLayout);
+
+            TextView tv;
+
+            tv = (TextView) actionBarLayout.findViewById(R.id.account_type);
+            tv.setTypeface(MyApplication.getDefaultTypeface());
+
+            tv = (TextView) actionBarLayout.findViewById(R.id.balance);
+            tv.setTypeface(MyApplication.getDefaultTypeface());
+
+            tv = (TextView) actionBarLayout.findViewById(R.id.balance_available);
+            tv.setTypeface(MyApplication.getDefaultTypeface());
+
+            tv = (TextView) actionBarLayout.findViewById(R.id.account_alias);
+            tv.setTypeface(MyApplication.getDefaultTypeface());
+
         }
 
 
@@ -267,7 +295,7 @@ public class AccountDetailActivity extends FragmentActivity
 
         private String[] titles;
         private String[] titles_1 = { };
-        private String[] titles_2 = { "Account", "Debits", "Credits", "All"};
+        private String[] titles_2 = {  "Debits", "Credits", "All"};
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -305,16 +333,16 @@ public class AccountDetailActivity extends FragmentActivity
 
             Fragment currentFragment;
             switch (position) {
+             //   case 0:
+             //       currentFragment =   AccountDetailAccountFragment.newInstance(position);
+             //       break;
                 case 0:
-                    currentFragment =   AccountDetailAccountFragment.newInstance(position);
-                    break;
-                case 1:
                     currentFragment =   AccountDetailAllFragment.newInstance(position);
                     break;
-                case 2:
+                case 1:
                     currentFragment =  AccountDetailAllFragment.newInstance(position);
                     break;
-                case 3:
+                case 2:
                     currentFragment =  AccountDetailAllFragment.newInstance(position);
                     break;
 

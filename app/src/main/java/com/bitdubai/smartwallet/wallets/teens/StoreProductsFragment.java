@@ -247,10 +247,10 @@ public class StoreProductsFragment extends Fragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                Intent intent;
+             /*   Intent intent;
                 intent = new Intent(getActivity(), StoreActivity.class);
                 startActivity(intent);
-
+*/
                 return ;
             }
         });

@@ -93,10 +93,10 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                     imageView.setImageResource(R.drawable.ic_action_gift_card);
                     break;
                 case 8:
-                    imageView.setImageResource(R.drawable.ic_action_add_person);
+                    imageView.setImageResource(R.drawable.ic_action_clone);
                     break;
                 case 9:
-                    imageView.setImageResource(R.drawable.ic_action_about_grey);
+                    imageView.setImageResource(R.drawable.ic_action_child);
                     break;
                 case 10:
                     imageView.setImageResource(R.drawable.ic_action_exit);

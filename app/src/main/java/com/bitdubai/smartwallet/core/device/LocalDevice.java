@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by ciencias on 22.12.14.
  */
-public class LocalDevice extends Device {
+public class LocalDevice implements Device {
     private List<LocalPersonalUser> mLocalPersonalUsers = new ArrayList<LocalPersonalUser>();
     private Shop[] mShops;
 

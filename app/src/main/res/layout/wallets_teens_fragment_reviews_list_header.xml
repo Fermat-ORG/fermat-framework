@@ -110,14 +110,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="reviews"
-                    android:textStyle="normal"
+                    android:textStyle="italic"
                     android:textSize="12sp"
                     android:gravity="center|top"/>
             </LinearLayout>
 
 
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingLeft="10dip"
@@ -127,7 +127,8 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:layout_weight="1">
                     <TextView android:id="@+id/like_amount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -137,18 +138,24 @@
                         android:textStyle="normal"/>
                     <ImageView
                         android:id="@+id/good"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:scaleType="centerCrop"
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:src="@drawable/ic_action_good_grey"
                         />
 
                     </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="invisible"
+                    android:layout_weight="2"/>
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_alignParentRight="true">
+                    android:layout_alignParentRight="true"
+                    android:layout_weight="1">
                     <TextView android:id="@+id/dislike_amount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -157,16 +164,15 @@
                         android:textSize="12sp"
                         android:textStyle="normal"/>
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:src="@drawable/ic_action_bad_grey"
-                    android:scaleType="centerCrop"
                     android:id="@+id/bad"
-                    android:layout_alignParentRight="true"
-                    />
+                    android:layout_gravity="center"
+                    android:layout_alignParentRight="true"/>
 
                 </LinearLayout>
-            </RelativeLayout>
+            </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
 </LinearLayout>
