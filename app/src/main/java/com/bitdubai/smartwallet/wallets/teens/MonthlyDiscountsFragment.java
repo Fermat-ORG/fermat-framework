@@ -23,7 +23,7 @@ public class MonthlyDiscountsFragment extends android.app.Fragment {
     ExpandableListView lv;
     private String[] adiscount_count;
     private String[] dates;
-
+    private String[] saved_money;
     private String[] pictures;
     private String[][] transactions;
     private String[][] transactions_amounts;
@@ -39,8 +39,8 @@ public class MonthlyDiscountsFragment extends android.app.Fragment {
         super.onCreate(savedInstanceState);
 
         dates = new String[]{"January", "February", "March", "April","May","Jun","July","August","September","October" ,"November","December"};
-        adiscount_count = new String[]{"38","-1","12","22","16","18","2","8","16","23","13","21","","","",""};
-
+        adiscount_count = new String[]{"38.52","-1.52","12.65","22.73","16.28","18.73","2.73","8.73","16.84","23.83","13.27","21.83","","","",""};
+        saved_money = new String[] {"$215.54", "-$2.53", "$50.32","$143.52","$114.42","$126.46","$5.42","$32.52","$73.32","$154.53","$57.24","$136.25"};
         transactions = new String[][]{
 
                 {},
@@ -170,7 +170,7 @@ public class MonthlyDiscountsFragment extends android.app.Fragment {
             ViewHolder holder;
             ViewHolder count;
             ViewHolder date;
-
+            ViewHolder savedMoney;
             ImageView discount_picture;
 
             //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
@@ -180,23 +180,20 @@ public class MonthlyDiscountsFragment extends android.app.Fragment {
 
                 discount_picture = (ImageView) convertView.findViewById(R.id.discount_picture);
 
-                if(Integer.parseInt(adiscount_count[groupPosition]) > 0) {
+                if(Double.parseDouble(adiscount_count[groupPosition]) > 0) {
 
                     discount_picture.setImageResource(R.drawable.account_type_current_small);
-
-
                 }else {
-                    if(Integer.parseInt(adiscount_count[groupPosition]) < 0) {
+                    if(Double.parseDouble(adiscount_count[groupPosition]) < 0) {
                         discount_picture.setImageResource(R.drawable.account_type_savings_1_small);
                     }
                     else
                     {
-                        if(Integer.parseInt(adiscount_count[groupPosition]) == 0) {
+                        if(Double.parseDouble(adiscount_count[groupPosition]) == 0) {
                             discount_picture.setImageResource(R.drawable.account_type_savings_2_small);
                         }
                     }
                 }
-
 
                 date= new ViewHolder();
                 date.text = (TextView) convertView.findViewById(R.id.date);
@@ -206,32 +203,22 @@ public class MonthlyDiscountsFragment extends android.app.Fragment {
                 count = new ViewHolder();
                 count.text = (TextView) convertView.findViewById(R.id.discount_count);
                 count.text.setTypeface(MyApplication.getDefaultTypeface());
-                count.text.setText(adiscount_count[groupPosition].toString());
+                count.text.setText(adiscount_count[groupPosition].toString() + "%");
 
-
-                holder = new ViewHolder();
-                holder.text = (TextView) convertView.findViewById(R.id.contact_name);
-                holder.text.setTypeface(MyApplication.getDefaultTypeface());
-                convertView.setTag(holder);
-
+                savedMoney = new ViewHolder();
+                savedMoney.text = (TextView) convertView.findViewById(R.id.money_saved);
+                savedMoney.text.setTypeface(MyApplication.getDefaultTypeface());
+                savedMoney.text.setText(saved_money[groupPosition].toString());
 
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-
-
-
-
-            holder.text.setText(getGroup(groupPosition).toString());
-
             return convertView;
         }
-
         @Override
         public boolean isChildSelectable(int groupPosition, int childPosition) {
             return true;
         }
-
         private class ViewHolder {
             TextView text;
         }

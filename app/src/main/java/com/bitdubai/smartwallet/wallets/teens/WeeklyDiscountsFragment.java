@@ -23,6 +23,7 @@ public class WeeklyDiscountsFragment extends android.app.Fragment {
     private String[] dates;
     private String[] adiscount_count;
     private String[] pictures;
+    private String[] saved_money;
     private String[][] transactions;
     private String[][] transactions_amounts;
     private String[][] transactions_whens;
@@ -39,7 +40,8 @@ public class WeeklyDiscountsFragment extends android.app.Fragment {
         super.onCreate(savedInstanceState);
 
         dates = new String[]{"this week", "last week", "2 weeks ago", "3 weeks ago " };
-        adiscount_count = new String[]{"27","12","8","10","2","5","-1"};
+        adiscount_count = new String[]{"27.42","12.64","8.64","10.35","2.53","5.23","-1.52"};
+        saved_money = new String[] {"$160.54", "$50.53", "$30.53","$42.52","$4.42","$6.46","-$2.42"};
 
         transactions = new String[][]{
 
@@ -170,7 +172,8 @@ public class WeeklyDiscountsFragment extends android.app.Fragment {
             ViewHolder holder;
             ViewHolder count;
             ViewHolder date;
-
+            ViewHolder savedMoney;
+            ViewHolder Average;
             ImageView discount_picture;
 
             //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
@@ -180,20 +183,21 @@ public class WeeklyDiscountsFragment extends android.app.Fragment {
 
                 discount_picture = (ImageView) convertView.findViewById(R.id.discount_picture);
 
-                if(Integer.parseInt(adiscount_count[groupPosition]) > 0) {
+                if(Double.parseDouble(adiscount_count[groupPosition]) > 0) {
 
                     discount_picture.setImageResource(R.drawable.account_type_current_small);
 
 
                 }else {
-                    if(Integer.parseInt(adiscount_count[groupPosition]) < 0) {
+                    if(Double.parseDouble(adiscount_count[groupPosition]) < 0) {
                         discount_picture.setImageResource(R.drawable.account_type_savings_1_small);
                     }
                     else
                     {
-                        if(Integer.parseInt(adiscount_count[groupPosition]) == 0) {
+                        if(Double.parseDouble(adiscount_count[groupPosition]) == 0) {
                             discount_picture.setImageResource(R.drawable.account_type_savings_2_small);
                         }
+
                     }
                 }
 
@@ -203,16 +207,19 @@ public class WeeklyDiscountsFragment extends android.app.Fragment {
                 date.text.setTypeface(MyApplication.getDefaultTypeface());
                 date.text.setText(dates[groupPosition].toString());
 
+                Average = new ViewHolder();
+                Average.text = (TextView) convertView.findViewById(R.id.average);
+                Average.text.setTypeface(MyApplication.getDefaultTypeface());
+
                 count = new ViewHolder();
                 count.text = (TextView) convertView.findViewById(R.id.discount_count);
                 count.text.setTypeface(MyApplication.getDefaultTypeface());
-                count.text.setText(adiscount_count[groupPosition].toString());
+                count.text.setText(adiscount_count[groupPosition].toString() + "%");
 
-
-                holder = new ViewHolder();
-                holder.text = (TextView) convertView.findViewById(R.id.contact_name);
-                holder.text.setTypeface(MyApplication.getDefaultTypeface());
-                convertView.setTag(holder);
+                savedMoney = new ViewHolder();
+                savedMoney.text = (TextView) convertView.findViewById(R.id.money_saved);
+                savedMoney.text.setTypeface(MyApplication.getDefaultTypeface());
+                savedMoney.text.setText(saved_money[groupPosition].toString());
 
 
             } else {
@@ -222,7 +229,6 @@ public class WeeklyDiscountsFragment extends android.app.Fragment {
 
 
 
-            holder.text.setText(getGroup(groupPosition).toString());
 
             return convertView;
         }

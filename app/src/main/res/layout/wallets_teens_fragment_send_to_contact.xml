@@ -7,7 +7,7 @@
     >
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="166dp"
+        android:layout_height="140dp"
         android:orientation="horizontal"
         android:paddingLeft="7dip"
         android:paddingRight="7dip"
@@ -124,21 +124,48 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="7dip"
-        android:paddingRight="7dip">
+        android:paddingRight="7dip"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"   android:layout_height="wrap_content" android:orientation="horizontal">
+            <TextView   android:id="@+id/percentage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:textColor="#FF666666"
+                android:textSize="20sp"
+                android:textStyle="normal"
+                android:hint="%%%"
+                android:paddingLeft="14dip"
+                android:paddingRight="14dip"
+                android:layout_weight="1"/>
+            <TextView android:id="@+id/discounted"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|end"
+                android:textColor="#FF666666"
+                android:textSize="20sp"
+                android:textStyle="normal"
+                android:hint="$$$"
+                android:paddingLeft="14dip"
+                android:paddingRight="14dip"
+                android:layout_weight="1"/>
+
+
+            </LinearLayout>
+
         <EditText
             android:id="@+id/notes"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:textColor="#FF666666"
             android:textSize="20sp"
             android:textStyle="normal"
             android:hint="Notes"
-            android:paddingTop="7dip"
             android:paddingLeft="14dip"
             android:paddingRight="14dip"
-            android:paddingBottom="7dip"
-            android:layout_gravity="end" />
+            android:paddingBottom="7dip"/>
     </LinearLayout>
 
 
@@ -151,7 +178,7 @@
         <EditText
             android:id="@+id/amount"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="wrap_content"
             android:gravity="end"
             android:paddingLeft="14dip"
             android:paddingRight="7dip"
@@ -165,8 +192,8 @@
             android:inputType="number"/>
         <ImageView
             android:id="@+id/send_button"
-            android:layout_width="50dp"
-            android:layout_height="40dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:src="@drawable/ic_action_send_now_grey"/>
     </LinearLayout>
