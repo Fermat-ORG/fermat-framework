@@ -16,7 +16,7 @@
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="106dp"
-        android:layout_height="106dp"
+        android:layout_height="82dp"
 
         >
 
@@ -24,7 +24,7 @@
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="106dp"
+        android:layout_height="82dp"
         android:orientation="horizontal"
 
 
@@ -36,7 +36,7 @@
         <ImageView
             android:id="@+id/frame_tx_record"
             android:layout_width="match_parent"
-            android:layout_height="106dp"
+            android:layout_height="82dp"
             android:scaleType="centerCrop"
 
             android:layout_gravity="center"
@@ -47,7 +47,7 @@
             android:id="@+id/notes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="40dp"
+            android:paddingBottom="32dp"
             android:paddingLeft="45dp"
             android:paddingRight="45dp"
             android:paddingTop="0dp"
@@ -64,7 +64,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:paddingBottom="8dp"
+            android:paddingBottom="3dp"
             android:paddingRight="10dp"
             android:paddingLeft="10dp">
             <ImageView
