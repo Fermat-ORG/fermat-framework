@@ -196,6 +196,7 @@ public class FrameworkActivity extends FragmentActivity
         TextView abTitle = (TextView) findViewById(titleId);
         abTitle.setTextColor(Color.WHITE);
 
+
         Intent i=getIntent();
 
         tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
@@ -213,7 +214,7 @@ public class FrameworkActivity extends FragmentActivity
                 break;
 
             case 3:
-                mTitle = "Ladies";
+                mTitle = "Ladies wallet";
 
                 break;
 
