@@ -10,9 +10,12 @@ import android.widget.TextView;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.wallets.teens.ReceiveFromContactFragment;
 
+
 public class ReceiveFromContactActivity extends Activity {
-    private CharSequence mTitle = "Receive From Contact";
+
     private PagerSlidingTabStrip tabs;
+    private CharSequence mTitle = "Receive From Contact";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,7 +38,7 @@ public class ReceiveFromContactActivity extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.wallet_framework_activity_receive_from_contact_menu, menu);
+        getMenuInflater().inflate(R.menu.wallet_framework_activity_send_to_contact_menu, menu);
         return true;
     }
 

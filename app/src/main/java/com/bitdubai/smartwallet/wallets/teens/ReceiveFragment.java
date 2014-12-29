@@ -222,6 +222,12 @@ public  class ReceiveFragment extends Fragment {
 
                 when.text.setText(transactions_whens[groupPosition][childPosition].toString());
 
+               //asigned tagId at icons action
+                ImageView  icon_receive_form_contact = (ImageView) convertView.findViewById(R.id.icon_receive_form_contact);
+
+                icon_receive_form_contact.setTag(groupPosition);
+
+
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }

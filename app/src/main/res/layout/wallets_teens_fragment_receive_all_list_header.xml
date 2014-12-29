@@ -113,18 +113,18 @@
                 android:paddingBottom="8dip"
                 android:layout_gravity="bottom">
                 <ImageView
-                    android:id="@+id/icon_send_to_contact"
+                    android:id="@+id/icon_receive_form_contact"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_action_send_now_grey"
+                    android:src="@drawable/ic_action_receive_now_grey"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentBottom="true"
                     android:paddingLeft="11dp"
                     android:paddingRight="0dp"
                     android:paddingBottom="7dp"
                     android:paddingTop="7dp"
-                    android:onClick="onSendToContactIconClicked"
+                    android:onClick="onReceiveIconClicked"
 
                     />
                 <ImageView

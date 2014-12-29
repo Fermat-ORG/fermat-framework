@@ -1,12 +1,12 @@
 package com.bitdubai.smartwallet.walletframework;
 
-import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
+import android.view.View;
 import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
@@ -36,26 +36,6 @@ public class SentHistoryActivity extends Activity {
         abTitle.setTextColor(Color.WHITE);
         ((MyApplication) this.getApplication()).setActionBarProperties(this,getWindow(),tabs, getActionBar(), getResources(),abTitle, mTitle.toString());
 
-                    /* Custom Action Bar with Icon and Text */
-
-        final ViewGroup actionBarLayout = (ViewGroup) getLayoutInflater().inflate(
-                R.layout.wallet_framework_activity_sent_history_action_bar,
-                null);
-
-        // Set up your ActionBar
-        final ActionBar actionBar = getActionBar();
-        actionBar.setDisplayShowHomeEnabled(false);
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setCustomView(actionBarLayout);
-
-        TextView tv;
-
-        tv = (TextView) actionBarLayout.findViewById(R.id.contact_name);
-        tv.setTypeface(MyApplication.getDefaultTypeface());
-
-        tv = (TextView) actionBarLayout.findViewById(R.id.activity_name);
-        tv.setTypeface(MyApplication.getDefaultTypeface());
     }
 
 
@@ -80,4 +60,17 @@ public class SentHistoryActivity extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public void onSendToContactIconClicked(View v) {
+
+        int tagId = (int)v.getTag();
+        MyApplication.setTagId(tagId);
+        Intent intent;
+        intent = new Intent(this, SendToContactActivity.class);
+        startActivity(intent);
+
+        return;
+
+    }
+
 }

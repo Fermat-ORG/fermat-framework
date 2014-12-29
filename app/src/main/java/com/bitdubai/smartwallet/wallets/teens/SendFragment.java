@@ -101,7 +101,9 @@ public  class SendFragment extends Fragment {
         lv.setAdapter(new ExpandableListAdapter(contacts, transactions));
         lv.setGroupIndicator(null);
 
-        lv.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+      //  lv.setOnItemClickListener(null);
+
+       lv.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
 
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
@@ -332,6 +334,21 @@ public  class SendFragment extends Fragment {
 
                     note.text.setText(notes[groupPosition].toString());
 
+                    //expand icon
+                    ImageView  recent_transactions = (ImageView) convertView.findViewById(R.id.recent_transactions);
+
+                    View.OnClickListener listener = new View.OnClickListener() {
+
+                        @Override
+                      public void onClick(View view) {
+                            //this is what runs when you click the button
+                            expandir(1,view);
+                        }
+
+                    };
+
+                    recent_transactions.setOnClickListener(listener);
+
                 } else {
                     holder = (ViewHolder) convertView.getTag();
                 }
@@ -350,7 +367,20 @@ public  class SendFragment extends Fragment {
             return true;
         }
 
+        public void expandir(int groupPosition,View view) {
+            try
+            {
 
+                lv = (ExpandableListView) view;
+                if( lv.isGroupExpanded(groupPosition)) lv.collapseGroup(groupPosition);
+                else lv.expandGroup(groupPosition, true);
+            }
+            catch(Exception ex)
+            {
+                String error = ex.getMessage();
+            }
+
+        }
 
 
 
