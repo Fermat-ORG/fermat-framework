@@ -8,12 +8,14 @@
     android:paddingRight="7dip"
     android:paddingBottom="0dip"
     android:paddingTop="0dip"
-    android:gravity="end|right">
+    android:gravity="end|right"
+    android:focusable="true"
+    >
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="106dp"
         android:layout_height="106dp"
-
+        android:clickable="false"
         >
 
         <ImageView
@@ -115,7 +117,6 @@
 android:layout_width="match_parent"
 android:layout_height="106dp"
 
-
     >
 
 <ImageView
@@ -133,7 +134,6 @@ android:layout_height="106dp"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:layout_alignParentRight="true"
-
     >
 
 
@@ -144,7 +144,8 @@ android:layout_height="106dp"
         android:orientation="horizontal"
         android:paddingLeft="10dip"
         android:paddingRight="10dip"
-        android:paddingTop="10dip">
+        android:paddingTop="10dip"
+        >
         <TextView
             android:id="@+id/amount"
             android:layout_width="wrap_content"
@@ -178,7 +179,8 @@ android:layout_height="106dp"
         android:orientation="horizontal"
         android:paddingLeft="10dip"
         android:paddingRight="10dip"
-        android:weightSum="1">
+        android:weightSum="1"
+        >
         <TextView
             android:id="@+id/when"
             android:layout_width="wrap_content"
@@ -212,7 +214,8 @@ android:layout_height="106dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingLeft="10dip"
-        android:paddingRight="10dip" android:paddingBottom="2dip" android:paddingTop="2dip">
+        android:paddingRight="10dip" android:paddingBottom="2dip" android:paddingTop="2dip"
+      >
 
         <TextView
             android:id="@+id/notes"

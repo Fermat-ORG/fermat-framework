@@ -1,10 +1,12 @@
 package com.bitdubai.smartwallet.walletframework;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
@@ -13,7 +15,7 @@ import com.bitdubai.smartwallet.wallets.teens.SendAllFragment;
 /**
  * Created by Natalia on 23/12/2014.
  */
-public class SendAllHistoryActivity extends Activity {
+public class SentHistoryActivity extends Activity {
 
     private PagerSlidingTabStrip tabs;
     private CharSequence mTitle = "Send History";
@@ -58,4 +60,17 @@ public class SendAllHistoryActivity extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public void onSendToContactIconClicked(View v) {
+
+        int tagId = (int)v.getTag();
+        MyApplication.setTagId(tagId);
+        Intent intent;
+        intent = new Intent(this, SendToContactActivity.class);
+        startActivity(intent);
+
+        return;
+
+    }
+
 }

@@ -117,7 +117,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_action_send_now_grey"
+                    android:src="@drawable/ic_action_receive_now_grey"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentBottom="true"
                     android:paddingLeft="11dp"
