@@ -170,6 +170,7 @@ public class MonthlyDiscountsFragment extends android.app.Fragment {
             ViewHolder holder;
             ViewHolder count;
             ViewHolder date;
+            ViewHolder Average;
             ViewHolder savedMoney;
             ImageView discount_picture;
 
@@ -204,6 +205,10 @@ public class MonthlyDiscountsFragment extends android.app.Fragment {
                 count.text = (TextView) convertView.findViewById(R.id.discount_count);
                 count.text.setTypeface(MyApplication.getDefaultTypeface());
                 count.text.setText(adiscount_count[groupPosition].toString() + "%");
+
+                Average = new ViewHolder();
+                Average.text = (TextView) convertView.findViewById(R.id.average);
+                Average.text.setTypeface(MyApplication.getDefaultTypeface());
 
                 savedMoney = new ViewHolder();
                 savedMoney.text = (TextView) convertView.findViewById(R.id.money_saved);

@@ -37,6 +37,7 @@ import java.util.List;
 
 public class StoreProductsFragment extends Fragment {
 
+
     private static final String ARG_POSITION = "position";
     private ArrayList<App> mlist;
 
@@ -52,6 +53,8 @@ public class StoreProductsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+
 
         String[] company_names = {"Sweet Heart",
                 "Classic Iced Pink",
@@ -202,7 +205,47 @@ public class StoreProductsFragment extends Fragment {
                 "aaa",
                 "aaa",
                 "aaa", };
-
+        String[] likes = {"614",
+                "1346",
+                "614",
+                "34",
+                "614",
+                "234",
+                "652",
+                "1543",
+                "234",
+                "646",
+                "859",
+                "964",
+                "456",
+                "575",
+                "324",
+                "254",
+                "334",
+                "624",
+                "275",
+                "373",
+                "735"};
+        String[] dislikes = {"124",
+                "132",
+                "41",
+                "43",
+                "23",
+                "54",
+                "652",
+                "53",
+                "63",
+                "43",
+                "978",
+                "667",
+                "856",
+                "57",
+                "87",
+                "55",
+                "67",
+                "99",
+                "45",
+                "85"};
 
 
         if (mlist == null)
@@ -213,6 +256,8 @@ public class StoreProductsFragment extends Fragment {
             for (int i = 0; i < 14; i++) {
                 App item = new App();
                 item.title = company_sites[i];
+                item.like = likes[i];
+                item.dislike = dislikes[i];
                 item.description = company_descriptions[i];
                 item.company = company_names[i];
                 item.Open_hours = company_horario[i];
@@ -271,6 +316,10 @@ public class StoreProductsFragment extends Fragment {
 
         public String description;
 
+        public String like;
+
+        public String dislike;
+
         public String company;
 
         public String Open_hours;
@@ -304,7 +353,6 @@ public class StoreProductsFragment extends Fragment {
             App item = getItem(position);
 
 
-
             ViewHolder holder;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
@@ -317,6 +365,8 @@ public class StoreProductsFragment extends Fragment {
                 holder.star4= (ImageView) convertView.findViewById(R.id.star_4);
                 holder.star5= (ImageView) convertView.findViewById(R.id.star_5);
 
+
+
                 holder.star1.setAdjustViewBounds(true);
                 holder.star2.setAdjustViewBounds(true);
                 holder.star3.setAdjustViewBounds(true);
@@ -328,6 +378,8 @@ public class StoreProductsFragment extends Fragment {
 
                 holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
                 holder.titleTextView = (TextView) convertView.findViewById(R.id.title_text_view);
+                holder.dislikeAmount = (TextView) convertView.findViewById(R.id.dislike_amount);
+                holder.likeAmount = (TextView) convertView.findViewById(R.id.like_amount);
                 holder.companyTextView = (TextView) convertView.findViewById(R.id.company_text_view);
                 holder.companyDescription = (TextView) convertView.findViewById(R.id.company_description);
                 //holder.ratingBar = (RatingBar) convertView.findViewById(R.id.rating_bar);
@@ -341,10 +393,8 @@ public class StoreProductsFragment extends Fragment {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-
-
-
-
+            holder.dislikeAmount.setText(item.dislike);
+            holder.likeAmount.setText(item.like);
             holder.titleTextView.setText(item.title);
             holder.companyTextView.setText(item.company);
             holder.companyDescription.setText(item.Address);
@@ -360,6 +410,8 @@ public class StoreProductsFragment extends Fragment {
             holder.openHours.setTypeface(MyApplication.getDefaultTypeface());
             holder.timeToArrive.setTypeface(MyApplication.getDefaultTypeface());
             holder.titleTextView.setTypeface(MyApplication.getDefaultTypeface());
+            holder.likeAmount.setTypeface(MyApplication.getDefaultTypeface());
+            holder.dislikeAmount.setTypeface(MyApplication.getDefaultTypeface());
             holder.companyTextView.setTypeface(MyApplication.getDefaultTypeface());
             holder.companyDescription.setTypeface(MyApplication.getDefaultTypeface());
             holder.valueTextView.setTypeface(MyApplication.getDefaultTypeface());
@@ -480,6 +532,10 @@ public class StoreProductsFragment extends Fragment {
             public TextView Address;
 
             public ImageView imageView;
+
+            public TextView likeAmount;
+
+            public TextView dislikeAmount;
 
             public TextView titleTextView;
 
