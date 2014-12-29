@@ -17,6 +17,7 @@ import com.bitdubai.smartwallet.walletframework.ReceiveFromNewContactActivity;
 import com.bitdubai.smartwallet.walletframework.ReceivedDetailActivity;
 
 
+
 public  class ReceiveFragment extends Fragment {
 
     private static final String ARG_POSITION = "position";
@@ -113,18 +114,20 @@ public  class ReceiveFragment extends Fragment {
         lv.setAdapter(new ExpandableListAdapter(contacts, transactions));
         lv.setGroupIndicator(null);
 
-        lv.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+        lv.setOnItemClickListener(null);
+
+     /*  lv.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
 
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
 
                 Intent intent;
-                intent = new Intent(getActivity(), ReceivedDetailActivity.class);
+                 intent = new Intent(getActivity(), SentDetailActivity.class);
                 startActivity(intent);
 
                 return true;
             }
-        });
+        });*/
 
         lv.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
 
@@ -132,6 +135,7 @@ public  class ReceiveFragment extends Fragment {
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
 
                 if (groupPosition == 0) {
+
                     Intent intent;
                     intent = new Intent(getActivity(), ReceiveFromNewContactActivity.class);
                     startActivity(intent);
@@ -143,6 +147,7 @@ public  class ReceiveFragment extends Fragment {
                 }
             }
         });
+
     }
 
     public class ExpandableListAdapter extends BaseExpandableListAdapter {
@@ -222,10 +227,10 @@ public  class ReceiveFragment extends Fragment {
 
                 when.text.setText(transactions_whens[groupPosition][childPosition].toString());
 
-               //asigned tagId at icons action
+                //asigned tagId at icons action
                 ImageView  icon_receive_form_contact = (ImageView) convertView.findViewById(R.id.icon_receive_form_contact);
 
-                icon_receive_form_contact.setTag(groupPosition);
+                icon_receive_form_contact.setTag(groupPosition + "-" + childPosition);
 
 
             } else {
@@ -238,7 +243,7 @@ public  class ReceiveFragment extends Fragment {
         }
 
         @Override
-        public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+        public View getGroupView(final int groupPosition, final boolean isExpanded, View convertView, final ViewGroup parent) {
             ViewHolder holder;
             ViewHolder amount;
             ViewHolder when;
@@ -282,7 +287,7 @@ public  class ReceiveFragment extends Fragment {
 //asigned tagId at icons action
                     ImageView  send_profile_picture = (ImageView) convertView.findViewById(R.id.icon_receive_profile);
 
-                    send_profile_picture.setTag(groupPosition);
+                    send_profile_picture.setTag(groupPosition + "-0");
 
                     ImageView  history_picture = (ImageView) convertView.findViewById(R.id.open_history);
 
@@ -314,9 +319,7 @@ public  class ReceiveFragment extends Fragment {
                             profile_picture.setImageResource(R.drawable.kimberly_profile_picture);
                             break;
 
-
                     }
-
 
 
                     holder = new ViewHolder();
@@ -352,6 +355,22 @@ public  class ReceiveFragment extends Fragment {
 
                     note.text.setText(notes[groupPosition].toString());
 
+                    //expand icon
+                    ImageView  recent_transactions = (ImageView) convertView.findViewById(R.id.recent_transactions);
+
+                    //Set the arrow programatically, so we can control it - to expand child
+
+                    recent_transactions.setOnClickListener(new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View v) {
+
+                            if(isExpanded) ((ExpandableListView) parent).collapseGroup(groupPosition);
+                            else ((ExpandableListView) parent).expandGroup(groupPosition, true);
+
+                        }
+                    });
+
                 } else {
                     holder = (ViewHolder) convertView.getTag();
                 }
@@ -375,5 +394,7 @@ public  class ReceiveFragment extends Fragment {
         private class ViewHolder {
             TextView text;
         }
+
+
     }
 }

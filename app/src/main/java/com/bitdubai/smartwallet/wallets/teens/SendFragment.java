@@ -84,6 +84,7 @@ public  class SendFragment extends Fragment {
                 {"yesterday"}
         };
 
+
     }
 
     @Override
@@ -101,20 +102,20 @@ public  class SendFragment extends Fragment {
         lv.setAdapter(new ExpandableListAdapter(contacts, transactions));
         lv.setGroupIndicator(null);
 
-      //  lv.setOnItemClickListener(null);
+        lv.setOnItemClickListener(null);
 
-       lv.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+     /*  lv.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
 
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
 
                 Intent intent;
-                intent = new Intent(getActivity(), SentDetailActivity.class);
+                 intent = new Intent(getActivity(), SentDetailActivity.class);
                 startActivity(intent);
 
                 return true;
             }
-        });
+        });*/
 
         lv.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
 
@@ -134,6 +135,8 @@ public  class SendFragment extends Fragment {
                 }
             }
         });
+
+
 
 
     }
@@ -220,7 +223,9 @@ public  class SendFragment extends Fragment {
                 when.text.setText(transactions_whens[groupPosition][childPosition].toString());
 
                 ImageView send_to_contact =  (ImageView) convertView.findViewById(R.id.icon_send_to_contact);
-                send_to_contact.setTag(groupPosition);
+                send_to_contact.setTag(groupPosition + "-" + childPosition);
+
+
 
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -232,7 +237,7 @@ public  class SendFragment extends Fragment {
         }
 
         @Override
-        public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+        public View getGroupView(final int groupPosition, final boolean isExpanded, View convertView, final ViewGroup parent) {
             ViewHolder holder;
             ViewHolder amount;
             ViewHolder when;
@@ -278,7 +283,7 @@ public  class SendFragment extends Fragment {
 //asigned tagId at icons action
                     ImageView  send_profile_picture = (ImageView) convertView.findViewById(R.id.icon_send_profile);
 
-                    send_profile_picture.setTag(groupPosition);
+                    send_profile_picture.setTag(groupPosition + "-0");
 
                     ImageView  history_picture = (ImageView) convertView.findViewById(R.id.open_history);
 
@@ -337,17 +342,20 @@ public  class SendFragment extends Fragment {
                     //expand icon
                     ImageView  recent_transactions = (ImageView) convertView.findViewById(R.id.recent_transactions);
 
-                    View.OnClickListener listener = new View.OnClickListener() {
+                    //Set the arrow programatically, so we can control it - to expand child
+
+                    recent_transactions.setOnClickListener(new View.OnClickListener() {
 
                         @Override
-                      public void onClick(View view) {
-                            //this is what runs when you click the button
-                            expandir(1,view);
+                        public void onClick(View v) {
+
+                            if(isExpanded) ((ExpandableListView) parent).collapseGroup(groupPosition);
+                            else ((ExpandableListView) parent).expandGroup(groupPosition, true);
+
                         }
+                    });
 
-                    };
 
-                    recent_transactions.setOnClickListener(listener);
 
                 } else {
                     holder = (ViewHolder) convertView.getTag();
@@ -365,21 +373,6 @@ public  class SendFragment extends Fragment {
         @Override
         public boolean isChildSelectable(int groupPosition, int childPosition) {
             return true;
-        }
-
-        public void expandir(int groupPosition,View view) {
-            try
-            {
-
-                lv = (ExpandableListView) view;
-                if( lv.isGroupExpanded(groupPosition)) lv.collapseGroup(groupPosition);
-                else lv.expandGroup(groupPosition, true);
-            }
-            catch(Exception ex)
-            {
-                String error = ex.getMessage();
-            }
-
         }
 
 
