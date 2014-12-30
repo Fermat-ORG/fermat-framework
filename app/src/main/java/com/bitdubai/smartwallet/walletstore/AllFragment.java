@@ -49,20 +49,19 @@ public class AllFragment extends Fragment {
         String[] free_paid =
                 {"paid",
                         "free",
-                        "paid",
-                        "free",
-                        "free",
-                        "free",
-                        "paid",
-                        "free",
-                        "free",
-                        "free",
-                        "paid",
                         "free",
                         "free",
                         "paid",
                         "free",
                         "paid",
+                        "free",
+                        "paid",
+                        "free",
+                        "paid",
+                        "paid",
+                        "free",
+                        "paid",
+                        "free",
                         "paid",
                         "paid"
                         };
@@ -72,25 +71,21 @@ public class AllFragment extends Fragment {
                         "yes",
                         "yes",
                         "yes",
-                        "yes",
-                        "yes",
                         "no",
                         "yes",
                         "no",
                         "yes",
                         "no",
+                        "yes",
                         "no",
                         "no",
                         "no",
                         "no",
                         "no",
-                        "yes"
+                        "no"
                 };
         String[] installed =
-                {"false",
-                        "false",
-                        "false",
-                        "false",
+                {"true",
                         "true",
                         "true",
                         "true",
@@ -99,111 +94,115 @@ public class AllFragment extends Fragment {
                         "false",
                         "true",
                         "false",
+                        "false",
+                        "false",
                         "true",
                         "false",
-                        "true",
                         "false",
                         "false",
-                        "true"
+                        "false",
+                        "false"
                 };
         String[] company_names =
                {"Girl's wallet",
                 "Boy's wallet",
                 "Ladies",
-                "Pomodoro Restaurant",
-                "Snack EOS",
-                "Beba Blue Salon",
-                "Tick Tock Diner",
-                "The New Yorker Hotel",
-                "Dunkin' Donuts",
-                "The Australian",
-                "Panera Bread",
-                "Mustang Cafe",
-                "Pret A Manger",
-                "Subway",
-                "Butterfield 8",
-                "Havana New York",
-                "Culture Espresso",
-                "Speedy's"};
+                "Young",
+                "Boca Junior's wallet",
+                "Carrefour's wallet",
+                "Gucci's wallet",
+                "Bank Itau's wallet",
+                       "Mc donal's wallet",
+                       "Van's wallet",
+                "Samsung's wallet",
+                "Popular Bank's wallet",
+                "Sony's wallet",
+                "BMW's wallet",
+                "HP's wallet",
+                "Billabong's wallet",
+                "Starbuck's wallet"
+
+};
 
         String[] company_picture =
                 {"wallet_store_cover_photo_girl",
                         "wallet_store_cover_photo_boy",
                         "wallet_store_cover_photo_lady",
-                        "store_4",
-                        "store_5",
-                        "store_6",
-                        "store_7",
-                        "store_8",
-                        "store_9",
-                        "store_10",
-                        "store_11",
-                        "store_12",
-                        "store_13",
-                        "store_14",
-                        "store_15",
-                        "store_16",
-                        "store_17",
-                        "store_18"};
+                        "wallet_store_cover_photo_young",
+                        "wallet_store_cover_photo_boca_juniors",
+                        "wallet_store_cover_photo_carrefour",
+                        "wallet_store_cover_photo_gucci",
+                        "wallet_store_cover_photo_bank_itau",
+                        "wallet_store_cover_photo_mcdonals",
+                        "wallet_store_cover_photo_vans",
+                        "wallet_store_cover_photo_samsung",
+                        "wallet_store_cover_photo_bank_popular",
+                        "wallet_store_cover_photo_sony",
+                        "wallet_store_cover_photo_bmw",
+                        "wallet_store_cover_photo_hp",
+                        "wallet_store_cover_photo_billabong",
+                        "wallet_store_cover_photo_starbucks"
+
+                        };
 
         String[] company_addresses =
                {"by bitDubai",
                 "by bitDubai",
+                       "by bitDubai",
+                       "by bitDubai",
+                "by Boca Junios",
+                "by carrefour",
+                "by Gucci",
+                "by Bank Itau",
+                "by McDonals",
+                "by Vans",
+                "by Samsung",
                 "by bitDubai",
-                "518 9th Ave #1",
-                "522 9th Ave",
-                "502 9th Ave",
-                "481 8th Ave",
-                "481 8th Ave",
-                "240 W 40th St",
-                "20 W 38th St",
-                "452 5th Ave",
-                "22 W 38th St",
-                "389 5th Ave",
-                "32 W 39th St",
-                "5 E 38th St",
-                "27 W 38th St",
-                "72 W 38th St",
-                "1271 Broadway #1" };
+                "by Sony",
+                "by BMW",
+                "by HP",
+                "by Billabong",
+                "by starbucks"
+
+                };
 
         String[] company_horario = {"Free",
                 "Free",
+                "Free",
                 "$1.00 / month",
-                "Today 11:00 am – 10:30 pm",
-                "Today 11:30 am – 11:00 pm",
-                "Today 9:30 am – 7:30 pm",
-                "Today Open 24 hours",
-                "Today Open 24 hours",
-                "Today 5:30 am – 10:00 pm",
-                "Today 11:30 am – 12:00 am",
-                "Today 6:00 am – 10:00 pm",
-                "Today 11:30 am – 11:00 pm",
-                "Today 6:30 am – 10:30 pm",
-                "Today 8:00 am – 9:00 pm",
-                "Today 11:30 am – 10:00 pm",
-                "Today 11:30 am – 10:30 pm",
-                "Today 7:00 am – 7:00 pm",
-                "Today Open 24 hours"
+                "Free",
+                "$1.00 / month",
+                "Free",
+                "$1.00 / month",
+                "Free",
+                "$1.00 / month",
+                "$1.00 / month",
+                "Free",
+                "Free",
+                "$1.00 / month",
+                "Free",
+                "$1.00 / month",
+                "$1.00 / month"
         };
         String[] company_telefono =
                {"No transaction fees",
                 "No transaction fees",
                 "0.10% transaction fees",
-                "+1 212-239-7019",
-                "+1 646-964-4964",
-                "+1 212-792-6999",
-                "+1 212-268-8444",
-                "+1 212-971-0101",
-                "+1 212-395-9280",
-                "+1 212-869-8601",
-                "+1 212-938-6950",
-                "+1 212-354-5522",
-                "+1 212-401-8686",
-                "+1 212-719-4044",
-                "+1 212-679-0646",
-                "+1 212-944-0990",
-                "+1 212-302-0200",
-                "+1 212-683-8997"};
+                "No transaction fees",
+                "0.15% transaction fees",
+                "No transaction fees",
+                "0.10% transaction fees",
+                "No transaction fees",
+                "0.10% transaction fees",
+                "0.15% transaction fees",
+                "No transaction fees",
+                "No transaction fees",
+                "No transaction fees",
+                "0.10% transaction fees",
+                "No transaction fees",
+                "No transaction fees",
+                "0.10% transaction fees"
+               };
 
         String[] company_descriptions = {"Classic, redefined. See what's new at our Westchester location!.",
                 "Smoking is allowed inside this clubby shop known for its hand-rolled cigars made ...",
@@ -222,26 +221,27 @@ public class AllFragment extends Fragment {
                 "Buzzy after-work-geared bar/eatery serving drinks & American fare in a cozy, ... ",
                 "A bar pours mojitos up front & a brick-lined dining room in the back serves traditional ...",
                 "Tiny, art-adorned coffeehouse pairing its brews with baked goods, sandwiches & a ...",
-                "All-day breakfast, sandwiches & other basic American fare are offered for takeout ..."
+
                };
         String[] company_sites = {"bitDubai.com",
                 "bitDubai.com",
                 "bitDubai.com",
-                "delivery.com",
-                "snackeos.com",
-                "bebablue.com",
-                "ticktockdinerny.com",
-                "newyorkerhotel.com",
-                "dunkindonuts.com",
-                "theaustraliannyc.com",
-                "panerabread.com",
-                "mustangcafe.com",
-                "pret.com",
-                "subway.com",
-                "butterfield8nyc.com",
-                "havanany.com",
-                "cultureespresso.com",
-                "speedys.com"
+                "bitDubai.com",
+                "bitBubai.com",
+                "carrefour.com",
+                "gucci.com",
+                "Bankitau.com",
+                "mcdonals.com",
+                "vans.com",
+                "samsung.com",
+                "bitDubai.com",
+                "sony.com",
+                "bmw.com",
+                "HP",
+                "billabong.com ",
+                "starbucks.com"
+
+
                };
 
 
@@ -556,51 +556,49 @@ public class AllFragment extends Fragment {
                 case "wallet_store_cover_photo_lady":
                     holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_lady);
                     break;
-                case "store_4":
-                    holder.imageView.setImageResource(R.drawable.store_4);
+                case "wallet_store_cover_photo_young":
+                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_young);
                     break;
-                case "store_5":
-                    holder.imageView.setImageResource(R.drawable.store_5);
+                case "wallet_store_cover_photo_boca_juniors":
+                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_boca_juniors);
                     break;
-                case "store_6":
-                    holder.imageView.setImageResource(R.drawable.store_6);
+                case "wallet_store_cover_photo_carrefour":
+                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_carrefour);
                     break;
-                case "store_7":
-                    holder.imageView.setImageResource(R.drawable.store_7);
+                case "wallet_store_cover_photo_gucci":
+                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_gucci);
                     break;
-                case "store_8":
-                    holder.imageView.setImageResource(R.drawable.store_8);
+                case "wallet_store_cover_photo_bank_itau":
+                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_bank_itau);
                     break;
-                case "store_9":
-                    holder.imageView.setImageResource(R.drawable.store_9);
+                case "wallet_store_cover_photo_mcdonals":
+                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_mcdonals);
                     break;
-                case "store_10":
-                    holder.imageView.setImageResource(R.drawable.store_10);
+                case "wallet_store_cover_photo_vans":
+                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_vans);
                     break;
-                case "store_11":
-                    holder.imageView.setImageResource(R.drawable.store_11);
+                case "wallet_store_cover_photo_samsung":
+                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_samsung);
                     break;
-                case "store_12":
-                    holder.imageView.setImageResource(R.drawable.store_12);
+                case "wallet_store_cover_photo_bank_popular":
+                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_bank_popular);
                     break;
-                case "store_13":
-                    holder.imageView.setImageResource(R.drawable.store_13);
+                case "wallet_store_cover_photo_sony":
+                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_sony);
                     break;
-                case "store_14":
-                    holder.imageView.setImageResource(R.drawable.store_14);
+                case "wallet_store_cover_photo_hp":
+                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_hp);
                     break;
-                case "store_15":
-                    holder.imageView.setImageResource(R.drawable.store_15);
+                case "wallet_store_cover_photo_bmw":
+                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_bmw);
                     break;
-                case "store_16":
-                    holder.imageView.setImageResource(R.drawable.store_16);
+                case "wallet_store_cover_photo_billabong":
+                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_billabong);
                     break;
-                case "store_17":
-                    holder.imageView.setImageResource(R.drawable.store_17);
+                case "wallet_store_cover_photo_starbucks":
+                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_starbucks);
                     break;
-                case "store_18":
-                    holder.imageView.setImageResource(R.drawable.store_18);
-                    break;
+
 
 
             }
