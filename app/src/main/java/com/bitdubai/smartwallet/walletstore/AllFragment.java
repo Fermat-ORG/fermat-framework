@@ -46,25 +46,7 @@ public class AllFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        String[] free_paid =
-                {"paid",
-                        "free",
-                        "free",
-                        "free",
-                        "paid",
-                        "free",
-                        "paid",
-                        "free",
-                        "paid",
-                        "free",
-                        "paid",
-                        "paid",
-                        "free",
-                        "paid",
-                        "free",
-                        "paid",
-                        "paid"
-                        };
+
         String[] accepted_nearby =
                 {"yes",
                         "yes",
@@ -123,6 +105,25 @@ public class AllFragment extends Fragment {
                 "Starbuck's wallet"
 
 };
+        String[] free_paid =
+                {"free",
+                        "free",
+                        "free",
+                        "paid",
+                        "free",
+                        "paid",
+                        "free",
+                        "paid",
+                        "free",
+                        "paid",
+                        "paid",
+                        "free",
+                        "free",
+                        "paid",
+                        "free",
+                        "paid",
+                        "paid"
+                };
 
         String[] company_picture =
                 {"wallet_store_cover_photo_girl",
@@ -357,7 +358,9 @@ public class AllFragment extends Fragment {
 
         //@SuppressWarnings("unchecked")
         //ArrayList<App> list = (ArrayList<App>) getArguments().get("list");
-        gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.wallet_store_activity_store_front_grid_item, mlist));
+        AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.wallet_store_activity_store_front_grid_item, mlist);
+        _adpatrer.notifyDataSetChanged();
+        gridView.setAdapter(_adpatrer);
 
 
 
