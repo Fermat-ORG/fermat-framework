@@ -162,7 +162,7 @@ public class SendAllFragment extends android.app.Fragment {
                 convertView = inf.inflate(R.layout.wallets_teens_fragment_send_all_list_header, parent, false);
 
                 ImageView  send_profile_picture = (ImageView) convertView.findViewById(R.id.icon_send_to_contact);
-                send_profile_picture.setTag(tagId + "-" + groupPosition);
+                send_profile_picture.setTag(tagId + "|" + groupPosition);
 
                 holder = new ViewHolder();
 

@@ -14,10 +14,8 @@ import com.bitdubai.smartwallet.walletframework.MyApplication;
 
 
 
-public  class
-        SendToNewContactFragment extends android.app.Fragment {
+public  class   SendToNewContactFragment extends android.app.Fragment {
 
-    private static final String ARG_POSITION = "position";
 
     View rootView;
     ExpandableListView lv;

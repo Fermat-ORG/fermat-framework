@@ -29,6 +29,7 @@ public class ReviewsFragment extends Fragment {
     private String[] reviews;
     private String[] dislikes;
     private String[] likes;
+    private String[] rates;
     private String[] pictures;
     private String[][] transactions;
 
@@ -50,6 +51,7 @@ public class ReviewsFragment extends Fragment {
         reviews = new String[]{ "\"Cheap and tasty. Get the coffee with donuts.\"", "\"The service was wonderful.I love it.\"", "\"they constantly mess up orders if there was another dunkin donuts around I'd never go back.\"", " \"I don't like the service at this particular Dunkin store.\" ", "Insert review here", "Insert review here", "Insert review here", "Insert review here",};
         likes = new String[]{"5","3","0","4","Insert like","Insert like",};
         dislikes = new String[]{"0","1","2 ","0","Insert dislike",};
+        rates = new String[]{"5","1","0","2","0","0",};
         pictures = new String[]{"brant_profile_picture", "teddy_profile_picture", "helene_profile_picture", "piper_profile_picture"};
 
         transactions = new String[][]{
@@ -194,6 +196,12 @@ public class ReviewsFragment extends Fragment {
             ViewHolder like;
             ViewHolder dislike;
             ImageView profile_picture;
+            ImageView star1;
+            ImageView star2;
+            ImageView star3;
+            ImageView star4;
+            ImageView star5;
+
             ImageView send_picture;
 
 
@@ -242,6 +250,33 @@ public class ReviewsFragment extends Fragment {
                 dislike.text = (TextView) convertView.findViewById(R.id.dislike_amount);
                 dislike.text.setTypeface(MyApplication.getDefaultTypeface());
                 dislike.text.setText(dislikes[groupPosition].toString());
+
+                star1 = (ImageView) convertView.findViewById(R.id.star_1);
+                star2 = (ImageView) convertView.findViewById(R.id.star_2);
+                star3 = (ImageView) convertView.findViewById(R.id.star_3);
+                star4 = (ImageView) convertView.findViewById(R.id.star_4);
+                star5 = (ImageView) convertView.findViewById(R.id.star_5);
+                int rate = Integer.parseInt(rates[groupPosition]);
+                if (rate >= 0)
+                {
+                    star1.setImageResource(R.drawable.grid_background_star_full);
+                }
+                if (rate >= 1)
+                {
+                    star2.setImageResource(R.drawable.grid_background_star_full);
+                }
+                if (rate >= 2)
+                {
+                    star3.setImageResource(R.drawable.grid_background_star_full);
+                }
+                if (rate >= 3)
+                {
+                    star4.setImageResource(R.drawable.grid_background_star_full);
+                }
+                if (rate >= 4)
+                {
+                    star5.setImageResource(R.drawable.grid_background_star_full);
+                }
 
             } else {
                 holder = (ViewHolder) convertView.getTag();
