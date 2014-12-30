@@ -223,7 +223,7 @@ public  class SendFragment extends Fragment {
                 when.text.setText(transactions_whens[groupPosition][childPosition].toString());
 
                 ImageView send_to_contact =  (ImageView) convertView.findViewById(R.id.icon_send_to_contact);
-                send_to_contact.setTag(groupPosition + "-" + childPosition);
+                send_to_contact.setTag(groupPosition + "|" + childPosition);
 
 
 
@@ -283,7 +283,7 @@ public  class SendFragment extends Fragment {
 //asigned tagId at icons action
                     ImageView  send_profile_picture = (ImageView) convertView.findViewById(R.id.icon_send_profile);
 
-                    send_profile_picture.setTag(groupPosition + "-0");
+                    send_profile_picture.setTag(groupPosition + "|-1");
 
                     ImageView  history_picture = (ImageView) convertView.findViewById(R.id.open_history);
 

@@ -305,12 +305,12 @@ public class StoreFrontActivity extends FragmentActivity
             {titles = titles_2;}
 
             Fragment currentFragment;
-            switch (position) {
+           switch (position) {
                 case 0:
                     currentFragment =   AllFragment.newInstance(position);
                     break;
                 case 1:
-                    currentFragment =   AllFragment.newInstance(position);
+                    currentFragment =   FreeFragment.newInstance(position);
                     break;
                 case 2:
                     currentFragment =  AllFragment.newInstance(position);
@@ -323,6 +323,7 @@ public class StoreFrontActivity extends FragmentActivity
                     currentFragment =   AccountDetailFiltersFragment.newInstance(position);
                     break;
             }
+
             return currentFragment;
         }
 

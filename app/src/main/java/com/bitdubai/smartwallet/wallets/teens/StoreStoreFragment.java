@@ -360,6 +360,8 @@ public class StoreStoreFragment extends Fragment {
                 convertView = inflater.inflate(R.layout.wallets_teens_fragment_store_store, parent, false);
                 holder = new ViewHolder();
 
+
+
                 holder.star1= (ImageView) convertView.findViewById(R.id.star_1);
                 holder.star2= (ImageView) convertView.findViewById(R.id.star_2);
                 holder.star3= (ImageView) convertView.findViewById(R.id.star_3);
@@ -371,6 +373,8 @@ public class StoreStoreFragment extends Fragment {
                 holder.star3.setAdjustViewBounds(true);
                 holder.star4.setAdjustViewBounds(true);
                 holder.star5.setAdjustViewBounds(true);
+
+
 
                 holder.sale = (ImageView) convertView.findViewById(R.id.sale);
                 holder.favorite = (ImageView) convertView.findViewById(R.id.favorite);

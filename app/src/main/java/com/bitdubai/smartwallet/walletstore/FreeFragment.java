@@ -44,105 +44,84 @@ public class FreeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        String[] company_names = {"The New York Times Store",
-                "NYC Fine Cigars",
-                "Fat Sal's Pizza",
-                "Pomodoro Restaurant",
-                "Snack EOS",
-                "Beba Blue Salon",
-                "Tick Tock Diner",
-                "The New Yorker Hotel",
-                "Dunkin' Donuts",
-                "The Australian",
-                "Panera Bread",
-                "Mustang Cafe",
-                "Pret A Manger",
-                "Subway",
-                "Butterfield 8",
-                "Havana New York",
-                "Culture Espresso",
-                "Speedy's",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa" };
-        String[] company_addresses = {"620 8th Ave",
-                "506 9th Ave",
-                "510 9th Ave",
-                "518 9th Ave #1",
-                "522 9th Ave",
-                "502 9th Ave",
-                "481 8th Ave",
-                "481 8th Ave",
-                "240 W 40th St",
-                "20 W 38th St",
-                "452 5th Ave",
-                "22 W 38th St",
-                "389 5th Ave",
-                "32 W 39th St",
-                "5 E 38th St",
-                "27 W 38th St",
-                "72 W 38th St",
-                "1271 Broadway #1",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa" };
-        String[] company_horario = {"Today 8:00 am – 9:00 pm",
-                "Today 10:30 am – 8:00 pm",
-                "Today 11:00 am – 10:30 pm",
-                "Today 11:00 am – 10:30 pm",
-                "Today 11:30 am – 11:00 pm",
-                "Today 9:30 am – 7:30 pm",
-                "Today Open 24 hours",
-                "Today Open 24 hours",
-                "Today 5:30 am – 10:00 pm",
-                "Today 11:30 am – 12:00 am",
-                "Today 6:00 am – 10:00 pm",
-                "Today 11:30 am – 11:00 pm",
-                "Today 6:30 am – 10:30 pm",
-                "Today 8:00 am – 9:00 pm",
-                "Today 11:30 am – 10:00 pm",
-                "Today 11:30 am – 10:30 pm",
-                "Today 7:00 am – 7:00 pm",
-                "Today Open 24 hours",
-                "Today",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa" };
-        String[] company_telefono = {"+1 800-671-4332",
-                "+1 212-714-0858",
-                "+1 212-594-9462",
-                "+1 212-239-7019",
-                "+1 646-964-4964",
-                "+1 212-792-6999",
-                "+1 212-268-8444",
-                "+1 212-971-0101",
-                "+1 212-395-9280",
-                "+1 212-869-8601",
-                "+1 212-938-6950",
-                "+1 212-354-5522",
-                "+1 212-401-8686",
-                "+1 212-719-4044",
-                "+1 212-679-0646",
-                "+1 212-944-0990",
-                "+1 212-302-0200",
-                "+1 212-683-8997",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa" };
+        String[] company_names =
+                {"Girl's wallet",
+                        "Boy's wallet",
+                        "Ladies",
+                        "Young",
+                        "Boca Junior's wallet",
+                        "Carrefour's wallet",
+                        "Gucci's wallet",
+                        "Bank Itau's wallet",
+                        "Mc donal's wallet",
+                        "Van's wallet",
+                        "Samsung's wallet",
+                        "Popular Bank's wallet",
+                        "Sony's wallet",
+                        "BMW's wallet",
+                        "HP's wallet",
+                        "Billabong's wallet",
+                        "Starbuck's wallet"
+
+                };
+        String[] company_addresses =
+                {"by bitDubai",
+                        "by bitDubai",
+                        "by bitDubai",
+                        "by bitDubai",
+                        "by Boca Junios",
+                        "by carrefour",
+                        "by Gucci",
+                        "by Bank Itau",
+                        "by McDonals",
+                        "by Vans",
+                        "by Samsung",
+                        "by bitDubai",
+                        "by Sony",
+                        "by BMW",
+                        "by HP",
+                        "by Billabong",
+                        "by starbucks"
+
+                };
+        String[] company_horario = {"Free",
+                "Free",
+                "Free",
+                "$1.00 / month",
+                "Free",
+                "$1.00 / month",
+                "Free",
+                "$1.00 / month",
+                "Free",
+                "$1.00 / month",
+                "$1.00 / month",
+                "Free",
+                "Free",
+                "$1.00 / month",
+                "Free",
+                "$1.00 / month",
+                "$1.00 / month"
+        };
+        String[] company_telefono =
+                {"No transaction fees",
+                        "No transaction fees",
+                        "0.10% transaction fees",
+                        "No transaction fees",
+                        "0.15% transaction fees",
+                        "No transaction fees",
+                        "0.10% transaction fees",
+                        "No transaction fees",
+                        "0.10% transaction fees",
+                        "0.15% transaction fees",
+                        "No transaction fees",
+                        "No transaction fees",
+                        "No transaction fees",
+                        "0.10% transaction fees",
+                        "No transaction fees",
+                        "No transaction fees",
+                        "0.10% transaction fees"
+                };
+
         String[] company_descriptions = {"Classic, redefined. See what's new at our Westchester location!.",
                 "Smoking is allowed inside this clubby shop known for its hand-rolled cigars made ...",
                 "Basic pizzeria serving a variety of NYC-style slices in a small, counter-service space.",
@@ -160,40 +139,89 @@ public class FreeFragment extends Fragment {
                 "Buzzy after-work-geared bar/eatery serving drinks & American fare in a cozy, ... ",
                 "A bar pours mojitos up front & a brick-lined dining room in the back serves traditional ...",
                 "Tiny, art-adorned coffeehouse pairing its brews with baked goods, sandwiches & a ...",
-                "All-day breakfast, sandwiches & other basic American fare are offered for takeout ...",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa" };
-        String[] company_sites = {"nytstore.com",
-                "nycfinecigars.com",
-                "fatsals.com",
-                "delivery.com",
-                "snackeos.com",
-                "bebablue.com",
-                "ticktockdinerny.com",
-                "newyorkerhotel.com",
-                "dunkindonuts.com",
-                "theaustraliannyc.com",
-                "panerabread.com",
-                "mustangcafe.com",
-                "pret.com",
-                "subway.com",
-                "butterfield8nyc.com",
-                "havanany.com",
-                "cultureespresso.com",
-                "speedys.com",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa",
-                "aaa", };
 
+        };
+        String[] company_sites = {"bitDubai.com",
+                "bitDubai.com",
+                "bitDubai.com",
+                "bitDubai.com",
+                "bitBubai.com",
+                "carrefour.com",
+                "gucci.com",
+                "Bankitau.com",
+                "mcdonals.com",
+                "vans.com",
+                "samsung.com",
+                "bitDubai.com",
+                "sony.com",
+                "bmw.com",
+                "HP",
+                "billabong.com ",
+                "starbucks.com"
+
+
+        };
+
+        String[] free_paid =
+                {"free",
+                        "free",
+                        "free",
+                        "paid",
+                        "free",
+                        "paid",
+                        "free",
+                        "paid",
+                        "free",
+                        "paid",
+                        "paid",
+                        "free",
+                        "free",
+                        "paid",
+                        "free",
+                        "paid",
+                        "paid"
+                };
+
+        String[] company_picture =
+                {"wallet_store_cover_photo_girl",
+                        "wallet_store_cover_photo_boy",
+                        "wallet_store_cover_photo_lady",
+                        "wallet_store_cover_photo_young",
+                        "wallet_store_cover_photo_boca_juniors",
+                        "wallet_store_cover_photo_carrefour",
+                        "wallet_store_cover_photo_gucci",
+                        "wallet_store_cover_photo_bank_itau",
+                        "wallet_store_cover_photo_mcdonals",
+                        "wallet_store_cover_photo_vans",
+                        "wallet_store_cover_photo_samsung",
+                        "wallet_store_cover_photo_bank_popular",
+                        "wallet_store_cover_photo_sony",
+                        "wallet_store_cover_photo_bmw",
+                        "wallet_store_cover_photo_hp",
+                        "wallet_store_cover_photo_billabong",
+                        "wallet_store_cover_photo_starbucks"
+
+                };
+
+        String[] installed =
+                {"true",
+                        "true",
+                        "true",
+                        "true",
+                        "true",
+                        "true",
+                        "false",
+                        "true",
+                        "false",
+                        "false",
+                        "false",
+                        "true",
+                        "false",
+                        "false",
+                         "false",
+                        "false",
+                        "false"
+                };
 
 
         if (mlist == null)
@@ -201,19 +229,25 @@ public class FreeFragment extends Fragment {
 
             mlist = new ArrayList<App>();
 
-            for (int i = 0; i < 17; i++) {
-                App item = new App();
-                item.title = company_sites[i];
-                item.description = company_descriptions[i];
-                item.company = company_names[i];
-                item.Open_hours = company_horario[i];
-                item.Phone = company_telefono[i];
-                item.Address = company_addresses[i];
-                item.rate = (float) Math.random() * 5;
-                item.value = (int) Math.floor((Math.random() * (500 - 80 + 1))) + 80;
-                item.favorite = (float) Math.random() * 5;
-                item.sale = (float) Math.random() * 5;
-                mlist.add(item);
+            for (int i = 0; i < free_paid.length; i++) {
+
+                if (free_paid[i] == "free") {
+                    App item = new App();
+                    item.title = company_sites[i];
+                    item.description = company_descriptions[i];
+                    item.picture = company_picture[i];
+                    item.company = company_names[i];
+                    item.Open_hours = company_horario[i];
+                    item.Phone = company_telefono[i];
+                    item.Address = company_addresses[i];
+                    item.rate = (float) Math.random() * 5;
+                    item.value = (int) Math.floor((Math.random() * (500 - 80 + 1))) + 80;
+                    item.favorite = (float) Math.random() * 5;
+                    item.timetoarraive = (float) Math.random() * 5;
+                    item.sale = (float) Math.random() * 5;
+                    item.installed = (installed[i]=="true") ? true : false;
+                    mlist.add(item);
+                }
             }
         }
 
@@ -262,6 +296,8 @@ public class FreeFragment extends Fragment {
 
         public String description;
 
+        public String picture;
+
         public String company;
 
         public String Open_hours;
@@ -278,7 +314,11 @@ public class FreeFragment extends Fragment {
 
         public float sale;
 
+        public float timetoarraive;
+        public boolean installed;
+
     }
+
 
 
 
@@ -327,6 +367,8 @@ public class FreeFragment extends Fragment {
                 holder.openHours = (TextView) convertView.findViewById(R.id.open_hours);
                 holder.timeToArrive = (TextView) convertView.findViewById(R.id.time_to_arrive);
 
+                holder.downloadIcon = (ImageView) convertView.findViewById(R.id.download);
+
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -344,8 +386,18 @@ public class FreeFragment extends Fragment {
 
             holder.openHours.setText(  item.Open_hours);
 
+            if (item.installed )
+            {
+                holder.timeToArrive.setText( "Installed");
+                holder.downloadIcon.setVisibility(View.INVISIBLE);
+            }
+            else
+            {
+                holder.timeToArrive.setText( "Download now");
+                holder.downloadIcon.setVisibility(View.VISIBLE);
+            }
 
-            holder.timeToArrive.setText( position + " min");
+
 
 
             holder.openHours.setTypeface(MyApplication.getDefaultTypeface());
@@ -395,63 +447,65 @@ public class FreeFragment extends Fragment {
                 holder.sale.setImageResource(R.drawable.grid_background_sale_flipped);
             }
 
+            // favorite and sale icons set to invisible
 
-            switch (position)
+            holder.favorite.setVisibility(View.INVISIBLE);
+            holder.sale.setVisibility(View.INVISIBLE);
+
+            switch (item.picture)
             {
-                case 0:
-                    holder.imageView.setImageResource(R.drawable.store_1);
+                case "wallet_store_cover_photo_girl":
+                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_girl);
                     break;
-                case 1:
-                    holder.imageView.setImageResource(R.drawable.store_2);
+                case "wallet_store_cover_photo_boy":
+                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_boy);
                     break;
-                case 2:
-                    holder.imageView.setImageResource(R.drawable.store_3);
+                case "wallet_store_cover_photo_lady":
+                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_lady);
                     break;
-                case 3:
-                    holder.imageView.setImageResource(R.drawable.store_4);
+                case "wallet_store_cover_photo_young":
+                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_young);
                     break;
-                case 4:
-                    holder.imageView.setImageResource(R.drawable.store_5);
+                case "wallet_store_cover_photo_boca_juniors":
+                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_boca_juniors);
                     break;
-                case 5:
-                    holder.imageView.setImageResource(R.drawable.store_6);
+                case "wallet_store_cover_photo_carrefour":
+                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_carrefour);
                     break;
-                case 6:
-                    holder.imageView.setImageResource(R.drawable.store_7);
+                case "wallet_store_cover_photo_gucci":
+                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_gucci);
                     break;
-                case 7:
-                    holder.imageView.setImageResource(R.drawable.store_8);
+                case "wallet_store_cover_photo_bank_itau":
+                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_bank_itau);
                     break;
-                case 8:
-                    holder.imageView.setImageResource(R.drawable.store_9);
+                case "wallet_store_cover_photo_mcdonals":
+                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_mcdonals);
                     break;
-                case 9:
-                    holder.imageView.setImageResource(R.drawable.store_10);
+                case "wallet_store_cover_photo_vans":
+                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_vans);
                     break;
-                case 10:
-                    holder.imageView.setImageResource(R.drawable.store_11);
+                case "wallet_store_cover_photo_samsung":
+                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_samsung);
                     break;
-                case 11:
-                    holder.imageView.setImageResource(R.drawable.store_12);
+                case "wallet_store_cover_photo_bank_popular":
+                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_bank_popular);
                     break;
-                case 12:
-                    holder.imageView.setImageResource(R.drawable.store_13);
+                case "wallet_store_cover_photo_sony":
+                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_sony);
                     break;
-                case 13:
-                    holder.imageView.setImageResource(R.drawable.store_14);
+                case "wallet_store_cover_photo_hp":
+                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_hp);
                     break;
-                case 14:
-                    holder.imageView.setImageResource(R.drawable.store_15);
+                case "wallet_store_cover_photo_bmw":
+                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_bmw);
                     break;
-                case 15:
-                    holder.imageView.setImageResource(R.drawable.store_16);
+                case "wallet_store_cover_photo_billabong":
+                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_billabong);
                     break;
-                case 16:
-                    holder.imageView.setImageResource(R.drawable.store_17);
+                case "wallet_store_cover_photo_starbucks":
+                    holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_starbucks);
                     break;
-                case 17:
-                    holder.imageView.setImageResource(R.drawable.store_18);
-                    break;
+
 
 
             }
@@ -492,7 +546,9 @@ public class FreeFragment extends Fragment {
 
             public TextView valueTextView;
 
+            public ImageView downloadIcon;
         }
+
 
     }
 
