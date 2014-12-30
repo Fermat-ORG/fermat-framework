@@ -1,14 +1,14 @@
 package com.bitdubai.smartwallet.core.system.user;
 
 /**
- * Created by ciencias on 23.12.14.
+ * Created by ciencias on 30.12.14.
  */
-public class LocalPersonalUser implements  LocalUser,  PersonalUser {
+public class LocalWalletPublisherUser implements WalletPublisherUser, LocalUser {
 
     private String mId;
     private LoginType mLoginType;
 
-    public LocalPersonalUser(String userId) {
+    public LocalWalletPublisherUser(String userId) {
         mId = userId;
         mLoginType = LoginType.NONE;
     }

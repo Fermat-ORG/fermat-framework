@@ -1,14 +1,14 @@
 package com.bitdubai.smartwallet.core.system.user;
 
 /**
- * Created by ciencias on 23.12.14.
+ * Created by ciencias on 30.12.14.
  */
-public class LocalPersonalUser implements  LocalUser,  PersonalUser {
+public class LocalCommercialUser implements LocalUser, CommercialUser {
 
     private String mId;
     private LoginType mLoginType;
 
-    public LocalPersonalUser(String userId) {
+    public LocalCommercialUser(String userId) {
         mId = userId;
         mLoginType = LoginType.NONE;
     }
@@ -31,6 +31,4 @@ public class LocalPersonalUser implements  LocalUser,  PersonalUser {
     public boolean Login(String pPassword) {
         return false;
     }
-
-
 }

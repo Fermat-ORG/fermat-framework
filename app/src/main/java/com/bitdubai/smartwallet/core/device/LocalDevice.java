@@ -1,6 +1,6 @@
 package com.bitdubai.smartwallet.core.device;
 
-import com.bitdubai.smartwallet.core.shop.Shop;
+import com.bitdubai.smartwallet.core.commerce.shop.Shop;
 import com.bitdubai.smartwallet.core.device.storage.Database;
 import com.bitdubai.smartwallet.core.system.user.LocalPersonalUser;
 
