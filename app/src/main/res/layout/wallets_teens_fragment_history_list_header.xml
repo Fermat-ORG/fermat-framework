@@ -10,36 +10,6 @@
     android:paddingTop="0dip"
     android:gravity="end|right">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="106dp"
-        android:layout_height="106dp"
-
-        >
-
-
-
-        <ImageView
-            android:id="@+id/profile_picture"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="fitXY"
-            android:src="@drawable/product_11"
-            android:layout_gravity="center"
-            android:padding="8dp"
-            />
-
-        <ImageView
-            android:id="@+id/frame_contact"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:src="@drawable/object_frame_1x1"
-            android:layout_gravity="center"
-
-            />
-
-
-    </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -72,29 +42,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingLeft="10dip"
-                android:paddingRight="10dip"
+                android:paddingLeft="12dip"
+                android:paddingRight="12dip"
                 android:paddingTop="10dip">
-                <TextView
-                    android:id="@+id/amount"
+
+                <TextView android:id="@+id/date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:textColor="#FF666666"
+                    android:gravity="center|start"
+
                     android:textSize="12sp"
                     android:textStyle="normal"
-                    android:text=""
-                    android:paddingBottom="2dip"
-                    android:paddingTop="2dip"
-                    android:layout_gravity="start" />
-
-
+                    android:text="date"
+                    android:textColor="#FF666666"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"/>
+1
                 <TextView
                     android:id="@+id/contact_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-
+                    android:layout_weight="1"
                     android:textSize="12sp"
                     android:textStyle="normal"
                     android:text="New contact name"
@@ -103,13 +72,13 @@
 
                     />
                 <TextView android:id="@+id/total_amount"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="$amount"
                     android:gravity="end"
                     android:textColor="#FF666666"
-
-                    android:textStyle="normal"
+                    android:layout_weight="1"
+                    android:textStyle="bold"
                     android:textSize="12sp"
                     android:paddingBottom="2dip"
                     android:paddingTop="2dip"/>
@@ -119,8 +88,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingLeft="10dip"
-                android:paddingRight="10dip"
+                android:paddingLeft="12dip"
+                android:paddingRight="12dip"
                 android:weightSum="1">
                 <TextView
                     android:id="@+id/when"
@@ -138,7 +107,6 @@
                     android:layout_height="wrap_content"
                     android:text="history count"
                     android:textColor="#FF666666"
-
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:textSize="12sp"
@@ -150,12 +118,18 @@
                     />
 
             </LinearLayout>
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="0.5dp"
+    android:layout_marginLeft="290dp"
+    android:layout_marginRight="10dp"
+    android:background="#FF666666"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingLeft="10dip"
-                android:paddingRight="10dip" android:paddingBottom="2dip" android:paddingTop="2dip">
+                android:paddingLeft="12dip"
+                android:paddingRight="12dip" android:paddingBottom="2dip" android:paddingTop="2dip">
 
                 <TextView
                     android:id="@+id/notes"
@@ -169,7 +143,18 @@
                     android:layout_gravity="start"
                     android:paddingBottom="2dip"
                     android:paddingTop="2dip" />
-
+                <TextView
+                    android:id="@+id/amount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:textColor="#FF666666"
+                    android:textSize="12sp"
+                    android:textStyle="normal"
+                    android:text="sdfs"
+                    android:paddingBottom="2dip"
+                    android:paddingTop="2dip"
+                    android:layout_gravity="end" />
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>

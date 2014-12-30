@@ -27,9 +27,12 @@ public class HistoryFragment extends Fragment {
     private String[] contacts;
     private String[] amounts;
     private String[] totalAmount;
+    private String[] dates;
     private String[] historyCount;
+    private String[][] names;
     private String[] whens;
     private String[] notes;
+    private String[][] items;
     private String[] pictures;
     private String[][] transactions;
     String[][] transactions_amounts;
@@ -49,38 +52,56 @@ public class HistoryFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        contacts = new String[]{"French Roll", "Caramel Chocolate Crunch", "Cinnamon Cake", "Classic Iced Pink"};
-        amounts = new String[]{"", "", "", ""};
-        whens = new String[]{"", "", "", ""};
-        notes = new String[]{ "2 units", "12 units", "6 units", "24 units"};
-        totalAmount = new String[]{"$5.89", "$2.00", "$3.49", "$2.49"};
-        historyCount = new String[] {"","","",""};
-        pictures = new String[]{"product_14", "product_8", "product_13", "product_2"};
+        contacts = new String[]{"2 units", "12 units", "6 units", "24 units"};
+        amounts = new String[]{"$4.00", "$21.50", "$11.00", "$30.00"};
+        whens = new String[]{"wallet discount","wallet discount","wallet discount","wallet discount","wallet discount","wallet discount",};
+        notes = new String[]{ "total paid ", "total paid ", "total paid ", "total paid ", "total paid "};
+        totalAmount = new String[]{"$5.00", "$24.00", "$13.50", "$36.00"};
+        historyCount = new String[] {"-$1.00", "-$2.50", "-$2.50", "-$2.00"};
+        pictures = new String[]{"product_14_history", "product_8_history", "product_13_history", "product_2_history"};
+        dates = new String[]{"yesterday","2 days ago","4 day ago","4 day ago","","","","",""};
+
 
         transactions = new String[][]{
 
-                {"","",""},
-                {"","","","","",""},
-                {""},
-                {""}
+                {"$2.50"},
+                {"$2.00"},
+                {"$2.25"},
+                {"$1.50"},
+                {"$"},
+                {"$"},
+                {"$"},
+
+        };
+
+        items = new String[][]{
+
+                {"price per unit"},
+                {"price per unit"},     {"price per unit"},     {"price per unit"},
+
+
+
+        };
+
+        names = new String[][]{
+
+                {"French Roll"},{"Caramel Chocolate Crunch"},{"Cinnamon Cake"},{"Clasisc Iced Pink"},
+
+
+
         };
 
         transactions_amounts = new String[][]{
 
-                {},
-                {"","",""},
-                {"","","","","","",""},
-                {""},
-                {""}
+
+                {"$15.00",},{"$12.00",},{"$13.50",},{"$9.00",},{"$",},{"$",}
+
         };
 
         transactions_whens = new String[][]{
 
-                {},
-                {"","",""},
-                {"","","","","","",""},
-                {""},
-                {""}
+                {"price for 6 units"},
+                {"price for 6 units"},{"price for 6 units"},{"price for 6 units"},
         };
 
     }
@@ -119,14 +140,14 @@ public class HistoryFragment extends Fragment {
 
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-
+/*
                 if (groupPosition == 0) {
                     Intent intent;
                     intent = new Intent(getActivity(), SendToNewContactActivity.class);
                     startActivity(intent);
                     return false;
                 }
-                else
+                else*/
                 {
                     return false;
                 }
@@ -190,12 +211,37 @@ public class HistoryFragment extends Fragment {
             ViewHolder holder;
             ViewHolder amount;
             ViewHolder when;
+            ViewHolder item;
+            ViewHolder name;
+            ImageView profile_picture;
 
 
             //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
             // if (convertView == null) {
             if (1 == 1) {
                 convertView = inf.inflate(R.layout.wallets_teens_fragment_history_list_detail, parent, false);
+
+                profile_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
+                switch (groupPosition)
+                {
+                    case 0:
+                        profile_picture.setImageResource(R.drawable.product_14);
+                        break;
+                    case 1:
+                        profile_picture.setImageResource(R.drawable.product_8);
+                        break;
+                    case 2:
+                        profile_picture.setImageResource(R.drawable.product_13);
+                        break;
+                    case 3:
+                        profile_picture.setImageResource(R.drawable.product_2);
+                        break;
+                    case 4:
+                        profile_picture.setImageResource(R.drawable.product_1);
+                        break;
+
+                }
+
                 holder = new ViewHolder();
 
                 holder.text = (TextView) convertView.findViewById(R.id.notes);
@@ -207,6 +253,17 @@ public class HistoryFragment extends Fragment {
                 amount.text.setTypeface(MyApplication.getDefaultTypeface());
 
                 amount.text.setText(transactions_amounts[groupPosition][childPosition].toString());
+
+                name = new ViewHolder();
+                name.text = (TextView) convertView.findViewById(R.id.contact_name);
+                name.text.setTypeface(MyApplication.getDefaultTypeface());
+                name.text.setText(names[groupPosition][childPosition].toString());
+
+                item = new ViewHolder();
+                item.text = (TextView) convertView.findViewById(R.id.name);
+                item.text.setTypeface(MyApplication.getDefaultTypeface());
+                item.text.setText(items[groupPosition][childPosition].toString());
+
 
                 when = new ViewHolder();
                 when.text = (TextView) convertView.findViewById(R.id.when);
@@ -233,6 +290,7 @@ public class HistoryFragment extends Fragment {
             ImageView profile_picture;
             ImageView send_picture;
             ViewHolder total;
+            ViewHolder date;
             ViewHolder history;
 
 
@@ -242,44 +300,25 @@ public class HistoryFragment extends Fragment {
                 if (1 == 1) {
                     convertView = inf.inflate(R.layout.wallets_teens_fragment_history_list_header, parent, false);
 
-                    profile_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
-                    switch (groupPosition)
-                    {
-                        case 0:
-                            profile_picture.setImageResource(R.drawable.product_14);
-                            break;
-                        case 1:
-                            profile_picture.setImageResource(R.drawable.product_8);
-                            break;
-                        case 2:
-                            profile_picture.setImageResource(R.drawable.product_13);
-                            break;
-                        case 3:
-                            profile_picture.setImageResource(R.drawable.product_2);
-                            break;
-                        case 4:
-                            profile_picture.setImageResource(R.drawable.product_1);
-                            break;
-
-                    }
-
-
 
                     holder = new ViewHolder();
                     holder.text = (TextView) convertView.findViewById(R.id.contact_name);
                     holder.text.setTypeface(MyApplication.getDefaultTypeface());
                     convertView.setTag(holder);
 
+                    date = new ViewHolder();
+                    date.text = (TextView) convertView.findViewById(R.id.date);
+                    date.text.setTypeface(MyApplication.getDefaultTypeface());
+                    date.text.setText(dates[groupPosition].toString());
+
                     amount = new ViewHolder();
                     amount.text = (TextView) convertView.findViewById(R.id.amount);
                     amount.text.setTypeface(MyApplication.getDefaultTypeface());
-
                     amount.text.setText(amounts[groupPosition].toString());
 
                     when = new ViewHolder();
                     when.text = (TextView) convertView.findViewById(R.id.when);
                     when.text.setTypeface(MyApplication.getDefaultTypeface());
-
                     when.text.setText(whens[groupPosition].toString());
 
                     total = new ViewHolder();
@@ -295,7 +334,6 @@ public class HistoryFragment extends Fragment {
                     note = new ViewHolder();
                     note.text = (TextView) convertView.findViewById(R.id.notes);
                     note.text.setTypeface(MyApplication.getDefaultTypeface());
-
                     note.text.setText(notes[groupPosition].toString());
 
                 } else {
