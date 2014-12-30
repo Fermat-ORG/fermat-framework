@@ -1,0 +1,2 @@
+Each subsystem within the bottom layer has no dependencies within the platform, only to external libraries, and no
+dependencies between them.
