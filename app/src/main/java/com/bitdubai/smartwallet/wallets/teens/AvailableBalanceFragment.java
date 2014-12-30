@@ -63,8 +63,6 @@ public  class AvailableBalanceFragment extends android.app.Fragment {
         crypto_amounts = new String[]{"mBTC 10.3475","mBTC 150.8347 ","mBTC 15.9304","mBTC 8.1923","mBTC 20.5743","mBTC 12.8724","mBTC 30.4365"};
 
         transactions = new String[][]{
-
-
                 {},
                 {},
                 {},
@@ -72,8 +70,6 @@ public  class AvailableBalanceFragment extends android.app.Fragment {
         };
 
         transactions_amounts = new String[][]{
-
-
                 {},
                 {},
                 {},
@@ -81,8 +77,6 @@ public  class AvailableBalanceFragment extends android.app.Fragment {
         };
 
         transactions_whens = new String[][]{
-
-
                 {},
                 {},
                 {},
@@ -94,8 +88,6 @@ public  class AvailableBalanceFragment extends android.app.Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.wallets_teens_fragment_available_balance, container, false);
-
-
 
         return rootView;
     }
@@ -121,7 +113,7 @@ public  class AvailableBalanceFragment extends android.app.Fragment {
             }
         });
 
-        lv.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+         lv.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
 
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
@@ -287,7 +279,6 @@ public  class AvailableBalanceFragment extends android.app.Fragment {
                 availability = new ViewHolder();
                 availability.text = (TextView) convertView.findViewById(R.id.availability);
                 availability.text.setTypeface(MyApplication.getDefaultTypeface());
-
 
                 type = new ViewHolder();
                 type.text = (TextView) convertView.findViewById(R.id.type);

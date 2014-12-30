@@ -226,13 +226,22 @@
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <ImageView
-        android:id="@+id/icon_send_to_contact"
-        android:layout_width="wrap_content"
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_action_send_now_grey"
-        android:layout_weight="1"/>
-    </LinearLayout>
+        android:id="@+id/progressBar"
+        android:layout_gravity="center_horizontal"
+        android:animationResolution="100"
+        android:indeterminate="true"
+        android:indeterminateBehavior="repeat"
+        android:paddingLeft="8dp"
+        android:paddingTop="8dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="8dp" />
+</LinearLayout>
+
 
     </LinearLayout>
     </RelativeLayout>
