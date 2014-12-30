@@ -2,7 +2,7 @@ package com.bitdubai.smartwallet.core.platform.systemwide.device;
 
 import com.bitdubai.smartwallet.core.world.commerce.shop.Shop;
 import com.bitdubai.smartwallet.core.platform.systemwide.device.storage.Database;
-import com.bitdubai.smartwallet.core.platform.innersystem.layer.lowlevel.service.user.LocalPersonalUser;
+import com.bitdubai.smartwallet.core.platform.innersystem.layer.lowlevel.service.user.version_1.LocalPersonalUser;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,7 +1,7 @@
 package com.bitdubai.smartwallet.core.world.commerce.shop;
 
-import com.bitdubai.smartwallet.core.platform.innersystem.layer.top.module.walletruntime.wallet.family.Wallet;
-import com.bitdubai.smartwallet.core.platform.innersystem.layer.top.module.walletruntime.wallet.service.WalletService;
+import com.bitdubai.smartwallet.core.platform.innersystem.layer.top.module.wallet_runtime.version_1.family.Wallet;
+import com.bitdubai.smartwallet.core.platform.innersystem.layer.top.module.wallet_runtime.version_1.service.WalletService;
 
 /**
  * Created by ciencias on 22.12.14.
