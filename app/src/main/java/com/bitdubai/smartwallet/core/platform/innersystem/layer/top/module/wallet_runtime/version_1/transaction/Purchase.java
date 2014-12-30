@@ -3,6 +3,6 @@ package com.bitdubai.smartwallet.core.platform.innersystem.layer.top.module.wall
 /**
  * Created by ciencias on 22.12.14.
  */
-public class Purchase extends InSystemMoneyOut {
+public class Purchase extends InnerSystemMoneyOut {
     private PurchaseItem[] mPurchaseItems;
 }

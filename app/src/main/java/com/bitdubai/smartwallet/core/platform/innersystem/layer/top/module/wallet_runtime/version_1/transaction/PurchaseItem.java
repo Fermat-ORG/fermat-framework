@@ -1,7 +1,7 @@
 package com.bitdubai.smartwallet.core.platform.innersystem.layer.top.module.wallet_runtime.version_1.transaction;
 
-import com.bitdubai.smartwallet.core.world.commerce.shop.Product;
-import com.bitdubai.smartwallet.core.world.commerce.shop.Service;
+import com.bitdubai.smartwallet.core.platform.innersystem.layer.lowlevel.service.shop.version_1.Product;
+import com.bitdubai.smartwallet.core.platform.innersystem.layer.lowlevel.service.shop.version_1.Service;
 import com.bitdubai.smartwallet.core.platform.innersystem.layer.middleware.money.CryptoMoney;
 import com.bitdubai.smartwallet.core.platform.innersystem.layer.middleware.money.FiatMoney;
 

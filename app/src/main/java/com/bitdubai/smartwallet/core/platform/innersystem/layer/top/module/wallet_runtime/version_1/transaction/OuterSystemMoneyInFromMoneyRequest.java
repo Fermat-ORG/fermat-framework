@@ -5,6 +5,6 @@ import com.bitdubai.smartwallet.core.platform.innersystem.layer.lowlevel.service
 /**
  * Created by ciencias on 25.12.14.
  */
-public class OutSystemMoneyOutFromMoneyRequest extends OuterSystemMoneyOut implements TransactionFromMoneyRequest {
+public class OuterSystemMoneyInFromMoneyRequest extends OuterSystemMoneyIn implements TransactionFromMoneyRequest{
     private MoneyRequest mMoneyRequest;
 }
