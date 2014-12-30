@@ -2,6 +2,7 @@ package com.bitdubai.smartwallet.wallets.teens;
 
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -55,7 +56,7 @@ public  class AvailableBalanceFragment extends android.app.Fragment {
 
         availabilities = new String[]{ "10.05%", "-1.23%", "7.30%", "2.25%", "-7.04%","11.84%","-5.52%"};
         types = new String[]{ "Received $200.00 ", "Received $3,000.00", "Refill $350.00", "Refill $1,500.00", "Received $400.00","Refill $250.00","received $600.00"};
-        contacts = new String[]{"Lucia Alarcon De Zam...", "Juan Luis R. Pons","Kalustyan´s","Kings Super Market", "Karina Rodriguez","D´Agostino", "Taylor Backus"};
+        contacts = new String[]{"Lucia Alarcon De Zamacona", "Juan Luis R. Pons","Kalustyan´s","Kings Super Market", "Karina Rodriguez","D´Agostino", "Taylor Backus"};
         amounts = new String[]{"$90.00", "$2,000.00", "$25.00", "$1,500.00","$400.00","$0.00","$600.00"};
         whens = new String[]{"4 hours ago", "5 hours ago", "yesterday", "yesterday","31 dec 14","5 sep 14","1 year ago"};
         notes = new String[]{"New telephone", "Old desk", "For electricity bill", "for this week expenses","Car oil", "Refill test","Computer monitor"};
@@ -237,6 +238,7 @@ public  class AvailableBalanceFragment extends android.app.Fragment {
             ViewHolder type;
             ViewHolder availability;
             ViewHolder crypto_amount;
+            ImageView frame_tx_record;
 
 
             //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototipo
@@ -245,6 +247,7 @@ public  class AvailableBalanceFragment extends android.app.Fragment {
                 convertView = inf.inflate(R.layout.wallets_teens_fragment_available_balance_list_header, parent, false);
 
                 profile_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
+
 
                 switch (groupPosition)
                 {
@@ -310,6 +313,31 @@ public  class AvailableBalanceFragment extends android.app.Fragment {
                 note.text.setTypeface(MyApplication.getDefaultTypeface());
 
                 note.text.setText(notes[groupPosition].toString());
+
+                frame_tx_record = (ImageView) convertView.findViewById(R.id.frame_tx_record);
+
+
+                switch (groupPosition)
+                {
+                    case 2:case 3:case 5:case 7:case 8:
+                    frame_tx_record.setBackgroundResource(R.drawable.object_frame_3x1_frozen);
+                    holder.text.setTextColor(Color.WHITE);
+                    holder.text.setTypeface(MyApplication.getDefaultTypeface(),1);
+                    amount.text.setTextColor(Color.WHITE);
+                    amount.text.setTypeface(MyApplication.getDefaultTypeface(),1);
+                    availability.text.setTextColor(Color.WHITE);
+                    availability.text.setTypeface(MyApplication.getDefaultTypeface(),1);
+                    type.text.setTextColor(Color.WHITE);
+                    type.text.setTypeface(MyApplication.getDefaultTypeface(),1);
+                    crypto_amount.text.setTextColor(Color.WHITE);
+                    crypto_amount.text.setTypeface(MyApplication.getDefaultTypeface(),1);
+                    when.text.setTextColor(Color.WHITE);
+                    when.text.setTypeface(MyApplication.getDefaultTypeface(),1);
+                    note.text.setTextColor(Color.WHITE);
+                    note.text.setTypeface(MyApplication.getDefaultTypeface(),1);
+                    break;
+
+                }
 
             } else {
                 holder = (ViewHolder) convertView.getTag();

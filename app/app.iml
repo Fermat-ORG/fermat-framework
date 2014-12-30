@@ -22,7 +22,7 @@
       </configuration>
     </facet>
   </component>
-  <component name="NewModuleRootManager" inherit-compiler-output="false">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
     <output url="file://$MODULE_DIR$/build/intermediates/classes/debug" />
     <exclude-output />
     <content url="file://$MODULE_DIR$">
@@ -89,4 +89,3 @@
     <orderEntry type="library" exported="" name="support-v4-21.0.2" level="project" />
   </component>
 </module>
-
