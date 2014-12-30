@@ -16,15 +16,12 @@ import com.bitdubai.smartwallet.walletframework.MyApplication;
 
 public  class SendToContactFragment extends android.app.Fragment {
 
-    private static final String ARG_POSITION = "position";
 
     View rootView;
     ExpandableListView lv;
     private String[] contacts;
     private String[] amounts;
     private String[] whens;
-    private String[] Discounted;
-    private String[] Percentage;
     private String[] notes;
     private String[] pictures;
     private String[][] transactions;
@@ -47,8 +44,7 @@ public  class SendToContactFragment extends android.app.Fragment {
         amounts = new String[]{ "", "$325.00", "$1,400.00", "$0.50", "$25.00"};
         whens = new String[]{ "", "3 min ago", "2 hours ago", "today 9:24 AM", "yesterday"};
         notes = new String[]{"",  "Electricity bill", "Flat rent", "Test address", "More pictures"};
-        Percentage = new String[]{"0.00%","0.00%","0.00%","0.00%","0.00%"};
-        Discounted = new String[]{"$0.00","$0.00","$0.00","$0.00","$0.00"};
+
         pictures = new String[]{"", "luis_profile_picture", "guillermo_profile_picture", "pedro_profile_picture", "mariana_profile_picture"};
 
         transactions = new String[][]{
@@ -84,30 +80,24 @@ public  class SendToContactFragment extends android.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.wallets_teens_fragment_send_to_contact, container, false);
 
-        int tagId = MyApplication.getTagId();
+
+        String[] tagId = MyApplication.getChildId().split("-");
         TextView tv;
 
         tv = (TextView) rootView.findViewById(R.id.notes);
         tv.setTypeface(MyApplication.getDefaultTypeface());
-
+        tv.setText(transactions[Integer.parseInt(tagId[0])][Integer.parseInt(tagId[1])]);
 
         tv = (TextView) rootView.findViewById(R.id.amount);
         tv.setTypeface(MyApplication.getDefaultTypeface());
-
-        tv = (TextView) rootView.findViewById(R.id.percentage);
-        tv.setTypeface(MyApplication.getDefaultTypeface());
-        tv.setText(Percentage[tagId]);
-
-        tv = (TextView) rootView.findViewById(R.id.discounted);
-        tv.setTypeface(MyApplication.getDefaultTypeface());
-        tv.setText(Discounted[tagId]);
+        tv.setText(transactions_amounts[Integer.parseInt(tagId[0])][Integer.parseInt(tagId[1])]);
 
         tv = (TextView) rootView.findViewById(R.id.contact_name);
         tv.setTypeface(MyApplication.getDefaultTypeface());
-        tv.setText(contacts[tagId]);
+        tv.setText(contacts[Integer.parseInt(tagId[0])]);
 
         ImageView profile_picture = (ImageView) rootView.findViewById(R.id.profile_picture);
-        switch (tagId)
+        switch (Integer.parseInt(tagId[0]))
         {
             case 1:
                 profile_picture.setImageResource(R.drawable.luis_profile_picture);

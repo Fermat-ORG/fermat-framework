@@ -110,6 +110,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:text="reviews"
+                    android:textColor="#aaaaaa"
                     android:textStyle="italic"
                     android:textSize="12sp"
                     android:gravity="center|top"/>
@@ -133,6 +134,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="1234"
+                        android:textColor="#aaaaaa"
+
                         android:layout_gravity="center"
                         android:textSize="12sp"
                         android:textStyle="normal"/>
@@ -145,11 +148,68 @@
                         />
 
                     </LinearLayout>
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="invisible"
-                    android:layout_weight="2"/>
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center"
+                    >
+
+                    <ImageView
+                        android:id="@+id/star_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/grid_background_star_empty"
+                        android:scaleType="fitCenter"
+                        android:scaleX="0.8"
+                        android:scaleY="0.8"
+                        android:gravity="center"
+                        />
+                    <ImageView
+                        android:id="@+id/star_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/grid_background_star_empty"
+                        android:scaleType="fitCenter"
+                        android:scaleX="0.8"
+                        android:scaleY="0.8"
+                        android:gravity="center"
+                        />
+                    <ImageView
+                        android:id="@+id/star_3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/grid_background_star_empty"
+                        android:scaleType="fitCenter"
+                        android:scaleX="0.8"
+                        android:scaleY="0.8"
+                        android:gravity="center"
+                        />
+                    <ImageView
+                        android:id="@+id/star_4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/grid_background_star_empty"
+                        android:scaleType="fitCenter"
+                        android:scaleX="0.8"
+                        android:scaleY="0.8"
+                        android:gravity="center"
+
+                        />
+                    <ImageView
+                        android:id="@+id/star_5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/grid_background_star_empty"
+                        android:scaleType="fitCenter"
+                        android:scaleX="0.8"
+                        android:scaleY="0.8"
+                        android:gravity="center"
+                        />
+
+
+                </LinearLayout>
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -160,6 +220,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="1234"
+                        android:textColor="#aaaaaa"
+
                         android:layout_gravity="center"
                         android:textSize="12sp"
                         android:textStyle="normal"/>

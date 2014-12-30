@@ -20,7 +20,7 @@ import com.bitdubai.smartwallet.wallets.teens.SendAllFragment;
 public class SentHistoryActivity extends Activity {
 
     private PagerSlidingTabStrip tabs;
-    private CharSequence mTitle = "Send History";
+    private CharSequence mTitle = "Sent History";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,8 +86,8 @@ public class SentHistoryActivity extends Activity {
 
     public void onSendToContactIconClicked(View v) {
 
-        int tagId = (int)v.getTag();
-        MyApplication.setTagId(tagId);
+        String tagId = v.getTag().toString();
+        MyApplication.setChildId(tagId);
         Intent intent;
         intent = new Intent(this, SendToContactActivity.class);
         startActivity(intent);

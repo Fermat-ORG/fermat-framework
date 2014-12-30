@@ -63,8 +63,8 @@ public class ReceiveAllHistoryActivity extends Activity {
 
     public void onReceiveIconClicked(View v) {
 
-        int tagId = (int) v.getTag();
-        MyApplication.setTagId(tagId);
+        String tagId = v.getTag().toString();
+        MyApplication.setChildId(tagId);
         Intent intent;
         intent = new Intent(this, ReceiveFromContactActivity.class);
         startActivity(intent);

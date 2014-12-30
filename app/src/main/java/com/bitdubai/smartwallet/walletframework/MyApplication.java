@@ -29,6 +29,7 @@ public class MyApplication extends Application {
     public static int mTAGID;
     public  static int mWalletId;
 
+    public static String mCHILDID;
     private static CharSequence mTitle;
     private static Drawable oldBackground = null;
     private static int currentColor = 0xFF666666;
@@ -52,6 +53,10 @@ public class MyApplication extends Application {
         return mTAGID;
     }
 
+    public static String getChildId() {
+        return mCHILDID;
+    }
+    public static void setChildId(String childId) { mCHILDID = childId; }
     public static void setTagId(int TagId) { mTAGID = TagId; }
 
 

@@ -176,6 +176,7 @@ public class DailyDiscountsFragment extends android.app.Fragment {
             ViewHolder holder;
             ViewHolder count;
             ViewHolder date;
+            ViewHolder Average;
             ViewHolder savedMoney;
 
             ImageView discount_picture;
@@ -209,6 +210,10 @@ public class DailyDiscountsFragment extends android.app.Fragment {
                 date.text = (TextView) convertView.findViewById(R.id.date);
                 date.text.setTypeface(MyApplication.getDefaultTypeface());
                 date.text.setText(dates[groupPosition].toString());
+
+                Average = new ViewHolder();
+                Average.text = (TextView) convertView.findViewById(R.id.average);
+                Average.text.setTypeface(MyApplication.getDefaultTypeface());
 
                 count = new ViewHolder();
                 count.text = (TextView) convertView.findViewById(R.id.discount_count);

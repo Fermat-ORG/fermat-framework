@@ -163,14 +163,14 @@ public class ReceiveAllFragment extends android.app.Fragment {
             ViewHolder amount;
             ViewHolder when;
             ViewHolder note;
-
+            int tagId = MyApplication.getTagId();
             if (groupPosition == 0)
             {
                 convertView = inf.inflate(R.layout.wallets_teens_fragment_receive_all_list_header, parent, false);
 
                 ImageView  icon_receive_form_contact = (ImageView) convertView.findViewById(R.id.icon_receive_form_contact);
                 icon_receive_form_contact.setTag(groupPosition);
-
+                icon_receive_form_contact.setTag(tagId + "-" + groupPosition);
                 holder = new ViewHolder();
 
                 amount = new ViewHolder();
@@ -199,7 +199,7 @@ public class ReceiveAllFragment extends android.app.Fragment {
                     convertView = inf.inflate(R.layout.wallets_teens_fragment_receive_all_list_header, parent, false);
 
                     ImageView  icon_receive_form_contact = (ImageView) convertView.findViewById(R.id.icon_receive_form_contact);
-                    icon_receive_form_contact.setTag(groupPosition);
+                    icon_receive_form_contact.setTag(tagId + "-" + groupPosition);
 
                     holder = new ViewHolder();
 
