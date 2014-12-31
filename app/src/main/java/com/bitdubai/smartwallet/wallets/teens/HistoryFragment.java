@@ -225,16 +225,16 @@ public class HistoryFragment extends Fragment {
                 switch (groupPosition)
                 {
                     case 0:
-                        profile_picture.setImageResource(R.drawable.product_14);
+                        profile_picture.setImageResource(R.drawable.product_14_history);
                         break;
                     case 1:
-                        profile_picture.setImageResource(R.drawable.product_8);
+                        profile_picture.setImageResource(R.drawable.product_8_history);
                         break;
                     case 2:
-                        profile_picture.setImageResource(R.drawable.product_13);
+                        profile_picture.setImageResource(R.drawable.product_13_history);
                         break;
                     case 3:
-                        profile_picture.setImageResource(R.drawable.product_2);
+                        profile_picture.setImageResource(R.drawable.product_2_history);
                         break;
                     case 4:
                         profile_picture.setImageResource(R.drawable.product_1);

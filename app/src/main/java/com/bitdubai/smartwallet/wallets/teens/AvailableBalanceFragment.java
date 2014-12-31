@@ -228,7 +228,7 @@ public  class AvailableBalanceFragment extends android.app.Fragment {
             ViewHolder note;
             ImageView profile_picture;
             ViewHolder type;
-            ViewHolder availability;
+            ViewHolder percentage;
             ViewHolder crypto_amount;
             ImageView frame_tx_record;
 
@@ -279,9 +279,10 @@ public  class AvailableBalanceFragment extends android.app.Fragment {
 
                 amount.text.setText(amounts[groupPosition].toString());
 
-                availability = new ViewHolder();
-                availability.text = (TextView) convertView.findViewById(R.id.availability);
-                availability.text.setTypeface(MyApplication.getDefaultTypeface());
+                percentage = new ViewHolder();
+                percentage.text = (TextView) convertView.findViewById(R.id.availability);
+                percentage.text.setTypeface(MyApplication.getDefaultTypeface());
+                percentage.text.setText(availabilities[groupPosition].toString());
 
                 type = new ViewHolder();
                 type.text = (TextView) convertView.findViewById(R.id.type);
@@ -316,8 +317,8 @@ public  class AvailableBalanceFragment extends android.app.Fragment {
                     holder.text.setTypeface(MyApplication.getDefaultTypeface(),1);
                     amount.text.setTextColor(Color.WHITE);
                     amount.text.setTypeface(MyApplication.getDefaultTypeface(),1);
-                    availability.text.setTextColor(Color.WHITE);
-                    availability.text.setTypeface(MyApplication.getDefaultTypeface(),1);
+                    percentage.text.setTextColor(Color.WHITE);
+                    percentage.text.setTypeface(MyApplication.getDefaultTypeface(),1);
                     type.text.setTextColor(Color.WHITE);
                     type.text.setTypeface(MyApplication.getDefaultTypeface(),1);
                     crypto_amount.text.setTextColor(Color.WHITE);

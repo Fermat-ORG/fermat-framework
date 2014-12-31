@@ -38,7 +38,7 @@ public class MonthlyDiscountsFragment extends android.app.Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        dates = new String[]{"January", "February", "March", "April","May","Jun","July","August","September","October" ,"November","December"};
+        dates = new String[]{"January", "december", "november", "october","september","august","july","june","may","april" ,"march","february"};
         adiscount_count = new String[]{"38.52","-1.52","12.65","22.73","16.28","18.73","2.73","8.73","16.84","23.83","13.27","21.83","","","",""};
         saved_money = new String[] {"$215.54", "-$2.53", "$50.32","$143.52","$114.42","$126.46","$5.42","$32.52","$73.32","$154.53","$57.24","$136.25"};
         transactions = new String[][]{
