@@ -3,6 +3,7 @@ package com.bitdubai.smartwallet.walletmanager;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,6 +11,9 @@ import android.view.View;
 import com.bitdubai.smartwallet.walletframework.FrameworkActivity;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.walletframework.MyApplication;
+
+import com.bitdubai.smartwallet.walletstore.DesktopFragment;
+
 import com.bitdubai.smartwallet.walletstore.StoreFrontActivity;
 
 
@@ -21,10 +25,16 @@ public class DesktopActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.wallet_manager_activity_desktop);
+        setContentView(R.layout.wallet_manager_activity_desktop_2);
         getActionBar().hide();
 
+        if (savedInstanceState == null) {
+            getFragmentManager().beginTransaction()
+                    .add(R.id.container, new DesktopFragment())
+                    .commit();
+        }
     }
+
 
 
     @Override
@@ -60,8 +70,10 @@ public class DesktopActivity extends Activity {
 
 
     public void onWalletClicked(View v) {
+        String tagId="3";
 
-        String tag = v.getTag().toString();
+     tagId = v.getTag().toString();
+
         Intent intent;
 
         intent = new Intent(this, FrameworkActivity.class);
@@ -70,7 +82,7 @@ public class DesktopActivity extends Activity {
        // String walletId =i.getStringExtra( "Wallet Id");
 
 
-        ((MyApplication) this.getApplication()).setWalletId(Integer.parseInt(tag));
+        ((MyApplication) this.getApplication()).setWalletId(Integer.parseInt(tagId));
 
        // intent.putExtra("Wallet Id", tag );
         startActivity(intent);
