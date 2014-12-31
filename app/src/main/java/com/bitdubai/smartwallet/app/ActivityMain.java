@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import com.bitdubai.smartwallet.R;
-import com.bitdubai.smartwallet.core.platform.systemwide.device.LocalDevice;
-import com.bitdubai.smartwallet.core.platform.innersystem.layer.lowlevel.service.user.version_1.LocalUser;
+import com.bitdubai.smartwallet.core.platform.layer.middleware.engine.device.version_1.LocalDevice;
+import com.bitdubai.smartwallet.core.platform.layer.lowlevel.service.user.version_1.LocalUser;
 import com.bitdubai.smartwallet.walletmanager.DesktopActivity;
 
 public class ActivityMain extends Activity {

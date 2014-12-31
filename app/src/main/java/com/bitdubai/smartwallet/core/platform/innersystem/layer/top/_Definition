@@ -1,2 +1,0 @@
-In this layer lives the functionality separated in modules. Each modules has a one to one correspondence with a sub-APP
-at a user interface level.

@@ -1,0 +1,4 @@
+An engine is a software component that shares functionality between modules across the local device only. It keeps in
+it's own storage information according to it's scope.
+
+It is acceded only by top layer modules, not by UI or other software using this library.

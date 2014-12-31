@@ -1,0 +1,2 @@
+This service handle user related functionality. It serves local objects and remote objects as well. The same user could
+have access to multiple devices and this service also helps achieve that goal.

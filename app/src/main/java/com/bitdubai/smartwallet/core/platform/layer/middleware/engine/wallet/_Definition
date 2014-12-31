@@ -1,0 +1,2 @@
+This engine stores the wallets definition, resources an licences of use. The financial information associated to the
+ usage of the wallet is out of the scope of this engine and its handled by a top layer module.
