@@ -257,6 +257,8 @@
                 android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
         </activity>
 
+
+
     </application>
 
 </manifest>
