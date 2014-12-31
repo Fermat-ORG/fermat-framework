@@ -88,8 +88,6 @@
             android:paddingRight="7dp"
             android:paddingBottom="7dp"
             android:paddingTop="7dp"
-            android:onClick="onChatOverTrxIconClicked"
-
             />
 
 
@@ -145,10 +143,10 @@
                 android:paddingLeft="7dip"
                 android:paddingRight="7dip"
                 android:paddingTop="3dip"
-                android:paddingBottom="3dip"
+                android:paddingBottom="1dip"
                 android:textColor="#FF666666"
                 android:textSize="12sp"
-                android:textStyle="normal"
+                android:textStyle="bold"
                 android:text="$0.00"
                 android:layout_gravity="end" />
 

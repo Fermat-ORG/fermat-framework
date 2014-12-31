@@ -84,7 +84,7 @@
                     android:textColor="#FF666666"
                     android:layout_gravity="end"
                     android:text="amount"
-                    android:textStyle="normal"
+                    android:textStyle="bold"
                     android:textSize="12sp"
                     android:paddingBottom="1dip"
                     android:paddingTop="2dip"/>

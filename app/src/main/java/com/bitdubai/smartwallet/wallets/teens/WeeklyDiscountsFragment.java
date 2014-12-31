@@ -39,7 +39,7 @@ public class WeeklyDiscountsFragment extends android.app.Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        dates = new String[]{"this week", "last week", "2 weeks ago", "3 weeks ago " };
+        dates = new String[]{"this week", "last week", "2 weeks ago", "3 weeks ago ","4 weeks ago","5 weeks ago", "6 weeks ago" };
         adiscount_count = new String[]{"27.42","12.64","8.64","10.35","2.53","5.23","-1.52"};
         saved_money = new String[] {"$160.54", "$50.53", "$30.53","$42.52","$4.42","$6.46","-$2.42"};
 

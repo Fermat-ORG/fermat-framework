@@ -6,7 +6,7 @@
 
 
     <item android:id="@+id/menu_wallets"
-        android:icon="@drawable/ic_action_bell"
+        android:icon="@drawable/ic_action_request_icon"
         android:title="All requests"
         android:showAsAction="ifRoom">
         <menu>

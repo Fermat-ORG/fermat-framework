@@ -133,6 +133,7 @@
             <TextView android:id="@+id/like_amount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingLeft="5dip"
                 android:text="1234"
                 android:textColor="#aaaaaa"
 
@@ -161,7 +162,7 @@
                 android:layout_gravity="center"
                 android:textSize="12sp"
                 android:textColor="#aaaaaa"
-
+                android:paddingRight="5dip"
                 android:textStyle="normal"/>
             <ImageView
                 android:layout_width="wrap_content"
@@ -177,7 +178,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:paddingBottom="14dp"
+            android:paddingBottom="53dp"
             android:gravity="center"
             >
 
@@ -251,7 +252,7 @@
 
         android:textColor="@color/black_overlay"
         android:textStyle="bold"
-        android:textSize="15sp"
+        android:textSize="18sp"
 
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
@@ -259,7 +260,7 @@
         android:paddingLeft="14dp"
         android:paddingRight="14dp"
         android:paddingTop="0dp"
-        android:paddingBottom="216dp"
+        android:paddingBottom="210dp"
         />
 
     <TextView
@@ -270,14 +271,14 @@
         android:textAlignment="center"
         android:textColor="@color/black_overlay"
         android:textStyle="normal"
-        android:textSize="10sp"
+        android:textSize="13sp"
 
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
 
-        android:paddingLeft="10dp"
-        android:paddingRight="14dp"
-        android:paddingTop="128dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="8dp"
+        android:paddingTop="134dp"
         android:paddingBottom="0dp"
         />
 
@@ -291,7 +292,7 @@
 
         android:textColor="#aaaaaa"
         android:textStyle="normal"
-        android:textSize="8sp"
+        android:textSize="12sp"
 
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
@@ -299,7 +300,7 @@
         android:paddingLeft="14dp"
         android:paddingRight="14dp"
         android:paddingTop="0dp"
-        android:paddingBottom="32dp"
+        android:paddingBottom="76dp"
         />
 
     <TextView
@@ -308,7 +309,7 @@
         android:layout_height="wrap_content"
         android:textColor="#aaaaaa"
         android:text="web site"
-        android:textSize="10sp"
+        android:textSize="15sp"
         android:textStyle="bold"
 
         android:gravity="center"
@@ -330,7 +331,7 @@
         android:layout_height="wrap_content"
         android:textColor="#aaaaaa"
         android:text="horario"
-        android:textSize="10sp"
+        android:textSize="13sp"
         android:textStyle="normal"
 
         android:gravity="center"
@@ -342,7 +343,7 @@
         android:paddingLeft="14dp"
         android:paddingRight="0dp"
         android:paddingTop="0dp"
-        android:paddingBottom="23dp"
+        android:paddingBottom="28dp"
 
         />
 
@@ -358,7 +359,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:textColor="#aaaaaa"
-        android:textSize="10sp"
+        android:textSize="15sp"
         android:textStyle="bold"
 
 
@@ -382,7 +383,7 @@
         android:paddingLeft="0dp"
         android:paddingRight="14dp"
         android:paddingTop="0dp"
-        android:paddingBottom="22dp"
+        android:paddingBottom="28dp"
         >
 
         <ImageView
@@ -404,7 +405,7 @@
             android:text="time"
 
             android:textColor="#aaaaaa"
-            android:textSize="10sp"
+            android:textSize="13sp"
             android:textStyle="normal"
 
 
