@@ -78,7 +78,7 @@
                     android:gravity="end"
                     android:textColor="#FF666666"
                     android:layout_weight="1"
-                    android:textStyle="bold"
+                    android:textStyle="normal"
                     android:textSize="12sp"
                     android:paddingBottom="2dip"
                     android:paddingTop="2dip"/>
@@ -150,7 +150,7 @@
                     android:gravity="end"
                     android:textColor="#FF666666"
                     android:textSize="12sp"
-                    android:textStyle="normal"
+                    android:textStyle="bold"
                     android:text="sdfs"
                     android:paddingBottom="2dip"
                     android:paddingTop="2dip"

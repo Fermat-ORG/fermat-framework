@@ -127,29 +127,30 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:paddingBottom="3dp"
-                android:paddingRight="10dp"
-                android:paddingLeft="10dp">
-                <ImageView
-                    android:id="@+id/icon_send_to_contact"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_action_send_now_grey"
-                    android:onClick="onSendIconClicked"
-                    android:layout_weight="1"/>
 
-                <ImageView
-                    android:id="@+id/icon_chat_over_trx"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_action_email_grey"
-                    android:onClick="onChatOverTrxIconClicked"
-                    android:layout_weight="1"/>
-            </LinearLayout>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:paddingBottom="8dp"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp">
+            <ImageView
+                android:id="@+id/icon_send_to_contact"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_action_send_now_grey"
+                android:onClick="onSendIconClicked"
+                android:layout_weight="1"/>
+
+            <ImageView
+                android:id="@+id/icon_chat_over_trx"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_action_email_grey"
+                android:onClick="onChatOverTrxIconClicked"
+                android:layout_weight="1"/>
         </LinearLayout>
     </RelativeLayout>
 </LinearLayout>

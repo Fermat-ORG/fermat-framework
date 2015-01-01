@@ -119,7 +119,9 @@ public class StoreChatFragment extends ListFragment implements LoaderManager.Loa
             entries.add(new Model("Java", "2"));
             entries.add(new Model("Java", "2"));
             entries.add(new Model("Java", "2"));
-
+            entries.add(new Model("Java", "2"));
+            entries.add(new Model("Java", "2"));
+            entries.add(new Model("Java", "2"));
 
             return entries;
         }
@@ -286,7 +288,7 @@ public class StoreChatFragment extends ListFragment implements LoaderManager.Loa
                     view = mInflater.inflate(R.layout.wallets_teens_fragment_store_chat_right, parent, false);
 
                     tv = ((TextView)view.findViewById(R.id.title));
-                    tv.setText("Hi");
+                    tv.setText("Hello");
                     tv.setTypeface(MyApplication.getDefaultTypeface());
 
                     break;
@@ -304,7 +306,7 @@ public class StoreChatFragment extends ListFragment implements LoaderManager.Loa
                     view = mInflater.inflate(R.layout.wallets_teens_fragment_store_chat_right, parent, false);
 
                     tv = ((TextView)view.findViewById(R.id.title));
-                    tv.setText("well, I am interested in the book called 'Baudolino' but can find it within your products");
+                    tv.setText("Well, I am in the need of some donuts for a party");
                     tv.setTypeface(MyApplication.getDefaultTypeface());
 
                     break;
@@ -313,7 +315,7 @@ public class StoreChatFragment extends ListFragment implements LoaderManager.Loa
                     view = mInflater.inflate(R.layout.wallets_teens_fragment_store_chat_right, parent, false);
 
                     tv = ((TextView)view.findViewById(R.id.title));
-                    tv.setText("do you have it?");
+                    tv.setText("How many dozens do you have available?");
                     tv.setTypeface(MyApplication.getDefaultTypeface());
 
                     break;
@@ -322,7 +324,7 @@ public class StoreChatFragment extends ListFragment implements LoaderManager.Loa
                     view = mInflater.inflate(R.layout.wallets_teens_fragment_store_chat_left, parent, false);
 
                     tv = ((TextView)view.findViewById(R.id.title));
-                    tv.setText("yes, I do");
+                    tv.setText("We have 5 in stock, but in 10 minutes were getting 3 more");
                     tv.setTypeface(MyApplication.getDefaultTypeface());
 
                     break;
@@ -331,7 +333,7 @@ public class StoreChatFragment extends ListFragment implements LoaderManager.Loa
                     view = mInflater.inflate(R.layout.wallets_teens_fragment_store_chat_right, parent, false);
 
                     tv = ((TextView)view.findViewById(R.id.title));
-                    tv.setText("how much is it?");
+                    tv.setText("I just need 4 dozen, how much would it be?");
                     tv.setTypeface(MyApplication.getDefaultTypeface());
 
                     break;
@@ -339,7 +341,7 @@ public class StoreChatFragment extends ListFragment implements LoaderManager.Loa
                     view = mInflater.inflate(R.layout.wallets_teens_fragment_store_chat_left, parent, false);
 
                     tv = ((TextView)view.findViewById(R.id.title));
-                    tv.setText("it's $44.00");
+                    tv.setText("The 4 dozens have a value of $76.25");
                     tv.setTypeface(MyApplication.getDefaultTypeface());
 
                     break;
@@ -357,11 +359,15 @@ public class StoreChatFragment extends ListFragment implements LoaderManager.Loa
                     view = mInflater.inflate(R.layout.wallets_teens_fragment_store_chat_left, parent, false);
 
                     tv = ((TextView)view.findViewById(R.id.title));
-                    tv.setText("no problem, see you then");
+                    tv.setText("No problem, see you then");
                     tv.setTypeface(MyApplication.getDefaultTypeface());
 
                     break;
 
+
+                case 9:
+                    view = mInflater.inflate(R.layout.wallets_teens_fragment_store_chat_box, parent, false);
+                    break;
 
 
 
@@ -407,4 +413,3 @@ public class StoreChatFragment extends ListFragment implements LoaderManager.Loa
     }
 
 }
-

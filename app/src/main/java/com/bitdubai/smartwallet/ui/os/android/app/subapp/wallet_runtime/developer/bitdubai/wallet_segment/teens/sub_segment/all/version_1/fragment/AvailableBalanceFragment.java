@@ -58,7 +58,7 @@ public  class AvailableBalanceFragment extends android.app.Fragment {
         whens = new String[]{"4 hours ago", "5 hours ago", "yesterday", "yesterday","31 dec 14","5 sep 14","1 year ago"};
         notes = new String[]{"New telephone", "Old desk", "For electricity bill", "for this week expenses","Car oil", "Refill test","Computer monitor"};
         pictures = new String[]{"lucia_profile_picture", "juan_profile_picture", "refill_2", "refill_4","karina_profile_picture","refill_1","taylor_profile_picture"};
-        crypto_amounts = new String[]{"mBTC 10.3475","mBTC 150.8347 ","mBTC 15.9304","mBTC 8.1923","mBTC 20.5743","mBTC 12.8724","mBTC 30.4365"};
+        crypto_amounts = new String[]{"mBTC 10.3475","mBTC 150.8347","mBTC 15.9304","mBTC 8.1923","mBTC 20.5743","mBTC 12.8724","mBTC 30.4365"};
 
         transactions = new String[][]{
                 {},
