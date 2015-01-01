@@ -114,27 +114,27 @@
     </RelativeLayout>
 
     <RelativeLayout
-android:layout_width="match_parent"
-android:layout_height="106dp"
-
-    >
-
-<ImageView
-    android:id="@+id/frame_tx_record"
     android:layout_width="match_parent"
     android:layout_height="106dp"
-    android:scaleType="centerCrop"
 
-    android:layout_gravity="center"
-    android:background="@drawable/object_frame_3x1_filled"
-    />
-
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:layout_alignParentRight="true"
     >
+
+    <ImageView
+        android:id="@+id/frame_tx_record"
+        android:layout_width="match_parent"
+        android:layout_height="106dp"
+        android:scaleType="centerCrop"
+
+        android:layout_gravity="center"
+        android:background="@drawable/object_frame_3x1_filled"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_alignParentRight="true"
+        >
 
 
 
@@ -233,27 +233,48 @@ android:layout_height="106dp"
     </LinearLayout>
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="10dip"
-        android:paddingRight="10dip"
-        android:paddingBottom="8dip"
-        android:layout_gravity="bottom">
-        <ImageView
-            android:id="@+id/recent_transactions"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_action_expand_grey"
-            android:layout_weight="1"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_action_view_as_list_grey"
-            android:id="@+id/open_history"
-            android:onClick="onSendAllIconClicked"
-            android:layout_weight="1"/>
+
+
+
+
     </LinearLayout>
-</LinearLayout>
-</RelativeLayout>
+
+
+        <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+
+
+                >
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dip"
+                    android:paddingRight="10dip"
+                    android:paddingBottom="8dip"
+                    android:layout_gravity="bottom"
+
+                    >
+                <ImageView
+                        android:id="@+id/recent_transactions"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_action_expand_grey"
+                        android:layout_weight="1"/>
+                <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_action_view_as_list_grey"
+                        android:id="@+id/open_history"
+                        android:onClick="onSendAllIconClicked"
+                        android:layout_weight="1"/>
+            </LinearLayout>
+        </FrameLayout>
+
+    </RelativeLayout>
+
+
+
     </LinearLayout>
