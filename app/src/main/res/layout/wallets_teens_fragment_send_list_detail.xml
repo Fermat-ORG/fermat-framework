@@ -10,7 +10,6 @@
     android:paddingTop="0dip"
     android:gravity="end|right"
 
-
     android:background="@drawable/background_tabs_diagonal_inverted"
 
     >
