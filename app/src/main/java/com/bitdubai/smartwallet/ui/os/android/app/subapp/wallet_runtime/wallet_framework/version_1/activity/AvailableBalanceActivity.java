@@ -1,10 +1,12 @@
 package com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
@@ -34,6 +36,33 @@ public class AvailableBalanceActivity extends Activity {
         TextView abTitle = (TextView) findViewById(titleId);
         abTitle.setTextColor(Color.WHITE);
         ((MyApplication) this.getApplication()).setActionBarProperties(this,getWindow(),tabs, getActionBar(), getResources(),abTitle, mTitle.toString());
+
+
+
+        final ViewGroup actionBarLayout = (ViewGroup) getLayoutInflater().inflate(
+                R.layout.wallets_teens_fragment_account_detail_action_bar,
+                null);
+
+        // Set up your ActionBar
+        final ActionBar actionBar = getActionBar();
+        actionBar.setDisplayShowHomeEnabled(false);
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setCustomView(actionBarLayout);
+
+        TextView tv;
+
+        tv = (TextView) actionBarLayout.findViewById(R.id.account_type);
+        tv.setTypeface(MyApplication.getDefaultTypeface());
+
+        tv = (TextView) actionBarLayout.findViewById(R.id.balance);
+        tv.setTypeface(MyApplication.getDefaultTypeface());
+
+        tv = (TextView) actionBarLayout.findViewById(R.id.balance_available);
+        tv.setTypeface(MyApplication.getDefaultTypeface());
+
+        tv = (TextView) actionBarLayout.findViewById(R.id.account_alias);
+        tv.setTypeface(MyApplication.getDefaultTypeface());
 
     }
 

@@ -232,27 +232,29 @@
 
 
 
-            <LinearLayout
-                android:layout_width="match_parent"
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dip"
+            android:paddingRight="10dip"
+            android:layout_alignParentBottom="true"
+            android:paddingBottom="8dip"
+            android:layout_gravity="bottom">
+            <ImageView
+                android:id="@+id/recent_transactions"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingLeft="10dip"
-                android:paddingRight="10dip"
-                android:paddingBottom="8dip"
-                android:layout_gravity="bottom">
-                <ImageView
-                    android:id="@+id/recent_transactions"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_action_expand_grey"
-                    android:layout_weight="1"/>
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_action_view_as_list_grey"
-                    android:id="@+id/open_history"
-                    android:onClick="onReceiveAllIconClicked"
-                    android:layout_weight="1"/>
-            </LinearLayout>
+                android:src="@drawable/ic_action_expand_grey"
+                android:layout_weight="1"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_action_view_as_list_grey"
+                android:id="@+id/open_history"
+                android:onClick="onReceiveAllIconClicked"
+                android:layout_weight="1"/>
         </LinearLayout>
     </RelativeLayout>
 </LinearLayout>
