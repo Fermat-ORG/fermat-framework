@@ -1,7 +1,7 @@
 package com.bitdubai.smartwallet.core.platform.layer.top.module.wallet_runtime.version_1.transaction;
 
-import com.bitdubai.smartwallet.core.platform.system_wide.definitions.money.CryptoMoney;
-import com.bitdubai.smartwallet.core.platform.system_wide.definitions.money.FiatMoney;
+import com.bitdubai.smartwallet.core.platform.global.definitions.money.CryptoMoney;
+import com.bitdubai.smartwallet.core.platform.global.definitions.money.FiatMoney;
 import com.bitdubai.smartwallet.core.platform.layer.top.module.wallet_runtime.version_1.account.Account;
 
 /**

@@ -4,7 +4,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.bitdubai.smartwallet.ui.os.android.app.subapp.walletmanager.DesktopActivity"
+    tools:context="com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_manager.version_1.activity.DesktopActivity"
     tools:ignore="MergeRootFrame"
 
     />

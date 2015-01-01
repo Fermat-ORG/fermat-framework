@@ -1,7 +1,7 @@
 package com.bitdubai.smartwallet.core.platform.layer.top.module.wallet_runtime.version_1.transaction;
 
-import com.bitdubai.smartwallet.core.platform.system_wide.definitions.money.Discount;
-import com.bitdubai.smartwallet.core.platform.system_wide.definitions.money.MoneySource;
+import com.bitdubai.smartwallet.core.platform.global.definitions.money.Discount;
+import com.bitdubai.smartwallet.core.platform.global.definitions.money.MoneySource;
 
 /**
  * Created by ciencias on 21.12.14.
