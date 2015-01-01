@@ -34,7 +34,7 @@
         android:maxSdkVersion="18" />
 
     <application
-        android:name=".walletframework.MyApplication"
+        android:name=".ui.os.android.app.subapp.walletframework.MyApplication"
         android:allowBackup="true"
         android:icon="@drawable/burj_shield"
         android:label="@string/app_name"
@@ -46,7 +46,7 @@
             android:value="AIzaSyDr98sVKnkeB-C26gU3Yu0HHpoVHETwdKo" />
 
         <activity
-                android:name="com.bitdubai.smartwallet.app.ActivityMain"
+                android:name=".ui.os.android.app.shell.ActivityMain"
                 android:label="@string/title_activity_activity_main" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -55,7 +55,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".walletmanager.DesktopActivity"
+            android:name=".ui.os.android.app.subapp.walletmanager.DesktopActivity"
             android:label="@string/title_activity_blank" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -65,196 +65,196 @@
         </activity>
 
         <activity
-            android:name=".walletstore.StoreFrontActivity"
+            android:name=".ui.os.android.app.subapp.walletstore.StoreFrontActivity"
             android:label="Wallet Store" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.smartwallet.walletmanager.DesktopActivity" />
+                android:value=".ui.os.android.app.subapp.walletmanager.DesktopActivity" />
         </activity>
         <activity
-            android:name=".walletframework.FrameworkActivity"
+            android:name=".ui.os.android.app.subapp.walletframework.FrameworkActivity"
             android:label="Wallet"
             android:windowSoftInputMode="adjustPan" >
         </activity>
         <activity
-            android:name=".walletframework.ContactsActivity"
+            android:name=".ui.os.android.app.subapp.walletframework.ContactsActivity"
             android:label="@string/title_activity_contacts"
-            android:parentActivityName=".walletframework.FrameworkActivity" >
+            android:parentActivityName=".ui.os.android.app.subapp.walletframework.FrameworkActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.smartwallet.walletmanager.DesktopActivity" />
+                android:value=".ui.os.android.app.subapp.walletmanager.DesktopActivity" />
         </activity>
         <activity
-            android:name=".walletframework.RequestsSentActivity"
+            android:name=".ui.os.android.app.subapp.walletframework.RequestsSentActivity"
             android:label="@string/title_activity_requests_sent"
-            android:parentActivityName=".walletframework.FrameworkActivity" >
+            android:parentActivityName=".ui.os.android.app.subapp.walletframework.FrameworkActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+                android:value=".ui.os.android.app.subapp.walletframework.FrameworkActivity" />
         </activity>
         <activity
-            android:name=".walletframework.SentDetailActivity"
+            android:name=".ui.os.android.app.subapp.walletframework.SentDetailActivity"
             android:label="@string/title_activity_sent_detail"
-            android:parentActivityName=".walletframework.FrameworkActivity" >
+            android:parentActivityName=".ui.os.android.app.subapp.walletframework.FrameworkActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+                android:value=".ui.os.android.app.subapp.walletframework.FrameworkActivity" />
         </activity>
         <activity
-            android:name=".walletframework.AccountDetailActivity"
+            android:name=".ui.os.android.app.subapp.walletframework.AccountDetailActivity"
             android:label="@string/title_activity_account_detail"
-            android:parentActivityName=".walletframework.FrameworkActivity" >
+            android:parentActivityName=".ui.os.android.app.subapp.walletframework.FrameworkActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+                android:value=".ui.os.android.app.subapp.walletframework.FrameworkActivity" />
         </activity>
         <activity
-            android:name=".walletframework.StoreActivity"
+            android:name=".ui.os.android.app.subapp.walletframework.StoreActivity"
             android:label="@string/title_activity_store"
-            android:parentActivityName=".walletframework.FrameworkActivity" >
+            android:parentActivityName=".ui.os.android.app.subapp.walletframework.FrameworkActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+                android:value=".ui.os.android.app.subapp.walletframework.FrameworkActivity" />
         </activity>
         <activity
-            android:name=".walletframework.RefillPointActivity"
+            android:name=".ui.os.android.app.subapp.walletframework.RefillPointActivity"
             android:label="@string/title_activity_refill_point"
-            android:parentActivityName=".walletframework.FrameworkActivity" >
+            android:parentActivityName=".ui.os.android.app.subapp.walletframework.FrameworkActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+                android:value=".ui.os.android.app.subapp.walletframework.FrameworkActivity" />
         </activity>
         <activity
-            android:name=".walletframework.DailyDiscountsActivity"
+            android:name=".ui.os.android.app.subapp.walletframework.DailyDiscountsActivity"
             android:label="@string/title_activity_daily_discounts"
-            android:parentActivityName=".walletframework.FrameworkActivity" >
+            android:parentActivityName=".ui.os.android.app.subapp.walletframework.FrameworkActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+                android:value=".ui.os.android.app.subapp.walletframework.FrameworkActivity" />
         </activity>
         <activity
-            android:name=".walletframework.WeeklyDiscountsActivity"
+            android:name=".ui.os.android.app.subapp.walletframework.WeeklyDiscountsActivity"
             android:label="@string/title_activity_weekly_discount"
-            android:parentActivityName=".walletframework.FrameworkActivity" >
+            android:parentActivityName=".ui.os.android.app.subapp.walletframework.FrameworkActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+                android:value=".ui.os.android.app.subapp.walletframework.FrameworkActivity" />
         </activity>
         <activity
-            android:name=".walletframework.MonthlyDiscountsActivity"
+            android:name=".ui.os.android.app.subapp.walletframework.MonthlyDiscountsActivity"
             android:label="@string/title_activity_monthly_discounts"
-            android:parentActivityName=".walletframework.FrameworkActivity" >
+            android:parentActivityName=".ui.os.android.app.subapp.walletframework.FrameworkActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+                android:value=".ui.os.android.app.subapp.walletframework.FrameworkActivity" />
         </activity>
         <activity
-            android:name=".walletframework.AccountsActivity"
+            android:name=".ui.os.android.app.subapp.walletframework.AccountsActivity"
             android:label="@string/title_activity_accounts"
-            android:parentActivityName=".walletframework.FrameworkActivity" >
+            android:parentActivityName=".ui.os.android.app.subapp.walletframework.FrameworkActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+                android:value=".ui.os.android.app.subapp.walletframework.FrameworkActivity" />
         </activity>
         <activity
-            android:name=".walletframework.EditPersonalProfileActivity"
+            android:name=".ui.os.android.app.subapp.walletframework.EditPersonalProfileActivity"
             android:label="@string/title_activity_edit_personal_profile"
-            android:parentActivityName=".walletframework.FrameworkActivity" >
+            android:parentActivityName=".ui.os.android.app.subapp.walletframework.FrameworkActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+                android:value=".ui.os.android.app.subapp.walletframework.FrameworkActivity" />
         </activity>
         <activity
-            android:name=".walletframework.SendToContactActivity"
+            android:name=".ui.os.android.app.subapp.walletframework.SendToContactActivity"
             android:label="Send To Contact Activity"
-            android:parentActivityName=".walletframework.FrameworkActivity" >
+            android:parentActivityName=".ui.os.android.app.subapp.walletframework.FrameworkActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+                android:value=".ui.os.android.app.subapp.walletframework.FrameworkActivity" />
         </activity>
         <activity
-            android:name=".walletframework.SendToNewContactActivity"
+            android:name=".ui.os.android.app.subapp.walletframework.SendToNewContactActivity"
             android:label="Sent to New Contact Activity"
-            android:parentActivityName=".walletframework.FrameworkActivity"
+            android:parentActivityName=".ui.os.android.app.subapp.walletframework.FrameworkActivity"
             android:windowSoftInputMode="stateVisible" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+                android:value=".ui.os.android.app.subapp.walletframework.FrameworkActivity" />
         </activity>
         <activity
-            android:name=".walletframework.SentHistoryActivity"
+            android:name=".ui.os.android.app.subapp.walletframework.SentHistoryActivity"
             android:label="Sent History"
-            android:parentActivityName=".walletframework.FrameworkActivity"
+            android:parentActivityName=".ui.os.android.app.subapp.walletframework.FrameworkActivity"
             android:windowSoftInputMode="stateVisible" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+                android:value=".ui.os.android.app.subapp.walletframework.FrameworkActivity" />
         </activity>
         <activity
-            android:name=".walletframework.ReceivedDetailActivity"
+            android:name=".ui.os.android.app.subapp.walletframework.ReceivedDetailActivity"
             android:label="Received Detail Activity"
-            android:parentActivityName=".walletframework.FrameworkActivity" >
+            android:parentActivityName=".ui.os.android.app.subapp.walletframework.FrameworkActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+                android:value=".ui.os.android.app.subapp.walletframework.FrameworkActivity" />
         </activity>
         <activity
-            android:name=".walletframework.ReceiveFromNewContactActivity"
+            android:name=".ui.os.android.app.subapp.walletframework.ReceiveFromNewContactActivity"
             android:label="Receive From New Contact Activity"
-            android:parentActivityName=".walletframework.FrameworkActivity" >
+            android:parentActivityName=".ui.os.android.app.subapp.walletframework.FrameworkActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+                android:value=".ui.os.android.app.subapp.walletframework.FrameworkActivity" />
         </activity>
         <activity
-            android:name=".walletframework.ReceiveFromContactActivity"
+            android:name=".ui.os.android.app.subapp.walletframework.ReceiveFromContactActivity"
             android:label="@string/title_activity_receive_from_contact"
-            android:parentActivityName=".walletframework.FrameworkActivity" >
+            android:parentActivityName=".ui.os.android.app.subapp.walletframework.FrameworkActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+                android:value=".ui.os.android.app.subapp.walletframework.FrameworkActivity" />
         </activity>
 
         <activity
-            android:name=".walletframework.ReceiveAllHistoryActivity"
+            android:name=".ui.os.android.app.subapp.walletframework.ReceiveAllHistoryActivity"
             android:label="@string/title_activity_receive_from_contact"
-            android:parentActivityName=".walletframework.FrameworkActivity" >
+            android:parentActivityName=".ui.os.android.app.subapp.walletframework.FrameworkActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+                android:value=".ui.os.android.app.subapp.walletframework.FrameworkActivity" />
         </activity>
         <activity
-            android:name=".walletframework.ChatOverTrxActivity"
+            android:name=".ui.os.android.app.subapp.walletframework.ChatOverTrxActivity"
             android:label="@string/title_activity_chat_over_trx"
-            android:parentActivityName=".walletframework.FrameworkActivity" >
+            android:parentActivityName=".ui.os.android.app.subapp.walletframework.FrameworkActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+                android:value=".ui.os.android.app.subapp.walletframework.FrameworkActivity" />
         </activity>
 
         <activity
-            android:name=".walletframework.AvailableBalanceActivity"
+            android:name=".ui.os.android.app.subapp.walletframework.AvailableBalanceActivity"
             android:label="@string/title_activity_balance_available"
-            android:parentActivityName=".walletframework.FrameworkActivity" >
+            android:parentActivityName=".ui.os.android.app.subapp.walletframework.FrameworkActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+                android:value=".ui.os.android.app.subapp.walletframework.FrameworkActivity" />
         </activity>
         <activity
-            android:name=".walletstore.WalletActivity"
+            android:name=".ui.os.android.app.subapp.walletstore.WalletActivity"
             android:label="@string/title_activity_wallet"
-            android:parentActivityName=".walletstore.StoreFrontActivity" >
+            android:parentActivityName=".ui.os.android.app.subapp.walletstore.StoreFrontActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.smartwallet.walletstore.StoreFrontActivity" />
+                android:value=".ui.os.android.app.subapp.walletstore.StoreFrontActivity" />
         </activity>
         <activity
-            android:name=".walletframework.RequestsReceivedActivity"
+            android:name=".ui.os.android.app.subapp.walletframework.RequestsReceivedActivity"
             android:label="@string/title_activity_requests_received"
-            android:parentActivityName=".walletframework.FrameworkActivity" >
+            android:parentActivityName=".ui.os.android.app.subapp.walletframework.FrameworkActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.smartwallet.walletframework.FrameworkActivity" />
+                android:value=".ui.os.android.app.subapp.walletframework.FrameworkActivity" />
         </activity>
 
 
