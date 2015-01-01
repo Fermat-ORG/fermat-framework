@@ -11,6 +11,15 @@ android {
         versionCode 1
         versionName "1.0"
     }
+    sourceSets {
+        main {
+            res.srcDirs = ['src/main/structured_res/os/android/app/shell/version_1',
+                           'src/main/structured_res/os/android/app/subapp/wallet_store/version_1',
+                           'src/main/structured_res/os/android/app/subapp/wallet_manager/version_1',
+                           'src/main/structured_res/os/android/app/subapp/wallet_runtime/wallet_framework/version_1',
+                           'src/main/res']
+        }
+    }
     buildTypes {
         release {
             apply plugin: 'idea'
