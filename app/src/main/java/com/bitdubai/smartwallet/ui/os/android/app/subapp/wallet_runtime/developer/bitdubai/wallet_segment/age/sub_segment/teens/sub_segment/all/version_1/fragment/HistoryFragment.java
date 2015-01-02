@@ -51,32 +51,30 @@ public class HistoryFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        contacts = new String[]{"2 units", "12 units", "6 units", "24 units"};
-        amounts = new String[]{"$4.00", "$21.50", "$11.00", "$30.00"};
+        contacts = new String[]{"14 units", "12 units", "8 units", "24 units"};
+        amounts = new String[]{"$12.00", "$21.50", "$12.00", "$34.00"};
         whens = new String[]{"wallet discount","wallet discount","wallet discount","wallet discount","wallet discount","wallet discount",};
         notes = new String[]{ "total paid ", "total paid ", "total paid ", "total paid ", "total paid "};
-        totalAmount = new String[]{"$5.00", "$24.00", "$13.50", "$36.00"};
-        historyCount = new String[] {"-$1.00", "-$2.50", "-$2.50", "-$2.00"};
+        totalAmount = new String[]{"$16.00", "$24.00", "$15.50", "$36.00"};
+        historyCount = new String[] {"-$4.00", "-$2.50", "-$2.50", "-$2.00"};
         pictures = new String[]{"product_14_history", "product_8_history", "product_13_history", "product_2_history"};
-        dates = new String[]{"yesterday","2 days ago","4 day ago","4 day ago","","","","",""};
+        dates = new String[]{"yesterday","2 days ago","4 day ago","4 day ago"};
 
 
         transactions = new String[][]{
 
-                {"$2.50"},
-                {"$2.00"},
-                {"$2.25"},
-                {"$1.50"},
-                {"$"},
-                {"$"},
-                {"$"},
-
+                {"$3.00","$2.00"},
+                {"$2.50","$1.50"},
+                {"$2.50","$2.00"},
+                {"$1.50",""},
         };
 
         items = new String[][]{
 
-                {"price per unit"},
-                {"price per unit"},     {"price per unit"},     {"price per unit"},
+                {"price per unit","price per unit"},
+                {"price per unit","price per unit"},
+                {"price per unit","price per unit"},
+                {"price per unit","price per unit"},
 
 
 
@@ -84,7 +82,9 @@ public class HistoryFragment extends Fragment {
 
         names = new String[][]{
 
-                {"French Roll"},{"Caramel Chocolate Crunch"},{"Cinnamon Cake"},{"Clasisc Iced Pink"},
+                {"French Roll","Chocolate chips"},{"Caramel Chocolate Crunch","Chocolate with sparkles"},
+                {"Cinnamon Cake","Honey bran raisins"},
+                {"Clasisc Iced Pink",""},
 
 
 
@@ -93,14 +93,16 @@ public class HistoryFragment extends Fragment {
         transactions_amounts = new String[][]{
 
 
-                {"$15.00",},{"$12.00",},{"$13.50",},{"$9.00",},{"$",},{"$",}
+                {"2 units","12 units"},{"6 units","6 units"},{"4 units","4 units"},{"24 units",""}
 
         };
 
         transactions_whens = new String[][]{
 
-                {"price for 6 units"},
-                {"price for 6 units"},{"price for 6 units"},{"price for 6 units"},
+                {"Quantity","Quantity"},
+                {"Quantity","Quantity"},
+                {"Quantity","Quantity"},
+                {"Quantity","Quantity"},
         };
 
     }

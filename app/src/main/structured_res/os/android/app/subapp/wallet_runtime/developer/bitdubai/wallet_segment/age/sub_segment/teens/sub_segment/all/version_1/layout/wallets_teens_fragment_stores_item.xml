@@ -22,7 +22,7 @@
 
 
             android:src="@drawable/store_1"
-            android:scaleType="centerCrop"
+            android:scaleType="fitCenter"
             android:layout_centerHorizontal="true"
 
             />

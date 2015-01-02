@@ -189,7 +189,6 @@ public class AccountDetailActivity extends FragmentActivity
                 startActivity(intent);
                 return true;
 
-
         }
 
         return super.onOptionsItemSelected(item);

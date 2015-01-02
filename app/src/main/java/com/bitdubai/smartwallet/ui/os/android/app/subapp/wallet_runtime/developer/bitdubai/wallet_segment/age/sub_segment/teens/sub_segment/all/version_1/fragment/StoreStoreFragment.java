@@ -467,7 +467,7 @@ public class StoreStoreFragment extends Fragment {
             switch (position)
             {
                 case 0:
-                    holder.imageView.setImageResource(R.drawable.dunkin_donuts);
+                    holder.imageView.setImageResource(R.drawable.store_9_1);
                     break;
                 case 1:
                     holder.imageView.setImageResource(R.drawable.store_2);
