@@ -127,7 +127,7 @@
                     android:textColor="#FF666666"
                     android:textSize="12sp"
                     android:text="city"
-                    android:textStyle="normal"
+                    android:textStyle="bold"
                     android:layout_gravity="end"
                     android:paddingBottom="1dip"
                     android:paddingTop="1dip" />

@@ -234,7 +234,7 @@ public class AcceptedNearbyFragment extends Fragment {
 
 
 
-
+/*
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
@@ -246,7 +246,7 @@ public class AcceptedNearbyFragment extends Fragment {
             }
         });
 
-
+*/
         return gridView;
     }
 

@@ -19,12 +19,9 @@
             android:id="@+id/image_view"
             android:layout_width="match_parent"
             android:layout_height="98dp"
-
-
-            android:src="@drawable/store_1"
-            android:scaleType="fitXY"
+            android:scaleType="centerCrop"
+            android:src="@drawable/store_9_1"
             android:layout_centerHorizontal="true"
-
             />
     </RelativeLayout>
 
@@ -277,7 +274,7 @@
         android:layout_centerHorizontal="true"
 
         android:paddingLeft="12dp"
-        android:paddingRight="8dp"
+        android:paddingRight="12dp"
         android:paddingTop="134dp"
         android:paddingBottom="0dp"
         />

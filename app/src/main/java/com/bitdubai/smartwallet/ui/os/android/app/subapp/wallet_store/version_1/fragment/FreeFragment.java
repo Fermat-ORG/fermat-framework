@@ -267,7 +267,7 @@ public class FreeFragment extends Fragment {
 
 
 
-
+/*
 
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
@@ -279,7 +279,7 @@ public class FreeFragment extends Fragment {
                 return ;
             }
         });
-
+*/
 
         return gridView;
     }
