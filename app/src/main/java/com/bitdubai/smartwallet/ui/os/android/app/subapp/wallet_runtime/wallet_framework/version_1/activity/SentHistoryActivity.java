@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyApplication;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.PagerSlidingTabStrip;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.developer.bitdubai.wallet_segment.teens.sub_segment.all.version_1.fragment.SendAllFragment;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.developer.bitdubai.wallet_segment.age.sub_segment.teens.sub_segment.all.version_1.fragment.SendAllFragment;
 
 /**
  * Created by Natalia on 23/12/2014.

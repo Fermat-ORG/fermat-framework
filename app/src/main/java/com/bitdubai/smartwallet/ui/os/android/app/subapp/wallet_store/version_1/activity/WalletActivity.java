@@ -29,12 +29,12 @@ import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_f
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.MyLayoutInflaterFactory;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.PagerSlidingTabStrip;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.RequestsSentActivity;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.developer.bitdubai.wallet_segment.teens.sub_segment.all.version_1.fragment.AccountDetailFiltersFragment;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.developer.bitdubai.wallet_segment.teens.sub_segment.all.version_1.fragment.RefillFragment;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.developer.bitdubai.wallet_segment.teens.sub_segment.all.version_1.fragment.SendFragment;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.developer.bitdubai.wallet_segment.teens.sub_segment.all.version_1.fragment.StoreChatFragment;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.developer.bitdubai.wallet_segment.teens.sub_segment.all.version_1.fragment.StoreMapFragment;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.developer.bitdubai.wallet_segment.teens.sub_segment.all.version_1.fragment.StoreStoreFragment;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.developer.bitdubai.wallet_segment.age.sub_segment.teens.sub_segment.all.version_1.fragment.AccountDetailFiltersFragment;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.developer.bitdubai.wallet_segment.age.sub_segment.teens.sub_segment.all.version_1.fragment.RefillFragment;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.developer.bitdubai.wallet_segment.age.sub_segment.teens.sub_segment.all.version_1.fragment.SendFragment;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.developer.bitdubai.wallet_segment.age.sub_segment.teens.sub_segment.all.version_1.fragment.StoreChatFragment;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.developer.bitdubai.wallet_segment.age.sub_segment.teens.sub_segment.all.version_1.fragment.StoreMapFragment;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.developer.bitdubai.wallet_segment.age.sub_segment.teens.sub_segment.all.version_1.fragment.StoreStoreFragment;
 
 
 

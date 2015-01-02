@@ -29,7 +29,7 @@ import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_f
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.MyLayoutInflaterFactory;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.PagerSlidingTabStrip;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.RequestsSentActivity;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.developer.bitdubai.wallet_segment.teens.sub_segment.all.version_1.fragment.AccountDetailFiltersFragment;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.developer.bitdubai.wallet_segment.age.sub_segment.teens.sub_segment.all.version_1.fragment.AccountDetailFiltersFragment;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_store.version_1.fragment.AllFragment;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_store.version_1.fragment.FreeFragment;
 
