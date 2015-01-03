@@ -5,12 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.util.Log;
 import android.view.View;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
 
 import android.view.LayoutInflater;
@@ -24,392 +27,253 @@ import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyApplication;
 
 
-public class StoreChatFragment extends ListFragment implements LoaderManager.LoaderCallbacks<List<StoreChatFragment.Model>> {
-
-    CustomArrayAdapter mAdapter;
+public class StoreChatFragment extends Fragment {
 
     private static final String ARG_POSITION = "position";
 
-    private int position;
+    View rootView;
+    ExpandableListView lv;
+    private String[] contacts;
+    private String[] countries;
+    private String[] states;
+    private String[] when;
+    private String[] amount;
+    private String[] cities;
+    private String[] pictures;
+    private String[][] transactions;
+    private String[][] transactions_amounts;
+    private String[][] transactions_whens;
 
     public static StoreChatFragment newInstance(int position) {
         StoreChatFragment f = new StoreChatFragment();
-        Bundle b = new Bundle();
-        b.putInt(ARG_POSITION, position);
-        f.setArguments(b);
         return f;
     }
 
 
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-    @Override public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+        contacts = new String[]{"","","","","","","","",""};
+        countries = new String[]{,};
+        states = new String[]{};
+        cities = new String[]{};
 
-        System.out.println("StoreChatFragment.onActivityCreated");
+        //pictures = new String[]{"luis_profile_picture", "guillermo_profile_picture", "pedro_profile_picture", "mariana_profile_picture"};
 
-        // Initially there is no data
-        setEmptyText("No Data Here");
+        transactions = new String[][]{
 
-        // Create an empty adapter we will use to display the loaded data.
-        mAdapter = new CustomArrayAdapter(getActivity());
-        setListAdapter(mAdapter);
+                {},
+        };
+        transactions_amounts = new String[][]{
 
-        // Start out with a progress indicator.
-        setListShown(false);
+                {},
+        };
 
-        // Prepare the loader.  Either re-connect with an existing one,
-        // or start a new one.
-        getLoaderManager().initLoader(0, null, this);
+        transactions_whens = new String[][]{
+
+                {},
+        };
+
     }
 
     @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        // Insert desired behavior here.
-        Log.i("StoreChatFragment", "Item clicked: " + id);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        rootView = inflater.inflate(R.layout.wallets_teens_fragment_store_chat, container, false);
+
+
+        return rootView;
     }
 
     @Override
-    public Loader<List<Model>> onCreateLoader(int arg0, Bundle arg1) {
-        System.out.println("StoreChatFragment.onCreateLoader");
-        return new DataListLoader(getActivity());
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        lv = (ExpandableListView) view.findViewById(R.id.expListView);
+        lv.setAdapter(new ExpandableListAdapter(contacts, transactions));
+        lv.setGroupIndicator(null);
+
     }
 
-    @Override
-    public void onLoadFinished(Loader<List<Model>> arg0, List<Model> data) {
-        mAdapter.setData(data);
-        System.out.println("StoreChatFragment.onLoadFinished");
-        // The list should now be shown.
-        if (isResumed()) {
-            setListShown(true);
-        } else {
-            setListShownNoAnimation(true);
-        }
-    }
+    public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
-    @Override
-    public void onLoaderReset(Loader<List<Model>> arg0) {
-        mAdapter.setData(null);
-    }
+        private final LayoutInflater inf;
+        private String[] contacts;
+        private String[][] transactions;
 
-
-
-
-    public static class DataListLoader extends AsyncTaskLoader<List<Model>> {
-
-        List<Model> mModels;
-
-        public DataListLoader(Context context) {
-            super(context);
+        public ExpandableListAdapter(String[] contacts, String[][] transactions) {
+            this.contacts = contacts;
+            this.transactions = transactions;
+            inf = LayoutInflater.from(getActivity());
         }
 
         @Override
-        public List<Model> loadInBackground() {
-            System.out.println("DataListLoader.loadInBackground");
-
-            // You should perform the heavy task of getting data from
-            // Internet or database or other source
-            // Here, we are generating some Sample data
-
-            // Create corresponding array of entries and load with data.
-            List<Model> entries = new ArrayList<Model>(5);
-            entries.add(new Model("Java", "2"));
-            entries.add(new Model("Java", "2"));
-            entries.add(new Model("Java", "2"));
-            entries.add(new Model("Java", "2"));
-            entries.add(new Model("Java", "2"));
-            entries.add(new Model("Java", "2"));
-            entries.add(new Model("Java", "2"));
-            entries.add(new Model("Java", "2"));
-            entries.add(new Model("Java", "2"));
-            entries.add(new Model("Java", "2"));
-
-            return entries;
+        public int getGroupCount() {
+            return contacts.length;
         }
 
-        /**
-         * Called when there is new data to deliver to the client.  The
-         * super class will take care of delivering it; the implementation
-         * here just adds a little more logic.
-         */
-        @Override public void deliverResult(List<Model> listOfData) {
-            if (isReset()) {
-                // An async query came in while the loader is stopped.  We
-                // don't need the result.
-                if (listOfData != null) {
-                    onReleaseResources(listOfData);
-                }
-            }
-            List<Model> oldApps = listOfData;
-            mModels = listOfData;
-
-            if (isStarted()) {
-                // If the Loader is currently started, we can immediately
-                // deliver its results.
-                super.deliverResult(listOfData);
-            }
-
-            // At this point we can release the resources associated with
-            // 'oldApps' if needed; now that the new result is delivered we
-            // know that it is no longer in use.
-            if (oldApps != null) {
-                onReleaseResources(oldApps);
-            }
+        @Override
+        public int getChildrenCount(int groupPosition) {
+            return transactions[groupPosition].length;
         }
 
-        /**
-         * Handles a request to start the Loader.
-         */
-        @Override protected void onStartLoading() {
-            if (mModels != null) {
-                // If we currently have a result available, deliver it
-                // immediately.
-                deliverResult(mModels);
-            }
-
-
-            if (takeContentChanged() || mModels == null) {
-                // If the data has changed since the last time it was loaded
-                // or is not currently available, start a load.
-                forceLoad();
-            }
+        @Override
+        public Object getGroup(int groupPosition) {
+            return contacts[groupPosition];
         }
 
-        /**
-         * Handles a request to stop the Loader.
-         */
-        @Override protected void onStopLoading() {
-            // Attempt to cancel the current load task if possible.
-            cancelLoad();
+        @Override
+        public Object getChild(int groupPosition, int childPosition) {
+            return transactions[groupPosition][childPosition];
         }
 
-        /**
-         * Handles a request to cancel a load.
-         */
-        @Override public void onCanceled(List<Model> apps) {
-            super.onCanceled(apps);
-
-            // At this point we can release the resources associated with 'apps'
-            // if needed.
-            onReleaseResources(apps);
+        @Override
+        public long getGroupId(int groupPosition) {
+            return groupPosition;
         }
 
-        /**
-         * Handles a request to completely reset the Loader.
-         */
-        @Override protected void onReset() {
-            super.onReset();
-
-            // Ensure the loader is stopped
-            onStopLoading();
-
-            // At this point we can release the resources associated with 'apps'
-            // if needed.
-            if (mModels != null) {
-                onReleaseResources(mModels);
-                mModels = null;
-            }
+        @Override
+        public long getChildId(int groupPosition, int childPosition) {
+            return childPosition;
         }
 
-        /**
-         * Helper function to take care of releasing resources associated
-         * with an actively loaded data set.
-         */
-        protected void onReleaseResources(List<Model> apps) {}
-
-    }
-
-
-
-
-
-    public class CustomArrayAdapter extends ArrayAdapter<Model> {
-        private final LayoutInflater mInflater;
-
-        public CustomArrayAdapter(Context context) {
-            super(context, android.R.layout.simple_list_item_2);
-            mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        @Override
+        public boolean hasStableIds() {
+            return true;
         }
 
-        public void setData(List<Model> data) {
-            clear();
-            if (data != null) {
-                for (Model appEntry : data) {
-                    add(appEntry);
-                }
-            }
-        }
+        @Override
+        public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
-        /**
-         * Populate new items in the list.
-         */
-        @Override public View getView(int position, View convertView, ViewGroup parent) {
-            String[] account_types;
-            String[] balances;
-            String[] balances_available;
-            String[] account_aliases;
-
-            String[] contacts;
-            String[] amounts;
-            String[] whens;
-            String[] notes;
-
-            contacts = new String[]{"", "", "", "Simon Cushing","Céline Begnis","Taylor Backus","Stephanie Himonidis","Kimberly Brown" };
-            amounts = new String[]{"","", "",  "$300.00", "$20.00", "$3.00","$290.00","$600.00","50.00","$80,000.00"};
-            whens = new String[]{"", "", "", "5 hours ago", "yesterday 10:22 AM", "24 Mar 14","3 Feb 14","1 year ago","1 year ago","2 year ago"};
-            notes = new String[]{"","", "",  "Tickets to the opera", "Bus Ticket", "Sandwich","Conference ticket","Computer monitor","Pen","Apartment in Dubai"};
-
-
-
-            account_types = new String[]{"1 current and 2 saving accounts"};
-
-            balances = new String[]{"$2,934.50"};
-            balances_available = new String[]{"$2,467.00 available"};
-
-            View view;
-            view = mInflater.inflate(R.layout.wallets_teens_fragment_home_list_item, parent, false);
-            //if (convertView == null) {
-
-            //} else {
-            //    view = convertView;
-            //}
-
-            ImageView account_picture;
             ViewHolder holder;
-            ViewHolder amount;
-            ViewHolder when;
-            ViewHolder note;
 
 
-            TextView tv;
 
-            switch (position)
-            {
-                case 0:
-                    view = mInflater.inflate(R.layout.wallets_teens_fragment_store_chat_right, parent, false);
+            //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
+            // if (convertView == null) {
+            if (1 == 1) {
+                // convertView = inf.inflate(R.layout.wallets_teens_fragment_send_and_receive_list_detail, parent, false);
+                holder = new ViewHolder();
 
-                    tv = ((TextView)view.findViewById(R.id.title));
-                    tv.setText("Hello");
-                    tv.setTypeface(MyApplication.getDefaultTypeface());
-
-                    break;
-
-                case 1:
-                    view = mInflater.inflate(R.layout.wallets_teens_fragment_store_chat_left, parent, false);
-
-                    tv = ((TextView)view.findViewById(R.id.title));
-                    tv.setText("Hi! How can I help you?");
-                    tv.setTypeface(MyApplication.getDefaultTypeface());
-
-                    break;
-
-                case 2:
-                    view = mInflater.inflate(R.layout.wallets_teens_fragment_store_chat_right, parent, false);
-
-                    tv = ((TextView)view.findViewById(R.id.title));
-                    tv.setText("Well, I am in the need of some donuts for a party");
-                    tv.setTypeface(MyApplication.getDefaultTypeface());
-
-                    break;
-
-                case 3:
-                    view = mInflater.inflate(R.layout.wallets_teens_fragment_store_chat_right, parent, false);
-
-                    tv = ((TextView)view.findViewById(R.id.title));
-                    tv.setText("How many dozens do you have available?");
-                    tv.setTypeface(MyApplication.getDefaultTypeface());
-
-                    break;
-
-                case 4:
-                    view = mInflater.inflate(R.layout.wallets_teens_fragment_store_chat_left, parent, false);
-
-                    tv = ((TextView)view.findViewById(R.id.title));
-                    tv.setText("We have 5 in stock, but in 10 minutes were getting 3 more");
-                    tv.setTypeface(MyApplication.getDefaultTypeface());
-
-                    break;
-
-                case 5:
-                    view = mInflater.inflate(R.layout.wallets_teens_fragment_store_chat_right, parent, false);
-
-                    tv = ((TextView)view.findViewById(R.id.title));
-                    tv.setText("I just need 4 dozen, how much would it be?");
-                    tv.setTypeface(MyApplication.getDefaultTypeface());
-
-                    break;
-                case 6:
-                    view = mInflater.inflate(R.layout.wallets_teens_fragment_store_chat_left, parent, false);
-
-                    tv = ((TextView)view.findViewById(R.id.title));
-                    tv.setText("The 4 dozens have a value of $76.25");
-                    tv.setTypeface(MyApplication.getDefaultTypeface());
-
-                    break;
-
-                case 7:
-                    view = mInflater.inflate(R.layout.wallets_teens_fragment_store_chat_right, parent, false);
-
-                    tv = ((TextView)view.findViewById(R.id.title));
-                    tv.setText("Ok, can you reserve it to me? I will pick it up in an hour");
-                    tv.setTypeface(MyApplication.getDefaultTypeface());
-
-                    break;
-
-                case 8:
-                    view = mInflater.inflate(R.layout.wallets_teens_fragment_store_chat_left, parent, false);
-
-                    tv = ((TextView)view.findViewById(R.id.title));
-                    tv.setText("No problem, see you then");
-                    tv.setTypeface(MyApplication.getDefaultTypeface());
-
-                    break;
+                holder.text = (TextView) convertView.findViewById(R.id.city);
+                holder.text.setTypeface(MyApplication.getDefaultTypeface());
+                convertView.setTag(holder);
 
 
-                case 9:
-                    view = mInflater.inflate(R.layout.wallets_teens_fragment_store_chat_box, parent, false);
-                    break;
+
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+
+            holder.text.setText(getChild(groupPosition, childPosition).toString());
+
+            return convertView;
+        }
+
+        @Override
+        public boolean isChildSelectable(int groupPosition, int childPosition) {
+            return false;
+        }
+
+        @Override
+        public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
+
+            //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
+            // if (convertView == null) {
+            if (1 == 1) {
+                View view;
+                view = inf.inflate(R.layout.wallets_teens_fragment_store_chat_right, parent, false);
 
 
+                TextView tv;
+                switch (groupPosition) {
+
+                    case 0:
+                        view = inf.inflate(R.layout.wallets_teens_fragment_store_chat_right, parent, false);
+
+                        tv = ((TextView)view.findViewById(R.id.title));
+                        tv.setText("Hello");
+                        tv.setTypeface(MyApplication.getDefaultTypeface());
+
+                        break;
+
+                    case 1:
+                        view = inf.inflate(R.layout.wallets_teens_fragment_store_chat_left, parent, false);
+
+                        tv = ((TextView)view.findViewById(R.id.title));
+                        tv.setText("Hi! How can I help you?");
+                        tv.setTypeface(MyApplication.getDefaultTypeface());
+
+                        break;
+
+                    case 2:
+                        view = inf.inflate(R.layout.wallets_teens_fragment_store_chat_right, parent, false);
+
+                        tv = ((TextView)view.findViewById(R.id.title));
+                        tv.setText("Well, I am in the need of some donuts for a party");
+                        tv.setTypeface(MyApplication.getDefaultTypeface());
+
+                        break;
+
+                    case 3:
+                        view = inf.inflate(R.layout.wallets_teens_fragment_store_chat_right, parent, false);
+
+                        tv = ((TextView)view.findViewById(R.id.title));
+                        tv.setText("How many dozens do you have available?");
+                        tv.setTypeface(MyApplication.getDefaultTypeface());
+
+                        break;
+
+                    case 4:
+                        view = inf.inflate(R.layout.wallets_teens_fragment_store_chat_left, parent, false);
+
+                        tv = ((TextView)view.findViewById(R.id.title));
+                        tv.setText("We have 5 in stock, but in 10 minutes were getting 3 more");
+                        tv.setTypeface(MyApplication.getDefaultTypeface());
+
+                        break;
+
+                    case 5:
+                        view = inf.inflate(R.layout.wallets_teens_fragment_store_chat_right, parent, false);
+
+                        tv = ((TextView)view.findViewById(R.id.title));
+                        tv.setText("I just need 4 dozens, how much would it be?");
+                        tv.setTypeface(MyApplication.getDefaultTypeface());
+
+                        break;
+                    case 6:
+                        view = inf.inflate(R.layout.wallets_teens_fragment_store_chat_left, parent, false);
+
+                        tv = ((TextView)view.findViewById(R.id.title));
+                        tv.setText("The 4 dozens have a value of $76.25");
+                        tv.setTypeface(MyApplication.getDefaultTypeface());
+                        break;
+                    case 7:
+                        view = inf.inflate(R.layout.wallets_teens_fragment_store_chat_right, parent, false);
+                        tv = ((TextView)view.findViewById(R.id.title));
+                        tv.setText("Ok, can you reserve it to me? I will pick it up in half an hour");
+                        tv.setTypeface(MyApplication.getDefaultTypeface());
+                        break;
+                    case 8:
+                        view = inf.inflate(R.layout.wallets_teens_fragment_store_chat_left, parent, false);
+                        tv = ((TextView)view.findViewById(R.id.title));
+                        tv.setText("No problem, see you then");
+                        tv.setTypeface(MyApplication.getDefaultTypeface());
+                        break;
+                }
+
+                return view;
 
             }
 
 
 
 
-            return view;
+            return convertView;
+        }
+
+
+        private class ViewHolder {
+            TextView text;
         }
     }
-
-    private class ViewHolder {
-        TextView text;
-    }
-
-    public static class Model {
-
-        private String name;
-        private String id;
-
-        public Model(String name, String id) {
-            this.name = name;
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-    }
-
 }

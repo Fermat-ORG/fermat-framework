@@ -64,17 +64,17 @@ public class HistoryFragment extends Fragment {
         transactions = new String[][]{
 
                 {"$3.00","$2.00"},
-                {"$2.50","$1.50"},
+                {"$2.00","$1.00","$1.00"},
                 {"$2.50","$2.00"},
-                {"$1.50",""},
+                {"$1.50"},
         };
 
         items = new String[][]{
 
-                {"price per unit","price per unit"},
-                {"price per unit","price per unit"},
-                {"price per unit","price per unit"},
-                {"price per unit","price per unit"},
+                {"Price per unit","Price per unit"},
+                {"Price per unit","Price per unit","Price per unit"},
+                {"Price per unit","Price per unit"},
+                {"Price per unit","Price per unit"},
 
 
 
@@ -82,7 +82,7 @@ public class HistoryFragment extends Fragment {
 
         names = new String[][]{
 
-                {"French Roll","Chocolate chips"},{"Caramel Chocolate Crunch","Chocolate with sparkles"},
+                {"French Roll","Chocolate chips"},{"Caramel Chocolate Crunch","Chocolate with sparkles","Classic Glazed Chocolate"},
                 {"Cinnamon Cake","Honey bran raisins"},
                 {"Clasisc Iced Pink",""},
 
@@ -93,16 +93,16 @@ public class HistoryFragment extends Fragment {
         transactions_amounts = new String[][]{
 
 
-                {"2 units","12 units"},{"6 units","6 units"},{"4 units","4 units"},{"24 units",""}
+                {"2 units","12 units"},{"4 units","4 units","4 units"},{"4 units","4 units"},{"24 units",""}
 
         };
 
         transactions_whens = new String[][]{
 
                 {"Quantity","Quantity"},
+                {"Quantity","Quantity","Quantity"},
                 {"Quantity","Quantity"},
-                {"Quantity","Quantity"},
-                {"Quantity","Quantity"},
+                {"Quantity",},
         };
 
     }
@@ -226,19 +226,48 @@ public class HistoryFragment extends Fragment {
                 switch (groupPosition)
                 {
                     case 0:
-                        profile_picture.setImageResource(R.drawable.product_14_history);
+                        switch (childPosition)
+                        {
+                            case 0:
+                                profile_picture.setImageResource(R.drawable.product_14_history);
+                                break;
+                            case 1:
+                                profile_picture.setImageResource(R.drawable.product_11_history);
+                                break;
+                        }
                         break;
                     case 1:
-                        profile_picture.setImageResource(R.drawable.product_8_history);
+                        switch (childPosition)
+                        {
+                            case 0:
+                                profile_picture.setImageResource(R.drawable.product_8_history);
+                                break;
+                            case 1:
+                                profile_picture.setImageResource(R.drawable.product_9_history);
+                                break;
+                            case 2:
+                                profile_picture.setImageResource(R.drawable.product_3_history);
+                        }
+
                         break;
                     case 2:
-                        profile_picture.setImageResource(R.drawable.product_13_history);
+                        switch (childPosition)
+                        {
+                            case 0:
+                                profile_picture.setImageResource(R.drawable.product_13_history);
+                                break;
+                            case 1:
+                                profile_picture.setImageResource(R.drawable.product_12_history);
+                                break;
+                        }
                         break;
                     case 3:
-                        profile_picture.setImageResource(R.drawable.product_2_history);
-                        break;
-                    case 4:
-                        profile_picture.setImageResource(R.drawable.product_1);
+                        switch (childPosition)
+                        {
+                            case 0:
+                                profile_picture.setImageResource(R.drawable.product_2_history);
+                                break;
+                        }
                         break;
 
                 }
@@ -353,9 +382,6 @@ public class HistoryFragment extends Fragment {
         public boolean isChildSelectable(int groupPosition, int childPosition) {
             return true;
         }
-
-
-
 
 
         private class ViewHolder {
