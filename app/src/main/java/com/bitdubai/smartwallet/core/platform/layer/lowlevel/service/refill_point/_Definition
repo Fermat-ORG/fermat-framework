@@ -1,3 +1,0 @@
-This service allow other devices to locate a refill point close by. This does not means this device is a refill point.
-It can or it cannot. The service in general handles the communication with refill points for local objects but also
-serves remotes objects helping them find refill points if necessary.

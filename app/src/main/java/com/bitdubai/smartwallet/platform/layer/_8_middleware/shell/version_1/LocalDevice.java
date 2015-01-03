@@ -1,8 +1,8 @@
 package com.bitdubai.smartwallet.platform.layer._8_middleware.shell.version_1;
 
-import com.bitdubai.smartwallet.platform.layer._7_service.shop.version_1.Shop;
+import com.bitdubai.smartwallet.platform.layer._7_network_service.shop.version_1.Shop;
 import com.bitdubai.smartwallet.platform.layer._1_os.android.version_1.sql_storage.Database;
-import com.bitdubai.smartwallet.platform.layer._7_service.user.version_1.LocalPersonalUser;
+import com.bitdubai.smartwallet.platform.layer._7_network_service.user.version_1.LocalPersonalUser;
 
 import java.util.ArrayList;
 import java.util.List;
