@@ -1,0 +1,7 @@
+package com.bitdubai.smartwallet.platform.layer._7_service.review.version_1;
+
+/**
+ * Created by ciencias on 28.12.14.
+ */
+public class Review implements Likeable, Dislikeable {
+}

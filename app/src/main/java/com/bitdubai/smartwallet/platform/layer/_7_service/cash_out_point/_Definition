@@ -1,0 +1,3 @@
+This service allows other devices to find this cash out point and interact with it. This does not means the local device
+runs a cash out point. The service handles all the communication needs between local or remote objects with cash out
+points.

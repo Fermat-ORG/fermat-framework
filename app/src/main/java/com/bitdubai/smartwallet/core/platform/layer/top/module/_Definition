@@ -1,3 +1,0 @@
-A module contains all the functionality needed for that specific sub-APP excluding the user interface and system-wide
-services on which it relies. Each module is self contained and does not use other modules objects directly.
-

@@ -1,3 +1,0 @@
-The middleware is the software layer that lies between the lower level services and the top modules. It handles the
-interactions between modules, provides definitions and access to lower level services.
-

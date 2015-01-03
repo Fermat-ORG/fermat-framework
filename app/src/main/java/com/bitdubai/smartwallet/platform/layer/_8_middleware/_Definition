@@ -1,0 +1,8 @@
+The middleware is the software layer that lies between the lower level services and the top modules. It handles the
+interactions between modules, provides definitions and access to lower level services.
+
+An engine is a software component that shares functionality between modules across the local device only. It keeps in
+its own storage information according to its scope.
+
+It is acceded only by modules, not by UI or other software using this core library.
+

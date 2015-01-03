@@ -22,7 +22,7 @@
       </configuration>
     </facet>
   </component>
-  <component name="NewModuleRootManager" inherit-compiler-output="false">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
     <output url="file://$MODULE_DIR$/build/intermediates/classes/debug" />
     <exclude-output />
     <content url="file://$MODULE_DIR$">
@@ -50,8 +50,8 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/structured_res/os/android/app/subapp/wallet_manager/version_1" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/structured_res/os/android/app/subapp/wallet_runtime/wallet_framework/version_1" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/structured_res/os/android/app/subapp/wallet_runtime/version_1" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/main/structured_res/os/android/app/subapp/wallet_runtime/developer/bitdubai/wallet_segment/age/sub_segment/teens/sub_segment/all/version_1" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/main/structured_res/os/android/app/subapp/wallet_runtime/developer/bitdubai/wallet_segment/age/sub_segment/kids/sub_segment/all/version_1" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/structured_res/os/android/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/main/structured_res/os/android/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/kids/sub_segment/all/developer/bitdubai/version_1" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/res" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/assets" type="java-resource" />
@@ -96,4 +96,3 @@
     <orderEntry type="library" exported="" name="play-services-6.5.87" level="project" />
   </component>
 </module>
-

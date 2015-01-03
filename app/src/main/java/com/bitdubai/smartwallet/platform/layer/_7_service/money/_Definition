@@ -1,0 +1,2 @@
+This service handles the communication of money transmission issues. Although the value is transmitted through each
+crypto p2p network, the information regarding this transmission has to be handled separately.
