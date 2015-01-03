@@ -20,7 +20,7 @@
             android:id="@+id/profile_picture"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/product_14"
+            android:src="@drawable/product_14_history"
             android:layout_gravity="center"
             android:scaleType="fitCenter"
             android:padding="8dp"
