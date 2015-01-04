@@ -94,14 +94,14 @@ public class ReviewsFragment extends Fragment {
 
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-
+/*
                 if (groupPosition == 0) {
                     Intent intent;
                     intent = new Intent(getActivity(), SendToNewContactActivity.class);
                     startActivity(intent);
                     return false;
                 }
-                else
+                else*/
                 {
                     return false;
                 }

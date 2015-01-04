@@ -66,23 +66,23 @@ public class DesktopFragment  extends android.app.Fragment {
                         "false"
                 };
         String[] company_names =
-                {"Girl's wallet",
-                        "Boy's wallet",
-                        "Ladies",
-                        "Young",
-                        "Boca Junior's",
-                        "Carrefour's",
-                        "Gucci's",
-                        "Bank Itau's",
-                        "Mc donal's",
-                        "Van's",
-                        "Samsung's",
-                        "Popular Bank's",
-                        "Sony's",
-                        "BMW's",
-                        "HP's",
-                        "Billabong's",
-                        "Starbuck's"
+                {"Girls' wallet",
+                        "Boys' wallet",
+                        "Ladies' wallet",
+                        "Youngs' wallet",
+                        "Boca Juniors' wallet",
+                        "Carrefour's wallet",
+                        "Gucci's wallet",
+                        "Bank Itau's wallet",
+                        "Mc donals' wallet",
+                        "Vans' wallet",
+                        "Samsung's wallet",
+                        "Popular Bank's wallet",
+                        "Sony's wallet",
+                        "BMW's wallet",
+                        "HP's wallet",
+                        "Billabong's wallet",
+                        "Starbucks' wallet"
 
                 };
 
@@ -189,6 +189,7 @@ public class DesktopFragment  extends android.app.Fragment {
         public float sale;
 
         public float timetoarraive;
+
         public boolean installed;
 
     }
