@@ -1,1 +1,2 @@
-Each package on this layer contains OS specifically functionality.
+Each package on this layer contains OS specifically functionality. That means that only objects in this layer have
+access to objects exposed by the OS.

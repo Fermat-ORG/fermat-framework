@@ -1,1 +1,2 @@
-The layer hierarchy defines the deepness of the functionality.
+The layer hierarchy defines the deepness of the functionality. In general, objects from one layer have access to objects
+in layers below them and not above.

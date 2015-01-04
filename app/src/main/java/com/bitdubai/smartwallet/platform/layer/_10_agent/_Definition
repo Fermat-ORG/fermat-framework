@@ -1,0 +1,7 @@
+The platform agent is the one in charge of selecting on behalf of the end user which plug-ins or services to use. For
+that it takes into account the costs associated to using them and the relation with its benefits.
+
+Many parts of the platforms are based on third party components which comes with a use license which is not free. As
+there are more than one implementation available someone has to choose which one to use.
+
+The platform agent has the intelligence enough to choose what to use and what to avoid.

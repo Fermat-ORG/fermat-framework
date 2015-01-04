@@ -1,10 +1,7 @@
-This layer has system wide functionality or services, meaning services that transcends one device. Their functionality
-is loosely related to finance or money.
+This layer has system wide functionality or services, meaning services that transcends one device.
 
 These services are user independent meaning they don't need a user to be logged in to be running. But on the other hand
 they do store information specific for each user.
 
 Each service talks with other instances of themselves running on remote devices. The underlying communication its
-handled by a
-
-A service in this layer allows a certain functionality to work across different devices.
+handled by a channel on the communication layer.

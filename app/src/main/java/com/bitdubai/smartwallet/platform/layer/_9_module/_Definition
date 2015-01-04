@@ -1,6 +1,6 @@
 In this layer lives the functionality separated in modules. Each modules has a one to one correspondence with a sub-APP
 at a user interface level. Modules serves UI components or other software using this library.
 
-A module contains all the functionality needed for that specific sub-APP excluding the user interface and system-wide
-services on which it relies. Each module is self contained and does not use other modules objects directly.
+A module contains all the functionality needed for that specific sub-APP. Each module is self contained and does not
+use other modules objects directly.
 
