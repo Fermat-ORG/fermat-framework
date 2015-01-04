@@ -6,5 +6,5 @@
     android:layout_height="match_parent"
     tools:context="com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_manager.version_1.activity.DesktopActivity"
     tools:ignore="MergeRootFrame"
-
+    android:background="@drawable/background_tiled_diagonal_light"
     />

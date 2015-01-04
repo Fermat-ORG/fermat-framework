@@ -62,7 +62,6 @@ public class HistoryFragment extends Fragment {
 
 
         transactions = new String[][]{
-
                 {"$3.00","$2.00"},
                 {"$2.00","$1.00","$1.00"},
                 {"$2.50","$2.00"},
@@ -70,14 +69,7 @@ public class HistoryFragment extends Fragment {
         };
 
         items = new String[][]{
-
-                {"Price per unit","Price per unit"},
-                {"Price per unit","Price per unit","Price per unit"},
-                {"Price per unit","Price per unit"},
-                {"Price per unit","Price per unit"},
-
-
-
+                {"2 units","12 units"},{"4 units","4 units","4 units"},{"4 units","4 units"},{"24 units",""}
         };
 
         names = new String[][]{
@@ -85,16 +77,13 @@ public class HistoryFragment extends Fragment {
                 {"French Roll","Chocolate chips"},{"Caramel Chocolate Crunch","Chocolate with sparkles","Classic Glazed Chocolate"},
                 {"Cinnamon Cake","Honey bran raisins"},
                 {"Clasisc Iced Pink",""},
-
-
-
         };
 
         transactions_amounts = new String[][]{
-
-
-                {"2 units","12 units"},{"4 units","4 units","4 units"},{"4 units","4 units"},{"24 units",""}
-
+                {"$6.00","$24.00"},
+                {"$8.00","$4.00","$4.00"},
+                {"$10.00","$8.00"},
+                {"$36.00",""},
         };
 
         transactions_whens = new String[][]{
@@ -128,12 +117,11 @@ public class HistoryFragment extends Fragment {
 
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-
+/*
                 Intent intent;
                 intent = new Intent(getActivity(), SentDetailActivity.class);
-                startActivity(intent);
-
-                return true;
+                startActivity(intent);*/
+                return false;
             }
         });
 
@@ -294,12 +282,6 @@ public class HistoryFragment extends Fragment {
                 item.text.setTypeface(MyApplication.getDefaultTypeface());
                 item.text.setText(items[groupPosition][childPosition].toString());
 
-
-                when = new ViewHolder();
-                when.text = (TextView) convertView.findViewById(R.id.when);
-                when.text.setTypeface(MyApplication.getDefaultTypeface());
-
-                when.text.setText(transactions_whens[groupPosition][childPosition].toString());
 
 
             } else {

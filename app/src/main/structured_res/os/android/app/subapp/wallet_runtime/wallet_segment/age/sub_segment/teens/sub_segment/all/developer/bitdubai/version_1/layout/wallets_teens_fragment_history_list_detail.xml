@@ -96,17 +96,16 @@
             android:paddingBottom="8dip"
             android:paddingRight="12dp"
             android:paddingLeft="4dp"
-            android:paddingTop="35dp"
+            android:paddingTop="14dp"
             android:textSize="12sp"
             android:text="notes"
-            android:gravity="center"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentRight="true"
+            android:layout_gravity="center"
             android:textColor="#FF666666"
             android:textStyle="bold"
 
 
-            />
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
 
         <TextView android:id="@+id/name"
             android:layout_width="wrap_content"
@@ -121,20 +120,6 @@
             android:gravity="left"
             android:textColor="#FF666666"/>
 
-        <TextView
-            android:id="@+id/when"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="8dp"
-            android:paddingLeft="12dp"
-            android:paddingRight="8dp"
-            android:paddingTop="35dp"
-            android:textSize="12sp"
-            android:text="time"
-            android:gravity="left"
-            android:textColor="#FF666666"
-            android:layout_alignParentTop="true"
-            />
 
         <TextView
             android:id="@+id/amount"
