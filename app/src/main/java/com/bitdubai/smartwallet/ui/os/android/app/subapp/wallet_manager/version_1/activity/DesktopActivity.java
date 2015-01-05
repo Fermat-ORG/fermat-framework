@@ -2,6 +2,7 @@ package com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_manager.version
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.Menu;
@@ -33,6 +34,9 @@ public class DesktopActivity extends Activity {
                     .add(R.id.container, new DesktopFragment())
                     .commit();
         }
+
+        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/CaviarDreams.ttf");
+        ((MyApplication) this.getApplication()).setDefaultTypeface(tf);
     }
 
 

@@ -1,6 +1,8 @@
 package com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -95,9 +97,43 @@ public  class SendToContactFragment extends android.app.Fragment {
             tv = (TextView) rootView.findViewById(R.id.amount);
             tv.setTypeface(MyApplication.getDefaultTypeface());
            tv.requestFocus();
+//add listener text change, to update discount
+           tv.addTextChangedListener(new TextWatcher() {
 
+               public void onTextChanged(CharSequence s, int start, int before,
+                                         int count) {
+                   if(s.length() != 0 )
+                   { //do your work here }
+                       int porcen = (int )(Math.random() * 15 + 1);
+
+                       double discount =0;
+
+                       if(s.toString() != "")
+                       discount = (porcen * Double.parseDouble(s.toString())) / 100;
+
+                       TextView txtdiscount = (TextView) rootView.findViewById(R.id.discounted);
+                       txtdiscount.setText(String.valueOf(discount));
+
+                       TextView txtpercent = (TextView) rootView.findViewById(R.id.percentage);
+                       txtpercent.setText(String.valueOf(porcen) + "%");
+                   }
+
+               }
+
+               public void beforeTextChanged(CharSequence s, int start, int count,
+                                             int after) {
+
+               }
+
+               public void afterTextChanged(Editable s) {
+
+               }
+
+
+           });
             tv = (TextView) rootView.findViewById(R.id.contact_name);
             tv.setTypeface(MyApplication.getDefaultTypeface());
+           tv.setText(contacts[Integer.parseInt(tagId[0])]);
 
             tv = (TextView) rootView.findViewById(R.id.percentage);
             tv.setTypeface(MyApplication.getDefaultTypeface());
@@ -117,10 +153,44 @@ public  class SendToContactFragment extends android.app.Fragment {
             tv.setTypeface(MyApplication.getDefaultTypeface());
                 tv.setText(transactions_amounts[Integer.parseInt(tagId[0])][Integer.parseInt(tagId[1])]);
             tv.requestFocus();
+           //add listener text change, to update discount
+           tv.addTextChangedListener(new TextWatcher() {
+
+               public void onTextChanged(CharSequence s, int start, int before,
+                                         int count) {
+                   if(s.length() != 0 )
+                   { //do your work here }
+                       int porcen = (int )(Math.random() * 15 + 1);
+
+                       double discount =0;
+
+                       if(s.toString() != "")
+                           discount = (porcen * Double.parseDouble(s.toString())) / 100;
+
+                       TextView txtdiscount = (TextView) rootView.findViewById(R.id.discounted);
+                       txtdiscount.setText(String.valueOf(discount));
+
+                       TextView txtpercent = (TextView) rootView.findViewById(R.id.percentage);
+                       txtpercent.setText(String.valueOf(porcen) + "%");
+                   }
+
+               }
+
+               public void beforeTextChanged(CharSequence s, int start, int count,
+                                             int after) {
+
+               }
+
+               public void afterTextChanged(Editable s) {
+
+               }
+
+
+           });
 
             tv = (TextView) rootView.findViewById(R.id.contact_name);
             tv.setTypeface(MyApplication.getDefaultTypeface());
-                tv.setText(contacts[Integer.parseInt(tagId[0])]);
+           tv.setText(contacts[Integer.parseInt(tagId[0])]);
 
             tv = (TextView) rootView.findViewById(R.id.percentage);
             tv.setTypeface(MyApplication.getDefaultTypeface());

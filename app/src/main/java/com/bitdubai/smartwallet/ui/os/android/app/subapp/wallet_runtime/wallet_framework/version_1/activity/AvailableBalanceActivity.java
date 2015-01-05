@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
@@ -43,6 +44,7 @@ public class AvailableBalanceActivity extends Activity {
                 R.layout.wallets_teens_fragment_account_detail_action_bar,
                 null);
 
+
         // Set up your ActionBar
         final ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowHomeEnabled(false);
@@ -55,6 +57,7 @@ public class AvailableBalanceActivity extends Activity {
         tv = (TextView) actionBarLayout.findViewById(R.id.account_type);
         tv.setTypeface(MyApplication.getDefaultTypeface());
 
+
         tv = (TextView) actionBarLayout.findViewById(R.id.balance);
         tv.setTypeface(MyApplication.getDefaultTypeface());
 
@@ -63,6 +66,9 @@ public class AvailableBalanceActivity extends Activity {
 
         tv = (TextView) actionBarLayout.findViewById(R.id.account_alias);
         tv.setTypeface(MyApplication.getDefaultTypeface());
+
+
+
 
     }
 

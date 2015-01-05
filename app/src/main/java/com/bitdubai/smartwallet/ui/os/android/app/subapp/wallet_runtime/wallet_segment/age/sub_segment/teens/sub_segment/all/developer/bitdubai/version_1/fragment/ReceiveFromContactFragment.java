@@ -102,7 +102,7 @@ public class ReceiveFromContactFragment  extends android.app.Fragment {
         tv = (TextView) rootView.findViewById(R.id.amount);
         tv.setTypeface(MyApplication.getDefaultTypeface());
         tv.setText(transactions_amounts[Integer.parseInt(tagId[0])][Integer.parseInt(tagId[1])]);
-
+        tv.requestFocus();
 
         tv = (TextView) rootView.findViewById(R.id.contact_name);
         tv.setTypeface(MyApplication.getDefaultTypeface());

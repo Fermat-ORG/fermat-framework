@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
@@ -41,6 +42,7 @@ public class SentHistoryActivity extends Activity {
         ((MyApplication) this.getApplication()).setActionBarProperties(this,getWindow(),tabs, getActionBar(), getResources(),abTitle, mTitle.toString());
 
         /* Custom Action Bar with Icon and Text */
+        String[] contacts = new String[]{ "", "Luis Fernando Molina", "Guillermo Villanueva", "Pedro Perrotta", "Mariana Duyos"};
 
         final ViewGroup actionBarLayout = (ViewGroup) getLayoutInflater().inflate(
                 R.layout.wallet_framework_activity_sent_history_action_bar,
@@ -53,13 +55,35 @@ public class SentHistoryActivity extends Activity {
         actionBar.setDisplayShowCustomEnabled(true);
         actionBar.setCustomView(actionBarLayout);
 
+        int tagId = MyApplication.getTagId();
         TextView tv;
 
         tv = (TextView) actionBarLayout.findViewById(R.id.contact_name);
         tv.setTypeface(MyApplication.getDefaultTypeface());
+        tv.setText(contacts[tagId].toString());
 
         tv = (TextView) actionBarLayout.findViewById(R.id.activity_name);
         tv.setTypeface(MyApplication.getDefaultTypeface());
+
+        ImageView profile_picture = (ImageView) actionBarLayout.findViewById(R.id.profile_picture);
+        switch (tagId)
+        {
+            case 1:
+                profile_picture.setImageResource(R.drawable.luis_profile_picture);
+
+                break;
+            case 2:
+                profile_picture.setImageResource(R.drawable.guillermo_profile_picture);
+
+                break;
+            case 3:
+                profile_picture.setImageResource(R.drawable.pedro_profile_picture);
+                break;
+            case 4:
+                profile_picture.setImageResource(R.drawable.mariana_profile_picture);
+
+                break;
+        }
 
     }
 
