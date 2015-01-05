@@ -101,7 +101,7 @@
             android:text="notes"
             android:layout_gravity="center"
             android:textColor="#FF666666"
-            android:textStyle="bold"
+            android:textStyle="normal"
 
 
             android:layout_alignParentTop="true"
