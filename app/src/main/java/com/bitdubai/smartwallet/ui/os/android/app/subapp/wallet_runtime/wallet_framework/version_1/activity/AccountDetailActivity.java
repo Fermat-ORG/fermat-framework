@@ -25,11 +25,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyApplication;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.PagerSlidingTabStrip;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.AccountDetailAllFragment;
 import com.bitdubai.smartwallet.R;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.AccountDetailCreditsFragment;
 
 public class AccountDetailActivity extends FragmentActivity
         {
@@ -107,6 +109,19 @@ public class AccountDetailActivity extends FragmentActivity
                     null);
 
             // Set up your ActionBar
+
+            String[] account_types;
+            String[] balances;
+            String[] balances_available;
+            String[] account_aliases;
+
+
+            account_types = new String[]{"Saving account", "Current account", "Saving account"};
+            account_aliases = new String[]{"My savings", "Pocket money", "Holiday savings"};
+            balances = new String[]{"$4,615.00", "$78.50", "$500.00"};
+            balances_available = new String[]{"$1,615.00 available", "$55.00 available", "$300.00 available"};
+
+            int tagId = MyApplication.getTagId();
             final ActionBar actionBar = getActionBar();
             actionBar.setDisplayShowHomeEnabled(false);
             actionBar.setDisplayShowTitleEnabled(false);
@@ -117,15 +132,37 @@ public class AccountDetailActivity extends FragmentActivity
 
             tv = (TextView) actionBarLayout.findViewById(R.id.account_type);
             tv.setTypeface(MyApplication.getDefaultTypeface());
+            tv.setText(account_types[tagId]);
 
             tv = (TextView) actionBarLayout.findViewById(R.id.balance);
             tv.setTypeface(MyApplication.getDefaultTypeface());
+            tv.setText(balances[tagId]);
 
             tv = (TextView) actionBarLayout.findViewById(R.id.balance_available);
             tv.setTypeface(MyApplication.getDefaultTypeface());
+            tv.setText(balances_available[tagId]);
 
             tv = (TextView) actionBarLayout.findViewById(R.id.account_alias);
             tv.setTypeface(MyApplication.getDefaultTypeface());
+            tv.setText(account_aliases[tagId]);
+
+            ImageView account_picture;
+
+            account_picture = (ImageView) actionBarLayout.findViewById(R.id.account_picture2);
+            account_picture.setTag(tagId);
+
+            switch (tagId)
+            {
+                case 0:
+                    account_picture.setImageResource(R.drawable.account_type_savings_1_small);
+                    break;
+                case 1:
+                    account_picture.setImageResource(R.drawable.account_type_current_small);
+                    break;
+                case 2:
+                    account_picture.setImageResource(R.drawable.account_type_savings_2_small);
+                    break;
+            }
 
         }
 
@@ -321,17 +358,15 @@ public class AccountDetailActivity extends FragmentActivity
 
             Fragment currentFragment;
             switch (position) {
-             //   case 0:
-             //       currentFragment =   AccountDetailAccountFragment.newInstance(position);
-             //       break;
+
                 case 0:
                     currentFragment =   AccountDetailAllFragment.newInstance(position);
                     break;
                 case 1:
-                    currentFragment =  AccountDetailAllFragment.newInstance(position);
+                    currentFragment =  AccountDetailCreditsFragment.newInstance(position);
                     break;
                 case 2:
-                    currentFragment =  AccountDetailAllFragment.newInstance(position);
+                    currentFragment = AccountDetailAllFragment.newInstance(position);
                     break;
 
                 default:

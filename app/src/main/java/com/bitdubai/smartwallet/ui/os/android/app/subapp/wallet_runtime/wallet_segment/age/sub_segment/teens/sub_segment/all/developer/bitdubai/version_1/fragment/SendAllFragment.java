@@ -156,6 +156,7 @@ public class SendAllFragment extends android.app.Fragment {
             ViewHolder amount;
             ViewHolder when;
             ViewHolder note;
+
             int tagId = MyApplication.getTagId();
             if (groupPosition == 0)
             {
@@ -163,6 +164,8 @@ public class SendAllFragment extends android.app.Fragment {
 
                 ImageView  send_profile_picture = (ImageView) convertView.findViewById(R.id.icon_send_to_contact);
                 send_profile_picture.setTag(tagId + "|" + groupPosition);
+
+
 
                 holder = new ViewHolder();
 
@@ -182,7 +185,8 @@ public class SendAllFragment extends android.app.Fragment {
                 note.text = (TextView) convertView.findViewById(R.id.notes);
                 note.text.setTypeface(MyApplication.getDefaultTypeface());
 
-                note.text.setText(notes[groupPosition]);
+
+
             }
             else {
 
@@ -190,8 +194,6 @@ public class SendAllFragment extends android.app.Fragment {
                 // if (convertView == null) {
                 if (1 == 1) {
                     convertView = inf.inflate(R.layout.wallets_teens_fragment_send_all_list_header, parent, false);
-
-
 
                     ImageView  send_profile_picture = (ImageView) convertView.findViewById(R.id.icon_send_to_contact);
                     send_profile_picture.setTag(tagId + "-" + groupPosition);

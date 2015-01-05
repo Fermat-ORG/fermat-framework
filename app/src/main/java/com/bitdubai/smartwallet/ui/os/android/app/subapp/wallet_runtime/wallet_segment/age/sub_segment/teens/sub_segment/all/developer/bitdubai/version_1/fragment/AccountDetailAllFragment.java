@@ -90,7 +90,7 @@ String debits = "";
         pictures_all = new String[]{"lucia_profile_picture", "juan_profile_picture", "luis_profile_picture", "refill_2", "guillermo_profile_picture", "refill_4","karina_profile_picture","mariana_profile_picture","taylor_profile_picture","refill_1"};
 
         //tab credit
-        if(tabId == 2) {
+     /*   if(tabId == 1) {
             for (int i = 0; i < debit_credit.length; i++) {
                 if (debit_credit[i] == "credit") {
                     contact_list.add(contacts_all[i]);
@@ -102,22 +102,18 @@ String debits = "";
 
                     }
             }
-            try
-            {
+
                types = (String[])types_list.toArray(new String[types_list.size()]);
                 contacts = (String[])contact_list.toArray(new String[contact_list.size()]);
                 amounts = (String[])amounts_list.toArray(new String[amounts_list.size()]);
                 whens = (String[])whens_list.toArray(new String[whens_list.size()]);
                 notes = (String[])notes_list.toArray(new String[notes_list.size()]);
                 pictures = (String[])pictures_list.toArray(new String[pictures_list.size()]);
-            }
-            catch(Exception e){
-                String error = e.getMessage();
-            }
 
-        }
+
+        }*/
         //tab debit
-        if(tabId == 1) {
+        if(tabId == 0) {
             for (int i = 0; i < debit_credit.length; i++) {
                 if (debit_credit[i] == "debit") {
                     contact_list.add(contacts_all[i]);
@@ -144,7 +140,7 @@ String debits = "";
         }
 
         //tab all
-        if(tabId == 3) {
+        if(tabId == 2) {
             types = types_all;
             contacts = contacts_all;
             amounts = amounts_all;

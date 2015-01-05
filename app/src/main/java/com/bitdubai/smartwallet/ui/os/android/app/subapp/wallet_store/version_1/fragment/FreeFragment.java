@@ -204,21 +204,21 @@ public class FreeFragment extends Fragment {
                 };
 
         String[] installed =
-                {"true",
+                {"false",
+                        "false",
+                        "true",
                         "true",
                         "true",
                         "true",
                         "true",
                         "true",
                         "false",
+                        "false",
+                        "false",
                         "true",
                         "false",
                         "false",
                         "false",
-                        "true",
-                        "false",
-                        "false",
-                         "false",
                         "false",
                         "false"
                 };

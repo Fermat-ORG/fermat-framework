@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
@@ -46,20 +47,50 @@ public class ReceiveAllHistoryActivity extends Activity {
                 null);
 
         // Set up your ActionBar
+        String[] contacts = new String[]{"","Lucia Alarcon De Zamacona", "Juan Luis R. Pons", "Karina Rodríguez", "Simon Cushing","Céline Begnis","Taylor Backus","Stephanie Himonidis","Kimberly Brown" };
         final ActionBar actionBar = getActionBar();
         actionBar.setDisplayShowHomeEnabled(false);
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayShowCustomEnabled(true);
         actionBar.setCustomView(actionBarLayout);
-
+        int tagId = MyApplication.getTagId();
         TextView tv;
 
         tv = (TextView) actionBarLayout.findViewById(R.id.contact_name);
         tv.setTypeface(MyApplication.getDefaultTypeface());
+        tv.setText(contacts[tagId].toString());
 
         tv = (TextView) actionBarLayout.findViewById(R.id.activity_name);
         tv.setTypeface(MyApplication.getDefaultTypeface());
 
+        ImageView profile_picture = (ImageView) actionBarLayout.findViewById(R.id.profile_picture);
+        switch (tagId)
+        {
+            case 1:
+                profile_picture.setImageResource(R.drawable.lucia_profile_picture);
+                break;
+            case 2:
+                profile_picture.setImageResource(R.drawable.juan_profile_picture);
+                break;
+            case 3:
+                profile_picture.setImageResource(R.drawable.karina_profile_picture);
+                break;
+            case 4:
+                profile_picture.setImageResource(R.drawable.simon_profile_picture);
+                break;
+            case 5:
+                profile_picture.setImageResource(R.drawable.celine_profile_picture);
+                break;
+            case 6:
+                profile_picture.setImageResource(R.drawable.taylor_profile_picture);
+                break;
+            case 7:
+                profile_picture.setImageResource(R.drawable.stephani_profile_picture);
+                break;
+            case 8:
+                profile_picture.setImageResource(R.drawable.kimberly_profile_picture);
+                break;
+        }
     }
 
 

@@ -16,6 +16,8 @@ import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyApplication;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.SendToNewContactActivity;
 
+import java.util.ArrayList;
+
 
 public  class AccountDetailCreditsFragment extends Fragment {
 
@@ -28,10 +30,24 @@ public  class AccountDetailCreditsFragment extends Fragment {
     private String[] whens;
     private String[] notes;
     private String[] pictures;
+    private String[] types;
     private String[][] transactions;
     String[][] transactions_amounts;
     private String[][] transactions_whens;
-
+    private String[] debit_credit;
+    private String[] types_all;
+    private String[] contacts_all;
+    private String[] amounts_all;
+    private String[] whens_all;
+    private String[] notes_all;
+    private String[] pictures_all;
+    private ArrayList<String> contact_list = new ArrayList<>();
+    private ArrayList<String> amounts_list = new ArrayList<>();
+    private ArrayList<String> whens_list = new ArrayList<>();
+    private ArrayList<String> pictures_list = new ArrayList<>();
+    private ArrayList<String> notes_list = new ArrayList<>();
+    private ArrayList<String> types_list = new ArrayList<>();
+    private static int tabId;
 
 
     public static AccountDetailCreditsFragment newInstance(int position) {
@@ -39,6 +55,7 @@ public  class AccountDetailCreditsFragment extends Fragment {
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
+        tabId = position;
         return f;
     }
 
@@ -46,12 +63,56 @@ public  class AccountDetailCreditsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        contacts = new String[]{ "Luis Fernando Molina", "Guillermo Villanueva", "Pedro Perrotta", "Mariana Duyos"};
-        amounts = new String[]{  "$325.00", "$1,400.00", "$0.50", "$25.00"};
-        whens = new String[]{  "3 min ago", "2 hours ago", "today 9:24 AM", "yesterday"};
-        notes = new String[]{  "Electricity bill", "Flat rent", "Test address", "More pictures"};
-
+        String debits = "";
         pictures = new String[]{"", "luis_profile_picture", "guillermo_profile_picture", "pedro_profile_picture", "mariana_profile_picture"};
+
+        types_all = new String[]{ "received", "received", "sent", "refill","sent", "refill" , "received", "sent","received", "refill"};
+        debit_credit = new String[]{"credit",
+                "credit",
+                "debit",
+                "credit",
+                "debit",
+                "credit",
+                "credit",
+                "debit",
+                "credit",
+                "credit"};
+        contacts_all = new String[]{"Lucia Alarcon De Zamacona",
+                "Juan Luis R. Pons",
+                "Luis Fernando Molina",
+                "Kalustyan´s",
+                "Guillermo Villanueva",
+                "Kings Super Market",
+                "Karina Rodriguez",
+                "Mariana Duyos",
+                "Taylor Backus",
+                "D´Agostino"};
+        amounts_all = new String[]{"$200.00", "$3,000.00", "$325.00", "$350.00", "$1,400.00", "$1,500.00", "$400.00"," $25.00","$600.00", "$250.00"};
+        whens_all = new String[]{"4 hours ago", "5 hours ago", "yesterday", "yesterday", "yesterday", "yesterday", "31 dec 14", "23 may 14", "1 year ago", "5 sep 14"};
+        notes_all = new String[]{"new telephone", "old desk", "electricity bill ", "for electricity bill", "flat rent", "for this week expenses","car oil", "more pictures","computer monitor", "refill test"};
+        pictures_all = new String[]{"lucia_profile_picture", "juan_profile_picture", "luis_profile_picture", "refill_2", "guillermo_profile_picture", "refill_4","karina_profile_picture","mariana_profile_picture","taylor_profile_picture","refill_1"};
+
+        //tab credit
+
+            for (int i = 0; i < debit_credit.length; i++) {
+                if (debit_credit[i] == "credit") {
+                    contact_list.add(contacts_all[i]);
+                    amounts_list.add(amounts_all[i]);
+                    whens_list.add(whens_all[i]);
+                    pictures_list.add(pictures_all[i]);
+                    notes_list.add(notes_all[i]);
+                    types_list.add(types_all[i]);
+
+                }
+            }
+
+                types = (String[])types_list.toArray(new String[types_list.size()]);
+                contacts = (String[])contact_list.toArray(new String[contact_list.size()]);
+                amounts = (String[])amounts_list.toArray(new String[amounts_list.size()]);
+                whens = (String[])whens_list.toArray(new String[whens_list.size()]);
+                notes = (String[])notes_list.toArray(new String[notes_list.size()]);
+                pictures = (String[])pictures_list.toArray(new String[pictures_list.size()]);
+
 
         transactions = new String[][]{
 
@@ -186,13 +247,18 @@ public  class AccountDetailCreditsFragment extends Fragment {
             ViewHolder holder;
             ViewHolder amount;
             ViewHolder when;
+            ViewHolder type;
 
 
             //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
             // if (convertView == null) {
             if (1 == 1) {
-                convertView = inf.inflate(R.layout.wallets_teens_fragment_account_detail_debits, parent, false);
+                convertView = inf.inflate(R.layout.wallets_teens_fragment_account_detail_all, parent, false);
                 holder = new ViewHolder();
+
+                type = new ViewHolder();
+                type.text = (TextView) convertView.findViewById(R.id.type);
+                type.text.setTypeface(MyApplication.getDefaultTypeface());
 
                 holder.text = (TextView) convertView.findViewById(R.id.notes);
                 holder.text.setTypeface(MyApplication.getDefaultTypeface());
@@ -226,31 +292,49 @@ public  class AccountDetailCreditsFragment extends Fragment {
             ViewHolder when;
             ViewHolder note;
             ImageView profile_picture;
-
+            ViewHolder type;
 
 
 
             //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
             // if (convertView == null) {
             if (1 == 1) {
-                convertView = inf.inflate(R.layout.wallets_teens_fragment_account_detail_credits, parent, false);
+                convertView = inf.inflate(R.layout.wallets_teens_fragment_account_detail_all, parent, false);
 
                 profile_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
 
-                switch (groupPosition)
+
+                switch (pictures[groupPosition])
                 {
-                    case 0:
+                    case "lucia_profile_picture":
+                        profile_picture.setImageResource(R.drawable.lucia_profile_picture);
+                        break;
+                    case "juan_profile_picture":
+                        profile_picture.setImageResource(R.drawable.juan_profile_picture);
+                        break;
+                    case "luis_profile_picture":
                         profile_picture.setImageResource(R.drawable.luis_profile_picture);
                         break;
-                    case 1:
+                    case "refill_2":
+                        profile_picture.setImageResource(R.drawable.refill_2);
+                        break;
+                    case "guillermo_profile_picture":
                         profile_picture.setImageResource(R.drawable.guillermo_profile_picture);
                         break;
-                    case 2:
-                        profile_picture.setImageResource(R.drawable.pedro_profile_picture);
+                    case "refill_4":
+                        profile_picture.setImageResource(R.drawable.refill_4);
                         break;
-                    case 3:
+                    case "karina_profile_picture":
+                        profile_picture.setImageResource(R.drawable.karina_profile_picture);
+                        break;
+                    case "mariana_profile_picture":
                         profile_picture.setImageResource(R.drawable.mariana_profile_picture);
                         break;
+                    case "taylor_profile_picture":
+                        profile_picture.setImageResource(R.drawable.taylor_profile_picture);
+                        break;
+                    case "refill_1":
+                        profile_picture.setImageResource(R.drawable.refill_1);
                 }
 
 
@@ -266,10 +350,14 @@ public  class AccountDetailCreditsFragment extends Fragment {
 
                 amount.text.setText(amounts[groupPosition].toString());
 
+                type = new ViewHolder();
+                type.text = (TextView) convertView.findViewById(R.id.type);
+                type.text.setTypeface(MyApplication.getDefaultTypeface());
+                type.text.setText(types[groupPosition].toString());
+
                 when = new ViewHolder();
                 when.text = (TextView) convertView.findViewById(R.id.when);
                 when.text.setTypeface(MyApplication.getDefaultTypeface());
-
                 when.text.setText(whens[groupPosition].toString());
 
                 note = new ViewHolder();

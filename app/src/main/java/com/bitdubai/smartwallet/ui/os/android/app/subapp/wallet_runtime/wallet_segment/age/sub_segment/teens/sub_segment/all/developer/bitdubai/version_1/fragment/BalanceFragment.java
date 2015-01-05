@@ -66,6 +66,8 @@ public class BalanceFragment extends ListFragment implements LoaderManager.Loade
     public void onListItemClick(ListView l, View v, int position, long id) {
         Intent intent;
         View clickedView = v;
+
+        MyApplication.setTagId(position);
         intent = new Intent(getActivity(), AccountDetailActivity.class);
         startActivity(intent);
 
@@ -263,6 +265,7 @@ public class BalanceFragment extends ListFragment implements LoaderManager.Loade
             ImageView account_picture;
 
             account_picture = (ImageView) view.findViewById(R.id.account_picture);
+            account_picture.setTag(position);
 
             switch (position)
             {
