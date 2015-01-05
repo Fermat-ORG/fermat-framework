@@ -26,6 +26,10 @@ import com.bitdubai.smartwallet.R;
 
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyApplication;
 
+import org.w3c.dom.Text;
+
+import static com.bitdubai.smartwallet.R.id.send_message_button;
+
 
 public class StoreChatFragment extends Fragment {
 
@@ -80,6 +84,15 @@ public class StoreChatFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.wallets_teens_fragment_store_chat, container, false);
 
+
+        TextView userInput;
+        TextView button;
+
+        userInput = ((TextView)rootView.findViewById(R.id.edit_text));
+        userInput.setTypeface(MyApplication.getDefaultTypeface());
+
+        button = ((TextView)rootView.findViewById(R.id.send_message_button));
+        button.setTypeface(MyApplication.getDefaultTypeface());
 
         return rootView;
     }
@@ -186,6 +199,7 @@ public class StoreChatFragment extends Fragment {
                 TextView hours;
                 TextView dates;
                 TextView tv;
+
                 switch (groupPosition) {
 
                     case 0:
@@ -394,21 +408,11 @@ public class StoreChatFragment extends Fragment {
                         hours.setTypeface(MyApplication.getDefaultTypeface());
 
                         break;
-
-
                 }
-
                 return view;
-
             }
-
-
-
-
             return convertView;
         }
-
-
         private class ViewHolder {
             TextView text;
         }

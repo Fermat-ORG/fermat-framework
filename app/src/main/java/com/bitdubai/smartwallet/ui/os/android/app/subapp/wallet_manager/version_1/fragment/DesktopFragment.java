@@ -226,7 +226,7 @@ public class DesktopFragment  extends android.app.Fragment {
             }
 
             holder.companyTextView.setText(item.company);
-             holder.companyTextView.setTypeface(MyApplication.getDefaultTypeface());
+            holder.companyTextView.setTypeface(MyApplication.getDefaultTypeface());
 
 
 
