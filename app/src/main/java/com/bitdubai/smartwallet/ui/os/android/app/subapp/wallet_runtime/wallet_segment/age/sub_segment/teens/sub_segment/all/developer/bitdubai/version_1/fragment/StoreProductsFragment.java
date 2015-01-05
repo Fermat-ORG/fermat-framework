@@ -357,6 +357,9 @@ public class StoreProductsFragment extends Fragment {
                 convertView = inflater.inflate(R.layout.wallets_teens_fragment_store_products_item, parent, false);
                 holder = new ViewHolder();
 
+                holder.dislike= (ImageView) convertView.findViewById(R.id.bad);
+                holder.like= (ImageView) convertView.findViewById(R.id.good);
+
                 holder.star1= (ImageView) convertView.findViewById(R.id.star_1);
                 holder.star2= (ImageView) convertView.findViewById(R.id.star_2);
                 holder.star3= (ImageView) convertView.findViewById(R.id.star_3);
@@ -454,6 +457,20 @@ public class StoreProductsFragment extends Fragment {
                 holder.sale.setImageResource(R.drawable.grid_background_sale_flipped);
             }
 
+            switch (position)
+            {
+                case 3:
+                    holder.like.setImageResource(R.drawable.ic_action_good_gold);
+                    break;
+                case 6:
+                    holder.like.setImageResource(R.drawable.ic_action_good_gold);
+                    break;
+                case 9:
+                    holder.dislike.setImageResource(R.drawable.ic_action_bad_gold);
+                    break;
+
+            }
+
 
             switch (position)
             {
@@ -520,6 +537,9 @@ public class StoreProductsFragment extends Fragment {
             public ImageView star3;
             public ImageView star4;
             public ImageView star5;
+
+            public ImageView like;
+            public ImageView dislike;
 
             public ImageView sale;
             public ImageView favorite;

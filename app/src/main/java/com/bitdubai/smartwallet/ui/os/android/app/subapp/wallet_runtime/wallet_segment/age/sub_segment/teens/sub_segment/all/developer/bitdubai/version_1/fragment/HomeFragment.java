@@ -229,7 +229,6 @@ public class HomeFragment extends ListFragment implements LoaderManager.LoaderCa
             super(context, android.R.layout.simple_list_item_2);
             mInflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
-
         public void setData(List<Model> data) {
             clear();
             if (data != null) {
