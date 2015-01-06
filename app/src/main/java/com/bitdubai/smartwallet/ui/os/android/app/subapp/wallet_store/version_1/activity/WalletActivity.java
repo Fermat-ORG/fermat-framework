@@ -85,6 +85,7 @@ public class WalletActivity extends FragmentActivity
 
         //getWindow().getDecorView().setBackgroundResource(R.drawable.wallet_wallpaper_yellow);
 
+
         pager = (ViewPager) findViewById(R.id.pager);
         adapter = new MyPagerAdapter(getSupportFragmentManager());
 
