@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -96,32 +97,47 @@ public  class SendToContactFragment extends android.app.Fragment {
 
             tv = (TextView) rootView.findViewById(R.id.amount);
             tv.setTypeface(MyApplication.getDefaultTypeface());
-           tv.requestFocus();
+
 //add listener text change, to update discount
+
+           tv.setOnTouchListener(new View.OnTouchListener() {
+               public boolean onTouch(View view, MotionEvent event) {
+                   if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                       int porcen = (int )(Math.random() * 15 + 1);
+                       TextView txtpercent = (TextView) rootView.findViewById(R.id.percentage);
+                       txtpercent.setText(String.valueOf(porcen) + "%");
+                   }
+                   return false;
+               }
+           });
+
+
            tv.addTextChangedListener(new TextWatcher() {
 
                public void onTextChanged(CharSequence s, int start, int before,
                                          int count) {
-                   if(s.length() != 0 )
-                   { //do your work here }
-                       int porcen = (int )(Math.random() * 15 + 1);
 
-                       double discount =0;
-
-                       if(s.toString() != "")
-                       discount = (porcen * Double.parseDouble(s.toString())) / 100;
-
-                       TextView txtdiscount = (TextView) rootView.findViewById(R.id.discounted);
-                       txtdiscount.setText(String.valueOf(discount));
-
-                       TextView txtpercent = (TextView) rootView.findViewById(R.id.percentage);
-                       txtpercent.setText(String.valueOf(porcen) + "%");
-                   }
 
                }
 
                public void beforeTextChanged(CharSequence s, int start, int count,
                                              int after) {
+                   if(s.length() != 0 )
+                   { //do your work here }
+                       double porcen = 0;
+                       TextView txtpercent = (TextView) rootView.findViewById(R.id.percentage);
+                       porcen =  Double.parseDouble(txtpercent.getText().toString().replace("%", ""));
+
+                       double discount =0;
+
+                       if(s.toString() != "")
+                           discount = (porcen * Double.parseDouble(s.toString().replace("$", ""))) / 100;
+
+                       TextView txtdiscount = (TextView) rootView.findViewById(R.id.discounted);
+                       txtdiscount.setText(String.valueOf(discount));
+
+
+                   }
 
                }
 
@@ -131,13 +147,15 @@ public  class SendToContactFragment extends android.app.Fragment {
 
 
            });
+           tv.requestFocus();
             tv = (TextView) rootView.findViewById(R.id.contact_name);
             tv.setTypeface(MyApplication.getDefaultTypeface());
            tv.setText(contacts[Integer.parseInt(tagId[0])]);
 
             tv = (TextView) rootView.findViewById(R.id.percentage);
             tv.setTypeface(MyApplication.getDefaultTypeface());
-            tv.setText("0.00%");
+           int porcen = (int )(Math.random() * 15 + 1);
+           tv.setText(String.valueOf(porcen) + "%");
 
             tv = (TextView) rootView.findViewById(R.id.discounted);
             tv.setTypeface(MyApplication.getDefaultTypeface());
@@ -152,41 +170,63 @@ public  class SendToContactFragment extends android.app.Fragment {
             tv = (TextView) rootView.findViewById(R.id.amount);
             tv.setTypeface(MyApplication.getDefaultTypeface());
                 tv.setText(transactions_amounts[Integer.parseInt(tagId[0])][Integer.parseInt(tagId[1])]);
-            tv.requestFocus();
+
            //add listener text change, to update discount
+
+
+          /* tv.setOnTouchListener(new View.OnTouchListener() {
+               public boolean onTouch(View view, MotionEvent event) {
+                   if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                       int porcen = (int )(Math.random() * 15 + 1);
+                       TextView txtpercent = (TextView) rootView.findViewById(R.id.percentage);
+                       txtpercent.setText(String.valueOf(porcen) + "%");
+                   }
+                   return false;
+               }
+           });*/
            tv.addTextChangedListener(new TextWatcher() {
 
                public void onTextChanged(CharSequence s, int start, int before,
                                          int count) {
-                   if(s.length() != 0 )
-                   { //do your work here }
-                       int porcen = (int )(Math.random() * 15 + 1);
 
-                       double discount =0;
-
-                       if(s.toString() != "")
-                           discount = (porcen * Double.parseDouble(s.toString())) / 100;
-
-                       TextView txtdiscount = (TextView) rootView.findViewById(R.id.discounted);
-                       txtdiscount.setText(String.valueOf(discount));
-
-                       TextView txtpercent = (TextView) rootView.findViewById(R.id.percentage);
-                       txtpercent.setText(String.valueOf(porcen) + "%");
-                   }
 
                }
 
                public void beforeTextChanged(CharSequence s, int start, int count,
                                              int after) {
 
+                   if(s.toString().length() != 0 )
+                   { //do your work here }
+                       double porcen = 0;
+                       TextView txtpercent = (TextView) rootView.findViewById(R.id.percentage);
+                       porcen =  Double.parseDouble(txtpercent.getText().toString().replace("%", ""));
+
+                       double discount =0;
+
+                     try {
+                         discount = (porcen * Double.parseDouble(s.toString().replace("$", ""))) / 100;
+                     }
+                     catch (Exception ex)
+                     {
+
+                     }
+
+
+                       TextView txtdiscount = (TextView) rootView.findViewById(R.id.discounted);
+                       txtdiscount.setText(String.valueOf(discount));
+
+
+                   }
                }
 
                public void afterTextChanged(Editable s) {
+
 
                }
 
 
            });
+           tv.requestFocus();
 
             tv = (TextView) rootView.findViewById(R.id.contact_name);
             tv.setTypeface(MyApplication.getDefaultTypeface());
@@ -195,6 +235,7 @@ public  class SendToContactFragment extends android.app.Fragment {
             tv = (TextView) rootView.findViewById(R.id.percentage);
             tv.setTypeface(MyApplication.getDefaultTypeface());
             tv.setText(Percentage[Integer.parseInt(tagId[0])]);
+
 
             tv = (TextView) rootView.findViewById(R.id.discounted);
             tv.setTypeface(MyApplication.getDefaultTypeface());

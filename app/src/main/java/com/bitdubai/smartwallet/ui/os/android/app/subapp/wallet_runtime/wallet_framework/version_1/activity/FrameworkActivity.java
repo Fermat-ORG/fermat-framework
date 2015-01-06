@@ -379,8 +379,8 @@ public class FrameworkActivity extends FragmentActivity
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        currentColor = savedInstanceState.getInt("currentColor");
-        ((MyApplication) this.getApplication()).changeColor(currentColor,getResources());
+       // currentColor = savedInstanceState.getInt("currentColor");
+       // ((MyApplication) this.getApplication()).changeColor(currentColor,getResources());
     }
 
 

@@ -141,7 +141,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_action_send_now_grey"
-                android:onClick="onSendIconClicked"
+                android:onClick="onSendToContactIconClicked"
                 android:layout_weight="1"/>
 
             <ImageView
