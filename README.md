@@ -141,7 +141,7 @@ The problem to be solved is how we can save everybody a few years and instead of
 
 * Include in the wallet platform a wallet store from where end users can download any of the wallets available.
 
-* Developers, marketeers and brands can publish their wallets in the wallet store. The platform allow them to keep in touch with their user base by sending them any number of different tokens representing coupons, discounts, etc, or even publicity with some value attached. Tokens with some crypto value that can be used as intended or traded by users of that kind of wallet.
+* Developers, marketeers and brands can publish their wallets in the wallet store. 
 
 ##### Associated Concepts:
 
@@ -170,17 +170,16 @@ The problem to be solved is how we can save everybody a few years and instead of
 
 * Integrating one by one each of their systems to this new technology seems like a huge and resource intensive project.
 
+* Banks have huge financial power to market crypto products to their current customer base that compromises half of the adult population of the world, but they are not doing it in part because the don't have the technology needed to turn their bank into a crypto bank. 
+
+
 #### Solution:
 
-Deployed on-cloud:
+* Complement the IT infrastructure traditional banks already have allowing them to reuse most of it seamlessly. Enable banks to create new products like bitcoin accounts for their costumers in whatever core banking system they currently have. Enable customers to freely transfer FROM and TO any of these crypto products and fiat accounts as well, using any of the channels currently available like internet banking, mobile banking, phone banking and ATMs. Allow them to withdraw funds from their crypto accounts (turned into fiat) at any branch of the bank or ATM network oblem #2-c)
 
-Problem #1 solution enabled:  Enables the financial institutions of the future to run a crypto virtual bank with credit and saving products at a cost low enough that would turn profitable the business of banking individuals who live on less than $5/day. In this way we enable the solution to problem #1.
+* Implement an architecture that absorb the evolution of the underlying technologies in order to help them get quickly on top of it with new products and services for their customers and adapt easily to any future change. Assume there will be multiple public networks for transporting value and design the banking platform to adapt quickly to whatever is needed to use.   
 
-* Complement the IT infrastructure traditional banks already have allowing them to reuse most of it seamlessly. Enable banks to create new products like bitcoin accounts for their costumes in whatever core banking system they currently have. Enable customers to freely transfer FROM and TO any of these crypto products and fiat accounts as well, using any of the channels currently available like internet banking, mobile banking, phone banking and ATMs. Allow them to withdraw funds from their crypto accounts (turned into fiat) at any branch of the bank or ATM network oblem #2-c)
-
-* Implement an architecture that absorb the evolution of the underlying technologies in order to help them get quickly on top of it with new products and services for their customers and adapt easily to any future change. Assumes there will be multiple public networks for transporting value and design the banking platform to adapt quickly to whatever is needed to use.   
-
-* Enable traditional banks to not depend on third party service providers to run a crypto bank and avoind the risk of startups not complying with regulations or melting down overnight. 
+* Enable traditional banks to not depend on third party service providers to run a crypto bank and avoid the risk of startups not complying with regulations or melting down overnight. 
 
 ##### Associated Concepts:
 
@@ -194,6 +193,29 @@ Problem #1 solution enabled:  Enables the financial institutions of the future t
 ##### Associated Functionality:
 
 * Crypto products in current core banking systems
+* Crypto account system
+* Refill engine which monitors banks customers wallet and automatically refill them
+
+
+
+## Problem #5
+### Almost nobody is marketing crypto currencies
+
+#### Descrption:
+
+Since very recently a few well funded startups start spending in marketing virtual currencies to the general public. Besides that, regular people is subject to the mood of the mainstream media, which in turn its mood tends to attached to bitcoin price performance. The problem to solve is how to make every single business of a certain size all arround the world to spend their own financial resources to market both on consumer and merchants the use of crypto currencies and stop depending both on mainstream media coverage and the few resources startups have.
+
+#### Solution:
+
+* Give every single business arround the world the possibility to rebrand one of the hundreds of segmented wallets in a fast and inexpensive way (basically for free).
+* Allow them to easily affiate shops to accept their wallets and handle all the details of the different kinds of deals the branded wallet publisher could do with a shop. Enforce automatically the contract between the wallet publisher and the shop accepting its branded wallet.
+* Allow them to keep in touch with their user base by sending them any number of different tokens representing coupons, discounts, etc, or even publicity with some value attached. These tokens with crypto value attached  can be used as intended or traded by users of that kind of wallet at will or traded automatically by the platforms AI agent acting on behalf of each user.
+
+##### Associated Concepts:
+
+* Branded Wallet
+* Wallet Publisher
+* Wallet AI Agent
 
 
 ## Prototype
