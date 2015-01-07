@@ -223,6 +223,10 @@ Since very recently a few well funded startups start spending in marketing virtu
 
 ## Prototype
 
+### Android APP proto
+
+![](https://github.com/bitDubai/smart-wallet/blob/master/proto/app-debug.apk)
+
 ### Wallet Store
 
 ![](https://github.com/bitDubai/smart-wallet/blob/master/proto/wallet_manager_1.png)
