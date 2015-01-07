@@ -42,7 +42,7 @@ You can contribute with your own expertise and time or hiring a developer that c
 The problems listed here are ordered by importance. If you don't agree with the priorization, description of the problem or the solution, or you belive there are other problems not considered here submit a pull request with your suggestions or mail them to contribution@bitdubai.com .
 
 ## Problem #1
-### People don't want to loose money with volatility.
+### People don't want to loose money with volatility
 
 #### Description:
 
@@ -63,7 +63,7 @@ John Doe bought some bitcoins when the prices were $154, $543, $1243. He also sp
 
 
 ## Problem #2
-### Lack of local ecosystems.
+### Lack of local ecosystems
 
 #### Descrption:
 
@@ -108,7 +108,7 @@ Budapest is a capital city of an European country. It's not only difficult to fi
 
 
 ## Problem #3
-### Lack of wallet segmentation.
+### Lack of wallet segmentation
 
 #### Descrption:
 
@@ -156,6 +156,44 @@ The problem to be solved is how we can save everybody a few years and instead of
 
 * Run a third party wallet on top of the wallet platform
 * Allow end users to download any available wallet on the wallet store
+
+
+
+## Problem #4
+### Banks not stepping in
+
+#### Descrption:
+
+* Traditional banks can see the disruption coming. They see that crypto networks are a disruptive technology that brings a huge opportunity for those who can take it quickly enough and a great threat to those who can't. They lack the agility to come up with a solution by themselves and their traditional platform providers aren't helping. They need to move/react quickly but at the same time should have the agility to adapt to this rapidly evolving landscape. 
+
+* The only way they see so far is to connect to and rely upon a set of startups in order to be able to run a crypto bank. They understand the risk of dealing with companies that can meltdown overnight or not fully comply with regulations. They also face the fact that converting them into a crypto bank is none of these startups core business. 
+
+* Integrating one by one each of their systems to this new technology seems like a huge and resource intensive project.
+
+#### Solution:
+
+Deployed on-cloud:
+
+Problem #1 solution enabled:  Enables the financial institutions of the future to run a crypto virtual bank with credit and saving products at a cost low enough that would turn profitable the business of banking individuals who live on less than $5/day. In this way we enable the solution to problem #1.
+
+* Complement the IT infrastructure traditional banks already have allowing them to reuse most of it seamlessly. Enable banks to create new products like bitcoin accounts for their costumes in whatever core banking system they currently have. Enable customers to freely transfer FROM and TO any of these crypto products and fiat accounts as well, using any of the channels currently available like internet banking, mobile banking, phone banking and ATMs. Allow them to withdraw funds from their crypto accounts (turned into fiat) at any branch of the bank or ATM network oblem #2-c)
+
+* Implement an architecture that absorb the evolution of the underlying technologies in order to help them get quickly on top of it with new products and services for their customers and adapt easily to any future change. Assumes there will be multiple public networks for transporting value and design the banking platform to adapt quickly to whatever is needed to use.   
+
+* Enable traditional banks to not depend on third party service providers to run a crypto bank and avoind the risk of startups not complying with regulations or melting down overnight. 
+
+##### Associated Concepts:
+
+* Crypto Banking Platform
+* Digital Vault
+* Money Stream
+* Pocket Money
+* Bank Segments Wallet
+* Smart Sourcing of Funds.
+
+##### Associated Functionality:
+
+* Crypto products in current core banking systems
 
 
 ## Prototype
