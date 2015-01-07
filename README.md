@@ -1,11 +1,14 @@
 bitDubai
 ========
 
-The objective of the bitDubai project is to develop whatever technology is found to be neccesary to bring adoption of crypto currency to the entire world population as fast as possible.
+The objective of the bitDubai project is to develop whatever technology is found to be neccesary to bring adoption of crypto currencies to the entire world population as fast as possible.
 
-To accomplish that a prioritized list of the problems/barriers that are preventing mass adoption has been written and a solution has been proposed for each of these problems with one condition: each solution must fit into the architecture of one single system that would solve all these identified problems at the same time.
+To accomplish this a prioritized list of the problems/barriers that are preventing mass adoption has been written and a solution has been proposed for each of these problems with one condition: each solution must fit into the architecture of one single system that would solve all these identified problems at the same time.
 
 As of today, this system spans two interconected platforms: a Crypto Wallet Platform and a Crypto Banking Platform.
+
+The current status of the project is moving towards a non working prototype. The architecture of the system has already been stablished.
+
 
 # Crypto Wallet Platform
 
