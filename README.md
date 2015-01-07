@@ -225,5 +225,36 @@ Since very recently a few well funded startups start spending in marketing virtu
 
 ### Wallet Store
 
-![](https://github.com/bitDubai/smart-wallet/blob/master/proto/wallet_screenshot_15.jpg)
+![](https://github.com/bitDubai/smart-wallet/blob/master/proto/wallet_manager_1.png)
+
+### Wallet Store
+
+![](https://github.com/bitDubai/smart-wallet/blob/master/proto/wallet_store_1.png)
+![](https://github.com/bitDubai/smart-wallet/blob/master/proto/wallet_store_2.png)
+![](https://github.com/bitDubai/smart-wallet/blob/master/proto/wallet_store_3.png)
+![](https://github.com/bitDubai/smart-wallet/blob/master/proto/wallet_store_4.png)
+
+### Kids Wallet 
+
+![](https://github.com/bitDubai/smart-wallet/blob/master/proto/wallet_kids_1.png)
+![](https://github.com/bitDubai/smart-wallet/blob/master/proto/wallet_kids_2.png)
+
+### Ladies Wallet 
+
+![](https://github.com/bitDubai/smart-wallet/blob/master/proto/wallet_teens_1.png)
+![](https://github.com/bitDubai/smart-wallet/blob/master/proto/wallet_teens_2.png)
+![](https://github.com/bitDubai/smart-wallet/blob/master/proto/wallet_teens_3.png)
+![](https://github.com/bitDubai/smart-wallet/blob/master/proto/wallet_teens_4.png)
+![](https://github.com/bitDubai/smart-wallet/blob/master/proto/wallet_teens_5.png)
+![](https://github.com/bitDubai/smart-wallet/blob/master/proto/wallet_teens_6.png)
+![](https://github.com/bitDubai/smart-wallet/blob/master/proto/wallet_teens_7.png)
+![](https://github.com/bitDubai/smart-wallet/blob/master/proto/wallet_teens_8.png)
+![](https://github.com/bitDubai/smart-wallet/blob/master/proto/wallet_teens_9.png)
+![](https://github.com/bitDubai/smart-wallet/blob/master/proto/wallet_teens_10.png)
+![](https://github.com/bitDubai/smart-wallet/blob/master/proto/wallet_teens_11.png)
+![](https://github.com/bitDubai/smart-wallet/blob/master/proto/wallet_teens_12.png)
+
+
+
+
 

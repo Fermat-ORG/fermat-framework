@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyApplication;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.fragment.NavigationDrawerFragment;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.PagerSlidingTabStrip;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ContactsFragment;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.DiscountsFragment;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.HomeFragment;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.SendFragment;
@@ -49,7 +50,6 @@ public class FrameworkActivity extends FragmentActivity
     private Drawable oldBackground = null;
     private int currentColor = 0xFF666666;
 
-    private String walletStyle = "";
 
     //***
     /**
@@ -168,21 +168,6 @@ public class FrameworkActivity extends FragmentActivity
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.wallet_framework_activity_framework);
-
-        mNavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
-
-        mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getFragmentManager().findFragmentById(R.id.navigation_drawer);
-
-
-        // Set up the drawer.
-        mNavigationDrawerFragment.setUp(
-                R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
-
-
-
-
         // I get the action bar title id and put it on a text view in order to later change its color
         int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
         TextView abTitle = (TextView) findViewById(titleId);
@@ -250,6 +235,25 @@ public class FrameworkActivity extends FragmentActivity
 
                 break;
         }
+
+        if (mTitle.equals("Boy's savings") ){
+
+        }
+        else {
+
+            mNavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
+
+            mNavigationDrawerFragment = (NavigationDrawerFragment)
+                    getFragmentManager().findFragmentById(R.id.navigation_drawer);
+
+
+            // Set up the drawer.
+            mNavigationDrawerFragment.setUp(
+                    R.id.navigation_drawer,
+                    (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        }
+
 
         ((MyApplication) this.getApplication()).setActionBarProperties(this,getWindow(),tabs, getActionBar(), getResources(),abTitle, mTitle.toString());
         //super.onCreate(savedInstanceState);
@@ -388,7 +392,7 @@ public class FrameworkActivity extends FragmentActivity
     public class MyPagerAdapter extends FragmentPagerAdapter {
 
         private String[] titles;
-        private String[] titles_1 = { "Home", "Balance", "Send", "Receive","Stores","Refill"};
+        private String[] titles_1 = { "Balance", "Contacts"};
         private String[] titles_2 = { "Home", "Balance", "Send", "Receive","Stores","Refill","Discounts"};
 
         public MyPagerAdapter(FragmentManager fm) {
@@ -398,7 +402,7 @@ public class FrameworkActivity extends FragmentActivity
         @Override
         public CharSequence getPageTitle(int position) {
 
-            if (walletStyle.equals("Kids") )
+            if (mTitle.equals("Boy's savings") )
             {titles = titles_1;}
             else
             {titles = titles_2;}
@@ -409,7 +413,7 @@ public class FrameworkActivity extends FragmentActivity
         @Override
         public int getCount() {
 
-            if (walletStyle.equals("Kids") )
+            if (mTitle.equals("Boy's savings") )
             {titles = titles_1;}
             else
             {titles = titles_2;}
@@ -420,20 +424,34 @@ public class FrameworkActivity extends FragmentActivity
         @Override
         public Fragment getItem(int position) {
 
-            if (walletStyle.equals("Kids") )
+            Fragment currentFragment = HomeFragment.newInstance(position);
+
+            if (mTitle.equals("Boy's savings") )
             {titles = titles_1;}
             else
             {titles = titles_2;}
 
-            Fragment currentFragment;
+
+            if (mTitle == "Boy's savings")
+
+                switch (position) {
+
+                    case 0:
+                        currentFragment =  com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.kids.sub_segment.all.developer.bitdubai.version_1.fragment.BalanceFragment.newInstance(position);
+                        break;
+                    case 1:
+                        currentFragment =  com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.kids.sub_segment.all.developer.bitdubai.version_1.fragment.ContactsFragment.newInstance(position);
+                        break;
+                }
+
+
+            else
+
             switch (position) {
                 case 0:
                     currentFragment =   HomeFragment.newInstance(position);
                     break;
                 case 1:
-                    if (walletStyle == "Kids")
-                    {currentFragment =  BalanceFragment.newInstance(position);}
-                    else
                     {currentFragment =  BalanceFragment.newInstance(position);}
                     break;
                 case 2:

@@ -1,0 +1,419 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+    <RelativeLayout android:id="@+id/kid_1"
+        android:layout_width="106dp"
+        android:layout_height="106dp"
+        android:layout_marginLeft="20dip"
+        android:layout_marginRight="2dip">
+        <ImageView
+            android:layout_width="match_parent"
+            android:src="@drawable/kid_3"
+            android:layout_height="match_parent"
+            android:paddingRight="5dip"
+            android:paddingLeft="5dip"
+            />
+
+        <ImageView
+            android:id="@+id/frame_contact"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/object_frame_1x1"
+            android:layout_gravity="center"
+
+            />
+
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:paddingLeft="8dip"
+            android:paddingRight="8dip"
+            android:paddingTop="3dip"
+            android:paddingBottom="8dip"
+
+            >
+
+
+            <TextView
+                android:id="@+id/contact_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+
+                android:textColor="#FFFFFFFF"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:text="Mark"
+
+                android:background="@color/black_overlay"
+                android:layout_gravity="center"
+
+                android:paddingLeft="8dip"
+                android:paddingRight="8dip"
+                />
+        </FrameLayout>
+        </RelativeLayout>
+
+    <RelativeLayout android:id="@+id/kid_2"
+        android:layout_width="106dp"
+        android:layout_height="106dp"
+        android:layout_toRightOf="@+id/kid_1"
+        android:layout_marginLeft="2dip"
+        android:layout_marginRight="2dip">
+        <ImageView
+            android:layout_width="match_parent"
+            android:src="@drawable/kid_1"
+            android:layout_height="match_parent"
+            android:paddingRight="5dip"
+            android:paddingLeft="5dip"
+            />
+
+        <ImageView
+            android:id="@+id/frame_contact_2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/object_frame_1x1"
+            android:layout_gravity="center"
+
+            />
+
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:paddingLeft="8dip"
+            android:paddingRight="8dip"
+            android:paddingTop="3dip"
+            android:paddingBottom="8dip"
+
+            >
+
+
+            <TextView
+                android:id="@+id/contact_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+
+                android:textColor="#FFFFFFFF"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:text="Anna"
+
+                android:background="@color/black_overlay"
+                android:layout_gravity="center"
+
+                android:paddingLeft="8dip"
+                android:paddingRight="8dip"
+                />
+        </FrameLayout>
+    </RelativeLayout>
+
+
+    <RelativeLayout android:id="@+id/kid_3"
+        android:layout_width="106dp"
+        android:layout_height="106dp"
+        android:layout_toRightOf="@+id/kid_2"
+        android:layout_marginLeft="2dip"
+        android:layout_marginRight="20dip">
+        <ImageView
+            android:layout_width="match_parent"
+            android:src="@drawable/kid_4"
+            android:layout_height="match_parent"
+            android:paddingRight="5dip"
+            android:paddingLeft="5dip"
+            />
+
+        <ImageView
+            android:id="@+id/frame_contact_3"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/object_frame_1x1"
+            android:layout_gravity="center"
+
+            />
+
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:paddingLeft="8dip"
+            android:paddingRight="8dip"
+            android:paddingTop="3dip"
+            android:paddingBottom="8dip"
+
+            >
+
+
+            <TextView
+                android:id="@+id/contact_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+
+                android:textColor="#FFFFFFFF"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:text="Marie"
+
+                android:background="@color/black_overlay"
+                android:layout_gravity="center"
+
+                android:paddingLeft="8dip"
+                android:paddingRight="8dip"
+                />
+        </FrameLayout>
+    </RelativeLayout>
+
+    <RelativeLayout android:id="@+id/kid_4"
+        android:layout_width="106dp"
+        android:layout_height="106dp"
+        android:layout_below="@+id/kid_1"
+        android:layout_marginLeft="20dip"
+        android:layout_marginRight="2dip">
+        <ImageView
+            android:layout_width="match_parent"
+            android:src="@drawable/kid_5"
+            android:layout_height="match_parent"
+            android:layout_margin="5dip"
+            />
+
+        <ImageView
+            android:id="@+id/frame_contact_4"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/object_frame_1x1"
+            android:layout_gravity="center"
+
+            />
+
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:paddingLeft="8dip"
+            android:paddingRight="8dip"
+            android:paddingTop="3dip"
+            android:paddingBottom="8dip"
+
+            >
+
+
+            <TextView
+                android:id="@+id/contact_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+
+                android:textColor="#FFFFFFFF"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:text="Roger"
+
+                android:background="@color/black_overlay"
+                android:layout_gravity="center"
+
+                android:paddingLeft="8dip"
+                android:paddingRight="8dip"
+                />
+        </FrameLayout>
+    </RelativeLayout>
+
+    <RelativeLayout android:id="@+id/kid_5"
+        android:layout_width="106dp"
+        android:layout_toRightOf="@+id/kid_4"
+        android:layout_height="106dp"
+        android:layout_below="@+id/kid_2"
+        android:layout_marginRight="2dip"
+        android:layout_marginLeft="2dip">
+        <ImageView
+            android:layout_width="match_parent"
+            android:src="@drawable/kid_2"
+            android:layout_height="match_parent"
+            android:paddingTop="5dip"
+            android:paddingBottom="5dip"
+            />
+
+        <ImageView
+            android:id="@+id/frame_contact_5"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/object_frame_1x1"
+            android:layout_gravity="center"
+
+            />
+
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:paddingLeft="4.5dip"
+            android:paddingRight="4.5dip"
+            android:paddingTop="3dip"
+            android:paddingBottom="8dip"
+
+            >
+
+
+            <TextView
+                android:id="@+id/contact_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+
+                android:textColor="#FFFFFFFF"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:text="Michael"
+
+                android:background="@color/black_overlay"
+                android:layout_gravity="center"
+                android:layout_marginRight="3dip"
+                android:layout_marginLeft="3dip"
+                />
+        </FrameLayout>
+    </RelativeLayout>
+
+    <RelativeLayout android:id="@+id/kid_6"
+        android:layout_width="106dp"
+        android:layout_toRightOf="@+id/kid_5"
+        android:layout_height="106dp"
+        android:layout_below="@+id/kid_2"
+        android:layout_marginLeft="2dip"
+        android:layout_marginRight="20dip">
+        <ImageView
+            android:layout_width="match_parent"
+            android:src="@drawable/kid_6"
+            android:layout_height="match_parent"
+            android:layout_marginRight="5dip"
+            android:layout_marginLeft="5dip"
+            />
+
+        <ImageView
+            android:id="@+id/frame_contact_5"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/object_frame_1x1"
+            android:layout_gravity="center"
+
+            />
+
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:paddingLeft="4.5dip"
+            android:paddingRight="4.5dip"
+            android:paddingTop="3dip"
+            android:paddingBottom="8dip"
+
+            >
+
+
+            <TextView
+                android:id="@+id/contact_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+
+                android:textColor="#FFFFFFFF"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:text="Juliet"
+
+                android:background="@color/black_overlay"
+                android:layout_gravity="center"
+
+                android:paddingLeft="8dip"
+                android:paddingRight="8dip"
+                />
+        </FrameLayout>
+    </RelativeLayout>
+
+    <RelativeLayout android:id="@+id/kid_7"
+        android:layout_width="106dp"
+        android:layout_height="106dp"
+        android:layout_below="@+id/kid_4"
+        android:layout_marginLeft="20dip"
+        android:layout_marginRight="2dip">
+        <ImageView
+            android:layout_width="match_parent"
+            android:src="@drawable/kid_7"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dip"
+            android:layout_marginRight="5dip"
+            android:layout_marginTop="5dip"
+            android:layout_marginBottom="5dip"
+            />
+
+        <ImageView
+            android:id="@+id/frame_contact"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/object_frame_1x1"
+            android:layout_gravity="center"
+
+            />
+
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:paddingLeft="8dip"
+            android:paddingRight="8dip"
+            android:paddingTop="3dip"
+            android:paddingBottom="8dip"
+
+            >
+
+
+            <TextView
+                android:id="@+id/contact_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+
+                android:textColor="#FFFFFFFF"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:text="Devin"
+
+                android:background="@color/black_overlay"
+                android:layout_gravity="center"
+
+                android:paddingLeft="8dip"
+                android:paddingRight="8dip"
+                />
+        </FrameLayout>
+    </RelativeLayout>
+
+</RelativeLayout>
