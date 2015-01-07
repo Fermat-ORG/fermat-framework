@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
@@ -274,10 +275,7 @@ public  class AvailableBalanceFragment extends android.app.Fragment {
 
                 amount.text.setText(amounts[groupPosition].toString());
 
-                percentage = new ViewHolder();
-                percentage.text = (TextView) convertView.findViewById(R.id.availability);
-                percentage.text.setTypeface(MyApplication.getDefaultTypeface());
-                percentage.text.setText(availabilities[groupPosition].toString());
+
 
                 type = new ViewHolder();
                 type.text = (TextView) convertView.findViewById(R.id.type);
@@ -300,6 +298,16 @@ public  class AvailableBalanceFragment extends android.app.Fragment {
                 note.text.setTypeface(MyApplication.getDefaultTypeface());
 
                 note.text.setText(notes[groupPosition].toString());
+
+                //progress bar - random progress
+                int porcen = (int )(Math.random() * 100 + 1);
+                ProgressBar bar = (ProgressBar) convertView.findViewById(R.id.progressBar);
+                bar.setProgress(porcen);
+
+                percentage = new ViewHolder();
+                percentage.text = (TextView) convertView.findViewById(R.id.availability);
+                percentage.text.setTypeface(MyApplication.getDefaultTypeface());
+                percentage.text.setText(availabilities[groupPosition].toString());
 
                 frame_tx_record = (ImageView) convertView.findViewById(R.id.frame_tx_record);
 

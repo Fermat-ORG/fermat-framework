@@ -100,18 +100,6 @@ public  class SendToContactFragment extends android.app.Fragment {
 
 //add listener text change, to update discount
 
-           tv.setOnTouchListener(new View.OnTouchListener() {
-               public boolean onTouch(View view, MotionEvent event) {
-                   if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                       int porcen = (int )(Math.random() * 15 + 1);
-                       TextView txtpercent = (TextView) rootView.findViewById(R.id.percentage);
-                       txtpercent.setText(String.valueOf(porcen) + "%");
-                   }
-                   return false;
-               }
-           });
-
-
            tv.addTextChangedListener(new TextWatcher() {
 
                public void onTextChanged(CharSequence s, int start, int before,
@@ -134,7 +122,7 @@ public  class SendToContactFragment extends android.app.Fragment {
                            discount = (porcen * Double.parseDouble(s.toString().replace("$", ""))) / 100;
 
                        TextView txtdiscount = (TextView) rootView.findViewById(R.id.discounted);
-                       txtdiscount.setText(String.valueOf(discount));
+                       txtdiscount.setText( "$" +String.valueOf(discount));
 
 
                    }
@@ -213,7 +201,7 @@ public  class SendToContactFragment extends android.app.Fragment {
 
 
                        TextView txtdiscount = (TextView) rootView.findViewById(R.id.discounted);
-                       txtdiscount.setText(String.valueOf(discount));
+                       txtdiscount.setText( "$" +String.valueOf(discount));
 
 
                    }
@@ -234,12 +222,15 @@ public  class SendToContactFragment extends android.app.Fragment {
 
             tv = (TextView) rootView.findViewById(R.id.percentage);
             tv.setTypeface(MyApplication.getDefaultTypeface());
-            tv.setText(Percentage[Integer.parseInt(tagId[0])]);
-
+          //  tv.setText(Percentage[Integer.parseInt(tagId[0])]);
+           int porcen = (int )(Math.random() * 15 + 1);
+           tv.setText(String.valueOf(porcen) + "%");
 
             tv = (TextView) rootView.findViewById(R.id.discounted);
             tv.setTypeface(MyApplication.getDefaultTypeface());
-            tv.setText(Discounted[Integer.parseInt(tagId[0])]);
+           double discount = (porcen * Double.parseDouble(transactions_amounts[Integer.parseInt(tagId[0])][Integer.parseInt(tagId[1])].toString().replace("$", ""))) / 100;
+
+            tv.setText("$" + String.valueOf(discount));
         }
 
 

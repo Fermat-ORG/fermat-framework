@@ -236,8 +236,8 @@ public class StoreFrontActivity extends FragmentActivity
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        currentColor = savedInstanceState.getInt("currentColor");
-        changeColor(currentColor);
+       // currentColor = savedInstanceState.getInt("currentColor");
+       // changeColor(currentColor);
     }
 
     private Drawable.Callback drawableCallback = new Drawable.Callback() {
