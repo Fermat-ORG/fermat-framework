@@ -107,6 +107,7 @@ public  class   SendToNewContactFragment extends android.app.Fragment {
 
         tv = (EditText) rootView.findViewById(R.id.amount);
         tv.setTypeface(MyApplication.getDefaultTypeface());
+        tv.requestFocus();
         //add listener text change, to update discount
      /*   tv.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View view, MotionEvent event) {
@@ -139,18 +140,13 @@ public  class   SendToNewContactFragment extends android.app.Fragment {
                         discount = (porcen * Double.parseDouble(s.toString().replace("$", ""))) / 100;
 
                     TextView txtdiscount = (TextView) rootView.findViewById(R.id.discounted);
-                    txtdiscount.setText(String.valueOf(discount));
-
-
+                    txtdiscount.setText("$" + String.valueOf(discount));
                 }
-
-
             }
 
             public void afterTextChanged(Editable s) {
 
             }
-
 
         });
 
