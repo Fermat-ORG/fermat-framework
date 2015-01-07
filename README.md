@@ -19,7 +19,7 @@ Is an extension of the core banking systems banks usually have. It allows tradit
 
 # Project Ownership
 
-While being bootstraped the ownership of the project is of its contributors. The intention is that at a certain point the point in time the project will become VC-backed and be turn into a company, as this is the fastest way to reach he goal. All contributors will be turned into co-founders and each ones share will be calculated based in the amount of hours contributed to the project by a factor from 1 to 10 assigned to each contributor based on his/her expertise and by consensus of the others.
+While being bootstraped the ownership of the project is of its contributors. The intention is that at a certain point in time the project will become VC-backed and be turn into a company, as this is the fastest way to reach the goal. All contributors will be turned into co-founders and each ones share will be calculated based in the amount of hours contributed to the project by a factor from 1 to 10 assigned to each contributor based on his/her expertise and by consensus with the others.
 
 ## Contributors
 
@@ -156,3 +156,11 @@ The problem to be solved is how we can save everybody a few years and instead of
 
 * Run a third party wallet on top of the wallet platform
 * Allow end users to download any available wallet on the wallet store
+
+
+## Prototype
+
+### Wallet Store
+
+![](https://github.com/bitDubai/smart-wallet/blob/master/proto/wallet_screenshot_15.jpg)
+
