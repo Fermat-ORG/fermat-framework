@@ -41,7 +41,8 @@ You can contribute with your own expertise and time or hiring a developer that c
 
 The problems listed here are ordered by importance. If you don't agree with the priorization, description of the problem or the solution, or you belive there are other problems not considered here submit a pull request with your suggestions or mail them to contribution@bitdubai.com .
 
-## Problem #1: People don't want to loose money with volatility.
+## Problem #1: 
+### People don't want to loose money with volatility.
 
 #### Description:
 
@@ -61,7 +62,8 @@ John Doe bought some bitcoins when the prices were $154, $543, $1243. He also sp
 
 
 
-## Problem #2: Lack of local ecosystems.
+## Problem #2: 
+### Lack of local ecosystems.
 
 #### Descrption:
 
@@ -105,7 +107,8 @@ Budapest is a capital city of an European country. It's not only difficult to fi
 
 
 
-## Problem #3: Lack of wallet segmentation.
+## Problem #3: 
+### Lack of wallet segmentation.
 
 #### Descrption:
 
