@@ -404,6 +404,8 @@ public class FrameworkActivity extends FragmentActivity
 
             if (mTitle.equals("Boy's savings") )
             {titles = titles_1;}
+            else if (mTitle.equals("Girl's savings") )
+            {titles = titles_1;}
             else
             {titles = titles_2;}
 
@@ -414,6 +416,8 @@ public class FrameworkActivity extends FragmentActivity
         public int getCount() {
 
             if (mTitle.equals("Boy's savings") )
+            {titles = titles_1;}
+            else if (mTitle.equals("Girl's savings") )
             {titles = titles_1;}
             else
             {titles = titles_2;}
@@ -428,12 +432,24 @@ public class FrameworkActivity extends FragmentActivity
 
             if (mTitle.equals("Boy's savings") )
             {titles = titles_1;}
+            else if (mTitle == "Girl's savings")
+            {titles = titles_1;}
             else
             {titles = titles_2;}
 
 
             if (mTitle == "Boy's savings")
+                switch (position) {
 
+                    case 0:
+                        currentFragment =  com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.kids.sub_segment.all.developer.bitdubai.version_1.fragment.UsdBalanceFragment.newInstance(position);
+                        break;
+                    case 1:
+                        currentFragment =  com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.kids.sub_segment.all.developer.bitdubai.version_1.fragment.ContactsFragment.newInstance(position);
+                        break;
+                }
+
+            else if (mTitle == "Girl's savings")
                 switch (position) {
 
                     case 0:
@@ -443,7 +459,6 @@ public class FrameworkActivity extends FragmentActivity
                         currentFragment =  com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.kids.sub_segment.all.developer.bitdubai.version_1.fragment.ContactsFragment.newInstance(position);
                         break;
                 }
-
 
             else
 
