@@ -219,7 +219,7 @@
                 android:textColor="#FFFFFFFF"
                 android:textSize="12sp"
                 android:textStyle="bold"
-                android:text="Agustina"
+                android:text="Agus"
 
                 android:background="@color/black_overlay"
                 android:layout_gravity="center"
@@ -337,7 +337,7 @@
                 android:textColor="#FFFFFFFF"
                 android:textSize="12sp"
                 android:textStyle="bold"
-                android:text="Facundo"
+                android:text="Facu"
 
                 android:background="@color/black_overlay"
                 android:layout_gravity="center"
