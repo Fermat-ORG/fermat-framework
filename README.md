@@ -1,7 +1,7 @@
 bitDubai
 ========
 
-The objective of the bitDubai project is to develop the technology found to be neccesary to achieve world-wide adoption of crypto currencies as fast as possible.
+The objective of the bitDubai project is to develop the technology found to be necessary to achieve world-wide adoption of crypto currencies as fast as possible.
 
 In order to accomplish this goal a prioritized list of the problems/barriers that are preventing mass adoption has been compiled and a solution has been proposed to each of these problems with one condition: each solution must fit into the architecture of one single system aimed to address all problems identified at the same time.
 
@@ -12,7 +12,7 @@ The current status of the project is moving towards a non working prototype. The
 
 # Crypto Wallet Platform
 
-Is a P2P platform with an open architecture that allows highly segmented wallets to be easily created on top of it by any developer using assets provided by other third parties. These in turn can be rebranded by marketeers and distributed by brands. An inbuilt licensing system guarantees each party that the use license of their contributions will be enforced by the platform.
+Is a P2P platform with an open architecture that allows highly segmented wallets to be easily created on top of it by any developer using assets provided by other third parties. These in turn can be re-branded by marketeers and distributed by brands. An inbuilt licensing system guarantees each party that the use license of their contributions will be enforced by the platform.
 
 
 # Crypto Banking Platform
@@ -72,7 +72,7 @@ John Doe bought some bitcoins when the prices were $154, $543, $1243. He also sp
 ## Problem #2
 ### Lack of local ecosystems
 
-#### Descrption:
+#### Description:
 
 Bringing bitcoins to a local ecosystem is expensive. You usually pay extra money for bringing them in. 
 
@@ -117,7 +117,7 @@ Budapest is a capital city of an European country. It's not only difficult to fi
 ## Problem #3
 ### Lack of wallet segmentation
 
-#### Descrption:
+#### Description:
 
 When music went digital cassette tapes disappeared. With the digitalization of image film cameras vanished. The technology that allows the digitalization of money has already been invented, consequently paper money and metal coins are bound to disappear soon. Some countries are already considering issuing their currency using this technology. 
 
@@ -139,11 +139,11 @@ The problem to be solved is how we can save everybody a few years and instead of
 
 * Open source each segmented wallet so anyone can use it as a basis for other segments/sub-segments or for an alternative implementation of the same segment.
 
-* Incorporate a licensing system into the platform, which allows third party developers to claim a use licence for their wallets and make the platform guarantee that users will pay according to this licence. Other developers can in turn fork any existing segmented wallet with the intention of further specializing it and at the same time also adding their own licence which the platform is going to enforce automatically together with the use licences of the original authors.  
+* Incorporate a licensing system into the platform, which allows third party developers to claim a use license for their wallets and make the platform guarantee that users will pay according to this license. Other developers can in turn fork any existing segmented wallet with the intention of further specializing it and at the same time also adding their own license which the platform is going to enforce automatically together with the use licenses of the original authors.  
 
 * The same licensing rules apply to graphic designers who provide assets and resource packages to be used in wallets within the platform. 
 
-* Any of the wallets available can be taken and re-branded by marketing companies in order to be offered to their own customers as an evolution to current loyalty programs. They or their customers can add more licence requirements to the already existing license structure of the original wallet.
+* Any of the wallets available can be taken and re-branded by marketing companies in order to be offered to their own customers as an evolution to current loyalty programs. They or their customers can add more license requirements to the already existing license structure of the original wallet.
 
 * A recognized local brand can take a re-branded wallet and market it to both local end users and local merchants coordinating the supply and demand and using their own financial means to do so.
 
@@ -170,11 +170,11 @@ The problem to be solved is how we can save everybody a few years and instead of
 ## Problem #4
 ### Banks not stepping in
 
-#### Descrption:
+#### Description:
 
 * Traditional banks can see the disruption coming. They see that crypto networks are a disruptive technology opening up a huge opportunity for those who can take it quickly enough and a great threat to those who can't. They lack the agility to come up with a solution by themselves and their traditional platform providers aren't helping. They need to move/react quickly but at the same time should have the agility to adapt to this rapidly evolving landscape. 
 
-* The only way they have recognised so far is to connect to and rely upon a set of startups in order to be able to run a crypto bank. They understand the risk of dealing with companies that can go bankrupt overnight or that don't fully comply with regulations. They are also facing the fact that converting them into crypto banks is not the core business of any of these startups. 
+* The only way they have recognized so far is to connect to and rely upon a set of startups in order to be able to run a crypto bank. They understand the risk of dealing with companies that can go bankrupt overnight or that don't fully comply with regulations. They are also facing the fact that converting them into crypto banks is not the core business of any of these startups. 
 
 * Integrating each of their systems one by one into this new technology appears to be a huge and resource intensive project.
 
@@ -209,13 +209,13 @@ The problem to be solved is how we can save everybody a few years and instead of
 ## Problem #5
 ### Almost nobody is marketing crypto currencies
 
-#### Descrption:
+#### Description:
 
 Most recently a few well-funded startups have started spending money on marketing crypto currencies to the general public. Besides that regular people are still at the mercy of the mood of the mainstream media which is strongly influenced by the bitcoin price performance. The question is how to make every single business of a certain size all around the world spend their own financial resources on marketing crypto currencies to consumers and merchants alike and how to make them independent from both mainstream media coverage and the few resources startups have.
 
 #### Solution:
 
-* Give every single business around the world the possibility of rebranding one of the hundreds of segmented wallets in a fast and inexpensive way (basically for free).
+* Give every single business around the world the possibility of re-branding one of the hundreds of segmented wallets in a fast and inexpensive way (basically for free).
 * Allow them to easily affiliate with shops to accept their wallets and handle all the details of the different kinds of deals the branded wallet publisher could do with a shop. Ensure automatic enforcement of the contract between the wallet publisher and the shop accepting their branded wallet.
 * Allow them to keep in touch with their user base by sending them any number of different tokens representing coupons, discounts, etc, or even an advertisement with some value attached. These tokens with crypto value attached can either be used as intended or traded by users at will or traded automatically by the platform's AI agent acting on behalf of the user.
 
