@@ -1,7 +1,7 @@
 bitDubai
 ========
 
-The objective of the bitDubai project is to develop the technology found to be neccesary to promote world-wide adoption of crypto currencies as fast as possible.
+The objective of the bitDubai project is to develop the technology found to be neccesary to achieve world-wide adoption of crypto currencies as fast as possible.
 
 In order to accomplish this goal a prioritized list of the problems/barriers that are preventing mass adoption has been compiled and a solution has been proposed to each of these problems with one condition: each solution must fit into the architecture of one single system aimed to address all problems identified at the same time.
 
@@ -12,7 +12,7 @@ The current status of the project is moving towards a non working prototype. The
 
 # Crypto Wallet Platform
 
-Is a P2P platform with an open architecture that allows highly segmented wallets to be easily created on top of it by any developer using assets provided by other third parties. These in turn can be rebranded by marketeers and distributed by brands. An inbuilt licensing system guarantees each developer that the use license of their contributions will be enforced by the platform.
+Is a P2P platform with an open architecture that allows highly segmented wallets to be easily created on top of it by any developer using assets provided by other third parties. These in turn can be rebranded by marketeers and distributed by brands. An inbuilt licensing system guarantees each party that the use license of their contributions will be enforced by the platform.
 
 
 # Crypto Banking Platform
@@ -22,7 +22,7 @@ Is an extension of the core banking systems banks usually have. It allows tradit
 
 # Project Ownership
 
-While being bootstrapped the ownership of the project remains with its contributors. The intention is that at a certain point in time the project will become VC-backed and be turned into a company, as this is the fastest way to reach the goal. All contributors will emerge as co-founders and their share will be calculated based on the amount of hours invested in the project multiplied by a factor ranging from 1 to 10 assigned to each contributor depending on their expertise and by consensus with the others.
+While being bootstrapped the ownership of the project remains within its contributors. The intention is that at a certain point in time the project will become VC-backed and be turned into a company, as this is the fastest way to reach the goal. All contributors will emerge as co-founders and their share will be calculated based on the amount of hours invested in the project multiplied by a factor ranging from 1 to 10 assigned to each contributor depending on their expertise and by consensus with the others.
 
 ## Contributors
 
@@ -64,7 +64,10 @@ John Doe bought some bitcoins when the prices were $154, $543, $1243. He also sp
 
 * Moreover each time a user spends within the limits of the available balance calculated by the platform they will profit from the exchange rate. This profit can be interpreted as a discount produced by the wallet technology and serves as a real life incentive to use crypto currency over fiat at any time. 
 
+##### Associated Concepts:
 
+* Available Balance
+* Wallet Discount
 
 ## Problem #2
 ### Lack of local ecosystems
@@ -87,7 +90,7 @@ Budapest is a capital city of an European country. It's not only difficult to fi
 
 * By automating the management for local merchants necessary for them to know when it is safe to resell the bitcoins collected and solving their volatility problem it provides an alternative to a payment processor. Thus merchants can start holding crypto currency and act as refill points for local users. This enables local economies to keep their crypto currency in there also allowing local users to have access to bitcoins without the need to pay extra fees to buy them from abroad.
 
-* Create  a geo fenced P2P network within the platform to allow local users to easily track nearby shops and places where they can spend their coins, refill their wallets or cash out. Through this P2P network shops can advertise their individual products to nearby users. Consumers can buy products, reserve them, review them,  and also communicate with the shop.
+* Create  a geo fenced P2P network within the wallet platform to allow local users to easily track nearby shops and places where they can spend their coins, refill their wallets or cash out. Through this P2P network shops can advertise their individual products to nearby users. Consumers can buy products, reserve them, review them,  and also communicate with the shop.
 
 ##### Associated Concepts:
 
@@ -136,9 +139,9 @@ The problem to be solved is how we can save everybody a few years and instead of
 
 * Open source each segmented wallet so anyone can use it as a basis for other segments/sub-segments or for an alternative implementation of the same segment.
 
-* Incorporate a licensing system into the platform, which allows third party developers to claim a use licence for their wallets and the platform guarantees that users will pay according to this licence. Other developers can in turn fork any existing segmented wallet with the intention of further specializing it and at the same time also adding their own licence which the platform is going to enforce automatically together with the use licences of the original authors.  
+* Incorporate a licensing system into the platform, which allows third party developers to claim a use licence for their wallets and make the platform guarantee that users will pay according to this licence. Other developers can in turn fork any existing segmented wallet with the intention of further specializing it and at the same time also adding their own licence which the platform is going to enforce automatically together with the use licences of the original authors.  
 
-* The same licensing rules apply to graphic designers who provide assets packages to be used in wallets within the platform. 
+* The same licensing rules apply to graphic designers who provide assets and resource packages to be used in wallets within the platform. 
 
 * Any of the wallets available can be taken and re-branded by marketing companies in order to be offered to their own customers as an evolution to current loyalty programs. They or their customers can add more licence requirements to the already existing license structure of the original wallet.
 
@@ -155,7 +158,7 @@ The problem to be solved is how we can save everybody a few years and instead of
 * Wallet Factory
 * Segmented Wallet
 * Wallet Runtime
-* Licensing Subsystem
+* Licensing Layer
 
 ##### Associated Functionality:
 
@@ -208,7 +211,7 @@ The problem to be solved is how we can save everybody a few years and instead of
 
 #### Descrption:
 
-Most recently a few well-funded startups have started spending money on marketing virtual currencies to the general public. Besides that regular people are still at the mercy of the mood of the mainstream media which is strongly influenced by the bitcoin price performance. The question is how to make every single business of a certain size all around the world spend their own financial resources on marketing crypto currencies to consumers and merchants alike and how to make them independent from both mainstream media coverage and the few resources startups have.
+Most recently a few well-funded startups have started spending money on marketing crypto currencies to the general public. Besides that regular people are still at the mercy of the mood of the mainstream media which is strongly influenced by the bitcoin price performance. The question is how to make every single business of a certain size all around the world spend their own financial resources on marketing crypto currencies to consumers and merchants alike and how to make them independent from both mainstream media coverage and the few resources startups have.
 
 #### Solution:
 
@@ -227,7 +230,7 @@ Most recently a few well-funded startups have started spending money on marketin
 
 ### Android APP proto
 
-[Download the Android APP here](https://github.com/bitDubai/smart-wallet/blob/master/proto/app-debug.apk?raw=true).
+[Download the Android APP here](https://github.com/bitDubai/smart-wallet/blob/master/proto/app-debug.apk).
 
 ### Wallet Store
 
@@ -259,7 +262,6 @@ Most recently a few well-funded startups have started spending money on marketin
 ![](https://github.com/bitDubai/smart-wallet/blob/master/proto/wallet_teens_10.png)
 ![](https://github.com/bitDubai/smart-wallet/blob/master/proto/wallet_teens_11.png)
 ![](https://github.com/bitDubai/smart-wallet/blob/master/proto/wallet_teens_12.png)
-![](https://github.com/bitDubai/smart-wallet/blob/master/proto/wallet_teens_13.jpg)
 
 
 
