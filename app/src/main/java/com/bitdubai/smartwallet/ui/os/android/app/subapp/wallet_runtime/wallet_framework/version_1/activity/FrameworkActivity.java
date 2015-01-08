@@ -456,7 +456,7 @@ public class FrameworkActivity extends FragmentActivity
                         currentFragment =  com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.kids.sub_segment.all.developer.bitdubai.version_1.fragment.BalanceFragment.newInstance(position);
                         break;
                     case 1:
-                        currentFragment =  com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.kids.sub_segment.all.developer.bitdubai.version_1.fragment.ContactsFragment.newInstance(position);
+                        currentFragment =  com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.kids.sub_segment.all.developer.bitdubai.version_1.fragment.GirlsContactsFragment.newInstance(position);
                         break;
                 }
 

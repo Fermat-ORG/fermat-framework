@@ -36,7 +36,7 @@ public class GirlsContactsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view;
 
-        view = inflater.inflate(R.layout.wallets_kids_fragment_contacts, container, false); //Contains empty RelativeLayout
+        view = inflater.inflate(R.layout.wallets_kids_fragment_girls_contacts, container, false); //Contains empty RelativeLayout
         return view;
     }
 
