@@ -227,9 +227,10 @@ public  class ReceiveFragment extends Fragment {
 
                 //asigned tagId at icons action
                 ImageView  icon_receive_form_contact = (ImageView) convertView.findViewById(R.id.icon_receive_form_contact);
-
                 icon_receive_form_contact.setTag(groupPosition + "-" + childPosition);
 
+                ImageView  send_message = (ImageView) convertView.findViewById(R.id.icon_chat_over_trx);
+                send_message.setTag(groupPosition + "|" + childPosition);
 
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -284,12 +285,13 @@ public  class ReceiveFragment extends Fragment {
                     profile_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
 //asigned tagId at icons action
                     ImageView  send_profile_picture = (ImageView) convertView.findViewById(R.id.icon_receive_profile);
-
-                    send_profile_picture.setTag(groupPosition + "-0");
+                     send_profile_picture.setTag(groupPosition + "-0");
 
                     ImageView  history_picture = (ImageView) convertView.findViewById(R.id.open_history);
-
                     history_picture.setTag(groupPosition);
+
+                    ImageView  send_message = (ImageView) convertView.findViewById(R.id.icon_send_message);
+                    send_message.setTag(groupPosition+ "|0");
 
                     switch (groupPosition) {
                         case 1:

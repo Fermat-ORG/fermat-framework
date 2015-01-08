@@ -126,4 +126,15 @@ public class ReceiveAllHistoryActivity extends Activity {
         return;
 
     }
+
+    public void onChatOverTrxIconClicked(View v) {
+        String tagId = v.getTag().toString();
+        MyApplication.setChildId(tagId);
+        Intent intent;
+        intent = new Intent(this, ChatOverReceiveTrxActivity.class);
+        startActivity(intent);
+
+        return;
+
+    }
 }

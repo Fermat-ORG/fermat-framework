@@ -15,9 +15,12 @@ import android.widget.TextView;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyApplication;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.PagerSlidingTabStrip;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ChatOverTransactionFragment;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ChatOverReceiveTrxFragment;
 
-public class ChatOverTrxActivity extends Activity {
+/**
+ * Created by Natalia on 08/01/2015.
+ */
+public class ChatOverReceiveTrxActivity extends Activity {
 
     private PagerSlidingTabStrip tabs;
     private CharSequence mTitle = "";
@@ -28,7 +31,7 @@ public class ChatOverTrxActivity extends Activity {
         setContentView(R.layout.wallet_framework_activity_chatovertrx);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, new ChatOverTransactionFragment())
+                    .add(R.id.container, new ChatOverReceiveTrxFragment())
                     .commit();
         }
         tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
@@ -38,44 +41,58 @@ public class ChatOverTrxActivity extends Activity {
         abTitle.setTextColor(Color.WHITE);
         ((MyApplication) this.getApplication()).setActionBarProperties(this,getWindow(),tabs, getActionBar(), getResources(),abTitle, mTitle.toString());
 
-        /* Custom Action Bar with Icon and Text */
-      /* Custom Action Bar with Icon and Text */
-        String[] contacts = new String[]{ "", "Luis Fernando Molina", "Guillermo Villanueva", "Pedro Perrotta", "Mariana Duyos"};
-        String[] amounts = new String[]{ "", "$325.00", "$1,400.00", "$0.50", "$25.00"};
-        String[] whens = new String[]{ "", "3 min ago", "2 hours ago", "today 9:24 AM", "yesterday"};
-        String[] notes = new String[]{"",  "Electricity bill", "Flat rent", "Test address", "More pictures"};
 
-        String[][] transactions = new String[][]{
+        String[]  whens = new String[]{"","4 hours ago", "5 hours ago", "yesterday 11:00 PM", "24 Mar 14","3 Feb 14","1 year ago","1 year ago","2 year ago"};
+        String[] notes = new String[]{"","New telephone", "Old desk", "Car oil", "Sandwich","Headphones","Computer monitor","Pen","Apartment in Dubai"};
 
+        String[] contacts = new String[]{"","Lucia Alarcon De Zamacona", "Juan Luis R. Pons", "Karina Rodríguez", "Simon Cushing","Céline Begnis","Taylor Backus","Stephanie Himonidis","Kimberly Brown" };
+        String[] amounts = new String[]{"","$200.00", "$3,000.00", "$400.00", "$3.00","$45.00","$600.00","50.00","$80,000.00"};
+
+        String[][]  transactions = new String[][]{
                 {},
-                {"Electricity bill","New chair","New desk"},
-                {"Flat rent","Flat rent","Flat rent","interest paid :(","Flat rent","Car repair","Invoice #2,356 that should have been paid on August"},
-                {"Test address"},
-                {"More pictures"}
+                {"New telephone","Hot dog","Telephone credit","Coffee"},
+                {"Old desk","Flat rent","New glasses","House in Europe","Coffee","Gum"},
+                {"Car oil","Headphones","Apartment"},
+                {"Sandwich","New kitchen","Camera repair"},
+                {"Headphones"},
+                {"Computer monitor","New car"},
+                {"Pen"},
+                {"Apartment in Dubai"}
         };
-
         String[][] transactions_amounts = new String[][]{
 
                 {},
-                {"$325.00","$55.00","$420.00"},
-                {"$1,400.00","$1,200.00","$1,400.00","$40.00","$1,900.00","$10,550.00","$1.00"},
-                {"$0.50"},
-                {"$25.00"}
+                {"$200.00", "$3.00", "$460.00", "$2.00", "$1.5"},
+                {"$3,000.00", "$34,200.00", "$4,500.00", "$4,000,000", "$2,00.00", "$0.50"},
+                {"$400,00", "$43.00", "$350,000.00"},
+                {"$3.00", "$55,000.00", "$7,500.00"},
+                {"$45.00"},
+                {"$600.00","$5050.00"},
+                {"$50.00"},
+                {"$80,000.00"}
+
         };
 
-        String[][] transactions_whens = new String[][]{
+        String[][]  transactions_whens = new String[][]{
 
                 {},
-                {"3 min ago","15 min ago","yesterday"},
-                {"2 hours ago","yesterday","last Friday","last Friday","14 May 14","11 May 14","5 Jan 14"},
-                {"today 9:24 AM"},
-                {"yesterday"}
+                {"4 hours ago","8 hours ago","yesterday 10:33 PM","yesterday 9:33 PM"},
+                {"5 hours ago","yesterday","20 Sep 14","16 Sep 14","13 Sep 14","12 Sep 14"},
+                {"yesterday 11:00 PM","23 May 14", "12 May 14"},
+                {"24 Mar 14","15 Apr 14","2 years ago"},
+                {"3 Feb 14"},
+                {"1 year ago","1 year ago"},
+                {"1 year ago"},
+                {"2 years ago"}
+
+
         };
+
         String[] tagId = MyApplication.getChildId().split("\\|");
 
 
         final ViewGroup actionBarLayout = (ViewGroup) getLayoutInflater().inflate(
-                R.layout.wallet_framework_activity_chatovertrx_action_bar,
+                R.layout.wallet_framework_activity_chatover_recevtrx_action_bar,
                 null);
 
         // Set up your ActionBar
@@ -97,19 +114,28 @@ public class ChatOverTrxActivity extends Activity {
         switch (Integer.parseInt(tagId[0]))
         {
             case 1:
-                profile_picture.setImageResource(R.drawable.luis_profile_picture);
-
+                profile_picture.setImageResource(R.drawable.lucia_profile_picture);
                 break;
             case 2:
-                profile_picture.setImageResource(R.drawable.guillermo_profile_picture);
-
+                profile_picture.setImageResource(R.drawable.juan_profile_picture);
                 break;
             case 3:
-                profile_picture.setImageResource(R.drawable.pedro_profile_picture);
+                profile_picture.setImageResource(R.drawable.karina_profile_picture);
                 break;
             case 4:
-                profile_picture.setImageResource(R.drawable.mariana_profile_picture);
-
+                profile_picture.setImageResource(R.drawable.simon_profile_picture);
+                break;
+            case 5:
+                profile_picture.setImageResource(R.drawable.celine_profile_picture);
+                break;
+            case 6:
+                profile_picture.setImageResource(R.drawable.taylor_profile_picture);
+                break;
+            case 7:
+                profile_picture.setImageResource(R.drawable.stephani_profile_picture);
+                break;
+            case 8:
+                profile_picture.setImageResource(R.drawable.kimberly_profile_picture);
                 break;
         }
 

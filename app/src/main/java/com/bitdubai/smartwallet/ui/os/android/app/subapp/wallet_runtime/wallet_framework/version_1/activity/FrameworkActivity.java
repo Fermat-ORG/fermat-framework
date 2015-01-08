@@ -97,9 +97,26 @@ public class FrameworkActivity extends FragmentActivity
 
     }
 
+    public void onChatOverReceiveTrxIconClicked(View v) {
+        try
+        {
+            String tagId = v.getTag().toString();
+            MyApplication.setChildId(tagId);
+            Intent intent;
+            intent = new Intent(this, ChatOverReceiveTrxActivity.class);
+            startActivity(intent);
+        }catch (Exception ex)
+        {
+            String strError = ex.getMessage();
+        }
 
+
+        return;
+
+    }
     public void onChatOverTrxIconClicked(View v) {
-
+        String tagId = v.getTag().toString();
+        MyApplication.setChildId(tagId);
         Intent intent;
         intent = new Intent(this, ChatOverTrxActivity.class);
         startActivity(intent);
@@ -167,7 +184,15 @@ public class FrameworkActivity extends FragmentActivity
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        int walletId = ((MyApplication) this.getApplication()).getWalletId();
+
+
         setContentView(R.layout.wallet_framework_activity_framework);
+        if (walletId >=4){
+            setContentView(R.layout.wallet_framework_activity_wallet_no_aviable);
+        }
+
+
         // I get the action bar title id and put it on a text view in order to later change its color
         int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
         TextView abTitle = (TextView) findViewById(titleId);
@@ -178,7 +203,7 @@ public class FrameworkActivity extends FragmentActivity
 
         tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
 
-        switch ( ((MyApplication) this.getApplication()).getWalletId() )
+        switch ( walletId )
         {
             case 1:
                 mTitle = "Girl's savings";
@@ -236,49 +261,82 @@ public class FrameworkActivity extends FragmentActivity
                 break;
         }
 
-        if (mTitle.equals("Boy's savings") ){
+        if (walletId == 2){
+            getActionBar().setDisplayHomeAsUpEnabled(false);
+            DrawerLayout draw = (DrawerLayout) findViewById(R.id.drawer_layout);
+            draw.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            ((MyApplication) this.getApplication()).setActionBarProperties(this,getWindow(),tabs, getActionBar(), getResources(),abTitle, mTitle.toString());
+            //super.onCreate(savedInstanceState);
+            //setContentView(R.layout.activity_main);
 
+            //getWindow().getDecorView().setBackgroundResource(R.drawable.wallet_wallpaper_yellow);
+
+            pager = (ViewPager) findViewById(R.id.pager);
+            adapter = new MyPagerAdapter(getSupportFragmentManager());
+
+            pager.setAdapter(adapter);
+
+            final int pageMargin = (int) TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
+                    .getDisplayMetrics());
+            pager.setPageMargin(pageMargin);
+
+            tabs.setViewPager(pager);
+
+            Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/CaviarDreams.ttf");
+            ((MyApplication) this.getApplication()).setDefaultTypeface(tf);
+            tabs.setTypeface(tf,1 );
+            //changeColor(currentColor);
+
+            tabs.setBackgroundResource(R.drawable.background_tiled_diagonal_light);
+            tabs.setDividerColor(0xFFBBBBBB);
         }
         else {
+            if (walletId < 4){
+                mNavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
 
-            mNavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
-
-            mNavigationDrawerFragment = (NavigationDrawerFragment)
-                    getFragmentManager().findFragmentById(R.id.navigation_drawer);
+                mNavigationDrawerFragment = (NavigationDrawerFragment)
+                        getFragmentManager().findFragmentById(R.id.navigation_drawer);
 
 
-            // Set up the drawer.
-            mNavigationDrawerFragment.setUp(
-                    R.id.navigation_drawer,
-                    (DrawerLayout) findViewById(R.id.drawer_layout));
+                // Set up the drawer.
+                mNavigationDrawerFragment.setUp(
+                        R.id.navigation_drawer,
+                        (DrawerLayout) findViewById(R.id.drawer_layout));
+
+                ((MyApplication) this.getApplication()).setActionBarProperties(this,getWindow(),tabs, getActionBar(), getResources(),abTitle, mTitle.toString());
+                //super.onCreate(savedInstanceState);
+                //setContentView(R.layout.activity_main);
+
+                //getWindow().getDecorView().setBackgroundResource(R.drawable.wallet_wallpaper_yellow);
+
+                pager = (ViewPager) findViewById(R.id.pager);
+                adapter = new MyPagerAdapter(getSupportFragmentManager());
+
+                pager.setAdapter(adapter);
+
+                final int pageMargin = (int) TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
+                        .getDisplayMetrics());
+                pager.setPageMargin(pageMargin);
+
+                tabs.setViewPager(pager);
+
+                Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/CaviarDreams.ttf");
+                ((MyApplication) this.getApplication()).setDefaultTypeface(tf);
+                tabs.setTypeface(tf,1 );
+                //changeColor(currentColor);
+
+                tabs.setBackgroundResource(R.drawable.background_tiled_diagonal_light);
+                tabs.setDividerColor(0xFFBBBBBB);
+            }
+
+
+
+
 
         }
 
 
-        ((MyApplication) this.getApplication()).setActionBarProperties(this,getWindow(),tabs, getActionBar(), getResources(),abTitle, mTitle.toString());
-        //super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_main);
 
-        //getWindow().getDecorView().setBackgroundResource(R.drawable.wallet_wallpaper_yellow);
-
-        pager = (ViewPager) findViewById(R.id.pager);
-        adapter = new MyPagerAdapter(getSupportFragmentManager());
-
-        pager.setAdapter(adapter);
-
-        final int pageMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
-                .getDisplayMetrics());
-        pager.setPageMargin(pageMargin);
-
-        tabs.setViewPager(pager);
-
-        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/CaviarDreams.ttf");
-        ((MyApplication) this.getApplication()).setDefaultTypeface(tf);
-        tabs.setTypeface(tf,1 );
-        //changeColor(currentColor);
-
-        tabs.setBackgroundResource(R.drawable.background_tiled_diagonal_light);
-        tabs.setDividerColor(0xFFBBBBBB);
 
 
     }
@@ -327,7 +385,11 @@ public class FrameworkActivity extends FragmentActivity
     public boolean onCreateOptionsMenu(Menu menu) {
 
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.wallet_framework_activity_framework_menu, menu);
+
+        if ( ((MyApplication) this.getApplication()).getWalletId() == 2)
+          inflater.inflate(R.menu.wallet_framework_activity_framework_menu2, menu);
+        else
+            inflater.inflate(R.menu.wallet_framework_activity_framework_menu, menu);
 
         LayoutInflater inflaterClone = getLayoutInflater().cloneInContext(getLayoutInflater().getContext());
         LayoutInflater.Factory lif = new MyLayoutInflaterFactory();

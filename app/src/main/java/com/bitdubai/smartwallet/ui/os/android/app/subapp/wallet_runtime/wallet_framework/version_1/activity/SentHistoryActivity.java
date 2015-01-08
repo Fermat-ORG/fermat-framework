@@ -122,4 +122,15 @@ public class SentHistoryActivity extends Activity {
 
     }
 
+    public void onChatOverTrxIconClicked(View v) {
+        String tagId = v.getTag().toString();
+        MyApplication.setChildId(tagId);
+        Intent intent;
+        intent = new Intent(this, ChatOverTrxActivity.class);
+        startActivity(intent);
+
+        return;
+
+    }
+
 }

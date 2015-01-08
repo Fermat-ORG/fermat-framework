@@ -198,6 +198,9 @@ public class SendAllFragment extends android.app.Fragment {
                     ImageView  send_profile_picture = (ImageView) convertView.findViewById(R.id.icon_send_to_contact);
                     send_profile_picture.setTag(tagId + "|" + groupPosition);
 
+                    ImageView  icon_chat_over_trx = (ImageView) convertView.findViewById(R.id.icon_chat_over_trx);
+                    icon_chat_over_trx.setTag(tagId + "|" + groupPosition);
+
                     holder = new ViewHolder();
 
                     amount = new ViewHolder();

@@ -56,6 +56,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:name="com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.fragment.NavigationDrawerFragment"
-        tools:layout="@layout/wallet_framework_fragment_navigation_drawer" />
+        tools:layout="@layout/wallet_framework_fragment_navigation_drawer"
+        />
 
 </android.support.v4.widget.DrawerLayout>

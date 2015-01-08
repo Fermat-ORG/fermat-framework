@@ -47,7 +47,7 @@ public class DesktopFragment  extends android.app.Fragment {
 
 
         String[] installed =
-                {"false",
+                {"true",
                         "true",
                         "true",
                         "true",
@@ -143,7 +143,7 @@ public class DesktopFragment  extends android.app.Fragment {
         gridView.setAdapter(_adpatrer);
 
 
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+     /*   gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
                 Intent intent;
@@ -152,7 +152,7 @@ public class DesktopFragment  extends android.app.Fragment {
 
                 return ;
             }
-        });
+        });*/
 
 
         return gridView;
