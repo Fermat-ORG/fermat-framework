@@ -36,7 +36,7 @@ updated 07 Jan 15
 | Andrey Molina  | 1  | 15  | 15  |
 | Hernan Calabrese  | 8  | 15  | 120  |
 | Eniko Jokai  | 10  | 17  | 170  |
-| Natalia Cortez (LFM)  | 5  | 80  | 400  |
+| Natalia Cortez (LFM)  | 5  | 84  | 420  |
 | Damien Calvignac   | 7  | 10  | 70  |
 
 You can contribute with your own expertise and time or by hiring a developer that contributes code on your behalf. If you are interested in doing so send an email to contribution@bitdubai.com . 
