@@ -17,6 +17,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
     private final Context context;
     private final String[] values;
 
+
     public NavigationDrawerArrayAdapter(Context context, String[] values) {
         super(context, R.layout.wallet_framework_activity_framework_navigation_drawer_row_layout, values);
         this.context = context;
@@ -42,7 +43,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
             textView.setTypeface(MyApplication.getDefaultTypeface(), 1);
 
             ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
-            textView.setText(values[position]);
+            textView.setText("Tessa Crankston");
 
     //        ImageView iconEdit = (ImageView) rowView.findViewById(R.id.icon_edit_profile);
     //        iconEdit.setOnClickListener(new View.OnClickListener() {

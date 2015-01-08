@@ -1,28 +1,28 @@
 bitDubai
 ========
 
-The objective of the bitDubai project is to develop whatever technology is found to be neccesary to bring adoption of crypto currencies to the entire world population as fast as possible.
+The objective of the bitDubai project is to develop the technology found to be neccesary to promote world-wide adoption of crypto currencies as fast as possible.
 
-To accomplish this a prioritized list of the problems/barriers that are preventing mass adoption has been written and a solution has been proposed for each of these problems with one condition: each solution must fit into the architecture of one single system that would solve all these identified problems at the same time.
+In order to accomplish this goal a prioritized list of the problems/barriers that are preventing mass adoption has been compiled and a solution has been proposed to each of these problems with one condition: each solution must fit into the architecture of one single system aimed to address all problems identified at the same time.
 
-As of today, this system spans two interconected platforms: a Crypto Wallet Platform and a Crypto Banking Platform.
+As of today two interconnected platforms constitute the system: a Crypto Wallet Platform and a Crypto Banking Platform.
 
-The current status of the project is moving towards a non working prototype. The architecture of the system has already been stablished.
+The current status of the project is moving towards a non working prototype. The architecture of the system has already been established.
 
 
 # Crypto Wallet Platform
 
-Is a P2P platform with an open architecture that allows highly segmented wallets to be easily created on top of it by any developer, using assets provided by other third parties, which can be rebranded by marketeers and distributed by brands. All that with a licensing system which guarantees to each actor that the use license of their contributions will be enforced by the platform.
+Is a P2P platform with an open architecture that allows highly segmented wallets to be easily created on top of it by any developer using assets provided by other third parties. These in turn can be rebranded by marketeers and distributed by brands. An inbuilt licensing system guarantees each developer that the use license of their contributions will be enforced by the platform.
 
 
 # Crypto Banking Platform
 
-Is an extension of the core banking systems banks usually have. It allows traditional banks to create in their own systems "crypto products" adding all the missing parts to make that happen.  
+Is an extension of the core banking systems banks usually have. It allows traditional banks to create "crypto products" in their own systems adding all the missing parts to make that happen.  
 
 
 # Project Ownership
 
-While being bootstraped the ownership of the project is of its contributors. The intention is that at a certain point in time the project will become VC-backed and be turn into a company, as this is the fastest way to reach the goal. All contributors will be turned into co-founders and each ones share will be calculated based in the amount of hours contributed to the project by a factor from 1 to 10 assigned to each contributor based on his/her expertise and by consensus with the others.
+While being bootstrapped the ownership of the project remains with its contributors. The intention is that at a certain point in time the project will become VC-backed and be turned into a company, as this is the fastest way to reach the goal. All contributors will emerge as co-founders and their share will be calculated based on the amount of hours invested in the project multiplied by a factor ranging from 1 to 10 assigned to each contributor depending on their expertise and by consensus with the others.
 
 ## Contributors
 
@@ -30,22 +30,23 @@ updated 07 Jan 15
 
 | Name (paid by)  | Expertise | Hours Contributed  | Project Shares |
 | ------------- | ------------- | ------------- | ------------- |
-| Luis Fernando Molina  | 10  | 1,200  | 12,000  |
+| Luis Fernando Molina  | 10  | 1,208  | 12,080  |
 | Guillermo Villanueva  | 10  | 240  | 2,400  |
-| Loui Molina  | 1  | 170  | 170  |
+| Loui Molina  | 1  | 178  | 178  |
 | Andrey Molina  | 1  | 15  | 15  |
 | Hernan Calabrese  | 8  | 15  | 120  |
-| Eniko Jokai  | 10  | 15  | 120  |
-| Natalia Cortez (LFM)  | 5  | 80  | 400  |
+| Eniko Jokai  | 10  | 17  | 170  |
+| Natalia Cortez (LFM)  | 5  | 84  | 420  |
+| Damien Calvignac   | 7  | 10  | 70  |
 
-You can contribute with your own expertise and time or hiring a developer that contributes code on your name. If you are interested in doing so send an email to contribution@bitdubai.com . 
+You can contribute with your own expertise and time or by hiring a developer that contributes code on your behalf. If you are interested in doing so send an email to contribution@bitdubai.com . 
 
 # Problems & Solutions
 
-The problems listed here are ordered by importance. If you don't agree with the priorization, description of the problem or the solution, or you belive there are other problems not considered here submit a pull request with your suggestions or mail them to contribution@bitdubai.com .
+The problems listed here are in order of importance. If you don't agree with the priorization, description of either the problem or the solution, or you belive there are other problems not considered here submit a pull request with your suggestions or mail them to contribution@bitdubai.com .
 
 ## Problem #1
-### People don't want to loose money with volatility
+### People don't want to lose money resulting from volatility
 
 #### Description:
 
@@ -57,11 +58,11 @@ John Doe bought some bitcoins when the prices were $154, $543, $1243. He also sp
 
 #### Solution:
 
-##### Turn the volatility problem into and advantage
+##### Turn the volatility problem into an advantage
 
-* Automate all the management needed  to know when it is safe to spend  bitcoins or any other crypto-currency. This allows regular people to buy and spend bitcoins whenever they need confident that they never lose money. 
+* Automate all the management needed to know when it is safe to spend  bitcoins or any other crypto-currency. This allows regular people to buy and spend bitcoins whenever they need confident that they never lose money. 
 
-* Moreover, each time a user spends within the limits of the available balance calculated by the platform they will profit from the exchange rate. This profit can be interpreted as a discount produced by the wallet technology and serves as a real life incentive to use crypto currency over fiat at any time. 
+* Moreover each time a user spends within the limits of the available balance calculated by the platform they will profit from the exchange rate. This profit can be interpreted as a discount produced by the wallet technology and serves as a real life incentive to use crypto currency over fiat at any time. 
 
 
 
@@ -72,7 +73,7 @@ John Doe bought some bitcoins when the prices were $154, $543, $1243. He also sp
 
 Bringing bitcoins to a local ecosystem is expensive. You usually pay extra money for bringing them in. 
 
-Then when you spend it at a local shop the payment processor is taking those bitcoins again out of the local ecosystem forcing local users to bring them back from abroad perpetuating the difficulty for regular people of getting coins.
+Then when you spend it at a local shop the payment processor takes those bitcoins again out of the local ecosystem forcing local users to bring them back from abroad perpetuating the difficulty of getting coins for regular people.
 
 Merchants prefer not to hold bitcoins because of the risk of losing money when cashing them out. 
 
@@ -86,7 +87,7 @@ Budapest is a capital city of an European country. It's not only difficult to fi
 
 * By automating the management for local merchants necessary for them to know when it is safe to resell the bitcoins collected and solving their volatility problem it provides an alternative to a payment processor. Thus merchants can start holding crypto currency and act as refill points for local users. This enables local economies to keep their crypto currency in there also allowing local users to have access to bitcoins without the need to pay extra fees to buy them from abroad.
 
-* Create within the platform a geo fenced P2P network to allow local users to easily track nearby shops and places where they can spend their coins, refill their wallets or cash out. Through this P2P network shops can advertise their individual products to nearby users. Consumers can buy products, reserve them, review them,  and also communicate with the shop.
+* Create  a geo fenced P2P network within the platform to allow local users to easily track nearby shops and places where they can spend their coins, refill their wallets or cash out. Through this P2P network shops can advertise their individual products to nearby users. Consumers can buy products, reserve them, review them,  and also communicate with the shop.
 
 ##### Associated Concepts:
 
@@ -117,7 +118,7 @@ Budapest is a capital city of an European country. It's not only difficult to fi
 
 When music went digital cassette tapes disappeared. With the digitalization of image film cameras vanished. The technology that allows the digitalization of money has already been invented, consequently paper money and metal coins are bound to disappear soon. Some countries are already considering issuing their currency using this technology. 
 
-Digitalization of money will inevitably bring about with the entire population using digital wallets. People from all walks of life  have different needs and demands which should be reflected by their wallet. The user interface, the functionality available and the way it is accessed should be adapted in a way that best fits the age, gender, cultural background, level of education, social status, etc. of the given user.
+Digitalization of money will inevitably bring about with the entire population using digital wallets. People from all walks of life have different needs and demands which should be reflected in their wallet. The user interface, the functionality available and the way it is accessed should be adapted in a way that best fits the age, gender, cultural background, level of education, social status, etc. of the given user.
 
 The way a Chinese country man thinks and interprets the operations of a wallet is inherently totally different from the way a person from the UK, Argentina, North Korea, Lebanon, Cuba, Nigeria, etc. does. What an accountant could be interested in doing with and seeing in his wallet is not the same what a psychologist, a lawyer or an engineer would be. 
 
@@ -125,7 +126,7 @@ A kid's wallet can not look the same as his teenage brother's or his father's. I
 
 However, on the other hand the core algorithms and mathematics inside those wallets are universal. 
 
-Currently wallet providers can barely identify the different segments of the potential user population and they target almost exclusively the tech-savvy segment even if in their minds are delivering a user friendly product for everyday people too. 
+Currently wallet providers can barely identify the different segments of the potential user population and they target almost exclusively the tech-savvy segment even if in their minds they are delivering a user friendly product for everyday people too. 
 
 The problem to be solved is how we can save everybody a few years and instead of evolving from where we are now to that future without replicating the same universal technology again and again for every single segmented wallet. 
 
@@ -135,10 +136,11 @@ The problem to be solved is how we can save everybody a few years and instead of
 
 * Open source each segmented wallet so anyone can use it as a basis for other segments/sub-segments or for an alternative implementation of the same segment.
 
-* Incorporated a licensing system into the platform, which allows third party developers to claim a use license for their wallets and the platform guarantees that users will pay according to this license. Other developers can in turn fork any existing segmented wallet further specializing it, and adding their own license which the platform is going to enforce together with the original authors use licenses automatically.  
+* Incorporate a licensing system into the platform, which allows third party developers to claim a use licence for their wallets and the platform guarantees that users will pay according to this licence. Other developers can in turn fork any existing segmented wallet with the intention of further specializing it and at the same time also adding their own licence which the platform is going to enforce automatically together with the use licences of the original authors.  
+
 * The same licensing rules apply to graphic designers who provide assets packages to be used in wallets within the platform. 
 
-* Any of the wallets available can be taken and re-branded by marketing companies in order to be offered to their own customers as an evolution to current loyalty programs. They or their customers can add more license requirements to whatever license structure the original wallet already had.
+* Any of the wallets available can be taken and re-branded by marketing companies in order to be offered to their own customers as an evolution to current loyalty programs. They or their customers can add more licence requirements to the already existing license structure of the original wallet.
 
 * A recognized local brand can take a re-branded wallet and market it to both local end users and local merchants coordinating the supply and demand and using their own financial means to do so.
 
@@ -167,22 +169,22 @@ The problem to be solved is how we can save everybody a few years and instead of
 
 #### Descrption:
 
-* Traditional banks can see the disruption coming. They see that crypto networks are a disruptive technology that brings a huge opportunity for those who can take it quickly enough and a great threat to those who can't. They lack the agility to come up with a solution by themselves and their traditional platform providers aren't helping. They need to move/react quickly but at the same time should have the agility to adapt to this rapidly evolving landscape. 
+* Traditional banks can see the disruption coming. They see that crypto networks are a disruptive technology opening up a huge opportunity for those who can take it quickly enough and a great threat to those who can't. They lack the agility to come up with a solution by themselves and their traditional platform providers aren't helping. They need to move/react quickly but at the same time should have the agility to adapt to this rapidly evolving landscape. 
 
-* The only way they see so far is to connect to and rely upon a set of startups in order to be able to run a crypto bank. They understand the risk of dealing with companies that can meltdown overnight or not fully comply with regulations. They also face the fact that converting them into a crypto bank is none of these startups core business. 
+* The only way they have recognised so far is to connect to and rely upon a set of startups in order to be able to run a crypto bank. They understand the risk of dealing with companies that can go bankrupt overnight or that don't fully comply with regulations. They are also facing the fact that converting them into crypto banks is not the core business of any of these startups. 
 
-* Integrating one by one each of their systems to this new technology seems like a huge and resource intensive project.
+* Integrating each of their systems one by one into this new technology appears to be a huge and resource intensive project.
 
-* Banks have huge financial power to market crypto products to their current customer base that compromises half of the adult population of the world, but they are not doing it in part because the don't have the technology needed to turn their bank into a crypto bank. 
+* Banks have huge financial power to market crypto products to their current customer base constituting half of the adult population of the world, but they are not doing it in part because the don't have the technology needed to turn a bank into a crypto bank. 
 
 
 #### Solution:
 
-* Complement the IT infrastructure traditional banks already have allowing them to reuse most of it seamlessly. Enable banks to create new products like bitcoin accounts for their costumers in whatever core banking system they currently have. Enable customers to freely transfer FROM and TO any of these crypto products and fiat accounts as well, using any of the channels currently available like internet banking, mobile banking, phone banking and ATMs. Allow them to withdraw funds from their crypto accounts (turned into fiat) at any branch of the bank or ATM network oblem #2-c)
+* Complement the IT infrastructure traditional banks already have allowing them to reuse most of it seamlessly. Enable banks to create new products like bitcoin accounts for their costumers irrespective of the core banking system they currently have. Enable customers to freely transfer FROM and TO any of these crypto products and fiat accounts as well, using any of the channels currently available such as internet banking, mobile banking, phone banking and ATMs. Allow them to withdraw funds from their crypto accounts (turned into fiat) at any branch of the bank or ATM network.
 
-* Implement an architecture that absorb the evolution of the underlying technologies in order to help them get quickly on top of it with new products and services for their customers and adapt easily to any future change. Assume there will be multiple public networks for transporting value and design the banking platform to adapt quickly to whatever is needed to use.   
+* Implement an architecture that absorbs the evolution of the underlying technologies in order to help them get quickly on top of it with new products and services for their customers and adapt easily to any future change. Assume there will be multiple public networks for transporting value and design the banking platform in a way that it is capable of quickly adapting to the requirements posed by any of these .   
 
-* Enable traditional banks to not depend on third party service providers to run a crypto bank and avoid the risk of startups not complying with regulations or melting down overnight. 
+* Enable traditional banks to run a crypto bank independent from third party service providers thereby avoiding the risk associated with having to rely on startups that may not comply with regulations or go bankrupt overnight. 
 
 ##### Associated Concepts:
 
@@ -197,7 +199,7 @@ The problem to be solved is how we can save everybody a few years and instead of
 
 * Crypto products in current core banking systems
 * Crypto account system
-* Refill engine which monitors banks customers wallet and automatically refill them
+* Refill engine which monitors banks' customers' wallet and automatically refills them
 
 
 
@@ -206,13 +208,13 @@ The problem to be solved is how we can save everybody a few years and instead of
 
 #### Descrption:
 
-Since very recently a few well funded startups start spending in marketing virtual currencies to the general public. Besides that, regular people is subject to the mood of the mainstream media, which in turn its mood tends to attached to bitcoin price performance. The problem to solve is how to make every single business of a certain size all arround the world to spend their own financial resources to market both on consumer and merchants the use of crypto currencies and stop depending both on mainstream media coverage and the few resources startups have.
+Most recently a few well-funded startups have started spending money on marketing virtual currencies to the general public. Besides that regular people are still at the mercy of the mood of the mainstream media which is strongly influenced by the bitcoin price performance. The question is how to make every single business of a certain size all around the world spend their own financial resources on marketing crypto currencies to consumers and merchants alike and how to make them independent from both mainstream media coverage and the few resources startups have.
 
 #### Solution:
 
-* Give every single business arround the world the possibility to rebrand one of the hundreds of segmented wallets in a fast and inexpensive way (basically for free).
-* Allow them to easily affiate shops to accept their wallets and handle all the details of the different kinds of deals the branded wallet publisher could do with a shop. Enforce automatically the contract between the wallet publisher and the shop accepting its branded wallet.
-* Allow them to keep in touch with their user base by sending them any number of different tokens representing coupons, discounts, etc, or even publicity with some value attached. These tokens with crypto value attached  can be used as intended or traded by users of that kind of wallet at will or traded automatically by the platforms AI agent acting on behalf of each user.
+* Give every single business around the world the possibility of rebranding one of the hundreds of segmented wallets in a fast and inexpensive way (basically for free).
+* Allow them to easily affiliate with shops to accept their wallets and handle all the details of the different kinds of deals the branded wallet publisher could do with a shop. Ensure automatic enforcement of the contract between the wallet publisher and the shop accepting their branded wallet.
+* Allow them to keep in touch with their user base by sending them any number of different tokens representing coupons, discounts, etc, or even an advertisement with some value attached. These tokens with crypto value attached can either be used as intended or traded by users at will or traded automatically by the platform's AI agent acting on behalf of the user.
 
 ##### Associated Concepts:
 
@@ -225,7 +227,7 @@ Since very recently a few well funded startups start spending in marketing virtu
 
 ### Android APP proto
 
-![](https://github.com/bitDubai/smart-wallet/blob/master/proto/app-debug.apk)
+[Download the Android APP here](https://github.com/bitDubai/smart-wallet/blob/master/proto/app-debug.apk).
 
 ### Wallet Store
 
