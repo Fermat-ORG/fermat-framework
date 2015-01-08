@@ -47,7 +47,7 @@ public class DesktopFragment  extends android.app.Fragment {
 
 
         String[] installed =
-                {"false",
+                {"true",
                         "true",
                         "true",
                         "true",
