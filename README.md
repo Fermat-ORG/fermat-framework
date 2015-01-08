@@ -232,7 +232,7 @@ Most recently a few well-funded startups have started spending money on marketin
 
 [Download the Android APP here](https://github.com/bitDubai/smart-wallet/blob/master/proto/app-debug.apk).
 
-### Wallet Store
+### Wallet Manager
 
 ![](https://github.com/bitDubai/smart-wallet/blob/master/proto/wallet_manager_1.png)
 
