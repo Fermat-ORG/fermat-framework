@@ -39,8 +39,8 @@ public class MonthlyDiscountsFragment extends android.app.Fragment {
         super.onCreate(savedInstanceState);
 
         dates = new String[]{"January", "december", "november", "october","september","august","july","june","may","april" ,"march","february"};
-        adiscount_count = new String[]{"38.52","-1.52","12.65","22.73","16.28","18.73","2.73","8.73","16.84","23.83","13.27","21.83","","","",""};
-        saved_money = new String[] {"$215.54", "-$2.53", "$50.32","$143.52","$114.42","$126.46","$5.42","$32.52","$73.32","$154.53","$57.24","$136.25"};
+        adiscount_count = new String[]{"38.52","1.52","12.65","22.73","16.28","18.73","2.73","8.73","16.84","23.83","13.27","21.83","","","",""};
+        saved_money = new String[] {"$215.54", "$2.53", "$50.32","$143.52","$114.42","$126.46","$5.42","$32.52","$73.32","$154.53","$57.24","$136.25"};
         transactions = new String[][]{
 
                 {},
@@ -179,22 +179,6 @@ public class MonthlyDiscountsFragment extends android.app.Fragment {
             if (1 == 1) {
                 convertView = inf.inflate(R.layout.wallets_teens_fragment_monthly_discounts_list_item, parent, false);
 
-                discount_picture = (ImageView) convertView.findViewById(R.id.discount_picture);
-
-                if(Double.parseDouble(adiscount_count[groupPosition]) > 0) {
-
-                    discount_picture.setImageResource(R.drawable.account_type_current_small);
-                }else {
-                    if(Double.parseDouble(adiscount_count[groupPosition]) < 0) {
-                        discount_picture.setImageResource(R.drawable.account_type_savings_1_small);
-                    }
-                    else
-                    {
-                        if(Double.parseDouble(adiscount_count[groupPosition]) == 0) {
-                            discount_picture.setImageResource(R.drawable.account_type_savings_2_small);
-                        }
-                    }
-                }
 
                 date= new ViewHolder();
                 date.text = (TextView) convertView.findViewById(R.id.date);
