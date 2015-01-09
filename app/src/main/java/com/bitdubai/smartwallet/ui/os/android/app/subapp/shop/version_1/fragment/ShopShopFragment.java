@@ -1,27 +1,14 @@
-package com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment;
+package com.bitdubai.smartwallet.ui.os.android.app.subapp.shop.version_1.fragment;
 
-/**
- * Created by ciencias on 25.11.14.
- */
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.bitdubai.smartwallet.R;
-
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyApplication;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.StoreActivity;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-
-import android.content.res.Configuration;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
@@ -29,21 +16,26 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.bitdubai.smartwallet.R;
 
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyApplication;
+
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-
-
-
-public class StoresFragment extends Fragment {
+/**
+ * Created by Natalia on 09/01/2015.
+ */
+public class ShopShopFragment extends Fragment {
 
     private static final String ARG_POSITION = "position";
     private ArrayList<App> mlist;
 
     private int position;
 
-    public static StoresFragment newInstance(int position) {
-        StoresFragment f = new StoresFragment();
+    public static ShopShopFragment newInstance(int position) {
+        ShopShopFragment f = new ShopShopFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -53,15 +45,15 @@ public class StoresFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        String[] company_names = {"Dunkin' Donuts",
+        String[] company_names = {"Dunkin' Donuts","The New York Times Store",
                 "NYC Fine Cigars",
                 "Fat Sal's Pizza",
                 "Pomodoro Restaurant",
                 "Snack EOS",
                 "Beba Blue Salon",
                 "Tick Tock Diner",
-                "The New Yorker Hotel",
-                "The New York Times Store",
+                "The New Yorker Hotel"
+                ,
                 "The Australian",
                 "Panera Bread",
                 "Mustang Cafe",
@@ -152,7 +144,10 @@ public class StoresFragment extends Fragment {
                 "aaa",
                 "aaa",
                 "aaa" };
-        String[] company_descriptions = {"Long-running chain serving signature donuts, breakfast sandwiches & a variety of coffee ...",
+        String[] company_descriptions = {"Long-running chain serving signature donuts, breakfast sandwiches & a variety of coffee.Dunkin' Donuts is an American global doughnut company and coffeehouse chain based in Canton, Massachusetts. It was founded in 1950 by William Rosenberg in Quincy, Massachusetts.",
+
+
+                "Classic, redefined. See what's new at our Westchester location!.",
                 "Smoking is allowed inside this clubby shop known for its hand-rolled cigars made ...",
                 "Basic pizzeria serving a variety of NYC-style slices in a small, counter-service space.",
                 "Pasta dishes, sandwiches & salads for take-out or eating in at this pint-sized Italian deli.",
@@ -160,7 +155,7 @@ public class StoresFragment extends Fragment {
                 "Hair Salon, Day Spa",
                 "Standard 24/7 diner with retro looks, basic fare & close proximity to Madison Square...",
                 "Huge historic Jazz Age (1929) hotel offers over 900 rooms and suites across from Penn Station.",
-                "Classic, redefined. See what's new at our Westchester location!.",
+
                 "Home-away-from-home Australian pub offering grilled kangaroo, Aussie beers & rugby ...",
                 "Counter-serve bakery/cafe chain serving sandwiches, salads & more, known for its ...",
                 "Counter-serve setup offering deli sandwiches & wraps, hot entrees, salads & breakfast items.",
@@ -177,7 +172,7 @@ public class StoresFragment extends Fragment {
                 "aaa",
                 "aaa",
                 "aaa" };
-        String[] company_sites = {"dunkindonuts.com",
+        String[] company_sites = {"dunkindonuts.com","nytstore.com",
                 "nycfinecigars.com",
                 "fatsals.com",
                 "delivery.com",
@@ -185,7 +180,7 @@ public class StoresFragment extends Fragment {
                 "bebablue.com",
                 "ticktockdinerny.com",
                 "newyorkerhotel.com",
-                "nytstore.com",
+
                 "theaustraliannyc.com",
                 "panerabread.com",
                 "mustangcafe.com",
@@ -202,7 +197,47 @@ public class StoresFragment extends Fragment {
                 "aaa",
                 "aaa",
                 "aaa", };
-
+        String[] likes = {"7335",
+                "1346",
+                "614",
+                "34",
+                "614",
+                "234",
+                "652",
+                "1543",
+                "234",
+                "646",
+                "859",
+                "964",
+                "456",
+                "575",
+                "324",
+                "254",
+                "334",
+                "624",
+                "275",
+                "373",
+                "735"};
+        String[] dislikes = {"2545",
+                "2342",
+                "524",
+                "234",
+                "243",
+                "254",
+                "352",
+                "234",
+                "235",
+                "234",
+                "954",
+                "667",
+                "856",
+                "57",
+                "87",
+                "55",
+                "67",
+                "99",
+                "45",
+                "85"};
 
 
         if (mlist == null)
@@ -210,9 +245,11 @@ public class StoresFragment extends Fragment {
 
             mlist = new ArrayList<App>();
 
-            for (int i = 0; i < 17; i++) {
+            for (int i = 0; i <1; i++) {
                 App item = new App();
                 item.title = company_sites[i];
+                item.like = likes[i];
+                item.dislike = dislikes[i];
                 item.description = company_descriptions[i];
                 item.company = company_names[i];
                 item.Open_hours = company_horario[i];
@@ -231,14 +268,14 @@ public class StoresFragment extends Fragment {
 
         Configuration config = getResources().getConfiguration();
         if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            gridView.setNumColumns(3);
+            gridView.setNumColumns(1);
         } else {
-            gridView.setNumColumns(2);
+            gridView.setNumColumns(1);
         }
 
         //@SuppressWarnings("unchecked")
         //ArrayList<App> list = (ArrayList<App>) getArguments().get("list");
-        gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.wallets_teens_fragment_stores_item, mlist));
+        gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.wallets_shop_fragment_shop_shop, mlist));
 
 
 
@@ -247,10 +284,10 @@ public class StoresFragment extends Fragment {
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                Intent intent;
+  /*              Intent intent;
                 intent = new Intent(getActivity(), StoreActivity.class);
                 startActivity(intent);
-
+*/
                 return ;
             }
         });
@@ -270,6 +307,10 @@ public class StoresFragment extends Fragment {
         public String title;
 
         public String description;
+
+        public String like;
+
+        public String dislike;
 
         public String company;
 
@@ -308,8 +349,10 @@ public class StoresFragment extends Fragment {
             ViewHolder holder;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.wallets_teens_fragment_stores_item, parent, false);
+                convertView = inflater.inflate(R.layout.wallets_shop_fragment_shop_shop, parent, false);
                 holder = new ViewHolder();
+
+
 
                 holder.star1= (ImageView) convertView.findViewById(R.id.star_1);
                 holder.star2= (ImageView) convertView.findViewById(R.id.star_2);
@@ -323,13 +366,18 @@ public class StoresFragment extends Fragment {
                 holder.star4.setAdjustViewBounds(true);
                 holder.star5.setAdjustViewBounds(true);
 
+
+
                 holder.sale = (ImageView) convertView.findViewById(R.id.sale);
                 holder.favorite = (ImageView) convertView.findViewById(R.id.favorite);
 
                 holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
                 holder.titleTextView = (TextView) convertView.findViewById(R.id.title_text_view);
+                holder.dislikeAmount = (TextView) convertView.findViewById(R.id.dislike_amount);
+                holder.likeAmount = (TextView) convertView.findViewById(R.id.like_amount);
                 holder.companyTextView = (TextView) convertView.findViewById(R.id.company_text_view);
                 holder.companyDescription = (TextView) convertView.findViewById(R.id.company_description);
+                holder.companyAddress = (TextView) convertView.findViewById(R.id.company_address);
                 //holder.ratingBar = (RatingBar) convertView.findViewById(R.id.rating_bar);
                 holder.valueTextView = (TextView) convertView.findViewById(R.id.value_text_view);
 
@@ -344,10 +392,12 @@ public class StoresFragment extends Fragment {
 
 
 
-
+            holder.dislikeAmount.setText(item.dislike);
+            holder.likeAmount.setText(item.like);
             holder.titleTextView.setText(item.title);
             holder.companyTextView.setText(item.company);
-            holder.companyDescription.setText(item.Address);
+            holder.companyDescription.setText(item.description);
+            holder.companyAddress.setText(item.Address);
             //holder.ratingBar.setRating(item.rate);
             holder.valueTextView.setText(  item.value + " reviews");
 
@@ -361,7 +411,10 @@ public class StoresFragment extends Fragment {
             holder.timeToArrive.setTypeface(MyApplication.getDefaultTypeface());
             holder.titleTextView.setTypeface(MyApplication.getDefaultTypeface());
             holder.companyTextView.setTypeface(MyApplication.getDefaultTypeface());
+            holder.likeAmount.setTypeface(MyApplication.getDefaultTypeface());
+            holder.dislikeAmount.setTypeface(MyApplication.getDefaultTypeface());
             holder.companyDescription.setTypeface(MyApplication.getDefaultTypeface());
+            holder.companyAddress.setTypeface(MyApplication.getDefaultTypeface());
             holder.valueTextView.setTypeface(MyApplication.getDefaultTypeface());
 
             if (item.rate >= 0)
@@ -408,7 +461,7 @@ public class StoresFragment extends Fragment {
             switch (position)
             {
                 case 0:
-                    holder.imageView.setImageResource(R.drawable.store_9);
+                    holder.imageView.setImageResource(R.drawable.store_9_1);
                     break;
                 case 1:
                     holder.imageView.setImageResource(R.drawable.store_2);
@@ -489,6 +542,10 @@ public class StoresFragment extends Fragment {
             public TextView Phone;
             public TextView Address;
 
+            public TextView likeAmount;
+
+            public TextView dislikeAmount;
+
             public ImageView imageView;
 
             public TextView titleTextView;
@@ -497,13 +554,11 @@ public class StoresFragment extends Fragment {
 
             public TextView companyDescription;
 
+            public TextView companyAddress;
+
             public RatingBar ratingBar;
 
             public TextView valueTextView;
-
         }
-
     }
-
 }
-

@@ -248,6 +248,10 @@ public class HomeFragment extends  Fragment {
 
                         note.text.setText(notes[groupPosition].toString());
 
+                        ImageView  send_message = (ImageView) convertView.findViewById(R.id.icon_edit_profile);
+                        send_message.setTag(contacts[groupPosition].toString());
+
+
                         switch (groupPosition)
                         {
 
