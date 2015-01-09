@@ -67,8 +67,8 @@ public class AllFragment extends Fragment {
                         "no"
                 };
         String[] installed =
-                {"false",
-                        "false",
+                {"true",
+                        "true",
                         "true",
                         "true",
                         "true",

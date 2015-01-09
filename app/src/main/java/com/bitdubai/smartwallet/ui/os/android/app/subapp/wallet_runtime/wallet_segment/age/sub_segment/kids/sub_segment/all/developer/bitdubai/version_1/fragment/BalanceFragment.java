@@ -30,6 +30,7 @@ public class BalanceFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         position = getArguments().getInt(ARG_POSITION);
+
     }
 
     @Override

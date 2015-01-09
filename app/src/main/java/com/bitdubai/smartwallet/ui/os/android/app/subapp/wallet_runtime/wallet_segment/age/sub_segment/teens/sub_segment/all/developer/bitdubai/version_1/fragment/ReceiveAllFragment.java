@@ -171,6 +171,10 @@ public class ReceiveAllFragment extends android.app.Fragment {
                 ImageView  icon_receive_form_contact = (ImageView) convertView.findViewById(R.id.icon_receive_form_contact);
                 icon_receive_form_contact.setTag(groupPosition);
                 icon_receive_form_contact.setTag(tagId + "-" + groupPosition);
+
+                ImageView  icon_chat_over_trx = (ImageView) convertView.findViewById(R.id.icon_chat_over_trx);
+                icon_chat_over_trx.setTag(tagId + "|" + groupPosition);
+
                 holder = new ViewHolder();
 
                 amount = new ViewHolder();
@@ -200,6 +204,9 @@ public class ReceiveAllFragment extends android.app.Fragment {
 
                     ImageView  icon_receive_form_contact = (ImageView) convertView.findViewById(R.id.icon_receive_form_contact);
                     icon_receive_form_contact.setTag(tagId + "-" + groupPosition);
+
+                    ImageView  icon_chat_over_trx = (ImageView) convertView.findViewById(R.id.icon_chat_over_trx);
+                    icon_chat_over_trx.setTag(tagId + "|" + groupPosition);
 
                     holder = new ViewHolder();
 

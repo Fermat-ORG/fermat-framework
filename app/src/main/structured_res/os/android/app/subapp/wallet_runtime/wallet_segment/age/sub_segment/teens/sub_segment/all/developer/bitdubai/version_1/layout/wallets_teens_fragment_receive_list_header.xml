@@ -86,7 +86,7 @@
             android:layout_alignParentLeft="true"
             android:paddingBottom="7dp"
             android:paddingTop="7dp"
-            android:onClick="onChatOverTrxIconClicked"
+            android:onClick="onChatOverReceiveTrxIconClicked"
 
             />
 

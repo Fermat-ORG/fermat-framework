@@ -233,6 +233,15 @@
         </activity>
 
         <activity
+            android:name=".ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.ChatOverReceiveTrxActivity"
+            android:label="@string/title_activity_chat_over_trx"
+            android:parentActivityName=".ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.FrameworkActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.FrameworkActivity" />
+        </activity>
+
+        <activity
             android:name=".ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.AvailableBalanceActivity"
             android:label="@string/title_activity_balance_available"
             android:parentActivityName=".ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.FrameworkActivity" >

@@ -82,9 +82,12 @@ public class MyApplication extends Application {
                 s = new SpannableString(mTitle);
                 color = "#FFC2F1";
                 actionBar.setIcon(context.getDrawable(R.drawable.icono_piggy_pink));
-                bg = context.getDrawable(R.drawable.wallet_wallpaper_pink);
+               // bg = context.getDrawable(R.drawable.wallet_wallpaper_pink);
+               // bg.setVisible(true,false);
+               // wallpaper = context.getDrawable(R.drawable.wallet_wallpaper_pink);
+                bg = context.getDrawable(R.drawable.banner_kid_yellow_blue);
                 bg.setVisible(true,false);
-                wallpaper = context.getDrawable(R.drawable.wallet_wallpaper_pink);
+                wallpaper = context.getDrawable(R.drawable.wallet_wallpaper_yellow);
                 abTitle.setTextColor(Color.BLACK);
                 walletStyle = "Kids";
                 break;
