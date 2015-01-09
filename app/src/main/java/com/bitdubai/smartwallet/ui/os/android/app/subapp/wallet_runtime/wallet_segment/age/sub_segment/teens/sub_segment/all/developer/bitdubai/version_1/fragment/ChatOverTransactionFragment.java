@@ -315,7 +315,7 @@ public class ChatOverTransactionFragment extends android.app.Fragment {
                         break;
 
                     case 10:
-                        view = inf.inflate(R.layout.wallets_teens_fragment_store_chat_left, parent, false);
+                        view = inf.inflate(R.layout.wallets_teens_fragment_shop_chat_left, parent, false);
                         tv = ((TextView)view.findViewById(R.id.title));
                         tv.setText("As you don't have water neither light to use the heating system.");
                         tv.setTypeface(MyApplication.getDefaultTypeface());
@@ -329,7 +329,7 @@ public class ChatOverTransactionFragment extends android.app.Fragment {
 
 
                     case 11:
-                        view = inf.inflate(R.layout.wallets_teens_fragment_store_chat_left, parent, false);
+                        view = inf.inflate(R.layout.wallets_teens_fragment_shop_chat_left, parent, false);
                         tv = ((TextView)view.findViewById(R.id.title));
                         tv.setText("I suggest you staying the night in the hotel down the street, and don't worry i will pay for it.");
                         tv.setTypeface(MyApplication.getDefaultTypeface());
@@ -342,7 +342,7 @@ public class ChatOverTransactionFragment extends android.app.Fragment {
                         break;
 
                     case 12:
-                        view = inf.inflate(R.layout.wallets_teens_fragment_store_chat_right, parent, false);
+                        view = inf.inflate(R.layout.wallets_teens_fragment_shop_chat_right, parent, false);
                         tv = ((TextView)view.findViewById(R.id.title));
                         tv.setText("Ok, thanks you for your kindness.");
                         tv.setTypeface(MyApplication.getDefaultTypeface());
