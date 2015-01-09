@@ -53,82 +53,6 @@
             android:scaleType="centerCrop"
             android:paddingLeft="7dp"
             android:paddingRight="7dp"
-            android:paddingTop="7dp"
-            android:layout_weight="1"
-            android:paddingBottom="7dp"
-            android:src="@drawable/usd_5"
-            android:layout_gravity="center"
-            />
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:paddingLeft="7dp"
-            android:paddingRight="7dp"
-            android:paddingTop="7dp"
-            android:layout_weight="1"
-            android:paddingBottom="7dp"
-            android:src="@drawable/usd_10"
-            android:layout_gravity="center"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:paddingLeft="7dp"
-            android:paddingRight="7dp"
-            android:paddingTop="7dp"
-            android:layout_weight="1"
-            android:paddingBottom="7dp"
-            android:src="@drawable/usd_20"
-            android:layout_gravity="center"
-            />
-    </LinearLayout>
-    <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-     android:layout_weight="1">
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:paddingLeft="7dp"
-            android:paddingRight="7dp"
-            android:paddingTop="7dp"
-            android:paddingBottom="7dp"
-            android:src="@drawable/usd_1"
-            android:layout_gravity="center"
-            android:layout_weight="1"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:paddingLeft="7dp"
-            android:paddingRight="7dp"
-            android:paddingTop="7dp"
-            android:layout_weight="1"
-            android:paddingBottom="7dp"
-            android:src="@drawable/usd_1"
-            android:layout_gravity="center"
-            />
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:paddingLeft="7dp"
-            android:paddingRight="7dp"
-            android:layout_weight="1"
-            android:paddingTop="7dp"
-            android:paddingBottom="7dp"
-            android:src="@drawable/usd_5"
-            android:layout_gravity="center"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:paddingLeft="7dp"
-            android:paddingRight="7dp"
             android:layout_weight="1"
             android:paddingTop="7dp"
             android:paddingBottom="7dp"
@@ -140,9 +64,9 @@
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
             android:paddingLeft="7dp"
-            android:layout_weight="1"
             android:paddingRight="7dp"
             android:paddingTop="7dp"
+            android:layout_weight="1"
             android:paddingBottom="7dp"
             android:src="@drawable/usd_20"
             android:layout_gravity="center"
@@ -160,6 +84,75 @@
             android:src="@drawable/usd_100"
             android:layout_gravity="center"
             />
+    </LinearLayout>
+    <LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="432dp"
+    android:layout_weight="1"
+    >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:paddingLeft="7dp"
+            android:paddingRight="7dp"
+            android:paddingTop="7dp"
+            android:paddingBottom="7dp"
+            android:src="@drawable/usd_1"
+            android:layout_gravity="center"
+            android:layout_weight="1"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:paddingLeft="7dp"
+            android:paddingRight="7dp"
+            android:layout_weight="1"
+            android:paddingTop="7dp"
+            android:paddingBottom="7dp"
+            android:src="@drawable/usd_5"
+            android:layout_gravity="center"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:paddingLeft="7dp"
+            android:paddingRight="7dp"
+            android:paddingTop="7dp"
+            android:layout_weight="1"
+            android:paddingBottom="7dp"
+            android:src="@drawable/usd_5"
+            android:layout_gravity="center"
+            />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:paddingLeft="7dp"
+            android:paddingRight="7dp"
+            android:paddingTop="7dp"
+            android:layout_weight="1"
+            android:paddingBottom="7dp"
+            android:src="@drawable/usd_10"
+            android:layout_gravity="center"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:paddingLeft="7dp"
+            android:layout_weight="1"
+            android:paddingRight="7dp"
+            android:paddingTop="7dp"
+            android:paddingBottom="7dp"
+            android:src="@drawable/usd_20"
+            android:layout_gravity="center"
+            />
+
+
     </LinearLayout>
 
 </LinearLayout>

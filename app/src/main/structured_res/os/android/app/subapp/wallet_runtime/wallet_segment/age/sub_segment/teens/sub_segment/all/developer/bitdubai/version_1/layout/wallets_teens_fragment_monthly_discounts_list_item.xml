@@ -7,28 +7,6 @@
     android:paddingRight="7dip"
     android:gravity="end|right">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="106dp"
-        android:layout_height="106dp"
-
-        >
-
-
-
-        <ImageView
-            android:id="@+id/discount_picture"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:src="@drawable/luis_profile_picture"
-            android:layout_gravity="center"
-
-            android:padding="6dp"
-            android:focusableInTouchMode="false" />
-
-
-    </RelativeLayout>
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="106dp"

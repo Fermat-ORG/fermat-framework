@@ -41,8 +41,8 @@ public class DailyDiscountsFragment extends android.app.Fragment {
         super.onCreate(savedInstanceState);
 
         dates = new String[]{"today", "yesterday", "Wed 21 Feb", "Tue 20 Feb","Mon 19 Feb","Sun 18 Feb", "Sat 17 Feb" };
-        adiscount_count = new String[]{"1.52","2.25","12.26","-3.73","8.48","9.76","-1.74"};
-        saved_money = new String[] {"$2.54", "$4.55", "$50.24","-$6.52","$23.42","$26.46","-$2.47"};
+        adiscount_count = new String[]{"1.52","2.25","12.26","3.73","8.48","9.76","1.74"};
+        saved_money = new String[] {"$2.54", "$4.55", "$50.24","$6.52","$23.42","$26.46","$2.47"};
 
         transactions = new String[][]{
 
@@ -183,24 +183,6 @@ public class DailyDiscountsFragment extends android.app.Fragment {
             if (1 == 1) {
                 convertView = inf.inflate(R.layout.wallets_teens_fragment_daily_discounts_list_item, parent, false);
 
-          discount_picture = (ImageView) convertView.findViewById(R.id.discount_picture);
-
-              if(Double.parseDouble(adiscount_count[groupPosition]) > 0) {
-
-                  discount_picture.setImageResource(R.drawable.account_type_current_small);
-
-
-                }else {
-                  if(Double.parseDouble(adiscount_count[groupPosition]) < 0) {
-                      discount_picture.setImageResource(R.drawable.account_type_savings_1_small);
-                  }
-                  else
-                  {
-                      if(Double.parseDouble(adiscount_count[groupPosition]) == 0) {
-                          discount_picture.setImageResource(R.drawable.account_type_savings_2_small);
-                      }
-                  }
-              }
 
 
                 date= new ViewHolder();
