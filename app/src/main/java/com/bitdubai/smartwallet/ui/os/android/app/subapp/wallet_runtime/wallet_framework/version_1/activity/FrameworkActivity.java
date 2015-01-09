@@ -24,7 +24,6 @@ import android.widget.TextView;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyApplication;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.fragment.NavigationDrawerFragment;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.PagerSlidingTabStrip;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ContactsFragment;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.DiscountsFragment;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.HomeFragment;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.SendFragment;
@@ -36,7 +35,7 @@ import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_s
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ReceiveFragment;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.RefillFragment;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.StoresFragment;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ShopFragment;
 
 
 //public class FrameworkActivity extends FragmentActivity {
@@ -125,6 +124,17 @@ public class FrameworkActivity extends FragmentActivity
 
     }
 
+    public void onChatContactIconClicked(View v) {
+        String contact_name =  v.getTag().toString();
+        MyApplication.setContact(contact_name);
+        Intent intent;
+        intent = new Intent(this, ChatWithContactActivity.class);
+        startActivity(intent);
+
+        return;
+
+    }
+
     public void onSendIconClicked(View v) {
 
         String tagId = v.getTag().toString();
@@ -188,10 +198,6 @@ public class FrameworkActivity extends FragmentActivity
 
 
         setContentView(R.layout.wallet_framework_activity_framework);
-        if (walletId >=4){
-            setContentView(R.layout.wallet_framework_activity_wallet_no_aviable);
-        }
-
 
         // I get the action bar title id and put it on a text view in order to later change its color
         int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
@@ -261,7 +267,7 @@ public class FrameworkActivity extends FragmentActivity
                 break;
         }
 
-        if (walletId == 2){
+        if (walletId == 2 || walletId == 1){
             getActionBar().setDisplayHomeAsUpEnabled(false);
             DrawerLayout draw = (DrawerLayout) findViewById(R.id.drawer_layout);
             draw.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
@@ -328,24 +334,12 @@ public class FrameworkActivity extends FragmentActivity
                 tabs.setBackgroundResource(R.drawable.background_tiled_diagonal_light);
                 tabs.setDividerColor(0xFFBBBBBB);
             }
-
-
-
-
-
         }
-
-
-
-
-
     }
 
     //***
     @Override
     public void onNavigationDrawerItemSelected(int position) {
-
-
 
     }
 
@@ -385,8 +379,8 @@ public class FrameworkActivity extends FragmentActivity
     public boolean onCreateOptionsMenu(Menu menu) {
 
         MenuInflater inflater = getMenuInflater();
-
-        if ( ((MyApplication) this.getApplication()).getWalletId() == 2)
+        int walletId = ((MyApplication) this.getApplication()).getWalletId();
+        if (walletId == 1 || walletId == 2)
           inflater.inflate(R.menu.wallet_framework_activity_framework_menu2, menu);
         else
             inflater.inflate(R.menu.wallet_framework_activity_framework_menu, menu);
@@ -455,7 +449,7 @@ public class FrameworkActivity extends FragmentActivity
 
         private String[] titles;
         private String[] titles_1 = { "Balance", "Contacts"};
-        private String[] titles_2 = { "Home", "Balance", "Send", "Receive","Stores","Refill","Discounts"};
+        private String[] titles_2 = { "Home", "Balance", "Send", "Receive","Shops","Refill","Discounts"};
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -538,7 +532,7 @@ public class FrameworkActivity extends FragmentActivity
                     currentFragment =  ReceiveFragment.newInstance(position);
                     break;
                 case 4:
-                    currentFragment =  StoresFragment.newInstance(position);
+                    currentFragment =  ShopFragment.newInstance(position);
                     break;
                 case 5:
                     currentFragment =  RefillFragment.newInstance(position);

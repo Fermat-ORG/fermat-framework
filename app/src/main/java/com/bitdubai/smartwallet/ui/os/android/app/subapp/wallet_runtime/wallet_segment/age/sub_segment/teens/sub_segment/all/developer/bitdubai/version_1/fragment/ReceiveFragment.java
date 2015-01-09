@@ -291,7 +291,7 @@ public  class ReceiveFragment extends Fragment {
                     history_picture.setTag(groupPosition);
 
                     ImageView  send_message = (ImageView) convertView.findViewById(R.id.icon_send_message);
-                    send_message.setTag(groupPosition+ "|0");
+                    send_message.setTag(contacts[groupPosition].toString());
 
                     switch (groupPosition) {
                         case 1:

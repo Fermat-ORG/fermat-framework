@@ -286,7 +286,7 @@ public  class SendFragment extends Fragment {
                     send_profile_picture.setTag(groupPosition + "|-1");
 
                     ImageView  send_message = (ImageView) convertView.findViewById(R.id.icon_send_message);
-                    send_message.setTag(groupPosition+ "|0");
+                    send_message.setTag(contacts[groupPosition].toString());
 
                     ImageView  history_picture = (ImageView) convertView.findViewById(R.id.open_history);
                     history_picture.setTag(groupPosition);

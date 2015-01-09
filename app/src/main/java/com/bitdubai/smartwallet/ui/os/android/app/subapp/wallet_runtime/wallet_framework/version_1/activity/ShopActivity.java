@@ -17,7 +17,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 
-import android.support.v4.widget.DrawerLayout;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -37,15 +36,13 @@ import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_s
 
 import com.bitdubai.smartwallet.R;
 
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.StoreChatFragment;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.StoreMapFragment;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.StoreProductsFragment;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.StoreStoreFragment;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ShopChatFragment;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ShopMapFragment;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ShopProductsFragment;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ShopShopFragment;
 
 
-
-
-public class StoreActivity extends FragmentActivity
+public class ShopActivity extends FragmentActivity
 {
 
     private final Handler handler = new Handler();
@@ -62,7 +59,7 @@ public class StoreActivity extends FragmentActivity
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
-    private CharSequence mTitle = "Store";
+    private CharSequence mTitle = "Shop";
     private Menu menu;
 
 
@@ -74,7 +71,7 @@ public class StoreActivity extends FragmentActivity
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.wallet_framework_activity_store);
+        setContentView(R.layout.wallet_framework_activity_shop);
 
         // I get the action bar title id and put it on a text view in order to later change its color
         int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
@@ -269,7 +266,7 @@ public class StoreActivity extends FragmentActivity
 
         private String[] titles;
         private String[] titles_1 = { };
-        private String[] titles_2 = { "Store", "Products", "Reviews", "Chat", "History", "Map"};
+        private String[] titles_2 = { "Shop", "Products", "Reviews", "Chat", "History", "Map"};
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -308,22 +305,22 @@ public class StoreActivity extends FragmentActivity
             Fragment currentFragment;
             switch (position) {
                 case 0:
-                    currentFragment =   StoreStoreFragment.newInstance(position);
+                    currentFragment =   ShopShopFragment.newInstance(position);
                     break;
                 case 1:
-                    currentFragment =   StoreProductsFragment.newInstance(position);
+                    currentFragment =   ShopProductsFragment.newInstance(position);
                     break;
                 case 2:
                     currentFragment =   ReviewsFragment.newInstance(position);
                     break;
                 case 3:
-                    currentFragment =  StoreChatFragment.newInstance(position);
+                    currentFragment =  ShopChatFragment.newInstance(position);
                     break;
                 case 4:
                     currentFragment =  HistoryFragment.newInstance(position);
                     break;
                 case 5:
-                    currentFragment =  StoreMapFragment.newInstance(position);
+                    currentFragment =  ShopMapFragment.newInstance(position);
                     break;
 
                 default:

@@ -26,6 +26,7 @@ public class MyApplication extends Application {
     private final static Handler handler = new Handler();
     public static Typeface mDefaultTypeface;
     public static int mTAGID;
+    public static String mContact;
     public  static int mWalletId;
 
     public static String mCHILDID;
@@ -52,12 +53,16 @@ public class MyApplication extends Application {
         return mTAGID;
     }
 
+    public static String getContact() {
+        return mContact;
+    }
+
     public static String getChildId() {
         return mCHILDID;
     }
     public static void setChildId(String childId) { mCHILDID = childId; }
     public static void setTagId(int TagId) { mTAGID = TagId; }
-
+    public static void setContact(String contact_name) { mContact = contact_name; }
 
     public static void setDefaultTypeface(Typeface DefaultTypeface) {
         mDefaultTypeface = DefaultTypeface;
@@ -81,13 +86,11 @@ public class MyApplication extends Application {
 
                 s = new SpannableString(mTitle);
                 color = "#FFC2F1";
+
                 actionBar.setIcon(context.getDrawable(R.drawable.icono_piggy_pink));
-               // bg = context.getDrawable(R.drawable.wallet_wallpaper_pink);
-               // bg.setVisible(true,false);
-               // wallpaper = context.getDrawable(R.drawable.wallet_wallpaper_pink);
-                bg = context.getDrawable(R.drawable.banner_kid_yellow_blue);
+                bg = context.getDrawable(R.drawable.wallet_wallpaper_pink);
                 bg.setVisible(true,false);
-                wallpaper = context.getDrawable(R.drawable.wallet_wallpaper_yellow);
+                wallpaper = context.getDrawable(R.drawable.wallet_wallpaper_pink);
                 abTitle.setTextColor(Color.BLACK);
                 walletStyle = "Kids";
                 break;

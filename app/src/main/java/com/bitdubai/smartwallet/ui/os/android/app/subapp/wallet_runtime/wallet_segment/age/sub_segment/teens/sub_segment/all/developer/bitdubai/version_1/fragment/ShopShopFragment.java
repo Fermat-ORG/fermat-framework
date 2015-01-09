@@ -33,15 +33,15 @@ import java.util.List;
 
 
 
-public class StoreStoreFragment extends Fragment {
+public class ShopShopFragment extends Fragment {
 
     private static final String ARG_POSITION = "position";
     private ArrayList<App> mlist;
 
     private int position;
 
-    public static StoreStoreFragment newInstance(int position) {
-        StoreStoreFragment f = new StoreStoreFragment();
+    public static ShopShopFragment newInstance(int position) {
+        ShopShopFragment f = new ShopShopFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -281,7 +281,7 @@ public class StoreStoreFragment extends Fragment {
 
         //@SuppressWarnings("unchecked")
         //ArrayList<App> list = (ArrayList<App>) getArguments().get("list");
-        gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.wallets_teens_fragment_store_store, mlist));
+        gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.wallets_teens_fragment_shop_shop, mlist));
 
 
 
@@ -355,7 +355,7 @@ public class StoreStoreFragment extends Fragment {
             ViewHolder holder;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.wallets_teens_fragment_store_store, parent, false);
+                convertView = inflater.inflate(R.layout.wallets_teens_fragment_shop_shop, parent, false);
                 holder = new ViewHolder();
 
 

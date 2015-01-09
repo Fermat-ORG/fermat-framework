@@ -19,15 +19,15 @@ import com.google.android.gms.maps.model.MarkerOptions;
 /**
  * A fragment that launches other parts of the demo application.
  */
-public class StoreMapFragment extends Fragment {
+public class ShopMapFragment extends Fragment {
 
     MapView mMapView;
     private GoogleMap googleMap;
 
     private static final String ARG_POSITION = "position";
 
-    public static StoreMapFragment newInstance(int position) {
-        StoreMapFragment f = new StoreMapFragment();
+    public static ShopMapFragment newInstance(int position) {
+        ShopMapFragment f = new ShopMapFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -39,7 +39,7 @@ public class StoreMapFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // inflat and return the layout
-        View v = inflater.inflate(R.layout.wallets_teens_fragment_store_map, container,
+        View v = inflater.inflate(R.layout.wallets_teens_fragment_shop_map, container,
                 false);
         mMapView = (MapView) v.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);

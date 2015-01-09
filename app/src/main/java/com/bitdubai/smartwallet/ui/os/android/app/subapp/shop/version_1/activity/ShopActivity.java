@@ -1,4 +1,4 @@
-package com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_store.version_1.activity;
+package com.bitdubai.smartwallet.ui.os.android.app.subapp.shop.version_1.activity;
 
 import android.app.ActionBar;
 import android.content.Intent;
@@ -25,19 +25,20 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyApplication;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.MyLayoutInflaterFactory;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.PagerSlidingTabStrip;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.RequestsSentActivity;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.AccountDetailFiltersFragment;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.RefillFragment;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.SendFragment;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ShopChatFragment;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ShopMapFragment;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ShopShopFragment;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyApplication;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.PagerSlidingTabStrip;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.shop.version_1.fragment.HistoryFragment;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.shop.version_1.fragment.ReviewsFragment;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.shop.version_1.fragment.ShopMapFragment;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.shop.version_1.fragment.ShopProductsFragment;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.shop.version_1.fragment.ShopShopFragment;
 
-
-public class WalletActivity extends FragmentActivity
+/**
+ * Created by Natalia on 09/01/2015.
+ */
+public class ShopActivity  extends FragmentActivity
 {
 
     private final Handler handler = new Handler();
@@ -54,7 +55,7 @@ public class WalletActivity extends FragmentActivity
     /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
-    private CharSequence mTitle = "Store";
+    private CharSequence mTitle = "Shop";
     private Menu menu;
 
 
@@ -66,7 +67,7 @@ public class WalletActivity extends FragmentActivity
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.wallet_framework_activity_shop);
+        setContentView(R.layout.wallet_shop_activity_shop);
 
         // I get the action bar title id and put it on a text view in order to later change its color
         int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
@@ -78,12 +79,11 @@ public class WalletActivity extends FragmentActivity
         tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
 
 
-        //((MyApplication) this.getApplication()).setActionBarProperties(this, getWindow(), tabs, getActionBar(), getResources(), abTitle, mTitle.toString());
+       // ((MyApplication) this.getApplication()).setActionBarProperties(this, getWindow(), tabs, getActionBar(), getResources(), abTitle, mTitle.toString());
         //super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_main);
 
         //getWindow().getDecorView().setBackgroundResource(R.drawable.wallet_wallpaper_yellow);
-
 
         pager = (ViewPager) findViewById(R.id.pager);
         adapter = new MyPagerAdapter(getSupportFragmentManager());
@@ -101,11 +101,10 @@ public class WalletActivity extends FragmentActivity
         tabs.setTypeface(tf, 1);
         //changeColor(currentColor);
 
-        tabs.setDividerColor(0xFFFFFFFF);
-        tabs.setIndicatorColor(0xFFFFFFFF);
-        tabs.setIndicatorHeight(9);
-        tabs.setBackgroundColor(0xFF87D2FA);
-        tabs.setTextColor(0xFFFFFFFF);
+        tabs.setBackgroundResource(R.drawable.background_tiled_diagonal_light);
+        tabs.setDividerColor(0xFFBBBBBB);
+
+
     }
 
 
@@ -141,7 +140,7 @@ public class WalletActivity extends FragmentActivity
     public boolean onCreateOptionsMenu(Menu menu) {
 
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.wallet_framework_activity_account_detail_menu, menu);
+        inflater.inflate(R.menu.wallet_shop_activity_account_detail_menu, menu);
 
         LayoutInflater inflaterClone = getLayoutInflater().cloneInContext(getLayoutInflater().getContext());
         LayoutInflater.Factory lif = new MyLayoutInflaterFactory();
@@ -263,7 +262,7 @@ public class WalletActivity extends FragmentActivity
 
         private String[] titles;
         private String[] titles_1 = { };
-        private String[] titles_2 = { "Wallet", "Reviews", "Cost", "Company", "Statistics"};
+        private String[] titles_2 = { "Shop", "Products", "Reviews",  "History", "Map"};
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -283,10 +282,7 @@ public class WalletActivity extends FragmentActivity
         @Override
         public int getCount() {
 
-            if (walletStyle.equals("Kids") )
-            {titles = titles_1;}
-            else
-            {titles = titles_2;}
+           titles = titles_2;
 
             return titles.length;
         }
@@ -294,10 +290,8 @@ public class WalletActivity extends FragmentActivity
         @Override
         public Fragment getItem(int position) {
 
-            if (walletStyle.equals("Kids") )
-            {titles = titles_1;}
-            else
-            {titles = titles_2;}
+
+           titles = titles_2;
 
             Fragment currentFragment;
             switch (position) {
@@ -305,23 +299,21 @@ public class WalletActivity extends FragmentActivity
                     currentFragment =   ShopShopFragment.newInstance(position);
                     break;
                 case 1:
-                    currentFragment =   RefillFragment.newInstance(position);
+                    currentFragment =   ShopProductsFragment.newInstance(position);
                     break;
                 case 2:
-                    currentFragment =  SendFragment.newInstance(position);
+                    currentFragment =   ReviewsFragment.newInstance(position);
                     break;
+
                 case 3:
-                    currentFragment =  ShopChatFragment.newInstance(position);
+                    currentFragment =  HistoryFragment.newInstance(position);
                     break;
                 case 4:
-                    currentFragment =  AccountDetailFiltersFragment.newInstance(position);
-                    break;
-                case 5:
                     currentFragment =  ShopMapFragment.newInstance(position);
                     break;
 
                 default:
-                    currentFragment =   AccountDetailFiltersFragment.newInstance(position);
+                    currentFragment =   ShopShopFragment.newInstance(position);
                     break;
             }
             return currentFragment;
