@@ -109,7 +109,7 @@
                 android:value=".ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.FrameworkActivity" />
         </activity>
         <activity
-            android:name=".ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.StoreActivity"
+            android:name=".ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.ShopActivity"
             android:label="@string/title_activity_store"
             android:parentActivityName=".ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.FrameworkActivity" >
             <meta-data
@@ -233,6 +233,15 @@
         </activity>
 
         <activity
+            android:name=".ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.ChatWithContactActivity"
+            android:label="@string/title_activity_chat_over_trx"
+            android:parentActivityName=".ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.FrameworkActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.FrameworkActivity" />
+        </activity>
+
+        <activity
             android:name=".ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.ChatOverReceiveTrxActivity"
             android:label="@string/title_activity_chat_over_trx"
             android:parentActivityName=".ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.FrameworkActivity" >
@@ -256,6 +265,14 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.os.android.app.subapp.wallet_store.version_1.activity.StoreFrontActivity" />
+        </activity>
+
+        <activity
+            android:name=".ui.os.android.app.subapp.shop.version_1.activity.ShopActivity"
+            android:label="Wallet Store" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.os.android.app.subapp.wallet_manager.version_1.activity.DesktopActivity" />
         </activity>
         <activity
             android:name=".ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.RequestsReceivedActivity"

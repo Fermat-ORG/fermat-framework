@@ -33,7 +33,7 @@ import java.util.List;
 
 
 
-public class StoreProductsFragment extends Fragment {
+public class ShopProductsFragment extends Fragment {
 
 
     private static final String ARG_POSITION = "position";
@@ -41,8 +41,8 @@ public class StoreProductsFragment extends Fragment {
 
     private int position;
 
-    public static StoreProductsFragment newInstance(int position) {
-        StoreProductsFragment f = new StoreProductsFragment();
+    public static ShopProductsFragment newInstance(int position) {
+        ShopProductsFragment f = new ShopProductsFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -281,7 +281,7 @@ public class StoreProductsFragment extends Fragment {
 
         //@SuppressWarnings("unchecked")
         //ArrayList<App> list = (ArrayList<App>) getArguments().get("list");
-        gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.wallets_teens_fragment_stores_item, mlist));
+        gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.wallets_teens_fragment_shop_item, mlist));
 
 
 
@@ -354,7 +354,7 @@ public class StoreProductsFragment extends Fragment {
             ViewHolder holder;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.wallets_teens_fragment_store_products_item, parent, false);
+                convertView = inflater.inflate(R.layout.wallets_teens_fragment_shop_products_item, parent, false);
                 holder = new ViewHolder();
 
                 holder.dislike= (ImageView) convertView.findViewById(R.id.bad);

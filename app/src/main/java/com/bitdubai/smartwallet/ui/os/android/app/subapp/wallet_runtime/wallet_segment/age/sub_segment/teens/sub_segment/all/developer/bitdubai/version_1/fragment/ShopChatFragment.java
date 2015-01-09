@@ -1,20 +1,23 @@
 package com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment;
 
+
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.support.v4.app.Fragment;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
+
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
+
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyApplication;
 
-/**
- * Created by Natalia on 08/01/2015.
- */
-public class ChatOverTransactionFragment extends android.app.Fragment {
+
+public class ShopChatFragment extends Fragment {
+
     private static final String ARG_POSITION = "position";
 
     View rootView;
@@ -22,19 +25,16 @@ public class ChatOverTransactionFragment extends android.app.Fragment {
     private String[] contacts;
     private String[] countries;
     private String[] states;
+    private String[] when;
+    private String[] amount;
     private String[] cities;
-
+    private String[] pictures;
     private String[][] transactions;
-    String[][] transactions_amounts;
+    private String[][] transactions_amounts;
     private String[][] transactions_whens;
 
-
-
-    public static ChatOverTransactionFragment newInstance(int position) {
-        ChatOverTransactionFragment f = new ChatOverTransactionFragment();
-        Bundle b = new Bundle();
-        b.putInt(ARG_POSITION, position);
-        f.setArguments(b);
+    public static ShopChatFragment newInstance(int position) {
+        ShopChatFragment f = new ShopChatFragment();
         return f;
     }
 
@@ -67,7 +67,7 @@ public class ChatOverTransactionFragment extends android.app.Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.wallets_teens_fragment_trx_chat, container, false);
+        rootView = inflater.inflate(R.layout.wallets_teens_fragment_shop_chat, container, false);
 
 
         TextView userInput;

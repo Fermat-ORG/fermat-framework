@@ -8,7 +8,9 @@ import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.shop.version_1.activity.ShopActivity;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.FrameworkActivity;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyApplication;
@@ -69,6 +71,15 @@ public class DesktopActivity extends Activity {
             return true;
         }
 
+        if (id == R.id.action_shop) {
+
+            Intent intent;
+            intent = new Intent(this, ShopActivity.class);
+            startActivity(intent);
+
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -78,18 +89,28 @@ public class DesktopActivity extends Activity {
 
      tagId = v.getTag().toString();
 
-        Intent intent;
+        if (Integer.parseInt(tagId) > 4)
+        {
+            Toast.makeText(getApplicationContext(), "This part of the prototype is not ready",
+                    Toast.LENGTH_LONG).show();
+        }
+        else
+        {
+            Intent intent;
 
-        intent = new Intent(this, FrameworkActivity.class);
+            intent = new Intent(this, FrameworkActivity.class);
 
-       // Intent i=getIntent();
-       // String walletId =i.getStringExtra( "Wallet Id");
+            // Intent i=getIntent();
+            // String walletId =i.getStringExtra( "Wallet Id");
 
 
-        ((MyApplication) this.getApplication()).setWalletId(Integer.parseInt(tagId));
+            ((MyApplication) this.getApplication()).setWalletId(Integer.parseInt(tagId));
 
-       // intent.putExtra("Wallet Id", tag );
-        startActivity(intent);
+            // intent.putExtra("Wallet Id", tag );
+            startActivity(intent);
+        }
+
+
 
     }
 

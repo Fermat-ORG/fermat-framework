@@ -1,13 +1,15 @@
-package com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_store.version_1.fragment;
+package com.bitdubai.smartwallet.ui.os.android.app.subapp.shop.version_1.fragment;
 
 import android.app.Service;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -15,23 +17,25 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.ShopActivity;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyApplication;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
-public class PaidFragment extends Fragment {
+/**
+ * Created by Natalia on 09/01/2015.
+ */
+public class ShopFragment extends Fragment {
 
     private static final String ARG_POSITION = "position";
     private ArrayList<App> mlist;
 
     private int position;
 
-    public static PaidFragment newInstance(int position) {
-        PaidFragment f = new PaidFragment();
+    public static ShopFragment newInstance(int position) {
+        ShopFragment f = new ShopFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -41,7 +45,7 @@ public class PaidFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        String[] company_names = {"The New York Times Store",
+        String[] company_names = {"Dunkin' Donuts",
                 "NYC Fine Cigars",
                 "Fat Sal's Pizza",
                 "Pomodoro Restaurant",
@@ -49,7 +53,7 @@ public class PaidFragment extends Fragment {
                 "Beba Blue Salon",
                 "Tick Tock Diner",
                 "The New Yorker Hotel",
-                "Dunkin' Donuts",
+                "The New York Times Store",
                 "The Australian",
                 "Panera Bread",
                 "Mustang Cafe",
@@ -140,7 +144,7 @@ public class PaidFragment extends Fragment {
                 "aaa",
                 "aaa",
                 "aaa" };
-        String[] company_descriptions = {"Classic, redefined. See what's new at our Westchester location!.",
+        String[] company_descriptions = {"Long-running chain serving signature donuts, breakfast sandwiches & a variety of coffee ...",
                 "Smoking is allowed inside this clubby shop known for its hand-rolled cigars made ...",
                 "Basic pizzeria serving a variety of NYC-style slices in a small, counter-service space.",
                 "Pasta dishes, sandwiches & salads for take-out or eating in at this pint-sized Italian deli.",
@@ -148,7 +152,7 @@ public class PaidFragment extends Fragment {
                 "Hair Salon, Day Spa",
                 "Standard 24/7 diner with retro looks, basic fare & close proximity to Madison Square...",
                 "Huge historic Jazz Age (1929) hotel offers over 900 rooms and suites across from Penn Station.",
-                "Long-running chain serving signature donuts, breakfast sandwiches & a variety of coffee ...",
+                "Classic, redefined. See what's new at our Westchester location!.",
                 "Home-away-from-home Australian pub offering grilled kangaroo, Aussie beers & rugby ...",
                 "Counter-serve bakery/cafe chain serving sandwiches, salads & more, known for its ...",
                 "Counter-serve setup offering deli sandwiches & wraps, hot entrees, salads & breakfast items.",
@@ -165,7 +169,7 @@ public class PaidFragment extends Fragment {
                 "aaa",
                 "aaa",
                 "aaa" };
-        String[] company_sites = {"nytstore.com",
+        String[] company_sites = {"dunkindonuts.com",
                 "nycfinecigars.com",
                 "fatsals.com",
                 "delivery.com",
@@ -173,7 +177,7 @@ public class PaidFragment extends Fragment {
                 "bebablue.com",
                 "ticktockdinerny.com",
                 "newyorkerhotel.com",
-                "dunkindonuts.com",
+                "nytstore.com",
                 "theaustraliannyc.com",
                 "panerabread.com",
                 "mustangcafe.com",
@@ -226,23 +230,23 @@ public class PaidFragment extends Fragment {
 
         //@SuppressWarnings("unchecked")
         //ArrayList<App> list = (ArrayList<App>) getArguments().get("list");
-        gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.wallet_store_activity_store_front_grid_item, mlist));
+        gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.wallets_teens_fragment_shop_item, mlist));
 
 
 
 
-/*
+
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
                 Intent intent;
-                intent = new Intent(getActivity(), StoreActivity.class);
+                intent = new Intent(getActivity(), ShopActivity.class);
                 startActivity(intent);
 
                 return ;
             }
         });
-*/
+
 
         return gridView;
     }
@@ -296,7 +300,7 @@ public class PaidFragment extends Fragment {
             ViewHolder holder;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.wallet_store_activity_store_front_grid_item, parent, false);
+                convertView = inflater.inflate(R.layout.wallets_teens_fragment_shop_item, parent, false);
                 holder = new ViewHolder();
 
                 holder.star1= (ImageView) convertView.findViewById(R.id.star_1);
@@ -396,7 +400,7 @@ public class PaidFragment extends Fragment {
             switch (position)
             {
                 case 0:
-                    holder.imageView.setImageResource(R.drawable.store_1);
+                    holder.imageView.setImageResource(R.drawable.store_9);
                     break;
                 case 1:
                     holder.imageView.setImageResource(R.drawable.store_2);
@@ -420,7 +424,7 @@ public class PaidFragment extends Fragment {
                     holder.imageView.setImageResource(R.drawable.store_8);
                     break;
                 case 8:
-                    holder.imageView.setImageResource(R.drawable.store_9);
+                    holder.imageView.setImageResource(R.drawable.store_1);
                     break;
                 case 9:
                     holder.imageView.setImageResource(R.drawable.store_10);

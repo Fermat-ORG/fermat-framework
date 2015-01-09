@@ -1,38 +1,20 @@
 package com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment;
 
-
-import java.util.ArrayList;
-import java.util.List;
-import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
-import android.support.v4.content.Loader;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
-import android.widget.ListView;
-
-import android.view.LayoutInflater;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
-
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyApplication;
 
-import org.w3c.dom.Text;
-
-import static com.bitdubai.smartwallet.R.id.send_message_button;
-
-
-public class StoreChatFragment extends Fragment {
-
+/**
+ * Created by Natalia on 09/01/2015.
+ */
+public class ChatWithContactFragment extends android.app.Fragment {
     private static final String ARG_POSITION = "position";
 
     View rootView;
@@ -40,16 +22,19 @@ public class StoreChatFragment extends Fragment {
     private String[] contacts;
     private String[] countries;
     private String[] states;
-    private String[] when;
-    private String[] amount;
     private String[] cities;
-    private String[] pictures;
+
     private String[][] transactions;
-    private String[][] transactions_amounts;
+    String[][] transactions_amounts;
     private String[][] transactions_whens;
 
-    public static StoreChatFragment newInstance(int position) {
-        StoreChatFragment f = new StoreChatFragment();
+
+
+    public static ChatWithContactFragment newInstance(int position) {
+        ChatWithContactFragment f = new ChatWithContactFragment();
+        Bundle b = new Bundle();
+        b.putInt(ARG_POSITION, position);
+        f.setArguments(b);
         return f;
     }
 
@@ -82,7 +67,7 @@ public class StoreChatFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.wallets_teens_fragment_store_chat, container, false);
+        rootView = inflater.inflate(R.layout.wallets_teens_fragment_contact_chat, container, false);
 
 
         TextView userInput;
@@ -194,7 +179,7 @@ public class StoreChatFragment extends Fragment {
             // if (convertView == null) {
             if (1 == 1) {
                 View view;
-                view = inf.inflate(R.layout.wallets_teens_fragment_store_chat_date, parent, false);
+                view = inf.inflate(R.layout.wallets_teens_fragment_shop_chat_date, parent, false);
 
                 TextView hours;
                 TextView dates;
@@ -203,14 +188,14 @@ public class StoreChatFragment extends Fragment {
                 switch (groupPosition) {
 
                     case 0:
-                        view = inf.inflate(R.layout.wallets_teens_fragment_store_chat_date, parent, false);
+                        view = inf.inflate(R.layout.wallets_teens_fragment_shop_chat_date, parent, false);
                         dates = ((TextView)view.findViewById(R.id.date));
                         dates.setText("14 dec 2014");
                         dates.setTypeface(MyApplication.getDefaultTypeface());
                         break;
 
                     case 1:
-                        view = inf.inflate(R.layout.wallets_teens_fragment_store_chat_right, parent, false);
+                        view = inf.inflate(R.layout.wallets_teens_fragment_shop_chat_right, parent, false);
 
                         tv = ((TextView)view.findViewById(R.id.title));
                         tv.setText("Hello.");
@@ -224,7 +209,7 @@ public class StoreChatFragment extends Fragment {
                         break;
 
                     case 2:
-                        view = inf.inflate(R.layout.wallets_teens_fragment_store_chat_left, parent, false);
+                        view = inf.inflate(R.layout.wallets_teens_fragment_shop_chat_left, parent, false);
 
                         tv = ((TextView)view.findViewById(R.id.title));
                         tv.setText("Hi! How can I help you?");
@@ -238,7 +223,7 @@ public class StoreChatFragment extends Fragment {
                         break;
 
                     case 3:
-                        view = inf.inflate(R.layout.wallets_teens_fragment_store_chat_right, parent, false);
+                        view = inf.inflate(R.layout.wallets_teens_fragment_shop_chat_right, parent, false);
 
                         tv = ((TextView)view.findViewById(R.id.title));
                         tv.setText("Well, I am in the need of some donuts for a party.");
@@ -253,7 +238,7 @@ public class StoreChatFragment extends Fragment {
                         break;
 
                     case 4:
-                        view = inf.inflate(R.layout.wallets_teens_fragment_store_chat_right, parent, false);
+                        view = inf.inflate(R.layout.wallets_teens_fragment_shop_chat_right, parent, false);
 
                         tv = ((TextView)view.findViewById(R.id.title));
                         tv.setText("How many dozens do you have available?");
@@ -267,7 +252,7 @@ public class StoreChatFragment extends Fragment {
                         break;
 
                     case 5:
-                        view = inf.inflate(R.layout.wallets_teens_fragment_store_chat_left, parent, false);
+                        view = inf.inflate(R.layout.wallets_teens_fragment_shop_chat_left, parent, false);
 
                         tv = ((TextView)view.findViewById(R.id.title));
                         tv.setText("We have 5 in stock, but in 10 minutes were getting 3 more.");
@@ -280,7 +265,7 @@ public class StoreChatFragment extends Fragment {
 
                         break;
                     case 6:
-                        view = inf.inflate(R.layout.wallets_teens_fragment_store_chat_right, parent, false);
+                        view = inf.inflate(R.layout.wallets_teens_fragment_shop_chat_right, parent, false);
 
                         tv = ((TextView)view.findViewById(R.id.title));
                         tv.setText("I just need 4 dozens, how much would it be?");
@@ -293,7 +278,7 @@ public class StoreChatFragment extends Fragment {
 
                         break;
                     case 7:
-                        view = inf.inflate(R.layout.wallets_teens_fragment_store_chat_left, parent, false);
+                        view = inf.inflate(R.layout.wallets_teens_fragment_shop_chat_left, parent, false);
 
                         tv = ((TextView)view.findViewById(R.id.title));
                         tv.setText("The 4 dozens have a value of $76.25.");
@@ -306,7 +291,7 @@ public class StoreChatFragment extends Fragment {
 
                         break;
                     case 8:
-                        view = inf.inflate(R.layout.wallets_teens_fragment_store_chat_right, parent, false);
+                        view = inf.inflate(R.layout.wallets_teens_fragment_shop_chat_right, parent, false);
                         tv = ((TextView)view.findViewById(R.id.title));
                         tv.setText("Ok, can you reserve it to me? I will pick it up in half an hour.");
                         tv.setTypeface(MyApplication.getDefaultTypeface());
@@ -317,7 +302,7 @@ public class StoreChatFragment extends Fragment {
 
                         break;
                     case 9:
-                        view = inf.inflate(R.layout.wallets_teens_fragment_store_chat_left, parent, false);
+                        view = inf.inflate(R.layout.wallets_teens_fragment_shop_chat_left, parent, false);
                         tv = ((TextView)view.findViewById(R.id.title));
                         tv.setText("No problem, see you then.");
                         tv.setTypeface(MyApplication.getDefaultTypeface());
@@ -330,14 +315,14 @@ public class StoreChatFragment extends Fragment {
                         break;
 
                     case 10:
-                        view = inf.inflate(R.layout.wallets_teens_fragment_store_chat_date, parent, false);
+                        view = inf.inflate(R.layout.wallets_teens_fragment_shop_chat_date, parent, false);
                         dates = ((TextView)view.findViewById(R.id.date));
                         dates.setText("30 dec 14");
                         dates.setTypeface(MyApplication.getDefaultTypeface());
 
                         break;
                     case 11:
-                        view = inf.inflate(R.layout.wallets_teens_fragment_store_chat_right, parent, false);
+                        view = inf.inflate(R.layout.wallets_teens_fragment_shop_chat_right, parent, false);
                         tv = ((TextView)view.findViewById(R.id.title));
                         tv.setText("Hello.");
                         tv.setTypeface(MyApplication.getDefaultTypeface());
@@ -349,7 +334,7 @@ public class StoreChatFragment extends Fragment {
 
                         break;
                     case 12:
-                        view = inf.inflate(R.layout.wallets_teens_fragment_store_chat_left, parent, false);
+                        view = inf.inflate(R.layout.wallets_teens_fragment_shop_chat_left, parent, false);
                         tv = ((TextView)view.findViewById(R.id.title));
                         tv.setText("Good morning, can i help you?");
                         tv.setTypeface(MyApplication.getDefaultTypeface());
@@ -361,7 +346,7 @@ public class StoreChatFragment extends Fragment {
 
                         break;
                     case 13:
-                        view = inf.inflate(R.layout.wallets_teens_fragment_store_chat_right, parent, false);
+                        view = inf.inflate(R.layout.wallets_teens_fragment_shop_chat_right, parent, false);
                         tv = ((TextView)view.findViewById(R.id.title));
                         tv.setText("I wanted to know if your delivery service is operating today.");
                         tv.setTypeface(MyApplication.getDefaultTypeface());
@@ -373,7 +358,7 @@ public class StoreChatFragment extends Fragment {
 
                         break;
                     case 14:
-                        view = inf.inflate(R.layout.wallets_teens_fragment_store_chat_left, parent, false);
+                        view = inf.inflate(R.layout.wallets_teens_fragment_shop_chat_left, parent, false);
                         tv = ((TextView)view.findViewById(R.id.title));
                         tv.setText("Yes, what do you need to be delivered?");
                         tv.setTypeface(MyApplication.getDefaultTypeface());
@@ -385,7 +370,7 @@ public class StoreChatFragment extends Fragment {
 
                         break;
                     case 15:
-                        view = inf.inflate(R.layout.wallets_teens_fragment_store_chat_right, parent, false);
+                        view = inf.inflate(R.layout.wallets_teens_fragment_shop_chat_right, parent, false);
                         tv = ((TextView)view.findViewById(R.id.title));
                         tv.setText("I need 2 boxes of mixed donuts at 134 of 43 street");
                         tv.setTypeface(MyApplication.getDefaultTypeface());
@@ -397,7 +382,7 @@ public class StoreChatFragment extends Fragment {
 
                         break;
                     case 16:
-                        view = inf.inflate(R.layout.wallets_teens_fragment_store_chat_left, parent, false);
+                        view = inf.inflate(R.layout.wallets_teens_fragment_shop_chat_left, parent, false);
                         tv = ((TextView)view.findViewById(R.id.title));
                         tv.setText("Ok , on the way.");
                         tv.setTypeface(MyApplication.getDefaultTypeface());
