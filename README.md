@@ -26,17 +26,17 @@ While being bootstrapped the ownership of the project remains within its contrib
 
 ## Contributors
 
-updated 07 Jan 15
+updated 09 Jan 15
 
 | Name (paid by)  | Expertise | Hours Contributed  | Project Shares |
 | ------------- | ------------- | ------------- | ------------- |
-| Luis Fernando Molina  | 10  | 1,208  | 12,080  |
+| Luis Fernando Molina  | 10  | 1,228  | 12,280  |
 | Guillermo Villanueva  | 10  | 240  | 2,400  |
-| Loui Molina  | 1  | 178  | 178  |
+| Loui Molina  | 1  | 198  | 198  |
 | Andrey Molina  | 1  | 15  | 15  |
 | Hernan Calabrese  | 8  | 15  | 120  |
-| Eniko Jokai  | 10  | 17  | 170  |
-| Natalia Cortez (LFM)  | 5  | 84  | 420  |
+| Eniko Jokai  | 10  | 18  | 180  |
+| Natalia Cortez (LFM)  | 5  | 92  | 460  |
 | Damien Calvignac   | 7  | 10  | 70  |
 
 You can contribute with your own expertise and time or by hiring a developer that contributes code on your behalf. If you are interested in doing so send an email to contribution@bitdubai.com . 
