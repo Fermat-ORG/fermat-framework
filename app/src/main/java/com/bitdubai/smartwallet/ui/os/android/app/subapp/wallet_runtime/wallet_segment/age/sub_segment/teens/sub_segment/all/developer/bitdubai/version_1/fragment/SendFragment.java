@@ -22,17 +22,29 @@ public  class SendFragment extends Fragment {
     private static final String ARG_POSITION = "position";
 
     View rootView;
+
     ExpandableListView lv;
+
     private String[] contacts;
+
     private String[] amounts;
+
     private String[] totalAmount;
+
     private String[] historyCount;
+
     private String[] whens;
+
     private String[] notes;
+
     private String[] pictures;
+
     private String[][] transactions;
+
     String[][] transactions_amounts;
+
     private String[][] transactions_whens;
+
 
 
 
@@ -281,7 +293,7 @@ public  class SendFragment extends Fragment {
                     convertView = inf.inflate(R.layout.wallets_teens_fragment_send_list_header, parent, false);
 
                     profile_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
-//asigned tagId at icons action
+                    //asigned tagId at icons action
                     ImageView  send_profile_picture = (ImageView) convertView.findViewById(R.id.icon_send_profile);
                     send_profile_picture.setTag(groupPosition + "|-1");
 
@@ -354,38 +366,22 @@ public  class SendFragment extends Fragment {
 
                             if(isExpanded) ((ExpandableListView) parent).collapseGroup(groupPosition);
                             else ((ExpandableListView) parent).expandGroup(groupPosition, true);
-
                         }
                     });
-
-
-
                 } else {
                     holder = (ViewHolder) convertView.getTag();
                 }
-
                 holder.text.setText(getGroup(groupPosition).toString());
-
-
             }
-
-
             return convertView;
         }
-
         @Override
         public boolean isChildSelectable(int groupPosition, int childPosition) {
             return true;
         }
 
-
-
         private class ViewHolder {
             TextView text;
         }
     }
-
-
-
 }
-

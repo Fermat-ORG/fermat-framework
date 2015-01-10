@@ -65,7 +65,7 @@ public  class SendToContactFragment extends android.app.Fragment {
         transactions_amounts = new String[][]{
 
                 {},
-                {"1,400.00","1,200.00","1,400.00","40.00","1,900.00","10,550.00","1.00"},
+                {"$1400.00","$1200.00","$1400.00","$40.00","$1900.00","$10550.00","$1.00"},
                 {"$325.00","$55.00","$420.00"},
                 {"$0.50"},
                 {"$25.00"}
@@ -214,54 +214,40 @@ public  class SendToContactFragment extends android.app.Fragment {
 
            });
            tv.requestFocus();
-
             tv = (TextView) rootView.findViewById(R.id.contact_name);
             tv.setTypeface(MyApplication.getDefaultTypeface());
            tv.setText(contacts[Integer.parseInt(tagId[0])]);
-
             tv = (TextView) rootView.findViewById(R.id.percentage);
             tv.setTypeface(MyApplication.getDefaultTypeface());
           //  tv.setText(Percentage[Integer.parseInt(tagId[0])]);
            int porcen = (int )(Math.random() * 15 + 1);
            tv.setText(String.valueOf(porcen) + "%");
-
             tv = (TextView) rootView.findViewById(R.id.discounted);
             tv.setTypeface(MyApplication.getDefaultTypeface());
            double discount = (porcen * Double.parseDouble(transactions_amounts[Integer.parseInt(tagId[0])][Integer.parseInt(tagId[1])].toString().replace("$", ""))) / 100;
 
             tv.setText("$" + String.valueOf(discount));
         }
-
-
         ImageView profile_picture = (ImageView) rootView.findViewById(R.id.profile_picture);
         switch (Integer.parseInt(tagId[0]))
         {
             case 1:
                 profile_picture.setImageResource(R.drawable.guillermo_profile_picture);
-
                 break;
             case 2:
                 profile_picture.setImageResource(R.drawable.luis_profile_picture);
-
                 break;
             case 3:
                 profile_picture.setImageResource(R.drawable.pedro_profile_picture);
                 break;
             case 4:
                 profile_picture.setImageResource(R.drawable.mariana_profile_picture);
-
                 break;
         }
-
         return rootView;
     }
-
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
     }
-
-
 }

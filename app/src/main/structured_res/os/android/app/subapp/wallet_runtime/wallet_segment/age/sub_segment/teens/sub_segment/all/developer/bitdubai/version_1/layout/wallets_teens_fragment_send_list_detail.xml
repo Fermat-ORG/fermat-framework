@@ -25,14 +25,7 @@
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="82dp"
-        android:orientation="horizontal"
-
-
-
-        >
-
-
-
+        android:orientation="horizontal">
         <ImageView
             android:id="@+id/frame_tx_record"
             android:layout_width="match_parent"

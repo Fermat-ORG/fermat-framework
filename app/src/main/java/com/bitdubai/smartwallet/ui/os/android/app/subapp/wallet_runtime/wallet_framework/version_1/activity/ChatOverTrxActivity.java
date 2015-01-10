@@ -38,16 +38,16 @@ public class ChatOverTrxActivity extends Activity {
 
         /* Custom Action Bar with Icon and Text */
       /* Custom Action Bar with Icon and Text */
-        String[] contacts = new String[]{ "", "Luis Fernando Molina", "Guillermo Villanueva", "Pedro Perrotta", "Mariana Duyos"};
-        String[] amounts = new String[]{ "", "$325.00", "$1,400.00", "$0.50", "$25.00"};
-        String[] whens = new String[]{ "", "3 min ago", "2 hours ago", "today 9:24 AM", "yesterday"};
-        String[] notes = new String[]{"",  "Electricity bill", "Flat rent", "Test address", "More pictures"};
+        String[] contacts = new String[]{ "", "Guillermo Villanueva", "Luis Fernando Molina", "Pedro Perrotta", "Mariana Duyos"};
+        String[] amounts = new String[]{ "", "$1,400.00", "$325.00", "$0.50", "$25.00"};
+        String[] whens = new String[]{ "", "2 hours ago", "3 min ago", "today 9:24 AM", "yesterday"};
+        String[] notes = new String[]{"", "Flat rent",  "Electricity bill", "Test address", "More pictures"};
 
         String[][] transactions = new String[][]{
 
                 {},
-                {"Electricity bill","New chair","New desk"},
                 {"Flat rent","Flat rent","Flat rent","interest paid :(","Flat rent","Car repair","Invoice #2,356 that should have been paid on August"},
+                {"Electricity bill","New chair","New desk"},
                 {"Test address"},
                 {"More pictures"}
         };
@@ -55,8 +55,8 @@ public class ChatOverTrxActivity extends Activity {
         String[][] transactions_amounts = new String[][]{
 
                 {},
-                {"$325.00","$55.00","$420.00"},
                 {"$1,400.00","$1,200.00","$1,400.00","$40.00","$1,900.00","$10,550.00","$1.00"},
+                {"$325.00","$55.00","$420.00"},
                 {"$0.50"},
                 {"$25.00"}
         };
@@ -65,7 +65,7 @@ public class ChatOverTrxActivity extends Activity {
 
                 {},
                 {"3 min ago","15 min ago","yesterday"},
-                {"2 hours ago","yesterday","last Friday","last Friday","14 May 14","11 May 14","5 Jan 14"},
+                {"2 hours ago","1 month ago","2 months ago","3 months ago","3 months ago","5 months ago","7 months ago"},
                 {"today 9:24 AM"},
                 {"yesterday"}
         };
@@ -95,11 +95,11 @@ public class ChatOverTrxActivity extends Activity {
         switch (Integer.parseInt(tagId[0]))
         {
             case 1:
-                profile_picture.setImageResource(R.drawable.luis_profile_picture);
+                profile_picture.setImageResource(R.drawable.guillermo_profile_picture);
 
                 break;
             case 2:
-                profile_picture.setImageResource(R.drawable.guillermo_profile_picture);
+                profile_picture.setImageResource(R.drawable.luis_profile_picture);
 
                 break;
             case 3:
