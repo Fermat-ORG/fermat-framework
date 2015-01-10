@@ -57,7 +57,7 @@
                         android:id="@+id/contact_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
+                        android:gravity="center_horizontal"
 
                         android:textColor="#FFFFFFFF"
                         android:textSize="7sp"
@@ -81,6 +81,16 @@
                 android:paddingRight="2dp"
                 android:paddingBottom="6dp">
                 <TextView
+                    android:id="@+id/amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FF666666"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:text="$1,615.00 available"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"/>
+                <TextView
                     android:id="@+id/when"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -96,17 +106,8 @@
                     android:textSize="12sp"
                     android:textStyle="normal"
                     android:text="My savings"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"/>
-                <TextView
-                    android:id="@+id/amount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#FF666666"
-                    android:textSize="12sp"
-                    android:textStyle="normal"
-                    android:text="$1,615.00 available"
                     android:layout_alignParentBottom="true"/>
+
 
             </RelativeLayout>
         </LinearLayout>
