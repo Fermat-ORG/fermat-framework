@@ -48,7 +48,7 @@
                         android:layout_height="wrap_content"
                         android:textColor="#FFFFFF"
                         android:background="@color/black_overlay"
-
+                        android:gravity="center_horizontal"
                         android:textSize="8sp"
                         android:textStyle="normal"
                         android:text="Luis Molina"/>
