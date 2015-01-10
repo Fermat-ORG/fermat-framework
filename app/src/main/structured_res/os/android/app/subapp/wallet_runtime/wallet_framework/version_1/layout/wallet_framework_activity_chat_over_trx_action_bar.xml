@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="45dp"
+    android:layout_height="48dp"
     android:layout_width="match_parent">
     <LinearLayout
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:orientation="vertical"
-        android:paddingLeft="7dip"
-        android:paddingRight="7dip"
-        android:paddingBottom="3dip"
-        android:paddingTop="3dip">
+        android:layout_marginLeft="3dp"
+        android:layout_marginRight="3dp">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -30,14 +28,12 @@
                     android:scaleType="centerCrop"
                     android:src="@drawable/luis_profile_picture"
                     android:layout_gravity="center"
-
-                    android:padding="4dp"
-                    />
+                    android:padding="3dp"/>
 
                 <ImageView
                     android:id="@+id/frame_contact"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:scaleType="centerCrop"
                     android:src="@drawable/object_frame_1x1"
                     android:layout_gravity="center"
@@ -67,13 +63,9 @@
                         android:textColor="#FFFFFFFF"
                         android:textSize="7sp"
                         android:textStyle="bold"
-                        android:text="New contact name"
-
+                        android:text="Luis Fernando Molina"
                         android:background="@color/black_overlay"
                         android:layout_gravity="center"
-
-                        android:paddingLeft="8dip"
-                        android:paddingRight="8dip"
                         />
                 </FrameLayout>
 
