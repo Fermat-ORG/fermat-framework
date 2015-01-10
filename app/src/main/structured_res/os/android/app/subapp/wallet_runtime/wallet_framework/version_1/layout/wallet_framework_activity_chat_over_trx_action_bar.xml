@@ -97,17 +97,17 @@
                     android:textSize="12sp"
                     android:textStyle="normal"
                     android:text="My savings"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"/>
+                    android:layout_alignParentBottom="true"/>
                 <TextView
                     android:id="@+id/amount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="#FF666666"
                     android:textSize="12sp"
-                    android:textStyle="normal"
+                    android:textStyle="bold"
                     android:text="$1,615.00 available"
-                    android:layout_alignParentBottom="true"/>
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"/>
 
             </RelativeLayout>
         </LinearLayout>
