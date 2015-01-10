@@ -46,7 +46,7 @@
             android:value="AIzaSyDr98sVKnkeB-C26gU3Yu0HHpoVHETwdKo" />
 
         <activity
-                android:name=".ui.os.android.app.shell.version_1.activity.ActivityMain"
+                android:name=".ui.os.android.app.shell.version_1.activity.LoginActivity"
                 android:label="bitDubai" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -55,7 +55,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.os.android.app.subapp.wallet_manager.version_1.activity.DesktopActivity"
+            android:name=".ui.os.android.app.shell.version_1.activity.WalletDesktopActivity"
             android:label="@string/title_activity_blank" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -69,7 +69,7 @@
             android:label="Wallet Store" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.os.android.app.subapp.wallet_manager.version_1.activity.DesktopActivity" />
+                android:value=".ui.os.android.app.shell.version_1.activity.WalletDesktopActivity" />
         </activity>
         <activity
             android:name=".ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.FrameworkActivity"
@@ -82,7 +82,7 @@
             android:parentActivityName=".ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.FrameworkActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.os.android.app.subapp.wallet_manager.version_1.activity.DesktopActivity" />
+                android:value=".ui.os.android.app.shell.version_1.activity.WalletDesktopActivity" />
         </activity>
         <activity
             android:name=".ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.RequestsSentActivity"
@@ -272,7 +272,7 @@
             android:label="Wallet Store" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.os.android.app.subapp.wallet_manager.version_1.activity.DesktopActivity" />
+                android:value=".ui.os.android.app.shell.version_1.activity.WalletDesktopActivity" />
         </activity>
         <activity
             android:name=".ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.RequestsReceivedActivity"

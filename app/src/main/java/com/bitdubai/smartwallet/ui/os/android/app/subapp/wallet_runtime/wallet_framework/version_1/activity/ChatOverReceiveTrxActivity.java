@@ -2,12 +2,10 @@ package com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -28,7 +26,7 @@ public class ChatOverReceiveTrxActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.wallet_framework_activity_chatovertrx);
+        setContentView(R.layout.wallet_framework_activity_chat_over_received_trx);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
                     .add(R.id.container, new ChatOverReceiveTrxFragment())
@@ -92,7 +90,7 @@ public class ChatOverReceiveTrxActivity extends Activity {
 
 
         final ViewGroup actionBarLayout = (ViewGroup) getLayoutInflater().inflate(
-                R.layout.wallet_framework_activity_chatover_recevtrx_action_bar,
+                R.layout.wallet_framework_activity_chat_over_received_trx_action_bar,
                 null);
 
         // Set up your ActionBar

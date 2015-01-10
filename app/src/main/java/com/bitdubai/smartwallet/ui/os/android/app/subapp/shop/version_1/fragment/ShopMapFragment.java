@@ -39,7 +39,7 @@ public class ShopMapFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // inflat and return the layout
-        View v = inflater.inflate(R.layout.wallets_shop_fragment_shop_map, container,
+        View v = inflater.inflate(R.layout.shop_fragment_shop_map, container,
                 false);
         mMapView = (MapView) v.findViewById(R.id.mapView);
         mMapView.onCreate(savedInstanceState);
