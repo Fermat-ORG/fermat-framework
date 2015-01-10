@@ -2,14 +2,12 @@ package com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_manager.version
 
 import android.app.Service;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -17,7 +15,6 @@ import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyApplication;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_store.version_1.activity.WalletActivity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -138,7 +135,7 @@ public class DesktopFragment  extends android.app.Fragment {
 
         //@SuppressWarnings("unchecked")
         //ArrayList<App> list = (ArrayList<App>) getArguments().get("list");
-        AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.wallet_manger_desktop_wallet_front_grid_item, mlist);
+        AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.shell_wallet_desktop_front_grid_item, mlist);
         _adpatrer.notifyDataSetChanged();
         gridView.setAdapter(_adpatrer);
 
@@ -211,7 +208,7 @@ public class DesktopFragment  extends android.app.Fragment {
             ViewHolder holder;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.wallet_manger_desktop_wallet_front_grid_item, parent, false);
+                convertView = inflater.inflate(R.layout.shell_wallet_desktop_front_grid_item, parent, false);
                 holder = new ViewHolder();
 
 

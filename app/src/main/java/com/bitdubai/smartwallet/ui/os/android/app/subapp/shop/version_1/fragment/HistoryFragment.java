@@ -96,7 +96,7 @@ public class HistoryFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.wallets_shop_fragment_history_store, container, false);
+        rootView = inflater.inflate(R.layout.shop_fragment_history_store, container, false);
 
 
 
@@ -206,7 +206,7 @@ public class HistoryFragment extends Fragment {
             //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
             // if (convertView == null) {
             if (1 == 1) {
-                convertView = inf.inflate(R.layout.wallets_shop_fragment_history_list_detail, parent, false);
+                convertView = inf.inflate(R.layout.shop_fragment_history_list_detail, parent, false);
 
                 profile_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
                 switch (groupPosition)
@@ -308,7 +308,7 @@ public class HistoryFragment extends Fragment {
             //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
             // if (convertView == null) {
             if (1 == 1) {
-                convertView = inf.inflate(R.layout.wallets_shop_fragment_history_list_header, parent, false);
+                convertView = inf.inflate(R.layout.shop_fragment_history_list_header, parent, false);
 
 
                 holder = new ViewHolder();

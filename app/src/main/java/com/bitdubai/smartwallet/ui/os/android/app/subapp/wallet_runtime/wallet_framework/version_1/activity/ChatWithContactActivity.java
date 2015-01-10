@@ -26,7 +26,7 @@ public class ChatWithContactActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.wallet_framework_activity_chatovertrx);
+        setContentView(R.layout.wallet_framework_activity_chat_over_received_trx);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
                     .add(R.id.container, new ChatWithContactFragment())
@@ -58,7 +58,7 @@ public class ChatWithContactActivity extends Activity {
         }
 
         final ViewGroup actionBarLayout = (ViewGroup) getLayoutInflater().inflate(
-                R.layout.wallet_framework_activity_chatcontact_action_bar,
+                R.layout.wallet_framework_activity_chat_with_contact_action_bar,
                 null);
 
         // Set up your ActionBar

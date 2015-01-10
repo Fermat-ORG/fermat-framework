@@ -275,7 +275,7 @@ public class ShopShopFragment extends Fragment {
 
         //@SuppressWarnings("unchecked")
         //ArrayList<App> list = (ArrayList<App>) getArguments().get("list");
-        gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.wallets_shop_fragment_shop_shop, mlist));
+        gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.shop_fragment_shop_shop, mlist));
 
 
 
@@ -349,7 +349,7 @@ public class ShopShopFragment extends Fragment {
             ViewHolder holder;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.wallets_shop_fragment_shop_shop, parent, false);
+                convertView = inflater.inflate(R.layout.shop_fragment_shop_shop, parent, false);
                 holder = new ViewHolder();
 
 

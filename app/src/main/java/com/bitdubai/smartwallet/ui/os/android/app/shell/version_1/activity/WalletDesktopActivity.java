@@ -1,4 +1,4 @@
-package com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_manager.version_1.activity;
+package com.bitdubai.smartwallet.ui.os.android.app.shell.version_1.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -20,7 +20,7 @@ import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_manager.version_
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_store.version_1.activity.StoreFrontActivity;
 
 
-public class DesktopActivity extends Activity {
+public class WalletDesktopActivity extends Activity {
 
 
 
@@ -28,7 +28,7 @@ public class DesktopActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.wallet_manager_activity_desktop_2);
+        setContentView(R.layout.shell_activity_wallet_desktop);
         getActionBar().hide();
 
         if (savedInstanceState == null) {
@@ -91,7 +91,7 @@ public class DesktopActivity extends Activity {
 
         if (Integer.parseInt(tagId) > 4)
         {
-            Toast.makeText(getApplicationContext(), "This part of the prototype is not ready",
+            Toast.makeText(getApplicationContext(), "This part of the prototype is not ready yet",
                     Toast.LENGTH_LONG).show();
         }
         else

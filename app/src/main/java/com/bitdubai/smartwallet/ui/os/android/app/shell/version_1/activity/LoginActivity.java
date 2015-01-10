@@ -8,9 +8,8 @@ import android.view.MenuItem;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.platform.layer._8_middleware.shell.version_1.LocalDevice;
 import com.bitdubai.smartwallet.platform.layer._7_network_service.user.version_1.LocalUser;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_manager.version_1.activity.DesktopActivity;
 
-public class ActivityMain extends Activity {
+public class LoginActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,13 +22,13 @@ public class ActivityMain extends Activity {
          * Initially, the APP will run with one user created when the APP run for the
          * first time and the user was asked which was his intended use of the APP was.
          * During this situation the system will bypass this first activity and navigate
-         * directly into the {@link DesktopActivity}
+         * directly into the {@link WalletDesktopActivity}
          */
         if (localDevice.getLocalPersonalUsers().size() == 1 ) {
             if (localDevice.getLocalPersonalUsers().get(0).getLoginType() == LocalUser.LoginType.NONE)  {
 
                 Intent intent;
-                intent = new Intent(this, DesktopActivity.class);
+                intent = new Intent(this, WalletDesktopActivity.class);
                 startActivity(intent);
             }
         }
