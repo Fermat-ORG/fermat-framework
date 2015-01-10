@@ -1,4 +1,4 @@
-package com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes;
+package com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes;
 
 import android.content.Context;
 import android.graphics.Paint;

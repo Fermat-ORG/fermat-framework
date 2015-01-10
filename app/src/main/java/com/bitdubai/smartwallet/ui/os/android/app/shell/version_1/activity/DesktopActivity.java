@@ -13,14 +13,14 @@ import android.widget.Toast;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.shop.version_1.activity.ShopActivity;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.FrameworkActivity;
 import com.bitdubai.smartwallet.R;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyApplication;
+import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.MyApplication;
 
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_manager.version_1.fragment.DesktopFragment;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_manager.version_1.fragment.WalletDesktopFragment;
 
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_store.version_1.activity.StoreFrontActivity;
 
 
-public class WalletDesktopActivity extends Activity {
+public class DesktopActivity extends Activity {
 
 
 
@@ -33,7 +33,7 @@ public class WalletDesktopActivity extends Activity {
 
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, new DesktopFragment())
+                    .add(R.id.container, new WalletDesktopFragment())
                     .commit();
         }
 

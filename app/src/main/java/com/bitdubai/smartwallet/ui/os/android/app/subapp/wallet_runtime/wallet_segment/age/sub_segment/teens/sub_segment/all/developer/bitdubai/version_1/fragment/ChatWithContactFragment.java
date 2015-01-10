@@ -9,7 +9,7 @@ import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyApplication;
+import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.MyApplication;
 
 /**
  * Created by Natalia on 09/01/2015.

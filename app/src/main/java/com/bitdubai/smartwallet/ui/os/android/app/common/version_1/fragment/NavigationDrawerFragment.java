@@ -1,4 +1,4 @@
-package com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.fragment;
+package com.bitdubai.smartwallet.ui.os.android.app.common.version_1.fragment;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -21,7 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.bitdubai.smartwallet.R;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.NavigationDrawerArrayAdapter;
+import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.NavigationDrawerArrayAdapter;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.ContactsActivity;
 
 /**

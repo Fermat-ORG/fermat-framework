@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyApplication;
+import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.MyApplication;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * Created by Natalia on 31/12/2014.
  */
-public class DesktopFragment  extends android.app.Fragment {
+public class WalletDesktopFragment extends android.app.Fragment {
 
     private static final String ARG_POSITION = "position";
     private ArrayList<App> mlist;
@@ -31,8 +31,8 @@ public class DesktopFragment  extends android.app.Fragment {
 
     private int position;
 
-    public static DesktopFragment newInstance(int position) {
-        DesktopFragment f = new DesktopFragment();
+    public static WalletDesktopFragment newInstance(int position) {
+        WalletDesktopFragment f = new WalletDesktopFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);

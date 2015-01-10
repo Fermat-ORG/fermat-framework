@@ -1,4 +1,4 @@
-package com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.fragment;
+package com.bitdubai.smartwallet.ui.os.android.app.common.version_1.fragment;
 
 /**
  * Created by ciencias on 25.11.14.
@@ -15,14 +15,14 @@ import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
 
-public class EmptyFragment extends Fragment {
+public class TabbedDialogEmptyFragment extends Fragment {
 
     private static final String ARG_POSITION = "position";
 
     private int position;
 
-    public static EmptyFragment newInstance(int position) {
-        EmptyFragment f = new EmptyFragment();
+    public static TabbedDialogEmptyFragment newInstance(int position) {
+        TabbedDialogEmptyFragment f = new TabbedDialogEmptyFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);

@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 
 import com.bitdubai.smartwallet.R;
 
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyApplication;
+import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.MyApplication;
 
 import java.io.Serializable;
 import java.util.ArrayList;

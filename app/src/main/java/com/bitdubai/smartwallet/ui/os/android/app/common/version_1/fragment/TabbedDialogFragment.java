@@ -1,4 +1,4 @@
-package com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.fragment;
+package com.bitdubai.smartwallet.ui.os.android.app.common.version_1.fragment;
 
 import android.graphics.Point;
 import android.os.Build;
@@ -16,7 +16,7 @@ import android.view.Window;
 import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.PagerSlidingTabStrip;
+import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.PagerSlidingTabStrip;
 
 //import com.astuetz.PagerSlidingTabStrip;
 //import com.astuetz.PagerSlidingTabStrip.IconTabProvider;
