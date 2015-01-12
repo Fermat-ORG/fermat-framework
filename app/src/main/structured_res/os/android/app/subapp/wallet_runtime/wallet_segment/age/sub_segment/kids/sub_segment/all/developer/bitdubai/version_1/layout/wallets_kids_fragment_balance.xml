@@ -26,7 +26,8 @@
             android:paddingTop="7dp"
             android:paddingBottom="7dp"
             android:src="@drawable/ar_bill_100_a"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:id="@+id/ticket1" />
 
         <ImageView
 
@@ -39,6 +40,7 @@
             android:paddingBottom="7dp"
             android:src="@drawable/ar_bill_100_a"
             android:layout_gravity="center"
+            android:id="@+id/ticket2"
             />
         <ImageView
 
@@ -51,6 +53,7 @@
             android:paddingBottom="7dp"
             android:src="@drawable/ar_bill_50_a"
             android:layout_gravity="center"
+            android:id="@+id/ticket3"
             />
         <ImageView
 
@@ -63,6 +66,7 @@
             android:paddingBottom="7dp"
             android:src="@drawable/ar_bill_10_a"
             android:layout_gravity="center"
+            android:id="@+id/ticket4"
             />
         <ImageView
 
@@ -75,6 +79,7 @@
             android:paddingBottom="7dp"
             android:src="@drawable/ar_bill_10_a"
             android:layout_gravity="center"
+            android:id="@+id/ticket5"
             />
         <ImageView
 
@@ -87,6 +92,7 @@
             android:paddingBottom="7dp"
             android:src="@drawable/ar_bill_10_b"
             android:layout_gravity="center"
+            android:id="@+id/ticket6"
             />
         <ImageView
 
@@ -99,6 +105,7 @@
             android:paddingBottom="7dp"
             android:src="@drawable/ar_bill_5_a"
             android:layout_gravity="center"
+            android:id="@+id/ticket7"
             />
     </LinearLayout>
 
