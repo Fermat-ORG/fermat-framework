@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,32 +17,60 @@ import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.MyApplication;
 
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_manager.version_1.fragment.WalletDesktopFragment;
-
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_manager.version_1.fragment.ShopDesktopFragment;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_store.version_1.activity.StoreFrontActivity;
 
+import android.support.v4.app.FragmentActivity;
 
-public class DesktopActivity extends Activity {
+import java.util.List;
+import java.util.Vector;
+
+import android.os.Bundle;
+
+public class DesktopActivity extends FragmentActivity {
 
 
-
+    private PagerAdapter mPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.shell_activity_wallet_desktop);
-        getActionBar().hide();
+      /*  getActionBar().hide();
 
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
                     .add(R.id.container, new WalletDesktopFragment())
                     .commit();
-        }
+        }*/
 
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/CaviarDreams.ttf");
         ((MyApplication) this.getApplication()).setDefaultTypeface(tf);
+
+        this.initialisePaging();
     }
 
+    /**
+     * Initialise the fragments to be paged
+     */
+    private void initialisePaging() {
 
+        try
+        {
+            List<Fragment> fragments = new Vector<Fragment>();
+            fragments.add(Fragment.instantiate(this, WalletDesktopFragment.class.getName()));
+            fragments.add(Fragment.instantiate(this, ShopDesktopFragment.class.getName()));
+
+            this.mPagerAdapter  = new PagerAdapter(super.getSupportFragmentManager(), fragments);
+            //
+            ViewPager pager = (ViewPager)super.findViewById(R.id.viewpager);
+            pager.setAdapter(this.mPagerAdapter);
+
+        }catch (Exception ex) {
+          String strError = ex.getMessage();
+        }
+
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -109,9 +138,24 @@ public class DesktopActivity extends Activity {
             // intent.putExtra("Wallet Id", tag );
             startActivity(intent);
         }
+    }
+
+
+    public void onShopClicked(View v) {
+        String tagId="";
+
+        tagId = v.getTag().toString();
+            Intent intent;
+            intent = new Intent(this, ShopActivity.class);
+
+           // ((MyApplication) this.getApplication()).setWalletId(Integer.parseInt(tagId));
+
+            // intent.putExtra("Wallet Id", tag );
+            startActivity(intent);
 
 
 
     }
+
 
 }
