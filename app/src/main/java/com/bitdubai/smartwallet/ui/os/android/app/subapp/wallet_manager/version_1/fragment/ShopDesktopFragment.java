@@ -4,7 +4,6 @@ import android.app.Service;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,15 +14,17 @@ import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.MyApplication;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.shop.version_1.activity.ShopActivity;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import android.support.v4.app.Fragment;
 
 /**
- * Created by Natalia on 31/12/2014.
+ * Created by Natalia on 12/01/2015.
  */
-public class WalletDesktopFragment extends Fragment {
+public class ShopDesktopFragment extends Fragment {
 
     private static final String ARG_POSITION = "position";
     private ArrayList<App> mlist;
@@ -31,8 +32,8 @@ public class WalletDesktopFragment extends Fragment {
 
     private int position;
 
-    public static WalletDesktopFragment newInstance(int position) {
-        WalletDesktopFragment f = new WalletDesktopFragment();
+    public static ShopDesktopFragment newInstance(int position) {
+        ShopDesktopFragment f = new ShopDesktopFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -44,28 +45,28 @@ public class WalletDesktopFragment extends Fragment {
 
 
         String[] installed =
-                {"true",
-                        "true",
-                        "true",
-                        "true",
-                        "true",
-                        "true",
-                        "true",
+                {"false",
+                        "false",
                         "true",
                         "false",
                         "false",
                         "false",
-                        "true",
+                        "false",
+                        "false",
+                        "false",
+                        "false",
+                        "false",
+                        "false",
                         "false",
                         "false",
                         "false",
                         "false",
                         "false"
                 };
-        String[] company_names =
+        String[] shop_names =
                 {"Girls' wallet",
                         "Boys' wallet",
-                        "Ladies' wallet",
+                        "Mi Shop",
                         "Youngs' wallet",
                         "Boca Juniors' wallet",
                         "Carrefour's wallet",
@@ -84,7 +85,7 @@ public class WalletDesktopFragment extends Fragment {
                 };
 
 
-        String[] company_picture =
+        String[] shop_picture =
                 {"wallet_store_cover_photo_girl",
                         "wallet_store_cover_photo_boy",
                         "wallet_store_cover_photo_lady",
@@ -105,24 +106,24 @@ public class WalletDesktopFragment extends Fragment {
 
                 };
 
-            mlist = new ArrayList<App>();
+        mlist = new ArrayList<App>();
 
 
-                for (int i = 0; i < installed.length; i++) {
-                    if (installed[i] == "true") {
-                        App item = new App();
+        for (int i = 0; i < installed.length; i++) {
+            if (installed[i] == "true") {
+                App item = new App();
 
-                        item.picture = company_picture[i];
-                        item.company = company_names[i];
-                        item.rate = (float) Math.random() * 5;
-                        item.value = (int) Math.floor((Math.random() * (500 - 80 + 1))) + 80;
-                        item.favorite = (float) Math.random() * 5;
-                        item.timetoarraive = (float) Math.random() * 5;
-                        item.sale = (float) Math.random() * 5;
-                        item.installed = true;
-                        mlist.add(item);
-                    }
-                }
+                item.picture = shop_picture[i];
+                item.company = shop_names[i];
+                item.rate = (float) Math.random() * 5;
+                item.value = (int) Math.floor((Math.random() * (500 - 80 + 1))) + 80;
+                item.favorite = (float) Math.random() * 5;
+                item.timetoarraive = (float) Math.random() * 5;
+                item.sale = (float) Math.random() * 5;
+                item.installed = true;
+                mlist.add(item);
+            }
+        }
 
         GridView gridView = new GridView(getActivity());
 
@@ -134,22 +135,11 @@ public class WalletDesktopFragment extends Fragment {
         }
 
         //@SuppressWarnings("unchecked")
-        //ArrayList<App> list = (ArrayList<App>) getArguments().get("list");
-        AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.shell_wallet_desktop_front_grid_item, mlist);
+     //   ArrayList<App> list = (ArrayList<App>) getArguments().get("list");
+        AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.shell_shop_desktop_fragment_grid_item ,mlist);
         _adpatrer.notifyDataSetChanged();
         gridView.setAdapter(_adpatrer);
 
-
-     /*    gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v,
-                                    int position, long id) {
-                Intent intent;
-                intent = new Intent(getActivity(), WalletActivity.class);
-                startActivity(intent);
-
-                return ;
-            }
-        });*/
 
 
         return gridView;
@@ -208,7 +198,7 @@ public class WalletDesktopFragment extends Fragment {
             ViewHolder holder;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.shell_wallet_desktop_front_grid_item, parent, false);
+                convertView = inflater.inflate(R.layout.shell_shop_desktop_fragment_grid_item, parent, false);
                 holder = new ViewHolder();
 
 

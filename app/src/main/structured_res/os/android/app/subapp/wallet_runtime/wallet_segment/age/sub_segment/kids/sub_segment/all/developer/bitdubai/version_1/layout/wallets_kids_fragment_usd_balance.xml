@@ -21,7 +21,7 @@
             android:layout_weight="1"
             android:paddingBottom="7dp"
             android:layout_gravity="center"
-            />
+            android:id="@+id/ticket1"            />
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -32,7 +32,7 @@
             android:paddingTop="7dp"
             android:layout_weight="1"
             android:paddingBottom="7dp"
-
+            android:id="@+id/ticket2"
             android:layout_gravity="center"
             />
         <ImageView
@@ -46,7 +46,8 @@
             android:layout_weight="1"
         android:src="@drawable/usd_5"
         android:layout_gravity="center"
-        />
+            android:id="@+id/ticket3"
+            />
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -58,6 +59,7 @@
             android:paddingBottom="7dp"
             android:src="@drawable/usd_10"
             android:layout_gravity="center"
+            android:id="@+id/ticket4"
             />
         <ImageView
             android:layout_width="wrap_content"
@@ -70,6 +72,7 @@
             android:paddingBottom="7dp"
             android:src="@drawable/usd_20"
             android:layout_gravity="center"
+            android:id="@+id/ticket5"
             />
         <ImageView
 
@@ -83,6 +86,7 @@
             android:paddingBottom="7dp"
             android:src="@drawable/usd_100"
             android:layout_gravity="center"
+            android:id="@+id/ticket6"
             />
     </LinearLayout>
     <LinearLayout
@@ -102,7 +106,9 @@
             android:paddingBottom="7dp"
             android:src="@drawable/usd_1"
             android:layout_gravity="center"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:id="@+id/ticket7" />
+
 
         <ImageView
             android:layout_width="wrap_content"
