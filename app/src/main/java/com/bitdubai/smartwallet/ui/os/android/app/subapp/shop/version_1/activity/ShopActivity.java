@@ -107,10 +107,10 @@ public class ShopActivity  extends FragmentActivity
         tabs.setDividerColor(0xFFFFFFFF);
         tabs.setIndicatorColor(0xFFFFFFFF);
         tabs.setIndicatorHeight(9);
-        tabs.setBackgroundColor(0xFF88ee00);
+        tabs.setBackgroundColor(0xFF76dc4a);
         tabs.setTextColor(0xFFFFFFFF);
 
-        String color = "#88EE00";
+        String color = "#76dc4a";
         MyApplication.setActionBar(getActionBar());
         ((MyApplication) this.getApplication()).changeColor(Color.parseColor(color), getResources());
 

@@ -236,6 +236,33 @@ public class ShopProductsFragment extends Fragment {
                 "99",
                 "45",
                 "85"};
+        String[] price = {
+                "$3.00",
+                "$1.50",
+                "$1.00",
+                "$1.00",
+                "$2.75",
+                "$2,00",
+                "$3.50",
+                "$2.00",
+                "$1.50",
+                "$2.00",
+                "$3.00",
+                "$2.00",
+                "$2.50",
+                "$7.50",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+
+
+        };
+
 
 
         if (mlist == null)
@@ -248,6 +275,7 @@ public class ShopProductsFragment extends Fragment {
                 item.title = company_sites[i];
                 item.like = likes[i];
                 item.dislike = dislikes[i];
+                item.Price = price[i];
                 item.description = company_descriptions[i];
                 item.company = company_names[i];
                 item.Open_hours = company_horario[i];
@@ -256,7 +284,6 @@ public class ShopProductsFragment extends Fragment {
                 item.rate = (float) Math.random() * 5;
                 item.value = (int) Math.floor((Math.random() * (500 - 80 + 1))) + 80;
                 item.favorite = (float) Math.random() * 5;
-                item.sale = (float) Math.random() * 5;
                 mlist.add(item);
             }
         }
@@ -324,7 +351,7 @@ public class ShopProductsFragment extends Fragment {
 
         public float favorite;
 
-        public float sale;
+        public String Price;
 
     }
 
@@ -366,11 +393,11 @@ public class ShopProductsFragment extends Fragment {
                 holder.star4.setAdjustViewBounds(true);
                 holder.star5.setAdjustViewBounds(true);
 
-                holder.sale = (ImageView) convertView.findViewById(R.id.sale);
                 holder.favorite = (ImageView) convertView.findViewById(R.id.favorite);
 
                 holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
                 holder.titleTextView = (TextView) convertView.findViewById(R.id.title_text_view);
+                holder.Prices = (TextView) convertView.findViewById(R.id.price);
                 holder.dislikeAmount = (TextView) convertView.findViewById(R.id.dislike_amount);
                 holder.likeAmount = (TextView) convertView.findViewById(R.id.like_amount);
                 holder.companyTextView = (TextView) convertView.findViewById(R.id.company_text_view);
@@ -389,6 +416,7 @@ public class ShopProductsFragment extends Fragment {
             holder.dislikeAmount.setText(item.dislike);
             holder.likeAmount.setText(item.like);
             holder.titleTextView.setText(item.title);
+            holder.Prices.setText(item.Price);
             holder.companyTextView.setText(item.company);
             holder.companyDescription.setText(item.Address);
             //holder.ratingBar.setRating(item.rate);
@@ -406,6 +434,7 @@ public class ShopProductsFragment extends Fragment {
             holder.likeAmount.setTypeface(MyApplication.getDefaultTypeface());
             holder.dislikeAmount.setTypeface(MyApplication.getDefaultTypeface());
             holder.companyTextView.setTypeface(MyApplication.getDefaultTypeface());
+            holder.Prices.setTypeface(MyApplication.getDefaultTypeface());
             holder.companyDescription.setTypeface(MyApplication.getDefaultTypeface());
             holder.valueTextView.setTypeface(MyApplication.getDefaultTypeface());
 
@@ -439,15 +468,6 @@ public class ShopProductsFragment extends Fragment {
                 holder.favorite.setImageResource(R.drawable.grid_background_not_favorite);
             }
 
-
-            if (item.sale > 3)
-            {
-                holder.sale.setImageResource(R.drawable.transparent);
-            }
-            else
-            {
-                holder.sale.setImageResource(R.drawable.grid_background_sale_flipped);
-            }
 
             switch (position)
             {
@@ -533,7 +553,8 @@ public class ShopProductsFragment extends Fragment {
             public ImageView like;
             public ImageView dislike;
 
-            public ImageView sale;
+            public TextView Prices;
+
             public ImageView favorite;
 
             public TextView openHours;

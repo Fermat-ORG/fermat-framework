@@ -83,28 +83,22 @@
 android:visibility="gone"
         />
 
-    <ImageView
-        android:id="@+id/sale"
+    <TextView
+        android:id="@+id/price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-android:visibility="gone"
-        android:src="@drawable/grid_background_sale_flipped"
-
-        android:scaleType="fitCenter"
+        android:text="$4.25"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="16dp"
+        android:textStyle="normal"
+        android:textSize="8dp"
+        android:textColor="#FFFFFF"
         android:layout_centerHorizontal="true"
-
-
-
-
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
+        android:background="@drawable/tag"/>
 
-
-        android:paddingLeft="0dp"
-        android:paddingRight="14dp"
-        android:paddingTop="20dp"
-        android:paddingBottom="0dp"/>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingLeft="25dp"
@@ -169,7 +163,7 @@ android:visibility="gone"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:paddingBottom="28dp"
+            android:paddingBottom="14dp"
             android:gravity="center"
             >
 
