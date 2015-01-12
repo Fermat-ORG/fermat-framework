@@ -27,6 +27,7 @@ public class HistoryFragment extends Fragment {
     private String[] dates;
     private String[] historyCount;
     private String[][] names;
+    private String[] client;
     private String[] whens;
     private String[] notes;
     private String[][] items;
@@ -49,44 +50,60 @@ public class HistoryFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        contacts = new String[]{"14 units", "12 units", "8 units", "24 units"};
-        amounts = new String[]{"$12.00", "$21.50", "$12.00", "$34.00"};
-        whens = new String[]{"wallet discount","wallet discount","wallet discount","wallet discount","wallet discount","wallet discount",};
-        notes = new String[]{ "total paid ", "total paid ", "total paid ", "total paid ", "total paid "};
-        totalAmount = new String[]{"$16.00", "$24.00", "$15.50", "$36.00"};
-        historyCount = new String[] {"-$4.00", "-$2.50", "-$2.50", "-$2.00"};
-        pictures = new String[]{"product_14_history", "product_8_history", "product_13_history", "product_2_history"};
-        dates = new String[]{"yesterday","2 days ago","4 day ago","4 day ago"};
+        contacts = new String[]{"14 units"          ,"5 units",          "6",                "12 units",           "8 units",            "24 units"};
+        amounts = new String[]{"$12.00"             ,"$32.00",           "$9.00",            "$21.50",             "$12.00",             "$34.00"};
+        whens = new String[]{"brand discount"       ,"brand discount",   "brand discount",   "brand discount",     "brand discount",     "brand discount",};
+        notes = new String[]{ "total paid "         ,"total paid",       "total paid "   ,   "total paid ",        "total paid ",        "total paid "};
+        totalAmount = new String[]{"$16.00"         ,"$37.50",           "$7.00",            "$24.00",             "$15.50",             "$36.00"};
+        historyCount = new String[] {"-$4.00"       ,"-$5.50",           "-$2.00",           "-$2.50",             "-$2.50",             "-$2.00"};
+        pictures = new String[]{"product_14_history","product_3_history","product_6_history","product_8_history",  "product_13_history", "product_2_history"};
+        dates = new String[]{"today"                ,"today",            "today",            "today",              "today",              "today"};
+        client = new String[]{"Victoria Gandit"     ,"Mariana Duyos",    "Jennifer Johnson" ,"Teddy Truchot",      "Caroline Mignaux",   "Brant Cryder"};
+
 
 
         transactions = new String[][]{
                 {"$3.00","$2.00"},
+                {"$7.50"},
+                {"$2.00","$1.00"},
                 {"$2.00","$1.00","$1.00"},
                 {"$2.50","$2.00"},
                 {"$1.50"},
         };
 
         items = new String[][]{
-                {"2 units","12 units"},{"4 units","4 units","4 units"},{"4 units","4 units"},{"24 units",""}
+                {"2 units","12 units"},
+                {"5 units"},
+                {"3 units", "3 units"},
+                {"4 units","4 units","4 units"},
+                {"4 units","4 units"},
+                {"24 units"}
         };
 
         names = new String[][]{
 
-                {"French Roll","Chocolate chips"},{"Caramel Chocolate Crunch","Chocolate with sparkles","Classic Glazed Chocolate"},
+                {"French Roll","Chocolate chips"},
+                {"French Roll "},
+                {"Peanut Butter Combo","Classic Glazed Strawberry"},
+                {"Caramel Chocolate Crunch","Chocolate with sparkles","Classic Glazed Chocolate"},
                 {"Cinnamon Cake","Honey bran raisins"},
-                {"Clasisc Iced Pink",""},
+                {"Classic Iced Pink"},
         };
 
         transactions_amounts = new String[][]{
                 {"$6.00","$24.00"},
+                {"$37.50"},
+                {"$6.00","$3.00"},
                 {"$8.00","$4.00","$4.00"},
                 {"$10.00","$8.00"},
-                {"$36.00",""},
+                {"$36.00"},
         };
 
         transactions_whens = new String[][]{
 
                 {"Quantity","Quantity"},
+                {"Quantity",},
+                {"Quantity",},
                 {"Quantity","Quantity","Quantity"},
                 {"Quantity","Quantity"},
                 {"Quantity",},
@@ -226,6 +243,25 @@ public class HistoryFragment extends Fragment {
                         switch (childPosition)
                         {
                             case 0:
+                                profile_picture.setImageResource(R.drawable.product_14_history);
+                                break;
+                        }
+                        break;
+                    case 2:
+                        switch (childPosition)
+                        {
+                            case 0:
+                                profile_picture.setImageResource(R.drawable.product_6_history);
+                                break;
+                            case 1:
+                                profile_picture.setImageResource(R.drawable.product_4_history);
+                                break;
+                        }
+                        break;
+                    case 3:
+                        switch (childPosition)
+                        {
+                            case 0:
                                 profile_picture.setImageResource(R.drawable.product_8_history);
                                 break;
                             case 1:
@@ -233,10 +269,11 @@ public class HistoryFragment extends Fragment {
                                 break;
                             case 2:
                                 profile_picture.setImageResource(R.drawable.product_3_history);
+                                break;
                         }
 
                         break;
-                    case 2:
+                    case 4:
                         switch (childPosition)
                         {
                             case 0:
@@ -247,7 +284,7 @@ public class HistoryFragment extends Fragment {
                                 break;
                         }
                         break;
-                    case 3:
+                    case 5:
                         switch (childPosition)
                         {
                             case 0:
@@ -255,7 +292,6 @@ public class HistoryFragment extends Fragment {
                                 break;
                         }
                         break;
-
                 }
 
                 holder = new ViewHolder();
@@ -301,6 +337,7 @@ public class HistoryFragment extends Fragment {
             ImageView send_picture;
             ViewHolder total;
             ViewHolder date;
+            ViewHolder clients;
             ViewHolder history;
 
 
@@ -309,6 +346,33 @@ public class HistoryFragment extends Fragment {
             // if (convertView == null) {
             if (1 == 1) {
                 convertView = inf.inflate(R.layout.shop_fragment_history_list_header, parent, false);
+
+                profile_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
+
+                switch (groupPosition)
+                {
+                    case 0:
+                        profile_picture.setImageResource(R.drawable.victoria_profile_picture);
+                        break;
+                    case 1:
+                        profile_picture.setImageResource(R.drawable.mariana_profile_picture);
+                        break;
+                    case 2:
+                        profile_picture.setImageResource(R.drawable.jennifer_profile_picture);
+                        break;
+                    case 3:
+                        profile_picture.setImageResource(R.drawable.teddy_profile_picture);
+                        break;
+                    case 4:
+                        profile_picture.setImageResource(R.drawable.caroline_profile_picture);
+                        break;
+                    case 5:
+                        profile_picture.setImageResource(R.drawable.brant_profile_picture);
+                        break;
+                }
+
+
+
 
 
                 holder = new ViewHolder();
@@ -325,6 +389,11 @@ public class HistoryFragment extends Fragment {
                 amount.text = (TextView) convertView.findViewById(R.id.amount);
                 amount.text.setTypeface(MyApplication.getDefaultTypeface());
                 amount.text.setText(amounts[groupPosition].toString());
+
+                clients = new ViewHolder();
+                clients.text = (TextView) convertView.findViewById(R.id.client_name);
+                clients.text.setTypeface(MyApplication.getDefaultTypeface());
+                clients.text.setText(client[groupPosition].toString());
 
                 when = new ViewHolder();
                 when.text = (TextView) convertView.findViewById(R.id.when);

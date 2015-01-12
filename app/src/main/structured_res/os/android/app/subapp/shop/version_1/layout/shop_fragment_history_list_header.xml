@@ -10,6 +10,71 @@
     android:paddingTop="0dip"
     android:gravity="end|right">
 
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="106dp"
+        android:layout_height="106dp"
+
+        >
+
+
+
+        <ImageView
+            android:id="@+id/profile_picture"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:src="@drawable/luis_profile_picture"
+            android:layout_gravity="center"
+
+            android:padding="6dp"
+            />
+
+        <ImageView
+            android:id="@+id/frame_contact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:src="@drawable/object_frame_1x1"
+            android:layout_gravity="center"
+
+            />
+
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:paddingLeft="8dip"
+            android:paddingRight="8dip"
+            android:paddingTop="3dip"
+            android:paddingBottom="8dip"
+
+            >
+
+
+            <TextView
+                android:id="@+id/client_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+
+                android:textColor="#FFFFFFFF"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:text="New contact name"
+
+                android:background="@color/black_overlay"
+                android:layout_gravity="center"
+
+                android:paddingLeft="8dip"
+                android:paddingRight="8dip"
+                />
+        </FrameLayout>
+
+    </RelativeLayout>
+
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -121,9 +186,9 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
-                android:layout_marginLeft="290dp"
+                android:layout_marginLeft="190dp"
                 android:layout_marginRight="10dp"
-                android:background="#FF666666"/>
+                android:background="#666666"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

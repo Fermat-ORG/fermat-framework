@@ -1,7 +1,9 @@
 package com.bitdubai.smartwallet.ui.os.android.app.subapp.shop.version_1.activity;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
@@ -16,15 +18,19 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
+import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.MyTypefaceSpan;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyLayoutInflaterFactory;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.RequestsSentActivity;
 import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.MyApplication;
@@ -48,14 +54,11 @@ public class ShopActivity  extends FragmentActivity
     private MyPagerAdapter adapter;
 
     private Drawable oldBackground = null;
-    private int currentColor = 0xFF666666;
+    private int currentColor = 0xFF88ee00;
 
     private String walletStyle = "";
 
-    /**
-     * Used to store the last screen title. For use in {@link #restoreActionBar()}.
-     */
-    private CharSequence mTitle = "Shop";
+    private CharSequence mTitle = "My Shop";
     private Menu menu;
 
 
@@ -79,7 +82,7 @@ public class ShopActivity  extends FragmentActivity
         tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
 
 
-       // ((MyApplication) this.getApplication()).setActionBarProperties(this, getWindow(), tabs, getActionBar(), getResources(), abTitle, mTitle.toString());
+        //((MyApplication) this.getApplication()).setActionBarProperties(this, getWindow(), tabs, getActionBar(), getResources(), abTitle, mTitle.toString());
         //super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_main);
 
@@ -101,10 +104,21 @@ public class ShopActivity  extends FragmentActivity
         tabs.setTypeface(tf, 1);
         //changeColor(currentColor);
 
-        tabs.setBackgroundResource(R.drawable.background_tiled_diagonal_light);
-        tabs.setDividerColor(0xFFBBBBBB);
+        tabs.setDividerColor(0xFFFFFFFF);
+        tabs.setIndicatorColor(0xFFFFFFFF);
+        tabs.setIndicatorHeight(9);
+        tabs.setBackgroundColor(0xFF76dc4a);
+        tabs.setTextColor(0xFFFFFFFF);
+
+        String color = "#76dc4a";
+        MyApplication.setActionBar(getActionBar());
+        ((MyApplication) this.getApplication()).changeColor(Color.parseColor(color), getResources());
 
 
+        ActionBar actionBar = getActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setTitle(mTitle);
     }
 
 
@@ -126,13 +140,6 @@ public class ShopActivity  extends FragmentActivity
     }
 
     //***
-
-    public void restoreActionBar() {
-        ActionBar actionBar = getActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
-    }
 
 
 
@@ -262,7 +269,7 @@ public class ShopActivity  extends FragmentActivity
 
         private String[] titles;
         private String[] titles_1 = { };
-        private String[] titles_2 = { "Shop", "Products", "Reviews",  "History", "Map"};
+        private String[] titles_2 = { "Shop", "Products", "Reviews", "History", "Map"};
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -281,18 +288,12 @@ public class ShopActivity  extends FragmentActivity
 
         @Override
         public int getCount() {
-
            titles = titles_2;
-
             return titles.length;
         }
-
         @Override
         public Fragment getItem(int position) {
-
-
            titles = titles_2;
-
             Fragment currentFragment;
             switch (position) {
                 case 0:
@@ -304,26 +305,17 @@ public class ShopActivity  extends FragmentActivity
                 case 2:
                     currentFragment =   ReviewsFragment.newInstance(position);
                     break;
-
                 case 3:
                     currentFragment =  HistoryFragment.newInstance(position);
                     break;
                 case 4:
                     currentFragment =  ShopMapFragment.newInstance(position);
                     break;
-
                 default:
                     currentFragment =   ShopShopFragment.newInstance(position);
                     break;
             }
             return currentFragment;
         }
-
     }
-
-
-
-
-
-
 }

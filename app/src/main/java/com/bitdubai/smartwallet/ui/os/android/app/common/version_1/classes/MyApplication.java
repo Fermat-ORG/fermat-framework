@@ -33,12 +33,20 @@ public class MyApplication extends Application {
     private static CharSequence mTitle;
     private static Drawable oldBackground = null;
     private static int currentColor = 0xFF666666;
-    private static ActionBar actionBar;
+    public static ActionBar actionBar;
     private static String walletStyle = "";
     private static PagerSlidingTabStrip tabs;
 
     public static int  getWalletId() {
         return mWalletId;
+    }
+
+    public static ActionBar getActionBar() {
+        return actionBar;
+    }
+
+    public static void setActionBar(ActionBar actionBar) {
+        MyApplication.actionBar = actionBar;
     }
 
     public  static void setWalletId(int WalletId) {
@@ -216,6 +224,8 @@ public class MyApplication extends Application {
     }
 
     public static void changeColor(int newColor, Resources context) {
+
+
 
         if(tabs != null)
             tabs.setIndicatorColor(newColor);
