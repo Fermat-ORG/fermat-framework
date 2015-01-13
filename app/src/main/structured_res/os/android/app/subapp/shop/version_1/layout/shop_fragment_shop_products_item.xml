@@ -153,7 +153,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:paddingBottom="28dp"
+                android:paddingBottom="22dp"
                 android:gravity="center"
                 >
 
@@ -256,7 +256,7 @@
         android:text="$4.25"
         android:layout_marginTop="20dp"
         android:layout_marginRight="16dp"
-        android:textStyle="bold"
+        android:textStyle="normal"
         android:textSize="12sp"
         android:textColor="#FFFFFF"
         android:layout_centerHorizontal="true"

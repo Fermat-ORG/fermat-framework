@@ -163,7 +163,7 @@ android:visibility="gone"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:paddingBottom="14dp"
+            android:paddingBottom="24dp"
             android:gravity="center"
             >
 
