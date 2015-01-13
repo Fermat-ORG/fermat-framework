@@ -38,7 +38,13 @@
             android:layout_gravity="center"
 
             />
-
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_action_email"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_alignParentRight="true"/>
 
 
         <FrameLayout
