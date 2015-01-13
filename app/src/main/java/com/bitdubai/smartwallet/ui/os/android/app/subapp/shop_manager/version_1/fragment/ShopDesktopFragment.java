@@ -1,4 +1,4 @@
-package com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_manager.version_1.fragment;
+package com.bitdubai.smartwallet.ui.os.android.app.subapp.shop_manager.version_1.fragment;
 
 import android.app.Service;
 import android.content.Context;
@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.MyApplication;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.shop.version_1.activity.ShopActivity;
 
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -1,6 +1,5 @@
 package com.bitdubai.smartwallet.ui.os.android.app.shell.version_1.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -17,15 +16,13 @@ import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.MyApplication;
 
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_manager.version_1.fragment.WalletDesktopFragment;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_manager.version_1.fragment.ShopDesktopFragment;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.shop_manager.version_1.fragment.ShopDesktopFragment;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_store.version_1.activity.StoreFrontActivity;
 
 import android.support.v4.app.FragmentActivity;
 
 import java.util.List;
 import java.util.Vector;
-
-import android.os.Bundle;
 
 public class DesktopActivity extends FragmentActivity {
 
