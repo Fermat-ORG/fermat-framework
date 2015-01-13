@@ -411,6 +411,13 @@
 
     </LinearLayout>
 
-
+<ImageView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:src="@drawable/ic_action_edit_grey"
+    android:layout_alignParentRight="true"
+    android:layout_above="@+id/company_address"
+    android:layout_marginRight="12dp"
+    android:layout_marginBottom="6dp"/>
 
 </RelativeLayout>

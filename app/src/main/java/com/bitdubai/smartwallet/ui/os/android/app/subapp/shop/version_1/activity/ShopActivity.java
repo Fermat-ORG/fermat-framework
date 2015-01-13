@@ -31,6 +31,7 @@ import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.MyTypefaceSpan;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.shop.version_1.fragment.ShopChatFragment;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyLayoutInflaterFactory;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.RequestsSentActivity;
 import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.MyApplication;
@@ -112,6 +113,7 @@ public class ShopActivity  extends FragmentActivity
 
         String color = "#76dc4a";
         MyApplication.setActionBar(getActionBar());
+        MyApplication.setDefaultTypeface(MyApplication.getDefaultTypeface());
         ((MyApplication) this.getApplication()).changeColor(Color.parseColor(color), getResources());
 
 
@@ -269,7 +271,7 @@ public class ShopActivity  extends FragmentActivity
 
         private String[] titles;
         private String[] titles_1 = { };
-        private String[] titles_2 = { "Shop", "Products", "Reviews", "History", "Map"};
+        private String[] titles_2 = { "Shop", "Products", "Reviews","Chats", "History", "Map"};
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -306,9 +308,12 @@ public class ShopActivity  extends FragmentActivity
                     currentFragment =   ReviewsFragment.newInstance(position);
                     break;
                 case 3:
-                    currentFragment =  HistoryFragment.newInstance(position);
+                    currentFragment = ShopChatFragment.newInstance(position);
                     break;
                 case 4:
+                    currentFragment =  HistoryFragment.newInstance(position);
+                    break;
+                case 5:
                     currentFragment =  ShopMapFragment.newInstance(position);
                     break;
                 default:
