@@ -274,14 +274,6 @@ public  class ShopChatFragment extends Fragment {
 
                     profile_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
                     //asigned tagId at icons action
-                    ImageView  send_profile_picture = (ImageView) convertView.findViewById(R.id.icon_send_profile);
-                    send_profile_picture.setTag(groupPosition + "|-1");
-
-                    ImageView  send_message = (ImageView) convertView.findViewById(R.id.icon_send_message);
-                    send_message.setTag(contacts[groupPosition].toString());
-
-                    ImageView  history_picture = (ImageView) convertView.findViewById(R.id.open_history);
-                    history_picture.setTag(groupPosition);
 
                     switch (groupPosition)
                     {

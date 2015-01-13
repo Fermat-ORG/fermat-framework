@@ -66,7 +66,7 @@
         android:scaleX="0.6"
         android:scaleY="0.6"
 
-
+        android:visibility="gone"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
 
@@ -84,7 +84,7 @@
         android:layout_height="wrap_content"
 
         android:src="@drawable/grid_background_sale_flipped"
-
+        android:visibility="gone"
         android:scaleType="fitCenter"
         android:layout_centerHorizontal="true"
 
@@ -416,8 +416,7 @@
     android:layout_height="wrap_content"
     android:src="@drawable/ic_action_edit_grey"
     android:layout_alignParentRight="true"
-    android:layout_above="@+id/company_address"
     android:layout_marginRight="12dp"
-    android:layout_marginBottom="6dp"/>
+    android:layout_marginTop="12dp" />
 
 </RelativeLayout>

@@ -16,7 +16,7 @@ import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.MyApp
 /**
  * Created by Natalia on 09/01/2015.
  */
-public class HistoryFragment extends Fragment {
+public class ShopHistoryFragment extends Fragment {
     private static final String ARG_POSITION = "position";
 
     View rootView;
@@ -38,8 +38,8 @@ public class HistoryFragment extends Fragment {
 
 
 
-    public static HistoryFragment newInstance(int position) {
-        HistoryFragment f = new HistoryFragment();
+    public static ShopHistoryFragment newInstance(int position) {
+        ShopHistoryFragment f = new ShopHistoryFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
