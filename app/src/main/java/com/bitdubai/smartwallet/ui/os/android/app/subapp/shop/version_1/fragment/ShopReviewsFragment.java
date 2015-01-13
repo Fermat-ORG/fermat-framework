@@ -19,7 +19,7 @@ import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.MyApp
 /**
  * Created by Natalia on 09/01/2015.
  */
-public class ReviewsFragment extends Fragment {
+public class ShopReviewsFragment extends Fragment {
     private static final String ARG_POSITION = "position";
 
     View rootView;
@@ -34,8 +34,8 @@ public class ReviewsFragment extends Fragment {
 
 
 
-    public static ReviewsFragment newInstance(int position) {
-        ReviewsFragment f = new ReviewsFragment();
+    public static ShopReviewsFragment newInstance(int position) {
+        ShopReviewsFragment f = new ShopReviewsFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);

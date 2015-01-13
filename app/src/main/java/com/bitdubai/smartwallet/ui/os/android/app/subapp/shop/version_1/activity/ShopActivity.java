@@ -1,9 +1,7 @@
 package com.bitdubai.smartwallet.ui.os.android.app.subapp.shop.version_1.activity;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
@@ -18,26 +16,22 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.text.Spannable;
-import android.text.SpannableString;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
-import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.MyTypefaceSpan;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.shop.version_1.fragment.ShopChatFragment;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyLayoutInflaterFactory;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.RequestsSentActivity;
 import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.MyApplication;
 import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.PagerSlidingTabStrip;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.shop.version_1.fragment.HistoryFragment;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.shop.version_1.fragment.ReviewsFragment;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.shop.version_1.fragment.ShopHistoryFragment;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.shop.version_1.fragment.ShopReviewsFragment;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.shop.version_1.fragment.ShopMapFragment;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.shop.version_1.fragment.ShopProductsFragment;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.shop.version_1.fragment.ShopShopFragment;
@@ -305,13 +299,13 @@ public class ShopActivity  extends FragmentActivity
                     currentFragment =   ShopProductsFragment.newInstance(position);
                     break;
                 case 2:
-                    currentFragment =   ReviewsFragment.newInstance(position);
+                    currentFragment =   ShopReviewsFragment.newInstance(position);
                     break;
                 case 3:
                     currentFragment = ShopChatFragment.newInstance(position);
                     break;
                 case 4:
-                    currentFragment =  HistoryFragment.newInstance(position);
+                    currentFragment =  ShopHistoryFragment.newInstance(position);
                     break;
                 case 5:
                     currentFragment =  ShopMapFragment.newInstance(position);

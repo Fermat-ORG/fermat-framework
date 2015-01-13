@@ -71,46 +71,6 @@
                 android:paddingRight="8dip"
                 />
         </FrameLayout>
-
-
-
-        <ImageView
-            android:id="@+id/icon_send_message"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_action_email"
-            android:layout_alignParentTop="true"
-            android:paddingLeft="7dp"
-            android:paddingRight="7dp"
-            android:layout_alignParentLeft="true"
-
-            android:paddingBottom="7dp"
-            android:paddingTop="7dp"
-            android:onClick="onChatContactIconClicked"
-
-            />
-
-        <ImageView
-            android:id="@+id/icon_send_profile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_action_send_now"
-            android:layout_alignParentRight="true"
-
-            android:layout_alignParentTop="true"
-            android:paddingLeft="7dp"
-            android:paddingRight="7dp"
-            android:paddingBottom="7dp"
-            android:paddingTop="7dp"
-            android:onClick="onSendIconClicked"
-
-            />
-
-
-
-
     </RelativeLayout>
 
     <RelativeLayout
@@ -135,25 +95,43 @@
         android:orientation="vertical"
         android:layout_alignParentRight="true"
         >
-        <RelativeLayout
-            android:id="@+id/layout"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/sent_message_bubble"
-            android:layout_gravity="right|center"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="6dp">
+            android:orientation="horizontal"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="8dp">
             <TextView
-                android:id="@+id/title"
+                android:id="@+id/when"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#FF666666"
+                android:textSize="12sp"
+                android:textStyle="normal"
+                android:text="yesterday"
+                android:layout_gravity="bottom"
+                android:layout_weight="1"/>
+
+            <LinearLayout
+                android:id="@+id/layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="15sp"
-                android:layout_gravity="center"
-                android:maxWidth="260dp"
-                android:text="Ok, on the way."
-                android:textColor="#FF000000"
-                android:textStyle="normal"/>
-</RelativeLayout>
+                android:background="@drawable/sent_message_bubble"
+                android:gravity="right|end">
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:layout_gravity="center"
+                    android:maxWidth="230dp"
+                    android:text="Ok, on the way."
+                    android:textColor="#FF000000"
+                    android:textStyle="normal"/>
+            </LinearLayout>
+        </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -162,17 +140,6 @@
         android:paddingLeft="10dip"
         android:paddingRight="10dip"
         android:weightSum="1">
-        <TextView
-            android:id="@+id/when"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#FF666666"
-            android:textSize="12sp"
-            android:textStyle="normal"
-            android:text="yesterday"
-            android:gravity="start" android:paddingBottom="1dip"
-            android:paddingTop="5dip"/>
-
     </LinearLayout>
     </LinearLayout>
         <FrameLayout
