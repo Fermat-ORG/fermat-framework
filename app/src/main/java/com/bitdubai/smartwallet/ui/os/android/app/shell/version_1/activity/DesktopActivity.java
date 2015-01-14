@@ -5,11 +5,14 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+
+import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.fragment.NavigationDrawerFragment;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.shop.version_1.activity.ShopActivity;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.FrameworkActivity;
 import com.bitdubai.smartwallet.R;
@@ -24,22 +27,38 @@ import android.support.v4.app.FragmentActivity;
 import java.util.List;
 import java.util.Vector;
 
-public class DesktopActivity extends FragmentActivity {
-
-
+public class DesktopActivity extends FragmentActivity
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks
+{
+    public int pageIndex = 0;
+    private NavigationDrawerFragment mNavigationDrawerFragment;
     private PagerAdapter mPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.shell_activity_wallet_desktop);
-      /*  getActionBar().hide();
+        getActionBar().hide();
 
-        if (savedInstanceState == null) {
+        MyApplication.setActivityId("DesktopActivity");
+
+       /* if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
                     .add(R.id.container, new WalletDesktopFragment())
                     .commit();
         }*/
+
+        mNavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
+
+        mNavigationDrawerFragment = (NavigationDrawerFragment)
+                getFragmentManager().findFragmentById(R.id.navigation_drawer);
+
+
+        // Set up the drawer.
+        mNavigationDrawerFragment.setUp(
+                R.id.navigation_drawer,
+                (DrawerLayout) findViewById(R.id.drawer_layout));
+
 
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/CaviarDreams.ttf");
         ((MyApplication) this.getApplication()).setDefaultTypeface(tf);
@@ -63,16 +82,31 @@ public class DesktopActivity extends FragmentActivity {
             ViewPager pager = (ViewPager)super.findViewById(R.id.viewpager);
             pager.setAdapter(this.mPagerAdapter);
 
+            pager.setBackgroundResource(R.drawable.background_tiled_diagonal_light);
+
+            pager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                public void onPageScrollStateChanged(int state) {}
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+
+                public void onPageSelected(int position) {
+                    // Check if this is the page you want.
+                    pageIndex = position;
+
+                }
+            });
         }catch (Exception ex) {
-          String strError = ex.getMessage();
+            String strError = ex.getMessage();
         }
 
     }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.wallet_manager_desktop_activity_menu, menu);
+        if (pageIndex == 0)
+            getMenuInflater().inflate(R.menu.wallet_manager_desktop_activity_menu, menu);
+        else
+            getMenuInflater().inflate(R.menu.shell_shop_desktop_fragment_menu, menu);
         return true;
     }
 
@@ -110,10 +144,11 @@ public class DesktopActivity extends FragmentActivity {
     }
 
 
+
     public void onWalletClicked(View v) {
         String tagId="3";
 
-     tagId = v.getTag().toString();
+        tagId = v.getTag().toString();
 
         if (Integer.parseInt(tagId) > 4)
         {
@@ -142,17 +177,21 @@ public class DesktopActivity extends FragmentActivity {
         String tagId="";
 
         tagId = v.getTag().toString();
-            Intent intent;
-            intent = new Intent(this, ShopActivity.class);
+        Intent intent;
+        intent = new Intent(this, ShopActivity.class);
 
-           // ((MyApplication) this.getApplication()).setWalletId(Integer.parseInt(tagId));
+        // ((MyApplication) this.getApplication()).setWalletId(Integer.parseInt(tagId));
 
-            // intent.putExtra("Wallet Id", tag );
-            startActivity(intent);
+        // intent.putExtra("Wallet Id", tag );
+        startActivity(intent);
 
 
 
     }
 
+    //***
+    @Override
+    public void onNavigationDrawerItemSelected(int position) {
 
+    }
 }

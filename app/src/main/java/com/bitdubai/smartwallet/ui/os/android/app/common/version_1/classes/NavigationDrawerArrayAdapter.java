@@ -36,8 +36,21 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
 
 
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            rowView = inflater.inflate(R.layout.wallet_framework_activity_framework_navigation_drawer_first_row, parent, false);
+            switch (MyApplication.getActivityId())
+            {
+                case "DesktopActivity":
+                    rowView = inflater.inflate(R.layout.wallet_manager_desktop_activity_navigation_drawer_first_row, parent, false);
+                    break;
+                case "FrameworkActivity":
+                    rowView = inflater.inflate(R.layout.wallet_framework_activity_framework_navigation_drawer_first_row, parent, false);
+                    break;
+                case "ShopActivity":
+                    rowView = inflater.inflate(R.layout.shell_shop_desktop_activity_navigation_drawer_first_row, parent, false);
+                    break;
+                default:
+                    rowView = inflater.inflate(R.layout.wallet_framework_activity_framework_navigation_drawer_first_row, parent, false);
 
+            }
             TextView textView = (TextView) rowView.findViewById(R.id.label);
 
             textView.setTypeface(MyApplication.getDefaultTypeface(), 1);
@@ -60,8 +73,22 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
         {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            rowView = inflater.inflate(R.layout.wallet_framework_activity_framework_navigation_drawer_row_layout, parent, false);
 
+            switch (MyApplication.getActivityId())
+            {
+                case "DesktopActivity":
+                    rowView = inflater.inflate(R.layout.wallet_manager_desktop_activity_framework_navigation_drawer_row_layout, parent, false);
+                    break;
+                case "FrameworkActivity":
+                    rowView = inflater.inflate(R.layout.wallet_framework_activity_framework_navigation_drawer_row_layout, parent, false);
+                    break;
+                case "ShopActivity":
+                    rowView = inflater.inflate(R.layout.shell_shop_desktop_activity_navigation_drawer_row_layout, parent, false);
+                    break;
+                default:
+                    rowView = inflater.inflate(R.layout.wallet_framework_activity_framework_navigation_drawer_row_layout, parent, false);
+
+            }
             TextView textView = (TextView) rowView.findViewById(R.id.label);
 
             textView.setTypeface(MyApplication.getDefaultTypeface(), 1);

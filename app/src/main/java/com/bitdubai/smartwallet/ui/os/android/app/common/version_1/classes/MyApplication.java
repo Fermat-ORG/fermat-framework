@@ -28,7 +28,7 @@ public class MyApplication extends Application {
     public static int mTAGID;
     public static String mContact;
     public  static int mWalletId;
-
+    public  static String mActivityId;
     public static String mCHILDID;
     private static CharSequence mTitle;
     private static Drawable oldBackground = null;
@@ -36,7 +36,9 @@ public class MyApplication extends Application {
     public static ActionBar actionBar;
     private static String walletStyle = "";
     private static PagerSlidingTabStrip tabs;
-
+    public static String getActivityId() {
+        return mActivityId;
+    }
     public static int  getWalletId() {
         return mWalletId;
     }
@@ -71,7 +73,7 @@ public class MyApplication extends Application {
     public static void setChildId(String childId) { mCHILDID = childId; }
     public static void setTagId(int TagId) { mTAGID = TagId; }
     public static void setContact(String contact_name) { mContact = contact_name; }
-
+    public static void setActivityId(String activity_name) { mActivityId = activity_name; }
     public static void setDefaultTypeface(Typeface DefaultTypeface) {
         mDefaultTypeface = DefaultTypeface;
     }

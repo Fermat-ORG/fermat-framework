@@ -23,6 +23,9 @@ import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.widget.LinearLayout;
 import com.bitdubai.smartwallet.R;
+import android.view.View.OnClickListener;
+
+
 
 
 public class UsdBalanceFragment extends Fragment {
@@ -58,11 +61,18 @@ public class UsdBalanceFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view;
-
+final ImageView imageTicket;
         view = inflater.inflate(R.layout.wallets_kids_fragment_usd_balance, container, false); //Contains empty RelativeLayout
-        ImageView money = (ImageView)view.findViewById(R.id.ticket1);
+         ImageView money = (ImageView)view.findViewById(R.id.ticket1);
+        imageTicket = money;
+       /* money.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                imageTicket.setImageResource(R.drawable.usd_10);
+            }
+        });*/
         money.setOnTouchListener(new dragTouchListener());
         money.setOnDragListener(new dropListener());
+
 
         money = (ImageView)view.findViewById(R.id.ticket2);
         money.setOnTouchListener(new dragTouchListener());

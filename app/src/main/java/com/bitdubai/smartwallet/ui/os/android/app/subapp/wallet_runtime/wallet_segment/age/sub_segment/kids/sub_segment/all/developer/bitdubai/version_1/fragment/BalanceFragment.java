@@ -85,46 +85,51 @@ public class BalanceFragment extends Fragment {
 
 
 
-        private final class dragTouchListener implements OnTouchListener {
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                    ClipData data = ClipData.newPlainText("", "");
-                    DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
-                    view.startDrag(data, shadowBuilder, view, 0);
-                    view.setVisibility(View.INVISIBLE);
-                    return true;
-                } else {
-                    return false;
-                }
+    private final class dragTouchListener implements View.OnTouchListener {
+        public boolean onTouch(View view, MotionEvent motionEvent) {
+            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                ClipData data = ClipData.newPlainText("", "");
+                View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(view);
+                view.startDrag(data, shadowBuilder, view, 0);
+                view.setVisibility(View.INVISIBLE);
+                return true;
+            } else {
+                return false;
             }
         }
+    }
 
-    private class dropListener implements OnDragListener {
+    private class dropListener implements View.OnDragListener {
 
         @Override
         public boolean onDrag(View v, DragEvent event) {
             int action = event.getAction();
-            switch (event.getAction()) {
+            switch (action) {
                 case DragEvent.ACTION_DRAG_STARTED:
                     // do nothing
                     break;
                 case DragEvent.ACTION_DRAG_ENTERED:
-                   // v.setBackgroundDrawable(enterShape);
+                    // v.setBackgroundDrawable(enterShape);
                     break;
                 case DragEvent.ACTION_DRAG_EXITED:
                     //v.setBackgroundDrawable(normalShape);
                     break;
                 case DragEvent.ACTION_DROP:
-                    // Dropped, reassign View to ViewGroup
-                    View view = (View) event.getLocalState();
+                  /*  View view = (View) event.getLocalState();
                     ViewGroup owner = (ViewGroup) view.getParent();
                     owner.removeView(view);
-                    LinearLayout container = (LinearLayout) v;
+                    LinearLayout container = (LinearLayout) owner;
                     container.addView(view);
-                    view.setVisibility(View.VISIBLE);
+                    view.setVisibility(View.VISIBLE);*/
                     break;
                 case DragEvent.ACTION_DRAG_ENDED:
-                   // v.setBackgroundDrawable(normalShape);
+                    // v.setBackgroundDrawable(normalShape);
+                /*    View view = (View) event.getLocalState();
+                    ViewGroup owner = (ViewGroup) view.getParent();
+                    owner.removeView(view);
+                    LinearLayout container = (LinearLayout) owner;
+                    container.addView(view);
+                    view.setVisibility(View.VISIBLE);*/
                     break;
                 default:
                     break;
@@ -133,6 +138,5 @@ public class BalanceFragment extends Fragment {
         }
 
     }
-
 
 }
