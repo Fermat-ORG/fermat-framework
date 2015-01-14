@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+    android:id="@+id/marco"  android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:src="@drawable/usd_1"
+            android:paddingLeft="7dp"
+            android:paddingRight="7dp"
+            android:paddingTop="7dp"
+            android:layout_weight="1"
+            android:paddingBottom="7dp"
+            android:layout_gravity="center"
+            android:id="@+id/ticket1"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:paddingLeft="7dp"
+            android:paddingRight="7dp"
+            android:paddingTop="7dp"
+            android:paddingBottom="7dp"
+            android:src="@drawable/usd_1"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:id="@+id/ticket2"
+            android:layout_below="@+id/ticket1"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+
+    <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:paddingLeft="7dp"
+            android:paddingRight="7dp"
+            android:paddingTop="7dp"
+            android:layout_weight="1"
+            android:paddingBottom="7dp"
+            android:src="@drawable/usd_10"
+            android:layout_gravity="center"
+            android:id="@+id/ticket3"
+            android:layout_below="@+id/ticket11"
+            android:layout_toRightOf="@+id/ticket1"
+            android:layout_toEndOf="@+id/ticket1" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:paddingLeft="7dp"
+            android:layout_weight="1"
+            android:paddingRight="7dp"
+            android:paddingTop="7dp"
+            android:paddingBottom="7dp"
+            android:src="@drawable/usd_20"
+            android:layout_gravity="center"
+            android:id="@+id/ticket4"
+            android:layout_below="@+id/ticket3"
+            android:layout_toRightOf="@+id/ticket1"
+            android:layout_toEndOf="@+id/ticket1" />
+
+
+
+    </RelativeLayout>
+
+
