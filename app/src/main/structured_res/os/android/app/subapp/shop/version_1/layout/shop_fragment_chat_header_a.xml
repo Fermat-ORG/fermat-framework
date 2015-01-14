@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scaleType="centerCrop"
-            android:src="@drawable/luis_profile_picture"
+            android:src="@drawable/victoria_profile_picture"
             android:layout_gravity="center"
 
             android:padding="6dp"
@@ -88,60 +88,75 @@
         android:layout_gravity="center"
         android:background="@drawable/object_frame_3x1_filled"
         />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_alignParentRight="true"
-        >
-        <LinearLayout
+        <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginTop="8dp">
-            <TextView
-                android:id="@+id/when"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#FF666666"
-                android:textSize="12sp"
-                android:textStyle="normal"
-                android:text="yesterday"
-                android:layout_gravity="bottom"
-                android:layout_weight="1"/>
-
+            android:layout_height="match_parent"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginLeft="3dp">
             <LinearLayout
-                android:id="@+id/layout"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/sent_message_bubble"
-                android:gravity="right|end">
-                <TextView
-                    android:id="@+id/title"
+                android:layout_height="wrap_content">
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"
-                    android:layout_gravity="center"
-                    android:maxWidth="230dp"
-                    android:text="Ok, on the way."
-                    android:textColor="#FF000000"
-                    android:textStyle="normal"/>
+                    android:background="@drawable/receive_message_bubble"
+                    android:gravity="center">
+                    <TextView
+                        android:id="@+id/title_a"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        android:maxWidth="200dp"
+                        android:text="Hi!"
+                        android:textColor="#FF000000"
+                        android:textStyle="normal"/>
+                </LinearLayout>
+
+                <TextView android:id="@+id/hour_a"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="15:53"
+                    android:textColor="#aaaaaa"
+                    android:textSize="8dp"
+                    android:paddingLeft="12dp"
+                    android:paddingBottom="5dp"
+                    android:layout_gravity="bottom"/>
             </LinearLayout>
-        </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_marginBottom="5dp">
+                <TextView android:id="@+id/hour"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="15:53"
+                    android:textSize="8dp"
+                    android:textColor="#aaaaaa"
+                    android:layout_gravity="bottom"
+                    android:paddingRight="8dp"
+                    android:paddingBottom="5dp"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/sent_message_bubble"
+                    android:gravity="center">
+                    <TextView
+                        android:id="@+id/title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="15sp"
+                        android:maxWidth="200dp"
+                        android:text="Hey, how are you doing?"
+                        android:textColor="#FF000000"
+                        android:textStyle="normal"/>
+                </LinearLayout>
 
+            </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingLeft="10dip"
-        android:paddingRight="10dip"
-        android:weightSum="1">
-    </LinearLayout>
-    </LinearLayout>
+        </FrameLayout>
         <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
