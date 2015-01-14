@@ -115,6 +115,7 @@ public class ShopActivity  extends FragmentActivity
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
+        abTitle.setTypeface(MyApplication.getDefaultTypeface());
     }
 
 
@@ -260,6 +261,8 @@ public class ShopActivity  extends FragmentActivity
             handler.removeCallbacks(what);
         }
     };
+
+
 
     public class MyPagerAdapter extends FragmentPagerAdapter {
 
