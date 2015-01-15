@@ -20,6 +20,12 @@
     <string name="title_section9">Clones</string>
     <string name="title_section10">Childs</string>
     <string name="title_section11">Exit</string>
+    <string name="title_section12">Personal Wallets</string>
+    <string name="title_section13">Shops</string>
+    <string name="title_section14">Commercial wallets</string>
+    <string name="title_section15">Factory Projects</string>
+    <string name="title_section16">Published Wallets</string>
+
     <string name="app_name">Smart Wallet</string>
     <string name="button_send">Send</string>
     <string name="title_activity_main">Young Wallet</string>

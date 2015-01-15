@@ -68,8 +68,9 @@ public class ShopActivity  extends FragmentActivity implements NavigationDrawerF
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.shop_activity_shop);
         MyApplication.setActivityId("ShopActivity");
+        setContentView(R.layout.shop_activity_shop);
+
         // I get the action bar title id and put it on a text view in order to later change its color
         int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
         TextView abTitle = (TextView) findViewById(titleId);

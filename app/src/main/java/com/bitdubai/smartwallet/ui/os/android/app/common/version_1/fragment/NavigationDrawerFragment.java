@@ -21,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.bitdubai.smartwallet.R;
+import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.MyApplication;
 import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.NavigationDrawerArrayAdapter;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.ContactsActivity;
 
@@ -107,22 +108,40 @@ public class NavigationDrawerFragment extends Fragment {
         });
 
 
+if(MyApplication.getActivityId()=="DesktopActivity")
+{
+    mDrawerListView.setAdapter(new NavigationDrawerArrayAdapter(
+            getActivity(),
+            new String[]{
+                    getString(R.string.title_section12),
+                    getString(R.string.title_section13),
+                    getString(R.string.title_section14),
+                    getString(R.string.title_section15),
+                    getString(R.string.title_section16),
+                    getString(R.string.title_section11)
 
-        mDrawerListView.setAdapter(new NavigationDrawerArrayAdapter(
-                getActivity(),
-                new String[]{
-                        getString(R.string.title_section1),
-                        getString(R.string.title_section2),
-                        getString(R.string.title_section3),
-                        getString(R.string.title_section4),
-                        getString(R.string.title_section5),
-                        getString(R.string.title_section6),
-                        getString(R.string.title_section7),
-                        getString(R.string.title_section8),
-                        getString(R.string.title_section9),
-                        getString(R.string.title_section10),
-                        getString(R.string.title_section11),
-                }));
+            }));
+
+
+}else
+{
+    mDrawerListView.setAdapter(new NavigationDrawerArrayAdapter(
+            getActivity(),
+            new String[]{
+                    getString(R.string.title_section1),
+                    getString(R.string.title_section2),
+                    getString(R.string.title_section3),
+                    getString(R.string.title_section4),
+                    getString(R.string.title_section5),
+                    getString(R.string.title_section6),
+                    getString(R.string.title_section7),
+                    getString(R.string.title_section8),
+                    getString(R.string.title_section9),
+                    getString(R.string.title_section10),
+                    getString(R.string.title_section11),
+            }));
+}
+
 
 
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
