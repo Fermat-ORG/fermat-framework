@@ -449,7 +449,7 @@ public class FrameworkActivity extends FragmentActivity
     public class MyPagerAdapter extends FragmentPagerAdapter {
 
         private String[] titles;
-        private String[] titles_1 = { "Balance", "Contacts"};
+        private String[] titles_1 = {"Me" ,"Balance", "Contacts","Community"};
         private String[] titles_2 = { "Home", "Balance", "Send", "Receive","Shops","Refill","Discounts"};
 
         public MyPagerAdapter(FragmentManager fm) {
@@ -497,24 +497,32 @@ public class FrameworkActivity extends FragmentActivity
 
             if (mTitle == "Boy's savings")
                 switch (position) {
-
                     case 0:
-                        currentFragment =  com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.kids.sub_segment.all.developer.bitdubai.version_1.fragment.UsdBalanceFragment.newInstance(position);
+                        currentFragment =  com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.kids.sub_segment.all.developer.bitdubai.version_1.fragment.ProfileCardFront.newInstance(position);
                         break;
                     case 1:
+                        currentFragment =  com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.kids.sub_segment.all.developer.bitdubai.version_1.fragment.UsdBalanceFragment.newInstance(position);
+                        break;
+                    case 2:
                         currentFragment =  com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.kids.sub_segment.all.developer.bitdubai.version_1.fragment.ContactsFragment.newInstance(position);
                         break;
+                    case 3:
+                        currentFragment =  com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.kids.sub_segment.all.developer.bitdubai.version_1.fragment.CommunityFragment.newInstance(position);
                 }
 
             else if (mTitle == "Girl's savings")
                 switch (position) {
-
                     case 0:
-                        currentFragment =  com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.kids.sub_segment.all.developer.bitdubai.version_1.fragment.BalanceFragment.newInstance(position);
+                        currentFragment =  com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.kids.sub_segment.all.developer.bitdubai.version_1.fragment.ProfileCardFront.newInstance(position);
                         break;
                     case 1:
-                        currentFragment =  com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.kids.sub_segment.all.developer.bitdubai.version_1.fragment.GirlsContactsFragment.newInstance(position);
+                        currentFragment =  com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.kids.sub_segment.all.developer.bitdubai.version_1.fragment.UsdBalanceFragment.newInstance(position);
                         break;
+                    case 2:
+                        currentFragment =  com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.kids.sub_segment.all.developer.bitdubai.version_1.fragment.ContactsFragment.newInstance(position);
+                        break;
+                    case 3:
+                        currentFragment =  com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.kids.sub_segment.all.developer.bitdubai.version_1.fragment.CommunityFragment.newInstance(position);
                 }
 
             else

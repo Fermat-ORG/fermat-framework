@@ -127,6 +127,7 @@ public class ShopActivity  extends FragmentActivity implements NavigationDrawerF
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
+        actionBar.setIcon(R.drawable.store_icon);
         abTitle.setTypeface(MyApplication.getDefaultTypeface());
     }
 

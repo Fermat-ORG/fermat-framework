@@ -1,35 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width= "120dp"
-    android:layout_height="120dp"
-    android:layout_marginLeft="2dip"
-    android:layout_marginRight="2dip">
+<RelativeLayout
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+<RelativeLayout
+    android:layout_width= "match_parent"
+    android:layout_height="400dp"
+    android:layout_centerVertical="true"
+    android:layout_alignParentLeft="true"
+    android:layout_alignParentStart="true">
     <ImageView android:id="@+id/profile_Image"
         android:layout_width="match_parent"
-        android:src="@drawable/kid_3"
+        android:src="@drawable/kid_15"
         android:scaleType="centerCrop"
-        android:layout_margin="8dip"
+        android:layout_margin="26dip"
         android:layout_height="match_parent"/>
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:paddingLeft="9dip"
-        android:paddingRight="9dip"
+        android:paddingLeft="22dip"
+        android:paddingRight="22dip"
         android:paddingTop="3dip"
-        android:paddingBottom="8dip">
+        android:paddingBottom="30dip">
         <TextView
             android:background="@color/black_overlay"
-            android:id="@+id/community_name"
+            android:id="@+id/user_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="#FFFFFFFF"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:text="Anna"
+            android:textSize="20sp"
+            android:textStyle="normal"
+            android:text="Johnny"
             android:gravity="center"
-            android:paddingBottom="2dip"/>
+            android:paddingBottom="8dip"/>
     </FrameLayout>
     <ImageView
         android:id="@+id/frame_contact_2"
@@ -39,3 +44,4 @@
         android:src="@drawable/object_frame_1x1"
         android:layout_gravity="center"/>
 </RelativeLayout>
+    </RelativeLayout>
