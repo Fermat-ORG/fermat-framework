@@ -9,12 +9,7 @@
         android:orderInCategory="94"
         android:showAsAction="never"
         android:icon="@drawable/ic_action_storage"/>
-    <item
-        android:id="@+id/action_shop"
-        android:title="Shop"
-        android:orderInCategory="94"
-        android:showAsAction="never"
-        android:icon="@drawable/ic_action_storage"/>
+
     <item
         android:id="@+id/action_edit"
         android:title="@string/action_edit"

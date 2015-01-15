@@ -196,7 +196,7 @@ public class FrameworkActivity extends FragmentActivity
 
         super.onCreate(savedInstanceState);
         int walletId = ((MyApplication) this.getApplication()).getWalletId();
-
+        MyApplication.setActivityId("FrameworkActivity");
 
         setContentView(R.layout.wallet_framework_activity_framework);
 
