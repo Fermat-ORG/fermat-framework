@@ -67,7 +67,7 @@ public class ShopDesktopFragment extends Fragment {
         String[] shop_names =
                 {"Girls' wallet",
                         "Boys' wallet",
-                        "Mi Shop",
+                        "My donuts Shop",
                         "Youngs' wallet",
                         "Boca Juniors' wallet",
                         "Carrefour's wallet",
@@ -89,7 +89,7 @@ public class ShopDesktopFragment extends Fragment {
         String[] shop_picture =
                 {"wallet_store_cover_photo_girl",
                         "wallet_store_cover_photo_boy",
-                        "wallet_store_cover_photo_lady",
+                        "wallet_store_cover_photo_shop",
                         "wallet_store_cover_photo_young",
                         "wallet_store_cover_photo_boca_juniors",
                         "wallet_store_cover_photo_carrefour",
@@ -232,8 +232,8 @@ public class ShopDesktopFragment extends Fragment {
                     holder.imageView.setImageResource(R.drawable.icono_piggy_yellow);
                     holder.imageView.setTag("2");
                     break;
-                case "wallet_store_cover_photo_lady":
-                    holder.imageView.setImageResource(R.drawable.wallet_1);
+                case "wallet_store_cover_photo_shop":
+                    holder.imageView.setImageResource(R.drawable.store_icon);
                     holder.imageView.setTag("3");
                     break;
                 case "wallet_store_cover_photo_young":

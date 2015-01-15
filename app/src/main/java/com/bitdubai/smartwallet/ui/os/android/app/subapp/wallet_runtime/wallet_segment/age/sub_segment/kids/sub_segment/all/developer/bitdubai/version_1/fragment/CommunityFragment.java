@@ -25,15 +25,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ContactsFragment extends Fragment {
+public class CommunityFragment extends Fragment {
 
     private static final String ARG_POSITION = "position";
     private ArrayList<App> mlist;
 
     private int position;
 
-    public static ContactsFragment newInstance(int position) {
-        ContactsFragment f = new ContactsFragment();
+    public static CommunityFragment newInstance(int position) {
+        CommunityFragment f = new CommunityFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -44,23 +44,34 @@ public class ContactsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         String[] names = {
-                "Mark",
-                "Anna",
-                "Marie",
-                "Roger",
-                "Michael",
-                "Juliet",
-                "Devin"};
-
+                "Tom",
+                "Debra",
+                "Connor",
+                "Barbara",
+                "Angela"};
+        String[] state = {
+                "NY",
+                "NY",
+                "NY",
+                "NY",
+                "NY"};
+        String[] country = {
+                "USA",
+                "USA",
+                "USA",
+                "USA",
+                "USA"};
 
         if (mlist == null)
         {
 
             mlist = new ArrayList<App>();
 
-            for (int i = 0; i < 7; i++) {
+            for (int i = 0; i < 5; i++) {
                 App item = new App();
                 item.Names = names[i];
+                item.States = state[i];
+                item.Countries = country[i];
                 mlist.add(item);
 
             }
@@ -78,7 +89,7 @@ public class ContactsFragment extends Fragment {
 
         //@SuppressWarnings("unchecked")
         //ArrayList<App> list = (ArrayList<App>) getArguments().get("list");
-        gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.wallets_kids_fragment_contacts, mlist));
+        gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.wallets_kids_fragment_community, mlist));
 
         //        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
         //  public void onItemClick(AdapterView<?> parent, View v,
@@ -95,6 +106,9 @@ public class ContactsFragment extends Fragment {
     }
 
 
+
+
+
     public class App implements Serializable {
 
 
@@ -102,9 +116,15 @@ public class ContactsFragment extends Fragment {
 
         public String Names;
 
+        public String Countries;
+
+        public String States;
     }
 
+
+
     public class AppListAdapter extends ArrayAdapter<App> {
+
 
         public AppListAdapter(Context context, int textViewResourceId, List<App> objects) {
             super(context, textViewResourceId, objects);
@@ -115,14 +135,19 @@ public class ContactsFragment extends Fragment {
 
             App item = getItem(position);
 
+
+
             ViewHolder holder;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.wallets_kids_fragment_contacts, parent, false);
+                convertView = inflater.inflate(R.layout.wallets_kids_fragment_community, parent, false);
                 holder = new ViewHolder();
 
                 holder.name = (TextView) convertView.findViewById(R.id.community_name);
+                holder.country = (TextView) convertView.findViewById(R.id.community_country);
+                holder.state= (TextView) convertView.findViewById(R.id.community_state);
                 holder.Photo = (ImageView) convertView.findViewById(R.id.profile_Image);
+
 
                 convertView.setTag(holder);
             } else {
@@ -130,34 +155,35 @@ public class ContactsFragment extends Fragment {
             }
 
 
+
+
+
+
             holder.name.setText(item.Names);
+            holder.country.setText(item.Countries);
+            holder.state.setText(item.States);
 
 
             holder.name.setTypeface(MyApplication.getDefaultTypeface());
-
+            holder.country.setTypeface(MyApplication.getDefaultTypeface());
+            holder.state.setTypeface(MyApplication.getDefaultTypeface());
 
             switch (position)
             {
                 case 0:
-                    holder.Photo.setImageResource(R.drawable.kid_3) ;
+                    holder.Photo.setImageResource(R.drawable.kid_8) ;
                     break;
                 case 1:
-                    holder.Photo.setImageResource(R.drawable.kid_1);
+                    holder.Photo.setImageResource(R.drawable.kid_9);
                     break;
                 case 2:
-                    holder.Photo.setImageResource(R.drawable.kid_4);
+                    holder.Photo.setImageResource(R.drawable.kid_12);
                     break;
                 case 3:
-                    holder.Photo.setImageResource(R.drawable.kid_5);
+                    holder.Photo.setImageResource(R.drawable.kid_11);
                     break;
                 case 4:
-                    holder.Photo.setImageResource(R.drawable.kid_2);
-                    break;
-                case 5:
-                    holder.Photo.setImageResource(R.drawable.kid_6);
-                    break;
-                case 6:
-                    holder.Photo.setImageResource(R.drawable.kid_7);
+                    holder.Photo.setImageResource(R.drawable.kid_10);
                     break;
             }
             return convertView;
@@ -168,6 +194,8 @@ public class ContactsFragment extends Fragment {
          */
         private class ViewHolder {
             public TextView name;
+            public TextView country;
+            public TextView state;
             public ImageView Photo;
         }
 
