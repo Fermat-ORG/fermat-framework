@@ -131,7 +131,7 @@ However, on the other hand the core algorithms and mathematics inside those wall
 
 Currently wallet providers can barely identify the different segments of the potential user population and they target almost exclusively the tech-savvy segment even if in their minds they are delivering a user friendly product to everyday people too. 
 
-The problem to be solved is how we can save everybody a few years and instead of evolving from where we are now to that future without replicating the same universal technology again and again for every single segmented wallet. 
+The problem to be solved is how we can save everybody a few years and evolve from where we are now to that future without having to replicate the same universal technology again and again for every single segmented wallet. 
 
 #### Solution:
 
