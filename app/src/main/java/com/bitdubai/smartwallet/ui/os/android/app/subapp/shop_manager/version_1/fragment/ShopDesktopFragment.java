@@ -67,7 +67,7 @@ public class ShopDesktopFragment extends Fragment {
         String[] shop_names =
                 {"Girls' wallet",
                         "Boys' wallet",
-                        "My donuts Shop",
+                        "My Donuts Shop",
                         "Youngs' wallet",
                         "Boca Juniors' wallet",
                         "Carrefour's wallet",

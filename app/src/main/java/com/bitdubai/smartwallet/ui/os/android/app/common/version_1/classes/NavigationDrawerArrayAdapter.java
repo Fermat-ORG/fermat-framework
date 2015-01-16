@@ -9,8 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
-
-
+import com.bitdubai.smartwallet.ui.os.android.app.shell.version_1.activity.DesktopActivity;
 
 
 public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
@@ -73,7 +72,11 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
         {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
+            rowView = inflater.inflate(R.layout.wallet_framework_activity_framework_navigation_drawer_row_layout, parent, false);
+            TextView textView = (TextView) rowView.findViewById(R.id.label);
+            textView.setTypeface(MyApplication.getDefaultTypeface(), 1);
+            ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
+            textView.setText(values[position]);
             switch (MyApplication.getActivityId())
             {
                 case "DesktopActivity":
@@ -87,14 +90,9 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                     break;
                 default:
                     rowView = inflater.inflate(R.layout.wallet_framework_activity_framework_navigation_drawer_row_layout, parent, false);
+                    break;
 
             }
-            TextView textView = (TextView) rowView.findViewById(R.id.label);
-
-            textView.setTypeface(MyApplication.getDefaultTypeface(), 1);
-
-            ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
-            textView.setText(values[position]);
 
             switch (position)
             {
@@ -129,6 +127,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                     imageView.setImageResource(R.drawable.ic_action_exit);
                     break;
             }
+
         }
         return rowView;
     }

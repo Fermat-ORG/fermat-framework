@@ -8,19 +8,17 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
-import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.MyApplication;
 
-public class ProfileCardFront extends Fragment {
+public class ProfileCardBackFragment extends Fragment {
 
     private static final String ARG_POSITION = "position";
 
     private int position;
 
-    public static ProfileCardFront newInstance(int position) {
-        ProfileCardFront f = new ProfileCardFront();
+    public static ProfileCardBackFragment newInstance(int position) {
+        ProfileCardBackFragment f = new ProfileCardBackFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -37,12 +35,8 @@ public class ProfileCardFront extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view;
-        TextView name;
-        view = inflater.inflate(R.layout.wallets_kids_fragment_profile_card_front, container, false); //Contains empty RelativeLayout
 
-        name = (TextView) view.findViewById(R.id.user_name);
-        name.setTypeface(MyApplication.getDefaultTypeface());
-        name.setText("Johnny");
+        view = inflater.inflate(R.layout.wallets_kids_fragment_profile_card_back, container, false); //Contains empty RelativeLayout
         return view;
     }
 
