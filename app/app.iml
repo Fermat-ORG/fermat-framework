@@ -17,12 +17,12 @@
         <option name="ALLOW_USER_CONFIGURATION" value="false" />
         <option name="MANIFEST_FILE_RELATIVE_PATH" value="/src/main/AndroidManifest.xml" />
         <option name="RES_FOLDER_RELATIVE_PATH" value="/src/main/structured_res/os/android/app/shell/version_1" />
-        <option name="RES_FOLDERS_RELATIVE_PATH" value="file://$MODULE_DIR$/src/main/structured_res/os/android/app/shell/version_1;file://$MODULE_DIR$/src/main/structured_res/os/android/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1;file://$MODULE_DIR$/src/main/structured_res/os/android/app/subapp/shop_manager/version_1;file://$MODULE_DIR$/src/main/structured_res/os/android/app/subapp/shop/version_1;file://$MODULE_DIR$/src/main/structured_res/os/android/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/kids/sub_segment/all/developer/bitdubai/version_1;file://$MODULE_DIR$/src/main/res;file://$MODULE_DIR$/src/main/structured_res/os/android/app/subapp/wallet_runtime/wallet_framework/version_1;file://$MODULE_DIR$/src/main/structured_res/os/android/app/subapp/wallet_store/version_1;file://$MODULE_DIR$/src/main/structured_res/os/android/app/subapp/wallet_manager/version_1" />
+        <option name="RES_FOLDERS_RELATIVE_PATH" value="file://$MODULE_DIR$/src/main/structured_res/os/android/app/subapp/shop_manager/version_1;file://$MODULE_DIR$/src/main/structured_res/os/android/app/subapp/wallet_runtime/wallet_framework/version_1;file://$MODULE_DIR$/src/main/res;file://$MODULE_DIR$/src/main/structured_res/os/android/app/subapp/wallet_manager/version_1;file://$MODULE_DIR$/src/main/structured_res/os/android/app/subapp/wallet_store/version_1;file://$MODULE_DIR$/src/main/structured_res/os/android/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/kids/sub_segment/all/developer/bitdubai/version_1;file://$MODULE_DIR$/src/main/structured_res/os/android/app/subapp/shop/version_1;file://$MODULE_DIR$/src/main/structured_res/os/android/app/shell/version_1;file://$MODULE_DIR$/src/main/structured_res/os/android/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1" />
         <option name="ASSETS_FOLDER_RELATIVE_PATH" value="/src/main/assets" />
       </configuration>
     </facet>
   </component>
-  <component name="NewModuleRootManager" inherit-compiler-output="true">
+  <component name="NewModuleRootManager" inherit-compiler-output="false">
     <output url="file://$MODULE_DIR$/build/intermediates/classes/debug" />
     <exclude-output />
     <content url="file://$MODULE_DIR$">
@@ -98,3 +98,4 @@
     <orderEntry type="library" exported="" name="play-services-6.5.87" level="project" />
   </component>
 </module>
+

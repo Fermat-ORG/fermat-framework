@@ -48,26 +48,66 @@ public class CommunityFragment extends Fragment {
                 "Debra",
                 "Connor",
                 "Barbara",
-                "Angela"};
+                "Angela",
+                "Aaron",
+                "Sophie",
+                "Megan",
+                "Catalina",
+                "Robin",
+                "Mia",
+                "Blue",
+                "Katrina",
+                "Adam",
+                "Paul"
+
+
+
+
+        };
         String[] state = {
                 "NY",
                 "NY",
                 "NY",
                 "NY",
-                "NY"};
+                "NY",
+                "NY",
+                "NY",
+                "NY",
+                "NY",
+                "NY",
+                "NY",
+                "NY",
+                "NY",
+                "NY"
+        };
         String[] country = {
                 "USA",
                 "USA",
                 "USA",
                 "USA",
-                "USA"};
+                "USA",
+                "USA",
+                "USA",
+                "USA",
+                "USA",
+                "USA",
+                "USA",
+                "USA",
+                "USA",
+                "USA",
+                "USA",
+                "USA",
+                "USA",
+                "USA",
+                "USA"
+        };
 
         if (mlist == null)
         {
 
             mlist = new ArrayList<App>();
 
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 13; i++) {
                 App item = new App();
                 item.Names = names[i];
                 item.States = state[i];
@@ -184,6 +224,30 @@ public class CommunityFragment extends Fragment {
                     break;
                 case 4:
                     holder.Photo.setImageResource(R.drawable.kid_10);
+                    break;
+                case 5:
+                    holder.Photo.setImageResource(R.drawable.kid_13);
+                    break;
+                case 6:
+                    holder.Photo.setImageResource(R.drawable.kid_14);
+                    break;
+                case 7:
+                    holder.Photo.setImageResource(R.drawable.kid_16);
+                    break;
+                case 8:
+                    holder.Photo.setImageResource(R.drawable.kid_17);
+                    break;
+                case 9:
+                    holder.Photo.setImageResource(R.drawable.kid_18);
+                    break;
+                case 10:
+                    holder.Photo.setImageResource(R.drawable.kid_19);
+                    break;
+                case 11:
+                    holder.Photo.setImageResource(R.drawable.kid_20);
+                    break;
+                case 12:
+                    holder.Photo.setImageResource(R.drawable.kid_21);
                     break;
             }
             return convertView;

@@ -86,7 +86,7 @@ public class UsdBalanceFragment extends Fragment {
                                 v.setTag(2);
                             }
                             else{
-                                imageTicket.setImageResource(R.drawable.ar_bill_1_b);
+                                imageTicket.setImageResource(R.drawable.usd_1_b);
                                 v.setTag(1);
                             }
                         }
@@ -112,7 +112,7 @@ public class UsdBalanceFragment extends Fragment {
                                 v.setTag(2);
                             }
                             else{
-                                imageTicket.setImageResource(R.drawable.ar_bill_5_b);
+                                imageTicket.setImageResource(R.drawable.usd_5_b);
                                 v.setTag(1);
                             }
                         }
@@ -138,7 +138,7 @@ public class UsdBalanceFragment extends Fragment {
                                 v.setTag(2);
                             }
                             else{
-                                imageTicket.setImageResource(R.drawable.ar_bill_10_b);
+                                imageTicket.setImageResource(R.drawable.usd_10_b);
                                 v.setTag(1);
                             }
                         }
@@ -164,7 +164,7 @@ public class UsdBalanceFragment extends Fragment {
                                         v.setTag(2);
                                     }
                                     else{
-                                        imagen1.setImageResource(R.drawable.ar_bill_5_b);
+                                        imagen1.setImageResource(R.drawable.usd_5_b);
                                         v.setTag(1);
                                     }
                                 }
@@ -188,7 +188,7 @@ public class UsdBalanceFragment extends Fragment {
                                         v.setTag(2);
                                     }
                                     else{
-                                        imagen2.setImageResource(R.drawable.ar_bill_5_b);
+                                        imagen2.setImageResource(R.drawable.usd_5_b);
                                         v.setTag(1);
                                     }
                                 }
@@ -213,7 +213,7 @@ public class UsdBalanceFragment extends Fragment {
                                 v.setTag(2);
                             }
                             else{
-                                imageTicket.setImageResource(R.drawable.ar_bill_2_b);
+                                imageTicket.setImageResource(R.drawable.usd_20_b);
                                 v.setTag(1);
                             }
                         }
@@ -240,7 +240,7 @@ public class UsdBalanceFragment extends Fragment {
                                         v.setTag(2);
                                     }
                                     else{
-                                        imagen1.setImageResource(R.drawable.ar_bill_10_b);
+                                        imagen1.setImageResource(R.drawable.usd_10_b);
                                         v.setTag(1);
                                     }
                                 }
@@ -264,7 +264,7 @@ public class UsdBalanceFragment extends Fragment {
                                         v.setTag(2);
                                     }
                                     else{
-                                        imagen2.setImageResource(R.drawable.ar_bill_10_b);
+                                        imagen2.setImageResource(R.drawable.usd_10_b);
                                         v.setTag(1);
                                     }
                                 }
@@ -289,7 +289,7 @@ public class UsdBalanceFragment extends Fragment {
                                 v.setTag(2);
                             }
                             else{
-                                imageTicket.setImageResource(R.drawable.ar_bill_100_b);
+                                imageTicket.setImageResource(R.drawable.usd_100_b);
                                 v.setTag(1);
                             }
                         }
@@ -315,7 +315,7 @@ public class UsdBalanceFragment extends Fragment {
                                         v.setTag(2);
                                     }
                                     else{
-                                        imagen1.setImageResource(R.drawable.ar_bill_50_b);
+                                        imagen1.setImageResource(R.drawable.usd_50_b);
                                         v.setTag(1);
                                     }
                                 }
@@ -339,7 +339,7 @@ public class UsdBalanceFragment extends Fragment {
                                         v.setTag(2);
                                     }
                                     else{
-                                        imagen2.setImageResource(R.drawable.ar_bill_50_b);
+                                        imagen2.setImageResource(R.drawable.usd_50_b);
                                         v.setTag(1);
                                     }
                                 }
