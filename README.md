@@ -51,7 +51,7 @@ The problems listed here are in order of importance. If you don't agree with the
 
 #### Description:
 
-Regular pleople are reluctant to buy and spend bitcoins because they don't want to spend them knowing that they lose on the transaction and neither do they want to keep track of the prices when buying or spending them.
+Regular people are reluctant to buy and spend bitcoins because they don't want to spend them knowing that they lose on the transaction and neither do they want to keep track of the prices when buying or spending them.
 
 #### Example: 
 
