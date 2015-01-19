@@ -274,6 +274,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.os.android.app.shell.version_1.activity.DesktopActivity" />
         </activity>
+        <activity android:name=".ui.os.android.app.subapp.wallet_factory.version_1.activity.FactoryActivity"
+            android:label="Wallet Factory">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.os.android.app.shell.version_1.activity.DesktopActivity" />
+        </activity>
         <activity
             android:name=".ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.RequestsReceivedActivity"
             android:label="@string/title_activity_requests_received"

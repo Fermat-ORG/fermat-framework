@@ -92,7 +92,7 @@ public class TicketFragment  extends DialogFragment  {
                     public void onClick(View v) {
 
                         if ((Integer) v.getTag() == 1) {
-                            imageTicket.setImageResource(R.drawable.ar_bill_1_b );
+                            imageTicket.setImageResource(R.drawable.usd_1_b );
                             v.setTag(2);
                         } else {
                             imageTicket.setImageResource(R.drawable.usd_1);
@@ -111,7 +111,7 @@ public class TicketFragment  extends DialogFragment  {
                     public void onClick(View v) {
 
                         if ((Integer) v.getTag() == 1) {
-                            imageTicket.setImageResource(R.drawable.ar_bill_5_b );
+                            imageTicket.setImageResource(R.drawable.usd_5_b);
                             v.setTag(2);
                         } else {
                             imageTicket.setImageResource(R.drawable.usd_5);
@@ -132,7 +132,7 @@ public class TicketFragment  extends DialogFragment  {
                             imageTicket.setImageResource(R.drawable.usd_10);
                             v.setTag(2);
                         } else {
-                            imageTicket.setImageResource(R.drawable.ar_bill_10_b);
+                            imageTicket.setImageResource(R.drawable.usd_10_b);
                             v.setTag(1);
                         }
                     }
@@ -147,7 +147,7 @@ public class TicketFragment  extends DialogFragment  {
                     public void onClick(View v) {
 
                         if ((Integer) v.getTag() == 1) {
-                            imageTicket.setImageResource(R.drawable.ar_bill_2_b );
+                            imageTicket.setImageResource(R.drawable.usd_20_b);
                             v.setTag(2);
                         } else {
                             imageTicket.setImageResource(R.drawable.usd_20);
@@ -166,7 +166,7 @@ public class TicketFragment  extends DialogFragment  {
                     public void onClick(View v) {
 
                         if ((Integer) v.getTag() == 1) {
-                            imageTicket.setImageResource(R.drawable.ar_bill_100_b);
+                            imageTicket.setImageResource(R.drawable.usd_100_b);
                             v.setTag(2);
                         } else {
                             imageTicket.setImageResource(R.drawable.usd_100);

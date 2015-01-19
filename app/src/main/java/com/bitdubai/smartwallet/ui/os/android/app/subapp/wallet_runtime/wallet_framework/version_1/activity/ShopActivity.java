@@ -31,7 +31,7 @@ import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.Pager
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyLayoutInflaterFactory;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.AccountDetailFiltersFragment;
 
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.HistoryFragment;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ShopHistoryFragment;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ReviewsFragment;
 
 
@@ -318,7 +318,7 @@ public class ShopActivity extends FragmentActivity
                     currentFragment =  ShopChatFragment.newInstance(position);
                     break;
                 case 4:
-                    currentFragment =  HistoryFragment.newInstance(position);
+                    currentFragment =  ShopHistoryFragment.newInstance(position);
                     break;
                 case 5:
                     currentFragment =  ShopMapFragment.newInstance(position);

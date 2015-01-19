@@ -7,7 +7,7 @@ In order to accomplish this goal a prioritized list of the problems/barriers tha
 
 As of today two interconnected platforms constitute the system: a Crypto Wallet Platform and a Crypto Banking Platform.
 
-The current status of the project is moving towards a non working prototype. The architecture of the system has already been established.
+The current status of the project is moving towards a non working prototype of the wallet platform. The architecture of the system has already been established. The first version of the wallet platform featuring a Kids wallet is scheduled to be available to the general public by March 2015.
 
 
 # Crypto Wallet Platform
@@ -26,17 +26,18 @@ While being bootstrapped the ownership of the project remains within its contrib
 
 ## Contributors
 
-updated 13 Jan 15
+updated 19 Jan 15
 
 | Name (paid by)  | Expertise | Hours Contributed  | Project Shares |
 | ------------- | ------------- | ------------- | ------------- |
-| Luis Fernando Molina  | 10  | 1,263  | 12,630  |
+| Luis Fernando Molina  | 10  | 1,313  | 13,130  |
 | Guillermo Villanueva  | 10  | 240  | 2,400  |
-| Loui Molina  | 1  | 222  | 222  |
+| Loui Molina  | 1  | 254  | 254  |
 | Andrey Molina  | 1  | 15  | 15  |
+| Thais Molina  | 1  | 3  | 3  |
 | Hernan Calabrese  | 8  | 15  | 120  |
-| Eniko Jokai  | 10  | 28  | 280  |
-| Natalia Cortez (LFM)  | 5  | 100  | 500  |
+| Eniko Jokai  | 10  | 31  | 310  |
+| Natalia Cortez (LFM)  | 5  | 120  | 600  |
 | Damien Calvignac   | 7  | 10  | 70  |
 
 You can contribute with your own expertise and time or by hiring a developer that contributes code on your behalf. If you are interested in doing so send an email to contribution@bitdubai.com . 
@@ -50,7 +51,7 @@ The problems listed here are in order of importance. If you don't agree with the
 
 #### Description:
 
-Regular pleople are reluctant to buy and spend bitcoins because they don't want to spend them knowing that they lose on the transaction and neither do they want to keep track of the prices when buying or spending them.
+Regular people are reluctant to buy and spend bitcoins because they don't want to spend them knowing that they lose on the transaction and neither do they want to keep track of the prices when buying or spending them.
 
 #### Example: 
 
@@ -236,6 +237,10 @@ Most recently a few well-funded startups have started spending money on marketin
 
 ![](https://github.com/bitDubai/smart-wallet/blob/master/proto/wallet_manager_1.png)
 
+### Shop Manager
+
+![](https://github.com/bitDubai/smart-wallet/blob/master/proto/shop_manager_1.png)
+
 ### Wallet Store
 
 ![](https://github.com/bitDubai/smart-wallet/blob/master/proto/wallet_store_1.png)
@@ -247,6 +252,8 @@ Most recently a few well-funded startups have started spending money on marketin
 
 ![](https://github.com/bitDubai/smart-wallet/blob/master/proto/wallet_kids_1.png)
 ![](https://github.com/bitDubai/smart-wallet/blob/master/proto/wallet_kids_2.png)
+![](https://github.com/bitDubai/smart-wallet/blob/master/proto/wallet_kids_3.png)
+![](https://github.com/bitDubai/smart-wallet/blob/master/proto/wallet_kids_4.png)
 
 ### Ladies Wallet 
 
