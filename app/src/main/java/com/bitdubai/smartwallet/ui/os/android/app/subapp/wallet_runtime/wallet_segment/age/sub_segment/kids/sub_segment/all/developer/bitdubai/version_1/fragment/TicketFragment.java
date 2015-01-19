@@ -9,14 +9,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import android.widget.RelativeLayout;
+import android.graphics.drawable.Drawable;
 import android.view.View.OnTouchListener;
 
 import com.bitdubai.smartwallet.R;
+import com.bitdubai.smartwallet.platform.layer._9_module.wallet_factory.version_1.Resource;
 import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.MyApplication;
 import android.view.GestureDetector;
 import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
+
+import java.io.File;
+import  	android.os.Environment;
 import android.content.Intent;
 import android.net.Uri;
 
@@ -80,6 +83,7 @@ public class TicketFragment  extends DialogFragment  {
 
         });
 
+        String ticketId = MyApplication.getTicketId();
         switch ( MyApplication.getTicketId()) {
             case "usd_1":
                 imageTicket.setImageResource(R.drawable.usd_1);
@@ -195,8 +199,11 @@ public class TicketFragment  extends DialogFragment  {
         public boolean onDoubleTap(MotionEvent e) {
 
             //  "Double Click open external Editor";
+             //  String imagePath = "android.resource://" + getResources().getResourcePackageName(R.drawable.usd_1) + "/drawable-xxhdpi/usd_1.jpg";
+            String imagePath ="file://" +  getResources().getResourcePackageName(R.drawable.usd_1) + "/structured_res/drawable-xxhdpi/usd_1.jpg";
             Intent editIntent = new Intent(Intent.ACTION_EDIT);
-            editIntent.setDataAndType(Uri.parse("file://" + "smart-wallet/app/src/main/structured_res/os/android/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/kids/sub_segment/all/developer/bitdubai/version_1/drawable-xxhdpi/usd_1.jpg"), "image/*");
+            //getResources().getIdentifier("ic_launcher", "drawable", getPackageName());
+           editIntent.setDataAndType(Uri.parse(imagePath), "image/*");
             editIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             startActivity(Intent.createChooser(editIntent, null));
 

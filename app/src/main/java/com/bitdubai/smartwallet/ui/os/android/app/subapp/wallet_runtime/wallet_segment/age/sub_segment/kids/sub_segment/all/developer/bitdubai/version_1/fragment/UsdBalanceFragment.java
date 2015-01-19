@@ -4,6 +4,7 @@ package com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_
  * Created by ciencias on 25.11.14.
  */
 
+import android.content.ClipData;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
@@ -61,7 +62,7 @@ public class UsdBalanceFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        tickets = new String[]{"usd_5", "usd_10", "usd_20", "usd_100", "usd_1", "usd_5", "usd_5", "usd_10", "usd_20"};
+        tickets = new String[]{"usd_1", "usd_20","usd_5", "usd_10","usd_10", "usd_20", "usd_100", "usd_1", "usd_5", "usd_5", "usd_10", "usd_20"};
 
         position = getArguments().getInt(ARG_POSITION);
     }
@@ -79,19 +80,23 @@ public class UsdBalanceFragment extends Fragment {
             ViewGroup.MarginLayoutParams marginParams = new ViewGroup.MarginLayoutParams( WRAP_CONTENT,
                     WRAP_CONTENT);
             int left_margin = 25;
-            int top_margin = 20;
+            int top_margin = 25;
             //int right_margin = 20;
             //int bottom_margin = 20;
 
-            if(i != 0) {
-                marginParams.setMargins(left_margin + (2* i), top_margin * + (2* i), 20, 20);
-            }
+            if(i > 5)
+                marginParams.setMargins(100 + (2* i), (20* i), 20, 20);
+
+            else
+                marginParams.setMargins(25 + (2* i), top_margin * + (2* i), 20, 20);
+
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(marginParams);
             imageTicket.setLayoutParams(layoutParams);
 
 
             switch (tickets[i]) {
                 case "usd_1":
+                    MyApplication.setTicketId( "usd_1");
                     imageTicket.setTag(1);
                     imageTicket.setImageResource(R.drawable.usd_1);
 
@@ -109,17 +114,10 @@ public class UsdBalanceFragment extends Fragment {
                         }
 
                     });
-                    imageTicket.setOnLongClickListener(new OnLongClickListener() {
 
-                        @Override
-                        public boolean onLongClick(View v) {
-
-                            MyApplication.setTicketId( "usd_1");
-                            return false;
-                        }
-                    });
                     break;
                 case "usd_5":
+                    MyApplication.setTicketId( "usd_5");
                     imageTicket.setTag(5);
                     imageTicket.setImageResource(R.drawable.usd_5);
                     imageTicket.setOnClickListener(new OnClickListener() {
@@ -136,17 +134,10 @@ public class UsdBalanceFragment extends Fragment {
                         }
 
                     });
-                    imageTicket.setOnLongClickListener(new OnLongClickListener() {
 
-                        @Override
-                        public boolean onLongClick(View v) {
-
-                            MyApplication.setTicketId( "usd_5");
-                            return false;
-                        }
-                    });
                     break;
                 case "usd_10":
+                    MyApplication.setTicketId( "usd_10");
                     imageTicket.setTag(10);
                     imageTicket.setImageResource(R.drawable.usd_10);
                     imageTicket.setOnClickListener(new OnClickListener() {
@@ -163,69 +154,10 @@ public class UsdBalanceFragment extends Fragment {
                         }
 
                     });
-                    imageTicket.setOnLongClickListener(new OnLongClickListener() {
 
-                        @Override
-                        public boolean onLongClick(View v) {
-                            MyApplication.setTicketId( "usd_10");
-                            //add two image and remove de current image
-                            imageTicket.setVisibility(View.INVISIBLE);
-
-                            final ImageView imagen1= new ImageView(container.getContext());
-
-                            imagen1.setTag(5);
-                            imagen1.setImageResource(R.drawable.usd_5);
-                            imagen1.setOnClickListener(new OnClickListener() {
-                                public void onClick(View v) {
-
-                                    if ((Integer)v.getTag() == 5) {
-                                        imagen1.setImageResource(R.drawable.ar_bill_5_b );
-                                        v.setTag(52);
-                                    }
-                                    else{
-                                        imagen1.setImageResource(R.drawable.usd_5);
-                                        v.setTag(5);
-                                    }
-                                }
-
-
-                            });
-
-
-                            imagen1.setOnTouchListener(new theTouchListener());
-                            marco.addView(imagen1);
-
-                            final ImageView imagen2= new ImageView(container.getContext());
-                            //Señalamos la imagen a mostrar
-
-                            imagen2.setTag(1);
-                            imagen2.setImageResource(R.drawable.usd_5);
-                            imagen2.setOnClickListener(new OnClickListener() {
-                                public void onClick(View v) {
-
-                                    if ((Integer)v.getTag() == 5) {
-                                        imagen2.setImageResource(R.drawable.ar_bill_5_b);
-                                        v.setTag(52);
-                                    }
-                                    else{
-                                        imagen2.setImageResource(R.drawable.usd_5);
-                                        v.setTag(5);
-                                    }
-                                }
-
-
-                            });
-
-
-
-                            imagen2.setOnTouchListener(new theTouchListener());
-                            marco.addView(imagen2);
-
-                            return false;
-                        }
-                    });
                     break;
                 case "usd_20":
+                    MyApplication.setTicketId( "usd_20");
                     imageTicket.setTag(20);
                     imageTicket.setImageResource(R.drawable.usd_20);
                     imageTicket.setOnClickListener(new OnClickListener() {
@@ -243,66 +175,10 @@ public class UsdBalanceFragment extends Fragment {
 
                     });
 
-                    imageTicket.setOnLongClickListener(new OnLongClickListener() {
 
-                        @Override
-                        public boolean onLongClick(View v) {
-                            MyApplication.setTicketId( "usd_20");
-                            //add two image and remove de current image
-                            imageTicket.setVisibility(View.INVISIBLE);
-
-                            final ImageView imagen1= new ImageView(container.getContext());
-
-                            imagen1.setTag(10);
-                            imagen1.setImageResource(R.drawable.usd_10);
-                            imagen1.setOnClickListener(new OnClickListener() {
-                                public void onClick(View v) {
-
-                                    if ((Integer)v.getTag() == 10) {
-                                        imagen1.setImageResource(R.drawable.ar_bill_10_b );
-                                        v.setTag(102);
-                                    }
-                                    else{
-                                        imagen1.setImageResource(R.drawable.usd_10);
-                                        v.setTag(10);
-                                    }
-                                }
-
-
-                            });
-
-                            imagen1.setOnTouchListener(new theTouchListener());
-                            marco.addView(imagen1);
-
-                            final ImageView imagen2= new ImageView(container.getContext());
-                            //Señalamos la imagen a mostrar
-
-                            imagen2.setTag(10);
-                            imagen2.setImageResource(R.drawable.usd_10);
-                            imagen2.setOnClickListener(new OnClickListener() {
-                                public void onClick(View v) {
-
-                                    if ((Integer)v.getTag() == 10) {
-                                        imagen2.setImageResource(R.drawable.ar_bill_10_b);
-                                        v.setTag(102);
-                                    }
-                                    else{
-                                        imagen2.setImageResource(R.drawable.usd_10);
-                                        v.setTag(10);
-                                    }
-                                }
-
-
-                            });
-
-                            imagen2.setOnTouchListener(new theTouchListener());
-                            marco.addView(imagen2);
-
-                            return false;
-                        }
-                    });
                     break;
                 case "usd_100":
+                    MyApplication.setTicketId( "usd_100");
                     imageTicket.setTag(100);
                     imageTicket.setImageResource(R.drawable.usd_100);
                     imageTicket.setOnClickListener(new OnClickListener() {
@@ -319,74 +195,216 @@ public class UsdBalanceFragment extends Fragment {
                         }
 
                     });
-                    imageTicket.setOnLongClickListener(new OnLongClickListener() {
-
-                        @Override
-                        public boolean onLongClick(View v) {
-
-                            //add two image and remove de current image
-                            imageTicket.setVisibility(View.INVISIBLE);
-
-                            final ImageView imagen1= new ImageView(container.getContext());
-
-                            imagen1.setTag(50);
-                            imagen1.setImageResource(R.drawable.usd_50);
-                            imagen1.setOnClickListener(new OnClickListener() {
-                                public void onClick(View v) {
-
-                                    if ((Integer)v.getTag() == 50) {
-                                        imagen1.setImageResource(R.drawable.ar_bill_50_b);
-                                        v.setTag(502);
-                                    }
-                                    else{
-                                        imagen1.setImageResource(R.drawable.usd_50);
-                                        v.setTag(50);
-                                    }
-                                }
 
 
-                            });
-
-                            imagen1.setOnTouchListener(new theTouchListener());
-                            marco.addView(imagen1);
-
-                            final ImageView imagen2= new ImageView(container.getContext());
-                            //Señalamos la imagen a mostrar
-
-                            imagen2.setTag(50);
-                            imagen2.setImageResource(R.drawable.usd_50);
-                            imagen2.setOnClickListener(new OnClickListener() {
-                                public void onClick(View v) {
-
-                                    if ((Integer)v.getTag() == 50) {
-                                        imagen2.setImageResource(R.drawable.ar_bill_50_b);
-                                        v.setTag(502);
-                                    }
-                                    else{
-                                        imagen2.setImageResource(R.drawable.usd_50);
-                                        v.setTag(50);
-                                    }
-                                }
-
-
-                            });
-
-                            imagen2.setOnTouchListener(new theTouchListener());
-                            marco.addView(imagen2);
-
-                            return false;
-                        }
-                    });
                     break;
 
             }
-            MyApplication.setTicketId( "usd_10");
+            imageTicket.setOnLongClickListener(new theLongClickListener());
             imageTicket.setOnTouchListener(new theTouchListener());
             marco.addView(imageTicket);
         }
 
 
         return view;
+    }
+
+     private final class theLongClickListener implements OnLongClickListener {
+        @Override
+        public boolean onLongClick(View v) {
+
+            //add two image and remove de current image
+            ClipData clipData = ClipData.newPlainText("", "");
+
+            View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
+            //start the drag - contains the data to be dragged,
+            //   metadata for this data and callback for drawing shadow
+            v.startDrag(clipData, shadowBuilder, v, 0);
+//        we're dragging the shadow so make the view invisible
+
+            final ImageView imagen1;
+            final ImageView imagen2;
+            RelativeLayout.LayoutParams layoutParams;
+
+
+            ViewGroup.MarginLayoutParams marginParams = new ViewGroup.MarginLayoutParams( WRAP_CONTENT,
+                    WRAP_CONTENT);
+
+            switch ((Integer)v.getTag()) {
+                case 1:
+
+                    break;
+                case 5:
+
+                    break;
+                case 10:
+                    v.setVisibility(View.INVISIBLE);
+                    imagen1= new ImageView(v.getContext());
+
+                    imagen1.setTag(5);
+                    imagen1.setImageResource(R.drawable.usd_5);
+                    imagen1.setOnClickListener(new OnClickListener() {
+                        public void onClick(View v) {
+
+                            if ((Integer)v.getTag() == 5) {
+                                imagen1.setImageResource(R.drawable.ar_bill_5_b);
+                                v.setTag(52);
+                            }
+                            else{
+                                imagen1.setImageResource(R.drawable.usd_5);
+                                v.setTag(50);
+                            }
+                        }
+
+
+                    });
+                    //imagen1.setOnLongClickListener(this);
+                    marginParams.setMargins(100, 100, 20, 20);
+                    layoutParams = new RelativeLayout.LayoutParams(marginParams);
+                    imagen1.setLayoutParams(layoutParams);
+                    imagen1.setOnTouchListener(new theTouchListener());
+                    marco.addView(imagen1);
+
+                    imagen2= new ImageView(v.getContext());
+                    //Señalamos la imagen a mostrar
+
+                    imagen2.setTag(5);
+                    imagen2.setImageResource(R.drawable.usd_5);
+                    imagen2.setOnClickListener(new OnClickListener() {
+                        public void onClick(View v) {
+
+                            if ((Integer)v.getTag() == 5) {
+                                imagen2.setImageResource(R.drawable.ar_bill_5_b);
+                                v.setTag(52);
+                            }
+                            else{
+                                imagen2.setImageResource(R.drawable.usd_5);
+                                v.setTag(5);
+                            }
+                        }
+
+
+                    });
+                    // imagen2.setOnLongClickListener(this);
+                    marginParams.setMargins(110, 110, 20, 20);
+                    layoutParams = new RelativeLayout.LayoutParams(marginParams);
+                    imagen2.setLayoutParams(layoutParams);
+                    imagen2.setOnTouchListener(new theTouchListener());
+                    marco.addView(imagen2);
+
+                    break;
+                case 20:
+                    v.setVisibility(View.INVISIBLE);
+                    imagen1= new ImageView(v.getContext());
+
+                    imagen1.setTag(10);
+                    imagen1.setImageResource(R.drawable.usd_10);
+                    imagen1.setOnClickListener(new OnClickListener() {
+                        public void onClick(View v) {
+
+                            if ((Integer)v.getTag() == 10) {
+                                imagen1.setImageResource(R.drawable.ar_bill_10_b);
+                                v.setTag(102);
+                            }
+                            else{
+                                imagen1.setImageResource(R.drawable.usd_10);
+                                v.setTag(10);
+                            }
+                        }
+
+
+                    });
+                    imagen1.setOnLongClickListener(new theLongClickListener());
+                    imagen1.setOnTouchListener(new theTouchListener());
+                    marco.addView(imagen1);
+
+                    imagen2= new ImageView(v.getContext());
+                    //Señalamos la imagen a mostrar
+
+                    imagen2.setTag(10);
+                    imagen2.setImageResource(R.drawable.usd_10);
+                    imagen2.setOnClickListener(new OnClickListener() {
+                        public void onClick(View v) {
+
+                            if ((Integer)v.getTag() == 10) {
+                                imagen2.setImageResource(R.drawable.ar_bill_10_b);
+                                v.setTag(102);
+                            }
+                            else{
+                                imagen2.setImageResource(R.drawable.usd_10);
+                                v.setTag(10);
+                            }
+                        }
+
+
+                    });
+                    imagen2.setOnLongClickListener(new theLongClickListener());
+                    imagen2.setOnTouchListener(new theTouchListener());
+                    marco.addView(imagen2);
+                    break;
+                case 50:
+
+                    break;
+                case 100:
+                    v.setVisibility(View.INVISIBLE);
+                    imagen1= new ImageView(v.getContext());
+
+                    imagen1.setTag(50);
+                    imagen1.setImageResource(R.drawable.usd_50);
+                    imagen1.setOnClickListener(new OnClickListener() {
+                        public void onClick(View v) {
+
+                            if ((Integer)v.getTag() == 50) {
+                                imagen1.setImageResource(R.drawable.ar_bill_50_b);
+                                v.setTag(102);
+                            }
+                            else{
+                                imagen1.setImageResource(R.drawable.usd_50);
+                                v.setTag(10);
+                            }
+                        }
+
+
+                    });
+                    // imagen1.setOnLongClickListener(this);
+                    imagen1.setOnTouchListener(new theTouchListener());
+                    marginParams.setMargins(100, 100, 20, 20);
+                    layoutParams = new RelativeLayout.LayoutParams(marginParams);
+                    imagen1.setLayoutParams(layoutParams);
+
+                    marco.addView(imagen1);
+
+                    imagen2= new ImageView(v.getContext());
+                    //Señalamos la imagen a mostrar
+
+                    imagen2.setTag(50);
+                    imagen2.setImageResource(R.drawable.usd_50);
+                    imagen2.setOnClickListener(new OnClickListener() {
+                        public void onClick(View v) {
+
+                            if ((Integer)v.getTag() == 50) {
+                                imagen2.setImageResource(R.drawable.ar_bill_50_b);
+                                v.setTag(502);
+                            }
+                            else{
+                                imagen2.setImageResource(R.drawable.usd_50);
+                                v.setTag(50);
+                            }
+                        }
+
+
+                    });
+                    // imagen2.setOnLongClickListener(this);
+                    marginParams.setMargins(120, 100, 20, 20);
+                    layoutParams = new RelativeLayout.LayoutParams(marginParams);
+                    imagen2.setLayoutParams(layoutParams);
+                    imagen2.setOnTouchListener(new theTouchListener());
+                    marco.addView(imagen2);
+                    break;
+            }
+
+            return false;
+        }
     }
 
     public static boolean esPar(int numero) {
@@ -398,8 +416,13 @@ public class UsdBalanceFragment extends Fragment {
         }
     }
 
+
+
+
     private final class theTouchListener implements OnTouchListener {
         public boolean onTouch(View view, MotionEvent event) {
+
+
             //Recogemos las coordenadas del dedo
             final int X = (int) event.getRawX();
             final int Y = (int) event.getRawY();
@@ -474,6 +497,24 @@ public class UsdBalanceFragment extends Fragment {
                                 MyApplication.setTicketId( "usd_20");
                                 break;
                             case 50:
+                                MyApplication.setTicketId( "usd_50");
+                                break;
+                            case 12:
+                                MyApplication.setTicketId( "usd_1");
+                                break;
+                            case 102:
+                                MyApplication.setTicketId( "usd_10");
+                                break;
+                            case 52:
+                                MyApplication.setTicketId( "usd_5");
+                                break;
+                            case 1002:
+                                MyApplication.setTicketId( "usd_100");
+                                break;
+                            case 202:
+                                MyApplication.setTicketId( "usd_20");
+                                break;
+                            case 502:
                                 MyApplication.setTicketId( "usd_50");
                                 break;
                         }
