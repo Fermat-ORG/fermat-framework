@@ -7,7 +7,7 @@ In order to accomplish this goal a prioritized list of the problems/barriers tha
 
 As of today two interconnected platforms constitute the system: a Crypto Wallet Platform and a Crypto Banking Platform.
 
-The current status of the project is moving towards a non working prototype of the wallet platform. The architecture of the system has already been established. The first version of the wallet platform featuring a Kids wallet is schedulled to be available to the general public by March 2015.
+The current status of the project is moving towards a non working prototype of the wallet platform. The architecture of the system has already been established. The first version of the wallet platform featuring a Kids wallet is scheduled to be available to the general public by March 2015.
 
 
 # Crypto Wallet Platform
