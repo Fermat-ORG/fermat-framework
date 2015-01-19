@@ -25,6 +25,7 @@ import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.MyApp
 import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.fragment.NavigationDrawerFragment;
 import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.PagerSlidingTabStrip;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyLayoutInflaterFactory;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.kids.sub_segment.all.developer.bitdubai.version_1.fragment.ProfileCardBackFragment;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.kids.sub_segment.all.developer.bitdubai.version_1.fragment.ProfileCardFrontFragment;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.DiscountsFragment;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.HomeFragment;
@@ -136,6 +137,8 @@ public class FrameworkActivity extends FragmentActivity
         return;
 
     }
+
+
 
     public void onSendIconClicked(View v) {
 

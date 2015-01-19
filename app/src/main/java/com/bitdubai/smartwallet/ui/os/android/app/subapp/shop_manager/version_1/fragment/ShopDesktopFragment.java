@@ -206,12 +206,8 @@ public class ShopDesktopFragment extends Fragment {
                 convertView = inflater.inflate(R.layout.shell_shop_desktop_fragment_grid_item, parent, false);
                 holder = new ViewHolder();
 
-
-
                 holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
                 holder.companyTextView = (TextView) convertView.findViewById(R.id.company_text_view);
-
-
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -292,8 +288,6 @@ public class ShopDesktopFragment extends Fragment {
                     holder.imageView.setTag("11");
                     break;
             }
-
-
             return convertView;
         }
 
@@ -302,11 +296,8 @@ public class ShopDesktopFragment extends Fragment {
          */
         private class ViewHolder {
 
-
-
             public ImageView imageView;
             public TextView companyTextView;
-
 
         }
 

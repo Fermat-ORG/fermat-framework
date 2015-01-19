@@ -73,10 +73,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             rowView = inflater.inflate(R.layout.wallet_framework_activity_framework_navigation_drawer_row_layout, parent, false);
-            TextView textView = (TextView) rowView.findViewById(R.id.label);
-            textView.setTypeface(MyApplication.getDefaultTypeface(), 1);
-            ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
-            textView.setText(values[position]);
+
             switch (MyApplication.getActivityId())
             {
                 case "DesktopActivity":
@@ -93,8 +90,34 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                     break;
 
             }
+            TextView textView = (TextView) rowView.findViewById(R.id.label);
+            textView.setTypeface(MyApplication.getDefaultTypeface(), 1);
+            ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
+            textView.setText(values[position]);
 
-            switch (position)
+            if(MyApplication.getActivityId()=="DesktopActivity"){
+
+                switch (position) {
+                    case 1:
+                        imageView.setImageResource(R.drawable.ic_action_store);
+                        break;
+                    case 2:
+                        imageView.setImageResource(R.drawable.ic_action_wallet);
+                        break;
+                    case 3:
+                        imageView.setImageResource(R.drawable.ic_action_factory);
+                        break;
+                    case 4:
+                        imageView.setImageResource(R.drawable.ic_action_wallet_published);
+                        break;
+                    case 5:
+                        imageView.setImageResource(R.drawable.ic_action_exit);
+                        break;
+                }
+
+            }else{
+
+                switch (position)
             {
                 case 1:
                     imageView.setImageResource(R.drawable.ic_action_user);
@@ -126,6 +149,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                 case 10:
                     imageView.setImageResource(R.drawable.ic_action_exit);
                     break;
+            }
             }
 
         }

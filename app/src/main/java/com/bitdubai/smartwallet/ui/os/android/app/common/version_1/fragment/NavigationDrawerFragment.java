@@ -23,6 +23,7 @@ import android.widget.ListView;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.MyApplication;
 import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.NavigationDrawerArrayAdapter;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_factory.version_1.activity.FactoryActivity;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.ContactsActivity;
 
 /**
@@ -238,7 +239,14 @@ if(MyApplication.getActivityId()=="DesktopActivity")
         if (mCallbacks != null) {
             mCallbacks.onNavigationDrawerItemSelected(position);
         }
+        if(MyApplication.getActivityId()=="DesktopActivity") {
 
+            if (position == 3) {
+                Intent intent;
+                intent = new Intent(super.getActivity(), FactoryActivity.class);
+                startActivity(intent);
+            }
+        }
         if (position == 1)
         {
             Intent intent;
@@ -246,6 +254,7 @@ if(MyApplication.getActivityId()=="DesktopActivity")
 
             startActivity(intent);
         }
+
 /*
         if (position == 2)
         {
