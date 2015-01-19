@@ -111,7 +111,7 @@ Budapest is a capital city of a European country. It is not only difficult to fi
 
 ##### Proposed Functionality:
 
-* B2C paid advertisments.
+* B2C paid advertisements.
 
 
 
