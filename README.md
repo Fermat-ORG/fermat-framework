@@ -237,6 +237,10 @@ Most recently a few well-funded startups have started spending money on marketin
 
 ![](https://github.com/bitDubai/smart-wallet/blob/master/proto/wallet_manager_1.png)
 
+### Shop Manager
+
+![](https://github.com/bitDubai/smart-wallet/blob/master/proto/shop_manager_1.png)
+
 ### Wallet Store
 
 ![](https://github.com/bitDubai/smart-wallet/blob/master/proto/wallet_store_1.png)
@@ -248,6 +252,8 @@ Most recently a few well-funded startups have started spending money on marketin
 
 ![](https://github.com/bitDubai/smart-wallet/blob/master/proto/wallet_kids_1.png)
 ![](https://github.com/bitDubai/smart-wallet/blob/master/proto/wallet_kids_2.png)
+![](https://github.com/bitDubai/smart-wallet/blob/master/proto/wallet_kids_3.png)
+![](https://github.com/bitDubai/smart-wallet/blob/master/proto/wallet_kids_4.png)
 
 ### Ladies Wallet 
 
