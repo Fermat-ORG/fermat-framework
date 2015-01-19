@@ -120,34 +120,34 @@ public class DrawersFragment extends Fragment {
     public class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         private final LayoutInflater inf;
-        private String[] contacts;
-        private String[][] transactions;
+        private String[] item;
+        private String[][] drawer_item;
 
         public ExpandableListAdapter(String[] contacts, String[][] transactions) {
-            this.contacts = contacts;
-            this.transactions = transactions;
+            this.item = contacts;
+            this.drawer_item = transactions;
             inf = LayoutInflater.from(getActivity());
         }
 
 
         @Override
         public int getGroupCount() {
-            return contacts.length;
+            return item.length;
         }
 
         @Override
         public int getChildrenCount(int groupPosition) {
-            return transactions[groupPosition].length;
+            return drawer_item[groupPosition].length;
         }
 
         @Override
         public Object getGroup(int groupPosition) {
-            return contacts[groupPosition];
+            return item[groupPosition];
         }
 
         @Override
         public Object getChild(int groupPosition, int childPosition) {
-            return transactions[groupPosition][childPosition];
+            return drawer_item[groupPosition][childPosition];
         }
 
         @Override
