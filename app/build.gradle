@@ -16,6 +16,7 @@ android {
             res.srcDirs = ['src/main/structured_res/os/android/app/shell/version_1',
                            'src/main/structured_res/os/android/app/subapp/shop/version_1',
                            'src/main/structured_res/os/android/app/subapp/shop_manager/version_1',
+                           'src/main/structured_res/os/android/app/subapp/wallet_factory/version_1',
                            'src/main/structured_res/os/android/app/subapp/wallet_store/version_1',
                            'src/main/structured_res/os/android/app/subapp/wallet_manager/version_1',
                            'src/main/structured_res/os/android/app/subapp/wallet_runtime/wallet_framework/version_1',

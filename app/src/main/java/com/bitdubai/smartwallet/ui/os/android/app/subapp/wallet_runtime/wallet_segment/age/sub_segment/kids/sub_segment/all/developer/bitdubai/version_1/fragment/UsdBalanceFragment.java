@@ -99,7 +99,7 @@ public class UsdBalanceFragment extends Fragment {
                         public void onClick(View v) {
                             MyApplication.setTicketId( "usd_1");
                             if ((Integer)v.getTag() == 1) {
-                                imageTicket.setImageResource(R.drawable.ar_bill_1_b);
+                                imageTicket.setImageResource(R.drawable.usd_1_b);
                                 v.setTag(22);
                             }
                             else{
@@ -126,7 +126,7 @@ public class UsdBalanceFragment extends Fragment {
                         public void onClick(View v) {
                             MyApplication.setTicketId( "usd_5");
                             if ((Integer)v.getTag() == 5) {
-                                imageTicket.setImageResource(R.drawable.ar_bill_5_b);
+                                imageTicket.setImageResource(R.drawable.usd_5_b);
                                 v.setTag(52);
                             }
                             else{
@@ -153,7 +153,7 @@ public class UsdBalanceFragment extends Fragment {
                         public void onClick(View v) {
                             MyApplication.setTicketId( "usd_10");
                             if ((Integer)v.getTag() == 10) {
-                                imageTicket.setImageResource(R.drawable.ar_bill_10_b);
+                                imageTicket.setImageResource(R.drawable.usd_10_b);
                                 v.setTag(102);
                             }
                             else{
@@ -179,7 +179,7 @@ public class UsdBalanceFragment extends Fragment {
                                 public void onClick(View v) {
 
                                     if ((Integer)v.getTag() == 5) {
-                                        imagen1.setImageResource(R.drawable.ar_bill_5_b );
+                                        imagen1.setImageResource(R.drawable.usd_5_b);
                                         v.setTag(52);
                                     }
                                     else{
@@ -204,7 +204,7 @@ public class UsdBalanceFragment extends Fragment {
                                 public void onClick(View v) {
 
                                     if ((Integer)v.getTag() == 5) {
-                                        imagen2.setImageResource(R.drawable.ar_bill_5_b);
+                                        imagen2.setImageResource(R.drawable.usd_5_b);
                                         v.setTag(52);
                                     }
                                     else{
@@ -232,7 +232,7 @@ public class UsdBalanceFragment extends Fragment {
                         public void onClick(View v) {
                             MyApplication.setTicketId( "usd_20");
                             if ((Integer)v.getTag() == 20) {
-                                imageTicket.setImageResource(R.drawable.ar_bill_2_b);
+                                imageTicket.setImageResource(R.drawable.usd_20_b);
                                 v.setTag(202);
                             }
                             else{
@@ -259,7 +259,7 @@ public class UsdBalanceFragment extends Fragment {
                                 public void onClick(View v) {
 
                                     if ((Integer)v.getTag() == 10) {
-                                        imagen1.setImageResource(R.drawable.ar_bill_10_b );
+                                        imagen1.setImageResource(R.drawable.usd_10_b );
                                         v.setTag(102);
                                     }
                                     else{
@@ -283,7 +283,7 @@ public class UsdBalanceFragment extends Fragment {
                                 public void onClick(View v) {
 
                                     if ((Integer)v.getTag() == 10) {
-                                        imagen2.setImageResource(R.drawable.ar_bill_10_b);
+                                        imagen2.setImageResource(R.drawable.usd_10_b);
                                         v.setTag(102);
                                     }
                                     else{
@@ -309,7 +309,7 @@ public class UsdBalanceFragment extends Fragment {
                         public void onClick(View v) {
 
                             if ((Integer)v.getTag() == 100) {
-                                imageTicket.setImageResource(R.drawable.ar_bill_100_b );
+                                imageTicket.setImageResource(R.drawable.usd_100_b );
                                 v.setTag(1002);
                             }
                             else{
@@ -335,7 +335,7 @@ public class UsdBalanceFragment extends Fragment {
                                 public void onClick(View v) {
 
                                     if ((Integer)v.getTag() == 50) {
-                                        imagen1.setImageResource(R.drawable.ar_bill_50_b);
+                                        imagen1.setImageResource(R.drawable.usd_50_b);
                                         v.setTag(502);
                                     }
                                     else{
@@ -359,7 +359,7 @@ public class UsdBalanceFragment extends Fragment {
                                 public void onClick(View v) {
 
                                     if ((Integer)v.getTag() == 50) {
-                                        imagen2.setImageResource(R.drawable.ar_bill_50_b);
+                                        imagen2.setImageResource(R.drawable.usd_50_b);
                                         v.setTag(502);
                                     }
                                     else{

@@ -3,6 +3,7 @@ package com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_
 /**
  * Created by ciencias on 25.11.14.
  */
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.MyApplication;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.SendToNewContactActivity;
 
 public class ProfileCardFrontFragment extends Fragment {
 
@@ -43,6 +45,7 @@ public class ProfileCardFrontFragment extends Fragment {
         name = (TextView) view.findViewById(R.id.user_name);
         name.setTypeface(MyApplication.getDefaultTypeface());
         name.setText("Johnny");
+
         return view;
     }
 
