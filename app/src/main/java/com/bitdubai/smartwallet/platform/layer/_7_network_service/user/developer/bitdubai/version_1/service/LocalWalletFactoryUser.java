@@ -1,14 +1,13 @@
-package com.bitdubai.smartwallet.platform.layer._7_network_service.user.version_1;
+package com.bitdubai.smartwallet.platform.layer._7_network_service.user.developer.bitdubai.version_1.service;
 
 /**
- * Created by ciencias on 23.12.14.
+ * Created by ciencias on 30.12.14.
  */
-public class LocalPersonalUser implements  LocalUser,  PersonalUser {
-
+public class LocalWalletFactoryUser implements WalletFactoryUser, LocalUser {
     private String mId;
     private LoginType mLoginType;
 
-    public LocalPersonalUser(String userId) {
+    public LocalWalletFactoryUser(String userId) {
         mId = userId;
         mLoginType = LoginType.NONE;
     }

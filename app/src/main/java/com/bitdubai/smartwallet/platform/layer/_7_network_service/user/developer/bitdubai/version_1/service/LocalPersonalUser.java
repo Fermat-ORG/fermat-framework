@@ -1,14 +1,14 @@
-package com.bitdubai.smartwallet.platform.layer._7_network_service.user.version_1;
+package com.bitdubai.smartwallet.platform.layer._7_network_service.user.developer.bitdubai.version_1.service;
 
 /**
- * Created by ciencias on 30.12.14.
+ * Created by ciencias on 23.12.14.
  */
-public class LocalCommercialUser implements LocalUser, CommercialUser {
+public class LocalPersonalUser implements  LocalUser,  PersonalUser {
 
     private String mId;
     private LoginType mLoginType;
 
-    public LocalCommercialUser(String userId) {
+    public LocalPersonalUser(String userId) {
         mId = userId;
         mLoginType = LoginType.NONE;
     }
@@ -31,4 +31,6 @@ public class LocalCommercialUser implements LocalUser, CommercialUser {
     public boolean Login(String pPassword) {
         return false;
     }
+
+
 }
