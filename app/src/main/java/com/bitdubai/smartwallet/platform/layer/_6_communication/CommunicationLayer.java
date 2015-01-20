@@ -37,7 +37,7 @@ public class CommunicationLayer implements PlatformLayer {
             mCloudCommunicationChannel = ((CloudSubsystem) cloudSubsystem).getCommunicationChannel();
 
         } catch (CantStartSubsystemException e) {
-            System.err.println("CantStartCryptoNetworkException: " + e.getMessage());
+            System.err.println("CantStartSubsystemException: " + e.getMessage());
 
             /**
              * Since this is the only implementation, if this does not start, then the layer can't start either.

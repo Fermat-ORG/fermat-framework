@@ -1,6 +1,6 @@
 package com.bitdubai.smartwallet.platform.layer._7_network_service.shop.version_1;
 
-import com.bitdubai.smartwallet.platform.layer._8_middleware.wallet.version_1.family.Wallet;
+import com.bitdubai.smartwallet.platform.layer._8_middleware.wallet.developer.bitdubai.version_1.engine.family.Wallet;
 
 
 /**
