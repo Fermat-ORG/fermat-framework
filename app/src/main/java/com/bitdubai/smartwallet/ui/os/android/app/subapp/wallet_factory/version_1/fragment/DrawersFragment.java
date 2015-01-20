@@ -25,7 +25,6 @@ public class DrawersFragment extends Fragment {
     private String[][] drawer_item;
 
 
-
     public static DrawersFragment newInstance(int position) {
         DrawersFragment f = new DrawersFragment();
         Bundle b = new Bundle();
@@ -37,7 +36,6 @@ public class DrawersFragment extends Fragment {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         item = new String[]{
                 getString(R.string.title_section2),
                 getString(R.string.title_section3),
@@ -50,19 +48,18 @@ public class DrawersFragment extends Fragment {
                 getString(R.string.title_section10),
                 getString(R.string.title_section11),
         };
-
         drawer_item = new String[][]{
 
-                { getString(R.string.title_section2)},
-                { getString(R.string.title_section3)},
-                { getString(R.string.title_section4)},
-                { getString(R.string.title_section5)},
-                { getString(R.string.title_section6)},
-                { getString(R.string.title_section7)},
-                { getString(R.string.title_section8)},
-                { getString(R.string.title_section9)},
-                { getString(R.string.title_section10)},
-                { getString(R.string.title_section11)},
+                {getString(R.string.title_section2)},
+                {getString(R.string.title_section3)},
+                {getString(R.string.title_section4)},
+                {getString(R.string.title_section5)},
+                {getString(R.string.title_section6)},
+                {getString(R.string.title_section7)},
+                {getString(R.string.title_section8)},
+                {getString(R.string.title_section9)},
+                {getString(R.string.title_section10)},
+                {getString(R.string.title_section11)},
         };
 
     }
@@ -123,9 +120,9 @@ public class DrawersFragment extends Fragment {
         private String[] item;
         private String[][] drawer_item;
 
-        public ExpandableListAdapter(String[] contacts, String[][] transactions) {
-            this.item = contacts;
-            this.drawer_item = transactions;
+        public ExpandableListAdapter(String[] items, String[][] drawer_items) {
+            this.item = items;
+            this.drawer_item = drawer_items;
             inf = LayoutInflater.from(getActivity());
         }
 
@@ -174,63 +171,64 @@ public class DrawersFragment extends Fragment {
 
             //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
             // if (convertView == null) {
-                convertView = inf.inflate(R.layout.wallet_factory_drawer_detail_fragment, parent, false);
+            convertView = inf.inflate(R.layout.wallet_factory_drawers_detail_fragment, parent, false);
 
-                profile_picture = (ImageView) convertView.findViewById(R.id.icon);
-                switch (groupPosition)
-                {
-                    case 0:
-                        profile_picture.setImageResource(R.drawable.ic_action_user_grey);
-                        break;
-                    case 1:
-                        profile_picture.setImageResource(R.drawable.ic_action_accounts_grey);
-                        break;
-                    case 2:
-                        profile_picture.setImageResource(R.drawable.ic_action_bank_grey);
-                        break;
-                    case 3:
-                        profile_picture.setImageResource(R.drawable.ic_action_coupon_grey);
-                        break;
-                    case 4:
-                        profile_picture.setImageResource(R.drawable.ic_action_discount_grey);
-                        break;
-                    case 5:
-                        profile_picture.setImageResource(R.drawable.ic_action_voucher_grey);
-                        break;
-                    case 6:
-                        profile_picture.setImageResource(R.drawable.ic_action_gift_card_grey);
-                        break;
-                    case 7:
-                        profile_picture.setImageResource(R.drawable.ic_action_clone_grey);
-                        break;
-                    case 8:
-                        profile_picture.setImageResource(R.drawable.ic_action_child_grey);
-                        break;
-                    case 9:
-                        profile_picture.setImageResource(R.drawable.ic_action_exit_grey);
-                        break;
-                }
+            profile_picture = (ImageView) convertView.findViewById(R.id.image);
+            switch (groupPosition)
+            {
+                case 0:
+                    profile_picture.setImageResource(R.drawable.ic_action_user_grey);
+                    break;
+                case 1:
+                    profile_picture.setImageResource(R.drawable.ic_action_accounts_grey);
+                    break;
+                case 2:
+                    profile_picture.setImageResource(R.drawable.ic_action_bank_grey);
+                    break;
+                case 3:
+                    profile_picture.setImageResource(R.drawable.ic_action_coupon_grey);
+                    break;
+                case 4:
+                    profile_picture.setImageResource(R.drawable.ic_action_discount_grey);
+                    break;
+                case 5:
+                    profile_picture.setImageResource(R.drawable.ic_action_voucher_grey);
+                    break;
+                case 6:
+                    profile_picture.setImageResource(R.drawable.ic_action_gift_card_grey);
+                    break;
+                case 7:
+                    profile_picture.setImageResource(R.drawable.ic_action_clone_grey);
+                    break;
+                case 8:
+                    profile_picture.setImageResource(R.drawable.ic_action_child_grey);
+                    break;
+                case 9:
+                    profile_picture.setImageResource(R.drawable.ic_action_exit_grey);
+                    break;
+            }
 
 
-                item = new ViewHolder();
-                item.text = (TextView) convertView.findViewById(R.id.description);
-                item.text.setTypeface(MyApplication.getDefaultTypeface());
-                item.text.setText(drawer_item[groupPosition][childPosition].toString());
+            item = new ViewHolder();
+            item.text = (TextView) convertView.findViewById(R.id.name);
+            item.text.setTypeface(MyApplication.getDefaultTypeface());
+            item.text.setText(drawer_item[groupPosition][childPosition].toString());
 
             return convertView;
         }
-
         @Override
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
             ViewHolder Item;
-            //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
-                // if (convertView == null) {
-                    convertView = inf.inflate(R.layout.wallet_factory_drawer_header_fragment, parent, false);
+            ImageView profile_picture;
 
-                    Item = new ViewHolder();
-                    Item.text = (TextView) convertView.findViewById(R.id.items);
-                    Item.text.setTypeface(MyApplication.getDefaultTypeface());
-                    Item.text.setText(item[groupPosition].toString());
+            //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
+            // if (convertView == null) {
+            convertView = inf.inflate(R.layout.wallet_factory_drawers_header_fragment, parent, false);
+
+            Item = new ViewHolder();
+            Item.text = (TextView) convertView.findViewById(R.id.items);
+            Item.text.setTypeface(MyApplication.getDefaultTypeface());
+            Item.text.setText(item[groupPosition].toString());
 
             return convertView;
         }
