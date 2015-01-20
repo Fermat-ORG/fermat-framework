@@ -286,7 +286,7 @@ public class FactoryActivity extends FragmentActivity
 
         private String[] titles;
         private String[] titles_1 = { };
-        private String[] titles_2 = {  "Activities","Drawers", "Fragments","Menus", "Resources"};
+        private String[] titles_2 = {  "Drawers","Activities", "Fragments","Menus", "Resources"};
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -314,10 +314,10 @@ public class FactoryActivity extends FragmentActivity
             Fragment currentFragment;
             switch (position) {
                 case 0:
-                    currentFragment = ActivitiesFragment.newInstance(position);
+                    currentFragment = DrawersFragment.newInstance(position);
                     break;
                 case 1:
-                    currentFragment = DrawersFragment.newInstance(position);
+                    currentFragment = ActivitiesFragment.newInstance(position);
                     break;
                 case 2:
                     currentFragment = FragmentsFragment.newInstance(position);
@@ -329,7 +329,7 @@ public class FactoryActivity extends FragmentActivity
                     currentFragment = ResourcesFragment.newInstance(position);
                     break;
                 default:
-                    currentFragment = ResourcesFragment.newInstance(position);
+                    currentFragment = DrawersFragment.newInstance(position);
                     break;
             }
             return currentFragment;

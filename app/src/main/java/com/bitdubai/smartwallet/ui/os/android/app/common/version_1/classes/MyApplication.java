@@ -20,15 +20,18 @@ import android.view.Window;
 import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
+import com.bitdubai.smartwallet.platform.CantStartPlatformException;
+import com.bitdubai.smartwallet.platform.Platform;
 
 
 public class MyApplication extends Application {
+
     private final static Handler handler = new Handler();
     public static Typeface mDefaultTypeface;
     public static int mTAGID;
     public static String mContact;
-    public  static int mWalletId;
-    public  static String mActivityId;
+    public static int mWalletId;
+    public static String mActivityId;
     public static String mCHILDID;
     public static String mTicketID;
     private static CharSequence mTitle;
@@ -37,40 +40,34 @@ public class MyApplication extends Application {
     public static ActionBar actionBar;
     private static String walletStyle = "";
     private static PagerSlidingTabStrip tabs;
+
     public static String getActivityId() {
         return mActivityId;
     }
     public static int  getWalletId() {
         return mWalletId;
     }
-
     public static ActionBar getActionBar() {
         return actionBar;
     }
-
     public static void setActionBar(ActionBar actionBar) {
         MyApplication.actionBar = actionBar;
     }
-
-    public  static void setWalletId(int WalletId) {
+    public static void setWalletId(int WalletId) {
         mWalletId = WalletId;
     }
-
     public static Typeface getDefaultTypeface() {
         return mDefaultTypeface;
     }
-
     public static int getTagId() {
         return mTAGID;
     }
     public static String getTicketId() {
         return mTicketID;
     }
-
     public static String getContact() {
         return mContact;
     }
-
     public static String getChildId() {
         return mCHILDID;
     }
@@ -81,6 +78,28 @@ public class MyApplication extends Application {
     public static void setActivityId(String activity_name) { mActivityId = activity_name; }
     public static void setDefaultTypeface(Typeface DefaultTypeface) {
         mDefaultTypeface = DefaultTypeface;
+    }
+
+
+
+    private Platform mPlatform;
+
+
+    public Platform getPlatform() {
+        return mPlatform;
+    }
+
+    public MyApplication () {
+        super();
+
+        try {
+            Platform platform = new Platform();
+            mPlatform = platform;
+        }
+        catch (CantStartPlatformException e) {
+            System.err.println("CantStartPlatformException: " + e.getMessage());
+
+        }
     }
 
 

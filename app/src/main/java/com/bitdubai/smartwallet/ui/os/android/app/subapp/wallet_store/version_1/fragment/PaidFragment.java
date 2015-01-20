@@ -41,6 +41,10 @@ public class PaidFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        // ejemplo de como acceder a MyApplication desde un fragmento //
+        MyApplication appCtx;
+        appCtx = (MyApplication) getActivity().getApplication();
+
         String[] company_names = {"The New York Times Store",
                 "NYC Fine Cigars",
                 "Fat Sal's Pizza",
