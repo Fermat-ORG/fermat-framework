@@ -231,6 +231,7 @@ public class AcceptedNearbyFragment extends Fragment {
 
 
 
+
 /*
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,

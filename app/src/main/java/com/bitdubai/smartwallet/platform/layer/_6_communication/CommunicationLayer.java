@@ -6,4 +6,7 @@ import com.bitdubai.smartwallet.platform.layer.PlatformLayer;
  * Created by ciencias on 31.12.14.
  */
 public class CommunicationLayer implements PlatformLayer {
+    @Override
+    public void start() {
+    }
 }

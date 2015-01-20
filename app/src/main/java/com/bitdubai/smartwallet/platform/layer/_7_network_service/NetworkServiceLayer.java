@@ -5,5 +5,8 @@ import com.bitdubai.smartwallet.platform.layer.PlatformLayer;
 /**
  * Created by ciencias on 03.01.15.
  */
-public class ServiceLayer implements PlatformLayer {
+public class NetworkServiceLayer implements PlatformLayer {
+    @Override
+    public void start() {
+    }
 }
