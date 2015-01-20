@@ -11,6 +11,10 @@ public class DeveloperBitDubai implements CryptoNetworkAccessDeveloper  {
 
     CryptoNetwork mCryptoNetwork;
 
+    @Override
+    public CryptoNetwork getCryptoNetwork() {
+        return mCryptoNetwork;
+    }
 
     public DeveloperBitDubai () {
 
@@ -23,8 +27,5 @@ public class DeveloperBitDubai implements CryptoNetworkAccessDeveloper  {
 
     }
 
-    @Override
-    public CryptoNetwork getCryptoNetwork() {
-        return mCryptoNetwork;
-    }
+
 }
