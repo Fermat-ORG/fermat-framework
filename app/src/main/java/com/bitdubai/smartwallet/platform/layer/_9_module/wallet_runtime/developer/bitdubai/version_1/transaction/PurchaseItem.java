@@ -2,8 +2,8 @@ package com.bitdubai.smartwallet.platform.layer._9_module.wallet_runtime.develop
 
 import com.bitdubai.smartwallet.platform.layer._7_network_service.shop.version_1.Product;
 import com.bitdubai.smartwallet.platform.layer._7_network_service.shop.version_1.Service;
-import com.bitdubai.smartwallet.platform.layer._2_definition.money.CryptoMoney;
-import com.bitdubai.smartwallet.platform.layer._2_definition.money.FiatMoney;
+import com.bitdubai.smartwallet.platform.layer._1_definition.money.CryptoMoney;
+import com.bitdubai.smartwallet.platform.layer._1_definition.money.FiatMoney;
 
 /**
  * Created by ciencias on 22.12.14.

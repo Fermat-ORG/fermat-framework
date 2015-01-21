@@ -3,8 +3,8 @@ package com.bitdubai.smartwallet.platform;
 import com.bitdubai.smartwallet.platform.layer.CantStartLayerException;
 import com.bitdubai.smartwallet.platform.layer.PlatformLayer;
 
-import com.bitdubai.smartwallet.platform.layer._1_os.OsLayer;
-import com.bitdubai.smartwallet.platform.layer._2_definition.DefinitionLayer;
+import com.bitdubai.smartwallet.platform.layer._2_os.OsLayer;
+import com.bitdubai.smartwallet.platform.layer._1_definition.DefinitionLayer;
 import com.bitdubai.smartwallet.platform.layer._3_license.LicenseLayer;
 import com.bitdubai.smartwallet.platform.layer._4_world.WorldLayer;
 import com.bitdubai.smartwallet.platform.layer._5_crypto_network.CryptoNetworkLayer;
@@ -13,8 +13,6 @@ import com.bitdubai.smartwallet.platform.layer._7_network_service.NetworkService
 import com.bitdubai.smartwallet.platform.layer._8_middleware.MiddlewareLayer;
 import com.bitdubai.smartwallet.platform.layer._9_module.ModuleLayer;
 import com.bitdubai.smartwallet.platform.layer._10_agent.AgentLayer;
-
-import java.util.List;
 
 /**
  * Created by ciencias on 20.01.15.

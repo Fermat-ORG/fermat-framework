@@ -1,6 +1,6 @@
 package com.bitdubai.smartwallet.platform.layer._9_module.wallet_runtime.developer.bitdubai.version_1.transaction;
 
-import com.bitdubai.smartwallet.platform.layer._2_definition.money.CryptoMoney;
+import com.bitdubai.smartwallet.platform.layer._1_definition.money.CryptoMoney;
 
 /**
  * Created by ciencias on 22.12.14.
