@@ -1,13 +1,13 @@
 package com.bitdubai.smartwallet.platform.layer._5_crypto_network.bitcoin.developer.bitdubai;
 
 import com.bitdubai.smartwallet.platform.layer._5_crypto_network.CryptoNetwork;
-import com.bitdubai.smartwallet.platform.layer._5_crypto_network.CryptoNetworkAccessDeveloper;
+import com.bitdubai.smartwallet.platform.layer._5_crypto_network.CryptoNetworkDeveloper;
 import com.bitdubai.smartwallet.platform.layer._5_crypto_network.bitcoin.developer.bitdubai.version_1.BitcoinCryptoNetwork;
 
 /**
  * Created by ciencias on 20.01.15.
  */
-public class DeveloperBitDubai implements CryptoNetworkAccessDeveloper  {
+public class DeveloperBitDubai implements CryptoNetworkDeveloper {
 
     CryptoNetwork mCryptoNetwork;
 

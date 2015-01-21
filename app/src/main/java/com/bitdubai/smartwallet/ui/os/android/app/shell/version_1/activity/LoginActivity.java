@@ -34,7 +34,7 @@ public class LoginActivity extends Activity {
         /**
          * Now I have access to the OS.
          */
-        Os os =  ((OsLayer) MyApp.getPlatform().getOsLayer()).getOsSubsystem().getOs();
+        Os os =  ((OsLayer) MyApp.getPlatform().getOsLayer()).getOs();
 
         /**
          * And now to the bitcoin network..

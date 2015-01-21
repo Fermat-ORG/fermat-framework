@@ -19,10 +19,10 @@ import com.bitdubai.smartwallet.platform.layer._1_os.windows.WindowsOsSubsystem;
 
 public class OsLayer implements PlatformLayer {
 
-    OsSubsystem mOsSubsystem;
+    Os mOs;
 
-    public OsSubsystem getOsSubsystem() {
-        return mOsSubsystem;
+    public Os getOs() {
+        return mOs;
     }
 
     @Override
@@ -30,51 +30,51 @@ public class OsLayer implements PlatformLayer {
 
         OsSubsystem osSubsystem;
 
-        if (mOsSubsystem == null) {
+        if (mOs == null) {
             osSubsystem = new AndroidOsSubsystem();
             try {
                 osSubsystem.start();
-                mOsSubsystem = osSubsystem;
+                mOs = osSubsystem.getOs();
             }
             catch (WrongOsException e) {
                 System.err.println("WrongOsException: " + e.getMessage());
             }
         }
 
-        if (mOsSubsystem == null) {
+        if (mOs == null) {
             osSubsystem = new IosOsSubsystem();
             try {
                 osSubsystem.start();
-                mOsSubsystem = osSubsystem;
+                mOs = osSubsystem.getOs();
             }
             catch (WrongOsException e) {
                 System.err.println("WrongOsException: " + e.getMessage());
             }
         }
 
-        if (mOsSubsystem == null) {
+        if (mOs == null) {
             osSubsystem = new LinuxOsSubsystem();
             try {
                 osSubsystem.start();
-                mOsSubsystem = osSubsystem;
+                mOs = osSubsystem.getOs();
             }
             catch (WrongOsException e) {
                 System.err.println("WrongOsException: " + e.getMessage());
             }
         }
 
-        if (mOsSubsystem == null) {
+        if (mOs == null) {
             osSubsystem = new WindowsOsSubsystem();
             try {
                 osSubsystem.start();
-                mOsSubsystem = osSubsystem;
+                mOs = osSubsystem.getOs();
             }
             catch (WrongOsException e) {
                 System.err.println("WrongOsException: " + e.getMessage());
             }
         }
 
-        if (mOsSubsystem == null) {
+        if (mOs == null) {
             throw new CantStartLayerException();
         }
     }

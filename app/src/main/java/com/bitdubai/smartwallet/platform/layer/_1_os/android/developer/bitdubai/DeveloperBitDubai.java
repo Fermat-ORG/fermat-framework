@@ -1,7 +1,7 @@
 package com.bitdubai.smartwallet.platform.layer._1_os.android.developer.bitdubai;
 
 import com.bitdubai.smartwallet.platform.layer._1_os.Os;
-import com.bitdubai.smartwallet.platform.layer._1_os.OsAccessDeveloper;
+import com.bitdubai.smartwallet.platform.layer._1_os.OsDeveloper;
 import com.bitdubai.smartwallet.platform.layer._1_os.android.developer.bitdubai.version_1.AndroidOs;
 
 /**
@@ -12,7 +12,7 @@ import com.bitdubai.smartwallet.platform.layer._1_os.android.developer.bitdubai.
  * Each developer might have different versions of their own implementation. This object chooses which version to run.
  */
 
-public class DeveloperBitDubai implements OsAccessDeveloper {
+public class DeveloperBitDubai implements OsDeveloper {
 
     Os mAndroidOs;
 

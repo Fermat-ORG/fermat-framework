@@ -3,7 +3,7 @@ package com.bitdubai.smartwallet.platform.layer._3_license.use;
 import com.bitdubai.smartwallet.platform.layer._3_license.CantStartSubsystemException;
 import com.bitdubai.smartwallet.platform.layer._3_license.LicenseManager;
 import com.bitdubai.smartwallet.platform.layer._3_license.LicenseSubsystem;
-import com.bitdubai.smartwallet.platform.layer._3_license.use.version_1.UseLicenseManager;
+import com.bitdubai.smartwallet.platform.layer._3_license.use.developer.DeveloperBitDubai;
 
 /**
  * Created by ciencias on 21.01.15.
@@ -24,7 +24,8 @@ public class UseLicenseSubsystem implements LicenseSubsystem {
          */
 
         try {
-            mLicenseManager = new UseLicenseManager();
+            DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
+            mLicenseManager = developerBitDubai.getLicenseManager();
         }
         catch (Exception e)
         {

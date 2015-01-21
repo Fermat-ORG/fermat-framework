@@ -1,4 +1,4 @@
-package com.bitdubai.smartwallet.platform.layer._3_license.component.version_1;
+package com.bitdubai.smartwallet.platform.layer._3_license.component.developer.bitdubai.version_1;
 
 import com.bitdubai.smartwallet.platform.layer._3_license.LicenseManager;
 
