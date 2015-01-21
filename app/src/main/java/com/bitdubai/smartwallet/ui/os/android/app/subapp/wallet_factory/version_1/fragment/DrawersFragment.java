@@ -224,6 +224,42 @@ public class DrawersFragment extends Fragment {
             //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
             // if (convertView == null) {
             convertView = inf.inflate(R.layout.wallet_factory_drawers_header_fragment, parent, false);
+            profile_picture = (ImageView) convertView.findViewById(R.id.image);
+
+            switch (groupPosition)
+            {
+                case 0:
+                    profile_picture.setImageResource(R.drawable.ic_action_user_grey);
+                    break;
+                case 1:
+                    profile_picture.setImageResource(R.drawable.ic_action_accounts_grey);
+                    break;
+                case 2:
+                    profile_picture.setImageResource(R.drawable.ic_action_bank_grey);
+                    break;
+                case 3:
+                    profile_picture.setImageResource(R.drawable.ic_action_coupon_grey);
+                    break;
+                case 4:
+                    profile_picture.setImageResource(R.drawable.ic_action_discount_grey);
+                    break;
+                case 5:
+                    profile_picture.setImageResource(R.drawable.ic_action_voucher_grey);
+                    break;
+                case 6:
+                    profile_picture.setImageResource(R.drawable.ic_action_gift_card_grey);
+                    break;
+                case 7:
+                    profile_picture.setImageResource(R.drawable.ic_action_clone_grey);
+                    break;
+                case 8:
+                    profile_picture.setImageResource(R.drawable.ic_action_child_grey);
+                    break;
+                case 9:
+                    profile_picture.setImageResource(R.drawable.ic_action_exit_grey);
+                    break;
+            }
+
 
             Item = new ViewHolder();
             Item.text = (TextView) convertView.findViewById(R.id.items);
