@@ -8,10 +8,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.view.View.OnTouchListener;
-
+import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.platform.layer._9_module.wallet_factory.version_1.Resource;
 import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.MyApplication;
@@ -19,7 +22,7 @@ import android.view.GestureDetector;
 import android.view.View.OnClickListener;
 
 import java.io.File;
-import  	android.os.Environment;
+import android.os.Environment;
 import android.content.Intent;
 import android.net.Uri;
 
@@ -159,6 +162,24 @@ public class TicketFragment  extends DialogFragment  {
                 });
 
                 break;
+            case "usd_50":
+                imageTicket.setImageResource(R.drawable.usd_50);
+                imageTicket.setTag(50);
+                imageTicket.setOnClickListener(new OnClickListener() {
+                    public void onClick(View v) {
+
+                        if ((Integer) v.getTag() == 1) {
+                            imageTicket.setImageResource(R.drawable.ar_bill_50_b);
+                            v.setTag(502);
+                        } else {
+                            imageTicket.setImageResource(R.drawable.usd_50);
+                            v.setTag(50);
+                        }
+                    }
+
+                });
+
+                break;
             case "usd_100":
                 imageTicket.setImageResource(R.drawable.usd_100);
                 imageTicket.setTag(1);
@@ -198,17 +219,93 @@ public class TicketFragment  extends DialogFragment  {
         @Override
         public boolean onDoubleTap(MotionEvent e) {
 
-            //  "Double Click open external Editor";
-             //  String imagePath = "android.resource://" + getResources().getResourcePackageName(R.drawable.usd_1) + "/drawable-xxhdpi/usd_1.jpg";
-            String imagePath ="file://" +  getResources().getResourcePackageName(R.drawable.usd_1) + "/structured_res/drawable-xxhdpi/usd_1.jpg";
-            Intent editIntent = new Intent(Intent.ACTION_EDIT);
-            //getResources().getIdentifier("ic_launcher", "drawable", getPackageName());
-           editIntent.setDataAndType(Uri.parse(imagePath), "image/*");
-            editIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            startActivity(Intent.createChooser(editIntent, null));
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.usd_1);
+
+            File mFile1 = Environment.getExternalStorageDirectory();
+
+            String fileName ="";
+            switch ( MyApplication.getTicketId()) {
+                case "usd_1":
+                    fileName ="usd_1.jpg";
+                    BitmapFactory.decodeResource(getResources(),R.drawable.usd_1);
+                    break;
+                case "usd_5":
+                    fileName ="usd_5.jpg";
+                    BitmapFactory.decodeResource(getResources(),R.drawable.usd_5);
+                    break;
+                case "usd_10":
+                    fileName ="usd_10.jpg";
+                    BitmapFactory.decodeResource(getResources(),R.drawable.usd_10);
+                    break;
+                case "usd_20":
+                    fileName ="usd_20.jpg";
+                    BitmapFactory.decodeResource(getResources(),R.drawable.usd_20);
+                    break;
+                case "usd_50":
+                    fileName ="usd_50.jpg";
+                    BitmapFactory.decodeResource(getResources(),R.drawable.usd_50);
+                    break;
+                case "usd_100":
+                    fileName ="usd_100.jpg";
+                    BitmapFactory.decodeResource(getResources(),R.drawable.usd_100);
+                    break;
+
+            }
+
+            File mFile2 = new File(mFile1,fileName);
+            try {
+                FileOutputStream outStream;
+
+                outStream = new FileOutputStream(mFile2);
+
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
+
+                outStream.flush();
+
+                outStream.close();
+
+            } catch (FileNotFoundException e2) {
+                // TODO Auto-generated catch block
+                e2.printStackTrace();
+            } catch (IOException e1) {
+                // TODO Auto-generated catch block
+                e1.printStackTrace();
+            }
+
+            String imagePath = mFile1.getAbsolutePath().toString()+"/"+fileName;
+            File temp=new File(imagePath);
+
+            if(temp.exists()){
+                //  "Double Click open external Editor";
+                //  String imagePath = "android.resource://" + getResources().getResourcePackageName(R.drawable.usd_1) + "/drawable-xxhdpi/usd_1.jpg";
+                // String imagePath ="file://" +  getResources().getResourcePackageName(R.drawable.usd_1) + "/structured_res/drawable-xxhdpi/usd_1.jpg";
+                Intent editIntent = new Intent(Intent.ACTION_EDIT);
+                //getResources().getIdentifier("ic_launcher", "drawable", getPackageName());
+                editIntent.setDataAndType(Uri.parse("file://" + imagePath), "image/*");
+                editIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                startActivity(Intent.createChooser(editIntent, null));
+//startActivityForResult(intent, Constants.LINK_CALENDER);
+            }
 
 
             return true;
         }
     }
+
+
+
+    /* 57 down vote accepted
+
+
+You can create a Drawable or Bitmap from a string path like this:
+
+ String pathName = "/path/to/file/xxx.jpg";
+ Drawable d = Drawable.createFromPath(pathName);
+
+For a Bitmap:
+
+String pathName = "/path/to/file/xxx.jpg";
+bitmap b = BitmapFactory.decodeFile(pathName);
+
+*/
 }

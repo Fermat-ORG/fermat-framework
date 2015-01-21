@@ -37,7 +37,7 @@ public class UsdBalanceFragment extends Fragment {
     private int position;
     private ArrayList<TicketPosition> mTicketsList;
     private String[] tickets;
-private int cantTickets = 0;
+    private int cantTickets = 0;
     //Definimos el marco por el cual podemos arrastrar la imagen
     private ViewGroup marco;
     //Definimos la imagen que vasmo arrastrar
@@ -64,7 +64,7 @@ private int cantTickets = 0;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        tickets = new String[]{"usd_1","usd_5", "usd_100", "usd_1",  "usd_20","usd_10","usd_20","usd_10"};
+        tickets = new String[]{"usd_1","usd_1","usd_10","usd_10","usd_20","usd_5",};
 
         position = getArguments().getInt(ARG_POSITION);
         mTicketsList = new ArrayList<TicketPosition>();
@@ -129,7 +129,7 @@ private int cantTickets = 0;
                         public void onClick(View v) {
                             MyApplication.setTicketId( "usd_5");
                             if ((Integer)v.getTag() == 5) {
-                                imageTicket.setImageResource(R.drawable.usd_5);
+                                imageTicket.setImageResource(R.drawable.ar_bill_5_b);
                                 v.setTag(52);
                             }
                             else{
@@ -248,16 +248,15 @@ private int cantTickets = 0;
 
             switch ((Integer)v.getTag()) {
                 case 1:
-
+                case 12:
                     break;
                 case 5:
+                case 52:
 
                     break;
                 case 10:
+                case 102:
 
-                    marco.removeView(v);
-
-                    mTicketsList.remove(item1);
                     imagen1= new ImageView(v.getContext());
                     cantTickets++;
                     imagen1.setId(cantTickets);
@@ -273,22 +272,22 @@ private int cantTickets = 0;
                             }
                             else{
                                 imagen1.setImageResource(R.drawable.usd_5);
-                                v.setTag(50);
+                                v.setTag(5);
                             }
                         }
 
 
                     });
 
-                    marginParams.setMargins(100, 100, -50, -50);
+                    marginParams.setMargins(item1.leftMargin,item1.topMargin,item1.rightMargin,item1.bottomMargin);
                     layoutParams = new RelativeLayout.LayoutParams(marginParams);
                     imagen1.setLayoutParams(layoutParams);
                     imagen1.setOnLongClickListener(new theLongClickListener());
                     imagen1.setOnTouchListener(new theTouchListener());
                     marco.addView(imagen1);
 
-                     item2 = new TicketPosition();
-                    item2.Id = imagen1.getId();
+                    item2 = new TicketPosition();
+                    item2.Id = cantTickets;
                     item2.ticketId = (Integer)imagen1.getTag();
                     item2.leftMargin = layoutParams.leftMargin;
                     item2.topMargin = layoutParams.topMargin ;
@@ -318,7 +317,7 @@ private int cantTickets = 0;
 
                     });
 
-                    marginParams.setMargins(110, 110, -50, -50);
+                    marginParams.setMargins(item1.leftMargin + 25,item1.topMargin,item1.rightMargin + 25,item1.bottomMargin);
                     layoutParams = new RelativeLayout.LayoutParams(marginParams);
                     imagen2.setLayoutParams(layoutParams);
                     imagen2.setOnLongClickListener(new theLongClickListener());
@@ -326,19 +325,18 @@ private int cantTickets = 0;
                     marco.addView(imagen2);
 
                     item2 = new TicketPosition();
-                    item2.Id = imagen2.getId();
+                    item2.Id = cantTickets;
                     item2.ticketId = (Integer)imagen2.getTag();
                     item2.leftMargin = layoutParams.leftMargin;
                     item2.topMargin = layoutParams.topMargin ;
                     item2.rightMargin = layoutParams.rightMargin;
                     item2.bottomMargin =  layoutParams.bottomMargin;
                     mTicketsList.add(item2);
-
+                    v.setVisibility(View.INVISIBLE);
+                    mTicketsList.remove(item1);
                     break;
                 case 20:
-                    marco.removeView(v);
-
-                    mTicketsList.remove(item1);
+                case 202:
                     imagen1= new ImageView(v.getContext());
                     cantTickets++;
                     imagen1.setId(cantTickets);
@@ -361,7 +359,7 @@ private int cantTickets = 0;
                     });
                     imagen1.setOnLongClickListener(new theLongClickListener());
                     imagen1.setOnTouchListener(new theTouchListener());
-                    marginParams.setMargins(120, 120, -50, -50);
+                    marginParams.setMargins(item1.leftMargin,item1.topMargin,item1.rightMargin,item1.bottomMargin);
                     layoutParams = new RelativeLayout.LayoutParams(marginParams);
                     imagen1.setLayoutParams(layoutParams);
                     marco.addView(imagen1);
@@ -399,7 +397,7 @@ private int cantTickets = 0;
                     imagen2.setOnLongClickListener(new theLongClickListener());
 
                     imagen2.setOnTouchListener(new theTouchListener());
-                    marginParams.setMargins(130, 130,-50, -50);
+                    marginParams.setMargins(item1.leftMargin + 25,item1.topMargin + 25,item1.rightMargin,item1.bottomMargin);
                     layoutParams = new RelativeLayout.LayoutParams(marginParams);
                     imagen2.setLayoutParams(layoutParams);
 
@@ -412,14 +410,15 @@ private int cantTickets = 0;
                     item2.bottomMargin =  layoutParams.bottomMargin;
                     mTicketsList.add(item2);
                     marco.addView(imagen2);
+
+                    v.setVisibility(View.INVISIBLE);
+                    mTicketsList.remove(item1);
                     break;
                 case 50:
-
+                case 502:
                     break;
                 case 100:
-                    marco.removeView(v);
-
-                    mTicketsList.remove(item1);
+                case 1002:
                     imagen1= new ImageView(v.getContext());
                     cantTickets++;
                     imagen1.setId(cantTickets);
@@ -442,7 +441,7 @@ private int cantTickets = 0;
                     });
                     imagen1.setOnLongClickListener(new theLongClickListener());
                     imagen1.setOnTouchListener(new theTouchListener());
-                    marginParams.setMargins(100, 100, -50, -50);
+                    marginParams.setMargins(item1.leftMargin,item1.topMargin,item1.rightMargin,item1.bottomMargin);
                     layoutParams = new RelativeLayout.LayoutParams(marginParams);
                     imagen1.setLayoutParams(layoutParams);
 
@@ -479,7 +478,7 @@ private int cantTickets = 0;
 
                     });
                     imagen2.setOnLongClickListener(new theLongClickListener());
-                    marginParams.setMargins(120, 100, -50, -50);
+                    marginParams.setMargins(item1.leftMargin + 25,item1.topMargin + 25,item1.rightMargin,item1.bottomMargin);
                     layoutParams = new RelativeLayout.LayoutParams(marginParams);
                     imagen2.setLayoutParams(layoutParams);
                     imagen2.setOnTouchListener(new theTouchListener());
@@ -494,11 +493,15 @@ private int cantTickets = 0;
                     item2.bottomMargin =  layoutParams.bottomMargin;
                     mTicketsList.add(item2);
 
+                    v.setVisibility(View.INVISIBLE);
+                    mTicketsList.remove(item1);
                     break;
             }
 
+
             return false;
         }
+
     }
 
     public static boolean esPar(int numero) {
@@ -635,13 +638,20 @@ private int cantTickets = 0;
 
     private void joinTickets(int id,RelativeLayout.LayoutParams layoutParams, int ticketId, View view)
     {
+        TicketPosition itemTicket = getTicket(id);
         for (int i = 0; i < mTicketsList.size(); i++) {
             TicketPosition item = mTicketsList.get(i);
-            double posi1 = (item.leftMargin * 5) /100.0;
+            double posi1 = (item.leftMargin * 50) /100.0;
             double posi2 = (item.rightMargin * 5) /100.0;
-
+            int left =0;
+            int top = layoutParams.topMargin - item.topMargin;
+            if (layoutParams.leftMargin > item.leftMargin)
+                left = ( layoutParams.leftMargin - item.leftMargin);
+            else
+                left = (  item.leftMargin -layoutParams.leftMargin);
+            int right = (item.rightMargin - layoutParams.rightMargin);
             //eveluate if resta negativa, no usarla.
-            if((item.leftMargin - layoutParams.leftMargin) <= posi1 && (item.rightMargin - layoutParams.rightMargin) ==0)
+            if( left > 0 && (left <= posi1 && right ==0))
             {
                 int idTicket = item.ticketId;
                 int idTicket2 = ticketId;
@@ -693,7 +703,7 @@ private int cantTickets = 0;
 
                     final ImageView imagen1;
                     TicketPosition item2;
-                    ImageView imagen2 = (ImageView) view.findViewById(item.Id);
+                    ImageView imagen2 = (ImageView)((RelativeLayout)view.getParent()).findViewById(item.Id);
                     ViewGroup.MarginLayoutParams marginParams = new ViewGroup.MarginLayoutParams( WRAP_CONTENT,
                             WRAP_CONTENT);
                     switch (idTicket2) {
@@ -729,9 +739,10 @@ private int cantTickets = 0;
                             marginParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin,-50,-50);
                             layoutParams = new RelativeLayout.LayoutParams(marginParams);
                             imagen1.setLayoutParams(layoutParams);
+                            marco.addView(imagen1);
 
                             item2 = new TicketPosition();
-                            item2.Id = id;
+                            item2.Id = cantTickets;
                             item2.ticketId = idTicket2;
                             item2.leftMargin = layoutParams.leftMargin;
                             item2.topMargin = layoutParams.topMargin ;
@@ -741,16 +752,17 @@ private int cantTickets = 0;
 
 
                             if(imagen2 != null)
-                                marco.addView(imagen2);
+                                marco.removeView(imagen2);
 
-                            marco.addView(imagen1);
+                            mTicketsList.remove(item);
+                            mTicketsList.remove(itemTicket);
                             break;
                         case 5:
-                           imagen1= new ImageView(view.getContext());
+                            imagen1= new ImageView(view.getContext());
                             cantTickets++;
                             imagen1.setId(cantTickets);
                             view.setVisibility(View.INVISIBLE);
-                            mTicketsList.remove(item);
+
                             imagen1.setTag(10);
                             imagen1.setImageResource(R.drawable.usd_10);
                             imagen1.setOnClickListener(new OnClickListener() {
@@ -776,7 +788,7 @@ private int cantTickets = 0;
                             imagen1.setLayoutParams(layoutParams);
 
                             item2 = new TicketPosition();
-                            item2.Id = id;
+                            item2.Id = cantTickets;
                             item2.ticketId = idTicket2;
                             item2.leftMargin = layoutParams.leftMargin;
                             item2.topMargin = layoutParams.topMargin ;
@@ -785,8 +797,11 @@ private int cantTickets = 0;
                             mTicketsList.add(item2);
 
                             if(imagen2 != null)
-                                marco.addView(imagen2);
+                                marco.removeView(imagen2);
                             marco.addView(imagen1);
+
+                            mTicketsList.remove(item);
+                            mTicketsList.remove(itemTicket);
                             break;
                         case 100:
                             break;
@@ -797,7 +812,7 @@ private int cantTickets = 0;
                             imagen1= new ImageView(view.getContext());
                             cantTickets++;
                             imagen1.setId(cantTickets);
-                            mTicketsList.remove(item);
+
                             view.setVisibility(View.INVISIBLE);
                             if(imagen2 != null)
                                 imagen2.setVisibility(View.INVISIBLE);
@@ -826,7 +841,7 @@ private int cantTickets = 0;
                             imagen1.setLayoutParams(layoutParams);
 
                             item2 = new TicketPosition();
-                            item2.Id = id;
+                            item2.Id = cantTickets;
                             item2.ticketId = idTicket2;
                             item2.leftMargin = layoutParams.leftMargin;
                             item2.topMargin = layoutParams.topMargin ;
@@ -835,8 +850,10 @@ private int cantTickets = 0;
                             mTicketsList.add(item2);
 
                             if(imagen2 != null)
-                                marco.addView(imagen2);
+                                marco.removeView(imagen2);
                             marco.addView(imagen1);
+                            mTicketsList.remove(item);
+                            mTicketsList.remove(itemTicket);
                             break;
                     }
 
@@ -870,50 +887,24 @@ private int cantTickets = 0;
                 if (item.ticketId == ticketId) {
                     //update
                     _update = true;
-                    return;
+                    break;
                 } else {
                     //insert new
                     _update = false;
                 }
             }
 
-            if (_update){
+            if (_update) {
                 //update
                 TicketPosition item2 = new TicketPosition();
                 item2.Id = id;
                 item2.ticketId = ticketId;
                 item2.leftMargin = layoutParams.leftMargin;
-                item2.topMargin = layoutParams.topMargin ;
+                item2.topMargin = layoutParams.topMargin;
                 item2.rightMargin = layoutParams.rightMargin;
-                item2.bottomMargin =  layoutParams.bottomMargin;
-            }else
-            {
-                TicketPosition item2 = new TicketPosition();
-                item2.Id = id;
-                item2.ticketId = ticketId;
-                item2.leftMargin = layoutParams.leftMargin;
-                item2.topMargin = layoutParams.topMargin ;
-                item2.rightMargin = layoutParams.rightMargin;
-                item2.bottomMargin =  layoutParams.bottomMargin;
-
-                mTicketsList.add(item2);
+                item2.bottomMargin = layoutParams.bottomMargin;
             }
-
-        } else {
-            TicketPosition item2 = new TicketPosition();
-            item2.Id = id;
-            item2.ticketId = ticketId;
-            item2.leftMargin = layoutParams.leftMargin;
-            item2.topMargin = layoutParams.topMargin;
-            item2.rightMargin = layoutParams.rightMargin;
-            item2.bottomMargin = layoutParams.bottomMargin;
-
-            mTicketsList.add(item2);
         }
-
-
-
-
 
     }
 
