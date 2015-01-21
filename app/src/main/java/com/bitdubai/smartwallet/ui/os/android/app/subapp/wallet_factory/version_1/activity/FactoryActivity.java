@@ -286,7 +286,7 @@ public class FactoryActivity extends FragmentActivity
 
         private String[] titles;
         private String[] titles_1 = { };
-        private String[] titles_2 = {  "Drawers","Activities", "Fragments","Menus", "Resources"};
+        private String[] titles_2 = {  "Navigation drawer","Activities", "Fragments","Menus", "Resources"};
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);

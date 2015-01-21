@@ -53,53 +53,52 @@ public class ActivitiesFragment extends Fragment {
                 "FrameworkActivity",
         };
         actionbar = new String[]{
-                "AccountDetailActivity",
-                "AccountsActivity",
-                "AvailableBalanceActivity",
-                "ChatOverReceiveTrxActivity",
-                "ChatOverTrxActivity",
-                "ChatWithContactActivity",
-                "ContactsActivity",
-                "DailyDiscountsActivity",
-                "EditPersonalProfileActivity",
-                "FrameworkActivity",
+                "ActionBar",
+                "ActionBar",
+                "ActionBar",
+                "ActionBar",
+                "ActionBar",
+                "ActionBar",
+                "ActionBar",
+                "ActionBar",
+                "ActionBar",
+                "ActionBar",
         };
         drawer = new String[]{
-                "AccountDetailActivity",
-                "AccountsActivity",
-                "AvailableBalanceActivity",
-                "ChatOverReceiveTrxActivity",
-                "ChatOverTrxActivity",
-                "ChatWithContactActivity",
-                "ContactsActivity",
-                "DailyDiscountsActivity",
-                "EditPersonalProfileActivity",
-                "FrameworkActivity",
+                "Navigation Drawer",
+                "Navigation Drawer",
+                "Navigation Drawer",
+                "Navigation Drawer",
+                "Navigation Drawer",
+                "Navigation Drawer",
+                "Navigation Drawer",
+                "Navigation Drawer",
+                "Navigation Drawer",
+                "Navigation Drawer",
         };
         tabs = new String[]{
-                "AccountDetailActivity",
-                "AccountsActivity",
-                "AvailableBalanceActivity",
-                "ChatOverReceiveTrxActivity",
-                "ChatOverTrxActivity",
-                "ChatWithContactActivity",
-                "ContactsActivity",
-                "DailyDiscountsActivity",
-                "EditPersonalProfileActivity",
-                "FrameworkActivity",
+                "Tabs",
+                "Tabs",
+                "Tabs",
+                "Tabs",
+                "Tabs",
+                "Tabs",
+                "Tabs",
+                "Tabs",
+                "Tabs",
+                "Tabs",
         };
         activity_item = new String[][]{
-
-                {""},
-                {""},
-                {""},
-                {""},
-                {""},
-                {""},
-                {""},
-                {""},
-                {""},
-                {""},
+                {"a"},
+                {"a"},
+                {"a"},
+                {"a"},
+                {"a"},
+                {"a"},
+                {"a"},
+                {"a"},
+                {"a"},
+                {"a"},
         };
 
     }
@@ -216,7 +215,7 @@ public class ActivitiesFragment extends Fragment {
             item = new ViewHolder();
             item.text = (TextView) convertView.findViewById(R.id.items);
             item.text.setTypeface(MyApplication.getDefaultTypeface());
-            item.text.setText(activity_item[groupPosition][childPosition].toString());
+            item.text.setText(activity_item[childPosition].toString());
 
             return convertView;
         }
