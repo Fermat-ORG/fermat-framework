@@ -146,9 +146,6 @@ public class CommunityFragment extends Fragment {
     }
 
 
-
-
-
     public class App implements Serializable {
 
 
@@ -193,16 +190,9 @@ public class CommunityFragment extends Fragment {
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-
-
-
-
-
-
             holder.name.setText(item.Names);
             holder.country.setText(item.Countries);
             holder.state.setText(item.States);
-
 
             holder.name.setTypeface(MyApplication.getDefaultTypeface());
             holder.country.setTypeface(MyApplication.getDefaultTypeface());
