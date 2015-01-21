@@ -6,7 +6,7 @@ import com.bitdubai.smartwallet.platform.layer._1_definition.enums.TimeFrequency
 /**
  * Created by ciencias on 21.01.15.
  */
-public interface LicensorComponent {
+public interface Licensor {
     
     public int getAmountToPay();
     public CryptoCurrency getCryptoCurrency();
