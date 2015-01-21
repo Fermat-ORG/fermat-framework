@@ -23,6 +23,38 @@ public class CommunicationLayer implements PlatformLayer {
     private CommunicationChannel mSMSCommunicationChannel;
     private CommunicationChannel mUriCommunicationChannel;
 
+    public CommunicationChannel getBluetoohCommunicationChannel() {
+        return mBluetoohCommunicationChannel;
+    }
+
+    public CommunicationChannel getCloudCommunicationChannel() {
+        return mCloudCommunicationChannel;
+    }
+
+    public CommunicationChannel getEmailCommunicationChannel() {
+        return mEmailCommunicationChannel;
+    }
+
+    public CommunicationChannel getLanCommunicationChannel() {
+        return mLanCommunicationChannel;
+    }
+
+    public CommunicationChannel getNfcCommunicationChannel() {
+        return mNfcCommunicationChannel;
+    }
+
+    public CommunicationChannel getP2PCommunicationChannel() {
+        return mP2PCommunicationChannel;
+    }
+
+    public CommunicationChannel getSMSCommunicationChannel() {
+        return mSMSCommunicationChannel;
+    }
+
+    public CommunicationChannel getUriCommunicationChannel() {
+        return mUriCommunicationChannel;
+    }
+
     @Override
     public void start() throws CantStartLayerException {
 

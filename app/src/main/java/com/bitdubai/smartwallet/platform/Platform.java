@@ -33,15 +33,57 @@ public class Platform  {
     PlatformLayer mModuleLayer = new ModuleLayer();
     PlatformLayer mAgentLayer = new AgentLayer();
 
+
+
+    public PlatformLayer getAgentLayer() {
+        return mAgentLayer;
+    }
+
     public PlatformLayer getOsLayer() {
         return mOsLayer;
+    }
+
+    public PlatformLayer getDefinitionLayer() {
+        return mDefinitionLayer;
+    }
+
+    public PlatformLayer getLicesnseLayer() {
+        return mLicesnseLayer;
+    }
+
+    public PlatformLayer getWorldLayer() {
+        return mWorldLayer;
     }
 
     public PlatformLayer getCryptoNetworkLayer() {
         return mCryptoNetworkLayer;
     }
 
+    public PlatformLayer getCommunicationLayer() {
+        return mCommunicationLayer;
+    }
+
+    public PlatformLayer getNetworkServiceLayer() {
+        return mNetworkServiceLayer;
+    }
+
+    public PlatformLayer getMiddlewareayer() {
+        return mMiddlewareayer;
+    }
+
+    public PlatformLayer getModuleLayer() {
+        return mModuleLayer;
+    }
+
+
     public Platform() throws CantStartPlatformException {
+
+        /**
+         * Here I will be starting all the platforms layers. It is required that none of them fails. That does not mean
+         * that a layer will have at least one service to offer. It depends on each layer. If one believes its lack of
+         * services prevent the whole platform to run, then it will throw an exception that will effectively prevent the
+         * platform to run.
+         */
 
         try {
             mOsLayer.start();

@@ -13,6 +13,14 @@ public class MiddlewareLayer implements PlatformLayer {
     private MiddlewareEngine mShellEngine;
     private MiddlewareEngine mWalletEngine;
 
+    public MiddlewareEngine getShellEngine() {
+        return mShellEngine;
+    }
+
+    public MiddlewareEngine getWalletEngine() {
+        return mWalletEngine;
+    }
+
     @Override
     public void start() throws CantStartLayerException {
 

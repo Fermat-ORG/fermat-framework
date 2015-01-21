@@ -10,7 +10,10 @@ import com.bitdubai.smartwallet.platform.layer._7_network_service.user.UserSubsy
 public class NetworkServiceLayer implements PlatformLayer {
 
     private NetworkService mUserService;
-    private NetworkService mShopService;
+
+    public NetworkService getUserService() {
+        return mUserService;
+    }
 
     @Override
     public void start() throws CantStartLayerException {

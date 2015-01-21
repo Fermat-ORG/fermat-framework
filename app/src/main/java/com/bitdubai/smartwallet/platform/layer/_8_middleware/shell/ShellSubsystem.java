@@ -4,7 +4,7 @@ package com.bitdubai.smartwallet.platform.layer._8_middleware.shell;
 import com.bitdubai.smartwallet.platform.layer._8_middleware.CantStartSubsystemException;
 import com.bitdubai.smartwallet.platform.layer._8_middleware.MiddlewareEngine;
 import com.bitdubai.smartwallet.platform.layer._8_middleware.MiddlewareSubsystem;
-import com.bitdubai.smartwallet.platform.layer._8_middleware.shell.developer.DeveloperBitDubai;
+import com.bitdubai.smartwallet.platform.layer._8_middleware.shell.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by ciencias on 20.01.15.
