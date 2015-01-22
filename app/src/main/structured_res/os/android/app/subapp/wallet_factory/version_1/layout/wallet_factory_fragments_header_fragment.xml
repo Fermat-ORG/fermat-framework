@@ -8,10 +8,12 @@
         android:layout_height="wrap_content"
         android:id="@+id/items"
         android:layout_weight="2"
+        android:textColor="#FFFFFF"
         android:padding="5dp"/>
     <Switch
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="15sp"
+        android:textColor="#FFFFFF"
         android:textStyle="normal"/>
 </LinearLayout>
