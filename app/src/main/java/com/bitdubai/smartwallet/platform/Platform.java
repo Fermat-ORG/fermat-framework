@@ -5,6 +5,7 @@ import com.bitdubai.smartwallet.platform.layer.PlatformLayer;
 
 import com.bitdubai.smartwallet.platform.layer._2_os.OsLayer;
 import com.bitdubai.smartwallet.platform.layer._1_definition.DefinitionLayer;
+import com.bitdubai.smartwallet.platform.layer._3_user.UserLayer;
 import com.bitdubai.smartwallet.platform.layer._4_license.LicenseLayer;
 import com.bitdubai.smartwallet.platform.layer._5_world.WorldLayer;
 import com.bitdubai.smartwallet.platform.layer._6_crypto_network.CryptoNetworkLayer;
@@ -20,8 +21,10 @@ import com.bitdubai.smartwallet.platform.layer._11_agent.AgentLayer;
 public class Platform  {
 
 
-    PlatformLayer mOsLayer = new OsLayer();
+
     PlatformLayer mDefinitionLayer = new DefinitionLayer();
+    PlatformLayer mOsLayer = new OsLayer();
+    PlatformLayer mUserLayer = new UserLayer();
     PlatformLayer mLicesnseLayer = new LicenseLayer();
     PlatformLayer mWorldLayer = new WorldLayer();
     PlatformLayer mCryptoNetworkLayer = new CryptoNetworkLayer();
@@ -33,16 +36,17 @@ public class Platform  {
 
 
 
-    public PlatformLayer getAgentLayer() {
-        return mAgentLayer;
+
+    public PlatformLayer getDefinitionLayer() {
+        return mDefinitionLayer;
     }
 
     public PlatformLayer getOsLayer() {
         return mOsLayer;
     }
 
-    public PlatformLayer getDefinitionLayer() {
-        return mDefinitionLayer;
+    public PlatformLayer getUserLayer() {
+        return mUserLayer;
     }
 
     public PlatformLayer getLicesnseLayer() {
@@ -73,6 +77,9 @@ public class Platform  {
         return mModuleLayer;
     }
 
+    public PlatformLayer getAgentLayer() {
+        return mAgentLayer;
+    }
 
     public Platform() throws CantStartPlatformException {
 
@@ -84,8 +91,10 @@ public class Platform  {
          */
 
         try {
-            mOsLayer.start();
+
             mDefinitionLayer.start();
+            mOsLayer.start();
+            mUserLayer.start();
             mLicesnseLayer.start();
             mWorldLayer.start();
             mCryptoNetworkLayer.start();
