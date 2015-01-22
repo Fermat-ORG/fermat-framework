@@ -177,34 +177,34 @@ public class DrawersFragment extends Fragment {
             switch (groupPosition)
             {
                 case 0:
-                    profile_picture.setImageResource(R.drawable.ic_action_user_grey);
+                    profile_picture.setImageResource(R.drawable.ic_action_user);
                     break;
                 case 1:
-                    profile_picture.setImageResource(R.drawable.ic_action_accounts_grey);
+                    profile_picture.setImageResource(R.drawable.ic_action_accounts);
                     break;
                 case 2:
-                    profile_picture.setImageResource(R.drawable.ic_action_bank_grey);
+                    profile_picture.setImageResource(R.drawable.ic_action_bank);
                     break;
                 case 3:
-                    profile_picture.setImageResource(R.drawable.ic_action_coupon_grey);
+                    profile_picture.setImageResource(R.drawable.ic_action_coupon);
                     break;
                 case 4:
-                    profile_picture.setImageResource(R.drawable.ic_action_discount_grey);
+                    profile_picture.setImageResource(R.drawable.ic_action_discount);
                     break;
                 case 5:
-                    profile_picture.setImageResource(R.drawable.ic_action_voucher_grey);
+                    profile_picture.setImageResource(R.drawable.ic_action_voucher);
                     break;
                 case 6:
-                    profile_picture.setImageResource(R.drawable.ic_action_gift_card_grey);
+                    profile_picture.setImageResource(R.drawable.ic_action_gift_card);
                     break;
                 case 7:
-                    profile_picture.setImageResource(R.drawable.ic_action_clone_grey);
+                    profile_picture.setImageResource(R.drawable.ic_action_clone);
                     break;
                 case 8:
-                    profile_picture.setImageResource(R.drawable.ic_action_child_grey);
+                    profile_picture.setImageResource(R.drawable.ic_action_child);
                     break;
                 case 9:
-                    profile_picture.setImageResource(R.drawable.ic_action_exit_grey);
+                    profile_picture.setImageResource(R.drawable.ic_action_exit);
                     break;
             }
 
@@ -229,34 +229,34 @@ public class DrawersFragment extends Fragment {
             switch (groupPosition)
             {
                 case 0:
-                    profile_picture.setImageResource(R.drawable.ic_action_user_grey);
+                    profile_picture.setImageResource(R.drawable.ic_action_user);
                     break;
                 case 1:
-                    profile_picture.setImageResource(R.drawable.ic_action_accounts_grey);
+                    profile_picture.setImageResource(R.drawable.ic_action_accounts);
                     break;
                 case 2:
-                    profile_picture.setImageResource(R.drawable.ic_action_bank_grey);
+                    profile_picture.setImageResource(R.drawable.ic_action_bank);
                     break;
                 case 3:
-                    profile_picture.setImageResource(R.drawable.ic_action_coupon_grey);
+                    profile_picture.setImageResource(R.drawable.ic_action_coupon);
                     break;
                 case 4:
-                    profile_picture.setImageResource(R.drawable.ic_action_discount_grey);
+                    profile_picture.setImageResource(R.drawable.ic_action_discount);
                     break;
                 case 5:
-                    profile_picture.setImageResource(R.drawable.ic_action_voucher_grey);
+                    profile_picture.setImageResource(R.drawable.ic_action_voucher);
                     break;
                 case 6:
-                    profile_picture.setImageResource(R.drawable.ic_action_gift_card_grey);
+                    profile_picture.setImageResource(R.drawable.ic_action_gift_card);
                     break;
                 case 7:
-                    profile_picture.setImageResource(R.drawable.ic_action_clone_grey);
+                    profile_picture.setImageResource(R.drawable.ic_action_clone);
                     break;
                 case 8:
-                    profile_picture.setImageResource(R.drawable.ic_action_child_grey);
+                    profile_picture.setImageResource(R.drawable.ic_action_child);
                     break;
                 case 9:
-                    profile_picture.setImageResource(R.drawable.ic_action_exit_grey);
+                    profile_picture.setImageResource(R.drawable.ic_action_exit);
                     break;
             }
 
