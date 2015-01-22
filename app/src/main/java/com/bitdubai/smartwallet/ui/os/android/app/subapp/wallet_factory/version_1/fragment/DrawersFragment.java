@@ -220,6 +220,8 @@ public class DrawersFragment extends Fragment {
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
             ViewHolder Item;
             ImageView profile_picture;
+            ViewHolder Switch;
+
 
             //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
             // if (convertView == null) {
@@ -265,6 +267,10 @@ public class DrawersFragment extends Fragment {
             Item.text = (TextView) convertView.findViewById(R.id.items);
             Item.text.setTypeface(MyApplication.getDefaultTypeface());
             Item.text.setText(item[groupPosition].toString());
+
+            Switch = new ViewHolder();
+            Switch.text = (TextView) convertView.findViewById(R.id.switch_1);
+            Switch.text.setTypeface(MyApplication.getDefaultTypeface());
 
             return convertView;
         }

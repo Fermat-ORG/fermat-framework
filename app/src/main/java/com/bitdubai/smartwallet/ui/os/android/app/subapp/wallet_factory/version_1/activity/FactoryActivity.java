@@ -28,7 +28,6 @@ import android.widget.TextView;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.MyApplication;
 import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.PagerSlidingTabStrip;
-import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.fragment.NavigationDrawerFragment;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.shop.version_1.fragment.ShopChatFragment;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.shop.version_1.fragment.ShopHistoryFragment;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.shop.version_1.fragment.ShopMapFragment;
@@ -64,7 +63,6 @@ public class FactoryActivity extends FragmentActivity
     private Menu menu;
 
 
-    private NavigationDrawerFragment mNavigationDrawerFragment;
 
 
 
@@ -74,22 +72,12 @@ public class FactoryActivity extends FragmentActivity
 
         super.onCreate(savedInstanceState);
         MyApplication.setActivityId("ShopActivity");
-        setContentView(R.layout.shop_activity_shop);
+        setContentView(R.layout.wallet_factory_activity);
 
         // I get the action bar title id and put it on a text view in order to later change its color
         int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
         TextView abTitle = (TextView) findViewById(titleId);
-        abTitle.setTextColor(Color.WHITE);
-        mNavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
 
-        mNavigationDrawerFragment = (NavigationDrawerFragment)
-                getFragmentManager().findFragmentById(R.id.navigation_drawer);
-
-
-        // Set up the drawer.
-        mNavigationDrawerFragment.setUp(
-                R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
         Intent i=getIntent();
 
         tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);

@@ -11,10 +11,6 @@ import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.MyApplication;
-
-/**
- * Created by Natalia on 19/12/2014.
- */
 public class ActivitiesFragment extends Fragment {
     private static final String ARG_POSITION = "position";
 
@@ -41,16 +37,16 @@ public class ActivitiesFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         item = new String[]{
-                "AccountDetailActivity",
-                "AccountsActivity",
-                "AvailableBalanceActivity",
-                "ChatOverReceiveTrxActivity",
-                "ChatOverTrxActivity",
-                "ChatWithContactActivity",
-                "ContactsActivity",
-                "DailyDiscountsActivity",
-                "EditPersonalProfileActivity",
-                "FrameworkActivity",
+                "Account Detail",
+                "Accounts",
+                "Available Balance",
+                "Chat Over Received Transaction",
+                "Chat Over Transaction",
+                "Chat With Contact",
+                "Contacts",
+                "Daily Discounts",
+                "Edit Personal Profile",
+                "Framework",
         };
         actionbar = new String[]{
                 "ActionBar",
@@ -239,16 +235,19 @@ public class ActivitiesFragment extends Fragment {
             actionbars.text = (TextView) convertView.findViewById(R.id.actionbar);
             actionbars.text.setTypeface(MyApplication.getDefaultTypeface());
             actionbars.text.setText(actionbar[groupPosition].toString());
+            actionbars.text.setPadding(0,3,0,3);
 
             drawers = new ViewHolder();
             drawers.text = (TextView) convertView.findViewById(R.id.drawer);
             drawers.text.setTypeface(MyApplication.getDefaultTypeface());
             drawers.text.setText(drawer[groupPosition].toString());
+            drawers.text.setPadding(0,3,0,3);
 
             tab = new ViewHolder();
             tab.text = (TextView) convertView.findViewById(R.id.tab);
             tab.text.setTypeface(MyApplication.getDefaultTypeface());
             tab.text.setText(tabs[groupPosition].toString());
+            tab.text.setPadding(0,3,0,3);
 
             return convertView;
         }

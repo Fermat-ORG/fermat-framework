@@ -38,16 +38,16 @@ public class MenusFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         item = new String[]{
-                "wallet_framework_activity_account_detail_menu",
-                "wallet_framework_activity_accounts_menu",
-                "wallet_framework_activity_available_balance_menu",
-                "wallet_framework_activity_chat_over_trx_menu",
-                "wallet_framework_activity_contacts_menu",
-                "wallet_framework_activity_daily_discounts_menu",
-                "wallet_framework_activity_edit_personal_profile_menu",
-                "wallet_framework_activity_framework_drawer_open_menu",
-                "wallet_framework_activity_framework_menu",
-                "wallet_framework_activity_monthly_discounts_menu",
+                "account detail menu",
+                "accounts menu",
+                "available balance menu",
+                "chat over transaction menu",
+                "contacts menu",
+                "daily discounts menu",
+                "edit personal profile menu",
+                "send to contact menu",
+                "framework menu",
+                "monthly discounts menu",
         };
         menu_item = new String[][]{
 
@@ -167,6 +167,7 @@ public class MenusFragment extends Fragment {
         public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 
             ViewHolder item;
+            ViewHolder Switch;
 
 
             //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
@@ -179,6 +180,9 @@ public class MenusFragment extends Fragment {
             item.text.setTypeface(MyApplication.getDefaultTypeface());
             item.text.setText(menu_item[groupPosition][childPosition].toString());
 
+            Switch = new ViewHolder();
+            Switch.text = (TextView) convertView.findViewById(R.id.switch_1);
+            Switch.text.setTypeface(MyApplication.getDefaultTypeface());
             return convertView;
         }
         @Override

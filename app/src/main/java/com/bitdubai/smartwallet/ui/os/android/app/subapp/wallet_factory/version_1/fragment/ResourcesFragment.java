@@ -24,6 +24,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.bitdubai.smartwallet.R.drawable;
+import static com.bitdubai.smartwallet.R.drawable.background_tabs_diagonal_rotated;
+
 
 public class ResourcesFragment extends Fragment {
 
@@ -43,7 +46,7 @@ public class ResourcesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        String[] size = {"144x144","110x100","150x150","150x150","250x200","200x60","250x166","200x200","500x177","200x200","25x24","29x47","85x35"};
+        String[] size = {"144x144 px","110x100 px","150x150 px","150x150 px","250x200 px","200x60 px","250x166 px","200x200 px","500x177 px","200x200 px","25x24 px","29x47 px","85x35 px"};
         String[] weight = {"41 kb","21 kb","23 kb","21 kb","39 kb","6 kb","42 kb","5 kb","500x177","163 kb","1 kb","3 kb","4 kb"};
 
 
@@ -64,6 +67,7 @@ public class ResourcesFragment extends Fragment {
 
         GridView gridView = new GridView(getActivity());
 
+
         Configuration config = getResources().getConfiguration();
         if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             gridView.setNumColumns(3);
@@ -73,6 +77,8 @@ public class ResourcesFragment extends Fragment {
         //@SuppressWarnings("unchecked")
         //ArrayList<App> list = (ArrayList<App>) getArguments().get("list");
         gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.wallet_factory_resources_fragment, mlist));
+        gridView.setBackgroundResource(R.drawable.background_tabs_diagonal_rotated);
+        gridView.setPadding(80,0,80,0);
         //        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
         //  public void onItemClick(AdapterView<?> parent, View v,
         //                         int position, long id) {
@@ -133,43 +139,43 @@ public class ResourcesFragment extends Fragment {
             switch (position)
             {
                 case 0:
-                    holder.Photo.setImageResource(R.drawable.wallet_1) ;
+                    holder.Photo.setImageResource(drawable.wallet_1) ;
                     break;
                 case 1:
-                    holder.Photo.setImageResource(R.drawable.account_type_current_small);
+                    holder.Photo.setImageResource(drawable.account_type_current_small);
                     break;
                 case 2:
-                    holder.Photo.setImageResource(R.drawable.account_type_savings_1_small);
+                    holder.Photo.setImageResource(drawable.account_type_savings_1_small);
                     break;
                 case 3:
-                    holder.Photo.setImageResource(R.drawable.account_type_savings_2_small);
+                    holder.Photo.setImageResource(drawable.account_type_savings_2_small);
                     break;
                 case 4:
-                    holder.Photo.setImageResource(R.drawable.discounts_month);
+                    holder.Photo.setImageResource(drawable.discounts_month);
                     break;
                 case 5:
-                    holder.Photo.setImageResource(R.drawable.discounts_week);
+                    holder.Photo.setImageResource(drawable.discounts_week);
                     break;
                 case 6:
-                    holder.Photo.setImageResource(R.drawable.discounts_year);
+                    holder.Photo.setImageResource(drawable.discounts_year);
                     break;
                 case 7:
-                    holder.Photo.setImageResource(R.drawable.object_frame_1x1);
+                    holder.Photo.setImageResource(drawable.object_frame_1x1);
                     break;
                 case 8:
-                    holder.Photo.setImageResource(R.drawable.object_frame_3x1_frozen);
+                    holder.Photo.setImageResource(drawable.object_frame_3x1_frozen);
                     break;
                 case 9:
-                    holder.Photo.setImageResource(R.drawable.object_frame_1x1_white_background);
+                    holder.Photo.setImageResource(drawable.object_frame_1x1_white_background);
                     break;
                 case 10:
-                    holder.Photo.setImageResource(R.drawable.grid_background_clock);
+                    holder.Photo.setImageResource(drawable.grid_background_clock);
                     break;
                 case 11:
-                    holder.Photo.setImageResource(R.drawable.grid_background_favorite);
+                    holder.Photo.setImageResource(drawable.grid_background_favorite);
                     break;
                 case 12:
-                    holder.Photo.setImageResource(R.drawable.grid_background_sale);
+                    holder.Photo.setImageResource(drawable.grid_background_sale);
                     break;
             }
             return convertView;
