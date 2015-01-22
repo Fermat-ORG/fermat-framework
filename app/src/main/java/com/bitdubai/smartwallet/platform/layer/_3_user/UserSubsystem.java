@@ -5,5 +5,5 @@ package com.bitdubai.smartwallet.platform.layer._3_user;
  */
 public interface UserSubsystem {
     public void start () throws CantStartSubsystemException;
-    public User getUser();
+    public UserManager getUserManager();
 }

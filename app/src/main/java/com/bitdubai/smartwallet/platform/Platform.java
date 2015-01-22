@@ -3,8 +3,14 @@ package com.bitdubai.smartwallet.platform;
 import com.bitdubai.smartwallet.platform.layer.CantStartLayerException;
 import com.bitdubai.smartwallet.platform.layer.PlatformLayer;
 
+import com.bitdubai.smartwallet.platform.layer._1_definition.enums.PlatformFileName;
+import com.bitdubai.smartwallet.platform.layer._2_os.File;
+import com.bitdubai.smartwallet.platform.layer._2_os.FileNotFoundException;
+import com.bitdubai.smartwallet.platform.layer._2_os.Os;
 import com.bitdubai.smartwallet.platform.layer._2_os.OsLayer;
 import com.bitdubai.smartwallet.platform.layer._1_definition.DefinitionLayer;
+import com.bitdubai.smartwallet.platform.layer._3_user.LoginFailedException;
+import com.bitdubai.smartwallet.platform.layer._3_user.User;
 import com.bitdubai.smartwallet.platform.layer._3_user.UserLayer;
 import com.bitdubai.smartwallet.platform.layer._4_license.LicenseLayer;
 import com.bitdubai.smartwallet.platform.layer._5_world.WorldLayer;
@@ -33,7 +39,6 @@ public class Platform  {
     PlatformLayer mMiddlewareayer = new MiddlewareLayer();
     PlatformLayer mModuleLayer = new ModuleLayer();
     PlatformLayer mAgentLayer = new AgentLayer();
-
 
 
 
@@ -81,6 +86,14 @@ public class Platform  {
         return mAgentLayer;
     }
 
+
+    User mLoggedInUser;
+
+    public User getLoggedInUser() {
+        return mLoggedInUser;
+    }
+
+
     public Platform() throws CantStartPlatformException {
 
         /**
@@ -108,6 +121,46 @@ public class Platform  {
             System.err.println("CantStartLayerException: " + e.getMessage());
             throw new CantStartPlatformException();
         }
+
+
+        /**
+         * Now I will recover the last state, in order to allow the end user to continue where he was.The first thing
+         * to do is to get the file where the last state was saved.
+         */
+
+        Os os = ((OsLayer) mOsLayer).getOs();
+
+        try {
+            File platformStateFile =  os.getFileSystem().getFile(PlatformFileName.LAST_STATE.getFileName());
+        }
+        catch (FileNotFoundException e)
+        {
+            /**
+             * If there is no last state file, I assume this is the first time the platform is running on this device.
+             * Under this situation I will do the following;
+             *
+             * 1) Create a new User with no password.
+             * 2) Auto login that user.
+             * 3) Save the last state of the platform.
+             */
+
+            User newUser = ((UserLayer) mUserLayer).getUserManager().createUser();
+            try {
+                newUser.login("");
+
+            } catch (LoginFailedException loginException) {
+                /**
+                 * This really should never happen. But if it does...
+                 */
+                loginException.printStackTrace();
+                throw new CantStartPlatformException();
+            }
+
+        }
+
+
+
+
 
     }
 

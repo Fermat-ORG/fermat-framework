@@ -1,19 +1,19 @@
 package com.bitdubai.smartwallet.platform.layer._3_user.login.developer;
 
-import com.bitdubai.smartwallet.platform.layer._3_user.User;
+import com.bitdubai.smartwallet.platform.layer._3_user.UserManager;
 import com.bitdubai.smartwallet.platform.layer._3_user.UserDeveloper;
-import com.bitdubai.smartwallet.platform.layer._3_user.login.developer.bitdubai.version_1.SystemUser;
+import com.bitdubai.smartwallet.platform.layer._3_user.login.developer.bitdubai.version_1.SystemUserManager;
 
 /**
  * Created by ciencias on 22.01.15.
  */
 public class DeveloperBitDubai implements UserDeveloper {
 
-    User mUser;
+    UserManager mUserManager;
 
     @Override
-    public User getUser() {
-        return mUser;
+    public UserManager getUser() {
+        return mUserManager;
     }
 
     public DeveloperBitDubai () {
@@ -23,7 +23,7 @@ public class DeveloperBitDubai implements UserDeveloper {
          * it is easy to choose.
          */
 
-        mUser = new SystemUser();
+        mUserManager = new SystemUserManager();
 
     }
 }

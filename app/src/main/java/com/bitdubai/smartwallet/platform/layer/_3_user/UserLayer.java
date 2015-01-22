@@ -9,10 +9,10 @@ import com.bitdubai.smartwallet.platform.layer._3_user.login.LoginSubsystem;
  */
 public class UserLayer implements PlatformLayer {
 
-    User mUser;
+    UserManager mUserManager;
 
-    public User getUser() {
-        return mUser;
+    public UserManager getUserManager() {
+        return mUserManager;
     }
 
     public void start() throws CantStartLayerException {
@@ -24,7 +24,7 @@ public class UserLayer implements PlatformLayer {
 
         try {
             loginSubsystem.start();
-            mUser = ((UserSubsystem) loginSubsystem).getUser();
+            mUserManager = ((UserSubsystem) loginSubsystem).getUserManager();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());
@@ -35,4 +35,7 @@ public class UserLayer implements PlatformLayer {
             throw new CantStartLayerException();
         }
     }
+
+
+
 }

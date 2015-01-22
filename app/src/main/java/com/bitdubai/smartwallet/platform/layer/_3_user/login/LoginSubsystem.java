@@ -1,7 +1,7 @@
 package com.bitdubai.smartwallet.platform.layer._3_user.login;
 
 import com.bitdubai.smartwallet.platform.layer._3_user.CantStartSubsystemException;
-import com.bitdubai.smartwallet.platform.layer._3_user.User;
+import com.bitdubai.smartwallet.platform.layer._3_user.UserManager;
 import com.bitdubai.smartwallet.platform.layer._3_user.UserSubsystem;
 import com.bitdubai.smartwallet.platform.layer._3_user.login.developer.DeveloperBitDubai;
 
@@ -10,11 +10,11 @@ import com.bitdubai.smartwallet.platform.layer._3_user.login.developer.Developer
  */
 public class LoginSubsystem implements UserSubsystem {
 
-    User mUser;
+    UserManager mUserManager;
 
     @Override
-    public User getUser() {
-        return null;
+    public UserManager getUserManager() {
+        return mUserManager;
     }
 
     @Override
@@ -26,7 +26,7 @@ public class LoginSubsystem implements UserSubsystem {
 
         try {
             DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
-            mUser = developerBitDubai.getUser();
+            mUserManager = developerBitDubai.getUser();
         }
         catch (Exception e)
         {
