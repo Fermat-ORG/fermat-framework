@@ -38,18 +38,18 @@ public class FragmentsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         item = new String[]{
-                "AccountDetailAccountFragment",
-                "AccountDetailAllFragment",
-                "AccountDetailCreditsFragment",
-                "AccountDetailDebitsFragment",
-                "AccountDetailFiltersFragment",
-                "AvailableBalanceFragment",
-                "BalanceFragment",
-                "ChatOverReceiveTrxFragment",
-                "ChatOverTransactionFragment",
-                "ChatWithContactFragment",
-                "ContactsFragment",
-                "DailyDiscountsFragment",
+                "Account Detail Account",
+                "Account Detail All",
+                "Account Detail Credits",
+                "Account Detail Debits",
+                "Account Detail Filters",
+                "Available Balance",
+                "Balance",
+                "Chat Over Receive Transaction",
+                "Chat Over Transaction",
+                "Chat With Contact",
+                "Contacts",
+                "Daily Discounts",
         };
         fragment_item = new String[][]{
 
@@ -187,6 +187,8 @@ public class FragmentsFragment extends Fragment {
         @Override
         public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
             ViewHolder Item;
+            ViewHolder Switch;
+
             //*** Seguramente por una cuestion de performance lo hacia asi, yo lo saque para que ande el prototippo
             // if (convertView == null) {
             convertView = inf.inflate(R.layout.wallet_factory_fragments_header_fragment, parent, false);
@@ -196,6 +198,9 @@ public class FragmentsFragment extends Fragment {
             Item.text.setTypeface(MyApplication.getDefaultTypeface());
             Item.text.setText(item[groupPosition].toString());
 
+            Switch = new ViewHolder();
+            Switch.text = (TextView) convertView.findViewById(R.id.switch_1);
+            Switch.text.setTypeface(MyApplication.getDefaultTypeface());
             return convertView;
         }
 

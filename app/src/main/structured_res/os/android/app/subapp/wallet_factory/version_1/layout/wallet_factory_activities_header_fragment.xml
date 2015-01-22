@@ -2,38 +2,50 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="20dp">
+    android:paddingBottom="4dp"
+    android:paddingTop="4dp"
+    android:paddingLeft="3dp"
+    android:paddingRight="3dp">
     <TextView android:id="@+id/description"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="description"
-        android:textSize="15sp"
+        android:textSize="18sp"
         android:textStyle="bold|normal"
         android:textColor="#FFFFFF"
         android:padding="5dp"
         android:gravity="center_vertical"/>
-    <Switch android:id="@+id/actionbar"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:textColor="#FFFFFF"
+        android:orientation="vertical">
+        <Switch android:id="@+id/actionbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:paddingBottom="6dp"
+            android:paddingTop="6dp"
+            android:textColor="#FFFFFF"
+            android:thumb="@drawable/wallet_factory_switch_background"
+            android:textStyle="normal"/>
+        <Switch android:id="@+id/drawer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:textColor="#FFFFFF"
+            android:thumb="@drawable/wallet_factory_switch_background"
+            android:paddingBottom="6dp"
+            android:paddingTop="6dp"
+            android:textStyle="normal"/>
+        <Switch android:id="@+id/tab"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:paddingBottom="6dp"
+            android:thumb="@drawable/wallet_factory_switch_background"
+            android:textColor="#FFFFFF"
+            android:paddingTop="6dp"
+            android:textStyle="normal"/>
+        </LinearLayout>
 
-        android:textStyle="normal"
-        android:layout_marginLeft="15dp"/>
-    <Switch android:id="@+id/drawer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:textColor="#FFFFFF"
-
-        android:textStyle="normal"
-        android:layout_marginLeft="15dp"/>
-    <Switch android:id="@+id/tab"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:textColor="#FFFFFF"
-
-        android:textStyle="normal"
-        android:layout_marginLeft="15dp"/>
 </LinearLayout>
