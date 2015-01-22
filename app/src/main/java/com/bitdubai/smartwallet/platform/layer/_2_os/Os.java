@@ -7,5 +7,6 @@ public interface Os {
 
     FileSystem getFileSystem();
     DatabaseSystem getDatabaseSystem();
+    void setContext (Object context);
 
 }

@@ -4,6 +4,7 @@ package com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -93,7 +94,10 @@ public class MyApplication extends Application {
         super();
 
         try {
-            Platform platform = new Platform();
+
+            Context context = getApplicationContext();
+
+            Platform platform = new Platform(context);
             mPlatform = platform;
         }
         catch (CantStartPlatformException e) {

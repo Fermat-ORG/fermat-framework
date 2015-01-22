@@ -4,10 +4,7 @@ import com.bitdubai.smartwallet.platform.layer.CantStartLayerException;
 import com.bitdubai.smartwallet.platform.layer.PlatformLayer;
 
 import com.bitdubai.smartwallet.platform.layer._1_definition.enums.PlatformFileName;
-import com.bitdubai.smartwallet.platform.layer._2_os.File;
-import com.bitdubai.smartwallet.platform.layer._2_os.FileNotFoundException;
-import com.bitdubai.smartwallet.platform.layer._2_os.Os;
-import com.bitdubai.smartwallet.platform.layer._2_os.OsLayer;
+import com.bitdubai.smartwallet.platform.layer._2_os.*;
 import com.bitdubai.smartwallet.platform.layer._1_definition.DefinitionLayer;
 import com.bitdubai.smartwallet.platform.layer._3_user.LoginFailedException;
 import com.bitdubai.smartwallet.platform.layer._3_user.User;
@@ -94,7 +91,7 @@ public class Platform  {
     }
 
 
-    public Platform() throws CantStartPlatformException {
+    public Platform(Object context) throws CantStartPlatformException {
 
         /**
          * Here I will be starting all the platforms layers. It is required that none of them fails. That does not mean
@@ -122,16 +119,21 @@ public class Platform  {
             throw new CantStartPlatformException();
         }
 
+        /**
+         * I will set the context to the OS in order to enable access to the underlying Os objects.
+         */
+
+        Os os = ((OsLayer) mOsLayer).getOs();
+        os.setContext(context);
 
         /**
          * Now I will recover the last state, in order to allow the end user to continue where he was.The first thing
          * to do is to get the file where the last state was saved.
          */
 
-        Os os = ((OsLayer) mOsLayer).getOs();
 
         try {
-            File platformStateFile =  os.getFileSystem().getFile(PlatformFileName.LAST_STATE.getFileName());
+            PlatformFile platformStateFile =  os.getFileSystem().getFile(PlatformFileName.LAST_STATE.getFileName());
         }
         catch (FileNotFoundException e)
         {
@@ -145,6 +147,7 @@ public class Platform  {
              */
 
             User newUser = ((UserLayer) mUserLayer).getUserManager().createUser();
+
             try {
                 newUser.login("");
 
@@ -156,10 +159,9 @@ public class Platform  {
                 throw new CantStartPlatformException();
             }
 
+            PlatformFile platformStateFile =  os.getFileSystem().createFile(PlatformFileName.LAST_STATE.getFileName(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT );
+
         }
-
-
-
 
 
     }

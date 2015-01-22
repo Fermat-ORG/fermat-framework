@@ -1,5 +1,6 @@
 package com.bitdubai.smartwallet.platform.layer._2_os.android.developer.bitdubai.version_1.file_system;
 
+import android.content.Context;
 import com.bitdubai.smartwallet.platform.layer._2_os.*;
 
 /**
@@ -7,15 +8,23 @@ import com.bitdubai.smartwallet.platform.layer._2_os.*;
  */
 public class AndroidFileSystem implements FileSystem {
 
+    Context mContext;
+
     @Override
-    public File getFile(String fileName) throws FileNotFoundException{
+    public PlatformFile getFile(String fileName) throws FileNotFoundException{
 
         throw new FileNotFoundException();
         //return null;
     }
 
     @Override
-    public File createFile(String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) {
-        return null;
+    public PlatformFile createFile(String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) {
+
+        return new AndroidFile(mContext, fileName, privacyLevel, lifeSpan);
+    }
+
+    @Override
+    public void setContext(Object context) {
+        mContext = (Context) context;
     }
 }

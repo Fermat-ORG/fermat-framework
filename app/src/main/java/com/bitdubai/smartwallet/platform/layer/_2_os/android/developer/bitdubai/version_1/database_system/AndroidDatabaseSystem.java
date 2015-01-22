@@ -1,5 +1,6 @@
 package com.bitdubai.smartwallet.platform.layer._2_os.android.developer.bitdubai.version_1.database_system;
 
+import android.content.Context;
 import com.bitdubai.smartwallet.platform.layer._2_os.Database;
 import com.bitdubai.smartwallet.platform.layer._2_os.DatabaseSystem;
 
@@ -7,6 +8,9 @@ import com.bitdubai.smartwallet.platform.layer._2_os.DatabaseSystem;
  * Created by ciencias on 20.01.15.
  */
 public class AndroidDatabaseSystem implements DatabaseSystem {
+
+    Context mContext;
+
     @Override
     public Database getDatabase(String databaseName) {
         return null;
@@ -15,5 +19,10 @@ public class AndroidDatabaseSystem implements DatabaseSystem {
     @Override
     public Database createDatabase(String databaseName, String databaseSchema) {
         return null;
+    }
+
+    @Override
+    public void setContext(Object context) {
+        mContext = (Context) context;
     }
 }

@@ -11,4 +11,7 @@ public interface DatabaseSystem {
     public Database getDatabase (String databaseName);
 
     public Database createDatabase (String databaseName, String databaseSchema);
+
+    void setContext (Object context);
+
 }

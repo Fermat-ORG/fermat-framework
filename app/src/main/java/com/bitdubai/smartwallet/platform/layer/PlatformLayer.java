@@ -10,4 +10,5 @@ public interface PlatformLayer {
      */
 
     public void start() throws CantStartLayerException;
+
 }
