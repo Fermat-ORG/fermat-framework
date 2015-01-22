@@ -116,6 +116,7 @@ public class Platform  {
         }
         catch (CantStartLayerException e) {
             System.err.println("CantStartLayerException: " + e.getMessage());
+            e.printStackTrace();
             throw new CantStartPlatformException();
         }
 
@@ -131,9 +132,8 @@ public class Platform  {
          * to do is to get the file where the last state was saved.
          */
 
-
         try {
-            PlatformFile platformStateFile =  os.getFileSystem().getFile(PlatformFileName.LAST_STATE.getFileName());
+            PlatformFile platformStateFile =  os.getFileSystem().getFile(PlatformFileName.LAST_STATE.getFileName(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT );
         }
         catch (FileNotFoundException e)
         {
@@ -155,18 +155,24 @@ public class Platform  {
                 /**
                  * This really should never happen. But if it does...
                  */
+                System.err.println("LoginFailedException: " + loginException.getMessage());
                 loginException.printStackTrace();
                 throw new CantStartPlatformException();
             }
 
             PlatformFile platformStateFile =  os.getFileSystem().createFile(PlatformFileName.LAST_STATE.getFileName(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT );
+            platformStateFile.setContent("");
 
+            try {
+                platformStateFile.persistToMedia();
+            } catch (CantPersistFileException cantPersistException) {
+                /**
+                 * This really should never happen. But if it does...
+                 */
+                System.err.println("Cant persist platform state to media: " + cantPersistException.getMessage());
+                cantPersistException.printStackTrace();
+                throw new CantStartPlatformException();
+            }
         }
-
-
     }
-
-
-
-
 }

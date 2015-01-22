@@ -24,6 +24,8 @@ import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.platform.CantStartPlatformException;
 import com.bitdubai.smartwallet.platform.Platform;
 
+import java.io.FileOutputStream;
+
 
 public class MyApplication extends Application {
 
@@ -104,6 +106,7 @@ public class MyApplication extends Application {
             System.err.println("CantStartPlatformException: " + e.getMessage());
 
         }
+
     }
 
 

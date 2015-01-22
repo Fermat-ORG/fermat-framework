@@ -11,10 +11,19 @@ public class AndroidFileSystem implements FileSystem {
     Context mContext;
 
     @Override
-    public PlatformFile getFile(String fileName) throws FileNotFoundException{
+    public PlatformFile getFile(String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException{
 
-        throw new FileNotFoundException();
-        //return null;
+        AndroidFile newFile = new AndroidFile(mContext, fileName, privacyLevel, lifeSpan);
+
+        try {
+            newFile.loadToMemory();
+            return newFile;
+        }
+        catch (CantLoadFileException e){
+            System.err.println("LoginFailedException: " + e.getMessage());
+            e.printStackTrace();
+            throw new FileNotFoundException();
+        }
     }
 
     @Override

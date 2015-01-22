@@ -5,7 +5,7 @@ package com.bitdubai.smartwallet.platform.layer._2_os;
  */
 public interface FileSystem {
 
-    public PlatformFile getFile (String fileName) throws FileNotFoundException;
+    public PlatformFile getFile (String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException;
 
     public PlatformFile createFile (String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan );
 
