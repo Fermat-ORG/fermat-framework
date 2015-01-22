@@ -5,14 +5,14 @@ import com.bitdubai.smartwallet.platform.layer.PlatformLayer;
 
 import com.bitdubai.smartwallet.platform.layer._2_os.OsLayer;
 import com.bitdubai.smartwallet.platform.layer._1_definition.DefinitionLayer;
-import com.bitdubai.smartwallet.platform.layer._3_license.LicenseLayer;
-import com.bitdubai.smartwallet.platform.layer._4_world.WorldLayer;
-import com.bitdubai.smartwallet.platform.layer._5_crypto_network.CryptoNetworkLayer;
-import com.bitdubai.smartwallet.platform.layer._6_communication.CommunicationLayer;
-import com.bitdubai.smartwallet.platform.layer._7_network_service.NetworkServiceLayer;
-import com.bitdubai.smartwallet.platform.layer._8_middleware.MiddlewareLayer;
-import com.bitdubai.smartwallet.platform.layer._9_module.ModuleLayer;
-import com.bitdubai.smartwallet.platform.layer._10_agent.AgentLayer;
+import com.bitdubai.smartwallet.platform.layer._4_license.LicenseLayer;
+import com.bitdubai.smartwallet.platform.layer._5_world.WorldLayer;
+import com.bitdubai.smartwallet.platform.layer._6_crypto_network.CryptoNetworkLayer;
+import com.bitdubai.smartwallet.platform.layer._7_communication.CommunicationLayer;
+import com.bitdubai.smartwallet.platform.layer._8_network_service.NetworkServiceLayer;
+import com.bitdubai.smartwallet.platform.layer._9_middleware.MiddlewareLayer;
+import com.bitdubai.smartwallet.platform.layer._10_module.ModuleLayer;
+import com.bitdubai.smartwallet.platform.layer._11_agent.AgentLayer;
 
 /**
  * Created by ciencias on 20.01.15.

@@ -9,11 +9,11 @@ import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.platform.Platform;
 import com.bitdubai.smartwallet.platform.layer._2_os.Os;
 import com.bitdubai.smartwallet.platform.layer._2_os.OsLayer;
-import com.bitdubai.smartwallet.platform.layer._5_crypto_network.CryptoNetwork;
-import com.bitdubai.smartwallet.platform.layer._5_crypto_network.CryptoNetworkLayer;
-import com.bitdubai.smartwallet.platform.layer._5_crypto_network.CryptoNetworks;
-import com.bitdubai.smartwallet.platform.layer._8_middleware.shell.developer.bitdubai.version_1.engine.LocalDevice;
-import com.bitdubai.smartwallet.platform.layer._7_network_service.user.developer.bitdubai.version_1.service.LocalUser;
+import com.bitdubai.smartwallet.platform.layer._6_crypto_network.CryptoNetwork;
+import com.bitdubai.smartwallet.platform.layer._6_crypto_network.CryptoNetworkLayer;
+import com.bitdubai.smartwallet.platform.layer._6_crypto_network.CryptoNetworks;
+import com.bitdubai.smartwallet.platform.layer._9_middleware.shell.developer.bitdubai.version_1.engine.LocalDevice;
+import com.bitdubai.smartwallet.platform.layer._8_network_service.user.developer.bitdubai.version_1.service.LocalUser;
 import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.MyApplication;
 
 public class LoginActivity extends Activity {

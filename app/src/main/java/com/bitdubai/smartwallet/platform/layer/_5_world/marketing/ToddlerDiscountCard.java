@@ -1,0 +1,7 @@
+package com.bitdubai.smartwallet.platform.layer._5_world.marketing;
+
+/**
+ * Created by ciencias on 26.12.14.
+ */
+public class ToddlerDiscountCard implements AgeRelatedDiscountCard {
+}
