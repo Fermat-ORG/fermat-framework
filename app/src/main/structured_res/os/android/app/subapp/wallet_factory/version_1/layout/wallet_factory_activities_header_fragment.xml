@@ -9,24 +9,31 @@
         android:text="description"
         android:textSize="15sp"
         android:textStyle="bold|normal"
+        android:textColor="#FFFFFF"
         android:padding="5dp"
         android:gravity="center_vertical"/>
     <Switch android:id="@+id/actionbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="12sp"
+        android:textColor="#FFFFFF"
+
         android:textStyle="normal"
         android:layout_marginLeft="15dp"/>
     <Switch android:id="@+id/drawer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="12sp"
+        android:textColor="#FFFFFF"
+
         android:textStyle="normal"
         android:layout_marginLeft="15dp"/>
     <Switch android:id="@+id/tab"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="12sp"
+        android:textColor="#FFFFFF"
+
         android:textStyle="normal"
         android:layout_marginLeft="15dp"/>
 </LinearLayout>

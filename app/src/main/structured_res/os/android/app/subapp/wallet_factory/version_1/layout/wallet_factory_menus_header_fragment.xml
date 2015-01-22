@@ -8,6 +8,7 @@
         android:layout_height="match_parent"
         android:text="description"
         android:textSize="15sp"
+        android:textColor="#FFFFFF"
         android:textStyle="normal|bold"
         android:padding="5dp"
         android:gravity="center_vertical"/>
