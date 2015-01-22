@@ -1,7 +1,8 @@
 package com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.kids.sub_segment.all.developer.bitdubai.version_1.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -18,18 +19,21 @@ import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.MyApplication;
 import android.view.GestureDetector;
 import android.view.View.OnClickListener;
-
+import java.io.InputStream;
 import java.io.File;
 import android.os.Environment;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v4.app.Fragment;
+
+
 
 
 /**
  * Created by Natalia on 16/01/2015.
  */
-public class TicketFragment  extends DialogFragment  {
-
+public class TicketFragment  extends  DialogFragment  {
+    private final int EDITED_TICKET = 1;
     private static final String ARG_POSITION = "position";
     private static final long DOUBLE_PRESS_INTERVAL = 250; // in millis
     private long lastPressTime;
@@ -37,9 +41,13 @@ public class TicketFragment  extends DialogFragment  {
     View rootView;
     boolean mHasDoubleClicked = false;
     private String[] tickets;
-
+    private ImageView imageMoney;
     GestureDetector gestureDetector;
     boolean tapped;
+    Context context;
+    String ticketFace = "A";
+    DialogFragment fragment = this;
+
     static TicketFragment newInstance(int position) {
         TicketFragment f = new TicketFragment();
 
@@ -70,9 +78,9 @@ public class TicketFragment  extends DialogFragment  {
 
         view = inflater.inflate(R.layout.wallets_kids_fragment_ticket, container, false); //Contains empty RelativeLayout
         final ImageView imageTicket;
-        ImageView money = (ImageView)view.findViewById(R.id.ticket1);
-        money.setTag(1);
-        imageTicket = money;
+        imageMoney = (ImageView)view.findViewById(R.id.ticket1);
+        imageMoney.setTag(1);
+        imageTicket = imageMoney;
 
         imageTicket.setOnTouchListener(new OnTouchListener() {
 
@@ -93,10 +101,12 @@ public class TicketFragment  extends DialogFragment  {
                     public void onClick(View v) {
 
                         if ((Integer) v.getTag() == 1) {
-                            imageTicket.setImageResource(R.drawable.ar_bill_1_b );
+                            imageTicket.setImageResource(R.drawable.usd_1_b );
+                            ticketFace = "B";
                             v.setTag(2);
                         } else {
                             imageTicket.setImageResource(R.drawable.usd_1);
+                            ticketFace = "A";
                             v.setTag(1);
                         }
                     }
@@ -112,10 +122,12 @@ public class TicketFragment  extends DialogFragment  {
                     public void onClick(View v) {
 
                         if ((Integer) v.getTag() == 1) {
-                            imageTicket.setImageResource(R.drawable.ar_bill_5_b);
+                            imageTicket.setImageResource(R.drawable.usd_5_b);
+                            ticketFace = "B";
                             v.setTag(2);
                         } else {
                             imageTicket.setImageResource(R.drawable.usd_5);
+                            ticketFace = "A";
                             v.setTag(1);
                         }
                     }
@@ -130,10 +142,12 @@ public class TicketFragment  extends DialogFragment  {
                     public void onClick(View v) {
 
                         if ((Integer) v.getTag() == 1) {
-                            imageTicket.setImageResource(R.drawable.usd_10);
+                            imageTicket.setImageResource(R.drawable.usd_10_b);
+                            ticketFace = "B";
                             v.setTag(2);
                         } else {
-                            imageTicket.setImageResource(R.drawable.ar_bill_10_b);
+                            imageTicket.setImageResource(R.drawable.usd_10);
+                            ticketFace = "A";
                             v.setTag(1);
                         }
                     }
@@ -148,10 +162,12 @@ public class TicketFragment  extends DialogFragment  {
                     public void onClick(View v) {
 
                         if ((Integer) v.getTag() == 1) {
-                            imageTicket.setImageResource(R.drawable.ar_bill_2_b);
+                            imageTicket.setImageResource(R.drawable.usd_20_b);
+                            ticketFace = "B";
                             v.setTag(2);
                         } else {
                             imageTicket.setImageResource(R.drawable.usd_20);
+                            ticketFace = "A";
                             v.setTag(1);
                         }
 
@@ -167,10 +183,12 @@ public class TicketFragment  extends DialogFragment  {
                     public void onClick(View v) {
 
                         if ((Integer) v.getTag() == 1) {
-                            imageTicket.setImageResource(R.drawable.ar_bill_50_b);
+                            imageTicket.setImageResource(R.drawable.usd_50_b);
+                            ticketFace = "B";
                             v.setTag(502);
                         } else {
                             imageTicket.setImageResource(R.drawable.usd_50);
+                            ticketFace = "A";
                             v.setTag(50);
                         }
                     }
@@ -185,10 +203,12 @@ public class TicketFragment  extends DialogFragment  {
                     public void onClick(View v) {
 
                         if ((Integer) v.getTag() == 1) {
-                            imageTicket.setImageResource(R.drawable.ar_bill_100_b);
+                            imageTicket.setImageResource(R.drawable.usd_100_b);
+                            ticketFace = "B";
                             v.setTag(2);
                         } else {
                             imageTicket.setImageResource(R.drawable.usd_100);
+                            ticketFace = "A";
                             v.setTag(1);
                         }
 
@@ -217,6 +237,7 @@ public class TicketFragment  extends DialogFragment  {
         @Override
         public boolean onDoubleTap(MotionEvent e) {
 
+
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.usd_1);
 
             File mFile1 = Environment.getExternalStorageDirectory();
@@ -224,28 +245,74 @@ public class TicketFragment  extends DialogFragment  {
             String fileName ="";
             switch ( MyApplication.getTicketId()) {
                 case "usd_1":
-                    fileName ="usd_1.jpg";
-                    BitmapFactory.decodeResource(getResources(),R.drawable.usd_1);
+                    if(ticketFace == "B")
+                    {
+                        fileName ="usd_1_b.jpg";
+                        bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.usd_1_b);
+                    }
+                    else{
+                        fileName ="usd_1.jpg";
+                        bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.usd_1);
+                    }
                     break;
                 case "usd_5":
-                    fileName ="usd_5.jpg";
-                    BitmapFactory.decodeResource(getResources(),R.drawable.usd_5);
+
+                    if(ticketFace == "B")
+                    {
+                        fileName ="usd_5_b.jpg";
+                        bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.usd_5_b);
+                    }
+                    else{
+                        fileName ="usd_5.jpg";
+                        bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.usd_5);
+                    }
                     break;
                 case "usd_10":
-                    fileName ="usd_10.jpg";
-                    BitmapFactory.decodeResource(getResources(),R.drawable.usd_10);
+
+                    if(ticketFace == "B")
+                    {
+                        fileName ="usd_10_b.jpg";
+                        bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.usd_10_b);
+                    }
+                    else{
+                        fileName ="usd_10.jpg";
+                        bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.usd_10);
+                    }
                     break;
                 case "usd_20":
-                    fileName ="usd_20.jpg";
-                    BitmapFactory.decodeResource(getResources(),R.drawable.usd_20);
+                    if(ticketFace == "B")
+                    {
+                        fileName ="usd_20_b.jpg";
+                        bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.usd_20_b);
+                    }
+                    else{
+                        fileName ="usd_20.jpg";
+                        bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.usd_20);
+                    }
                     break;
                 case "usd_50":
-                    fileName ="usd_50.jpg";
-                    BitmapFactory.decodeResource(getResources(),R.drawable.usd_50);
+
+                    if(ticketFace == "B")
+                    {
+                        fileName ="usd_50_b.jpg";
+                        bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.usd_50_b);
+                    }
+                    else{
+                        fileName ="usd_50.jpg";
+                        bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.usd_50);
+                    }
                     break;
                 case "usd_100":
-                    fileName ="usd_100.jpg";
-                    BitmapFactory.decodeResource(getResources(),R.drawable.usd_100);
+
+                    if(ticketFace == "B")
+                    {
+                        fileName ="usd_100_b.jpg";
+                        bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.usd_100_b);
+                    }
+                    else{
+                        fileName ="usd_100.jpg";
+                        bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.usd_100);
+                    }
                     break;
 
             }
@@ -281,13 +348,35 @@ public class TicketFragment  extends DialogFragment  {
                 //getResources().getIdentifier("ic_launcher", "drawable", getPackageName());
                 editIntent.setDataAndType(Uri.parse("file://" + imagePath), "image/*");
                 editIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                startActivity(Intent.createChooser(editIntent, null));
-//startActivityForResult(intent, Constants.LINK_CALENDER);
+                editIntent.putExtra("finishActivityOnSaveCompleted", true);
+                //startActivity(Intent.createChooser(editIntent, null));
+                fragment.startActivityForResult(editIntent, EDITED_TICKET);
             }
 
 
             return true;
         }
+
+
+        public  void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+
+            switch(requestCode) {
+                case EDITED_TICKET:
+                    if(resultCode == 1){
+                        try {
+                            final Uri imageUri = imageReturnedIntent.getData();
+                            final InputStream imageStream = context.getContentResolver().openInputStream(imageUri);
+                            final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                            imageMoney.setImageBitmap(selectedImage);
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+            }
+        }
+
+
     }
 
 

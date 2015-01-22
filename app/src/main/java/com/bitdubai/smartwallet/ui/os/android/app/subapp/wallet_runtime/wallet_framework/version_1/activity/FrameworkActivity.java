@@ -39,7 +39,7 @@ import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ReceiveFragment;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.RefillFragment;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ShopFragment;
-
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.kids.sub_segment.all.developer.bitdubai.version_1.fragment.TicketFragment;
 
 //public class FrameworkActivity extends FragmentActivity {
 public class FrameworkActivity extends FragmentActivity
@@ -364,6 +364,17 @@ public class FrameworkActivity extends FragmentActivity
     }
 
     //***
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        FragmentManager fm = getSupportFragmentManager();
+
+//if you added fragment via layout xml
+        TicketFragment fragment = (TicketFragment)fm.findFragmentByTag("dialog");
+        fragment.onActivityResult(requestCode, resultCode, data);
+
+    }
 
     public void restoreActionBar() {
         ActionBar actionBar = getActionBar();

@@ -64,7 +64,7 @@ public class UsdBalanceFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        tickets = new String[]{"usd_1","usd_1","usd_10","usd_10","usd_20","usd_5",};
+        tickets = new String[]{"usd_1","usd_1","usd_10","usd_100","usd_10","usd_20","usd_5","usd_10"};
 
         position = getArguments().getInt(ARG_POSITION);
         mTicketsList = new ArrayList<TicketPosition>();
@@ -109,8 +109,8 @@ public class UsdBalanceFragment extends Fragment {
                         public void onClick(View v) {
                             MyApplication.setTicketId( "usd_1");
                             if ((Integer)v.getTag() == 1) {
-                                imageTicket.setImageResource(R.drawable.ar_bill_1_b);
-                                v.setTag(22);
+                                imageTicket.setImageResource(R.drawable.usd_1_b);
+                                v.setTag(12);
                             }
                             else{
                                 imageTicket.setImageResource(R.drawable.usd_1);
@@ -129,7 +129,7 @@ public class UsdBalanceFragment extends Fragment {
                         public void onClick(View v) {
                             MyApplication.setTicketId( "usd_5");
                             if ((Integer)v.getTag() == 5) {
-                                imageTicket.setImageResource(R.drawable.ar_bill_5_b);
+                                imageTicket.setImageResource(R.drawable.usd_5_b);
                                 v.setTag(52);
                             }
                             else{
@@ -149,7 +149,7 @@ public class UsdBalanceFragment extends Fragment {
                         public void onClick(View v) {
                             MyApplication.setTicketId( "usd_10");
                             if ((Integer)v.getTag() == 10) {
-                                imageTicket.setImageResource(R.drawable.ar_bill_10_b);
+                                imageTicket.setImageResource(R.drawable.usd_10_b);
                                 v.setTag(102);
                             }
                             else{
@@ -169,7 +169,7 @@ public class UsdBalanceFragment extends Fragment {
                         public void onClick(View v) {
                             MyApplication.setTicketId( "usd_20");
                             if ((Integer)v.getTag() == 20) {
-                                imageTicket.setImageResource(R.drawable.ar_bill_2_b);
+                                imageTicket.setImageResource(R.drawable.usd_20_b);
                                 v.setTag(202);
                             }
                             else{
@@ -190,7 +190,7 @@ public class UsdBalanceFragment extends Fragment {
                         public void onClick(View v) {
 
                             if ((Integer)v.getTag() == 100) {
-                                imageTicket.setImageResource(R.drawable.ar_bill_100_b );
+                                imageTicket.setImageResource(R.drawable.usd_100_b );
                                 v.setTag(1002);
                             }
                             else{
@@ -267,7 +267,7 @@ public class UsdBalanceFragment extends Fragment {
                         public void onClick(View v) {
 
                             if ((Integer)v.getTag() == 5) {
-                                imagen1.setImageResource(R.drawable.ar_bill_5_b);
+                                imagen1.setImageResource(R.drawable.usd_5_b);
                                 v.setTag(52);
                             }
                             else{
@@ -305,7 +305,7 @@ public class UsdBalanceFragment extends Fragment {
                         public void onClick(View v) {
 
                             if ((Integer)v.getTag() == 5) {
-                                imagen2.setImageResource(R.drawable.ar_bill_5_b);
+                                imagen2.setImageResource(R.drawable.usd_5_b);
                                 v.setTag(52);
                             }
                             else{
@@ -346,7 +346,7 @@ public class UsdBalanceFragment extends Fragment {
                         public void onClick(View v) {
 
                             if ((Integer)v.getTag() == 10) {
-                                imagen1.setImageResource(R.drawable.ar_bill_10_b);
+                                imagen1.setImageResource(R.drawable.usd_10_b);
                                 v.setTag(102);
                             }
                             else{
@@ -366,7 +366,7 @@ public class UsdBalanceFragment extends Fragment {
 
                     item2 = new TicketPosition();
                     item2.Id = imagen1.getId();
-                    item2.ticketId = (Integer)imagen1.getTag();
+                    item2.ticketId = 10;
                     item2.leftMargin = layoutParams.leftMargin;
                     item2.topMargin = layoutParams.topMargin ;
                     item2.rightMargin = layoutParams.rightMargin;
@@ -383,7 +383,7 @@ public class UsdBalanceFragment extends Fragment {
                         public void onClick(View v) {
 
                             if ((Integer)v.getTag() == 10) {
-                                imagen2.setImageResource(R.drawable.ar_bill_10_b);
+                                imagen2.setImageResource(R.drawable.usd_10_b);
                                 v.setTag(102);
                             }
                             else{
@@ -403,7 +403,7 @@ public class UsdBalanceFragment extends Fragment {
 
                     item2 = new TicketPosition();
                     item2.Id = imagen2.getId();
-                    item2.ticketId = (Integer)imagen2.getTag();
+                    item2.ticketId = 10;
                     item2.leftMargin = layoutParams.leftMargin;
                     item2.topMargin = layoutParams.topMargin ;
                     item2.rightMargin = layoutParams.rightMargin;
@@ -428,7 +428,7 @@ public class UsdBalanceFragment extends Fragment {
                         public void onClick(View v) {
 
                             if ((Integer)v.getTag() == 50) {
-                                imagen1.setImageResource(R.drawable.ar_bill_50_b);
+                                imagen1.setImageResource(R.drawable.usd_50_b);
                                 v.setTag(502);
                             }
                             else{
@@ -466,7 +466,7 @@ public class UsdBalanceFragment extends Fragment {
                         public void onClick(View v) {
 
                             if ((Integer)v.getTag() == 50) {
-                                imagen2.setImageResource(R.drawable.ar_bill_50_b);
+                                imagen2.setImageResource(R.drawable.usd_50_b);
                                 v.setTag(502);
                             }
                             else{
@@ -548,13 +548,13 @@ public class UsdBalanceFragment extends Fragment {
 
                     return false;
                 case MotionEvent.ACTION_POINTER_DOWN:
-                    //oldDist = spacing(event);
-                    //if (oldDist > 5f) {
-                    //  savedMatrix.set(matrix);
-                    //  midPoint(mid, event);
-                    mode = ZOOM;
+                    oldDist = spacing(event);
+                    if (oldDist > 5f) {
+                        //  savedMatrix.set(matrix);
+                        //  midPoint(mid, event);
+                        mode = ZOOM;
 
-                    // }
+                    }
                     break;
                 case MotionEvent.ACTION_POINTER_UP:
                     mode = NONE;
@@ -641,7 +641,7 @@ public class UsdBalanceFragment extends Fragment {
         TicketPosition itemTicket = getTicket(id);
         for (int i = 0; i < mTicketsList.size(); i++) {
             TicketPosition item = mTicketsList.get(i);
-            double posi1 = (item.leftMargin * 50) /100.0;
+            double posi1 = (item.leftMargin * 45) /100.0;
             double posi2 = (item.rightMargin * 5) /100.0;
             int left =0;
             int top = layoutParams.topMargin - item.topMargin;
@@ -651,7 +651,7 @@ public class UsdBalanceFragment extends Fragment {
                 left = (  item.leftMargin -layoutParams.leftMargin);
             int right = (item.rightMargin - layoutParams.rightMargin);
             //eveluate if resta negativa, no usarla.
-            if( left > 0 && (left <= posi1 && right ==0))
+            if((left <= posi1 && right ==0))
             {
                 int idTicket = item.ticketId;
                 int idTicket2 = ticketId;
@@ -722,7 +722,7 @@ public class UsdBalanceFragment extends Fragment {
                                 public void onClick(View v) {
 
                                     if ((Integer)v.getTag() == 20) {
-                                        imagen1.setImageResource(R.drawable.ar_bill_2_b);
+                                        imagen1.setImageResource(R.drawable.usd_20_b);
                                         v.setTag(202);
                                     }
                                     else{
@@ -743,7 +743,7 @@ public class UsdBalanceFragment extends Fragment {
 
                             item2 = new TicketPosition();
                             item2.Id = cantTickets;
-                            item2.ticketId = idTicket2;
+                            item2.ticketId = 20;
                             item2.leftMargin = layoutParams.leftMargin;
                             item2.topMargin = layoutParams.topMargin ;
                             item2.rightMargin = layoutParams.rightMargin;
@@ -769,7 +769,7 @@ public class UsdBalanceFragment extends Fragment {
                                 public void onClick(View v) {
 
                                     if ((Integer)v.getTag() == 10) {
-                                        imagen1.setImageResource(R.drawable.ar_bill_10_b);
+                                        imagen1.setImageResource(R.drawable.usd_10_b);
                                         v.setTag(102);
                                     }
                                     else{
@@ -789,7 +789,7 @@ public class UsdBalanceFragment extends Fragment {
 
                             item2 = new TicketPosition();
                             item2.Id = cantTickets;
-                            item2.ticketId = idTicket2;
+                            item2.ticketId = 10;
                             item2.leftMargin = layoutParams.leftMargin;
                             item2.topMargin = layoutParams.topMargin ;
                             item2.rightMargin = layoutParams.rightMargin;
@@ -823,7 +823,7 @@ public class UsdBalanceFragment extends Fragment {
                                 public void onClick(View v) {
 
                                     if ((Integer)v.getTag() == 100) {
-                                        imagen1.setImageResource(R.drawable.ar_bill_100_b);
+                                        imagen1.setImageResource(R.drawable.usd_10_b);
                                         v.setTag(1002);
                                     }
                                     else{
@@ -842,7 +842,7 @@ public class UsdBalanceFragment extends Fragment {
 
                             item2 = new TicketPosition();
                             item2.Id = cantTickets;
-                            item2.ticketId = idTicket2;
+                            item2.ticketId = 100;
                             item2.leftMargin = layoutParams.leftMargin;
                             item2.topMargin = layoutParams.topMargin ;
                             item2.rightMargin = layoutParams.rightMargin;
@@ -886,24 +886,18 @@ public class UsdBalanceFragment extends Fragment {
 
                 if (item.ticketId == ticketId) {
                     //update
-                    _update = true;
+                    TicketPosition item2 = new TicketPosition();
+                    item2.Id = id;
+                    item2.ticketId = ticketId;
+                    item2.leftMargin = layoutParams.leftMargin;
+                    item2.topMargin = layoutParams.topMargin;
+                    item2.rightMargin = layoutParams.rightMargin;
+                    item2.bottomMargin = layoutParams.bottomMargin;
                     break;
-                } else {
-                    //insert new
-                    _update = false;
                 }
             }
 
-            if (_update) {
-                //update
-                TicketPosition item2 = new TicketPosition();
-                item2.Id = id;
-                item2.ticketId = ticketId;
-                item2.leftMargin = layoutParams.leftMargin;
-                item2.topMargin = layoutParams.topMargin;
-                item2.rightMargin = layoutParams.rightMargin;
-                item2.bottomMargin = layoutParams.bottomMargin;
-            }
+
         }
 
     }
