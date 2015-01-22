@@ -64,7 +64,16 @@ public class AndroidFile implements PlatformFile {
     @Override
     public void loadToMemory() throws CantLoadFileException {
 
-        File file = new File(mContext.getFilesDir(), mFileName);
+        try {
+            File file = new File(mContext.getFilesDir(), mFileName);
+        }
+        catch (Exception e) {
+            System.err.println("Error trying to load a file to memory: " + e.getMessage());
+            e.printStackTrace();
+            throw new CantLoadFileException(mFileName);
+        }
+
+
 
         FileInputStream inputStream;
 

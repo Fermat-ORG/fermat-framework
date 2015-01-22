@@ -28,18 +28,18 @@ public class LoginActivity extends Activity {
         /**
          * Get access to the platform.
          */
-        MyApplication MyApp = (MyApplication) getApplication();
-        Platform platform = MyApp.getPlatform();
+        //MyApplication MyApp = (MyApplication) getApplication();
+       // Platform platform = MyApp.getPlatform();
 
         /**
          * Now I have access to the OS.
          */
-        Os os =  ((OsLayer) MyApp.getPlatform().getOsLayer()).getOs();
+        //Os os =  ((OsLayer) MyApp.getPlatform().getOsLayer()).getOs();
 
         /**
          * And now to the bitcoin network..
          */
-        CryptoNetwork bitcoinNetwork =  ((CryptoNetworkLayer) platform.getCryptoNetworkLayer()).getCryptoNetwork(CryptoNetworks.BITCOIN);
+       // CryptoNetwork bitcoinNetwork =  ((CryptoNetworkLayer) platform.getCryptoNetworkLayer()).getCryptoNetwork(CryptoNetworks.BITCOIN);
 
 
 

@@ -24,6 +24,7 @@ import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.platform.CantStartPlatformException;
 import com.bitdubai.smartwallet.platform.Platform;
 
+import java.io.File;
 import java.io.FileOutputStream;
 
 
@@ -95,17 +96,22 @@ public class MyApplication extends Application {
     public MyApplication () {
         super();
 
-        try {
+        //try {
 
-            Context context = getApplicationContext();
+          // Context mContext;
+           // mContext = this.getApplicationContext();
 
-            Platform platform = new Platform(context);
-            mPlatform = platform;
-        }
-        catch (CantStartPlatformException e) {
-            System.err.println("CantStartPlatformException: " + e.getMessage());
+           // File file = new File(mContext.getFilesDir(), "Platform_Last_State");
 
-        }
+            //Context context = getContext();
+
+            //Platform platform = new Platform(this.getApplicationContext());
+           // mPlatform = platform;
+       // }
+       // catch (CantStartPlatformException e) {
+        //    System.err.println("CantStartPlatformException: " + e.getMessage());
+
+        //}
 
     }
 
