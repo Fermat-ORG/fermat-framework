@@ -1,6 +1,9 @@
 package com.bitdubai.smartwallet.platform.layer._6_crypto_network.bitcoin.developer.bitdubai.version_1;
 
 import com.bitdubai.smartwallet.platform.layer._6_crypto_network.CryptoNetwork;
+import com.bitdubai.smartwallet.platform.layer._6_crypto_network.CryptoWallet;
+
+import java.util.UUID;
 
 /**
  * Created by ciencias on 20.01.15.
@@ -12,4 +15,12 @@ import com.bitdubai.smartwallet.platform.layer._6_crypto_network.CryptoNetwork;
 
 public class BitcoinCryptoNetwork implements CryptoNetwork {
 
+    CryptoWallet mCryptoWallet;
+
+    @Override
+    public void loadCryptoWallet(UUID walletId) {
+
+        mCryptoWallet = new BitcoinCryptoWallet(walletId);
+
+    }
 }
