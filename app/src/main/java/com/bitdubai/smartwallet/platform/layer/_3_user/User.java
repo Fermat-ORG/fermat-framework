@@ -9,6 +9,9 @@ import java.util.UUID;
  */
 public interface User {
 
+    public void createUser()  throws CantCreateUserException ;
+
+    public void loadUser  (UUID id) throws CantLoadUserException;
 
     public UUID getId();
 

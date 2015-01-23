@@ -6,9 +6,7 @@ import com.bitdubai.smartwallet.platform.layer.PlatformLayer;
 import com.bitdubai.smartwallet.platform.layer._1_definition.enums.PlatformFileName;
 import com.bitdubai.smartwallet.platform.layer._2_os.*;
 import com.bitdubai.smartwallet.platform.layer._1_definition.DefinitionLayer;
-import com.bitdubai.smartwallet.platform.layer._3_user.LoginFailedException;
-import com.bitdubai.smartwallet.platform.layer._3_user.User;
-import com.bitdubai.smartwallet.platform.layer._3_user.UserLayer;
+import com.bitdubai.smartwallet.platform.layer._3_user.*;
 import com.bitdubai.smartwallet.platform.layer._4_license.LicenseLayer;
 import com.bitdubai.smartwallet.platform.layer._5_world.WorldLayer;
 import com.bitdubai.smartwallet.platform.layer._6_crypto_network.CryptoNetworkLayer;
@@ -18,6 +16,7 @@ import com.bitdubai.smartwallet.platform.layer._9_middleware.MiddlewareLayer;
 import com.bitdubai.smartwallet.platform.layer._10_module.ModuleLayer;
 import com.bitdubai.smartwallet.platform.layer._11_agent.AgentLayer;
 
+import java.io.File;
 import java.util.UUID;
 
 /**
@@ -123,11 +122,20 @@ public class Platform  {
         }
 
         /**
-         * I will set the context to the OS in order to enable access to the underlying Os objects.
+         * I will set the context to the Os in order to enable access to the underlying Os objects.
          */
 
         Os os = ((OsLayer) mOsLayer).getOs();
         os.setContext(context);
+
+        /**
+         * I will give the User Manager access to the File System so it can load and save user information from
+         * persistent media.
+         */
+
+        UserManager userManager =  ((UserLayer) mUserLayer).getUserManager();
+
+        ((UsesFileSystem) userManager).setFileSystem(os.getFileSystem());
 
         /**
          * Now I will recover the last state, in order to allow the end user to continue where he was.The first thing
@@ -152,8 +160,19 @@ public class Platform  {
 
             UUID userId =  UUID.fromString(platformStateFile.getContent());
 
-            ((UserLayer) mUserLayer).getUserManager().loadUser(userId);
-
+            try
+            {
+                ((UserLayer) mUserLayer).getUserManager().loadUser(userId);
+            }
+            catch (CantLoadUserException cantLoadUserException)
+            {
+                /**
+                 * This really should never happen. But if it does...
+                 */
+                System.err.println("CantLoadUserException: " + cantLoadUserException.getMessage());
+                cantLoadUserException.printStackTrace();
+                throw new CantStartPlatformException();
+            }
 
         }
         catch (FileNotFoundException fileNotFoundException)
@@ -167,17 +186,19 @@ public class Platform  {
              * 3) Save the last state of the platform.
              */
 
-            User newUser = ((UserLayer) mUserLayer).getUserManager().createUser();
+            User newUser;
 
             try {
+
+                newUser = ((UserLayer) mUserLayer).getUserManager().createUser();
                 newUser.login("");
 
-            } catch (LoginFailedException loginFailedException) {
+            } catch (CantCreateUserException | LoginFailedException  exception) {
                 /**
                  * This really should never happen. But if it does...
                  */
-                System.err.println("LoginFailedException: " + loginFailedException.getMessage());
-                loginFailedException.printStackTrace();
+                System.err.println("LoginFailedException or CantCreateUserException: " + exception.getMessage());
+                exception.printStackTrace();
                 throw new CantStartPlatformException();
             }
 

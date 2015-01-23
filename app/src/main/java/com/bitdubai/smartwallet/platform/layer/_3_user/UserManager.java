@@ -9,8 +9,8 @@ public interface UserManager {
 
     public User getLoggedInUser();
 
-    public User createUser();
+    public User createUser() throws CantCreateUserException ;
 
-    public void loadUser(UUID id);
+    public void loadUser(UUID id)  throws CantLoadUserException ;
 
 }
