@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,7 +79,7 @@ public class ResourcesFragment extends Fragment {
         //ArrayList<App> list = (ArrayList<App>) getArguments().get("list");
         gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.wallet_factory_resources_fragment, mlist));
         gridView.setBackgroundResource(R.drawable.background_tabs_diagonal_rotated);
-        gridView.setPadding(80,0,80,0);
+        gridView.setGravity(Gravity.CENTER_HORIZONTAL);
         //        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
         //  public void onItemClick(AdapterView<?> parent, View v,
         //                         int position, long id) {
