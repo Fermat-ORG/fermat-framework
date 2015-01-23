@@ -18,6 +18,8 @@ import com.bitdubai.smartwallet.platform.layer._9_middleware.MiddlewareLayer;
 import com.bitdubai.smartwallet.platform.layer._10_module.ModuleLayer;
 import com.bitdubai.smartwallet.platform.layer._11_agent.AgentLayer;
 
+import java.util.UUID;
+
 /**
  * Created by ciencias on 20.01.15.
  */
@@ -114,9 +116,9 @@ public class Platform  {
             mModuleLayer.start();
             mAgentLayer.start();
         }
-        catch (CantStartLayerException e) {
-            System.err.println("CantStartLayerException: " + e.getMessage());
-            e.printStackTrace();
+        catch (CantStartLayerException CantStartLayerException) {
+            System.err.println("CantStartLayerException: " + CantStartLayerException.getMessage());
+            CantStartLayerException.printStackTrace();
             throw new CantStartPlatformException();
         }
 
@@ -133,9 +135,28 @@ public class Platform  {
          */
 
         try {
+
             PlatformFile platformStateFile =  os.getFileSystem().getFile(PlatformFileName.LAST_STATE.getFileName(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT );
+
+            try {
+                platformStateFile.loadToMemory();
+            }
+            catch (CantLoadFileException cantLoadFileException) {
+                /**
+                 * This really should never happen. But if it does...
+                 */
+                System.err.println("CantLoadFileException: " + cantLoadFileException.getMessage());
+                cantLoadFileException.printStackTrace();
+                throw new CantStartPlatformException();
+            }
+
+            UUID userId =  UUID.fromString(platformStateFile.getContent());
+
+            ((UserLayer) mUserLayer).getUserManager().loadUser(userId);
+
+
         }
-        catch (FileNotFoundException e)
+        catch (FileNotFoundException fileNotFoundException)
         {
             /**
              * If there is no last state file, I assume this is the first time the platform is running on this device.
@@ -151,26 +172,26 @@ public class Platform  {
             try {
                 newUser.login("");
 
-            } catch (LoginFailedException loginException) {
+            } catch (LoginFailedException loginFailedException) {
                 /**
                  * This really should never happen. But if it does...
                  */
-                System.err.println("LoginFailedException: " + loginException.getMessage());
-                loginException.printStackTrace();
+                System.err.println("LoginFailedException: " + loginFailedException.getMessage());
+                loginFailedException.printStackTrace();
                 throw new CantStartPlatformException();
             }
 
             PlatformFile platformStateFile =  os.getFileSystem().createFile(PlatformFileName.LAST_STATE.getFileName(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT );
-            platformStateFile.setContent("");
+            platformStateFile.setContent(newUser.getId().toString());
 
             try {
                 platformStateFile.persistToMedia();
-            } catch (CantPersistFileException cantPersistException) {
+            } catch (CantPersistFileException cantPersistFileException) {
                 /**
                  * This really should never happen. But if it does...
                  */
-                System.err.println("Cant persist platform state to media: " + cantPersistException.getMessage());
-                cantPersistException.printStackTrace();
+                System.err.println("Cant persist platform state to media: " + cantPersistFileException.getMessage());
+                cantPersistFileException.printStackTrace();
                 throw new CantStartPlatformException();
             }
         }

@@ -16,12 +16,27 @@ public class PlatformUser implements User {
     String mPassword;
     User_Status mStatus;
 
-
+    /**
+     * This constructor is to be used for creating a new user.
+     */
     PlatformUser (String userName, String password) {
         mUserName = userName;
         mPassword = password;
         mId = UUID.randomUUID();
         mStatus = User_Status.LOGGED_OUT;
+
+        persist();
+    }
+
+    /**
+     * This constructor is to be used to regenerate a user that was already logged in while the last session was
+     * destroyed.
+     */
+    PlatformUser (UUID id) {
+        mId = id;
+        mStatus = User_Status.LOGGED_IN;
+
+        load();
     }
 
     @Override
@@ -49,4 +64,15 @@ public class PlatformUser implements User {
             mStatus = User_Status.LOGGED_IN;
         }
     }
+
+
+    private void persist() {
+
+    }
+
+
+    private void load() {
+
+    }
+
 }
