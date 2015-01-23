@@ -15,11 +15,10 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.MyApplication;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,10 +58,6 @@ public class CommunityFragment extends Fragment {
                 "Katrina",
                 "Adam",
                 "Paul"
-
-
-
-
         };
         String[] state = {
                 "NY",
@@ -119,7 +114,6 @@ public class CommunityFragment extends Fragment {
 
 
         GridView gridView = new GridView(getActivity());
-
         Configuration config = getResources().getConfiguration();
         if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             gridView.setNumColumns(5);
@@ -127,20 +121,7 @@ public class CommunityFragment extends Fragment {
             gridView.setNumColumns(3);
         }
 
-        //@SuppressWarnings("unchecked")
-        //ArrayList<App> list = (ArrayList<App>) getArguments().get("list");
-        gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.wallets_kids_fragment_community, mlist));
-
-        //        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-        //  public void onItemClick(AdapterView<?> parent, View v,
-        //                         int position, long id) {
-        //      Intent intent;
-        //      intent = new Intent(getActivity(), RefillPointActivity.class);
-        //      startActivity(intent);
-        //      return ;
-        //  }
-        // });
-
+        gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.wallet_kids_fragment_community_filter, mlist));
 
         return gridView;
     }
@@ -171,25 +152,20 @@ public class CommunityFragment extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
 
             App item = getItem(position);
-
-
-
             ViewHolder holder;
-            if (convertView == null) {
-                LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.wallets_kids_fragment_community, parent, false);
-                holder = new ViewHolder();
+            LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
+            convertView = inflater.inflate(R.layout.wallets_kids_fragment_community, parent, false);
 
-                holder.name = (TextView) convertView.findViewById(R.id.community_name);
-                holder.country = (TextView) convertView.findViewById(R.id.community_country);
-                holder.state= (TextView) convertView.findViewById(R.id.community_state);
-                holder.Photo = (ImageView) convertView.findViewById(R.id.profile_Image);
+            holder = new ViewHolder();
 
+            holder.name = (TextView) convertView.findViewById(R.id.community_name);
+            holder.country = (TextView) convertView.findViewById(R.id.community_country);
+            holder.state= (TextView) convertView.findViewById(R.id.community_state);
+            holder.Photo = (ImageView) convertView.findViewById(R.id.profile_Image);
 
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-            }
+            convertView.setTag(holder);
+            holder = (ViewHolder) convertView.getTag();
+            
             holder.name.setText(item.Names);
             holder.country.setText(item.Countries);
             holder.state.setText(item.States);
@@ -243,17 +219,11 @@ public class CommunityFragment extends Fragment {
             return convertView;
         }
 
-        /**
-         * ViewHolder.
-         */
         private class ViewHolder {
             public TextView name;
             public TextView country;
             public TextView state;
             public ImageView Photo;
         }
-
     }
-
 }
-
