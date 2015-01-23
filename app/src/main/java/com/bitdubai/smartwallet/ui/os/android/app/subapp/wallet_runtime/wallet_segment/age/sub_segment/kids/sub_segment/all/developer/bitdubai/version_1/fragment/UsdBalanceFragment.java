@@ -7,6 +7,8 @@ import android.content.ClipData;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import android.view.DragEvent;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,6 +20,7 @@ import android.view.View.OnTouchListener;
 
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.MyApplication;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.HomeFragment;
 
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
@@ -27,6 +30,7 @@ import android.support.v4.app.DialogFragment;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import static android.widget.RelativeLayout.LayoutParams.*;
 
@@ -52,6 +56,8 @@ public class UsdBalanceFragment extends Fragment {
     static final int ZOOM = 2;
     int mode = NONE;
     float oldDist = 1f;
+    GestureDetector gestureDetector;
+
 
     public static UsdBalanceFragment newInstance(int position) {
         UsdBalanceFragment f = new UsdBalanceFragment();
@@ -64,10 +70,13 @@ public class UsdBalanceFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        tickets = new String[]{"usd_1","usd_1","usd_10","usd_100","usd_10","usd_20","usd_5","usd_10"};
+       tickets = new String[]{"usd_1","usd_1","usd_10","usd_100","usd_10","usd_20","usd_5","usd_10"};
+
+      //  tickets = new String[]{"usd_10","usd_10"};
 
         position = getArguments().getInt(ARG_POSITION);
         mTicketsList = new ArrayList<TicketPosition>();
+
     }
 
     @Override
@@ -105,7 +114,7 @@ public class UsdBalanceFragment extends Fragment {
                     imageTicket.setTag(1);
                     imageTicket.setImageResource(R.drawable.usd_1);
 
-                    imageTicket.setOnClickListener(new OnClickListener() {
+                  /*  imageTicket.setOnClickListener(new OnClickListener() {
                         public void onClick(View v) {
                             MyApplication.setTicketId( "usd_1");
                             if ((Integer)v.getTag() == 1) {
@@ -118,14 +127,14 @@ public class UsdBalanceFragment extends Fragment {
                             }
                         }
 
-                    });
+                    });*/
 
                     break;
                 case "usd_5":
                     MyApplication.setTicketId( "usd_5");
                     imageTicket.setTag(5);
                     imageTicket.setImageResource(R.drawable.usd_5);
-                    imageTicket.setOnClickListener(new OnClickListener() {
+                 /*   imageTicket.setOnClickListener(new OnClickListener() {
                         public void onClick(View v) {
                             MyApplication.setTicketId( "usd_5");
                             if ((Integer)v.getTag() == 5) {
@@ -138,14 +147,14 @@ public class UsdBalanceFragment extends Fragment {
                             }
                         }
 
-                    });
+                    });*/
 
                     break;
                 case "usd_10":
                     MyApplication.setTicketId( "usd_10");
                     imageTicket.setTag(10);
                     imageTicket.setImageResource(R.drawable.usd_10);
-                    imageTicket.setOnClickListener(new OnClickListener() {
+                   /* imageTicket.setOnClickListener(new OnClickListener() {
                         public void onClick(View v) {
                             MyApplication.setTicketId( "usd_10");
                             if ((Integer)v.getTag() == 10) {
@@ -158,14 +167,14 @@ public class UsdBalanceFragment extends Fragment {
                             }
                         }
 
-                    });
+                    });*/
 
                     break;
                 case "usd_20":
                     MyApplication.setTicketId( "usd_20");
                     imageTicket.setTag(20);
                     imageTicket.setImageResource(R.drawable.usd_20);
-                    imageTicket.setOnClickListener(new OnClickListener() {
+                  /*  imageTicket.setOnClickListener(new OnClickListener() {
                         public void onClick(View v) {
                             MyApplication.setTicketId( "usd_20");
                             if ((Integer)v.getTag() == 20) {
@@ -178,7 +187,7 @@ public class UsdBalanceFragment extends Fragment {
                             }
                         }
 
-                    });
+                    });*/
 
 
                     break;
@@ -186,7 +195,7 @@ public class UsdBalanceFragment extends Fragment {
                     MyApplication.setTicketId( "usd_100");
                     imageTicket.setTag(100);
                     imageTicket.setImageResource(R.drawable.usd_100);
-                    imageTicket.setOnClickListener(new OnClickListener() {
+                /*    imageTicket.setOnClickListener(new OnClickListener() {
                         public void onClick(View v) {
 
                             if ((Integer)v.getTag() == 100) {
@@ -199,13 +208,13 @@ public class UsdBalanceFragment extends Fragment {
                             }
                         }
 
-                    });
+                    });*/
 
 
                     break;
 
             }
-            imageTicket.setOnLongClickListener(new theLongClickListener());
+
             imageTicket.setOnTouchListener(new theTouchListener());
             marco.addView(imageTicket);
 
@@ -217,6 +226,8 @@ public class UsdBalanceFragment extends Fragment {
             item2.rightMargin = layoutParams.rightMargin;
             item2.bottomMargin =  layoutParams.bottomMargin;
             mTicketsList.add(item2);
+
+
         }
 
 
@@ -227,281 +238,197 @@ public class UsdBalanceFragment extends Fragment {
         @Override
         public boolean onLongClick(View v) {
 
-            //add two image and remove de current image
-            ClipData clipData = ClipData.newPlainText("", "");
-
-            View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
-            //start the drag - contains the data to be dragged,
-            //   metadata for this data and callback for drawing shadow
-            v.startDrag(clipData, shadowBuilder, v, 0);
-//        we're dragging the shadow so make the view invisible
-
-            final ImageView imagen1;
-            final ImageView imagen2;
-
-            TicketPosition item1 = getTicket(v.getId());
-            TicketPosition item2;
-            RelativeLayout.LayoutParams layoutParams;
-
-            ViewGroup.MarginLayoutParams marginParams = new ViewGroup.MarginLayoutParams( WRAP_CONTENT,
-                    WRAP_CONTENT);
-
-            switch ((Integer)v.getTag()) {
-                case 1:
-                case 12:
-                    break;
-                case 5:
-                case 52:
-
-                    break;
-                case 10:
-                case 102:
-
-                    imagen1= new ImageView(v.getContext());
-                    cantTickets++;
-                    imagen1.setId(cantTickets);
-
-                    imagen1.setTag(5);
-                    imagen1.setImageResource(R.drawable.usd_5);
-                    imagen1.setOnClickListener(new OnClickListener() {
-                        public void onClick(View v) {
-
-                            if ((Integer)v.getTag() == 5) {
-                                imagen1.setImageResource(R.drawable.usd_5_b);
-                                v.setTag(52);
-                            }
-                            else{
-                                imagen1.setImageResource(R.drawable.usd_5);
-                                v.setTag(5);
-                            }
-                        }
-
-
-                    });
-
-                    marginParams.setMargins(item1.leftMargin,item1.topMargin,item1.rightMargin,item1.bottomMargin);
-                    layoutParams = new RelativeLayout.LayoutParams(marginParams);
-                    imagen1.setLayoutParams(layoutParams);
-                    imagen1.setOnLongClickListener(new theLongClickListener());
-                    imagen1.setOnTouchListener(new theTouchListener());
-                    marco.addView(imagen1);
-
-                    item2 = new TicketPosition();
-                    item2.Id = cantTickets;
-                    item2.ticketId = (Integer)imagen1.getTag();
-                    item2.leftMargin = layoutParams.leftMargin;
-                    item2.topMargin = layoutParams.topMargin ;
-                    item2.rightMargin = layoutParams.rightMargin;
-                    item2.bottomMargin =  layoutParams.bottomMargin;
-                    mTicketsList.add(item2);
-
-                    imagen2= new ImageView(v.getContext());
-                    //Señalamos la imagen a mostrar
-                    cantTickets++;
-                    imagen2.setId(cantTickets);
-                    imagen2.setTag(5);
-                    imagen2.setImageResource(R.drawable.usd_5);
-                    imagen2.setOnClickListener(new OnClickListener() {
-                        public void onClick(View v) {
-
-                            if ((Integer)v.getTag() == 5) {
-                                imagen2.setImageResource(R.drawable.usd_5_b);
-                                v.setTag(52);
-                            }
-                            else{
-                                imagen2.setImageResource(R.drawable.usd_5);
-                                v.setTag(5);
-                            }
-                        }
-
-
-                    });
-
-                    marginParams.setMargins(item1.leftMargin + 25,item1.topMargin,item1.rightMargin + 25,item1.bottomMargin);
-                    layoutParams = new RelativeLayout.LayoutParams(marginParams);
-                    imagen2.setLayoutParams(layoutParams);
-                    imagen2.setOnLongClickListener(new theLongClickListener());
-                    imagen2.setOnTouchListener(new theTouchListener());
-                    marco.addView(imagen2);
-
-                    item2 = new TicketPosition();
-                    item2.Id = cantTickets;
-                    item2.ticketId = (Integer)imagen2.getTag();
-                    item2.leftMargin = layoutParams.leftMargin;
-                    item2.topMargin = layoutParams.topMargin ;
-                    item2.rightMargin = layoutParams.rightMargin;
-                    item2.bottomMargin =  layoutParams.bottomMargin;
-                    mTicketsList.add(item2);
-                    v.setVisibility(View.INVISIBLE);
-                    mTicketsList.remove(item1);
-                    break;
-                case 20:
-                case 202:
-                    imagen1= new ImageView(v.getContext());
-                    cantTickets++;
-                    imagen1.setId(cantTickets);
-                    imagen1.setTag(10);
-                    imagen1.setImageResource(R.drawable.usd_10);
-                    imagen1.setOnClickListener(new OnClickListener() {
-                        public void onClick(View v) {
-
-                            if ((Integer)v.getTag() == 10) {
-                                imagen1.setImageResource(R.drawable.usd_10_b);
-                                v.setTag(102);
-                            }
-                            else{
-                                imagen1.setImageResource(R.drawable.usd_10);
-                                v.setTag(10);
-                            }
-                        }
-
-
-                    });
-                    imagen1.setOnLongClickListener(new theLongClickListener());
-                    imagen1.setOnTouchListener(new theTouchListener());
-                    marginParams.setMargins(item1.leftMargin,item1.topMargin,item1.rightMargin,item1.bottomMargin);
-                    layoutParams = new RelativeLayout.LayoutParams(marginParams);
-                    imagen1.setLayoutParams(layoutParams);
-                    marco.addView(imagen1);
-
-                    item2 = new TicketPosition();
-                    item2.Id = imagen1.getId();
-                    item2.ticketId = 10;
-                    item2.leftMargin = layoutParams.leftMargin;
-                    item2.topMargin = layoutParams.topMargin ;
-                    item2.rightMargin = layoutParams.rightMargin;
-                    item2.bottomMargin =  layoutParams.bottomMargin;
-                    mTicketsList.add(item2);
-
-                    imagen2= new ImageView(v.getContext());
-                    //Señalamos la imagen a mostrar
-                    cantTickets++;
-                    imagen2.setId(cantTickets);
-                    imagen2.setTag(10);
-                    imagen2.setImageResource(R.drawable.usd_10);
-                    imagen2.setOnClickListener(new OnClickListener() {
-                        public void onClick(View v) {
-
-                            if ((Integer)v.getTag() == 10) {
-                                imagen2.setImageResource(R.drawable.usd_10_b);
-                                v.setTag(102);
-                            }
-                            else{
-                                imagen2.setImageResource(R.drawable.usd_10);
-                                v.setTag(10);
-                            }
-                        }
-
-
-                    });
-                    imagen2.setOnLongClickListener(new theLongClickListener());
-
-                    imagen2.setOnTouchListener(new theTouchListener());
-                    marginParams.setMargins(item1.leftMargin + 25,item1.topMargin + 25,item1.rightMargin,item1.bottomMargin);
-                    layoutParams = new RelativeLayout.LayoutParams(marginParams);
-                    imagen2.setLayoutParams(layoutParams);
-
-                    item2 = new TicketPosition();
-                    item2.Id = imagen2.getId();
-                    item2.ticketId = 10;
-                    item2.leftMargin = layoutParams.leftMargin;
-                    item2.topMargin = layoutParams.topMargin ;
-                    item2.rightMargin = layoutParams.rightMargin;
-                    item2.bottomMargin =  layoutParams.bottomMargin;
-                    mTicketsList.add(item2);
-                    marco.addView(imagen2);
-
-                    v.setVisibility(View.INVISIBLE);
-                    mTicketsList.remove(item1);
-                    break;
-                case 50:
-                case 502:
-                    break;
-                case 100:
-                case 1002:
-                    imagen1= new ImageView(v.getContext());
-                    cantTickets++;
-                    imagen1.setId(cantTickets);
-                    imagen1.setTag(50);
-                    imagen1.setImageResource(R.drawable.usd_50);
-                    imagen1.setOnClickListener(new OnClickListener() {
-                        public void onClick(View v) {
-
-                            if ((Integer)v.getTag() == 50) {
-                                imagen1.setImageResource(R.drawable.usd_50_b);
-                                v.setTag(502);
-                            }
-                            else{
-                                imagen1.setImageResource(R.drawable.usd_50);
-                                v.setTag(50);
-                            }
-                        }
-
-
-                    });
-                    imagen1.setOnLongClickListener(new theLongClickListener());
-                    imagen1.setOnTouchListener(new theTouchListener());
-                    marginParams.setMargins(item1.leftMargin,item1.topMargin,item1.rightMargin,item1.bottomMargin);
-                    layoutParams = new RelativeLayout.LayoutParams(marginParams);
-                    imagen1.setLayoutParams(layoutParams);
-
-                    marco.addView(imagen1);
-
-                    item2 = new TicketPosition();
-                    item2.Id = imagen1.getId();
-                    item2.ticketId = (Integer)imagen1.getTag();
-                    item2.leftMargin = layoutParams.leftMargin;
-                    item2.topMargin = layoutParams.topMargin ;
-                    item2.rightMargin = layoutParams.rightMargin;
-                    item2.bottomMargin =  layoutParams.bottomMargin;
-                    mTicketsList.add(item2);
-
-                    imagen2= new ImageView(v.getContext());
-                    //Señalamos la imagen a mostrar
-                    cantTickets++;
-                    imagen2.setId(cantTickets);
-                    imagen2.setTag(50);
-                    imagen2.setImageResource(R.drawable.usd_50);
-                    imagen2.setOnClickListener(new OnClickListener() {
-                        public void onClick(View v) {
-
-                            if ((Integer)v.getTag() == 50) {
-                                imagen2.setImageResource(R.drawable.usd_50_b);
-                                v.setTag(502);
-                            }
-                            else{
-                                imagen2.setImageResource(R.drawable.usd_50);
-                                v.setTag(50);
-                            }
-                        }
-
-
-                    });
-                    imagen2.setOnLongClickListener(new theLongClickListener());
-                    marginParams.setMargins(item1.leftMargin + 25,item1.topMargin + 25,item1.rightMargin,item1.bottomMargin);
-                    layoutParams = new RelativeLayout.LayoutParams(marginParams);
-                    imagen2.setLayoutParams(layoutParams);
-                    imagen2.setOnTouchListener(new theTouchListener());
-                    marco.addView(imagen2);
-
-                    item2 = new TicketPosition();
-                    item2.Id = imagen2.getId();
-                    item2.ticketId = (Integer)imagen2.getTag();
-                    item2.leftMargin = layoutParams.leftMargin;
-                    item2.topMargin = layoutParams.topMargin ;
-                    item2.rightMargin = layoutParams.rightMargin;
-                    item2.bottomMargin =  layoutParams.bottomMargin;
-                    mTicketsList.add(item2);
-
-                    v.setVisibility(View.INVISIBLE);
-                    mTicketsList.remove(item1);
-                    break;
-            }
-
-
             return false;
         }
 
+    }
+
+
+    public boolean longClick(View v) {
+
+        //add two image and remove de current image
+        ClipData clipData = ClipData.newPlainText("", "");
+
+        View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
+        //start the drag - contains the data to be dragged,
+        //   metadata for this data and callback for drawing shadow
+        v.startDrag(clipData, shadowBuilder, v, 0);
+//        we're dragging the shadow so make the view invisible
+
+        final ImageView imagen1;
+        final ImageView imagen2;
+
+        TicketPosition item1 = getTicket(v.getId());
+        TicketPosition item2;
+        RelativeLayout.LayoutParams layoutParams;
+
+        ViewGroup.MarginLayoutParams marginParams = new ViewGroup.MarginLayoutParams( WRAP_CONTENT,
+                WRAP_CONTENT);
+
+        switch ((Integer)v.getTag()) {
+            case 1:
+            case 12:
+                break;
+            case 5:
+            case 52:
+
+                break;
+            case 10:
+            case 102:
+
+                imagen1= new ImageView(v.getContext());
+                cantTickets++;
+                imagen1.setId(cantTickets);
+
+                imagen1.setTag(5);
+                imagen1.setImageResource(R.drawable.usd_5);
+
+
+                marginParams.setMargins(item1.leftMargin,item1.topMargin,item1.rightMargin,item1.bottomMargin);
+                layoutParams = new RelativeLayout.LayoutParams(marginParams);
+                imagen1.setLayoutParams(layoutParams);
+
+                imagen1.setOnTouchListener(new theTouchListener());
+                marco.addView(imagen1);
+
+                item2 = new TicketPosition();
+                item2.Id = cantTickets;
+                item2.ticketId = 5;
+                item2.leftMargin = layoutParams.leftMargin;
+                item2.topMargin = layoutParams.topMargin ;
+                item2.rightMargin = layoutParams.rightMargin;
+                item2.bottomMargin =  layoutParams.bottomMargin;
+                mTicketsList.add(item2);
+
+                imagen2= new ImageView(v.getContext());
+                //Señalamos la imagen a mostrar
+                cantTickets++;
+                imagen2.setId(cantTickets);
+                imagen2.setTag(5);
+                imagen2.setImageResource(R.drawable.usd_5);
+
+
+                marginParams.setMargins(item1.leftMargin + 25,item1.topMargin,item1.rightMargin + 25,item1.bottomMargin);
+                layoutParams = new RelativeLayout.LayoutParams(marginParams);
+                imagen2.setLayoutParams(layoutParams);
+
+                imagen2.setOnTouchListener(new theTouchListener());
+                marco.addView(imagen2);
+
+                item2 = new TicketPosition();
+                item2.Id = cantTickets;
+                item2.ticketId = 5;
+                item2.leftMargin = layoutParams.leftMargin;
+                item2.topMargin = layoutParams.topMargin ;
+                item2.rightMargin = layoutParams.rightMargin;
+                item2.bottomMargin =  layoutParams.bottomMargin;
+                mTicketsList.add(item2);
+                v.setVisibility(View.INVISIBLE);
+                mTicketsList.remove(item1);
+                break;
+            case 20:
+            case 202:
+                imagen1= new ImageView(v.getContext());
+                cantTickets++;
+                imagen1.setId(cantTickets);
+                imagen1.setTag(10);
+                imagen1.setImageResource(R.drawable.usd_10);
+
+                imagen1.setOnTouchListener(new theTouchListener());
+                marginParams.setMargins(item1.leftMargin,item1.topMargin,item1.rightMargin,item1.bottomMargin);
+                layoutParams = new RelativeLayout.LayoutParams(marginParams);
+                imagen1.setLayoutParams(layoutParams);
+                marco.addView(imagen1);
+
+                item2 = new TicketPosition();
+                item2.Id = imagen1.getId();
+                item2.ticketId = 10;
+                item2.leftMargin = layoutParams.leftMargin;
+                item2.topMargin = layoutParams.topMargin ;
+                item2.rightMargin = layoutParams.rightMargin;
+                item2.bottomMargin =  layoutParams.bottomMargin;
+                mTicketsList.add(item2);
+
+                imagen2= new ImageView(v.getContext());
+                //Señalamos la imagen a mostrar
+                cantTickets++;
+                imagen2.setId(cantTickets);
+                imagen2.setTag(10);
+                imagen2.setImageResource(R.drawable.usd_10);
+
+                imagen2.setOnTouchListener(new theTouchListener());
+                marginParams.setMargins(item1.leftMargin + 25,item1.topMargin + 25,item1.rightMargin,item1.bottomMargin);
+                layoutParams = new RelativeLayout.LayoutParams(marginParams);
+                imagen2.setLayoutParams(layoutParams);
+
+                item2 = new TicketPosition();
+                item2.Id = imagen2.getId();
+                item2.ticketId = 10;
+                item2.leftMargin = layoutParams.leftMargin;
+                item2.topMargin = layoutParams.topMargin ;
+                item2.rightMargin = layoutParams.rightMargin;
+                item2.bottomMargin =  layoutParams.bottomMargin;
+                mTicketsList.add(item2);
+                marco.addView(imagen2);
+
+                v.setVisibility(View.INVISIBLE);
+                mTicketsList.remove(item1);
+                break;
+            case 50:
+            case 502:
+                break;
+            case 100:
+            case 1002:
+                imagen1= new ImageView(v.getContext());
+                cantTickets++;
+                imagen1.setId(cantTickets);
+                imagen1.setTag(50);
+                imagen1.setImageResource(R.drawable.usd_50);
+                imagen1.setOnTouchListener(new theTouchListener());
+                marginParams.setMargins(item1.leftMargin,item1.topMargin,item1.rightMargin,item1.bottomMargin);
+                layoutParams = new RelativeLayout.LayoutParams(marginParams);
+                imagen1.setLayoutParams(layoutParams);
+
+                marco.addView(imagen1);
+
+                item2 = new TicketPosition();
+                item2.Id = imagen1.getId();
+                item2.ticketId = 50;
+                item2.leftMargin = layoutParams.leftMargin;
+                item2.topMargin = layoutParams.topMargin ;
+                item2.rightMargin = layoutParams.rightMargin;
+                item2.bottomMargin =  layoutParams.bottomMargin;
+                mTicketsList.add(item2);
+
+                imagen2= new ImageView(v.getContext());
+                //Señalamos la imagen a mostrar
+                cantTickets++;
+                imagen2.setId(cantTickets);
+                imagen2.setTag(50);
+                imagen2.setImageResource(R.drawable.usd_50);
+
+                marginParams.setMargins(item1.leftMargin + 25,item1.topMargin + 25,item1.rightMargin,item1.bottomMargin);
+                layoutParams = new RelativeLayout.LayoutParams(marginParams);
+                imagen2.setLayoutParams(layoutParams);
+                imagen2.setOnTouchListener(new theTouchListener());
+                marco.addView(imagen2);
+
+                item2 = new TicketPosition();
+                item2.Id = imagen2.getId();
+                item2.ticketId = 50;
+                item2.leftMargin = layoutParams.leftMargin;
+                item2.topMargin = layoutParams.topMargin ;
+                item2.rightMargin = layoutParams.rightMargin;
+                item2.bottomMargin =  layoutParams.bottomMargin;
+                mTicketsList.add(item2);
+
+                v.setVisibility(View.INVISIBLE);
+                mTicketsList.remove(item1);
+                break;
+        }
+
+
+        return false;
     }
 
     public static boolean esPar(int numero) {
@@ -514,9 +441,19 @@ public class UsdBalanceFragment extends Fragment {
     }
 
 
-
-
     private final class theTouchListener implements OnTouchListener {
+        private final int MAX_CLICK_DURATION = 200;
+        private final int MAX_DOUBLE_CLICK_DURATION = 600;
+        private final int MAX_CLICK_DISTANCE = 5;
+        private long startClickTime;
+        private final float SCROLL_THRESHOLD = 10;
+        private boolean isOnClick;
+        private float x1;
+        private float y1;
+        private float x2;
+        private float y2;
+        private float dx;
+        private float dy;
         public boolean onTouch(View view, MotionEvent event) {
 
             int ticketId = (Integer)view.getTag();
@@ -536,17 +473,116 @@ public class UsdBalanceFragment extends Fragment {
                     xDelta = X - Params.leftMargin;
                     yDelta = Y - Params.topMargin;
                     mode = DRAG;
-                    return false;
+                    isOnClick = true;
+                    startClickTime = Calendar.getInstance().getTimeInMillis();
+                    x1 = event.getX();
+                    y1 = event.getY();
+                    return true;
                 case MotionEvent.ACTION_UP:
-                    //Al levantar el dedo simplemento mostramos un mensaje
-                    //Toast.makeText(this, "Soltamos", Toast.LENGTH_LONG).show();
-//verify if image another other
+                    //Al levantar el dedo fuardamos la posicion actual
+
+                    long clickDuration = Calendar.getInstance().getTimeInMillis() - startClickTime;
+                     x2 = event.getX();
+                    y2 = event.getY();
+                    dx = x2-x1;
+                    dy = y2-y1;
+                    x2 = event.getX();
+                    y2 = event.getY();
+                    dx = x2-x1;
+                    dy = y2-y1;
+
+                    if(Math.abs(dx) > Math.abs(dy))
+                    {
+                        if (dx == 0) {
+                            String move = "click";
+                        }
+
+                    }
+                    else
+                    {
+                        if (dy == 0) {
+                            String move = "click";
+                        }
+                    }
+                    if(clickDuration < MAX_CLICK_DURATION && dx < MAX_CLICK_DISTANCE && dy < MAX_CLICK_DISTANCE){
+                        //click event has occurred
+                        ImageView image= (ImageView)view.findViewById(Id);
+                       //usd 1
+                            if (ticketId == 1) {
+                                image.setImageResource(R.drawable.usd_1_b);
+                                view.setTag(12);
+                            } else {
+                                if (ticketId == 12) {
+                                    image.setImageResource(R.drawable.usd_1);
+                                    view.setTag(1);
+                                }
+                            }
+//usd 5
+                        if (ticketId == 5) {
+                            image.setImageResource(R.drawable.usd_5_b);
+                            view.setTag(52);
+                        } else {
+                            if (ticketId == 52) {
+                                image.setImageResource(R.drawable.usd_5);
+                                view.setTag(5);
+                            }
+                        }
+//usd 10
+                        if (ticketId == 10) {
+                            image.setImageResource(R.drawable.usd_10_b);
+                            view.setTag(102);
+                        } else {
+                            if (ticketId == 102) {
+                                image.setImageResource(R.drawable.usd_10);
+                                view.setTag(10);
+                            }
+                        }
+
+                        //usd 20
+                        if (ticketId == 20) {
+                            image.setImageResource(R.drawable.usd_20_b);
+                            view.setTag(202);
+                        } else {
+                            if (ticketId == 202) {
+                                image.setImageResource(R.drawable.usd_20);
+                                view.setTag(20);
+                            }
+                        }
+
+                        //usd 50
+                        if (ticketId == 50) {
+                            image.setImageResource(R.drawable.usd_50_b);
+                            view.setTag(502);
+                        } else {
+                            if (ticketId == 502) {
+                                image.setImageResource(R.drawable.usd_50);
+                                view.setTag(50);
+                            }
+                        }
+
+                        //usd 50
+                        if (ticketId == 100) {
+                            image.setImageResource(R.drawable.usd_100_b);
+                            view.setTag(1002);
+                        } else {
+                            if (ticketId == 1002) {
+                                image.setImageResource(R.drawable.usd_100);
+                                view.setTag(100);
+                            }
+                        }
+                    }
 
                     joinTickets(Id,layoutParams,ticketId, view);
                     //add ticket position to array list
                     addTickets(Id,layoutParams,ticketId);
 
-                    return false;
+                    //long click event
+                    if((clickDuration > MAX_DOUBLE_CLICK_DURATION && clickDuration < 1500) && dx < 7 && dy < MAX_CLICK_DISTANCE){
+                        longClick(view);
+                    }
+
+
+                    return true;
                 case MotionEvent.ACTION_POINTER_DOWN:
                     oldDist = spacing(event);
                     if (oldDist > 5f) {
@@ -562,7 +598,7 @@ public class UsdBalanceFragment extends Fragment {
                     break;
                 case MotionEvent.ACTION_MOVE:
                     //Al mover el dedo vamos actualizando
-
+                    isOnClick = false;
                     if (mode == DRAG) { //movement of first finger
                         //los margenes de la imagen para
                         //crear efecto de arrastrado
@@ -619,13 +655,14 @@ public class UsdBalanceFragment extends Fragment {
                             ft.addToBackStack(null);
 
                             // Create and show the dialog.
+                            //Fragment currentFragment = TicketFragment.newInstance(1);
                             DialogFragment newFragment = TicketFragment.newInstance(1);
                             newFragment.show(ft, "dialog");
 
                         }
                     }
 
-                    return false;
+                    return true;
 
 
             }
@@ -640,19 +677,27 @@ public class UsdBalanceFragment extends Fragment {
     {
         TicketPosition itemTicket = getTicket(id);
         for (int i = 0; i < mTicketsList.size(); i++) {
+
             TicketPosition item = mTicketsList.get(i);
-            double posi1 = (item.leftMargin * 45) /100.0;
+            if(id != item.Id)
+            {
+            double posiPorc = 0;
             double posi2 = (item.rightMargin * 5) /100.0;
             int left =0;
+                int right = (item.rightMargin - layoutParams.rightMargin);
             int top = layoutParams.topMargin - item.topMargin;
-            if (layoutParams.leftMargin > item.leftMargin)
-                left = ( layoutParams.leftMargin - item.leftMargin);
-            else
+            if (layoutParams.leftMargin > item.leftMargin) {
+                left = (layoutParams.leftMargin - item.leftMargin);
+                posiPorc = (layoutParams.leftMargin * 45) /100.0;
+            }
+            else{
                 left = (  item.leftMargin -layoutParams.leftMargin);
-            int right = (item.rightMargin - layoutParams.rightMargin);
+                    posiPorc = (item.leftMargin * 45) /100.0;
+                }
+
+
             //eveluate if resta negativa, no usarla.
-            if((left <= posi1 && right ==0))
-            {
+            if((left <= posiPorc) && right == 0 ) {
                 int idTicket = item.ticketId;
                 int idTicket2 = ticketId;
                 //verify if ticket equal to another ticket value and join in a another to couble value
@@ -698,45 +743,29 @@ public class UsdBalanceFragment extends Fragment {
                         break;
                 }
 //if the same value but diferent ticket
-                if ((idTicket2 == idTicket) && (id != item.Id))
-                {
+                if ((idTicket2 == idTicket) && (id != item.Id)) {
 
                     final ImageView imagen1;
                     TicketPosition item2;
-                    ImageView imagen2 = (ImageView)((RelativeLayout)view.getParent()).findViewById(item.Id);
-                    ViewGroup.MarginLayoutParams marginParams = new ViewGroup.MarginLayoutParams( WRAP_CONTENT,
+                    ImageView imagen2 = (ImageView) ((RelativeLayout) view.getParent()).findViewById(item.Id);
+                    ViewGroup.MarginLayoutParams marginParams = new ViewGroup.MarginLayoutParams(WRAP_CONTENT,
                             WRAP_CONTENT);
                     switch (idTicket2) {
                         case 1:
 
                             break;
                         case 10:
-                            imagen1= new ImageView(view.getContext());
+                            imagen1 = new ImageView(view.getContext());
                             cantTickets++;
                             imagen1.setId(cantTickets);
                             mTicketsList.remove(item);
                             view.setVisibility(View.INVISIBLE);
                             imagen1.setTag(20);
                             imagen1.setImageResource(R.drawable.usd_20);
-                            imagen1.setOnClickListener(new OnClickListener() {
-                                public void onClick(View v) {
 
-                                    if ((Integer)v.getTag() == 20) {
-                                        imagen1.setImageResource(R.drawable.usd_20_b);
-                                        v.setTag(202);
-                                    }
-                                    else{
-                                        imagen1.setImageResource(R.drawable.usd_20);
-                                        v.setTag(20);
-                                    }
-                                }
-
-
-                            });
-                            imagen1.setOnLongClickListener(new theLongClickListener());
                             imagen1.setOnTouchListener(new theTouchListener());
 
-                            marginParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin,-50,-50);
+                            marginParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, -50, -50);
                             layoutParams = new RelativeLayout.LayoutParams(marginParams);
                             imagen1.setLayoutParams(layoutParams);
                             marco.addView(imagen1);
@@ -745,42 +774,26 @@ public class UsdBalanceFragment extends Fragment {
                             item2.Id = cantTickets;
                             item2.ticketId = 20;
                             item2.leftMargin = layoutParams.leftMargin;
-                            item2.topMargin = layoutParams.topMargin ;
+                            item2.topMargin = layoutParams.topMargin;
                             item2.rightMargin = layoutParams.rightMargin;
-                            item2.bottomMargin =  layoutParams.bottomMargin;
+                            item2.bottomMargin = layoutParams.bottomMargin;
                             mTicketsList.add(item2);
 
 
-                            if(imagen2 != null)
+                            if (imagen2 != null)
                                 marco.removeView(imagen2);
 
                             mTicketsList.remove(item);
                             mTicketsList.remove(itemTicket);
                             break;
                         case 5:
-                            imagen1= new ImageView(view.getContext());
+                            imagen1 = new ImageView(view.getContext());
                             cantTickets++;
                             imagen1.setId(cantTickets);
                             view.setVisibility(View.INVISIBLE);
 
                             imagen1.setTag(10);
                             imagen1.setImageResource(R.drawable.usd_10);
-                            imagen1.setOnClickListener(new OnClickListener() {
-                                public void onClick(View v) {
-
-                                    if ((Integer)v.getTag() == 10) {
-                                        imagen1.setImageResource(R.drawable.usd_10_b);
-                                        v.setTag(102);
-                                    }
-                                    else{
-                                        imagen1.setImageResource(R.drawable.usd_10);
-                                        v.setTag(10);
-                                    }
-                                }
-
-
-                            });
-                            imagen1.setOnLongClickListener(new theLongClickListener());
 
                             imagen1.setOnTouchListener(new theTouchListener());
                             marginParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, -50, -50);
@@ -791,12 +804,12 @@ public class UsdBalanceFragment extends Fragment {
                             item2.Id = cantTickets;
                             item2.ticketId = 10;
                             item2.leftMargin = layoutParams.leftMargin;
-                            item2.topMargin = layoutParams.topMargin ;
+                            item2.topMargin = layoutParams.topMargin;
                             item2.rightMargin = layoutParams.rightMargin;
-                            item2.bottomMargin =  layoutParams.bottomMargin;
+                            item2.bottomMargin = layoutParams.bottomMargin;
                             mTicketsList.add(item2);
 
-                            if(imagen2 != null)
+                            if (imagen2 != null)
                                 marco.removeView(imagen2);
                             marco.addView(imagen1);
 
@@ -809,34 +822,19 @@ public class UsdBalanceFragment extends Fragment {
 
                             break;
                         case 50:
-                            imagen1= new ImageView(view.getContext());
+                            imagen1 = new ImageView(view.getContext());
                             cantTickets++;
                             imagen1.setId(cantTickets);
 
                             view.setVisibility(View.INVISIBLE);
-                            if(imagen2 != null)
+                            if (imagen2 != null)
                                 imagen2.setVisibility(View.INVISIBLE);
 
                             imagen1.setTag(100);
                             imagen1.setImageResource(R.drawable.usd_100);
-                            imagen1.setOnClickListener(new OnClickListener() {
-                                public void onClick(View v) {
-
-                                    if ((Integer)v.getTag() == 100) {
-                                        imagen1.setImageResource(R.drawable.usd_10_b);
-                                        v.setTag(1002);
-                                    }
-                                    else{
-                                        imagen1.setImageResource(R.drawable.usd_100);
-                                        v.setTag(100);
-                                    }
-                                }
-
-
-                            });
                             imagen1.setOnLongClickListener(new theLongClickListener());
                             imagen1.setOnTouchListener(new theTouchListener());
-                            marginParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin,-50,-50);
+                            marginParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, -50, -50);
                             layoutParams = new RelativeLayout.LayoutParams(marginParams);
                             imagen1.setLayoutParams(layoutParams);
 
@@ -844,12 +842,12 @@ public class UsdBalanceFragment extends Fragment {
                             item2.Id = cantTickets;
                             item2.ticketId = 100;
                             item2.leftMargin = layoutParams.leftMargin;
-                            item2.topMargin = layoutParams.topMargin ;
+                            item2.topMargin = layoutParams.topMargin;
                             item2.rightMargin = layoutParams.rightMargin;
-                            item2.bottomMargin =  layoutParams.bottomMargin;
+                            item2.bottomMargin = layoutParams.bottomMargin;
                             mTicketsList.add(item2);
 
-                            if(imagen2 != null)
+                            if (imagen2 != null)
                                 marco.removeView(imagen2);
                             marco.addView(imagen1);
                             mTicketsList.remove(item);
@@ -859,7 +857,7 @@ public class UsdBalanceFragment extends Fragment {
 
 
                 }
-
+            }
 
             }
         }
@@ -925,5 +923,9 @@ public class UsdBalanceFragment extends Fragment {
 
 
     }
+
+
 }
+
+
 
