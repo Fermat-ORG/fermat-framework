@@ -49,5 +49,4 @@
             android:paddingTop="5dp"
             android:textStyle="normal"/>
         </LinearLayout>
-
 </LinearLayout>

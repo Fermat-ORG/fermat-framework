@@ -63,7 +63,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity
+            android:name=".ui.os.android.app.subapp.marketplace.version_1.activity.PublisherActivity"
+            android:label="Publisher" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.os.android.app.shell.version_1.activity.DesktopActivity" />
+        </activity>
         <activity
             android:name=".ui.os.android.app.subapp.wallet_store.version_1.activity.StoreFrontActivity"
             android:label="Wallet Store" >

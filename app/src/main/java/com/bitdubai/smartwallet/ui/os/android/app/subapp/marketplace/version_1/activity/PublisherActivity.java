@@ -1,4 +1,4 @@
-package com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_factory.version_1.activity;
+package com.bitdubai.smartwallet.ui.os.android.app.subapp.marketplace.version_1.activity;
 
 import android.app.ActionBar;
 import android.content.Intent;
@@ -16,7 +16,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,22 +23,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.MyApplication;
 import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.PagerSlidingTabStrip;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_factory.version_1.fragment.ActivitiesFragment;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_factory.version_1.fragment.DrawersFragment;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_factory.version_1.fragment.FragmentsFragment;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_factory.version_1.fragment.MenusFragment;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_factory.version_1.fragment.ResourcesFragment;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.marketplace.version_1.fragment.ScripsFragment;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.marketplace.version_1.fragment.ShopsFragment;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.marketplace.version_1.fragment.SubscribersFragment;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.RequestsSentActivity;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyLayoutInflaterFactory;
 
-/**
- * Created by Natalia on 09/01/2015.
- */
-public class FactoryActivity extends FragmentActivity
+public class PublisherActivity extends FragmentActivity
 {
 
     private final Handler handler = new Handler();
@@ -49,11 +42,11 @@ public class FactoryActivity extends FragmentActivity
     private MyPagerAdapter adapter;
 
     private Drawable oldBackground = null;
-    private int currentColor = 0xFFff9900;
+    private int currentColor = 0xFFff0000;
 
     private String walletStyle = "";
 
-    private CharSequence mTitle = "Wallet Factory";
+    private CharSequence mTitle = "Marketplace";
     private Menu menu;
 
 
@@ -65,8 +58,8 @@ public class FactoryActivity extends FragmentActivity
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        MyApplication.setActivityId("FactoryActivity");
-        setContentView(R.layout.wallet_factory_activity);
+        MyApplication.setActivityId("MarketplaceActivity");
+        setContentView(R.layout.market_activity_market);
 
         // I get the action bar title id and put it on a text view in order to later change its color
         int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
@@ -102,10 +95,10 @@ public class FactoryActivity extends FragmentActivity
         tabs.setDividerColor(0xFFFFFFFF);
         tabs.setIndicatorColor(0xFFFFFFFF);
         tabs.setIndicatorHeight(9);
-        tabs.setBackgroundColor(0xFFff9900);
+        tabs.setBackgroundColor(0xFFff0000);
         tabs.setTextColor(0xFFFFFFFF);
 
-        String color = "#ff9900";
+        String color = "#ff0000";
         MyApplication.setActionBar(getActionBar());
         MyApplication.setDefaultTypeface(MyApplication.getDefaultTypeface());
         ((MyApplication) this.getApplication()).changeColor(Color.parseColor(color), getResources());
@@ -115,7 +108,7 @@ public class FactoryActivity extends FragmentActivity
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
-        actionBar.setIcon(R.drawable.ic_action_factory);
+        actionBar.setIcon(R.drawable.ic_action_wallet_published);
         abTitle.setTypeface(MyApplication.getDefaultTypeface());
     }
 
@@ -268,7 +261,7 @@ public class FactoryActivity extends FragmentActivity
 
         private String[] titles;
         private String[] titles_1 = { };
-        private String[] titles_2 = {  "Navigation drawer","Activities", "Fragments","Menus", "Resources"};
+        private String[] titles_2 = {  "Subscribers","Shops", "Scrips"};
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -292,26 +285,20 @@ public class FactoryActivity extends FragmentActivity
         }
         @Override
         public Fragment getItem(int position) {
-           titles = titles_2;
+            titles = titles_2;
             Fragment currentFragment;
             switch (position) {
                 case 0:
-                    currentFragment = DrawersFragment.newInstance(position);
+                    currentFragment = SubscribersFragment.newInstance(position);
                     break;
                 case 1:
-                    currentFragment = ActivitiesFragment.newInstance(position);
+                    currentFragment = ShopsFragment.newInstance(position);
                     break;
                 case 2:
-                    currentFragment = FragmentsFragment.newInstance(position);
-                    break;
-                case 3:
-                    currentFragment = MenusFragment.newInstance(position);
-                    break;
-                case 4:
-                    currentFragment = ResourcesFragment.newInstance(position);
+                    currentFragment = ScripsFragment.newInstance(position);
                     break;
                 default:
-                    currentFragment = DrawersFragment.newInstance(position);
+                    currentFragment = SubscribersFragment.newInstance(position);
                     break;
             }
             return currentFragment;
