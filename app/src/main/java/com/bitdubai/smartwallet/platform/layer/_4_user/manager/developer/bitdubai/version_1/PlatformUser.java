@@ -2,7 +2,7 @@ package com.bitdubai.smartwallet.platform.layer._4_user.manager.developer.bitdub
 
 import com.bitdubai.smartwallet.platform.layer._3_os.*;
 import com.bitdubai.smartwallet.platform.layer._4_user.*;
-import com.bitdubai.smartwallet.platform.layer._4_user.manager.User_Status;
+import com.bitdubai.smartwallet.platform.layer._4_user.User_Status;
 
 import java.util.UUID;
 

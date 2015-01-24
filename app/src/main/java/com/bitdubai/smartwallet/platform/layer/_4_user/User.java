@@ -1,7 +1,5 @@
 package com.bitdubai.smartwallet.platform.layer._4_user;
 
-import com.bitdubai.smartwallet.platform.layer._4_user.manager.User_Status;
-
 import java.util.UUID;
 
 /**
