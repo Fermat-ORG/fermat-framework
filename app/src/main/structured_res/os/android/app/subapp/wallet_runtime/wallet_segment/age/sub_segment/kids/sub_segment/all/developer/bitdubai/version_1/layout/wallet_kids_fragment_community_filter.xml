@@ -8,7 +8,7 @@
         android:layout_height="match_parent"
         android:layout_weight="0.1">
     </GridLayout>
-    <LinearLayout android:id="@+id/filter"
+    <LinearLayout android:id="@+id/filter_layout"
         android:orientation="horizontal" android:layout_width="match_parent"
         android:layout_height="40dp"
         android:paddingRight="7dip"

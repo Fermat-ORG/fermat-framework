@@ -2,18 +2,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingBottom="4dp"
-    android:paddingTop="4dp"
-    android:paddingLeft="3dp"
-    android:paddingRight="3dp">
+    android:paddingLeft="4dp"
+    android:paddingRight="4dp">
     <TextView android:id="@+id/description"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="description"
         android:textSize="18sp"
-        android:textStyle="bold|normal"
         android:textColor="#FFFFFF"
-        android:padding="5dp"
+        android:textStyle="bold|normal"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
         android:gravity="center_vertical"/>
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,8 +22,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="15sp"
-            android:paddingBottom="6dp"
-            android:paddingTop="6dp"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:text="asdasd"
             android:textColor="#FFFFFF"
             android:thumb="@drawable/wallet_factory_switch_background"
             android:textStyle="normal"/>
@@ -32,19 +32,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="15sp"
-            android:textColor="#FFFFFF"
             android:thumb="@drawable/wallet_factory_switch_background"
-            android:paddingBottom="6dp"
-            android:paddingTop="6dp"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:text="asdasd"
+            android:textColor="#FFFFFF"
             android:textStyle="normal"/>
         <Switch android:id="@+id/tab"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="15sp"
-            android:paddingBottom="6dp"
-            android:thumb="@drawable/wallet_factory_switch_background"
             android:textColor="#FFFFFF"
-            android:paddingTop="6dp"
+            android:text="asdads"
+            android:paddingBottom="5dp"
+            android:thumb="@drawable/wallet_factory_switch_background"
+            android:paddingTop="5dp"
             android:textStyle="normal"/>
         </LinearLayout>
 
