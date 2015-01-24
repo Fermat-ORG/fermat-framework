@@ -6,4 +6,8 @@ import com.bitdubai.smartwallet.platform.layer._11_module.Module;
  * Created by ciencias on 21.01.15.
  */
 public class WalletRuntimeModule implements Module {
+    @Override
+    public void getReady() {
+
+    }
 }

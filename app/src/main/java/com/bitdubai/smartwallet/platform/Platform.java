@@ -3,7 +3,11 @@ package com.bitdubai.smartwallet.platform;
 import com.bitdubai.smartwallet.platform.layer.CantStartLayerException;
 import com.bitdubai.smartwallet.platform.layer.PlatformLayer;
 
+import com.bitdubai.smartwallet.platform.layer._11_module.Module;
 import com.bitdubai.smartwallet.platform.layer._1_definition.enums.PlatformFileName;
+import com.bitdubai.smartwallet.platform.layer._2_event.DealWithEvents;
+import com.bitdubai.smartwallet.platform.layer._2_event.EventLayer;
+import com.bitdubai.smartwallet.platform.layer._2_event.EventManager;
 import com.bitdubai.smartwallet.platform.layer._3_os.*;
 import com.bitdubai.smartwallet.platform.layer._1_definition.DefinitionLayer;
 import com.bitdubai.smartwallet.platform.layer._4_user.*;
@@ -127,10 +131,17 @@ public class Platform  {
         }
 
         /**
-         * I will set the context to the Os in order to enable access to the underlying Os objects.
+         * The OS and Event Manager will need to be handled to several other objects. I will have them handly.
          */
 
         Os os = ((OsLayer) mOsLayer).getOs();
+        EventManager eventManager = ((EventLayer) mEventLayer).getEventManager();
+
+
+        /**
+         * I will set the context to the Os in order to enable access to the underlying Os objects.
+         */
+
         os.setContext(context);
 
         /**
@@ -140,7 +151,19 @@ public class Platform  {
 
         UserManager userManager =  ((UserLayer) mUserLayer).getUserManager();
 
-        ((UsesFileSystem) userManager).setFileSystem(os.getFileSystem());
+        ((DealWithFileSystem) userManager).setFileSystem(os.getFileSystem());
+        ((DealWithEvents) userManager).setEventManager(eventManager);
+
+        /**
+         * I will give the Wallet Manager access to the File System and to the Event Manager
+         */
+
+        Module walletManager =  ((ModuleLayer) mModuleLayer).getWalletManager();
+
+        ((DealWithFileSystem) walletManager).setFileSystem(os.getFileSystem());
+        ((DealWithEvents) walletManager).setEventManager(eventManager);
+
+        walletManager.getReady();
 
         /**
          * Now I will recover the last state, in order to allow the end user to continue where he was.The first thing
