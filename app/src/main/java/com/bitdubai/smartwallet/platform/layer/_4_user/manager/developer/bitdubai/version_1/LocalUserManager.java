@@ -1,7 +1,9 @@
 package com.bitdubai.smartwallet.platform.layer._4_user.manager.developer.bitdubai.version_1;
 
+import com.bitdubai.smartwallet.platform.layer._2_event.DealWithEvents;
+import com.bitdubai.smartwallet.platform.layer._2_event.EventManager;
 import com.bitdubai.smartwallet.platform.layer._3_os.FileSystem;
-import com.bitdubai.smartwallet.platform.layer._3_os.UsesFileSystem;
+import com.bitdubai.smartwallet.platform.layer._3_os.DealWithFileSystem;
 import com.bitdubai.smartwallet.platform.layer._4_user.CantCreateUserException;
 import com.bitdubai.smartwallet.platform.layer._4_user.CantLoadUserException;
 import com.bitdubai.smartwallet.platform.layer._4_user.User;
@@ -12,7 +14,7 @@ import java.util.UUID;
 /**
  * Created by ciencias on 22.01.15.
  */
-public class LocalUserManager implements UserManager,UsesFileSystem {
+public class LocalUserManager implements UserManager,DealWithFileSystem, DealWithEvents {
 
     /**
      * UserManager Interface member variables.
@@ -24,6 +26,10 @@ public class LocalUserManager implements UserManager,UsesFileSystem {
      */
     FileSystem mFileSystem;
 
+    /**
+     * DealWithEvents Interface member variables.
+     */
+    EventManager eventManager;
 
     /**
      * UserManager Interface implementation.
@@ -40,7 +46,7 @@ public class LocalUserManager implements UserManager,UsesFileSystem {
         try
         {
             User user = new PlatformUser();
-            ((UsesFileSystem) user).setFileSystem(mFileSystem);
+            ((DealWithFileSystem) user).setFileSystem(mFileSystem);
             user.createUser();
 
             return user;
@@ -63,7 +69,7 @@ public class LocalUserManager implements UserManager,UsesFileSystem {
         try
         {
             User user = new PlatformUser();
-            ((UsesFileSystem) user).setFileSystem(mFileSystem);
+            ((DealWithFileSystem) user).setFileSystem(mFileSystem);
             user.loadUser(id);
 
             mLoggedInUser = user;
@@ -91,5 +97,12 @@ public class LocalUserManager implements UserManager,UsesFileSystem {
         mFileSystem = fileSystem;
     }
 
+    /**
+     * DealWithEvents Interface implementation.
+     */
 
+    @Override
+    public void setEventManager(EventManager eventManager) {
+        this.eventManager = eventManager;
+    }
 }

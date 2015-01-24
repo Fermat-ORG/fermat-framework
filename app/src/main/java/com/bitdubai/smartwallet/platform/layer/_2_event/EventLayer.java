@@ -9,12 +9,15 @@ import com.bitdubai.smartwallet.platform.layer._2_event.manager.ManagerSubsystem
  */
 public class EventLayer implements PlatformLayer {
 
+    EventManager eventManager;
 
+    public EventManager getEventManager() {
+        return this.eventManager;
+    }
 
     @Override
     public void start() throws CantStartLayerException {
 
-        EventManager mEventManager;
 
         /**
          * For now, the only way to communicate with other devices is through a cloud service.
@@ -23,7 +26,7 @@ public class EventLayer implements PlatformLayer {
 
         try {
             managerSubsystem.start();
-            mEventManager = ((EventSubsystem) managerSubsystem).getEventManager();
+            this.eventManager = ((EventSubsystem) managerSubsystem).getEventManager();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());
@@ -34,4 +37,6 @@ public class EventLayer implements PlatformLayer {
             throw new CantStartLayerException();
         }
     }
+
+
 }

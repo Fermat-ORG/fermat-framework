@@ -15,6 +15,11 @@ public class UserLoggedInEvent implements PlatformEvent {
         this.userId = userId;
     }
 
+    public UUID getUserId() {
+        return this.userId;
+    }
+
+
     public UserLoggedInEvent (Event eventType){
         this.eventType = eventType;
     }

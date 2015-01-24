@@ -6,6 +6,7 @@ package com.bitdubai.smartwallet.platform.layer._2_event;
 public class UserLoggedInEventListener implements EventListener {
 
     private Event eventType;
+    private EventHandler eventHandler;
 
     public UserLoggedInEventListener (Event eventType){
         this.eventType = eventType;
@@ -17,8 +18,8 @@ public class UserLoggedInEventListener implements EventListener {
     }
 
     @Override
-    public void setEventHandler() {
-
+    public void setEventHandler(EventHandler eventHandler) {
+        this.eventHandler = eventHandler;
     }
 
     @Override
@@ -28,6 +29,6 @@ public class UserLoggedInEventListener implements EventListener {
 
     @Override
     public void raiseEvent(PlatformEvent platformEvent) {
-
+        this.eventHandler.raiseEvent(platformEvent);
     }
 }

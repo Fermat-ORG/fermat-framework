@@ -7,7 +7,7 @@ public interface EventListener {
 
     public Event getEventType();
 
-    public void setEventHandler();
+    public void setEventHandler(EventHandler eventHandler);
 
     public void getEventHandler();
 

@@ -15,6 +15,10 @@ public class UserLoggedOutEvent implements PlatformEvent {
         this.userId = userId;
     }
 
+    public UUID getUserId() {
+        return this.userId;
+    }
+
     public UserLoggedOutEvent(Event eventType) {
         this.eventType = eventType;
     }

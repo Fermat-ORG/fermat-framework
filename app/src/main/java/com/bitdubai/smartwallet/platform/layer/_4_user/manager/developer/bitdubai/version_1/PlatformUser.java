@@ -9,7 +9,7 @@ import java.util.UUID;
 /**
  * Created by ciencias on 22.01.15.
  */
-public class PlatformUser implements User,UsesFileSystem {
+public class PlatformUser implements User,DealWithFileSystem {
 
     /**
      * User Interface member variables.
