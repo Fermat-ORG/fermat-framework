@@ -24,7 +24,7 @@ public class LocalUserManager implements UserManager,DealWithFileSystem, DealWit
     /**
      * UsesFileSystem Interface member variables.
      */
-    FileSystem mFileSystem;
+    FileSystem fileSystem;
 
     /**
      * DealWithEvents Interface member variables.
@@ -46,7 +46,7 @@ public class LocalUserManager implements UserManager,DealWithFileSystem, DealWit
         try
         {
             User user = new PlatformUser();
-            ((DealWithFileSystem) user).setFileSystem(mFileSystem);
+            ((DealWithFileSystem) user).setFileSystem(this.fileSystem);
             user.createUser();
 
             return user;
@@ -69,7 +69,7 @@ public class LocalUserManager implements UserManager,DealWithFileSystem, DealWit
         try
         {
             User user = new PlatformUser();
-            ((DealWithFileSystem) user).setFileSystem(mFileSystem);
+            ((DealWithFileSystem) user).setFileSystem(this.fileSystem);
             user.loadUser(id);
 
             mLoggedInUser = user;
@@ -94,7 +94,7 @@ public class LocalUserManager implements UserManager,DealWithFileSystem, DealWit
 
     @Override
     public void setFileSystem(FileSystem fileSystem) {
-        mFileSystem = fileSystem;
+        this.fileSystem = fileSystem;
     }
 
     /**
@@ -105,4 +105,5 @@ public class LocalUserManager implements UserManager,DealWithFileSystem, DealWit
     public void setEventManager(EventManager eventManager) {
         this.eventManager = eventManager;
     }
+
 }

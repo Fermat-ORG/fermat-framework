@@ -1,8 +1,6 @@
 package com.bitdubai.smartwallet.platform.layer._11_module.wallet_manager.developer.bitdubai.version_1;
 
-import com.bitdubai.smartwallet.platform.layer._11_module.Module;
-import com.bitdubai.smartwallet.platform.layer._11_module.ModuleStatus;
-import com.bitdubai.smartwallet.platform.layer._11_module.wallet_manager.CantLoadUserWalletsException;
+
 import com.bitdubai.smartwallet.platform.layer._1_definition.enums.DeviceDirectory;
 import com.bitdubai.smartwallet.platform.layer._2_event.*;
 import com.bitdubai.smartwallet.platform.layer._2_event.manager.DealWithEvents;
@@ -10,6 +8,9 @@ import com.bitdubai.smartwallet.platform.layer._2_event.manager.EventType;
 import com.bitdubai.smartwallet.platform.layer._2_event.manager.EventHandler;
 import com.bitdubai.smartwallet.platform.layer._2_event.manager.EventListener;
 import com.bitdubai.smartwallet.platform.layer._3_os.*;
+import com.bitdubai.smartwallet.platform.layer._11_module.Module;
+import com.bitdubai.smartwallet.platform.layer._11_module.ModuleStatus;
+import com.bitdubai.smartwallet.platform.layer._11_module.wallet_manager.CantLoadUserWalletsException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,11 +22,19 @@ import java.util.UUID;
 public class WalletManagerModule implements Module, DealWithEvents, DealWithFileSystem {
 
     ModuleStatus status;
-    EventManager eventManager;
-    FileSystem fileSystem;
     UUID userId;
 
     List<Wallet> wallets;
+
+    /**
+     * UsesFileSystem Interface member variables.
+     */
+    FileSystem fileSystem;
+
+    /**
+     * DealWithEvents Interface member variables.
+     */
+    EventManager eventManager;
 
     public List<Wallet> getWallets() {
         return wallets;
@@ -69,7 +78,12 @@ public class WalletManagerModule implements Module, DealWithEvents, DealWithFile
                 throw new CantLoadUserWalletsException();
             }
 
-            /* TODO: read the content of the File and create de wallets.*/
+            String[] walletsId = platformFile.getContent().split(";",-1);
+            for ( String walletId : walletsId)
+            {
+                Wallet wallet = new Wallet (UUID.fromString(walletId));
+                wallets.add(wallet);
+            }
 
         }
         catch (FileNotFoundException fileNotFoundException)
@@ -104,13 +118,22 @@ public class WalletManagerModule implements Module, DealWithEvents, DealWithFile
         return this.status;
     }
 
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
+    /**
+     * UsesFileSystem Interface implementation.
+     */
 
     @Override
     public void setFileSystem(FileSystem fileSystem) {
         this.fileSystem = fileSystem;
     }
+
+    /**
+     * DealWithEvents Interface implementation.
+     */
+
+    @Override
+    public void setEventManager(EventManager eventManager) {
+        this.eventManager = eventManager;
+    }
+
 }
