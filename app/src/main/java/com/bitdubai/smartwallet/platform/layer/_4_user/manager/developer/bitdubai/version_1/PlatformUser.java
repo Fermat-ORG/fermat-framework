@@ -1,5 +1,6 @@
 package com.bitdubai.smartwallet.platform.layer._4_user.manager.developer.bitdubai.version_1;
 
+import com.bitdubai.smartwallet.platform.layer._2_event.*;
 import com.bitdubai.smartwallet.platform.layer._3_os.*;
 import com.bitdubai.smartwallet.platform.layer._4_user.*;
 import com.bitdubai.smartwallet.platform.layer._4_user.User_Status;
@@ -9,7 +10,7 @@ import java.util.UUID;
 /**
  * Created by ciencias on 22.01.15.
  */
-public class PlatformUser implements User,DealWithFileSystem {
+public class PlatformUser implements User,DealWithFileSystem, DealWithEvents {
 
     /**
      * User Interface member variables.
@@ -23,6 +24,11 @@ public class PlatformUser implements User,DealWithFileSystem {
      * UsesFileSystem Interface member variables.
      */
     FileSystem mFileSystem;
+
+    /**
+     * DealWithEvents Interface member variables.
+     */
+    EventManager eventManager;
 
 
     /**
@@ -59,7 +65,7 @@ public class PlatformUser implements User,DealWithFileSystem {
      */
     public void loadUser (UUID id) throws CantLoadUserException  {
         mId = id;
-        mStatus = User_Status.LOGGED_IN;
+        this.changeToLoggedInStatus();
 
         try {
             load();
@@ -115,10 +121,32 @@ public class PlatformUser implements User,DealWithFileSystem {
     }
 
 
+    /**
+     * DealWithEvents Interface implementation.
+     */
+
+    @Override
+    public void setEventManager(EventManager eventManager) {
+        this.eventManager = eventManager;
+    }
 
     /**
      * Private methods implementation.
      */
+
+    private void changeToLoggedInStatus(){
+        mStatus = User_Status.LOGGED_IN;
+
+        /**
+         * Now I fire the Logged In event.
+         */
+
+        PlatformEvent platformEvent = eventManager.getNewEvent(Event.USER_LOGGED_IN);
+        ((UserLoggedInEvent) platformEvent).setUserId(mId);
+        eventManager.raiseEvent(platformEvent);
+
+    }
+
 
     private void persist() throws CantPersistUserException{
 
@@ -164,5 +192,6 @@ public class PlatformUser implements User,DealWithFileSystem {
         }
 
     }
+
 
 }

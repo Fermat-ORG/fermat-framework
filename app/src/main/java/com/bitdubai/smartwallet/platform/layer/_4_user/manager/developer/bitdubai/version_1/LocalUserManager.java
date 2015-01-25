@@ -54,7 +54,7 @@ public class LocalUserManager implements UserManager,DealWithFileSystem, DealWit
         catch (CantCreateUserException cantCreateUserException)
         {
             /**
-             * This is bad, the only thing I can do is to through the exception again.
+             * This is bad, the only thing I can do is to throw the exception again.
              */
             System.err.println("CantPersistUserException: " + cantCreateUserException.getMessage());
             cantCreateUserException.printStackTrace();
@@ -77,7 +77,7 @@ public class LocalUserManager implements UserManager,DealWithFileSystem, DealWit
         catch (CantLoadUserException cantLoadUserException)
         {
             /**
-             * This is bad, the only thing I can do is to through the exception again.
+             * This is bad, the only thing I can do is to throw the exception again.
              */
             System.err.println("CantLoadUserException: " + cantLoadUserException.getMessage());
             cantLoadUserException.printStackTrace();

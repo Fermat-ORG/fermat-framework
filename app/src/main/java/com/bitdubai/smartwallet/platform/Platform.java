@@ -99,8 +99,22 @@ public class Platform  {
         return mLoggedInUser;
     }
 
+    Object context;
 
-    public Platform(Object context) throws CantStartPlatformException {
+
+
+    public void Platform (Object context) {
+
+        /**
+         * Somebody is starting the platform. The platform is portable. That somebody is OS dependent and has access to
+         * the OS. I have to transport a reference to that somebody to the OS subsystem in other to allow it to access
+         * the OS through this reference.
+         */
+
+        this.context = context;
+    }
+
+    public void start(Object context) throws CantStartPlatformException {
 
         /**
          * Here I will be starting all the platforms layers. It is required that none of them fails. That does not mean
@@ -142,7 +156,7 @@ public class Platform  {
          * I will set the context to the Os in order to enable access to the underlying Os objects.
          */
 
-        os.setContext(context);
+        os.setContext(this.context);
 
         /**
          * I will give the User Manager access to the File System so it can load and save user information from
@@ -168,6 +182,9 @@ public class Platform  {
         /**
          * Now I will recover the last state, in order to allow the end user to continue where he was.The first thing
          * to do is to get the file where the last state was saved.
+         *
+         * It is important to note that the recover of the last state comes after all the initialization process is done,
+         * because if not, events raised during this recovery could not be handled by the corresponding listeners.
          */
 
         try {
