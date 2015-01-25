@@ -1,11 +1,11 @@
 package com.bitdubai.smartwallet.platform.layer._4_user.manager.developer.bitdubai.version_1;
 
-import com.bitdubai.smartwallet.platform.layer._2_event.DealWithEvents;
+import com.bitdubai.smartwallet.platform.layer._2_event.manager.DealWithEvents;
 import com.bitdubai.smartwallet.platform.layer._2_event.EventManager;
 import com.bitdubai.smartwallet.platform.layer._3_os.FileSystem;
 import com.bitdubai.smartwallet.platform.layer._3_os.DealWithFileSystem;
-import com.bitdubai.smartwallet.platform.layer._4_user.CantCreateUserException;
-import com.bitdubai.smartwallet.platform.layer._4_user.CantLoadUserException;
+import com.bitdubai.smartwallet.platform.layer._4_user.manager.CantCreateUserException;
+import com.bitdubai.smartwallet.platform.layer._4_user.manager.CantLoadUserException;
 import com.bitdubai.smartwallet.platform.layer._4_user.User;
 import com.bitdubai.smartwallet.platform.layer._4_user.UserManager;
 

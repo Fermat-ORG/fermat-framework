@@ -5,6 +5,8 @@ package com.bitdubai.smartwallet.platform.layer._11_module;
  */
 public interface Module {
 
-    public void getReady();
+    public void run();
+
+    public ModuleStatus getStatus();
 
 }

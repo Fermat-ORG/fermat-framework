@@ -1,4 +1,4 @@
-package com.bitdubai.smartwallet.platform.layer._4_user;
+package com.bitdubai.smartwallet.platform.layer._4_user.manager;
 
 /**
  * Created by ciencias on 22.01.15.

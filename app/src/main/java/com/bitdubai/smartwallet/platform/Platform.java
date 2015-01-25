@@ -5,12 +5,16 @@ import com.bitdubai.smartwallet.platform.layer.PlatformLayer;
 
 import com.bitdubai.smartwallet.platform.layer._11_module.Module;
 import com.bitdubai.smartwallet.platform.layer._1_definition.enums.PlatformFileName;
-import com.bitdubai.smartwallet.platform.layer._2_event.DealWithEvents;
+import com.bitdubai.smartwallet.platform.layer._1_definition.event.DealWithEventMonitor;
+import com.bitdubai.smartwallet.platform.layer._2_event.manager.DealWithEvents;
 import com.bitdubai.smartwallet.platform.layer._2_event.EventLayer;
 import com.bitdubai.smartwallet.platform.layer._2_event.EventManager;
 import com.bitdubai.smartwallet.platform.layer._3_os.*;
 import com.bitdubai.smartwallet.platform.layer._1_definition.DefinitionLayer;
 import com.bitdubai.smartwallet.platform.layer._4_user.*;
+import com.bitdubai.smartwallet.platform.layer._4_user.manager.CantCreateUserException;
+import com.bitdubai.smartwallet.platform.layer._4_user.manager.CantLoadUserException;
+import com.bitdubai.smartwallet.platform.layer._4_user.manager.LoginFailedException;
 import com.bitdubai.smartwallet.platform.layer._5_license.LicenseLayer;
 import com.bitdubai.smartwallet.platform.layer._6_world.WorldLayer;
 import com.bitdubai.smartwallet.platform.layer._7_crypto_network.CryptoNetworkLayer;
@@ -94,6 +98,7 @@ public class Platform  {
 
 
     User mLoggedInUser;
+    PlatformEventMonitor eventMonitor;
 
     public User getLoggedInUser() {
         return mLoggedInUser;
@@ -112,6 +117,12 @@ public class Platform  {
          */
 
         this.context = context;
+
+        /**
+         * The event monitor is intended to handle exceptions on listeners, in order to take appropiate action.
+         */
+
+        eventMonitor = new PlatformEventMonitor();
     }
 
     public void start(Object context) throws CantStartPlatformException {
@@ -144,6 +155,8 @@ public class Platform  {
             throw new CantStartPlatformException();
         }
 
+
+
         /**
          * The OS and Event Manager will need to be handled to several other objects. I will have them handly.
          */
@@ -151,6 +164,11 @@ public class Platform  {
         Os os = ((OsLayer) mOsLayer).getOs();
         EventManager eventManager = ((EventLayer) mEventLayer).getEventManager();
 
+        /**
+         * I will give the Event Monitor to the Event Manager, in order to allow it to monitor listeners exceptions..
+         */
+
+        ((DealWithEventMonitor) eventManager).setEventMonitor(eventMonitor);
 
         /**
          * I will set the context to the Os in order to enable access to the underlying Os objects.
@@ -177,7 +195,7 @@ public class Platform  {
         ((DealWithFileSystem) walletManager).setFileSystem(os.getFileSystem());
         ((DealWithEvents) walletManager).setEventManager(eventManager);
 
-        walletManager.getReady();
+        walletManager.run();
 
         /**
          * Now I will recover the last state, in order to allow the end user to continue where he was.The first thing
@@ -238,7 +256,7 @@ public class Platform  {
                 newUser = ((UserLayer) mUserLayer).getUserManager().createUser();
                 newUser.login("");
 
-            } catch (CantCreateUserException | LoginFailedException  exception) {
+            } catch (CantCreateUserException | LoginFailedException exception) {
                 /**
                  * This really should never happen. But if it does...
                  */

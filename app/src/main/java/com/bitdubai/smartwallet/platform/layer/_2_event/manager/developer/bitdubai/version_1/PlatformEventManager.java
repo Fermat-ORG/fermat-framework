@@ -1,6 +1,10 @@
 package com.bitdubai.smartwallet.platform.layer._2_event.manager.developer.bitdubai.version_1;
 
+
+import com.bitdubai.smartwallet.platform.layer._1_definition.event.DealWithEventMonitor;
+import com.bitdubai.smartwallet.platform.layer._1_definition.event.EventMonitor;
 import com.bitdubai.smartwallet.platform.layer._2_event.*;
+import com.bitdubai.smartwallet.platform.layer._2_event.manager.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,12 +12,14 @@ import java.util.List;
 /**
  * Created by ciencias on 23.01.15.
  */
-public class SystemEventManager implements EventManager {
+public class PlatformEventManager implements EventManager, DealWithEventMonitor {
 
     private List<EventListener> listenersUserLoggedInEvent;
     private List<EventListener> listenersUserLoggedOutEvent;
 
-    public SystemEventManager () {
+    com.bitdubai.smartwallet.platform.layer._1_definition.event.EventMonitor eventMonitor;
+
+    public PlatformEventManager() {
 
         listenersUserLoggedInEvent = new ArrayList<>();
         listenersUserLoggedOutEvent = new ArrayList<>();
@@ -22,27 +28,27 @@ public class SystemEventManager implements EventManager {
 
 
     @Override
-    public EventListener getNewListener(Event eventType) {
+    public EventListener getNewListener(EventType eventType) {
 
         switch (eventType) {
             case USER_LOGGED_IN:
-                return new UserLoggedInEventListener(Event.USER_LOGGED_IN);
+                return new UserLoggedInEventListener(EventType.USER_LOGGED_IN, this.eventMonitor);
 
             case USER_LOGGED_OUT:
-                return new UserLoggedOutEventListener(Event.USER_LOGGED_OUT);
+                return new UserLoggedOutEventListener(EventType.USER_LOGGED_OUT, this.eventMonitor);
         }
         return null;
     }
 
     @Override
-    public PlatformEvent getNewEvent(Event eventType) {
+    public PlatformEvent getNewEvent(EventType eventType) {
 
         switch (eventType) {
             case USER_LOGGED_IN:
-                return new UserLoggedInEvent(Event.USER_LOGGED_IN);
+                return new UserLoggedInEvent(EventType.USER_LOGGED_IN);
 
             case USER_LOGGED_OUT:
-                return new UserLoggedOutEvent(Event.USER_LOGGED_OUT);
+                return new UserLoggedOutEvent(EventType.USER_LOGGED_OUT);
         }
         return null;
     }
@@ -50,6 +56,7 @@ public class SystemEventManager implements EventManager {
 
     @Override
     public void registerListener(EventListener listener) {
+
 
         switch (listener.getEventType()) {
             case USER_LOGGED_IN:
@@ -82,4 +89,15 @@ public class SystemEventManager implements EventManager {
         }
 
     }
+
+    /**
+     * DealWithEventMonitor interface implementation.
+     */
+
+    @Override
+    public void setEventMonitor(EventMonitor eventMonitor) {
+        this.eventMonitor = eventMonitor;
+    }
+
+
 }

@@ -1,1 +1,0 @@
-A subapp is a self contained module which does not talk directly to other subapps.

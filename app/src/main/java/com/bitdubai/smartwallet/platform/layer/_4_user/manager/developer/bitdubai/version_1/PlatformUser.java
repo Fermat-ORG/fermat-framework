@@ -1,9 +1,13 @@
 package com.bitdubai.smartwallet.platform.layer._4_user.manager.developer.bitdubai.version_1;
 
 import com.bitdubai.smartwallet.platform.layer._2_event.*;
+import com.bitdubai.smartwallet.platform.layer._2_event.manager.DealWithEvents;
+import com.bitdubai.smartwallet.platform.layer._2_event.manager.EventType;
+import com.bitdubai.smartwallet.platform.layer._2_event.manager.PlatformEvent;
+import com.bitdubai.smartwallet.platform.layer._2_event.manager.UserLoggedInEvent;
 import com.bitdubai.smartwallet.platform.layer._3_os.*;
 import com.bitdubai.smartwallet.platform.layer._4_user.*;
-import com.bitdubai.smartwallet.platform.layer._4_user.User_Status;
+import com.bitdubai.smartwallet.platform.layer._4_user.manager.*;
 
 import java.util.UUID;
 
@@ -63,7 +67,7 @@ public class PlatformUser implements User,DealWithFileSystem, DealWithEvents {
      * This constructor is to be used to regenerate a user that was already logged in while the last session was
      * destroyed.
      */
-    public void loadUser (UUID id) throws CantLoadUserException  {
+    public void loadUser (UUID id) throws CantLoadUserException {
         mId = id;
         this.changeToLoggedInStatus();
 
@@ -141,7 +145,7 @@ public class PlatformUser implements User,DealWithFileSystem, DealWithEvents {
          * Now I fire the Logged In event.
          */
 
-        PlatformEvent platformEvent = eventManager.getNewEvent(Event.USER_LOGGED_IN);
+        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.USER_LOGGED_IN);
         ((UserLoggedInEvent) platformEvent).setUserId(mId);
         eventManager.raiseEvent(platformEvent);
 

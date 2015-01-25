@@ -2,6 +2,7 @@ package com.bitdubai.smartwallet.platform.layer._4_user;
 
 import com.bitdubai.smartwallet.platform.layer.CantStartLayerException;
 import com.bitdubai.smartwallet.platform.layer.PlatformLayer;
+import com.bitdubai.smartwallet.platform.layer._4_user.manager.CantStartSubsystemException;
 import com.bitdubai.smartwallet.platform.layer._4_user.manager.ManagerSubsystem;
 
 /**

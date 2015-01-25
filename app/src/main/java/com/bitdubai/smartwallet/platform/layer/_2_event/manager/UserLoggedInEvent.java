@@ -1,4 +1,4 @@
-package com.bitdubai.smartwallet.platform.layer._2_event;
+package com.bitdubai.smartwallet.platform.layer._2_event.manager;
 
 import java.util.UUID;
 
@@ -8,7 +8,7 @@ import java.util.UUID;
 public class UserLoggedInEvent implements PlatformEvent {
 
     private UUID userId;
-    private Event eventType;
+    private EventType eventType;
     private EventSource eventSource;
 
     public void setUserId (UUID userId){
@@ -20,13 +20,13 @@ public class UserLoggedInEvent implements PlatformEvent {
     }
 
 
-    public UserLoggedInEvent (Event eventType){
+    public UserLoggedInEvent (EventType eventType){
         this.eventType = eventType;
     }
 
 
     @Override
-    public Event getEventType() {
+    public EventType getEventType() {
         return this.eventType;
     }
 

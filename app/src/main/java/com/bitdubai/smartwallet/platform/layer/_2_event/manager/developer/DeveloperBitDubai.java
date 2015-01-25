@@ -2,7 +2,7 @@ package com.bitdubai.smartwallet.platform.layer._2_event.manager.developer;
 
 import com.bitdubai.smartwallet.platform.layer._2_event.EventDeveloper;
 import com.bitdubai.smartwallet.platform.layer._2_event.EventManager;
-import com.bitdubai.smartwallet.platform.layer._2_event.manager.developer.bitdubai.version_1.SystemEventManager;
+import com.bitdubai.smartwallet.platform.layer._2_event.manager.developer.bitdubai.version_1.PlatformEventManager;
 
 
 /**
@@ -25,7 +25,7 @@ public class DeveloperBitDubai implements EventDeveloper {
          * it is easy to choose.
          */
 
-        mEventManager = new SystemEventManager();
+        mEventManager = new PlatformEventManager();
 
     }
 }
