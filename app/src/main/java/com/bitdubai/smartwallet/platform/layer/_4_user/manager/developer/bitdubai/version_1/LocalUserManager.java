@@ -1,9 +1,9 @@
 package com.bitdubai.smartwallet.platform.layer._4_user.manager.developer.bitdubai.version_1;
 
-import com.bitdubai.smartwallet.platform.layer._2_event.manager.DealWithEvents;
+import com.bitdubai.smartwallet.platform.layer._2_event.manager.DealsWithEvents;
 import com.bitdubai.smartwallet.platform.layer._2_event.EventManager;
 import com.bitdubai.smartwallet.platform.layer._3_os.FileSystem;
-import com.bitdubai.smartwallet.platform.layer._3_os.DealWithFileSystem;
+import com.bitdubai.smartwallet.platform.layer._3_os.DealsWithFileSystem;
 import com.bitdubai.smartwallet.platform.layer._4_user.manager.CantCreateUserException;
 import com.bitdubai.smartwallet.platform.layer._4_user.manager.CantLoadUserException;
 import com.bitdubai.smartwallet.platform.layer._4_user.User;
@@ -14,7 +14,7 @@ import java.util.UUID;
 /**
  * Created by ciencias on 22.01.15.
  */
-public class LocalUserManager implements UserManager,DealWithFileSystem, DealWithEvents {
+public class LocalUserManager implements UserManager,DealsWithFileSystem, DealsWithEvents {
 
     /**
      * UserManager Interface member variables.
@@ -46,7 +46,7 @@ public class LocalUserManager implements UserManager,DealWithFileSystem, DealWit
         try
         {
             User user = new PlatformUser();
-            ((DealWithFileSystem) user).setFileSystem(this.fileSystem);
+            ((DealsWithFileSystem) user).setFileSystem(this.fileSystem);
             user.createUser();
 
             return user;
@@ -69,7 +69,7 @@ public class LocalUserManager implements UserManager,DealWithFileSystem, DealWit
         try
         {
             User user = new PlatformUser();
-            ((DealWithFileSystem) user).setFileSystem(this.fileSystem);
+            ((DealsWithFileSystem) user).setFileSystem(this.fileSystem);
             user.loadUser(id);
 
             mLoggedInUser = user;

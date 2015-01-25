@@ -5,6 +5,6 @@ package com.bitdubai.smartwallet.platform.layer._2_event.manager;
  */
 public enum EventType {
 
-    USER_LOGGED_IN, USER_LOGGED_OUT;
+    USER_LOGGED_IN, USER_LOGGED_OUT, WALLET_WENT_ONLINE;
 
 }

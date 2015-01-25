@@ -17,6 +17,8 @@ public class PlatformEventManager implements EventManager, DealWithEventMonitor 
 
     private List<EventListener> listenersUserLoggedInEvent;
     private List<EventListener> listenersUserLoggedOutEvent;
+    private List<EventListener> listenersWalletWentOnlineEvent;
+
 
     com.bitdubai.smartwallet.platform.layer._1_definition.event.EventMonitor eventMonitor;
 
@@ -24,7 +26,7 @@ public class PlatformEventManager implements EventManager, DealWithEventMonitor 
 
         listenersUserLoggedInEvent = new ArrayList<>();
         listenersUserLoggedOutEvent = new ArrayList<>();
-
+        listenersWalletWentOnlineEvent = new ArrayList<>();
     }
 
 
@@ -37,6 +39,9 @@ public class PlatformEventManager implements EventManager, DealWithEventMonitor 
 
             case USER_LOGGED_OUT:
                 return new UserLoggedOutEventListener(EventType.USER_LOGGED_OUT, this.eventMonitor);
+
+            case WALLET_WENT_ONLINE:
+                return new WalletWentOnlineEventListener(EventType.WALLET_WENT_ONLINE, this.eventMonitor);
         }
         return null;
     }
@@ -50,6 +55,9 @@ public class PlatformEventManager implements EventManager, DealWithEventMonitor 
 
             case USER_LOGGED_OUT:
                 return new UserLoggedOutEvent(EventType.USER_LOGGED_OUT);
+
+            case WALLET_WENT_ONLINE:
+                return new WalletWentOnlineEvent(EventType.USER_LOGGED_OUT);
         }
         return null;
     }
@@ -67,6 +75,11 @@ public class PlatformEventManager implements EventManager, DealWithEventMonitor 
             case USER_LOGGED_OUT:
                 listenersUserLoggedOutEvent.add(listener);
                 break;
+
+            case WALLET_WENT_ONLINE:
+                listenersWalletWentOnlineEvent.add(listener);
+                break;
+
         }
     }
 
@@ -82,6 +95,10 @@ public class PlatformEventManager implements EventManager, DealWithEventMonitor 
 
             case USER_LOGGED_OUT:
                 listeners = listenersUserLoggedOutEvent;
+                break;
+
+            case WALLET_WENT_ONLINE:
+                listeners = listenersWalletWentOnlineEvent;
                 break;
         }
 

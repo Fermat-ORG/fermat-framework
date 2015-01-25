@@ -1,8 +1,10 @@
 package com.bitdubai.smartwallet.platform.layer._11_module.wallet_manager.developer.bitdubai.version_1;
 
+import com.bitdubai.smartwallet.platform.layer._11_module.Module;
 import com.bitdubai.smartwallet.platform.layer._11_module.ModuleNotRunningException;
 import com.bitdubai.smartwallet.platform.layer._11_module.ModuleStatus;
-import com.bitdubai.smartwallet.platform.layer._11_module.wallet_manager.CantLoadUserWalletsException;
+import com.bitdubai.smartwallet.platform.layer._11_module.wallet_manager.CantLoadWalletException;
+import com.bitdubai.smartwallet.platform.layer._11_module.wallet_manager.WalletManager;
 import com.bitdubai.smartwallet.platform.layer._2_event.manager.EventHandler;
 import com.bitdubai.smartwallet.platform.layer._1_definition.event.PlatformEvent;
 import com.bitdubai.smartwallet.platform.layer._2_event.manager.UserLoggedInEvent;
@@ -14,9 +16,9 @@ import java.util.UUID;
  */
 public class UserLoggedInEventHandler implements EventHandler {
 
-    WalletManagerModule walletManager;
+    WalletManager walletManager;
 
-    public void setWalletManager (WalletManagerModule walletManager){
+    public void setWalletManager (WalletManager walletManager){
         this.walletManager = walletManager;
     }
 
@@ -26,21 +28,21 @@ public class UserLoggedInEventHandler implements EventHandler {
         UUID userId = ((UserLoggedInEvent) platformEvent).getUserId();
 
 
-        if (this.walletManager.getStatus() == ModuleStatus.RUNNING) {
+        if (((Module) this.walletManager).getStatus() == ModuleStatus.RUNNING) {
 
             try
             {
                 this.walletManager.loadUserWallets(userId);
             }
-            catch (CantLoadUserWalletsException cantLoadUserWalletsException)
+            catch (CantLoadWalletException cantLoadWalletException)
             {
                 /**
                  * The main module could not handle this exception. Me neither. Will throw it again.
                  */
-                System.err.println("CantLoadUserWalletsException: " + cantLoadUserWalletsException.getMessage());
-                cantLoadUserWalletsException.printStackTrace();
+                System.err.println("CantLoadUserWalletsException: " + cantLoadWalletException.getMessage());
+                cantLoadWalletException.printStackTrace();
 
-                throw cantLoadUserWalletsException;
+                throw cantLoadWalletException;
             }
         }
         else

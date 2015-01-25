@@ -7,7 +7,7 @@ import com.bitdubai.smartwallet.platform.layer._11_module.Module;
 import com.bitdubai.smartwallet.platform.layer._1_definition.enums.DeviceDirectory;
 import com.bitdubai.smartwallet.platform.layer._1_definition.enums.PlatformFileName;
 import com.bitdubai.smartwallet.platform.layer._1_definition.event.DealWithEventMonitor;
-import com.bitdubai.smartwallet.platform.layer._2_event.manager.DealWithEvents;
+import com.bitdubai.smartwallet.platform.layer._2_event.manager.DealsWithEvents;
 import com.bitdubai.smartwallet.platform.layer._2_event.EventLayer;
 import com.bitdubai.smartwallet.platform.layer._2_event.EventManager;
 import com.bitdubai.smartwallet.platform.layer._3_os.*;
@@ -184,8 +184,8 @@ public class Platform  {
 
         UserManager userManager =  ((UserLayer) mUserLayer).getUserManager();
 
-        ((DealWithFileSystem) userManager).setFileSystem(os.getFileSystem());
-        ((DealWithEvents) userManager).setEventManager(eventManager);
+        ((DealsWithFileSystem) userManager).setFileSystem(os.getFileSystem());
+        ((DealsWithEvents) userManager).setEventManager(eventManager);
 
         /**
          * I will give the Wallet Manager access to the File System and to the Event Manager
@@ -193,8 +193,8 @@ public class Platform  {
 
         Module walletManager =  ((ModuleLayer) mModuleLayer).getWalletManager();
 
-        ((DealWithFileSystem) walletManager).setFileSystem(os.getFileSystem());
-        ((DealWithEvents) walletManager).setEventManager(eventManager);
+        ((DealsWithFileSystem) walletManager).setFileSystem(os.getFileSystem());
+        ((DealsWithEvents) walletManager).setEventManager(eventManager);
 
         walletManager.run();
 

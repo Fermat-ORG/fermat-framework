@@ -2,7 +2,7 @@ package com.bitdubai.smartwallet.platform.layer._4_user.manager.developer.bitdub
 
 import com.bitdubai.smartwallet.platform.layer._1_definition.enums.DeviceDirectory;
 import com.bitdubai.smartwallet.platform.layer._2_event.*;
-import com.bitdubai.smartwallet.platform.layer._2_event.manager.DealWithEvents;
+import com.bitdubai.smartwallet.platform.layer._2_event.manager.DealsWithEvents;
 import com.bitdubai.smartwallet.platform.layer._2_event.manager.EventType;
 import com.bitdubai.smartwallet.platform.layer._1_definition.event.PlatformEvent;
 import com.bitdubai.smartwallet.platform.layer._2_event.manager.UserLoggedInEvent;
@@ -15,20 +15,20 @@ import java.util.UUID;
 /**
  * Created by ciencias on 22.01.15.
  */
-public class PlatformUser implements User,DealWithFileSystem, DealWithEvents {
+public class PlatformUser implements User,DealsWithFileSystem, DealsWithEvents {
 
     /**
      * User Interface member variables.
      */
-    UUID mId;
-    String mUserName = "";
-    String mPassword = "";
-    User_Status mStatus;
+    UUID userId;
+    String userName = "";
+    String password = "";
+    UserStatus status;
 
     /**
      * UsesFileSystem Interface member variables.
      */
-    FileSystem mFileSystem;
+    FileSystem fileSystem;
 
     /**
      * DealWithEvents Interface member variables.
@@ -44,10 +44,11 @@ public class PlatformUser implements User,DealWithFileSystem, DealWithEvents {
     /**
      * This method is to be used for creating a new user.
      */
+
     public void createUser () throws CantCreateUserException {
 
-        mId = UUID.randomUUID();
-        mStatus = User_Status.LOGGED_OUT;
+        this.userId = UUID.randomUUID();
+        this.status = UserStatus.LOGGED_OUT;
 
         try {
             persist();
@@ -65,15 +66,16 @@ public class PlatformUser implements User,DealWithFileSystem, DealWithEvents {
     }
 
     /**
-     * This constructor is to be used to regenerate a user that was already logged in while the last session was
+     * This method is to be used to regenerate a user that was already logged in while the last session was
      * destroyed.
      */
+
     public void loadUser (UUID id) throws CantLoadUserException {
-        mId = id;
-        this.changeToLoggedInStatus();
+        this.userId = id;
 
         try {
             load();
+            this.changeToLoggedInStatus();
         }
         catch (CantLoadUserException cantLoadUserException)
         {
@@ -90,27 +92,27 @@ public class PlatformUser implements User,DealWithFileSystem, DealWithEvents {
 
     @Override
     public UUID getId() {
-        return mId;
+        return this.userId ;
     }
 
     @Override
     public String getUserName() {
-        return mUserName;
+        return this.userName;
     }
 
     @Override
-    public User_Status getStatus() {
-        return mStatus;
+    public UserStatus getStatus() {
+        return this.status;
     }
 
     @Override
     public void login(String password) throws LoginFailedException {
-        if (mPassword != password) {
+        if (this.password != password) {
             throw new LoginFailedException();
         }
         else
         {
-            mStatus = User_Status.LOGGED_IN;
+            this.status = UserStatus.LOGGED_IN;
         }
     }
 
@@ -122,7 +124,7 @@ public class PlatformUser implements User,DealWithFileSystem, DealWithEvents {
 
     @Override
     public void setFileSystem(FileSystem fileSystem) {
-        mFileSystem = fileSystem;
+        this.fileSystem = fileSystem;
     }
 
 
@@ -140,14 +142,15 @@ public class PlatformUser implements User,DealWithFileSystem, DealWithEvents {
      */
 
     private void changeToLoggedInStatus(){
-        mStatus = User_Status.LOGGED_IN;
+
+        this.status = UserStatus.LOGGED_IN;
 
         /**
          * Now I fire the Logged In event.
          */
 
         PlatformEvent platformEvent = eventManager.getNewEvent(EventType.USER_LOGGED_IN);
-        ((UserLoggedInEvent) platformEvent).setUserId(mId);
+        ((UserLoggedInEvent) platformEvent).setUserId(this.userId );
         eventManager.raiseEvent(platformEvent);
 
     }
@@ -155,14 +158,14 @@ public class PlatformUser implements User,DealWithFileSystem, DealWithEvents {
 
     private void persist() throws CantPersistUserException{
 
-        PlatformFile file = mFileSystem.createFile(
+        PlatformFile file = this.fileSystem.createFile(
                 DeviceDirectory.LOCAL_USERS.getName(),
-                mId.toString(),
+                this.userId.toString(),
                 FilePrivacy.PRIVATE,
                 FileLifeSpan.PERMANENT
         );
 
-        file.setContent(mUserName + ";" + mPassword);
+        file.setContent(this.userName + ";" + this.password);
 
         try {
             file.persistToMedia();
@@ -175,17 +178,15 @@ public class PlatformUser implements User,DealWithFileSystem, DealWithEvents {
             cantPersistFileException.printStackTrace();
             throw new CantPersistUserException();
         }
-
-
     }
 
 
     private void load() throws CantLoadUserException {
 
         try {
-            PlatformFile file = mFileSystem.getFile(
+            PlatformFile file = this.fileSystem.getFile(
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    mId.toString(),
+                    this.userId.toString(),
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -193,8 +194,8 @@ public class PlatformUser implements User,DealWithFileSystem, DealWithEvents {
             file.loadToMemory();
             String[] values = file.getContent().split(";", -1);
 
-            mUserName = values[0];
-            mPassword = values[1];
+            this.userName = values[0];
+            this.password = values[1];
 
         }
         catch (FileNotFoundException|CantLoadFileException ex)
@@ -202,11 +203,10 @@ public class PlatformUser implements User,DealWithFileSystem, DealWithEvents {
             /**
              * This is bad, but lets handle it...
              */
-            System.err.println("CantPersistFileException: " + ex.getMessage());
+            System.err.println("FileNotFoundException or CantLoadFileException: " + ex.getMessage());
             ex.printStackTrace();
             throw new CantLoadUserException();
         }
-
     }
 
 

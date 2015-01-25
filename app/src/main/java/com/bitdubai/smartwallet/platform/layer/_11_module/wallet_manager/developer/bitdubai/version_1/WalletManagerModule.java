@@ -1,16 +1,18 @@
 package com.bitdubai.smartwallet.platform.layer._11_module.wallet_manager.developer.bitdubai.version_1;
 
 
+import com.bitdubai.smartwallet.platform.layer._11_module.wallet_manager.WalletManager;
+import com.bitdubai.smartwallet.platform.layer._11_module.wallet_manager.WalletManagerWallet;
 import com.bitdubai.smartwallet.platform.layer._1_definition.enums.DeviceDirectory;
 import com.bitdubai.smartwallet.platform.layer._2_event.*;
-import com.bitdubai.smartwallet.platform.layer._2_event.manager.DealWithEvents;
+import com.bitdubai.smartwallet.platform.layer._2_event.manager.DealsWithEvents;
 import com.bitdubai.smartwallet.platform.layer._2_event.manager.EventType;
 import com.bitdubai.smartwallet.platform.layer._2_event.manager.EventHandler;
 import com.bitdubai.smartwallet.platform.layer._2_event.manager.EventListener;
 import com.bitdubai.smartwallet.platform.layer._3_os.*;
 import com.bitdubai.smartwallet.platform.layer._11_module.Module;
 import com.bitdubai.smartwallet.platform.layer._11_module.ModuleStatus;
-import com.bitdubai.smartwallet.platform.layer._11_module.wallet_manager.CantLoadUserWalletsException;
+import com.bitdubai.smartwallet.platform.layer._11_module.wallet_manager.CantLoadWalletException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,12 +21,16 @@ import java.util.UUID;
 /**
  * Created by ciencias on 21.01.15.
  */
-public class WalletManagerModule implements Module, DealWithEvents, DealWithFileSystem {
+public class WalletManagerModule implements  Module, WalletManager, DealsWithEvents, DealsWithFileSystem {
+
+    /**
+     * WalletManager Interface member variables.
+     */
 
     ModuleStatus status;
     UUID userId;
 
-    List<Wallet> wallets;
+    List<WalletManagerWallet> userWallets;
 
     /**
      * UsesFileSystem Interface member variables.
@@ -36,17 +42,20 @@ public class WalletManagerModule implements Module, DealWithEvents, DealWithFile
      */
     EventManager eventManager;
 
-    public List<Wallet> getWallets() {
-        return wallets;
-    }
-
     public WalletManagerModule (){
-        wallets = new ArrayList<>();
+        userWallets = new ArrayList<>();
         this.status = ModuleStatus.CREATED;
     }
 
+    /**
+     * WalletManager Interface implementation.
+     */
 
-    public void loadUserWallets (UUID userId) throws CantLoadUserWalletsException{
+    public List<WalletManagerWallet> getUserWallets() {
+        return userWallets;
+    }
+
+    public void loadUserWallets (UUID userId) throws CantLoadWalletException {
 
         this.userId = userId;
 
@@ -75,27 +84,48 @@ public class WalletManagerModule implements Module, DealWithEvents, DealWithFile
 
                 this.status = ModuleStatus.PAUSED;
 
-                throw new CantLoadUserWalletsException();
+                throw new CantLoadWalletException();
             }
 
             String[] walletsId = platformFile.getContent().split(";",-1);
             for ( String walletId : walletsId)
             {
-                Wallet wallet = new Wallet (UUID.fromString(walletId));
-                wallets.add(wallet);
+                WalletManagerWallet wallet = new Wallet();
+                try
+                {
+                    wallet.loadWallet(UUID.fromString(walletId));
+                }
+                catch (CantLoadWalletException cantLoadWalletException)
+                {
+                    /**
+                     * Initially we would assume that the wallet failed to load to circumstantial stuff. We assume that
+                     * we can retry to put load it when the user tries to open it.
+                     *
+                     * TODO: Raise an event to handle this problem. Probably the platform can do something like retrying
+                     * by itself or notifying the developers team.
+                     */
+                    System.err.println("CantLoadWalletException: " + cantLoadWalletException.getMessage());
+                    cantLoadWalletException.printStackTrace();
+                }
+
+                userWallets.add(wallet);
             }
 
         }
         catch (FileNotFoundException fileNotFoundException)
         {
             /**
-             * This is possible if the user is new and has no wallets at all. I wont take any action now.
+             * This is possible if the user is new and has no userWallets at all. I wont take any action now.
              */
             System.err.println("FileNotFoundException: " + fileNotFoundException.getMessage());
             fileNotFoundException.printStackTrace();
         }
 
     }
+
+    /**
+     * Module Interface implementation.
+     */
 
     @Override
     public void run() {

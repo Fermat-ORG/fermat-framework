@@ -3,7 +3,7 @@ package com.bitdubai.smartwallet.platform.layer._4_user;
 import com.bitdubai.smartwallet.platform.layer._4_user.manager.CantCreateUserException;
 import com.bitdubai.smartwallet.platform.layer._4_user.manager.CantLoadUserException;
 import com.bitdubai.smartwallet.platform.layer._4_user.manager.LoginFailedException;
-import com.bitdubai.smartwallet.platform.layer._4_user.manager.User_Status;
+import com.bitdubai.smartwallet.platform.layer._4_user.manager.UserStatus;
 
 import java.util.UUID;
 
@@ -20,7 +20,7 @@ public interface User {
 
     public String getUserName();
 
-    public User_Status getStatus();
+    public UserStatus getStatus();
 
 
     public void login (String password) throws LoginFailedException;
