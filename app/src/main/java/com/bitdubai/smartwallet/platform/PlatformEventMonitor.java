@@ -5,16 +5,16 @@ package com.bitdubai.smartwallet.platform;
  */
 
 import com.bitdubai.smartwallet.platform.layer._1_definition.event.EventMonitor;
+import com.bitdubai.smartwallet.platform.layer._1_definition.event.PlatformEvent;
 
 /**
- * The event monitor inserts itself in each event raises a monitor that the listener completes its task successfully.
- * If it doesn't, it takes actions.
+ * The event monitor is called when an Event Handler cant handle an Exception.
  */
 
-public class PlatformEventMonitor implements com.bitdubai.smartwallet.platform.layer._1_definition.event.EventMonitor {
+public class PlatformEventMonitor implements EventMonitor {
 
 
-    public void handleEventException (Exception e){
+    public void handleEventException (Exception exception, PlatformEvent platformEvent ){
 
     }
 

@@ -4,6 +4,7 @@ import com.bitdubai.smartwallet.platform.layer.CantStartLayerException;
 import com.bitdubai.smartwallet.platform.layer.PlatformLayer;
 
 import com.bitdubai.smartwallet.platform.layer._11_module.Module;
+import com.bitdubai.smartwallet.platform.layer._1_definition.enums.DeviceDirectory;
 import com.bitdubai.smartwallet.platform.layer._1_definition.enums.PlatformFileName;
 import com.bitdubai.smartwallet.platform.layer._1_definition.event.DealWithEventMonitor;
 import com.bitdubai.smartwallet.platform.layer._2_event.manager.DealWithEvents;
@@ -207,7 +208,11 @@ public class Platform  {
 
         try {
 
-            PlatformFile platformStateFile =  os.getFileSystem().getFile(PlatformFileName.LAST_STATE.getFileName(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT );
+            PlatformFile platformStateFile =  os.getFileSystem().getFile(
+                    DeviceDirectory.PLATFORM.getName(),
+                    PlatformFileName.LAST_STATE.getFileName(),
+                    FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT
+            );
 
             try {
                 platformStateFile.loadToMemory();
@@ -265,7 +270,12 @@ public class Platform  {
                 throw new CantStartPlatformException();
             }
 
-            PlatformFile platformStateFile =  os.getFileSystem().createFile(PlatformFileName.LAST_STATE.getFileName(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT );
+            PlatformFile platformStateFile =  os.getFileSystem().createFile(
+                    DeviceDirectory.PLATFORM.getName(),
+                    PlatformFileName.LAST_STATE.getFileName(),
+                    FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT
+            );
+
             platformStateFile.setContent(newUser.getId().toString());
 
             try {

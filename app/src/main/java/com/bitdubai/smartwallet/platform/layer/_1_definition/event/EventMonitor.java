@@ -5,6 +5,6 @@ package com.bitdubai.smartwallet.platform.layer._1_definition.event;
  */
 public interface EventMonitor {
 
-    public void handleEventException (Exception e);
+    public void handleEventException (Exception exception, PlatformEvent platformEvent );
 
 }

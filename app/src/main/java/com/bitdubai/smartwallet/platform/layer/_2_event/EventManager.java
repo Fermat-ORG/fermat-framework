@@ -2,7 +2,7 @@ package com.bitdubai.smartwallet.platform.layer._2_event;
 
 import com.bitdubai.smartwallet.platform.layer._2_event.manager.EventType;
 import com.bitdubai.smartwallet.platform.layer._2_event.manager.EventListener;
-import com.bitdubai.smartwallet.platform.layer._2_event.manager.PlatformEvent;
+import com.bitdubai.smartwallet.platform.layer._1_definition.event.PlatformEvent;
 
 /**
  * Created by ciencias on 23.01.15.

@@ -1,9 +1,10 @@
 package com.bitdubai.smartwallet.platform.layer._4_user.manager.developer.bitdubai.version_1;
 
+import com.bitdubai.smartwallet.platform.layer._1_definition.enums.DeviceDirectory;
 import com.bitdubai.smartwallet.platform.layer._2_event.*;
 import com.bitdubai.smartwallet.platform.layer._2_event.manager.DealWithEvents;
 import com.bitdubai.smartwallet.platform.layer._2_event.manager.EventType;
-import com.bitdubai.smartwallet.platform.layer._2_event.manager.PlatformEvent;
+import com.bitdubai.smartwallet.platform.layer._1_definition.event.PlatformEvent;
 import com.bitdubai.smartwallet.platform.layer._2_event.manager.UserLoggedInEvent;
 import com.bitdubai.smartwallet.platform.layer._3_os.*;
 import com.bitdubai.smartwallet.platform.layer._4_user.*;
@@ -154,7 +155,12 @@ public class PlatformUser implements User,DealWithFileSystem, DealWithEvents {
 
     private void persist() throws CantPersistUserException{
 
-        PlatformFile file = mFileSystem.createFile(mId.toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+        PlatformFile file = mFileSystem.createFile(
+                DeviceDirectory.LOCAL_USERS.getName(),
+                mId.toString(),
+                FilePrivacy.PRIVATE,
+                FileLifeSpan.PERMANENT
+        );
 
         file.setContent(mUserName + ";" + mPassword);
 
@@ -177,7 +183,13 @@ public class PlatformUser implements User,DealWithFileSystem, DealWithEvents {
     private void load() throws CantLoadUserException {
 
         try {
-            PlatformFile file = mFileSystem.getFile(mId.toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            PlatformFile file = mFileSystem.getFile(
+                    DeviceDirectory.LOCAL_USERS.getName(),
+                    mId.toString(),
+                    FilePrivacy.PRIVATE,
+                    FileLifeSpan.PERMANENT
+            );
+
             file.loadToMemory();
             String[] values = file.getContent().split(";", -1);
 

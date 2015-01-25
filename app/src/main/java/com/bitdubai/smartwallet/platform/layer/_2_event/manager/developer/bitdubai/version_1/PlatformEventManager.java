@@ -3,6 +3,7 @@ package com.bitdubai.smartwallet.platform.layer._2_event.manager.developer.bitdu
 
 import com.bitdubai.smartwallet.platform.layer._1_definition.event.DealWithEventMonitor;
 import com.bitdubai.smartwallet.platform.layer._1_definition.event.EventMonitor;
+import com.bitdubai.smartwallet.platform.layer._1_definition.event.PlatformEvent;
 import com.bitdubai.smartwallet.platform.layer._2_event.*;
 import com.bitdubai.smartwallet.platform.layer._2_event.manager.*;
 

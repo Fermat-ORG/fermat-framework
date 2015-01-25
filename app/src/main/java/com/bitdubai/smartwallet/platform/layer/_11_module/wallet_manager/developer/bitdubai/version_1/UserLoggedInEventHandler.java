@@ -4,7 +4,7 @@ import com.bitdubai.smartwallet.platform.layer._11_module.ModuleNotRunningExcept
 import com.bitdubai.smartwallet.platform.layer._11_module.ModuleStatus;
 import com.bitdubai.smartwallet.platform.layer._11_module.wallet_manager.CantLoadUserWalletsException;
 import com.bitdubai.smartwallet.platform.layer._2_event.manager.EventHandler;
-import com.bitdubai.smartwallet.platform.layer._2_event.manager.PlatformEvent;
+import com.bitdubai.smartwallet.platform.layer._1_definition.event.PlatformEvent;
 import com.bitdubai.smartwallet.platform.layer._2_event.manager.UserLoggedInEvent;
 
 import java.util.UUID;

@@ -11,9 +11,9 @@ public class AndroidFileSystem implements FileSystem {
     Context mContext;
 
     @Override
-    public PlatformFile getFile(String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException{
+    public PlatformFile getFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException{
 
-        AndroidFile newFile = new AndroidFile(mContext, fileName, privacyLevel, lifeSpan);
+        AndroidFile newFile = new AndroidFile(mContext, directoryName, fileName, privacyLevel, lifeSpan);
 
         try {
             newFile.loadToMemory();
@@ -27,9 +27,9 @@ public class AndroidFileSystem implements FileSystem {
     }
 
     @Override
-    public PlatformFile createFile(String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) {
+    public PlatformFile createFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) {
 
-        return new AndroidFile(mContext, fileName, privacyLevel, lifeSpan);
+        return new AndroidFile(mContext, directoryName, fileName, privacyLevel, lifeSpan);
     }
 
     @Override

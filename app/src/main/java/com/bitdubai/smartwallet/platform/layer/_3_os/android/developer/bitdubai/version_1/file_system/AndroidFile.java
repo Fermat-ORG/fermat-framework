@@ -34,7 +34,7 @@ public class AndroidFile implements PlatformFile {
         mContent = content;
     }
 
-    public AndroidFile (Context context, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
+    public AndroidFile (Context context, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
 
         mContext = context;
         mFileName = fileName;

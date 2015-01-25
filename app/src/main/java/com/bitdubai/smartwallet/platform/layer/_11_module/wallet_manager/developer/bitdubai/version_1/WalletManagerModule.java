@@ -3,6 +3,7 @@ package com.bitdubai.smartwallet.platform.layer._11_module.wallet_manager.develo
 import com.bitdubai.smartwallet.platform.layer._11_module.Module;
 import com.bitdubai.smartwallet.platform.layer._11_module.ModuleStatus;
 import com.bitdubai.smartwallet.platform.layer._11_module.wallet_manager.CantLoadUserWalletsException;
+import com.bitdubai.smartwallet.platform.layer._1_definition.enums.DeviceDirectory;
 import com.bitdubai.smartwallet.platform.layer._2_event.*;
 import com.bitdubai.smartwallet.platform.layer._2_event.manager.DealWithEvents;
 import com.bitdubai.smartwallet.platform.layer._2_event.manager.EventType;
@@ -42,7 +43,12 @@ public class WalletManagerModule implements Module, DealWithEvents, DealWithFile
 
         try
         {
-            PlatformFile platformFile = this.fileSystem.getFile(userId.toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            PlatformFile platformFile = this.fileSystem.getFile(
+                    DeviceDirectory.LOCAL_WALLETS.getName(),
+                    userId.toString(),
+                    FilePrivacy.PRIVATE,
+                    FileLifeSpan.PERMANENT
+            );
 
             try
             {
