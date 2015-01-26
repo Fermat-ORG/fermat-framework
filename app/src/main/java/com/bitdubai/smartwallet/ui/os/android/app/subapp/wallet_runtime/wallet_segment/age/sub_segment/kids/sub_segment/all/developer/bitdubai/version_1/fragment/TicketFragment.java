@@ -103,7 +103,7 @@ public class TicketFragment  extends  DialogFragment  {
                         if ((Integer) v.getTag() == 1) {
                             imageTicket.setImageResource(R.drawable.usd_1_b );
                             ticketFace = "B";
-                            v.setTag(2);
+                            v.setTag(12);
                         } else {
                             imageTicket.setImageResource(R.drawable.usd_1);
                             ticketFace = "A";
@@ -117,18 +117,18 @@ public class TicketFragment  extends  DialogFragment  {
                 break;
             case "usd_5":
                 imageTicket.setImageResource(R.drawable.usd_5);
-                imageTicket.setTag(1);
+                imageTicket.setTag(5);
                 imageTicket.setOnClickListener(new OnClickListener() {
                     public void onClick(View v) {
 
-                        if ((Integer) v.getTag() == 1) {
+                        if ((Integer) v.getTag() == 5) {
                             imageTicket.setImageResource(R.drawable.usd_5_b);
                             ticketFace = "B";
-                            v.setTag(2);
+                            v.setTag(52);
                         } else {
                             imageTicket.setImageResource(R.drawable.usd_5);
                             ticketFace = "A";
-                            v.setTag(1);
+                            v.setTag(5);
                         }
                     }
 
@@ -137,18 +137,18 @@ public class TicketFragment  extends  DialogFragment  {
                 break;
             case "usd_10":
                 imageTicket.setImageResource(R.drawable.usd_10);
-                imageTicket.setTag(1);
+                imageTicket.setTag(10);
                 imageTicket.setOnClickListener(new OnClickListener() {
                     public void onClick(View v) {
 
-                        if ((Integer) v.getTag() == 1) {
+                        if ((Integer) v.getTag() == 10) {
                             imageTicket.setImageResource(R.drawable.usd_10_b);
                             ticketFace = "B";
-                            v.setTag(2);
+                            v.setTag(102);
                         } else {
                             imageTicket.setImageResource(R.drawable.usd_10);
                             ticketFace = "A";
-                            v.setTag(1);
+                            v.setTag(10);
                         }
                     }
 
@@ -157,18 +157,18 @@ public class TicketFragment  extends  DialogFragment  {
                 break;
             case "usd_20":
                 imageTicket.setImageResource(R.drawable.usd_20);
-                imageTicket.setTag(1);
+                imageTicket.setTag(20);
                 imageTicket.setOnClickListener(new OnClickListener() {
                     public void onClick(View v) {
 
                         if ((Integer) v.getTag() == 1) {
                             imageTicket.setImageResource(R.drawable.usd_20_b);
                             ticketFace = "B";
-                            v.setTag(2);
+                            v.setTag(202);
                         } else {
                             imageTicket.setImageResource(R.drawable.usd_20);
                             ticketFace = "A";
-                            v.setTag(1);
+                            v.setTag(20);
                         }
 
                     }
@@ -182,7 +182,7 @@ public class TicketFragment  extends  DialogFragment  {
                 imageTicket.setOnClickListener(new OnClickListener() {
                     public void onClick(View v) {
 
-                        if ((Integer) v.getTag() == 1) {
+                        if ((Integer) v.getTag() == 50) {
                             imageTicket.setImageResource(R.drawable.usd_50_b);
                             ticketFace = "B";
                             v.setTag(502);
@@ -198,18 +198,18 @@ public class TicketFragment  extends  DialogFragment  {
                 break;
             case "usd_100":
                 imageTicket.setImageResource(R.drawable.usd_100);
-                imageTicket.setTag(1);
+                imageTicket.setTag(100);
                 imageTicket.setOnClickListener(new OnClickListener() {
                     public void onClick(View v) {
 
-                        if ((Integer) v.getTag() == 1) {
+                        if ((Integer) v.getTag() == 100) {
                             imageTicket.setImageResource(R.drawable.usd_100_b);
                             ticketFace = "B";
-                            v.setTag(2);
+                            v.setTag(1002);
                         } else {
                             imageTicket.setImageResource(R.drawable.usd_100);
                             ticketFace = "A";
-                            v.setTag(1);
+                            v.setTag(100);
                         }
 
                     }
