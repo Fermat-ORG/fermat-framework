@@ -19,6 +19,9 @@ import com.bitdubai.smartwallet.platform.layer._4_user.manager.LoginFailedExcept
 import com.bitdubai.smartwallet.platform.layer._5_license.LicenseLayer;
 import com.bitdubai.smartwallet.platform.layer._6_world.WorldLayer;
 import com.bitdubai.smartwallet.platform.layer._7_crypto_network.CryptoNetworkLayer;
+import com.bitdubai.smartwallet.platform.layer._7_crypto_network.CryptoNetworkManager;
+import com.bitdubai.smartwallet.platform.layer._7_crypto_network.CryptoNetworkService;
+import com.bitdubai.smartwallet.platform.layer._7_crypto_network.CryptoNetworks;
 import com.bitdubai.smartwallet.platform.layer._8_communication.CommunicationLayer;
 import com.bitdubai.smartwallet.platform.layer._9_network_service.NetworkServiceLayer;
 import com.bitdubai.smartwallet.platform.layer._10_middleware.MiddlewareLayer;
@@ -186,6 +189,16 @@ public class Platform  {
 
         ((DealsWithFileSystem) userManager).setFileSystem(os.getFileSystem());
         ((DealsWithEvents) userManager).setEventManager(eventManager);
+
+        /**
+         * I will give the Crypto Wallet Manager of each crypto network access to the File System and Event Manager so
+         * it can load and save and load information from persistent media and also raise events.
+         */
+
+        CryptoNetworkService cryptoNetworkService =  ((CryptoNetworkLayer) mCryptoNetworkLayer).getCryptoNetwork(CryptoNetworks.BITCOIN);
+
+        ((DealsWithFileSystem) cryptoNetworkService).setFileSystem(os.getFileSystem());
+        ((DealsWithEvents) cryptoNetworkService).setEventManager(eventManager);
 
         /**
          * I will give the Wallet Manager access to the File System and to the Event Manager

@@ -8,4 +8,6 @@ import java.util.UUID;
 public interface CryptoNetworkManager {
 
     public void loadCryptoWallet (UUID walletId);
+
+    public void createCryptoWallet (UUID walletId) throws  CantCreateCryptoWalletException;
 }
