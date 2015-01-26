@@ -1,20 +1,20 @@
 package com.bitdubai.smartwallet.platform.layer._11_module.wallet_manager.developer.bitdubai.version_1;
 
-import com.bitdubai.smartwallet.platform.layer._11_module.ModuleService;
 import com.bitdubai.smartwallet.platform.layer._11_module.ModuleNotRunningException;
-import com.bitdubai.smartwallet.platform.layer._1_definition.enums.ServiceStatus;
-import com.bitdubai.smartwallet.platform.layer._11_module.wallet_manager.CantLoadWalletsException;
+import com.bitdubai.smartwallet.platform.layer._11_module.ModuleService;
+import com.bitdubai.smartwallet.platform.layer._11_module.wallet_manager.CantCreateWalletException;
 import com.bitdubai.smartwallet.platform.layer._11_module.wallet_manager.WalletManager;
-import com.bitdubai.smartwallet.platform.layer._2_event.manager.EventHandler;
+import com.bitdubai.smartwallet.platform.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.smartwallet.platform.layer._1_definition.event.PlatformEvent;
-import com.bitdubai.smartwallet.platform.layer._2_event.manager.UserLoggedInEvent;
+import com.bitdubai.smartwallet.platform.layer._2_event.manager.EventHandler;
+import com.bitdubai.smartwallet.platform.layer._2_event.manager.developer.UserCreatedEvent;
 
 import java.util.UUID;
 
 /**
- * Created by ciencias on 24.01.15.
+ * Created by ciencias on 26.01.15.
  */
-public class UserLoggedInEventHandler implements EventHandler {
+public class UserCreatedEventHandler  implements EventHandler {
 
     WalletManager walletManager;
 
@@ -25,24 +25,24 @@ public class UserLoggedInEventHandler implements EventHandler {
     @Override
     public void raiseEvent(PlatformEvent platformEvent) throws Exception{
 
-        UUID userId = ((UserLoggedInEvent) platformEvent).getUserId();
+        UUID userId = ((UserCreatedEvent) platformEvent).getUserId();
 
 
         if (((ModuleService) this.walletManager).getStatus() == ServiceStatus.RUNNING) {
 
             try
             {
-                this.walletManager.loadUserWallets(userId);
+                this.walletManager.createDefaultWallets(userId);
             }
-            catch (CantLoadWalletsException cantLoadWalletsException)
+            catch (CantCreateWalletException cantCreateWalletException)
             {
                 /**
                  * The main module could not handle this exception. Me neither. Will throw it again.
                  */
-                System.err.println("CantLoadUserWalletsException: " + cantLoadWalletsException.getMessage());
-                cantLoadWalletsException.printStackTrace();
+                System.err.println("CantCreateWalletException: " + cantCreateWalletException.getMessage());
+                cantCreateWalletException.printStackTrace();
 
-                throw cantLoadWalletsException;
+                throw cantCreateWalletException;
             }
         }
         else

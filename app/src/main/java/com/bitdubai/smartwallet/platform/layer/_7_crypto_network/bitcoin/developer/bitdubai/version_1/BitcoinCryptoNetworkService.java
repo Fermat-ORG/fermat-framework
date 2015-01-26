@@ -16,10 +16,14 @@ import java.util.UUID;
  */
 
 public class BitcoinCryptoNetworkService implements CryptoNetworkService, CryptoNetworkManager {
-
+    /**
+     * CryptoNetworkManager Interface member variables.
+     */
     CryptoWallet mCryptoWallet;
 
-
+    /**
+     * CryptoNetworkService Interface implementation.
+     */
 
     @Override
     public void run() {
@@ -41,6 +45,10 @@ public class BitcoinCryptoNetworkService implements CryptoNetworkService, Crypto
         return null;
     }
 
+
+    /**
+     * CryptoNetworkManager Interface implementation.
+     */
 
     @Override
     public void loadCryptoWallet(UUID walletId) {

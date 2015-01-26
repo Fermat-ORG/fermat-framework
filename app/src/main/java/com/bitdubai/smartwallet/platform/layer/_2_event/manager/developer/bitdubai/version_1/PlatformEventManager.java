@@ -6,6 +6,7 @@ import com.bitdubai.smartwallet.platform.layer._1_definition.event.EventMonitor;
 import com.bitdubai.smartwallet.platform.layer._1_definition.event.PlatformEvent;
 import com.bitdubai.smartwallet.platform.layer._2_event.*;
 import com.bitdubai.smartwallet.platform.layer._2_event.manager.*;
+import com.bitdubai.smartwallet.platform.layer._2_event.manager.developer.UserCreatedEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
  */
 public class PlatformEventManager implements EventManager, DealWithEventMonitor {
 
+    private List<EventListener> listenersUserCreatedEvent;
     private List<EventListener> listenersUserLoggedInEvent;
     private List<EventListener> listenersUserLoggedOutEvent;
     private List<EventListener> listenersWalletWentOnlineEvent;
@@ -24,6 +26,7 @@ public class PlatformEventManager implements EventManager, DealWithEventMonitor 
 
     public PlatformEventManager() {
 
+        listenersUserCreatedEvent = new ArrayList<>();
         listenersUserLoggedInEvent = new ArrayList<>();
         listenersUserLoggedOutEvent = new ArrayList<>();
         listenersWalletWentOnlineEvent = new ArrayList<>();
@@ -34,6 +37,10 @@ public class PlatformEventManager implements EventManager, DealWithEventMonitor 
     public EventListener getNewListener(EventType eventType) {
 
         switch (eventType) {
+
+            case USER_CREATED:
+                return new UserCreatedEventListener(EventType.USER_LOGGED_IN, this.eventMonitor);
+
             case USER_LOGGED_IN:
                 return new UserLoggedInEventListener(EventType.USER_LOGGED_IN, this.eventMonitor);
 
@@ -50,6 +57,10 @@ public class PlatformEventManager implements EventManager, DealWithEventMonitor 
     public PlatformEvent getNewEvent(EventType eventType) {
 
         switch (eventType) {
+
+            case USER_CREATED:
+                return new UserCreatedEvent(EventType.USER_LOGGED_IN);
+
             case USER_LOGGED_IN:
                 return new UserLoggedInEvent(EventType.USER_LOGGED_IN);
 
@@ -68,6 +79,11 @@ public class PlatformEventManager implements EventManager, DealWithEventMonitor 
 
 
         switch (listener.getEventType()) {
+
+            case USER_CREATED:
+                listenersUserCreatedEvent.add(listener);
+                break;
+
             case USER_LOGGED_IN:
                 listenersUserLoggedInEvent.add(listener);
                 break;
@@ -89,6 +105,11 @@ public class PlatformEventManager implements EventManager, DealWithEventMonitor 
         List<EventListener> listeners = listenersUserLoggedInEvent; // Just assign one of the possible values.
 
         switch (platformEvent.getEventType()) {
+
+            case USER_CREATED:
+                listeners = listenersUserLoggedInEvent;
+                break;
+
             case USER_LOGGED_IN:
                 listeners = listenersUserLoggedInEvent;
                 break;

@@ -1,8 +1,7 @@
 package com.bitdubai.smartwallet.platform.layer._11_module.wallet_manager.developer.bitdubai.version_1;
 
 
-import com.bitdubai.smartwallet.platform.layer._11_module.wallet_manager.WalletManager;
-import com.bitdubai.smartwallet.platform.layer._11_module.wallet_manager.WalletManagerWallet;
+import com.bitdubai.smartwallet.platform.layer._11_module.wallet_manager.*;
 import com.bitdubai.smartwallet.platform.layer._1_definition.enums.DeviceDirectory;
 import com.bitdubai.smartwallet.platform.layer._2_event.*;
 import com.bitdubai.smartwallet.platform.layer._2_event.manager.DealsWithEvents;
@@ -12,7 +11,6 @@ import com.bitdubai.smartwallet.platform.layer._2_event.manager.EventListener;
 import com.bitdubai.smartwallet.platform.layer._3_os.*;
 import com.bitdubai.smartwallet.platform.layer._11_module.ModuleService;
 import com.bitdubai.smartwallet.platform.layer._1_definition.enums.ServiceStatus;
-import com.bitdubai.smartwallet.platform.layer._11_module.wallet_manager.CantLoadWalletException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +53,7 @@ public class WalletManagerModule implements ModuleService, WalletManager, DealsW
         return userWallets;
     }
 
-    public void loadUserWallets (UUID userId) throws CantLoadWalletException {
+    public void loadUserWallets (UUID userId) throws CantLoadWalletsException {
 
         this.userId = userId;
 
@@ -84,7 +82,7 @@ public class WalletManagerModule implements ModuleService, WalletManager, DealsW
 
                 this.status = ServiceStatus.PAUSED;
 
-                throw new CantLoadWalletException();
+                throw new CantLoadWalletsException();
             }
 
             String[] walletsId = platformFile.getContent().split(";",-1);
@@ -100,6 +98,10 @@ public class WalletManagerModule implements ModuleService, WalletManager, DealsW
                     /**
                      * Initially we would assume that the wallet failed to load to circumstantial stuff. We assume that
                      * we can retry to put load it when the user tries to open it.
+                     *
+                     * As it is a single wallet, I don't wont to halt everything for this situation. Instead this should
+                     * raise an event to be handled by the platform itself, or some more code should be written to better
+                     * diagnose the situation and try to get a work around.
                      *
                      * TODO: Raise an event to handle this problem. Probably the platform can do something like retrying
                      * by itself or notifying the developers team.
@@ -123,6 +125,11 @@ public class WalletManagerModule implements ModuleService, WalletManager, DealsW
 
     }
 
+    @Override
+    public void createDefaultWallets(UUID userId) throws CantCreateWalletException {
+
+    }
+
     /**
      * Module Interface implementation.
      */
@@ -131,14 +138,25 @@ public class WalletManagerModule implements ModuleService, WalletManager, DealsW
     public void run() {
 
         /**
-         * The only thing I can do for now is to wait for a User to log in.
+         * I will initialize the handling of platform events.
          */
 
-        EventListener eventListener = eventManager.getNewListener(EventType.USER_LOGGED_IN);
-        EventHandler eventHandler = new UserLoggedInEventHandler();
+        EventListener eventListener;
+        EventHandler eventHandler;
+
+        eventListener = eventManager.getNewListener(EventType.USER_CREATED);
+        eventHandler = new UserCreatedEventHandler();
+        ((UserCreatedEventHandler) eventHandler).setWalletManager(this);
+        eventListener.setEventHandler(eventHandler);
+        eventManager.registerListener(eventListener);
+
+        eventListener = eventManager.getNewListener(EventType.USER_LOGGED_IN);
+        eventHandler = new UserLoggedInEventHandler();
         ((UserLoggedInEventHandler) eventHandler).setWalletManager(this);
         eventListener.setEventHandler(eventHandler);
         eventManager.registerListener(eventListener);
+
+
 
         this.status = ServiceStatus.RUNNING;
     }

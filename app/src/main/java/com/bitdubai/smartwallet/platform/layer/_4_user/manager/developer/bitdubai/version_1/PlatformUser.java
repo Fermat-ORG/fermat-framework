@@ -6,6 +6,7 @@ import com.bitdubai.smartwallet.platform.layer._2_event.manager.DealsWithEvents;
 import com.bitdubai.smartwallet.platform.layer._2_event.manager.EventType;
 import com.bitdubai.smartwallet.platform.layer._1_definition.event.PlatformEvent;
 import com.bitdubai.smartwallet.platform.layer._2_event.manager.UserLoggedInEvent;
+import com.bitdubai.smartwallet.platform.layer._2_event.manager.developer.UserCreatedEvent;
 import com.bitdubai.smartwallet.platform.layer._3_os.*;
 import com.bitdubai.smartwallet.platform.layer._4_user.*;
 import com.bitdubai.smartwallet.platform.layer._4_user.manager.*;
@@ -63,6 +64,14 @@ public class PlatformUser implements User,DealsWithFileSystem, DealsWithEvents {
             throw new CantCreateUserException();
         }
 
+        /**
+         * Now I fire the User Created event.
+         */
+
+        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.USER_CREATED);
+        ((UserCreatedEvent) platformEvent).setUserId(this.userId );
+        eventManager.raiseEvent(platformEvent);
+
     }
 
     /**
@@ -112,7 +121,7 @@ public class PlatformUser implements User,DealsWithFileSystem, DealsWithEvents {
         }
         else
         {
-            this.status = UserStatus.LOGGED_IN;
+            this.changeToLoggedInStatus();
         }
     }
 
