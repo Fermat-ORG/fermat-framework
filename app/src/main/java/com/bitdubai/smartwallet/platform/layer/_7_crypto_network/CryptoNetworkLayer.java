@@ -73,9 +73,9 @@ public class CryptoNetworkLayer implements PlatformLayer {
     }
 
 
-    public CryptoNetwork getCryptoNetwork (CryptoNetworks pCryptoNetwork) {
+    public CryptoNetworkService getCryptoNetwork (CryptoNetworks pCryptoNetwork) {
 
-        CryptoNetwork cryptoNetwork = null;
+        CryptoNetworkService cryptoNetworkService = null;
 
         switch (pCryptoNetwork) {
 
@@ -92,7 +92,7 @@ public class CryptoNetworkLayer implements PlatformLayer {
                     }
                     catch (Exception e) {}
                 }
-                cryptoNetwork =  bitcoinSubsystem.getCryptoNetwork();
+                cryptoNetworkService =  bitcoinSubsystem.getCryptoNetwork();
 
                 break;
 
@@ -102,7 +102,7 @@ public class CryptoNetworkLayer implements PlatformLayer {
                 break;
         }
 
-        return cryptoNetwork;
+        return cryptoNetworkService;
 
     }
 }

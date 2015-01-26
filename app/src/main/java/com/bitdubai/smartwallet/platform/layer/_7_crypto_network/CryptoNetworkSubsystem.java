@@ -5,5 +5,5 @@ package com.bitdubai.smartwallet.platform.layer._7_crypto_network;
  */
 public interface CryptoNetworkSubsystem {
     public void start () throws CantStartSubsystemException;
-    public CryptoNetwork getCryptoNetwork();
+    public CryptoNetworkService getCryptoNetwork();
 }

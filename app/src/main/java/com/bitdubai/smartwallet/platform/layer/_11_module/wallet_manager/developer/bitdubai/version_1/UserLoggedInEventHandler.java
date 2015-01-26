@@ -1,8 +1,8 @@
 package com.bitdubai.smartwallet.platform.layer._11_module.wallet_manager.developer.bitdubai.version_1;
 
-import com.bitdubai.smartwallet.platform.layer._11_module.Module;
+import com.bitdubai.smartwallet.platform.layer._11_module.ModuleService;
 import com.bitdubai.smartwallet.platform.layer._11_module.ModuleNotRunningException;
-import com.bitdubai.smartwallet.platform.layer._11_module.ModuleStatus;
+import com.bitdubai.smartwallet.platform.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.smartwallet.platform.layer._11_module.wallet_manager.CantLoadWalletException;
 import com.bitdubai.smartwallet.platform.layer._11_module.wallet_manager.WalletManager;
 import com.bitdubai.smartwallet.platform.layer._2_event.manager.EventHandler;
@@ -28,7 +28,7 @@ public class UserLoggedInEventHandler implements EventHandler {
         UUID userId = ((UserLoggedInEvent) platformEvent).getUserId();
 
 
-        if (((Module) this.walletManager).getStatus() == ModuleStatus.RUNNING) {
+        if (((ModuleService) this.walletManager).getStatus() == ServiceStatus.RUNNING) {
 
             try
             {

@@ -1,7 +1,7 @@
 package com.bitdubai.smartwallet.platform.layer._11_module.wallet_manager;
 
 import com.bitdubai.smartwallet.platform.layer._11_module.CantStartSubsystemException;
-import com.bitdubai.smartwallet.platform.layer._11_module.Module;
+import com.bitdubai.smartwallet.platform.layer._11_module.ModuleService;
 import com.bitdubai.smartwallet.platform.layer._11_module.ModuleSubsystem;
 
 /**
@@ -10,7 +10,7 @@ import com.bitdubai.smartwallet.platform.layer._11_module.ModuleSubsystem;
 public class WalletManagerSubsystem  implements ModuleSubsystem {
 
     @Override
-    public Module getModule() {
+    public ModuleService getModule() {
         return null;
     }
 

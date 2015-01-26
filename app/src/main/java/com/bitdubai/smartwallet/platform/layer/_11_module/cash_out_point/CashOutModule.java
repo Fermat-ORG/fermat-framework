@@ -1,19 +1,29 @@
 package com.bitdubai.smartwallet.platform.layer._11_module.cash_out_point;
 
-import com.bitdubai.smartwallet.platform.layer._11_module.Module;
-import com.bitdubai.smartwallet.platform.layer._11_module.ModuleStatus;
+import com.bitdubai.smartwallet.platform.layer._11_module.ModuleService;
+import com.bitdubai.smartwallet.platform.layer._1_definition.enums.ServiceStatus;
 
 /**
  * Created by ciencias on 31.12.14.
  */
-public class CashOutModule implements Module {
+public class CashOutModule implements ModuleService {
     @Override
     public void run() {
 
     }
 
     @Override
-    public ModuleStatus getStatus() {
+    public void pause() {
+
+    }
+
+    @Override
+    public void stop() {
+
+    }
+
+    @Override
+    public ServiceStatus getStatus() {
         return null;
     }
 }

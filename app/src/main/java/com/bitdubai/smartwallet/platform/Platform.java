@@ -3,7 +3,7 @@ package com.bitdubai.smartwallet.platform;
 import com.bitdubai.smartwallet.platform.layer.CantStartLayerException;
 import com.bitdubai.smartwallet.platform.layer.PlatformLayer;
 
-import com.bitdubai.smartwallet.platform.layer._11_module.Module;
+import com.bitdubai.smartwallet.platform.layer._11_module.ModuleService;
 import com.bitdubai.smartwallet.platform.layer._1_definition.enums.DeviceDirectory;
 import com.bitdubai.smartwallet.platform.layer._1_definition.enums.PlatformFileName;
 import com.bitdubai.smartwallet.platform.layer._1_definition.event.DealWithEventMonitor;
@@ -191,7 +191,7 @@ public class Platform  {
          * I will give the Wallet Manager access to the File System and to the Event Manager
          */
 
-        Module walletManager =  ((ModuleLayer) mModuleLayer).getWalletManager();
+        ModuleService walletManager =  ((ModuleLayer) mModuleLayer).getWalletManager();
 
         ((DealsWithFileSystem) walletManager).setFileSystem(os.getFileSystem());
         ((DealsWithEvents) walletManager).setEventManager(eventManager);

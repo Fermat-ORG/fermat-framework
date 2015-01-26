@@ -11,14 +11,14 @@ import com.bitdubai.smartwallet.platform.layer._11_module.wallet_runtime.WalletR
 public class ModuleLayer implements PlatformLayer {
 
 
-    Module mWalletRuntime;
-    Module mWalletManager;
+    ModuleService mWalletRuntime;
+    ModuleService mWalletManager;
 
-    public Module getWalletRuntime() {
+    public ModuleService getWalletRuntime() {
         return mWalletRuntime;
     }
 
-    public Module getWalletManager() {
+    public ModuleService getWalletManager() {
         return mWalletManager;
     }
 

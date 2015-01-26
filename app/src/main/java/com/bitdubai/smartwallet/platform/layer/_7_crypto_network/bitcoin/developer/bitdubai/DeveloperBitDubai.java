@@ -1,19 +1,19 @@
 package com.bitdubai.smartwallet.platform.layer._7_crypto_network.bitcoin.developer.bitdubai;
 
-import com.bitdubai.smartwallet.platform.layer._7_crypto_network.CryptoNetwork;
+import com.bitdubai.smartwallet.platform.layer._7_crypto_network.CryptoNetworkService;
 import com.bitdubai.smartwallet.platform.layer._7_crypto_network.CryptoNetworkDeveloper;
-import com.bitdubai.smartwallet.platform.layer._7_crypto_network.bitcoin.developer.bitdubai.version_1.BitcoinCryptoNetwork;
+import com.bitdubai.smartwallet.platform.layer._7_crypto_network.bitcoin.developer.bitdubai.version_1.BitcoinCryptoNetworkService;
 
 /**
  * Created by ciencias on 20.01.15.
  */
 public class DeveloperBitDubai implements CryptoNetworkDeveloper {
 
-    CryptoNetwork mCryptoNetwork;
+    CryptoNetworkService mCryptoNetworkService;
 
     @Override
-    public CryptoNetwork getCryptoNetwork() {
-        return mCryptoNetwork;
+    public CryptoNetworkService getCryptoNetwork() {
+        return mCryptoNetworkService;
     }
 
     public DeveloperBitDubai () {
@@ -23,7 +23,7 @@ public class DeveloperBitDubai implements CryptoNetworkDeveloper {
          * it is easy to choose.
          */
 
-        mCryptoNetwork = new BitcoinCryptoNetwork();
+        mCryptoNetworkService = new BitcoinCryptoNetworkService();
 
     }
 

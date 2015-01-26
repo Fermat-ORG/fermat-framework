@@ -1,6 +1,6 @@
 package com.bitdubai.smartwallet.platform.layer._11_module.wallet_manager.developer.bitdubai;
 
-import com.bitdubai.smartwallet.platform.layer._11_module.Module;
+import com.bitdubai.smartwallet.platform.layer._11_module.ModuleService;
 import com.bitdubai.smartwallet.platform.layer._11_module.ModuleDeveloper;
 import com.bitdubai.smartwallet.platform.layer._11_module.wallet_manager.developer.bitdubai.version_1.WalletManagerModule;
 
@@ -10,10 +10,10 @@ import com.bitdubai.smartwallet.platform.layer._11_module.wallet_manager.develop
  */
 public class DeveloperBitDubai  implements ModuleDeveloper {
 
-    Module mModule;
+    ModuleService mModule;
 
     @Override
-    public Module getModule() {
+    public ModuleService getModule() {
         return mModule;
     }
 

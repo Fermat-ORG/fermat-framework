@@ -1,7 +1,7 @@
 package com.bitdubai.smartwallet.platform.layer._7_crypto_network.litecoin;
 
 import com.bitdubai.smartwallet.platform.layer._7_crypto_network.CantStartSubsystemException;
-import com.bitdubai.smartwallet.platform.layer._7_crypto_network.CryptoNetwork;
+import com.bitdubai.smartwallet.platform.layer._7_crypto_network.CryptoNetworkService;
 import com.bitdubai.smartwallet.platform.layer._7_crypto_network.CryptoNetworkSubsystem;
 
 /**
@@ -14,7 +14,7 @@ public class LitecoinSubsystem implements CryptoNetworkSubsystem {
     }
 
     @Override
-    public CryptoNetwork getCryptoNetwork() {
+    public CryptoNetworkService getCryptoNetwork() {
         return null;
     }
 }

@@ -10,8 +10,8 @@ import com.bitdubai.smartwallet.platform.layer._2_event.manager.EventType;
 import com.bitdubai.smartwallet.platform.layer._2_event.manager.EventHandler;
 import com.bitdubai.smartwallet.platform.layer._2_event.manager.EventListener;
 import com.bitdubai.smartwallet.platform.layer._3_os.*;
-import com.bitdubai.smartwallet.platform.layer._11_module.Module;
-import com.bitdubai.smartwallet.platform.layer._11_module.ModuleStatus;
+import com.bitdubai.smartwallet.platform.layer._11_module.ModuleService;
+import com.bitdubai.smartwallet.platform.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.smartwallet.platform.layer._11_module.wallet_manager.CantLoadWalletException;
 
 import java.util.ArrayList;
@@ -21,13 +21,13 @@ import java.util.UUID;
 /**
  * Created by ciencias on 21.01.15.
  */
-public class WalletManagerModule implements  Module, WalletManager, DealsWithEvents, DealsWithFileSystem {
+public class WalletManagerModule implements ModuleService, WalletManager, DealsWithEvents, DealsWithFileSystem {
 
     /**
      * WalletManager Interface member variables.
      */
 
-    ModuleStatus status;
+    ServiceStatus status;
     UUID userId;
 
     List<WalletManagerWallet> userWallets;
@@ -44,7 +44,7 @@ public class WalletManagerModule implements  Module, WalletManager, DealsWithEve
 
     public WalletManagerModule (){
         userWallets = new ArrayList<>();
-        this.status = ModuleStatus.CREATED;
+        this.status = ServiceStatus.CREATED;
     }
 
     /**
@@ -82,7 +82,7 @@ public class WalletManagerModule implements  Module, WalletManager, DealsWithEve
                 System.err.println("CantLoadFileException: " + cantLoadFileException.getMessage());
                 cantLoadFileException.printStackTrace();
 
-                this.status = ModuleStatus.PAUSED;
+                this.status = ServiceStatus.PAUSED;
 
                 throw new CantLoadWalletException();
             }
@@ -140,11 +140,19 @@ public class WalletManagerModule implements  Module, WalletManager, DealsWithEve
         eventListener.setEventHandler(eventHandler);
         eventManager.registerListener(eventListener);
 
-        this.status = ModuleStatus.RUNNING;
+        this.status = ServiceStatus.RUNNING;
     }
 
     @Override
-    public ModuleStatus getStatus() {
+    public void pause() {
+    }
+
+    @Override
+    public void stop() {
+    }
+
+    @Override
+    public ServiceStatus getStatus() {
         return this.status;
     }
 

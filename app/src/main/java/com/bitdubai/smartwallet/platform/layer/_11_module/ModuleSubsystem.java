@@ -5,5 +5,5 @@ package com.bitdubai.smartwallet.platform.layer._11_module;
  */
 public interface ModuleSubsystem {
     public void start () throws CantStartSubsystemException;
-    public Module getModule();
+    public ModuleService getModule();
 }
