@@ -19,7 +19,9 @@ public class PlatformEventManager implements EventManager, DealWithEventMonitor 
     private List<EventListener> listenersUserCreatedEvent;
     private List<EventListener> listenersUserLoggedInEvent;
     private List<EventListener> listenersUserLoggedOutEvent;
+    private List<EventListener> listenersWalletCreatedEvent;
     private List<EventListener> listenersWalletWentOnlineEvent;
+
 
 
     com.bitdubai.smartwallet.platform.layer._1_definition.event.EventMonitor eventMonitor;
@@ -29,6 +31,7 @@ public class PlatformEventManager implements EventManager, DealWithEventMonitor 
         listenersUserCreatedEvent = new ArrayList<>();
         listenersUserLoggedInEvent = new ArrayList<>();
         listenersUserLoggedOutEvent = new ArrayList<>();
+        listenersWalletCreatedEvent = new ArrayList<>();
         listenersWalletWentOnlineEvent = new ArrayList<>();
     }
 
@@ -39,13 +42,16 @@ public class PlatformEventManager implements EventManager, DealWithEventMonitor 
         switch (eventType) {
 
             case USER_CREATED:
-                return new UserCreatedEventListener(EventType.USER_LOGGED_IN, this.eventMonitor);
+                return new UserCreatedEventListener(EventType.USER_CREATED, this.eventMonitor);
 
             case USER_LOGGED_IN:
                 return new UserLoggedInEventListener(EventType.USER_LOGGED_IN, this.eventMonitor);
 
             case USER_LOGGED_OUT:
                 return new UserLoggedOutEventListener(EventType.USER_LOGGED_OUT, this.eventMonitor);
+
+            case WALLET_CREATED:
+                return new WalletCreatedEventListener(EventType.WALLET_CREATED, this.eventMonitor);
 
             case WALLET_WENT_ONLINE:
                 return new WalletWentOnlineEventListener(EventType.WALLET_WENT_ONLINE, this.eventMonitor);
@@ -59,7 +65,7 @@ public class PlatformEventManager implements EventManager, DealWithEventMonitor 
         switch (eventType) {
 
             case USER_CREATED:
-                return new UserCreatedEvent(EventType.USER_LOGGED_IN);
+                return new UserCreatedEvent(EventType.USER_CREATED);
 
             case USER_LOGGED_IN:
                 return new UserLoggedInEvent(EventType.USER_LOGGED_IN);
@@ -67,8 +73,11 @@ public class PlatformEventManager implements EventManager, DealWithEventMonitor 
             case USER_LOGGED_OUT:
                 return new UserLoggedOutEvent(EventType.USER_LOGGED_OUT);
 
+            case WALLET_CREATED:
+                return new WalletCreatedEvent(EventType.WALLET_CREATED);
+
             case WALLET_WENT_ONLINE:
-                return new WalletWentOnlineEvent(EventType.USER_LOGGED_OUT);
+                return new WalletWentOnlineEvent(EventType.WALLET_WENT_ONLINE);
         }
         return null;
     }
@@ -90,6 +99,10 @@ public class PlatformEventManager implements EventManager, DealWithEventMonitor 
 
             case USER_LOGGED_OUT:
                 listenersUserLoggedOutEvent.add(listener);
+                break;
+
+            case WALLET_CREATED:
+                listenersWalletCreatedEvent.add(listener);
                 break;
 
             case WALLET_WENT_ONLINE:
@@ -120,6 +133,10 @@ public class PlatformEventManager implements EventManager, DealWithEventMonitor 
 
             case WALLET_WENT_ONLINE:
                 listeners = listenersWalletWentOnlineEvent;
+                break;
+
+            case WALLET_CREATED:
+                listeners = listenersWalletCreatedEvent;
                 break;
         }
 

@@ -2,6 +2,7 @@ package com.bitdubai.smartwallet.platform.layer._11_module.wallet_manager.develo
 
 import com.bitdubai.smartwallet.platform.layer._11_module.ModuleNotRunningException;
 import com.bitdubai.smartwallet.platform.layer._11_module.ModuleService;
+import com.bitdubai.smartwallet.platform.layer._11_module.wallet_manager.CantCreateDefaultWalletsException;
 import com.bitdubai.smartwallet.platform.layer._11_module.wallet_manager.CantCreateWalletException;
 import com.bitdubai.smartwallet.platform.layer._11_module.wallet_manager.WalletManager;
 import com.bitdubai.smartwallet.platform.layer._1_definition.enums.ServiceStatus;
@@ -34,15 +35,15 @@ public class UserCreatedEventHandler  implements EventHandler {
             {
                 this.walletManager.createDefaultWallets(userId);
             }
-            catch (CantCreateWalletException cantCreateWalletException)
+            catch (CantCreateDefaultWalletsException cantCreateDefaultWalletsException)
             {
                 /**
                  * The main module could not handle this exception. Me neither. Will throw it again.
                  */
-                System.err.println("CantCreateWalletException: " + cantCreateWalletException.getMessage());
-                cantCreateWalletException.printStackTrace();
+                System.err.println("CantCreateDefaultWalletsException: " + cantCreateDefaultWalletsException.getMessage());
+                cantCreateDefaultWalletsException.printStackTrace();
 
-                throw cantCreateWalletException;
+                throw cantCreateDefaultWalletsException;
             }
         }
         else

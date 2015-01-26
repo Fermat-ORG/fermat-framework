@@ -8,7 +8,7 @@ import java.util.UUID;
  */
 public interface WalletManagerWallet {
 
-    public void createWallet()  throws CantCreateWalletException;
+    public void createWallet(WalletType walletType)  throws CantCreateWalletException;
 
     public void loadWallet  (UUID id) throws CantLoadWalletException;
 
@@ -16,7 +16,7 @@ public interface WalletManagerWallet {
 
     public String getWalletName();
 
-    public String getWalletType();
+    public WalletType getWalletType();
 
     public WalletStatus getStatus();
 

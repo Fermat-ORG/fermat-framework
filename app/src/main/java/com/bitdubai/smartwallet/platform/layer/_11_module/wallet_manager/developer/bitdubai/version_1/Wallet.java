@@ -7,6 +7,7 @@ import com.bitdubai.smartwallet.platform.layer._1_definition.event.PlatformEvent
 import com.bitdubai.smartwallet.platform.layer._2_event.EventManager;
 import com.bitdubai.smartwallet.platform.layer._2_event.manager.DealsWithEvents;
 import com.bitdubai.smartwallet.platform.layer._2_event.manager.EventType;
+import com.bitdubai.smartwallet.platform.layer._2_event.manager.WalletCreatedEvent;
 import com.bitdubai.smartwallet.platform.layer._2_event.manager.WalletWentOnlineEvent;
 import com.bitdubai.smartwallet.platform.layer._3_os.*;
 
@@ -21,7 +22,7 @@ public class Wallet implements WalletManagerWallet, DealsWithEvents, DealsWithFi
 
     UUID walletId;
     String walletName = "";
-    String walletType = "";
+    WalletType walletType;
     WalletStatus status;
 
     /**
@@ -43,9 +44,10 @@ public class Wallet implements WalletManagerWallet, DealsWithEvents, DealsWithFi
      * This method is to be used for creating a new wallet.
      */
 
-    public void createWallet() throws CantCreateWalletException {
+    public void createWallet(WalletType walletType) throws CantCreateWalletException {
         this.walletId = UUID.randomUUID();
         this.status = WalletStatus.CLOSED;
+        this.walletType = walletType;
 
         try {
             persist();
@@ -59,6 +61,15 @@ public class Wallet implements WalletManagerWallet, DealsWithEvents, DealsWithFi
             cantPersistWalletException.printStackTrace();
             throw new CantCreateWalletException();
         }
+
+        /**
+         * Now I fire the Wallet Created  event.
+         */
+
+        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.WALLET_CREATED);
+        ((WalletCreatedEvent) platformEvent).setWalletId(this.walletId);
+        eventManager.raiseEvent(platformEvent);
+
     }
 
 
@@ -97,7 +108,7 @@ public class Wallet implements WalletManagerWallet, DealsWithEvents, DealsWithFi
     }
 
     @Override
-    public String getWalletType() {
+    public WalletType getWalletType() {
         return this.walletType;
     }
 
@@ -167,7 +178,7 @@ public class Wallet implements WalletManagerWallet, DealsWithEvents, DealsWithFi
                 FileLifeSpan.PERMANENT
         );
 
-        file.setContent(this.walletName + ";" + this.walletType);
+        file.setContent(this.walletName + ";" + this.walletType.getTypeName());
 
         try {
             file.persistToMedia();
@@ -196,7 +207,7 @@ public class Wallet implements WalletManagerWallet, DealsWithEvents, DealsWithFi
             String[] values = file.getContent().split(";", -1);
 
             this.walletName = values[0];
-            this.walletType = values[1];
+            this.walletType = WalletType.getTypeByName(values[1]);
 
         }
         catch (FileNotFoundException|CantLoadFileException ex)

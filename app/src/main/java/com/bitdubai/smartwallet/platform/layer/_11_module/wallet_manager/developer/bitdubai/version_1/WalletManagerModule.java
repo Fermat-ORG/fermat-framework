@@ -126,7 +126,28 @@ public class WalletManagerModule implements ModuleService, WalletManager, DealsW
     }
 
     @Override
-    public void createDefaultWallets(UUID userId) throws CantCreateWalletException {
+    public void createDefaultWallets(UUID userId) throws CantCreateDefaultWalletsException {
+
+        /**
+         * By now I will create only a new wallet, In the future there will be more than one default wallets.
+         */
+
+        WalletManagerWallet wallet = new Wallet();
+
+        try
+        {
+            wallet.createWallet(WalletType.DEFAULT);
+        }
+        catch (CantCreateWalletException cantCreateWalletException)
+        {
+            /**
+             * Well, if it is not possible to create a wallet, then we have a problem that I can not handle...
+             */
+            System.err.println("CantCreateWalletException: " + cantCreateWalletException.getMessage());
+            cantCreateWalletException.printStackTrace();
+
+            throw new CantCreateDefaultWalletsException();
+        }
 
     }
 
