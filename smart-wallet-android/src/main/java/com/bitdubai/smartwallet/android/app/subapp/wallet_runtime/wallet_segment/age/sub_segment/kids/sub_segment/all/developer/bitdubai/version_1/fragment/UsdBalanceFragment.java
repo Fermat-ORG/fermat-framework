@@ -1,12 +1,17 @@
 package com.bitdubai.smartwallet.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.kids.sub_segment.all.developer.bitdubai.version_1.fragment;
-
-/**
- * Created by ciencias on 25.11.14.
+ /* Created by ciencias on 25.11.14.
  */
 import android.content.ClipData;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 
+import android.view.DragEvent;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -20,11 +25,17 @@ import android.view.View.OnTouchListener;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.android.app.common.version_1.classes.MyApplication;
 
+import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.util.FloatMath;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.DialogFragment;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -53,8 +64,11 @@ public class UsdBalanceFragment extends Fragment {
     static final int ZOOM = 2;
     int mode = NONE;
     float oldDist = 1f;
-    GestureDetector gestureDetector;
-
+    GestureDetector  gestureDetector;
+    String ticketFace = "A";
+    private final int EDITED_TICKET = 1;
+    private ImageView imageMoney;
+    Context context;
 
     public static UsdBalanceFragment newInstance(int position) {
         UsdBalanceFragment f = new UsdBalanceFragment();
@@ -71,6 +85,7 @@ public class UsdBalanceFragment extends Fragment {
 
         //  tickets = new String[]{"usd_5","usd_1","usd_5"};
 
+
         position = getArguments().getInt(ARG_POSITION);
         mTicketsList = new ArrayList<TicketPosition>();
 
@@ -81,7 +96,13 @@ public class UsdBalanceFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
 
         View view;
+
+
         view = inflater.inflate(R.layout.wallets_kids_fragment_usd_balance2, container, false); //Contains empty RelativeLayout
+        //  GestureSwipeListener gestureListener = new GestureSwipeListener(getActivity().getApplicationContext(),view);
+        // gestureDetector = new GestureDetector(getActivity(), gestureListener);
+
+
         marco = (ViewGroup)view.findViewById(R.id.marco);
         cantTickets = tickets.length;
         for (int i = 0; i < tickets.length; i++) {
@@ -144,22 +165,12 @@ public class UsdBalanceFragment extends Fragment {
             imageTicket.setOnTouchListener(new theTouchListener());
             marco.addView(imageTicket);
 
-            addTicketPosition(imageTicket.getId(),layoutParams,(Integer)imageTicket.getTag());
+            addTicketPosition(imageTicket.getId(),layoutParams,(Integer)imageTicket.getTag(),imageTicket.getX(), imageTicket.getY(), imageTicket.getWidth(), imageTicket.getHeight());
         }
 
 
         return view;
     }
-
-    private final class theLongClickListener implements OnLongClickListener {
-        @Override
-        public boolean onLongClick(View v) {
-
-            return false;
-        }
-
-    }
-
 
     public boolean longClick(View v) {
 
@@ -208,7 +219,7 @@ public class UsdBalanceFragment extends Fragment {
                 imagen1.setOnTouchListener(new theTouchListener());
                 marco.addView(imagen1);
 
-                addTicketPosition(cantTickets,layoutParams,5);
+                addTicketPosition(cantTickets,layoutParams,5,v.getX(),v.getY(), v.getWidth(),v.getHeight());
 
 
                 imagen2= new ImageView(v.getContext());
@@ -226,7 +237,7 @@ public class UsdBalanceFragment extends Fragment {
                 imagen2.setOnTouchListener(new theTouchListener());
                 marco.addView(imagen2);
 
-                addTicketPosition(cantTickets,layoutParams,5);
+                addTicketPosition(cantTickets,layoutParams,5,v.getX(),v.getY(), v.getWidth(),v.getHeight());
 
                 v.setVisibility(View.INVISIBLE);
                 mTicketsList.remove(item1);
@@ -245,7 +256,7 @@ public class UsdBalanceFragment extends Fragment {
                 imagen1.setLayoutParams(layoutParams);
                 marco.addView(imagen1);
 
-                addTicketPosition(cantTickets,layoutParams,10);
+                addTicketPosition(cantTickets,layoutParams,10,v.getX(),v.getY(), v.getWidth(),v.getHeight());
 
                 imagen2= new ImageView(v.getContext());
                 //Señalamos la imagen a mostrar
@@ -259,7 +270,7 @@ public class UsdBalanceFragment extends Fragment {
                 layoutParams = new RelativeLayout.LayoutParams(marginParams);
                 imagen2.setLayoutParams(layoutParams);
 
-                addTicketPosition(cantTickets, layoutParams, 10);
+                addTicketPosition(cantTickets, layoutParams, 10,v.getX(),v.getY(), v.getWidth(),v.getHeight());
                 marco.addView(imagen2);
 
                 v.setVisibility(View.INVISIBLE);
@@ -282,7 +293,7 @@ public class UsdBalanceFragment extends Fragment {
 
                 marco.addView(imagen1);
 
-                addTicketPosition(cantTickets, layoutParams, 50);
+                addTicketPosition(cantTickets, layoutParams, 50,v.getX(),v.getY(), v.getWidth(),v.getHeight());
 
                 imagen2= new ImageView(v.getContext());
                 //Señalamos la imagen a mostrar
@@ -297,7 +308,7 @@ public class UsdBalanceFragment extends Fragment {
                 imagen2.setOnTouchListener(new theTouchListener());
                 marco.addView(imagen2);
 
-                addTicketPosition(cantTickets, layoutParams, 50);
+                addTicketPosition(cantTickets, layoutParams, 50,v.getX(),v.getY(), v.getWidth(),v.getHeight());
 
                 v.setVisibility(View.INVISIBLE);
                 mTicketsList.remove(item1);
@@ -320,8 +331,10 @@ public class UsdBalanceFragment extends Fragment {
 
     private final class theTouchListener implements OnTouchListener {
         private final int MAX_CLICK_DURATION = 200;
-        private final int MAX_DOUBLE_CLICK_DURATION = 750;
+        private final int MAX_DOUBLECLICK_DURATION = 100;
+        private final int MAX_DOUBLE_CLICK_DURATION = 500;
         private final int MAX_CLICK_DISTANCE = 5;
+        private final int MAX_DOUBLECLICK_DISTANCE = 1;
         private long startClickTime;
         private final float SCROLL_THRESHOLD = 10;
         private boolean isOnClick;
@@ -335,6 +348,14 @@ public class UsdBalanceFragment extends Fragment {
 
             int ticketId = (Integer)view.getTag();
             int Id = (Integer)view.getId();
+            MyApplication.setTagId(ticketId);
+            //   MyApplication.setId(Id);
+
+          /*  if(gestureDetector.onTouchEvent(event)) {
+
+                return true;
+            }*/
+
             RelativeLayout.LayoutParams layoutParams =
                     (RelativeLayout.LayoutParams) view.getLayoutParams();
             //Recogemos las coordenadas del dedo
@@ -356,7 +377,8 @@ public class UsdBalanceFragment extends Fragment {
                     y1 = event.getY();
                     return true;
                 case MotionEvent.ACTION_UP:
-                    //Al levantar el dedo fuardamos la posicion actual
+
+                    //Al levantar el dedo guardamos la posicion actual
 
                     long clickDuration = Calendar.getInstance().getTimeInMillis() - startClickTime;
                     x2 = event.getX();
@@ -368,16 +390,11 @@ public class UsdBalanceFragment extends Fragment {
                     dx = x2 - x1;
                     dy = y2 - y1;
 
-                    if (Math.abs(dx) > Math.abs(dy)) {
-                        if (dx == 0) {
-                            String move = "click";
-                        }
-
-                    } else {
-                        if (dy == 0) {
-                            String move = "click";
-                        }
+                    //double tap
+                    if (clickDuration < MAX_DOUBLECLICK_DURATION && dx < MAX_DOUBLECLICK_DISTANCE && dy < MAX_DOUBLECLICK_DISTANCE) {
+                        onDoubleTap();
                     }
+
                     if (clickDuration < MAX_CLICK_DURATION && dx < MAX_CLICK_DISTANCE && dy < MAX_CLICK_DISTANCE) {
                         //click event has occurred
                         ImageView image = (ImageView) view.findViewById(Id);
@@ -446,18 +463,47 @@ public class UsdBalanceFragment extends Fragment {
                         }
 
 
-                    } else{
+                    }else{
                         //long click event
-                        if((clickDuration > MAX_DOUBLE_CLICK_DURATION && clickDuration < 1100) && dx < 7 && dy < MAX_CLICK_DISTANCE){
-                            longClick(view);
+                        if((clickDuration > MAX_DOUBLE_CLICK_DURATION && clickDuration < 1100)  && dx < 10 && dy < MAX_CLICK_DISTANCE){
+                            //if ticket move not separete
+                            TicketPosition item = getTicket(Id);
+                            float centreX=view.getX() + view.getWidth()  / 2;
+                            float centreY=view.getY() + view.getHeight() / 2;
+
+                            float centreX1=item.X + item.Width  / 2;
+                            float centreY1=item.Y + item.Height / 2;
+
+                            float difCenterX =0;
+                            float difCenterY =0;
+
+                            if(centreX1 > centreX)
+                                difCenterX= centreX1 - centreX;
+                            else
+                                difCenterX= centreX - centreX1;
+
+                            if(centreY1 > centreY)
+                                difCenterX= centreY1 - centreY;
+                            else
+                                difCenterX= centreY - centreY1;
+
+
+
+                            if((difCenterX < 10) && difCenterY < 10 )
+                                longClick(view);
+                            else
+                                joinTickets(Id,layoutParams,ticketId, view);
+                        }
+                        else {
+                            joinTickets(Id,layoutParams,ticketId, view);
                         }
 
                     }
 
-                    joinTickets(Id,layoutParams,ticketId, view);
+                    updateTicketPosition(Id,layoutParams,ticketId,view.getX(),view.getY(),view.getWidth(), view.getHeight());
+
                     //add ticket position to array list
-                    updateTicketPosition(Id,layoutParams,ticketId);
-                    return true;
+                    break;
                 case MotionEvent.ACTION_POINTER_DOWN:
                     oldDist = spacing(event);
                     if (oldDist > 5f) {
@@ -567,10 +613,20 @@ public class UsdBalanceFragment extends Fragment {
                 float centreX1=imagen2.getX() + imagen2.getWidth()  / 2;
                 float centreY1=imagen2.getY() + imagen2.getHeight() / 2;
 
-                float difCenterX = centreX - centreX1;
-                float difCenterY = centreY - centreY1;
+                float difCenterX =0;
+                float difCenterY =0;
+
+                if(centreX1 > centreX)
+                    difCenterX= centreX1 - centreX;
+                else
+                    difCenterX= centreX - centreX1;
+
+                if(centreY1 > centreY)
+                    difCenterX= centreY1 - centreY;
+                else
+                    difCenterX= centreY - centreY1;
                 //eveluate if resta negativa, no usarla.
-                if((difCenterX <= 10) && difCenterY <= 10 ) {
+                if((difCenterX <= 10) && difCenterY <= 5 ) {
                     int idTicket = item.ticketId;
                     int idTicket2 = ticketId;
                     //verify if ticket equal to another ticket value and join in a another to couble value
@@ -705,7 +761,6 @@ public class UsdBalanceFragment extends Fragment {
 
                                 imagen1.setTag(100);
                                 imagen1.setImageResource(R.drawable.usd_100);
-                                imagen1.setOnLongClickListener(new theLongClickListener());
                                 imagen1.setOnTouchListener(new theTouchListener());
                                 marginParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, -50, -50);
                                 layoutParams = new RelativeLayout.LayoutParams(marginParams);
@@ -727,7 +782,7 @@ public class UsdBalanceFragment extends Fragment {
                                 mTicketsList.remove(itemTicket);
                                 break;
                         }
-
+                        break;
 
                     }
                 }
@@ -749,21 +804,24 @@ public class UsdBalanceFragment extends Fragment {
 
         return item1;
     }
-    private void updateTicketPosition(int id,RelativeLayout.LayoutParams layoutParams, int ticketId) {
+    private void updateTicketPosition(int id,RelativeLayout.LayoutParams layoutParams, int ticketId, float X, float Y , float Width, float Height ) {
         boolean _update = false;
         if (mTicketsList.size() > 0) {
             for (int i = 0; i < mTicketsList.size(); i++) {
-                TicketPosition item = mTicketsList.get(i);
+                TicketPosition item2 = mTicketsList.get(i);
 
-                if (item.ticketId == ticketId) {
+                if (item2.Id == id) {
                     //update
-                    TicketPosition item2 = new TicketPosition();
-                    item2.Id = id;
                     item2.ticketId = ticketId;
                     item2.leftMargin = layoutParams.leftMargin;
                     item2.topMargin = layoutParams.topMargin;
                     item2.rightMargin = layoutParams.rightMargin;
                     item2.bottomMargin = layoutParams.bottomMargin;
+                    item2.X = X;
+                    item2.Y = Y;
+                    item2.Width = Width;
+                    item2.Height = Height;
+                    mTicketsList.set(i,item2);
                     break;
                 }
             }
@@ -774,7 +832,7 @@ public class UsdBalanceFragment extends Fragment {
     }
 
 
-    private void addTicketPosition(int id,RelativeLayout.LayoutParams layoutParams, int ticketId) {
+    private void addTicketPosition(int id,RelativeLayout.LayoutParams layoutParams, int ticketId, float X, float Y,float Width,float Height) {
         TicketPosition item2 = new TicketPosition();
         item2.Id = id;
         item2.ticketId = ticketId;
@@ -782,9 +840,16 @@ public class UsdBalanceFragment extends Fragment {
         item2.topMargin = layoutParams.topMargin ;
         item2.rightMargin = layoutParams.rightMargin;
         item2.bottomMargin =  layoutParams.bottomMargin;
+        item2.X = X;
+        item2.Y = Y;
+        item2.Width = Width;
+        item2.Height = Height;
         mTicketsList.add(item2);
 
     }
+
+
+
 
     private float spacing(MotionEvent event) {
         float x = event.getX(0) - event.getX(1);
@@ -805,11 +870,244 @@ public class UsdBalanceFragment extends Fragment {
         public int rightMargin;
 
         public int bottomMargin;
+        public float X;
+        public float Y;
+        public float Width;
+        public float Height;
 
 
 
     }
 
+    private void onDoubleTap()
+    {
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.usd_1);
+
+        File mFile1 = Environment.getExternalStorageDirectory();
+
+        String fileName ="";
+        switch ( MyApplication.getTagId()) {
+            case 12:
+
+                fileName ="usd_1_b.jpg";
+                bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.usd_1_b);
+                break;
+            case 1:
+                fileName ="usd_1.jpg";
+                bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.usd_1);
+
+                break;
+            case 52:
+
+                fileName ="usd_5_b.jpg";
+                bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.usd_5_b);
+
+                break;
+            case 5:
+                fileName ="usd_5.jpg";
+                bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.usd_5);
+
+                break;
+            case 102:
+                fileName ="usd_10_b.jpg";
+                bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.usd_10_b);
+                break;
+            case 10:
+                fileName ="usd_10.jpg";
+                bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.usd_10);
+
+                break;
+            case 202:
+
+                fileName ="usd_20_b.jpg";
+                bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.usd_20_b);
+                break;
+            case 20:
+                fileName ="usd_20.jpg";
+                bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.usd_20);
+
+                break;
+            case 502:
+                fileName ="usd_50_b.jpg";
+                bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.usd_50_b);
+                break;
+            case 50:
+                fileName ="usd_50.jpg";
+                bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.usd_50);
+                break;
+            case 100:
+
+                fileName ="usd_100.jpg";
+                bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.usd_100);
+                break;
+            case 1002:
+                fileName ="usd_100_b.jpg";
+                bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.usd_100_b);
+
+                break;
+
+        }
+
+        File mFile2 = new File(mFile1,fileName);
+        try {
+            FileOutputStream outStream;
+
+            outStream = new FileOutputStream(mFile2);
+
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
+
+            outStream.flush();
+
+            outStream.close();
+
+        } catch (FileNotFoundException e2) {
+            // TODO Auto-generated catch block
+            e2.printStackTrace();
+        } catch (IOException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+
+        String imagePath = mFile1.getAbsolutePath().toString()+"/"+fileName;
+        File temp=new File(imagePath);
+
+        if(temp.exists()){
+            //  "Double Click open external Editor";
+            //  String imagePath = "android.resource://" + getResources().getResourcePackageName(R.drawable.usd_1) + "/drawable-xxhdpi/usd_1.jpg";
+            // String imagePath ="file://" +  getResources().getResourcePackageName(R.drawable.usd_1) + "/structured_res/drawable-xxhdpi/usd_1.jpg";
+            Intent editIntent = new Intent(Intent.ACTION_EDIT);
+            //getResources().getIdentifier("ic_launcher", "drawable", getPackageName());
+            editIntent.setDataAndType(Uri.parse("file://" + imagePath), "image/*");
+            editIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            editIntent.putExtra("finishActivityOnSaveCompleted", true);
+            //startActivity(Intent.createChooser(editIntent, null));
+            getActivity().startActivityForResult(editIntent, EDITED_TICKET);
+        }
+    }
+
+    public class GestureSwipeListener  extends
+            GestureDetector.SimpleOnGestureListener {
+        final Context myContext;
+        View view;
+        public GestureSwipeListener (Context context, View v) {
+            myContext = context;
+            view = v;
+        }
+
+        @Override
+        public boolean onDown(MotionEvent e) {
+            ImageView image = (ImageView) view.findViewById(MyApplication.getId());
+            int tagId = MyApplication.getTagId();
+            //usd 1
+            if (tagId == 1) {
+                image.setImageResource(R.drawable.usd_1_b);
+                view.setTag(12);
+            } else {
+                if (tagId == 12) {
+                    image.setImageResource(R.drawable.usd_1);
+                    view.setTag(1);
+                }
+            }
+//usd 5
+            if (tagId == 5) {
+                image.setImageResource(R.drawable.usd_5_b);
+                view.setTag(52);
+            } else {
+                if (tagId == 52) {
+                    image.setImageResource(R.drawable.usd_5);
+                    view.setTag(5);
+                }
+            }
+//usd 10
+            if (tagId == 10) {
+                image.setImageResource(R.drawable.usd_10_b);
+                view.setTag(102);
+            } else {
+                if (tagId == 102) {
+                    image.setImageResource(R.drawable.usd_10);
+                    view.setTag(10);
+                }
+            }
+
+            //usd 20
+            if (tagId == 20) {
+                image.setImageResource(R.drawable.usd_20_b);
+                view.setTag(202);
+            } else {
+                if (tagId == 202) {
+                    image.setImageResource(R.drawable.usd_20);
+                    view.setTag(20);
+                }
+            }
+
+            //usd 50
+            if (tagId == 50) {
+                image.setImageResource(R.drawable.usd_50_b);
+                view.setTag(502);
+            } else {
+                if (tagId == 502) {
+                    image.setImageResource(R.drawable.usd_50);
+                    view.setTag(50);
+                }
+            }
+
+            //usd 50
+            if (tagId == 100) {
+                image.setImageResource(R.drawable.usd_100_b);
+                view.setTag(1002);
+            } else {
+                if (tagId == 1002) {
+                    image.setImageResource(R.drawable.usd_100);
+                    view.setTag(100);
+                }
+            }
+
+            return true;
+        }
+
+        @Override
+        public void onLongPress(MotionEvent e)
+        {
+            super.onLongPress(e);
+            String straction = "long press";
+            longClick(view);
+        }
+
+        // event when double tap occurs
+        @Override
+        public boolean onDoubleTap(MotionEvent e) {
+
+
+
+
+
+            return true;
+        }
+
+
+
+
+    }
+
+    @Override
+    public  void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+
+        super.onActivityResult(requestCode, resultCode,imageReturnedIntent);
+        switch(requestCode) {
+            case EDITED_TICKET:
+                if(resultCode == 1){
+                    try {
+                        final Uri imageUri = imageReturnedIntent.getData();
+                        final InputStream imageStream = context.getContentResolver().openInputStream(imageUri);
+                        final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                        imageMoney.setImageBitmap(selectedImage);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+        }
+    }
 
 }
 
