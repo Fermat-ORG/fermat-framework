@@ -1,7 +1,6 @@
-package com.bitdubai.smartwallet.ui.os.android.app.subapp.marketplace.version_1.fragment;
+package com.bitdubai.smartwallet.ui.os.android.app.subapp.publisher.version_1.fragment;
 
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,12 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
-import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.MyApplication;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.SendToNewContactActivity;
 
 
 public  class SubscribersFragment extends Fragment {
@@ -59,7 +55,7 @@ public  class SubscribersFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.marketplace_inflater, container, false);
+        rootView = inflater.inflate(R.layout.publisher_inflater, container, false);
 
         return rootView;
     }
@@ -127,14 +123,14 @@ public  class SubscribersFragment extends Fragment {
 
         @Override
         public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-            convertView = inf.inflate(R.layout.marketplace_subscribers_detail, parent, false);
+            convertView = inf.inflate(R.layout.publisher_subscribers_detail, parent, false);
 
             return convertView;
         }
 
         @Override
         public View getGroupView(final int groupPosition, final boolean isExpanded, View convertView, final ViewGroup parent) {
-            convertView = inf.inflate(R.layout.marketplace_subscribers_header, parent, false);
+            convertView = inf.inflate(R.layout.publisher_subscribers_header, parent, false);
 
             return convertView;
         }

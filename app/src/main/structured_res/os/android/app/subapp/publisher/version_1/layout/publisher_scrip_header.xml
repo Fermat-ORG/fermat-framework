@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="6dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="2dp">
+        <ImageView android:id="@+id/icon"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginRight="4dp"
+            android:src="@drawable/voucher_icon_big"/>
+        <TextView android:id="@+id/scrip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="vouchers"
+            android:layout_weight="1"
+            android:textSize="15sp"
+            android:textStyle="normal"/>
+        <TextView android:id="@+id/scrip_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Our first voucher"
+            android:layout_weight="1"
+            android:textSize="15sp"
+            android:gravity="end"
+            android:textStyle="normal"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="2dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+            <TextView android:id="@+id/units"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="12M"
+                android:textSize="18sp"
+                android:gravity="center"
+                android:textStyle="normal"
+                android:layout_weight="1"/>
+            <TextView android:id="@+id/per_user"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="$10.00"
+                android:textSize="18sp"
+                android:textStyle="normal"/>
+            <TextView android:id="@+id/investment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="$120M"
+                android:gravity="center"
+                android:textSize="18sp"
+                android:textStyle="normal"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+            <TextView android:id="@+id/text_1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="units distributed"
+                android:textSize="15sp"
+                android:textStyle="normal"
+                android:gravity="center"
+                android:layout_weight="1"/>
+            <TextView android:id="@+id/text_2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Per user"
+                android:textSize="15sp"
+                android:textStyle="normal"/>
+            <TextView android:id="@+id/text_3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="invested"
+                android:gravity="center"
+                android:textSize="15sp"
+                android:textStyle="normal"/>
+            </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="2dp">
+        <TextView android:id="@+id/scrip_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="This is a description of this scrip, this scrip has a fixed value wich you can reedem."
+            android:layout_weight="1"
+            android:textStyle="normal"
+            android:textSize="15sp"/>
+        <ImageView android:id="@+id/card_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/voucher_image"
+            android:layout_weight="3"/>
+    </LinearLayout>
+</LinearLayout>

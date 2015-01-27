@@ -64,7 +64,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.os.android.app.subapp.marketplace.version_1.activity.PublisherActivity"
+            android:name=".ui.os.android.app.subapp.publisher.version_1.activity.PublisherActivity"
             android:label="Publisher" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
