@@ -7,12 +7,12 @@ In order to accomplish this goal a prioritized list of the problems/barriers tha
 
 As of today two interconnected platforms constitute the system: a Crypto Wallet Platform and a Crypto Banking Platform.
 
-The current status of the project is moving towards a non working prototype of the wallet platform. The architecture of the system has already been established. The first version of the wallet platform featuring a Kids wallet is scheduled to be available to the general public by March 2015.
+The current status of the project is moving towards a non working prototype of the wallet com.bitdubai.platform. The architecture of the system has already been established. The first version of the wallet com.bitdubai.platform featuring a Kids wallet is scheduled to be available to the general public by March 2015.
 
 
 # Crypto Wallet Platform
 
-Is a P2P platform with an open architecture that allows highly segmented wallets to be easily created on top of it by any developer using assets provided by other third parties. These in turn can be re-branded by marketeers and distributed by brands. An inbuilt licensing system guarantees each party that the use license of their contributions will be enforced by the platform.
+Is a P2P com.bitdubai.platform with an open architecture that allows highly segmented wallets to be easily created on top of it by any developer using assets provided by other third parties. These in turn can be re-branded by marketeers and distributed by brands. An inbuilt licensing system guarantees each party that the use license of their contributions will be enforced by the com.bitdubai.platform.
 
 
 # Crypto Banking Platform
@@ -63,7 +63,7 @@ John Doe bought some bitcoins when the prices were $154, $543, $1243. He also sp
 
 * Automate all the management needed to know when it is safe to spend  bitcoins or any other crypto currency. This allows regular people to buy and spend bitcoins, whenever they need, confident that they never lose money. 
 
-* Moreover each time a user spends within the limits of the available balance calculated by the platform they will profit from the exchange rate. This profit can be interpreted as a discount produced by the wallet technology and serves as a real life incentive to use crypto currency over fiat at any time. 
+* Moreover each time a user spends within the limits of the available balance calculated by the com.bitdubai.platform they will profit from the exchange rate. This profit can be interpreted as a discount produced by the wallet technology and serves as a real life incentive to use crypto currency over fiat at any time.
 
 ##### Associated Concepts:
 
@@ -91,7 +91,7 @@ Budapest is a capital city of a European country. It is not only difficult to fi
 
 * By automating the management for local merchants necessary for them to know when it is safe to resell the bitcoins collected and solving their volatility problem it provides an alternative to a payment processor. Thus merchants can start holding crypto currency and act as refill points for local users. This enables local economies to keep their crypto currency within the ecosystem also allowing local users to have access to bitcoins without the need to pay extra fees to buy them from abroad.
 
-* Create a geo fenced P2P network within the wallet platform to allow local users to easily track nearby shops and places where they can spend their coins, refill their wallets or cash out. Through this P2P network shops can advertise their individual products to nearby users. Not only can consumers buy, reserve and review products, but they can also communicate with the shop.
+* Create a geo fenced P2P network within the wallet com.bitdubai.platform to allow local users to easily track nearby shops and places where they can spend their coins, refill their wallets or cash out. Through this P2P network shops can advertise their individual products to nearby users. Not only can consumers buy, reserve and review products, but they can also communicate with the shop.
 
 ##### Associated Concepts:
 
@@ -136,19 +136,19 @@ The problem to be solved is how we can save everybody a few years and evolve fro
 
 #### Solution:
 
-* Separate all universal algorithms and mathematics needed to manage crypto wallets and incorporate all that functionality in the crypto wallet platform. All the segment-specific functionality including the user interface should be outside the platform. In this way anyone can quickly and easily create segmented wallets without the need to replicate the universal rules over and over again.
+* Separate all universal algorithms and mathematics needed to manage crypto wallets and incorporate all that functionality in the crypto wallet com.bitdubai.platform. All the segment-specific functionality including the user interface should be outside the com.bitdubai.platform. In this way anyone can quickly and easily create segmented wallets without the need to replicate the universal rules over and over again.
 
 * Open source each segmented wallet so that anyone can use it as a basis for other segments/sub-segments or for an alternative implementation of the same segment.
 
-* Incorporate a licensing system into the platform, which allows third party developers to claim a use license for their wallets and make the platform guarantee that users will pay according to this license. Other developers can in turn fork any existing segmented wallet with the intention of further specializing it and at the same time also adding their own license which the platform is going to enforce automatically together with the use licenses of the original authors.  
+* Incorporate a licensing system into the com.bitdubai.platform, which allows third party developers to claim a use license for their wallets and make the com.bitdubai.platform guarantee that users will pay according to this license. Other developers can in turn fork any existing segmented wallet with the intention of further specializing it and at the same time also adding their own license which the com.bitdubai.platform is going to enforce automatically together with the use licenses of the original authors.
 
-* The same licensing rules apply to graphic designers who provide assets and resource packages to be used in wallets within the platform. 
+* The same licensing rules apply to graphic designers who provide assets and resource packages to be used in wallets within the com.bitdubai.platform.
 
 * Any of the wallets available can be taken and re-branded by marketing companies in order to be offered to their own customers as an evolution to current loyalty programs. They or their customers can add more license requirements to the already existing license structure of the original wallet.
 
 * A recognized local brand can take a re-branded wallet and market it to both local end users and local merchants coordinating the supply and demand and using their own financial means to do so.
 
-* Include in the wallet platform a wallet store from where end users can download any of the wallets available.
+* Include in the wallet com.bitdubai.platform a wallet store from where end users can download any of the wallets available.
 
 * Developers, marketeers and brands can publish their wallets in the wallet store. 
 
@@ -163,7 +163,7 @@ The problem to be solved is how we can save everybody a few years and evolve fro
 
 ##### Associated Functionality:
 
-* Run a third party wallet on top of the wallet platform
+* Run a third party wallet on top of the wallet com.bitdubai.platform
 * Allow end users to download any wallet available in the wallet store
 
 
@@ -173,7 +173,7 @@ The problem to be solved is how we can save everybody a few years and evolve fro
 
 #### Description:
 
-* Traditional banks can see the disruption coming. They see that crypto networks are a disruptive technology opening up a huge opportunity for those who can take it quickly enough and posing great threat to those who can't. They lack the agility to come up with a solution by themselves and their traditional platform providers aren't helping. They need to move/react quickly but at the same time should have the agility to adapt to this rapidly evolving landscape. 
+* Traditional banks can see the disruption coming. They see that crypto networks are a disruptive technology opening up a huge opportunity for those who can take it quickly enough and posing great threat to those who can't. They lack the agility to come up with a solution by themselves and their traditional com.bitdubai.platform providers aren't helping. They need to move/react quickly but at the same time should have the agility to adapt to this rapidly evolving landscape.
 
 * The only way they have recognized so far is to connect to and rely upon a set of startups in order to be able to run a crypto bank. They understand the risk of dealing with companies that can go bankrupt overnight or that don't fully comply with regulations. They are also facing the fact that converting them into crypto banks is not the core business of any of these startups. 
 
@@ -186,7 +186,7 @@ The problem to be solved is how we can save everybody a few years and evolve fro
 
 * Complement the IT infrastructure traditional banks already have allowing them to reuse most of it seamlessly. Enable banks to create new products such as bitcoin accounts for their costumers irrespective of the core banking system they currently have. Enable customers to freely transfer FROM and TO any of these crypto products and fiat accounts as well, using any of the channels currently available such as internet banking, mobile banking, phone banking and ATMs. Allow them to withdraw funds from their crypto accounts (turned into fiat) at any branch of the bank or ATM network.
 
-* Implement an architecture that embraces the evolution of the underlying technologies in order to help them get quickly on top of it with new products and services for their customers and adapt easily to any future change. Assume there will be multiple public networks for transporting value and design the banking platform in a way that it is capable of quickly adapting to the requirements posed by any of these .   
+* Implement an architecture that embraces the evolution of the underlying technologies in order to help them get quickly on top of it with new products and services for their customers and adapt easily to any future change. Assume there will be multiple public networks for transporting value and design the banking com.bitdubai.platform in a way that it is capable of quickly adapting to the requirements posed by any of these .
 
 * Enable traditional banks to run a crypto bank independent from third party service providers thereby avoiding the risk associated with having to rely on startups that may not comply with regulations or go bankrupt overnight. 
 
@@ -218,7 +218,7 @@ Most recently a few well-funded startups have started spending money on marketin
 
 * Give every single business around the world the possibility of re-branding one of the hundreds of segmented wallets in a fast and inexpensive way (basically for free).
 * Allow them to easily affiliate with shops to accept their wallets and handle all the details of the different kinds of deals the branded wallet publisher could do with a shop. Ensure automatic enforcement of the contract between the wallet publisher and the shop accepting their branded wallet.
-* Allow them to keep in touch with their user base by sending them any number of different tokens representing coupons, discounts, etc, or even an advertisement with some value attached. These tokens with crypto value attached can either be used as intended or traded by users at will or traded automatically by the platform's AI agent acting on behalf of the user.
+* Allow them to keep in touch with their user base by sending them any number of different tokens representing coupons, discounts, etc, or even an advertisement with some value attached. These tokens with crypto value attached can either be used as intended or traded by users at will or traded automatically by the com.bitdubai.platform's AI agent acting on behalf of the user.
 
 ##### Associated Concepts:
 

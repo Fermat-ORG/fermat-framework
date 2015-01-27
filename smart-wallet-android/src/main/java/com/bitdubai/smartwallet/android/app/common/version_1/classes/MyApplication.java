@@ -4,6 +4,7 @@ package com.bitdubai.smartwallet.android.app.common.version_1.classes;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Application;
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -20,7 +21,7 @@ import android.view.Window;
 import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
-import platform.Platform;
+import com.bitdubai.platform.Platform;
 
 
 public class MyApplication extends Application {
@@ -93,15 +94,15 @@ public class MyApplication extends Application {
 
         //try {
 
-          // Context mContext;
+           //Context mContext;
            // mContext = this.getApplicationContext();
 
            // File file = new File(mContext.getFilesDir(), "Platform_Last_State");
 
             //Context context = getContext();
 
-            //Platform platform = new Platform(this.getApplicationContext());
-           // mPlatform = platform;
+            //Platform com.bitdubai.platform = new Platform(this.getApplicationContext());
+           // mPlatform = com.bitdubai.platform;
        // }
        // catch (CantStartPlatformException e) {
         //    System.err.println("CantStartPlatformException: " + e.getMessage());

@@ -18,10 +18,10 @@ public class LoginActivity extends Activity {
 
 
         /**
-         * Get access to the platform.
+         * Get access to the com.bitdubai.platform.
          */
         //MyApplication MyApp = (MyApplication) getApplication();
-       // Platform platform = MyApp.getPlatform();
+       // Platform com.bitdubai.platform = MyApp.getPlatform();
 
         /**
          * Now I have access to the OS.
@@ -31,7 +31,7 @@ public class LoginActivity extends Activity {
         /**
          * And now to the bitcoin network..
          */
-       // CryptoNetwork bitcoinNetwork =  ((CryptoNetworkLayer) platform.getCryptoNetworkLayer()).getCryptoNetwork(CryptoNetworks.BITCOIN);
+       // CryptoNetwork bitcoinNetwork =  ((CryptoNetworkLayer) com.bitdubai.platform.getCryptoNetworkLayer()).getCryptoNetwork(CryptoNetworks.BITCOIN);
 
 
 /**
@@ -46,11 +46,11 @@ public class LoginActivity extends Activity {
          */
    /**     if (localDevice.getLocalPersonalUsers().size() == 1 ) {
             if (localDevice.getLocalPersonalUsers().get(0).getLoginType() == LocalUser.LoginType.NONE)  {
-
+*/
                 Intent intent;
                 intent = new Intent(this, DesktopActivity.class);
                 startActivity(intent);
-            }
+  /*          }
         }*/
 
 

@@ -1,1 +1,2 @@
-include ':smart-wallet-android'
+include 'wallet-platform', 'smart-wallet-android'
+
