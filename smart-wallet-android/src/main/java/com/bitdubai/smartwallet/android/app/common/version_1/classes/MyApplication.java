@@ -20,7 +20,7 @@ import android.view.Window;
 import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
-import com.bitdubai.smartwallet.platform.Platform;
+import platform.Platform;
 
 
 public class MyApplication extends Application {

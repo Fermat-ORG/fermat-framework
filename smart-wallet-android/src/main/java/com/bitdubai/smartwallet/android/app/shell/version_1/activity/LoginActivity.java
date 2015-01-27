@@ -6,8 +6,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import com.bitdubai.smartwallet.R;
-import com.bitdubai.smartwallet.platform.layer._10_middleware.shell.developer.bitdubai.version_1.engine.LocalDevice;
-import com.bitdubai.smartwallet.platform.layer._9_network_service.user.developer.bitdubai.version_1.service.LocalUser;
+
 
 public class LoginActivity extends Activity {
 
@@ -35,7 +34,7 @@ public class LoginActivity extends Activity {
        // CryptoNetwork bitcoinNetwork =  ((CryptoNetworkLayer) platform.getCryptoNetworkLayer()).getCryptoNetwork(CryptoNetworks.BITCOIN);
 
 
-
+/**
 
          LocalDevice localDevice = new LocalDevice();
 
@@ -45,14 +44,16 @@ public class LoginActivity extends Activity {
          * During this situation the system will bypass this first activity and navigate
          * directly into the {@link DesktopActivity}
          */
-        if (localDevice.getLocalPersonalUsers().size() == 1 ) {
+   /**     if (localDevice.getLocalPersonalUsers().size() == 1 ) {
             if (localDevice.getLocalPersonalUsers().get(0).getLoginType() == LocalUser.LoginType.NONE)  {
 
                 Intent intent;
                 intent = new Intent(this, DesktopActivity.class);
                 startActivity(intent);
             }
-        }
+        }*/
+
+
     }
 
 

@@ -1,0 +1,54 @@
+package platform.layer._11_module.wallet_manager.developer.bitdubai.version_1;
+
+import platform.layer._11_module.ModuleNotRunningException;
+import platform.layer._11_module.ModuleService;
+import platform.layer._11_module.wallet_manager.CantCreateDefaultWalletsException;
+import platform.layer._11_module.wallet_manager.WalletManager;
+import platform.layer._1_definition.enums.ServiceStatus;
+import platform.layer._1_definition.event.PlatformEvent;
+import platform.layer._2_event.manager.EventHandler;
+import platform.layer._2_event.manager.developer.UserCreatedEvent;
+
+import java.util.UUID;
+
+/**
+ * Created by ciencias on 26.01.15.
+ */
+public class UserCreatedEventHandler  implements EventHandler {
+
+    WalletManager walletManager;
+
+    public void setWalletManager (WalletManager walletManager){
+        this.walletManager = walletManager;
+    }
+
+    @Override
+    public void raiseEvent(PlatformEvent platformEvent) throws Exception{
+
+        UUID userId = ((UserCreatedEvent) platformEvent).getUserId();
+
+
+        if (((ModuleService) this.walletManager).getStatus() == ServiceStatus.RUNNING) {
+
+            try
+            {
+                this.walletManager.createDefaultWallets(userId);
+            }
+            catch (CantCreateDefaultWalletsException cantCreateDefaultWalletsException)
+            {
+                /**
+                 * The main module could not handle this exception. Me neither. Will throw it again.
+                 */
+                System.err.println("CantCreateDefaultWalletsException: " + cantCreateDefaultWalletsException.getMessage());
+                cantCreateDefaultWalletsException.printStackTrace();
+
+                throw cantCreateDefaultWalletsException;
+            }
+        }
+        else
+        {
+            throw new ModuleNotRunningException();
+        }
+
+    }
+}
