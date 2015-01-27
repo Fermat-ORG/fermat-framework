@@ -3,9 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/SmartWallet.iml" filepath="$PROJECT_DIR$/SmartWallet.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/smart-wallet.iml" filepath="$PROJECT_DIR$/smart-wallet.iml" />
+      <module fileurl="file://$PROJECT_DIR$/smart-wallet-android/smart-wallet-android.iml" filepath="$PROJECT_DIR$/smart-wallet-android/smart-wallet-android.iml" />
     </modules>
   </component>
 </project>
-
