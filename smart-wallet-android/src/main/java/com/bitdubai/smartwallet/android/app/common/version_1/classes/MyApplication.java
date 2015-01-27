@@ -29,6 +29,7 @@ public class MyApplication extends Application {
     private final static Handler handler = new Handler();
     public static Typeface mDefaultTypeface;
     public static int mTAGID;
+    public static int mID;
     public static String mContact;
     public static int mWalletId;
     public static String mActivityId;
@@ -62,6 +63,9 @@ public class MyApplication extends Application {
     public static int getTagId() {
         return mTAGID;
     }
+    public static int getId() {
+        return mID;
+    }
     public static String getTicketId() {
         return mTicketID;
     }
@@ -73,6 +77,7 @@ public class MyApplication extends Application {
     }
     public static void setChildId(String childId) { mCHILDID = childId; }
     public static void setTagId(int TagId) { mTAGID = TagId; }
+    public static void setId(int TagId) { mID = TagId; }
     public static void setTicketId(String TagId) { mTicketID = TagId; }
     public static void setContact(String contact_name) { mContact = contact_name; }
     public static void setActivityId(String activity_name) { mActivityId = activity_name; }
