@@ -56,25 +56,23 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
             ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
             textView.setText("Tessa Crankston");
 
-    //        ImageView iconEdit = (ImageView) rowView.findViewById(R.id.icon_edit_profile);
-    //        iconEdit.setOnClickListener(new View.OnClickListener() {
+            //        ImageView iconEdit = (ImageView) rowView.findViewById(R.id.icon_edit_profile);
+            //        iconEdit.setOnClickListener(new View.OnClickListener() {
 
-    //            @Override
-    //            public void onClick(View v) {
-    //                Intent intent;
+            //            @Override
+            //            public void onClick(View v) {
+            //                Intent intent;
 
-    //            }
-     //       });
+            //            }
+            //       });
 
         }
-        else
-        {
+        else {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             rowView = inflater.inflate(R.layout.wallet_framework_activity_framework_navigation_drawer_row_layout, parent, false);
 
-            switch (MyApplication.getActivityId())
-            {
+            switch (MyApplication.getActivityId()) {
                 case "DesktopActivity":
                     rowView = inflater.inflate(R.layout.wallet_manager_desktop_activity_framework_navigation_drawer_row_layout, parent, false);
                     break;
@@ -84,6 +82,8 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                 case "ShopActivity":
                     rowView = inflater.inflate(R.layout.shell_shop_desktop_activity_navigation_drawer_row_layout, parent, false);
                     break;
+                case "PublisherActivity":
+                    rowView = inflater.inflate(R.layout.shell_shop_desktop_activity_navigation_drawer_row_layout, parent, false);
                 default:
                     rowView = inflater.inflate(R.layout.wallet_framework_activity_framework_navigation_drawer_row_layout, parent, false);
                     break;
@@ -94,7 +94,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
             ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
             textView.setText(values[position]);
 
-            if(MyApplication.getActivityId()=="DesktopActivity"){
+            if (MyApplication.getActivityId() == "DesktopActivity") {
 
                 switch (position) {
                     case 1:
@@ -114,41 +114,78 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                         break;
                 }
 
+            }
+            else if (MyApplication.getActivityId() == "PublisherActivity")
+            {
+                switch (position)
+                {
+                    case 1:
+                        imageView.setImageResource(R.drawable.ic_action_store);
+                        break;
+                    case 2:
+                        imageView.setImageResource(R.drawable.ic_action_accounts);
+                        break;
+                    case 3:
+                        imageView.setImageResource(R.drawable.ic_action_bank);
+                        break;
+                    case 4:
+                        imageView.setImageResource(R.drawable.ic_action_coupon);
+                        break;
+                    case 5:
+                        imageView.setImageResource(R.drawable.ic_action_discount);
+                        break;
+                    case 6:
+                        imageView.setImageResource(R.drawable.ic_action_voucher);
+                        break;
+                    case 7:
+                        imageView.setImageResource(R.drawable.ic_action_gift_card);
+                        break;
+                    case 8:
+                        imageView.setImageResource(R.drawable.ic_action_clone);
+                        break;
+                    case 9:
+                        imageView.setImageResource(R.drawable.ic_action_child);
+                        break;
+                    case 10:
+                        imageView.setImageResource(R.drawable.ic_action_exit);
+                        break;
+                }
+
             }else{
 
                 switch (position)
-            {
-                case 1:
-                    imageView.setImageResource(R.drawable.ic_action_user);
-                    break;
-                case 2:
-                    imageView.setImageResource(R.drawable.ic_action_accounts);
-                    break;
-                case 3:
-                    imageView.setImageResource(R.drawable.ic_action_bank);
-                    break;
-                case 4:
-                    imageView.setImageResource(R.drawable.ic_action_coupon);
-                    break;
-                case 5:
-                    imageView.setImageResource(R.drawable.ic_action_discount);
-                    break;
-                case 6:
-                    imageView.setImageResource(R.drawable.ic_action_voucher);
-                    break;
-                case 7:
-                    imageView.setImageResource(R.drawable.ic_action_gift_card);
-                    break;
-                case 8:
-                    imageView.setImageResource(R.drawable.ic_action_clone);
-                    break;
-                case 9:
-                    imageView.setImageResource(R.drawable.ic_action_child);
-                    break;
-                case 10:
-                    imageView.setImageResource(R.drawable.ic_action_exit);
-                    break;
-            }
+                {
+                    case 1:
+                        imageView.setImageResource(R.drawable.ic_action_user);
+                        break;
+                    case 2:
+                        imageView.setImageResource(R.drawable.ic_action_accounts);
+                        break;
+                    case 3:
+                        imageView.setImageResource(R.drawable.ic_action_bank);
+                        break;
+                    case 4:
+                        imageView.setImageResource(R.drawable.ic_action_coupon);
+                        break;
+                    case 5:
+                        imageView.setImageResource(R.drawable.ic_action_discount);
+                        break;
+                    case 6:
+                        imageView.setImageResource(R.drawable.ic_action_voucher);
+                        break;
+                    case 7:
+                        imageView.setImageResource(R.drawable.ic_action_gift_card);
+                        break;
+                    case 8:
+                        imageView.setImageResource(R.drawable.ic_action_clone);
+                        break;
+                    case 9:
+                        imageView.setImageResource(R.drawable.ic_action_child);
+                        break;
+                    case 10:
+                        imageView.setImageResource(R.drawable.ic_action_exit);
+                        break;
+                }
             }
 
         }

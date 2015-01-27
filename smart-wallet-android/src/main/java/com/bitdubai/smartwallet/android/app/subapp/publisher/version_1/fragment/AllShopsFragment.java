@@ -15,7 +15,7 @@ import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.android.app.common.version_1.classes.MyApplication;
 
 
-public  class ScripsFragment extends Fragment {
+public  class AllShopsFragment extends Fragment {
 
     private static final String ARG_POSITION = "position";
 
@@ -55,8 +55,8 @@ public  class ScripsFragment extends Fragment {
 
     private String[][] Received;
 
-    public static ScripsFragment newInstance(int position) {
-        ScripsFragment f = new ScripsFragment();
+    public static AllShopsFragment newInstance(int position) {
+        AllShopsFragment f = new AllShopsFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);

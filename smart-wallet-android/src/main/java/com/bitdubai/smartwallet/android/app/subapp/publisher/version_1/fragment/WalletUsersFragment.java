@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.bitdubai.smartwallet.R;
 
 
-public  class SubscribersFragment extends Fragment {
+public  class WalletUsersFragment extends Fragment {
 
     private static final String ARG_POSITION = "position";
 
@@ -28,8 +28,8 @@ public  class SubscribersFragment extends Fragment {
 
 
 
-    public static SubscribersFragment newInstance(int position) {
-        SubscribersFragment f = new SubscribersFragment();
+    public static WalletUsersFragment newInstance(int position) {
+        WalletUsersFragment f = new WalletUsersFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -55,7 +55,7 @@ public  class SubscribersFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.publisher_inflater, container, false);
+        rootView = inflater.inflate(R.layout.publisher_expandablelisview_inflater, container, false);
 
         return rootView;
     }
@@ -123,14 +123,14 @@ public  class SubscribersFragment extends Fragment {
 
         @Override
         public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-            convertView = inf.inflate(R.layout.publisher_subscribers_detail, parent, false);
+            convertView = inf.inflate(R.layout.publisher_wallet_users_detail, parent, false);
 
             return convertView;
         }
 
         @Override
         public View getGroupView(final int groupPosition, final boolean isExpanded, View convertView, final ViewGroup parent) {
-            convertView = inf.inflate(R.layout.publisher_subscribers_header, parent, false);
+            convertView = inf.inflate(R.layout.publisher_wallet_users_header, parent, false);
 
             return convertView;
         }

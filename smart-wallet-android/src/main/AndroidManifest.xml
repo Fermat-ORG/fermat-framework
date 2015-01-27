@@ -71,6 +71,13 @@
                 android:value=".android.app.shell.version_1.activity.DesktopActivity" />
         </activity>
         <activity
+            android:name=".android.app.subapp.publisher.version_1.activity.ShopsActivity"
+            android:label="Stores" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".android.app.subapp.publisher.version_1.activity.PublisherActivity" />
+        </activity>
+        <activity
             android:name=".android.app.subapp.wallet_store.version_1.activity.StoreFrontActivity"
             android:label="Wallet Store" >
             <meta-data

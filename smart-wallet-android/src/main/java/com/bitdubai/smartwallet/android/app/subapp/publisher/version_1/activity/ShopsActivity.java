@@ -22,16 +22,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.android.app.common.version_1.classes.MyApplication;
 import com.bitdubai.smartwallet.android.app.common.version_1.classes.PagerSlidingTabStrip;
-import com.bitdubai.smartwallet.android.app.subapp.publisher.version_1.fragment.ScripsFragment;
-import com.bitdubai.smartwallet.android.app.subapp.publisher.version_1.fragment.ShopsFragment;
-import com.bitdubai.smartwallet.android.app.subapp.publisher.version_1.fragment.WalletUsersFragment;
+import com.bitdubai.smartwallet.android.app.subapp.publisher.version_1.fragment.AffiliatedShopsFragment;
+import com.bitdubai.smartwallet.android.app.subapp.publisher.version_1.fragment.AllShopsFragment;
 import com.bitdubai.smartwallet.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.RequestsSentActivity;
 import com.bitdubai.smartwallet.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyLayoutInflaterFactory;
 
-public class PublisherActivity extends FragmentActivity
+public class ShopsActivity extends FragmentActivity
 {
 
     private final Handler handler = new Handler();
@@ -45,7 +45,7 @@ public class PublisherActivity extends FragmentActivity
 
     private String walletStyle = "";
 
-    private CharSequence mTitle = "Publisher";
+    private CharSequence mTitle = "Shops";
     private Menu menu;
 
 
@@ -57,7 +57,7 @@ public class PublisherActivity extends FragmentActivity
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        MyApplication.setActivityId("PublisherActivity");
+        MyApplication.setActivityId("ShopsActivity");
         setContentView(R.layout.publisher_activity_publisher);
 
         // I get the action bar title id and put it on a text view in order to later change its color
@@ -260,7 +260,7 @@ public class PublisherActivity extends FragmentActivity
 
         private String[] titles;
         private String[] titles_1 = { };
-        private String[] titles_2 = {  "Wallet Users","Shops", "Scrips"};
+        private String[] titles_2 = {  "Affiliated Shops","All Shops"};
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -279,7 +279,7 @@ public class PublisherActivity extends FragmentActivity
 
         @Override
         public int getCount() {
-           titles = titles_2;
+            titles = titles_2;
             return titles.length;
         }
         @Override
@@ -288,16 +288,13 @@ public class PublisherActivity extends FragmentActivity
             Fragment currentFragment;
             switch (position) {
                 case 0:
-                    currentFragment = WalletUsersFragment.newInstance(position);
+                    currentFragment = AffiliatedShopsFragment.newInstance(position);
                     break;
                 case 1:
-                    currentFragment = ShopsFragment.newInstance(position);
-                    break;
-                case 2:
-                    currentFragment = ScripsFragment.newInstance(position);
+                    currentFragment = AllShopsFragment.newInstance(position);
                     break;
                 default:
-                    currentFragment = WalletUsersFragment.newInstance(position);
+                    currentFragment = AffiliatedShopsFragment.newInstance(position);
                     break;
             }
             return currentFragment;
