@@ -364,14 +364,16 @@ public class FrameworkActivity extends FragmentActivity
 
     //***
 
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        FragmentManager fm = getSupportFragmentManager();
+        super.onActivityResult(requestCode, resultCode,data);
+      /*  FragmentManager fm = getSupportFragmentManager();
 
 //if you added fragment via layout xml
         TicketFragment fragment = (TicketFragment)fm.findFragmentByTag("dialog");
-        fragment.onActivityResult(requestCode, resultCode, data);
+        fragment.onActivityResult(requestCode, resultCode, data);*/
 
     }
 
