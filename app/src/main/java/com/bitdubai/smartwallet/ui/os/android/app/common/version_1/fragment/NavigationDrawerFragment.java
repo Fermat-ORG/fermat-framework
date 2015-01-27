@@ -23,7 +23,7 @@ import android.widget.ListView;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.MyApplication;
 import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.NavigationDrawerArrayAdapter;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.marketplace.version_1.activity.PublisherActivity;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.publisher.version_1.activity.PublisherActivity;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_factory.version_1.activity.FactoryActivity;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.ContactsActivity;
 

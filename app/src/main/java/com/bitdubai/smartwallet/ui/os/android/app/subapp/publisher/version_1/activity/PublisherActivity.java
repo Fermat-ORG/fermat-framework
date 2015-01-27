@@ -1,4 +1,4 @@
-package com.bitdubai.smartwallet.ui.os.android.app.subapp.marketplace.version_1.activity;
+package com.bitdubai.smartwallet.ui.os.android.app.subapp.publisher.version_1.activity;
 
 import android.app.ActionBar;
 import android.content.Intent;
@@ -26,9 +26,9 @@ import android.widget.TextView;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.MyApplication;
 import com.bitdubai.smartwallet.ui.os.android.app.common.version_1.classes.PagerSlidingTabStrip;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.marketplace.version_1.fragment.ScripsFragment;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.marketplace.version_1.fragment.ShopsFragment;
-import com.bitdubai.smartwallet.ui.os.android.app.subapp.marketplace.version_1.fragment.SubscribersFragment;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.publisher.version_1.fragment.ScripsFragment;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.publisher.version_1.fragment.ShopsFragment;
+import com.bitdubai.smartwallet.ui.os.android.app.subapp.publisher.version_1.fragment.SubscribersFragment;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.RequestsSentActivity;
 import com.bitdubai.smartwallet.ui.os.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyLayoutInflaterFactory;
 
@@ -46,7 +46,7 @@ public class PublisherActivity extends FragmentActivity
 
     private String walletStyle = "";
 
-    private CharSequence mTitle = "Marketplace";
+    private CharSequence mTitle = "Publisher";
     private Menu menu;
 
 
@@ -58,8 +58,8 @@ public class PublisherActivity extends FragmentActivity
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        MyApplication.setActivityId("MarketplaceActivity");
-        setContentView(R.layout.market_activity_market);
+        MyApplication.setActivityId("PublisherActivity");
+        setContentView(R.layout.publisher_activity_publisher);
 
         // I get the action bar title id and put it on a text view in order to later change its color
         int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
@@ -261,7 +261,7 @@ public class PublisherActivity extends FragmentActivity
 
         private String[] titles;
         private String[] titles_1 = { };
-        private String[] titles_2 = {  "Subscribers","Shops", "Scrips"};
+        private String[] titles_2 = {  "Wallet Users","Shops", "Scrips"};
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
