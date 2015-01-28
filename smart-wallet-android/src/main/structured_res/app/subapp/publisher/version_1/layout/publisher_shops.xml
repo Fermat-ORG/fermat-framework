@@ -15,7 +15,7 @@
     android:layout_width="wrap_content"
     android:layout_height="220dp"
     android:src="@drawable/graph_1"
-    android:layout_below="@+id/shops"
+    android:layout_below="@+id/shops_associated"
     android:layout_alignRight="@+id/imageView"
     android:layout_alignEnd="@+id/imageView"
     android:id="@+id/imageView2"

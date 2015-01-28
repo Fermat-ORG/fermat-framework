@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.bitdubai.smartwallet.R;
 
 
-public  class WalletUsersFragment extends Fragment {
+public  class PublisherWalletUsersFragment extends Fragment {
 
     private static final String ARG_POSITION = "position";
 
@@ -28,8 +28,8 @@ public  class WalletUsersFragment extends Fragment {
 
 
 
-    public static WalletUsersFragment newInstance(int position) {
-        WalletUsersFragment f = new WalletUsersFragment();
+    public static PublisherWalletUsersFragment newInstance(int position) {
+        PublisherWalletUsersFragment f = new PublisherWalletUsersFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);

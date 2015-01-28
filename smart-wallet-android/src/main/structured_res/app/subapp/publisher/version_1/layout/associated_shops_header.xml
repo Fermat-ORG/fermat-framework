@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="4dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView android:id="@+id/store_image"
+            android:layout_width="240dp"
+            android:layout_height="100dp"
+            android:layout_weight="1"
+            android:layout_marginRight="4dp"
+            android:layout_marginLeft="4dp"
+            android:contentDescription="Shop image"
+            android:src="@drawable/store_16"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="6dp"
+            android:layout_marginRight="2dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginLeft="4dp"
+            android:gravity="center_vertical">
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="3dp">
+                <TextView android:id="@+id/store_name"
+                    android:layout_width="match_parent"
+                    android:textSize="12sp"
+                    android:textStyle="normal"
+                    android:layout_height="wrap_content"
+                    android:text="store name"
+                    android:layout_weight="1"/>
+                <TextView android:id="@+id/deal_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Voucher permission"
+                    android:textSize="12sp"
+                    android:textStyle="normal"
+                    android:gravity="center"/>
+            </LinearLayout>
+            <LinearLayout
+                android:padding="3dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView android:id="@+id/store_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="address"
+                    android:textSize="12sp"
+                    android:textStyle="normal"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginRight="2dp"
+                    android:layout_marginLeft="2dp">
+                    <TextView android:id="@+id/deal_start"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="date start"
+                        android:textStyle="normal"
+                        android:textSize="12sp"/>
+                    <TextView android:id="@+id/deal_end"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textSize="12sp"
+                        android:textStyle="normal"
+                        android:text="end date"
+                        android:gravity="end"/>
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:padding="3dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView android:id="@+id/store_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="12sp"
+                    android:textStyle="normal"
+                    android:text="3548 532890"/>
+                </LinearLayout>
+            <LinearLayout
+                android:padding="3dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView android:id="@+id/store_direction"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="example.com"
+                    android:textSize="12sp"
+                    android:layout_weight="1"
+                    android:textStyle="normal"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

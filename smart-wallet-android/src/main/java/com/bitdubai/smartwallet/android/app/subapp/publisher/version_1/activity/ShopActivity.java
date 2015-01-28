@@ -1,4 +1,5 @@
 package com.bitdubai.smartwallet.android.app.subapp.publisher.version_1.activity;
+
 import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.Color;
@@ -21,15 +22,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
+
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.android.app.common.version_1.classes.MyApplication;
 import com.bitdubai.smartwallet.android.app.common.version_1.classes.PagerSlidingTabStrip;
-import com.bitdubai.smartwallet.android.app.subapp.publisher.version_1.fragment.PublisherScripsFragment;
-import com.bitdubai.smartwallet.android.app.subapp.publisher.version_1.fragment.PublisherShopsFragment;
-import com.bitdubai.smartwallet.android.app.subapp.publisher.version_1.fragment.PublisherWalletUsersFragment;
+import com.bitdubai.smartwallet.android.app.subapp.publisher.version_1.fragment.ShopDealsFragment;
+import com.bitdubai.smartwallet.android.app.subapp.publisher.version_1.fragment.ShopShopChatFragment;
+import com.bitdubai.smartwallet.android.app.subapp.publisher.version_1.fragment.ShopShopFragment;
 import com.bitdubai.smartwallet.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyLayoutInflaterFactory;
 
-public class PublisherActivity extends FragmentActivity
+public class ShopActivity extends FragmentActivity
 {
 
     private final Handler handler = new Handler();
@@ -43,7 +45,7 @@ public class PublisherActivity extends FragmentActivity
 
     private String walletStyle = "";
 
-    private CharSequence mTitle = "Publisher";
+    private CharSequence mTitle = "Shop";
     private Menu menu;
 
 
@@ -55,7 +57,7 @@ public class PublisherActivity extends FragmentActivity
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        MyApplication.setActivityId("PublisherActivity");
+        MyApplication.setActivityId("ShopActivity");
         setContentView(R.layout.publisher_activity_publisher);
 
         // I get the action bar title id and put it on a text view in order to later change its color
@@ -227,7 +229,7 @@ public class PublisherActivity extends FragmentActivity
 
         private String[] titles;
         private String[] titles_1 = { };
-        private String[] titles_2 = {  "Wallet Users","Shops", "Scrips"};
+        private String[] titles_2 = {  "Shop","Deals","Chat"};
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -255,16 +257,16 @@ public class PublisherActivity extends FragmentActivity
             Fragment currentFragment;
             switch (position) {
                 case 0:
-                    currentFragment = PublisherWalletUsersFragment.newInstance(position);
+                    currentFragment = ShopShopFragment.newInstance(position);
                     break;
                 case 1:
-                    currentFragment = PublisherShopsFragment.newInstance(position);
+                    currentFragment = ShopDealsFragment.newInstance(position);
                     break;
                 case 2:
-                    currentFragment = PublisherScripsFragment.newInstance(position);
+                    currentFragment = ShopShopChatFragment.newInstance(position);
                     break;
                 default:
-                    currentFragment = PublisherWalletUsersFragment.newInstance(position);
+                    currentFragment = ShopShopFragment.newInstance(position);
                     break;
             }
             return currentFragment;

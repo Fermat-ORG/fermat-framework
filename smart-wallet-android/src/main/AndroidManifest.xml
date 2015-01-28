@@ -78,6 +78,13 @@
                 android:value=".android.app.subapp.publisher.version_1.activity.PublisherActivity" />
         </activity>
         <activity
+            android:name=".android.app.subapp.publisher.version_1.activity.ShopActivity"
+            android:label="Shop" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".android.app.subapp.publisher.version_1.activity.ShopsActivity" />
+        </activity>
+        <activity
             android:name=".android.app.subapp.wallet_store.version_1.activity.StoreFrontActivity"
             android:label="Wallet Store" >
             <meta-data
@@ -279,7 +286,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".android.app.subapp.wallet_store.version_1.activity.StoreFrontActivity" />
         </activity>
-
         <activity
             android:name=".android.app.subapp.shop.version_1.activity.ShopActivity"
             android:label="Wallet Store" >
@@ -301,9 +307,5 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.FrameworkActivity" />
         </activity>
-
-
-
     </application>
-
 </manifest>
