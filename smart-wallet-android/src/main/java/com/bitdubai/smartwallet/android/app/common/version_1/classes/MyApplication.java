@@ -4,7 +4,6 @@ package com.bitdubai.smartwallet.android.app.common.version_1.classes;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Application;
-import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -20,8 +19,9 @@ import android.text.SpannableString;
 import android.view.Window;
 import android.widget.TextView;
 
+import com.bitdubai.wallet_platform_api.CantStartPlatformException;
 import com.bitdubai.smartwallet.R;
-import com.bitdubai.platform.Platform;
+import com.bitdubai.wallet_platform_core.Platform;
 
 
 public class MyApplication extends Application {
@@ -97,7 +97,16 @@ public class MyApplication extends Application {
     public MyApplication () {
         super();
 
-        //try {
+        mPlatform = new Platform();
+
+
+
+
+
+
+        try {
+
+            mPlatform.start(this);
 
            //Context mContext;
            // mContext = this.getApplicationContext();
@@ -108,11 +117,11 @@ public class MyApplication extends Application {
 
             //Platform com.bitdubai.platform = new Platform(this.getApplicationContext());
            // mPlatform = com.bitdubai.platform;
-       // }
-       // catch (CantStartPlatformException e) {
-        //    System.err.println("CantStartPlatformException: " + e.getMessage());
+        }
+        catch (CantStartPlatformException e) {
+           System.err.println("CantStartPlatformException: " + e.getMessage());
 
-        //}
+       }
 
     }
 

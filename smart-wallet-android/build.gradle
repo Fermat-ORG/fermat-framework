@@ -43,6 +43,7 @@ dependencies {
     compile 'com.google.android.gms:play-services:6.5.87'
 
 
-    compile project(':wallet-platform')
+    compile project(':wallet-platform-core')
+    compile project(':wallet-platform-api')
 
 }

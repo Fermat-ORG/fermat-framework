@@ -10,7 +10,9 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/smart-wallet-android" />
-            <option value="$PROJECT_DIR$/wallet-platform" />
+            <option value="$PROJECT_DIR$/wallet-platform-api" />
+            <option value="$PROJECT_DIR$/wallet-platform-core" />
+            <option value="$PROJECT_DIR$/wallet-platform-os-android-bitdubai" />
           </set>
         </option>
       </GradleProjectSettings>

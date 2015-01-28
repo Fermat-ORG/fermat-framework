@@ -1,8 +1,8 @@
-package com.bitdubai.platform.layer._3_os.android.developer.bitdubai.version_1.database_system;
+package com.bitdubai.wallet_platform_core.layer._3_os.android.developer.bitdubai.version_1.database_system;
 
 import android.content.Context;
-import com.bitdubai.platform.layer._3_os.Database;
-import com.bitdubai.platform.layer._3_os.DatabaseSystem;
+import com.bitdubai.wallet_platform_core.layer._3_os.Database;
+import com.bitdubai.wallet_platform_core.layer._3_os.DatabaseSystem;
 
 /**
  * Created by ciencias on 20.01.15.
