@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
 
-import android.view.DragEvent;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -25,8 +24,7 @@ import android.view.View.OnTouchListener;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.android.app.common.version_1.classes.MyApplication;
 
-import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
+import android.os.Parcelable;
 import android.util.FloatMath;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.DialogFragment;
@@ -39,13 +37,15 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.BitmapDrawable;
 
 import static android.widget.RelativeLayout.LayoutParams.*;
 
 public class UsdBalanceFragment extends Fragment {
 
     private static final String ARG_POSITION = "position";
-
+    Fragment fragment = this;
     private int position;
     private ArrayList<TicketPosition> mTicketsList;
     private String[] tickets;
@@ -57,19 +57,18 @@ public class UsdBalanceFragment extends Fragment {
     //Variables para centrar la imagen bajo el dedo
     private int xDelta;
     private int yDelta;
-
+    private boolean oneClick= false;
     // We can be in one of these 3 states
     static final int NONE = 0;
     static final int DRAG = 1;
     static final int ZOOM = 2;
     int mode = NONE;
     float oldDist = 1f;
-    GestureDetector  gestureDetector;
-    String ticketFace = "A";
+
     private final int EDITED_TICKET = 1;
     private ImageView imageMoney;
-    Context context;
 
+private  boolean doubleClick = false;
     public static UsdBalanceFragment newInstance(int position) {
         UsdBalanceFragment f = new UsdBalanceFragment();
         Bundle b = new Bundle();
@@ -330,11 +329,11 @@ public class UsdBalanceFragment extends Fragment {
 
 
     private final class theTouchListener implements OnTouchListener {
-        private final int MAX_CLICK_DURATION = 200;
-        private final int MAX_DOUBLECLICK_DURATION = 100;
-        private final int MAX_DOUBLE_CLICK_DURATION = 500;
+
+        private final int MAX_DOUBLECLICK_DURATION = 35;
+        private final int MAX_LONG_CLICK_DURATION = 400;
         private final int MAX_CLICK_DISTANCE = 5;
-        private final int MAX_DOUBLECLICK_DISTANCE = 1;
+        private final int MAX_DOUBLECLICK_DISTANCE = 5;
         private long startClickTime;
         private final float SCROLL_THRESHOLD = 10;
         private boolean isOnClick;
@@ -349,7 +348,7 @@ public class UsdBalanceFragment extends Fragment {
             int ticketId = (Integer)view.getTag();
             int Id = (Integer)view.getId();
             MyApplication.setTagId(ticketId);
-            //   MyApplication.setId(Id);
+            MyApplication.setId(Id);
 
           /*  if(gestureDetector.onTouchEvent(event)) {
 
@@ -391,114 +390,70 @@ public class UsdBalanceFragment extends Fragment {
                     dy = y2 - y1;
 
                     //double tap
-                    if (clickDuration < MAX_DOUBLECLICK_DURATION && dx < MAX_DOUBLECLICK_DISTANCE && dy < MAX_DOUBLECLICK_DISTANCE) {
-                        onDoubleTap();
-                    }
+                    if (clickDuration < MAX_DOUBLECLICK_DURATION && dx <= MAX_DOUBLECLICK_DISTANCE && dy <= MAX_DOUBLECLICK_DISTANCE) {
+                        imageMoney = (ImageView) view.findViewById(Id);
+                          //if(oneClick)
+                          //  rotateTicket(ticketId,imageMoney,view);
 
-                    if (clickDuration < MAX_CLICK_DURATION && dx < MAX_CLICK_DISTANCE && dy < MAX_CLICK_DISTANCE) {
-                        //click event has occurred
-                        ImageView image = (ImageView) view.findViewById(Id);
-                        //usd 1
-                        if (ticketId == 1) {
-                            image.setImageResource(R.drawable.usd_1_b);
-                            view.setTag(12);
-                        } else {
-                            if (ticketId == 12) {
-                                image.setImageResource(R.drawable.usd_1);
-                                view.setTag(1);
+                        oneClick = false;
+
+                        if(!doubleClick)
+                         onDoubleTap(view);
+
+                    }else
+                    {
+                        if (clickDuration > MAX_DOUBLECLICK_DURATION && clickDuration < MAX_LONG_CLICK_DURATION && dx < MAX_CLICK_DISTANCE && dy < MAX_CLICK_DISTANCE) {
+                            //click event has occurred
+
+                                ImageView image = (ImageView) view.findViewById(Id);
+                                rotateTicket(ticketId, image, view);
+
+                            doubleClick = false;
+                            oneClick = true;
+
+                        }else{
+                            //long click event
+                            if((clickDuration >= MAX_LONG_CLICK_DURATION && clickDuration < 1000)  && dx < 10 && dy < 10){
+                                oneClick = false;
+                                doubleClick = false;
+                                //if ticket move not separete
+                                TicketPosition item = getTicket(Id);
+                                float centreX=view.getX() + view.getWidth()  / 2;
+                                float centreY=view.getY() + view.getHeight() / 2;
+
+                                float centreX1=item.X + item.Width  / 2;
+                                float centreY1=item.Y + item.Height / 2;
+
+                                float difCenterX =0;
+                                float difCenterY =0;
+
+                                if(centreX1 > centreX)
+                                    difCenterX= centreX1 - centreX;
+                                else
+                                    difCenterX= centreX - centreX1;
+
+                                if(centreY1 > centreY)
+                                    difCenterX= centreY1 - centreY;
+                                else
+                                    difCenterX= centreY - centreY1;
+
+
+
+                                if((difCenterX <= 15 && difCenterY <= 10))
+                                    longClick(view);
+                                else
+                                    joinTickets(Id,layoutParams,ticketId, view);
                             }
-                        }
-//usd 5
-                        if (ticketId == 5) {
-                            image.setImageResource(R.drawable.usd_5_b);
-                            view.setTag(52);
-                        } else {
-                            if (ticketId == 52) {
-                                image.setImageResource(R.drawable.usd_5);
-                                view.setTag(5);
-                            }
-                        }
-//usd 10
-                        if (ticketId == 10) {
-                            image.setImageResource(R.drawable.usd_10_b);
-                            view.setTag(102);
-                        } else {
-                            if (ticketId == 102) {
-                                image.setImageResource(R.drawable.usd_10);
-                                view.setTag(10);
-                            }
-                        }
-
-                        //usd 20
-                        if (ticketId == 20) {
-                            image.setImageResource(R.drawable.usd_20_b);
-                            view.setTag(202);
-                        } else {
-                            if (ticketId == 202) {
-                                image.setImageResource(R.drawable.usd_20);
-                                view.setTag(20);
-                            }
-                        }
-
-                        //usd 50
-                        if (ticketId == 50) {
-                            image.setImageResource(R.drawable.usd_50_b);
-                            view.setTag(502);
-                        } else {
-                            if (ticketId == 502) {
-                                image.setImageResource(R.drawable.usd_50);
-                                view.setTag(50);
-                            }
-                        }
-
-                        //usd 50
-                        if (ticketId == 100) {
-                            image.setImageResource(R.drawable.usd_100_b);
-                            view.setTag(1002);
-                        } else {
-                            if (ticketId == 1002) {
-                                image.setImageResource(R.drawable.usd_100);
-                                view.setTag(100);
-                            }
-                        }
-
-
-                    }else{
-                        //long click event
-                        if((clickDuration > MAX_DOUBLE_CLICK_DURATION && clickDuration < 1100)  && dx < 10 && dy < MAX_CLICK_DISTANCE){
-                            //if ticket move not separete
-                            TicketPosition item = getTicket(Id);
-                            float centreX=view.getX() + view.getWidth()  / 2;
-                            float centreY=view.getY() + view.getHeight() / 2;
-
-                            float centreX1=item.X + item.Width  / 2;
-                            float centreY1=item.Y + item.Height / 2;
-
-                            float difCenterX =0;
-                            float difCenterY =0;
-
-                            if(centreX1 > centreX)
-                                difCenterX= centreX1 - centreX;
-                            else
-                                difCenterX= centreX - centreX1;
-
-                            if(centreY1 > centreY)
-                                difCenterX= centreY1 - centreY;
-                            else
-                                difCenterX= centreY - centreY1;
-
-
-
-                            if((difCenterX < 10) && difCenterY < 10 )
-                                longClick(view);
-                            else
+                            else {
+                                doubleClick = false;
+                                oneClick = false;
                                 joinTickets(Id,layoutParams,ticketId, view);
-                        }
-                        else {
-                            joinTickets(Id,layoutParams,ticketId, view);
-                        }
+                            }
 
+                        }
                     }
+
+
 
                     updateTicketPosition(Id,layoutParams,ticketId,view.getX(),view.getY(),view.getWidth(), view.getHeight());
 
@@ -591,6 +546,74 @@ public class UsdBalanceFragment extends Fragment {
             //la posición de la imagen en el marco.
             marco.invalidate();
             return true;
+        }
+    }
+
+    private void rotateTicket(int ticketId, ImageView image, View view ) {
+        //click event has occurred
+        oneClick = true;
+        //usd 1
+        if (ticketId == 1) {
+            image.setImageResource(R.drawable.usd_1_b);
+            view.setTag(12);
+        } else {
+            if (ticketId == 12) {
+                image.setImageResource(R.drawable.usd_1);
+                view.setTag(1);
+            }
+        }
+//usd 5
+        if (ticketId == 5) {
+            image.setImageResource(R.drawable.usd_5_b);
+            view.setTag(52);
+        } else {
+            if (ticketId == 52) {
+                image.setImageResource(R.drawable.usd_5);
+                view.setTag(5);
+            }
+        }
+//usd 10
+        if (ticketId == 10) {
+            image.setImageResource(R.drawable.usd_10_b);
+            view.setTag(102);
+        } else {
+            if (ticketId == 102) {
+                image.setImageResource(R.drawable.usd_10);
+                view.setTag(10);
+            }
+        }
+
+        //usd 20
+        if (ticketId == 20) {
+            image.setImageResource(R.drawable.usd_20_b);
+            view.setTag(202);
+        } else {
+            if (ticketId == 202) {
+                image.setImageResource(R.drawable.usd_20);
+                view.setTag(20);
+            }
+        }
+
+        //usd 50
+        if (ticketId == 50) {
+            image.setImageResource(R.drawable.usd_50_b);
+            view.setTag(502);
+        } else {
+            if (ticketId == 502) {
+                image.setImageResource(R.drawable.usd_50);
+                view.setTag(50);
+            }
+        }
+
+        //usd 50
+        if (ticketId == 100) {
+            image.setImageResource(R.drawable.usd_100_b);
+            view.setTag(1002);
+        } else {
+            if (ticketId == 1002) {
+                image.setImageResource(R.drawable.usd_100);
+                view.setTag(100);
+            }
         }
     }
 
@@ -879,7 +902,7 @@ public class UsdBalanceFragment extends Fragment {
 
     }
 
-    private void onDoubleTap()
+    private void onDoubleTap(View view)
     {
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.usd_1);
 
@@ -970,143 +993,63 @@ public class UsdBalanceFragment extends Fragment {
 
         String imagePath = mFile1.getAbsolutePath().toString()+"/"+fileName;
         File temp=new File(imagePath);
-
-        if(temp.exists()){
-            //  "Double Click open external Editor";
-            //  String imagePath = "android.resource://" + getResources().getResourcePackageName(R.drawable.usd_1) + "/drawable-xxhdpi/usd_1.jpg";
-            // String imagePath ="file://" +  getResources().getResourcePackageName(R.drawable.usd_1) + "/structured_res/drawable-xxhdpi/usd_1.jpg";
-            Intent editIntent = new Intent(Intent.ACTION_EDIT);
-            //getResources().getIdentifier("ic_launcher", "drawable", getPackageName());
-            editIntent.setDataAndType(Uri.parse("file://" + imagePath), "image/*");
-            editIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            editIntent.putExtra("finishActivityOnSaveCompleted", true);
-            //startActivity(Intent.createChooser(editIntent, null));
-            getActivity().startActivityForResult(editIntent, EDITED_TICKET);
-        }
-    }
-
-    public class GestureSwipeListener  extends
-            GestureDetector.SimpleOnGestureListener {
-        final Context myContext;
-        View view;
-        public GestureSwipeListener (Context context, View v) {
-            myContext = context;
-            view = v;
-        }
-
-        @Override
-        public boolean onDown(MotionEvent e) {
-            ImageView image = (ImageView) view.findViewById(MyApplication.getId());
-            int tagId = MyApplication.getTagId();
-            //usd 1
-            if (tagId == 1) {
-                image.setImageResource(R.drawable.usd_1_b);
-                view.setTag(12);
-            } else {
-                if (tagId == 12) {
-                    image.setImageResource(R.drawable.usd_1);
-                    view.setTag(1);
-                }
-            }
-//usd 5
-            if (tagId == 5) {
-                image.setImageResource(R.drawable.usd_5_b);
-                view.setTag(52);
-            } else {
-                if (tagId == 52) {
-                    image.setImageResource(R.drawable.usd_5);
-                    view.setTag(5);
-                }
-            }
-//usd 10
-            if (tagId == 10) {
-                image.setImageResource(R.drawable.usd_10_b);
-                view.setTag(102);
-            } else {
-                if (tagId == 102) {
-                    image.setImageResource(R.drawable.usd_10);
-                    view.setTag(10);
-                }
-            }
-
-            //usd 20
-            if (tagId == 20) {
-                image.setImageResource(R.drawable.usd_20_b);
-                view.setTag(202);
-            } else {
-                if (tagId == 202) {
-                    image.setImageResource(R.drawable.usd_20);
-                    view.setTag(20);
-                }
-            }
-
-            //usd 50
-            if (tagId == 50) {
-                image.setImageResource(R.drawable.usd_50_b);
-                view.setTag(502);
-            } else {
-                if (tagId == 502) {
-                    image.setImageResource(R.drawable.usd_50);
-                    view.setTag(50);
-                }
-            }
-
-            //usd 50
-            if (tagId == 100) {
-                image.setImageResource(R.drawable.usd_100_b);
-                view.setTag(1002);
-            } else {
-                if (tagId == 1002) {
-                    image.setImageResource(R.drawable.usd_100);
-                    view.setTag(100);
-                }
-            }
-
-            return true;
-        }
-
-        @Override
-        public void onLongPress(MotionEvent e)
+        try
         {
-            super.onLongPress(e);
-            String straction = "long press";
-            longClick(view);
+            if(temp.exists()){
+                //  "Double Click open external Editor";
+                //  String imagePath = "android.resource://" + getResources().getResourcePackageName(R.drawable.usd_1) + "/drawable-xxhdpi/usd_1.jpg";
+                // String imagePath ="file://" +  getResources().getResourcePackageName(R.drawable.usd_1) + "/structured_res/drawable-xxhdpi/usd_1.jpg";
+                Intent editIntent = new Intent(Intent.ACTION_EDIT);
+                //getResources().getIdentifier("ic_launcher", "drawable", getPackageName());
+                editIntent.setDataAndType(Uri.parse("file://" + imagePath), "image/*");
+                editIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                editIntent.putExtra("finishActivityOnSaveCompleted", true);
+
+                //startActivity(Intent.createChooser(editIntent, null));
+                fragment.startActivityForResult(editIntent, EDITED_TICKET);
+
+                doubleClick = true;
+            }
+        }catch(Exception e)
+        {
+            String strError = e.getMessage();
         }
-
-        // event when double tap occurs
-        @Override
-        public boolean onDoubleTap(MotionEvent e) {
-
-
-
-
-
-            return true;
-        }
-
-
-
 
     }
+
+
 
     @Override
     public  void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
 
-        super.onActivityResult(requestCode, resultCode,imageReturnedIntent);
+
         switch(requestCode) {
             case EDITED_TICKET:
-                if(resultCode == 1){
-                    try {
-                        final Uri imageUri = imageReturnedIntent.getData();
-                        final InputStream imageStream = context.getContentResolver().openInputStream(imageUri);
+                if(imageReturnedIntent != null){
+                    final Uri imageUri = imageReturnedIntent.getData();
+                    try
+                    {
+                        final InputStream imageStream = getActivity().getContentResolver().openInputStream(imageUri);
                         final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                        imageMoney.setImageBitmap(selectedImage);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
+                        Drawable d = new BitmapDrawable(getResources(),selectedImage);
+
+                        if(imageMoney != null)
+                            imageMoney.setImageDrawable(d);
+
+                        doubleClick = false;
+                        oneClick = false;
                     }
+                    catch(Exception ex) {
+                        String strError = ex.getMessage();
+                    }
+
+                    //imageMoney.setImageBitmap(selectedImage);
+
 
                 }
         }
+
+        super.onActivityResult(requestCode, resultCode,imageReturnedIntent);
     }
 
 }

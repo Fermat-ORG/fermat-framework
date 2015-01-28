@@ -1,6 +1,8 @@
 package com.bitdubai.smartwallet.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.kids.sub_segment.all.developer.bitdubai.version_1.fragment;
 
 import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import android.support.v4.app.DialogFragment;
@@ -161,7 +163,7 @@ public class TicketFragment  extends  DialogFragment  {
                 imageTicket.setOnClickListener(new OnClickListener() {
                     public void onClick(View v) {
 
-                        if ((Integer) v.getTag() == 1) {
+                        if ((Integer) v.getTag() == 20) {
                             imageTicket.setImageResource(R.drawable.usd_20_b);
                             ticketFace = "B";
                             v.setTag(202);
@@ -223,6 +225,26 @@ public class TicketFragment  extends  DialogFragment  {
         return view;
     }
 
+    @Override
+    public  void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+
+        switch(requestCode) {
+            case EDITED_TICKET:
+                if(imageReturnedIntent != null){
+                    try {
+                        final Uri imageUri = imageReturnedIntent.getData();
+                        final InputStream imageStream = getActivity().getContentResolver().openInputStream(imageUri);
+                        final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                        Drawable d = new BitmapDrawable(getResources(),selectedImage);
+
+                        imageMoney.setImageDrawable(d);
+                    } catch (Exception e) {
+                        String strError = e.getMessage();
+                    }
+
+                }
+        }
+    }
 
     public class GestureListener extends
             GestureDetector.SimpleOnGestureListener {
@@ -358,23 +380,6 @@ public class TicketFragment  extends  DialogFragment  {
         }
 
 
-        public  void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
-
-            switch(requestCode) {
-                case EDITED_TICKET:
-                    if(resultCode == 1){
-                        try {
-                            final Uri imageUri = imageReturnedIntent.getData();
-                            final InputStream imageStream = context.getContentResolver().openInputStream(imageUri);
-                            final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                            imageMoney.setImageBitmap(selectedImage);
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-            }
-        }
 
 
     }
