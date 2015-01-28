@@ -6,10 +6,12 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <ImageView
+        <ImageView android:id="@+id/store_image"
             android:layout_width="240dp"
-            android:layout_height="wrap_content"
+            android:layout_height="100dp"
             android:layout_weight="1"
+            android:layout_marginRight="4dp"
+            android:layout_marginLeft="4dp"
             android:contentDescription="Shop image"
             android:src="@drawable/store_16"/>
         <LinearLayout
@@ -20,12 +22,13 @@
             android:layout_marginBottom="6dp"
             android:layout_marginRight="2dp"
             android:layout_marginTop="6dp"
-            android:layout_marginLeft="2dp"
+            android:layout_marginLeft="4dp"
             android:gravity="center_vertical">
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:padding="3dp">
                 <TextView android:id="@+id/store_name"
                     android:layout_width="match_parent"
                     android:textSize="12sp"
@@ -35,6 +38,7 @@
                     android:layout_weight="1"/>
             </LinearLayout>
             <LinearLayout
+                android:padding="3dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView android:id="@+id/store_address"
@@ -46,6 +50,19 @@
                     android:textStyle="normal"/>
             </LinearLayout>
             <LinearLayout
+                android:padding="3dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView android:id="@+id/store_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="12sp"
+                    android:textStyle="normal"
+                    android:text="3548 532890"/>
+            </LinearLayout>
+            <LinearLayout
+                android:padding="3dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView android:id="@+id/store_direction"
