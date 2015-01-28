@@ -19,6 +19,7 @@ import android.text.SpannableString;
 import android.view.Window;
 import android.widget.TextView;
 
+import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.AndroidOs;
 import com.bitdubai.wallet_platform_api.CantStartPlatformException;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.wallet_platform_core.Platform;
@@ -106,7 +107,10 @@ public class MyApplication extends Application {
 
         try {
 
-            mPlatform.start(this);
+
+            mPlatform.setContext(this);
+            mPlatform.setOs(new AndroidOs());
+            mPlatform.start();
 
            //Context mContext;
            // mContext = this.getApplicationContext();

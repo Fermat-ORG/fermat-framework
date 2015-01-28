@@ -113,27 +113,40 @@ public class Platform  {
     }
 
     Object context;
+    Os os;
 
 
+    public void Platform () {
 
-    public void Platform (Object context) {
-
-        /**
-         * Somebody is starting the com.bitdubai.platform. The com.bitdubai.platform is portable. That somebody is OS dependent and has access to
-         * the OS. I have to transport a reference to that somebody to the OS subsystem in other to allow it to access
-         * the OS through this reference.
-         */
-
-        this.context = context;
-
-        /**
+         /**
          * The event monitor is intended to handle exceptions on listeners, in order to take appropiate action.
          */
 
         eventMonitor = new PlatformEventMonitor();
     }
 
-    public void start(Object context) throws CantStartPlatformException {
+    /**
+     * Somebody is starting the com.bitdubai.platform. The com.bitdubai.platform is portable. That somebody is OS dependent and has access to
+     * the OS. I have to transport a reference to that somebody to the OS subsystem in other to allow it to access
+     * the OS through this reference.
+     */
+
+    public void setContext (Object context){
+        this.context = context;
+    }
+
+    /**
+     * An unresolved bug in either Android or Gradle does not allow us to create the os object on a library outside the
+     * main module. While this situation persists, we will create it inside the wallet package and receive it throw this
+     * method.
+     */
+
+    public void setOs (Os os){
+        this.os = os;
+    }
+
+
+    public void start() throws CantStartPlatformException {
 
         /**
          * Here I will be starting all the platforms layers. It is required that none of them fails. That does not mean
@@ -169,7 +182,15 @@ public class Platform  {
          * The OS and Event Manager will need to be handled to several other objects. I will have them handly.
          */
 
-        Os os = ((OsLayer) mOsLayer).getOs();
+        if (os == null) {
+            /**
+             * In Android, an unresolved bug doesn't allow us to create the Os object where it should be created and we
+             * receive it from the wallet module. If we did not receive it we follow the standard procedure.
+             */
+
+            this.os  = ((OsLayer) mOsLayer).getOs();
+        }
+
         EventManager eventManager = ((EventLayer) mEventLayer).getEventManager();
 
         /**
