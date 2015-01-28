@@ -1,11 +1,11 @@
-package com.bitdubai.wallet_platform_dev.layer._3_os.android.developer.btdubai;
+package com.bitdubai.wallet_platform_dev.layer._3_os.android.developer.bitdubai;
 
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.TimeFrequency;
 import com.bitdubai.wallet_platform_api.layer._1_definition.license.Licensor;
 import com.bitdubai.wallet_platform_api.layer._3_os.Os;
 import com.bitdubai.wallet_platform_api.layer._3_os.OsDeveloper;
-//import com.bitdubai.platform.layer._3_os.android.developer.bitdubai.version_1.AndroidOs;
+
 
 /**
  * Created by ciencias on 03.01.15.

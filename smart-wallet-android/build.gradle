@@ -46,4 +46,5 @@ dependencies {
     compile project(':wallet-platform-core')
     compile project(':wallet-platform-api')
 
+
 }

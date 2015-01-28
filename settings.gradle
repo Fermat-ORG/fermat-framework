@@ -1,3 +1,4 @@
+include ':TestApp'
 
 include 'smart-wallet-android'
 

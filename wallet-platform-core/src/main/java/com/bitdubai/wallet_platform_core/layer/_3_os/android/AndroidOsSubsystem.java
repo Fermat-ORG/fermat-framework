@@ -3,7 +3,7 @@ package com.bitdubai.wallet_platform_core.layer._3_os.android;
 import com.bitdubai.wallet_platform_api.layer._3_os.Os;
 import com.bitdubai.wallet_platform_api.layer._3_os.OsSubsystem;
 import com.bitdubai.wallet_platform_api.layer._3_os.WrongOsException;
-import com.bitdubai.wallet_platform_dev.layer._3_os.android.developer.btdubai.DeveloperBitDubai;
+import com.bitdubai.wallet_platform_dev.layer._3_os.android.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by ciencias on 30.12.14.

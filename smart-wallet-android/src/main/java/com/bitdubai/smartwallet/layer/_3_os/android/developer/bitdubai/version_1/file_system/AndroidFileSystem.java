@@ -1,6 +1,7 @@
-package com.bitdubai.wallet_platform_core.layer._3_os.android.developer.bitdubai.version_1.file_system;
+package com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system;
 
 import android.content.Context;
+import com.bitdubai.wallet_platform_api.layer._3_os.*;
 
 /**
  * Created by ciencias on 20.01.15.
@@ -10,7 +11,7 @@ public class AndroidFileSystem implements FileSystem {
     Context mContext;
 
     @Override
-    public PlatformFile getFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException{
+    public PlatformFile getFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException {
 
         AndroidFile newFile = new AndroidFile(mContext, directoryName, fileName, privacyLevel, lifeSpan);
 
