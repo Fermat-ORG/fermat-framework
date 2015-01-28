@@ -83,7 +83,8 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                     rowView = inflater.inflate(R.layout.shell_shop_desktop_activity_navigation_drawer_row_layout, parent, false);
                     break;
                 case "PublisherActivity":
-                    rowView = inflater.inflate(R.layout.shell_shop_desktop_activity_navigation_drawer_row_layout, parent, false);
+                    rowView = inflater.inflate(R.layout.wallet_framework_activity_framework_navigation_drawer_row_layout, parent, false);
+                    break;
                 default:
                     rowView = inflater.inflate(R.layout.wallet_framework_activity_framework_navigation_drawer_row_layout, parent, false);
                     break;
@@ -114,9 +115,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                         break;
                 }
 
-            }
-            else if (MyApplication.getActivityId() == "PublisherActivity")
-            {
+            }else if (MyApplication.getActivityId() == "PublisherActivity"){
                 switch (position)
                 {
                     case 1:

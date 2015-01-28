@@ -115,6 +115,7 @@ public class NavigationDrawerFragment extends Fragment {
             mDrawerListView.setAdapter(new NavigationDrawerArrayAdapter(
                     getActivity(),
                     new String[]{
+
                             getString(R.string.title_section12),
                             getString(R.string.title_section13),
                             getString(R.string.title_section14),
@@ -130,8 +131,8 @@ public class NavigationDrawerFragment extends Fragment {
             mDrawerListView.setAdapter(new NavigationDrawerArrayAdapter(
                     getActivity(),
                     new String[]{
+                            getString(R.string.title_section1),
                             getString(R.string.title_section17),
-                            getString(R.string.title_section2),
                             getString(R.string.title_section3),
                             getString(R.string.title_section4),
                             getString(R.string.title_section5),
@@ -269,8 +270,7 @@ public class NavigationDrawerFragment extends Fragment {
                 intent = new Intent(super.getActivity(), PublisherActivity.class);
                 startActivity(intent);
             }
-        }
-        if(MyApplication.getActivityId()=="PublisherActivity") {
+        }else if(MyApplication.getActivityId()=="PublisherActivity") {
             if (position == 1)
             {
                 Intent intent;
@@ -278,12 +278,12 @@ public class NavigationDrawerFragment extends Fragment {
 
                 startActivity(intent);
             }
-        }
-
-        if (position == 1){
-            Intent intent;
-            intent = new Intent(super.getActivity(), ContactsActivity.class);
-            startActivity(intent);
+        }else {
+            if (position == 1) {
+                Intent intent;
+                intent = new Intent(super.getActivity(), ContactsActivity.class);
+                startActivity(intent);
+            }
         }
 
     }
