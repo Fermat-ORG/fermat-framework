@@ -36,26 +36,6 @@
                     android:layout_height="wrap_content"
                     android:text="store name"
                     android:layout_weight="1"/>
-                <TextView android:id="@+id/deal_type"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Voucher permission"
-                    android:textSize="12sp"
-                    android:textStyle="normal"
-                    android:gravity="center"/>
-            </LinearLayout>
-            <LinearLayout
-                android:padding="3dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <TextView android:id="@+id/store_address"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="address"
-                    android:textSize="12sp"
-                    android:textStyle="normal"/>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -78,6 +58,18 @@
                         android:text="end date"
                         android:gravity="end"/>
                 </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:padding="3dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TextView android:id="@+id/store_address"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="address"
+                    android:textSize="12sp"
+                    android:textStyle="normal"/>
             </LinearLayout>
             <LinearLayout
                 android:padding="3dp"
