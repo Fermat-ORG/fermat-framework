@@ -73,8 +73,6 @@ public class AndroidFile implements PlatformFile {
             throw new CantLoadFileException(mFileName);
         }
 
-
-
         FileInputStream inputStream;
 
         try {
