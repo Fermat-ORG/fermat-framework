@@ -44,7 +44,7 @@ public  class PublisherShopsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.publisher_shops, container, false);
 
-        TextView number = (TextView) rootView.findViewById(R.id.shops_associated);
+        TextView number = (TextView) rootView.findViewById(R.id.shops_affiliated);
         number.setTypeface(MyApplication.getDefaultTypeface());
 
         return rootView;

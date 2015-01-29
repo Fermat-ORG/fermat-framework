@@ -5,12 +5,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ExpandableListView;
 import android.widget.TextView;
-
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.android.app.common.version_1.classes.MyApplication;
-
 
 public  class ShopShopFragment extends Fragment {
 
@@ -18,7 +15,6 @@ public  class ShopShopFragment extends Fragment {
 
     View rootView;
 
-    ExpandableListView lv;
 
     public static ShopShopFragment newInstance(int position) {
         ShopShopFragment f = new ShopShopFragment();
@@ -30,8 +26,6 @@ public  class ShopShopFragment extends Fragment {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
     }
 
     @Override

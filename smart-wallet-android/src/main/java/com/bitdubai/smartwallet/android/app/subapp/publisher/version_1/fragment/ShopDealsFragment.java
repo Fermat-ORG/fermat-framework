@@ -49,7 +49,7 @@ public  class ShopDealsFragment extends Fragment {
         };
 
         Description = new String[]{
-                "This store has permission to accept all vouchers in our name."
+                "This store has permission to accept all vouchers released by us."
         };
 
         Status = new String[]{
@@ -138,7 +138,7 @@ public  class ShopDealsFragment extends Fragment {
 
         @Override
         public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        convertView = inf.inflate(R.layout.associated_shops_header, parent, false);
+        convertView = inf.inflate(R.layout.affiliated_shops_header, parent, false);
 
             return convertView;
         }

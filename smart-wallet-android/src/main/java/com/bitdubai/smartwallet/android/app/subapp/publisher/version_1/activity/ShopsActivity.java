@@ -26,7 +26,7 @@ import android.widget.TextView;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.android.app.common.version_1.classes.MyApplication;
 import com.bitdubai.smartwallet.android.app.common.version_1.classes.PagerSlidingTabStrip;
-import com.bitdubai.smartwallet.android.app.subapp.publisher.version_1.fragment.ShopsAssociatedShopsFragment;
+import com.bitdubai.smartwallet.android.app.subapp.publisher.version_1.fragment.ShopsAffiliatedShopsFragment;
 import com.bitdubai.smartwallet.android.app.subapp.publisher.version_1.fragment.ShopsAllShopsFragment;
 import com.bitdubai.smartwallet.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.RequestsSentActivity;
 import com.bitdubai.smartwallet.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyLayoutInflaterFactory;
@@ -260,7 +260,7 @@ public class ShopsActivity extends FragmentActivity
 
         private String[] titles;
         private String[] titles_1 = { };
-        private String[] titles_2 = {  "Associated Shops","All Shops"};
+        private String[] titles_2 = {  "Affiliated Shops","All Shops"};
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -288,13 +288,13 @@ public class ShopsActivity extends FragmentActivity
             Fragment currentFragment;
             switch (position) {
                 case 0:
-                    currentFragment = ShopsAssociatedShopsFragment.newInstance(position);
+                    currentFragment = ShopsAffiliatedShopsFragment.newInstance(position);
                     break;
                 case 1:
                     currentFragment = ShopsAllShopsFragment.newInstance(position);
                     break;
                 default:
-                    currentFragment = ShopsAssociatedShopsFragment.newInstance(position);
+                    currentFragment = ShopsAffiliatedShopsFragment.newInstance(position);
                     break;
             }
             return currentFragment;

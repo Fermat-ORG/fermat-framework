@@ -17,7 +17,7 @@ import com.bitdubai.smartwallet.android.app.common.version_1.classes.MyApplicati
 import com.bitdubai.smartwallet.android.app.subapp.publisher.version_1.activity.ShopActivity;
 
 
-public  class ShopsAssociatedShopsFragment extends Fragment {
+public  class ShopsAffiliatedShopsFragment extends Fragment {
 
     private static final String ARG_POSITION = "position";
 
@@ -40,7 +40,7 @@ public  class ShopsAssociatedShopsFragment extends Fragment {
     private String[] Start;
 
 
-    public static ShopsAssociatedShopsFragment newInstance(int position) {ShopsAssociatedShopsFragment f = new ShopsAssociatedShopsFragment();
+    public static ShopsAffiliatedShopsFragment newInstance(int position) {ShopsAffiliatedShopsFragment f = new ShopsAffiliatedShopsFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -162,14 +162,14 @@ public  class ShopsAssociatedShopsFragment extends Fragment {
 
         @Override
         public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        convertView = inf.inflate(R.layout.associated_shops_header, parent, false);
+        convertView = inf.inflate(R.layout.affiliated_shops_header, parent, false);
 
             return convertView;
         }
 
         @Override
         public View getGroupView(final int groupPosition, final boolean isExpanded, View convertView, final ViewGroup parent) {
-            convertView = inf.inflate(R.layout.associated_shops_header, parent, false);
+            convertView = inf.inflate(R.layout.affiliated_shops_header, parent, false);
             ViewHolder address;
             ViewHolder direction;
             ViewHolder start;
@@ -195,10 +195,6 @@ public  class ShopsAssociatedShopsFragment extends Fragment {
                     photo.setImageResource(R.drawable.store_2);
                     break;
             }
-
-            ViewHolder type = new ViewHolder();
-            type.text  = (TextView) convertView.findViewById(R.id.deal_type);
-            type.text.setTypeface(MyApplication.getDefaultTypeface());
 
             names = new ViewHolder();
             names.text = (TextView) convertView.findViewById(R.id.store_name);

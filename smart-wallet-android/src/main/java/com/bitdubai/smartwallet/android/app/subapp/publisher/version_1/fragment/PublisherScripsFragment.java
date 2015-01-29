@@ -51,7 +51,7 @@ public  class PublisherScripsFragment extends Fragment {
 
     private String[][] Shops;
 
-    private String[][] Associated;
+    private String[][] Affiliated;
 
     private String[][] Received;
 
@@ -71,9 +71,9 @@ public  class PublisherScripsFragment extends Fragment {
 
         items = new String[]{"Voucher","Voucher","Voucher","Voucher"};
 
-        unit_amount = new String[]{"12"+"M","20"+"M","15"+"M","20"+"M"};
+        unit_amount = new String[]{"12"+"M","20"+"M","15"+"M","5"+"M"};
 
-        Per_User = new String[]{"$"+"10.00","$"+"5.00","$"+"12.00","$"+"4.00"};
+        Per_User = new String[]{"$"+"10.00","$"+"5.00","$"+"12.00","$"+"16.00"};
 
         Investment = new String[]{"$"+"120"+"M","$"+"100"+"M","$"+"180"+"M","$"+"80"+"M"};
 
@@ -85,63 +85,63 @@ public  class PublisherScripsFragment extends Fragment {
 
                 {"20"+"M"},
                 {"20"+"M"},
-                {"20"+"M"},
-                {"20"+"M"}
+                {"15"+"M"},
+                {"5"+"M"}
         };
         Target = new String[][]{
                 {"20"+"M"+" "+"100"+"%"},
                 {"20"+"M"+" "+"100"+"%"},
-                {"20"+"M"+" "+"100"+"%"},
-                {"20"+"M"+" "+"100"+"%"}
+                {"10"+"M"+" "+"66.6"+"%"},
+                {"5"+"M"+" "+"100"+"%"}
         };
         Received_by = new String[][]{
                 {"20"+"M"+" "+"100"+"%"},
                 {"20"+"M"+" "+"100"+"%"},
-                {"20"+"M"+" "+"100"+"%"},
-                {"19"+"M"+" "+"95"+"%"}
+                {"8.8"+"M"+" "+"58.6"+"%"},
+                {"4.7"+"M"+" "+"94"+"%"}
         };
         Seen = new String[][]{
                 {"20"+"M"+" "+"100"+"%"},
                 {"20"+"M"+" "+"100"+"%"},
-                {"20"+"M"+" "+"100"+"%"},
-                {"12"+"M"+" "+"60"+"%"}
+                {"6"+"M"+" "+"40"+"%"},
+                {"4.2"+"M"+" "+"84"+"%"}
         };
         Sold = new String[][]{
                 {"20"+"M"+" "+"100"+"%"},
                 {"20"+"M"+" "+"100"+"%"},
-                {"20"+"M"+" "+"100"+"%"},
-                {"1.5"+"M"+" "+"7.5"+"%"}
+                {"2.3"+"M"+" "+"15.3"+"%"},
+                {"1.1"+"M"+" "+"22"+"%"}
 
         };
         Cashed_out = new String[][]{
                 {"20"+"M"+" "+"100"+"%"},
                 {"20"+"M"+" "+"100"+"%"},
-                {"20"+"M"+" "+"100"+"%"},
-                {"900"+"k"+" "+"4.5"+"%"},
+                {"400"+"K"+" "+"2.6"+"%"},
+                {"900"+"K"+" "+"18"+"%"},
         };
         Used = new String[][]{
                 {"20"+"M"+" "+"100"+"%"},
                 {"20"+"M"+" "+"100"+"%"},
-                {"20"+"M"+" "+"100"+"%"},
-                {"7"+"M"+" "+"35"+"%"},
+                {"4"+"M"+" "+"26.6"+"%"},
+                {"2.3"+"M"+" "+"46"+"%"},
         };
         Shops = new String[][]{
-                {"120"},
-                {"120"},
-                {"120"},
-                {"120"},
+                {"110"},
+                {"140"},
+                {"70"},
+                {"90"},
         };
-        Associated = new String[][]{
-                {"90"},
-                {"90"},
-                {"90"},
-                {"90"},
+        Affiliated = new String[][]{
+                {"171"},
+                {"171"},
+                {"171"},
+                {"171"},
         };
         Received = new String[][]{
                 {"28"+"M"},
                 {"28"+"M"},
                 {"28"+"M"},
-                {"28"+"M"},
+                {"36.8"+"M"},
         };
     }
 
@@ -233,7 +233,7 @@ public  class PublisherScripsFragment extends Fragment {
             ViewHolder cashed_out;
             ViewHolder seen;
             ViewHolder received;
-            ViewHolder associated;
+            ViewHolder affiliated;
             ViewHolder shops;
 
             text_1 = new ViewHolder();
@@ -279,52 +279,52 @@ public  class PublisherScripsFragment extends Fragment {
             User_Base = new ViewHolder();
             User_Base.text = (TextView) convertView.findViewById(R.id.user_base);
             User_Base.text.setTypeface(MyApplication.getDefaultTypeface());
-            User_Base.text.setText(Base[groupPosition][childPosition].toString());
+            User_Base.text.setText(Base[groupPosition][childPosition]);
 
             seen = new ViewHolder();
             seen.text = (TextView) convertView.findViewById(R.id.views_amount);
             seen.text.setTypeface(MyApplication.getDefaultTypeface());
-            seen.text.setText(Seen[groupPosition][childPosition].toString());
+            seen.text.setText(Seen[groupPosition][childPosition]);
 
             sold = new ViewHolder();
             sold.text = (TextView) convertView.findViewById(R.id.sold_amount);
             sold.text.setTypeface(MyApplication.getDefaultTypeface());
-            sold.text.setText(Sold[groupPosition][childPosition].toString());
+            sold.text.setText(Sold[groupPosition][childPosition]);
 
             cashed_out = new ViewHolder();
             cashed_out.text = (TextView) convertView.findViewById(R.id.cashed_out_amount);
             cashed_out.text.setTypeface(MyApplication.getDefaultTypeface());
-            cashed_out.text.setText(Cashed_out[groupPosition][childPosition].toString());
+            cashed_out.text.setText(Cashed_out[groupPosition][childPosition]);
 
             used = new ViewHolder();
             used.text = (TextView) convertView.findViewById(R.id.used_amount);
             used.text.setTypeface(MyApplication.getDefaultTypeface());
-            used.text.setText(Used[groupPosition][childPosition].toString());
+            used.text.setText(Used[groupPosition][childPosition]);
 
             User_Target = new ViewHolder();
             User_Target.text = (TextView) convertView.findViewById(R.id.user_target);
             User_Target.text.setTypeface(MyApplication.getDefaultTypeface());
-            User_Target.text.setText(Target[groupPosition][childPosition].toString());
+            User_Target.text.setText(Target[groupPosition][childPosition]);
 
             received_by = new ViewHolder();
             received_by.text = (TextView) convertView.findViewById(R.id.users_reached);
             received_by.text.setTypeface(MyApplication.getDefaultTypeface());
-            received_by.text.setText(Received_by[groupPosition][childPosition].toString());
+            received_by.text.setText(Received_by[groupPosition][childPosition]);
 
             received = new ViewHolder();
             received.text = (TextView) convertView.findViewById(R.id.received_scrips);
             received.text.setTypeface(MyApplication.getDefaultTypeface());
-            received.text.setText(Received[groupPosition][childPosition].toString());
+            received.text.setText(Received[groupPosition][childPosition]);
 
             shops = new ViewHolder();
             shops.text = (TextView) convertView.findViewById(R.id.shops_amount);
             shops.text.setTypeface(MyApplication.getDefaultTypeface());
-            shops.text.setText(Shops[groupPosition][childPosition].toString());
+            shops.text.setText(Affiliated[groupPosition][childPosition]);
 
-            associated = new ViewHolder();
-            associated.text = (TextView) convertView.findViewById(R.id.acepting_shops);
-            associated.text.setTypeface(MyApplication.getDefaultTypeface());
-            associated.text.setText(Associated[groupPosition][childPosition].toString());
+            affiliated = new ViewHolder();
+            affiliated.text = (TextView) convertView.findViewById(R.id.acepting_shops);
+            affiliated.text.setTypeface(MyApplication.getDefaultTypeface());
+            affiliated.text.setText(Shops[groupPosition][childPosition]);
 
             return convertView;
         }
@@ -343,6 +343,22 @@ public  class PublisherScripsFragment extends Fragment {
             ViewHolder text_2;
             ViewHolder text_3;
             image = (ImageView) convertView.findViewById(R.id.icon);
+
+            switch (groupPosition)
+            {
+                case 0:
+                    image.setImageResource(R.drawable.voucher_image);
+                    break;
+                case 1:
+                    image.setImageResource(R.drawable.voucher_image_1);
+                    break;
+                case 2:
+                    image.setImageResource(R.drawable.voucher_image);
+                    break;
+                case 3:
+                    image.setImageResource(R.drawable.voucher_image_1);
+                    break;
+            }
 
             item = new ViewHolder();
             item.text = (TextView) convertView.findViewById(R.id.scrip);

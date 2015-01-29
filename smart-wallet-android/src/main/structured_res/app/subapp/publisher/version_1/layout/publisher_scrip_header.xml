@@ -5,7 +5,7 @@
     android:padding="6dp">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="45dp"
+        android:layout_height="70dp"
         android:gravity="center_vertical"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
@@ -13,7 +13,7 @@
         android:layout_marginTop="2dp">
         <TextView android:id="@+id/scrip_description"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:text="This is a description of this scrip, this scrip has a fixed value wich you can reedem."
             android:layout_weight="1"
             android:textColor="#FF666666"

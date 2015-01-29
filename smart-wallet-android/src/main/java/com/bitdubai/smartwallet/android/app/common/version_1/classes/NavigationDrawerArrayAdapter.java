@@ -121,33 +121,6 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                     case 1:
                         imageView.setImageResource(R.drawable.ic_action_store);
                         break;
-                    case 2:
-                        imageView.setImageResource(R.drawable.ic_action_accounts);
-                        break;
-                    case 3:
-                        imageView.setImageResource(R.drawable.ic_action_bank);
-                        break;
-                    case 4:
-                        imageView.setImageResource(R.drawable.ic_action_coupon);
-                        break;
-                    case 5:
-                        imageView.setImageResource(R.drawable.ic_action_discount);
-                        break;
-                    case 6:
-                        imageView.setImageResource(R.drawable.ic_action_voucher);
-                        break;
-                    case 7:
-                        imageView.setImageResource(R.drawable.ic_action_gift_card);
-                        break;
-                    case 8:
-                        imageView.setImageResource(R.drawable.ic_action_clone);
-                        break;
-                    case 9:
-                        imageView.setImageResource(R.drawable.ic_action_child);
-                        break;
-                    case 10:
-                        imageView.setImageResource(R.drawable.ic_action_exit);
-                        break;
                 }
 
             }else{

@@ -6,12 +6,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseExpandableListAdapter;
-import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
-
+import com.bitdubai.smartwallet.android.app.common.version_1.classes.MyApplication;
 
 public  class PublisherWalletUsersFragment extends Fragment {
 
@@ -19,11 +17,8 @@ public  class PublisherWalletUsersFragment extends Fragment {
 
     View rootView;
 
-    ExpandableListView lv;
+    private String[] item;
 
-    private String[] contacts;
-
-    private String[][] transactions;
 
 
 
@@ -40,107 +35,27 @@ public  class PublisherWalletUsersFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        contacts = new String[]{ "", "Guillermo Villanueva", "Luis Fernando Molina", "Pedro Perrotta", "Mariana Duyos"};
+        item = new String[]{""};
 
-        transactions = new String[][]{
-
-                {},
-                {"Flat rent","Flat rent","Flat rent","interest paid :(","Flat rent","Car repair","Invoice #2,356 that should have been paid on August"},
-                {"Plasma TV","New chair","New desk"},
-                {"Test address"},
-                {"More pictures"}
-        };
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.publisher_expandablelisview_inflater, container, false);
+        rootView = inflater.inflate(R.layout.publisher_wallet_user, container, false);
+        TextView item_1;
+        TextView item_2;
+        TextView item_3;
+
+
+        item_1 = (TextView) rootView.findViewById(R.id.item_1);
+        item_1.setTypeface(MyApplication.getDefaultTypeface());
+        item_2 = (TextView) rootView.findViewById(R.id.item_2);
+        item_2.setTypeface(MyApplication.getDefaultTypeface());
+        item_3 = (TextView) rootView.findViewById(R.id.item_3);
+        item_3.setTypeface(MyApplication.getDefaultTypeface());
+
 
         return rootView;
-    }
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        lv = (ExpandableListView) view.findViewById(R.id.expListView);
-        lv.setAdapter(new ExpandableListAdapter(contacts, transactions));
-        lv.setGroupIndicator(null);
-
-        lv.setOnItemClickListener(null);
-
-
-    }
-
-    public class ExpandableListAdapter extends BaseExpandableListAdapter {
-
-        private final LayoutInflater inf;
-        private String[] contacts;
-        private String[][] transactions;
-
-        public ExpandableListAdapter(String[] contacts, String[][] transactions) {
-            this.contacts = contacts;
-            this.transactions = transactions;
-            inf = LayoutInflater.from(getActivity());
-        }
-
-
-        @Override
-        public int getGroupCount() {
-            return contacts.length;
-        }
-
-        @Override
-        public int getChildrenCount(int groupPosition) {
-            return transactions[groupPosition].length;
-        }
-
-        @Override
-        public Object getGroup(int groupPosition) {
-            return contacts[groupPosition];
-        }
-
-        @Override
-        public Object getChild(int groupPosition, int childPosition) {
-            return transactions[groupPosition][childPosition];
-        }
-
-        @Override
-        public long getGroupId(int groupPosition) {
-            return groupPosition;
-        }
-
-        @Override
-        public long getChildId(int groupPosition, int childPosition) {
-            return childPosition;
-        }
-
-        @Override
-        public boolean hasStableIds() {
-            return true;
-        }
-
-        @Override
-        public View getChildView(int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-            convertView = inf.inflate(R.layout.publisher_wallet_users_detail, parent, false);
-
-            return convertView;
-        }
-
-        @Override
-        public View getGroupView(final int groupPosition, final boolean isExpanded, View convertView, final ViewGroup parent) {
-            convertView = inf.inflate(R.layout.publisher_wallet_users_header, parent, false);
-
-            return convertView;
-        }
-        @Override
-        public boolean isChildSelectable(int groupPosition, int childPosition) {
-            return true;
-        }
-
-        private class ViewHolder {
-            TextView text;
-        }
     }
 }
