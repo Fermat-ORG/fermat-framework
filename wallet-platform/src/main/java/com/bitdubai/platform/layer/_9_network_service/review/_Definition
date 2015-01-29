@@ -1,2 +1,0 @@
-This service allows objects to make reviews of other objects. It will store locally the information related to reviews
-of objects derived from local users and it will service requests from local and remote objects as well.

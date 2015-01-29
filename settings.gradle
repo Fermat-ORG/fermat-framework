@@ -1,2 +1,10 @@
-include 'wallet-platform', 'smart-wallet-android'
+include ':TestApp'
+
+include 'smart-wallet-android'
+
+include 'wallet-platform-core'
+
+include 'wallet-platform-api'
+
+include 'wallet-platform-os-android-bitdubai'
 

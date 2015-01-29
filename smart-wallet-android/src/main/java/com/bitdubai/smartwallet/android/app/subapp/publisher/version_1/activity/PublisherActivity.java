@@ -20,15 +20,13 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.android.app.common.version_1.classes.MyApplication;
 import com.bitdubai.smartwallet.android.app.common.version_1.classes.PagerSlidingTabStrip;
-import com.bitdubai.smartwallet.android.app.subapp.publisher.version_1.fragment.ScripsFragment;
-import com.bitdubai.smartwallet.android.app.subapp.publisher.version_1.fragment.ShopsFragment;
-import com.bitdubai.smartwallet.android.app.subapp.publisher.version_1.fragment.WalletUsersFragment;
-import com.bitdubai.smartwallet.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.RequestsSentActivity;
+import com.bitdubai.smartwallet.android.app.subapp.publisher.version_1.fragment.PublisherScripsFragment;
+import com.bitdubai.smartwallet.android.app.subapp.publisher.version_1.fragment.PublisherShopsFragment;
+import com.bitdubai.smartwallet.android.app.subapp.publisher.version_1.fragment.PublisherWalletUsersFragment;
 import com.bitdubai.smartwallet.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyLayoutInflaterFactory;
 
 public class PublisherActivity extends FragmentActivity
@@ -112,28 +110,6 @@ public class PublisherActivity extends FragmentActivity
     }
 
 
-
-
-    //***
-    public void onSectionAttached(int number) {
-        switch (number) {
-            case 1:
-                mTitle = getString(R.string.title_section1);
-                break;
-            case 2:
-                mTitle = getString(R.string.title_section2);
-                break;
-            case 3:
-                mTitle = getString(R.string.title_section3);
-                break;
-        }
-    }
-
-    //***
-
-
-
-
     public boolean onCreateOptionsMenu(Menu menu) {
 
         MenuInflater inflater = getMenuInflater();
@@ -157,16 +133,14 @@ public class PublisherActivity extends FragmentActivity
                 TabbedDialogFragment dialog = new TabbedDialogFragment();
                 dialog.show(getSupportFragmentManager(), "QuickContactFragment");
                 return true;
-*/
+
             case R.id.action_requests_sent:
                 Intent intent;
                 intent = new Intent(this, RequestsSentActivity.class);
                 startActivity(intent);
                 return true;
-
-
+*/
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -215,13 +189,6 @@ public class PublisherActivity extends FragmentActivity
         }
 
         currentColor = newColor;
-
-    }
-
-    public void onColorClicked(View v) {
-
-        int color = Color.parseColor(v.getTag().toString());
-        changeColor(color);
 
     }
 
@@ -288,16 +255,16 @@ public class PublisherActivity extends FragmentActivity
             Fragment currentFragment;
             switch (position) {
                 case 0:
-                    currentFragment = WalletUsersFragment.newInstance(position);
+                    currentFragment = PublisherWalletUsersFragment.newInstance(position);
                     break;
                 case 1:
-                    currentFragment = ShopsFragment.newInstance(position);
+                    currentFragment = PublisherShopsFragment.newInstance(position);
                     break;
                 case 2:
-                    currentFragment = ScripsFragment.newInstance(position);
+                    currentFragment = PublisherScripsFragment.newInstance(position);
                     break;
                 default:
-                    currentFragment = WalletUsersFragment.newInstance(position);
+                    currentFragment = PublisherWalletUsersFragment.newInstance(position);
                     break;
             }
             return currentFragment;
