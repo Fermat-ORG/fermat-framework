@@ -342,18 +342,18 @@ public  class PublisherScripsFragment extends Fragment {
             ViewHolder text_1;
             ViewHolder text_2;
             ViewHolder text_3;
-            image = (ImageView) convertView.findViewById(R.id.icon);
+            image = (ImageView) convertView.findViewById(R.id.card_icon);
 
             switch (groupPosition)
             {
                 case 0:
-                    image.setImageResource(R.drawable.voucher_image);
+                    image.setImageResource(R.drawable.voucher_image_4);
                     break;
                 case 1:
-                    image.setImageResource(R.drawable.voucher_image_1);
+                    image.setImageResource(R.drawable.voucher_image_3);
                     break;
                 case 2:
-                    image.setImageResource(R.drawable.voucher_image);
+                    image.setImageResource(R.drawable.voucher_image );
                     break;
                 case 3:
                     image.setImageResource(R.drawable.voucher_image_1);
