@@ -1,8 +1,10 @@
-include 'smart-wallet-android'
+include 'smart-wallet-android', ':wallet-platform-core'
 
 include 'wallet-platform-core'
 
 include 'wallet-platform-api'
 
 include 'wallet-platform-os-android-bitdubai'
+
+include 'wallet-platform-crypto-network-bitcoin-bitdubai'
 
