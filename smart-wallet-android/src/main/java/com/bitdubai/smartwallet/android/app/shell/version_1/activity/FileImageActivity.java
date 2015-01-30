@@ -7,7 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.os.Bundle;
-
+import android.content.ContentValues;
 import android.os.Environment;
 import android.support.v4.app.FragmentActivity;
 
@@ -29,6 +29,7 @@ import com.bitdubai.wallet_platform_api.layer._3_os.FilePrivacy;
 import com.bitdubai.wallet_platform_api.layer._3_os.CantPersistFileException;
 import android.content.Context;
 import android.widget.TextView;
+import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.database_system.AndroidDatabaseSystem;
 
 
 /**
@@ -117,6 +118,8 @@ public class FileImageActivity extends FragmentActivity {
             //load binary to memory
 
             AndroidFile filemanager = new AndroidFile(mContext,"","example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
+
+            filemanager.setContent("Text Content Test File Binary");
             filemanager.loadToMemory();
             TextView  result = (TextView)findViewById(R.id.result_text);
             result.setText("Binary loaded to Memory");
@@ -129,7 +132,167 @@ public class FileImageActivity extends FragmentActivity {
 
     }
 
+    public void onBinaryMediaClicked(View v) throws CantLoadFileException  {
+        try
+        {
+            //load binary to memory
+
+            AndroidFile filemanager = new AndroidFile(mContext,"","example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
+
+            filemanager.setContent("Text Content to Test File Binary");
+            filemanager.persistToMedia();
+            TextView  result = (TextView)findViewById(R.id.result_text);
+            result.setText("Binary loaded to Media");
+        }
+        catch (Exception e)
+        {
+            TextView  result = (TextView)findViewById(R.id.result_text);
+            result.setText("Error persist binary to memory");
+        }
+
+    }
+    public void onBinaryFromMemoryClicked(View v) throws CantLoadFileException  {
+        try
+        {
+            //load binary to memory
+
+            AndroidFile filemanager = new AndroidFile(mContext,"","example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
+
+            filemanager.loadFromMemory();
+
+            TextView  result = (TextView)findViewById(R.id.result_text);
+            result.setText( filemanager.getContent());
+        }
+        catch (Exception e)
+        {
+            TextView  result = (TextView)findViewById(R.id.result_text);
+            result.setText("Error Load binary From memory");
+        }
+
+    }
 
 
+    public void onBinaryFromMediaClicked(View v) throws CantLoadFileException  {
+        try
+        {
+            //load binary to memory
+
+            AndroidFile filemanager = new AndroidFile(mContext,"","example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
+
+            filemanager.loadFromMedia();
+
+            TextView  result = (TextView)findViewById(R.id.result_text);
+            result.setText( filemanager.getContent());
+        }
+        catch (Exception e)
+        {
+            TextView  result = (TextView)findViewById(R.id.result_text);
+            result.setText("Error Load binary From memory");
+        }
+
+    }
+
+    public void onCreateDBClicked(View v)   {
+        try
+        {
+            //create DB
+
+            AndroidDatabaseSystem dbmanager = new AndroidDatabaseSystem(mContext);
+
+            dbmanager.createDatabase("dbExample");
+
+            TextView  result = (TextView)findViewById(R.id.result_text);
+            result.setText("DB Created");
+        }
+        catch (Exception e)
+        {
+            TextView  result = (TextView)findViewById(R.id.result_text);
+            result.setText("Error Created DB");
+        }
+
+    }
+
+    public void onCreateTableClicked(View v)   {
+        try
+        {
+            //create DB
+
+            AndroidDatabaseSystem dbmanager = new AndroidDatabaseSystem(mContext);
+        String tableSchema =   "CREATE TABLE Table1 (Id INTEGER PRIMARY KEY, name TEXT, type TEXT)";
+            dbmanager.createTable("dbExample",tableSchema);
+
+            TextView  result = (TextView)findViewById(R.id.result_text);
+            result.setText("Table Created");
+        }
+        catch (Exception e)
+        {
+            TextView  result = (TextView)findViewById(R.id.result_text);
+            result.setText("Error Created Table");
+        }
+
+    }
+
+    public void onInsertRecordClicked(View v)   {
+        try
+        {
+            //create DB
+            ContentValues initialValues = new ContentValues();
+            initialValues.put("Id", 1);
+            initialValues.put("name", "NN");
+            initialValues.put("type", "A");
+
+            AndroidDatabaseSystem dbmanager = new AndroidDatabaseSystem(mContext);
+
+            dbmanager.insertRecord("dbExample","Table1",initialValues);
+
+            TextView  result = (TextView)findViewById(R.id.result_text);
+            result.setText("Record Inserted");
+        }
+        catch (Exception e)
+        {
+            TextView  result = (TextView)findViewById(R.id.result_text);
+            result.setText("Error Inserted Record");
+        }
+
+    }
+
+    public void onDeleteRecordClicked(View v)   {
+        try
+        {
+            AndroidDatabaseSystem dbmanager = new AndroidDatabaseSystem(mContext);
+
+            dbmanager.deleteRow("dbExample","Table1","Id=",1);
+
+            TextView  result = (TextView)findViewById(R.id.result_text);
+            result.setText("Record Inserted");
+        }
+        catch (Exception e)
+        {
+            TextView  result = (TextView)findViewById(R.id.result_text);
+            result.setText("Error Inserted Record");
+        }
+
+    }
+
+    public void onUpdateRecordClicked(View v)   {
+        try
+        {
+            AndroidDatabaseSystem dbmanager = new AndroidDatabaseSystem(mContext);
+            ContentValues initialValues = new ContentValues();
+
+            initialValues.put("name", "CC");
+            initialValues.put("type", "B");
+            dbmanager.updateRow("dbExample","Table1","Id=",1,initialValues);
+
+            TextView  result = (TextView)findViewById(R.id.result_text);
+            result.setText("Record Updated");
+        }
+        catch (Exception e)
+        {
+            TextView  result = (TextView)findViewById(R.id.result_text);
+            result.setText("Error Updated Record");
+        }
+
+    }
 
 }
