@@ -6,5 +6,4 @@ include 'wallet-platform-api'
 
 include 'wallet-platform-os-android-bitdubai'
 
-include 'wallet-platform-crypto-network-bitcoin-bitdubai'
 

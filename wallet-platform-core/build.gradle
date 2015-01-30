@@ -9,5 +9,6 @@ dependencies {
 
     compile project(':wallet-platform-api')
     compile project(':wallet-platform-os-android-bitdubai')
+
 }
 
