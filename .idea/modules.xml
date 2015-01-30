@@ -6,7 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/smart-wallet-android/smart-wallet-android.iml" filepath="$PROJECT_DIR$/smart-wallet-android/smart-wallet-android.iml" />
       <module fileurl="file://$PROJECT_DIR$/wallet-platform-api/wallet-platform-api.iml" filepath="$PROJECT_DIR$/wallet-platform-api/wallet-platform-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/wallet-platform-core/wallet-platform-core.iml" filepath="$PROJECT_DIR$/wallet-platform-core/wallet-platform-core.iml" />
-      <module fileurl="file://$PROJECT_DIR$/wallet-platform-os-android-bitdubai-anterior/wallet-platform-os-android-bitdubai-anterior.iml" filepath="$PROJECT_DIR$/wallet-platform-os-android-bitdubai-anterior/wallet-platform-os-android-bitdubai-anterior.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wallet-platform-os-android-bitdubai/wallet-platform-os-android-bitdubai.iml" filepath="$PROJECT_DIR$/wallet-platform-os-android-bitdubai/wallet-platform-os-android-bitdubai.iml" />
     </modules>
   </component>
 </project>

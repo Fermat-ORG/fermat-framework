@@ -9,7 +9,6 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/TestApp" />
             <option value="$PROJECT_DIR$/smart-wallet-android" />
             <option value="$PROJECT_DIR$/wallet-platform-api" />
             <option value="$PROJECT_DIR$/wallet-platform-core" />
