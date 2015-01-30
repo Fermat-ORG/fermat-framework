@@ -46,4 +46,10 @@
         android:orderInCategory="100"
         android:showAsAction="never"
         android:icon="@drawable/ic_action_settings"/>
+    <item
+        android:id="@+id/action_file"
+        android:title="File"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:icon="@drawable/ic_action_settings"/>
 </menu>
