@@ -1,5 +1,3 @@
-include ':TestApp'
-
 include 'smart-wallet-android'
 
 include 'wallet-platform-core'

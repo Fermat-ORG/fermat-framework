@@ -1,3 +1,6 @@
 [submodule "wallet-platform-os-android-bitdubai/wallet-platform-os-android-bitdubai"]
 	path = wallet-platform-os-android-bitdubai/wallet-platform-os-android-bitdubai
 	url = /home/ciencias/ideaProjects/bitDubai-system
+[submodule "wallet-platform-crypto-network-bitcoin-bitdubai"]
+	path = wallet-platform-crypto-network-bitcoin-bitdubai
+	url = ../wallet-platform-crypto-network-bitcoin-bitdubai.git
