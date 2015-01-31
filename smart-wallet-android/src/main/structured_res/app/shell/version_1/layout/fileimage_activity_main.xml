@@ -7,9 +7,8 @@
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
-        android:layout_width="match_parent"
+        android:layout_width="189dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
         android:id="@+id/bottomlinear"
         >
         <ImageView
@@ -42,7 +41,25 @@
             android:layout_height="wrap_content"
             android:text="Persist Binary in Media"
             android:id="@+id/button7"
-            android:layout_gravity="right" android:onClick="" />
+            android:layout_gravity="right" android:onClick="onBinaryMediaClicked" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create DataBase"
+            android:id="@+id/button10"
+            android:layout_gravity="right" android:onClick="onCreateDBClicked" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delete Record"
+            android:id="@+id/button13"
+            android:layout_gravity="right" android:onClick="onDeleteRecordClicked" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Update Record"
+            android:id="@+id/button15"
+            android:layout_gravity="right" android:onClick="onUpdateRecordClicked" />
         <TextView
             android:id="@+id/result_text"
             android:layout_width="wrap_content"
@@ -58,9 +75,9 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="432dp"
-        android:layout_weight="1"
-        android:id="@+id/toplinear">
+        android:layout_height="match_parent"
+        android:id="@+id/toplinear"
+        android:weightSum="1">
 
 
         <ImageView
@@ -75,14 +92,14 @@
             android:id="@+id/imageView5" />
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="171dp"
             android:layout_height="wrap_content"
             android:text="Load Image From Memory"
             android:id="@+id/button3"
             android:layout_gravity="right" android:onClick="onFromMemoryClicked" />
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="159dp"
             android:layout_height="wrap_content"
             android:text="Load Image From Media"
             android:id="@+id/button5"
@@ -99,36 +116,32 @@
             android:text=""
             />
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="175dp"
             android:layout_height="wrap_content"
             android:text="Load Binary From Memory"
             android:id="@+id/button8"
-            android:layout_gravity="right" android:onClick="" />
+            android:layout_gravity="right" android:onClick="onBinaryFromMemoryClicked" />
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="147dp"
             android:layout_height="wrap_content"
             android:text="Load Binary From Media"
             android:id="@+id/button9"
-            android:layout_gravity="right" android:onClick="" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:id="@+id/toplinear2">
-
-
-        <ImageView
-            android:layout_width="wrap_content"
+            android:layout_gravity="right" android:onClick="onBinaryFromMediaClicked" />
+        <Button
+            android:layout_width="157dp"
             android:layout_height="wrap_content"
-            android:id="@+id/imageView4" />
-
+            android:text="Create Table"
+            android:id="@+id/button11"
+            android:layout_gravity="right" android:onClick="onCreateTableClicked" />
+        <Button
+            android:layout_width="157dp"
+            android:layout_height="wrap_content"
+            android:text="Insert Record"
+            android:id="@+id/button12"
+            android:layout_gravity="right" android:onClick="onInsertRecordClicked" />
 
 
     </LinearLayout>
+
 </LinearLayout>

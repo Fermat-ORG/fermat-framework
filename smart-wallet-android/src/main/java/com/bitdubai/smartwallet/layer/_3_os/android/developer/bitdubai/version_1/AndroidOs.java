@@ -36,7 +36,7 @@ public class AndroidOs implements Os {
 
 
     public AndroidOs() {
-        mDatabaseSystem = new AndroidDatabaseSystem();
+        mDatabaseSystem = new AndroidDatabaseSystem(mContext);
         mFileSystem = new AndroidFileSystem();
     }
 
