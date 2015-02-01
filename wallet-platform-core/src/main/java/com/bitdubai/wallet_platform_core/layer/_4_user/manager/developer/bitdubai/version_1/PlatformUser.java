@@ -29,7 +29,7 @@ public class PlatformUser implements User,DealsWithFileSystem, DealsWithEvents {
     /**
      * UsesFileSystem Interface member variables.
      */
-    FileSystem fileSystem;
+    PluginFileSystem pluginFileSystem;
 
     /**
      * DealWithEvents Interface member variables.
@@ -132,8 +132,8 @@ public class PlatformUser implements User,DealsWithFileSystem, DealsWithEvents {
      */
 
     @Override
-    public void setFileSystem(FileSystem fileSystem) {
-        this.fileSystem = fileSystem;
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem = pluginFileSystem;
     }
 
 
@@ -167,7 +167,7 @@ public class PlatformUser implements User,DealsWithFileSystem, DealsWithEvents {
 
     private void persist() throws CantPersistUserException{
 
-        PlatformFile file = this.fileSystem.createFile(
+        PluginFile file = this.pluginFileSystem.createFile(
                 DeviceDirectory.LOCAL_USERS.getName(),
                 this.userId.toString(),
                 FilePrivacy.PRIVATE,
@@ -193,7 +193,7 @@ public class PlatformUser implements User,DealsWithFileSystem, DealsWithEvents {
     private void load() throws CantLoadUserException {
 
         try {
-            PlatformFile file = this.fileSystem.getFile(
+            PluginFile file = this.pluginFileSystem.getFile(
                     DeviceDirectory.LOCAL_USERS.getName(),
                     this.userId.toString(),
                     FilePrivacy.PRIVATE,

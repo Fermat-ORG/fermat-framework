@@ -3,17 +3,19 @@ package com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_
 import android.content.Context;
 import com.bitdubai.wallet_platform_api.layer._3_os.*;
 
+import java.util.UUID;
+
 /**
  * Created by ciencias on 20.01.15.
  */
-public class AndroidFileSystem implements FileSystem {
+public class AndroidPluginFileSystem implements PluginFileSystem {
 
     Context mContext;
 
     @Override
-    public PlatformFile getFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException {
+    public PluginFile getFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException {
 
-        AndroidFile newFile = new AndroidFile(mContext, directoryName, fileName, privacyLevel, lifeSpan);
+        AndroidFile newFile = new AndroidFile(ownerId, mContext, directoryName, fileName, privacyLevel, lifeSpan);
 
         try {
             newFile.loadToMemory();
@@ -27,9 +29,9 @@ public class AndroidFileSystem implements FileSystem {
     }
 
     @Override
-    public PlatformFile createFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) {
+    public PluginFile createFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) {
 
-        return new AndroidFile(mContext, directoryName, fileName, privacyLevel, lifeSpan);
+        return new AndroidFile(ownerId, mContext, directoryName, fileName, privacyLevel, lifeSpan);
     }
 
     @Override

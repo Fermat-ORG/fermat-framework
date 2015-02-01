@@ -1,9 +1,6 @@
 package com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Environment;
 
 import com.bitdubai.wallet_platform_api.layer._3_os.*;
 
@@ -13,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.UUID;
 /**
  * Created by ciencias on 22.01.15.
  */
@@ -22,7 +20,7 @@ import java.io.InputStreamReader;
  * PERMANENT.
  */
 
-public class AndroidFile implements PlatformFile {
+public class AndroidFile implements PluginFile {
 
     Context mContext;
     String mContent;
@@ -40,7 +38,7 @@ public class AndroidFile implements PlatformFile {
         mContent = content;
     }
 
-    public AndroidFile (Context context, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
+    public AndroidFile (UUID ownerId, Context context, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
 
         mContext = context;
         mFileName = fileName;

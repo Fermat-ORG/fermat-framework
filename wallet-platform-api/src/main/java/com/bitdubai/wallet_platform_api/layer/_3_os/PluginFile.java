@@ -1,9 +1,9 @@
 package com.bitdubai.wallet_platform_api.layer._3_os;
 
 /**
- * Created by ciencias on 01.02.15.
+ * Created by ciencias on 22.01.15.
  */
-public interface PlatformFile {
+public interface PluginFile {
 
     public String getContent ();
 
@@ -12,5 +12,5 @@ public interface PlatformFile {
     public void persistToMedia() throws CantPersistFileException;
 
     public void loadToMemory () throws CantLoadFileException;
-    
+
 }

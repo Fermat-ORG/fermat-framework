@@ -7,24 +7,20 @@ import com.bitdubai.wallet_platform_api.layer._3_os.CantLoadFileException;
 import com.bitdubai.wallet_platform_api.layer._3_os.CantPersistFileException;
 import com.bitdubai.wallet_platform_api.layer._3_os.FileLifeSpan;
 import com.bitdubai.wallet_platform_api.layer._3_os.FilePrivacy;
-import com.bitdubai.wallet_platform_api.layer._3_os.PlatformFile;
+import com.bitdubai.wallet_platform_api.layer._3_os.PluginFile;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Environment;
 
 /**
  * Created by Natalia on 29/01/2015.
  */
-public class AndroidImageFile implements PlatformFile {
+public class AndroidImageFile implements PluginFile {
 
     Context mContext;
     String mContent;

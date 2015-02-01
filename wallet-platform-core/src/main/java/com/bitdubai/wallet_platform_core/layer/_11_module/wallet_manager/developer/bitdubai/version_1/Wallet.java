@@ -28,7 +28,7 @@ public class Wallet implements WalletManagerWallet, DealsWithEvents, DealsWithFi
     /**
      * UsesFileSystem Interface member variables.
      */
-    FileSystem fileSystem;
+    PluginFileSystem pluginFileSystem;
 
     /**
      * DealWithEvents Interface member variables.
@@ -137,8 +137,8 @@ public class Wallet implements WalletManagerWallet, DealsWithEvents, DealsWithFi
      */
 
     @Override
-    public void setFileSystem(FileSystem fileSystem) {
-        this.fileSystem = fileSystem;
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem = pluginFileSystem;
     }
 
     /**
@@ -171,7 +171,7 @@ public class Wallet implements WalletManagerWallet, DealsWithEvents, DealsWithFi
 
     private void persist() throws CantPersistWalletException {
 
-        PlatformFile file = this.fileSystem.createFile(
+        PluginFile file = this.pluginFileSystem.createFile(
                 DeviceDirectory.LOCAL_WALLETS.getName(),
                 this.walletId.toString(),
                 FilePrivacy.PRIVATE,
@@ -196,7 +196,7 @@ public class Wallet implements WalletManagerWallet, DealsWithEvents, DealsWithFi
     private void load() throws CantLoadWalletException {
 
         try {
-            PlatformFile file = this.fileSystem.getFile(
+            PluginFile file = this.pluginFileSystem.getFile(
                     DeviceDirectory.LOCAL_WALLETS.getName(),
                     this.walletId.toString(),
                     FilePrivacy.PRIVATE,

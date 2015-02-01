@@ -34,7 +34,7 @@ public class WalletManagerModule implements ModuleService, WalletManager, DealsW
     /**
      * UsesFileSystem Interface member variables.
      */
-    FileSystem fileSystem;
+    PluginFileSystem pluginFileSystem;
 
     /**
      * DealWithEvents Interface member variables.
@@ -60,7 +60,7 @@ public class WalletManagerModule implements ModuleService, WalletManager, DealsW
 
         try
         {
-            PlatformFile platformFile = this.fileSystem.getFile(
+            PluginFile pluginFile = this.pluginFileSystem.getFile(
                     DeviceDirectory.LOCAL_WALLETS.getName(),
                     userId.toString(),
                     FilePrivacy.PRIVATE,
@@ -69,7 +69,7 @@ public class WalletManagerModule implements ModuleService, WalletManager, DealsW
 
             try
             {
-                platformFile.loadToMemory();
+                pluginFile.loadToMemory();
             }
             catch (CantLoadFileException cantLoadFileException)
             {
@@ -86,7 +86,7 @@ public class WalletManagerModule implements ModuleService, WalletManager, DealsW
                 throw new CantLoadWalletsException();
             }
 
-            String[] walletsId = platformFile.getContent().split(";",-1);
+            String[] walletsId = pluginFile.getContent().split(";",-1);
             for ( String walletId : walletsId)
             {
                 WalletManagerWallet wallet = new Wallet();
@@ -201,8 +201,8 @@ public class WalletManagerModule implements ModuleService, WalletManager, DealsW
      */
 
     @Override
-    public void setFileSystem(FileSystem fileSystem) {
-        this.fileSystem = fileSystem;
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem = pluginFileSystem;
     }
 
     /**

@@ -5,6 +5,6 @@ package com.bitdubai.wallet_platform_api.layer._3_os;
  */
 public interface DealsWithFileSystem {
 
-    public void setFileSystem (FileSystem fileSystem);
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem);
 
 }

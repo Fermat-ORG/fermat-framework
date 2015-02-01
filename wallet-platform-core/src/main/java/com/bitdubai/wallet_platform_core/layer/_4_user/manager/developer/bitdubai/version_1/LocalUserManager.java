@@ -2,7 +2,7 @@ package com.bitdubai.wallet_platform_core.layer._4_user.manager.developer.bitdub
 
 import com.bitdubai.wallet_platform_api.layer._2_event.manager.DealsWithEvents;
 import com.bitdubai.wallet_platform_api.layer._2_event.EventManager;
-import com.bitdubai.wallet_platform_api.layer._3_os.FileSystem;
+import com.bitdubai.wallet_platform_api.layer._3_os.PluginFileSystem;
 import com.bitdubai.wallet_platform_api.layer._3_os.DealsWithFileSystem;
 import com.bitdubai.wallet_platform_api.layer._4_user.manager.CantCreateUserException;
 import com.bitdubai.wallet_platform_api.layer._4_user.manager.CantLoadUserException;
@@ -24,7 +24,7 @@ public class LocalUserManager implements UserManager,DealsWithFileSystem, DealsW
     /**
      * UsesFileSystem Interface member variables.
      */
-    FileSystem fileSystem;
+    PluginFileSystem pluginFileSystem;
 
     /**
      * DealWithEvents Interface member variables.
@@ -46,7 +46,7 @@ public class LocalUserManager implements UserManager,DealsWithFileSystem, DealsW
         try
         {
             User user = new PlatformUser();
-            ((DealsWithFileSystem) user).setFileSystem(this.fileSystem);
+            ((DealsWithFileSystem) user).setPluginFileSystem(this.pluginFileSystem);
             user.createUser();
 
             return user;
@@ -69,7 +69,7 @@ public class LocalUserManager implements UserManager,DealsWithFileSystem, DealsW
         try
         {
             User user = new PlatformUser();
-            ((DealsWithFileSystem) user).setFileSystem(this.fileSystem);
+            ((DealsWithFileSystem) user).setPluginFileSystem(this.pluginFileSystem);
             user.loadUser(id);
 
             mLoggedInUser = user;
@@ -93,8 +93,8 @@ public class LocalUserManager implements UserManager,DealsWithFileSystem, DealsW
      */
 
     @Override
-    public void setFileSystem(FileSystem fileSystem) {
-        this.fileSystem = fileSystem;
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem = pluginFileSystem;
     }
 
     /**

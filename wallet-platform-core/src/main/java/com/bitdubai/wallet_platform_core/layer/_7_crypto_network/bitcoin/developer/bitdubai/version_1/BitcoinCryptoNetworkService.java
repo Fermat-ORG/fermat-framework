@@ -4,7 +4,7 @@ import com.bitdubai.wallet_platform_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.wallet_platform_api.layer._2_event.EventManager;
 import com.bitdubai.wallet_platform_api.layer._2_event.manager.DealsWithEvents;
 import com.bitdubai.wallet_platform_api.layer._3_os.DealsWithFileSystem;
-import com.bitdubai.wallet_platform_api.layer._3_os.FileSystem;
+import com.bitdubai.wallet_platform_api.layer._3_os.PluginFileSystem;
 import com.bitdubai.wallet_platform_api.layer._7_crypto_network.CantCreateCryptoWalletException;
 import com.bitdubai.wallet_platform_api.layer._7_crypto_network.CryptoNetworkManager;
 import com.bitdubai.wallet_platform_api.layer._7_crypto_network.CryptoNetworkService;
@@ -29,7 +29,7 @@ public class BitcoinCryptoNetworkService implements CryptoNetworkService, Crypto
     /**
      * UsesFileSystem Interface member variables.
      */
-    FileSystem fileSystem;
+    PluginFileSystem pluginFileSystem;
 
     /**
      * DealWithEvents Interface member variables.
@@ -82,8 +82,8 @@ public class BitcoinCryptoNetworkService implements CryptoNetworkService, Crypto
      */
 
     @Override
-    public void setFileSystem(FileSystem fileSystem) {
-        this.fileSystem = fileSystem;
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem = pluginFileSystem;
     }
 
     /**

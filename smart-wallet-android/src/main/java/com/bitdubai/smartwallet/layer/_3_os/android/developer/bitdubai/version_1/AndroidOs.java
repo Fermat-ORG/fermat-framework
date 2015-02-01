@@ -1,11 +1,11 @@
 package com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1;
 
 import android.content.Context;
-import com.bitdubai.wallet_platform_api.layer._3_os.DatabaseSystem;
-import com.bitdubai.wallet_platform_api.layer._3_os.FileSystem;
+import com.bitdubai.wallet_platform_api.layer._3_os.PluginDatabaseSystem;
+import com.bitdubai.wallet_platform_api.layer._3_os.PluginFileSystem;
 import com.bitdubai.wallet_platform_api.layer._3_os.Os;
-import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.database_system.AndroidDatabaseSystem;
-import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidFileSystem;
+import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.database_system.AndroidPluginDatabaseSystem;
+import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidPluginFileSystem;
 
 
 /**
@@ -13,31 +13,31 @@ import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1
  */
 public class AndroidOs implements Os {
 
-    DatabaseSystem mDatabaseSystem;
-    FileSystem mFileSystem;
+    PluginDatabaseSystem mPluginDatabaseSystem;
+    PluginFileSystem mPluginFileSystem;
     Context mContext;
 
     @Override
-    public DatabaseSystem getDatabaseSystem() {
-        return mDatabaseSystem;
+    public PluginDatabaseSystem getPluginsDatabaseSystem() {
+        return mPluginDatabaseSystem;
     }
 
     @Override
     public void setContext(Object context) {
         mContext = (Context) context;
-        mFileSystem.setContext(context);
-        mDatabaseSystem.setContext(context);
+        mPluginFileSystem.setContext(context);
+        mPluginDatabaseSystem.setContext(context);
     }
 
     @Override
-    public FileSystem getFileSystem() {
-        return mFileSystem;
+    public PluginFileSystem getFileSystem() {
+        return mPluginFileSystem;
     }
 
 
     public AndroidOs() {
-        mDatabaseSystem = new AndroidDatabaseSystem(mContext);
-        mFileSystem = new AndroidFileSystem();
+        mPluginDatabaseSystem = new AndroidPluginDatabaseSystem(mContext);
+        mPluginFileSystem = new AndroidPluginFileSystem();
     }
 
 }

@@ -2,16 +2,18 @@ package com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_
 
 import android.content.ContentValues;
 import android.content.Context;
-import com.bitdubai.wallet_platform_api.layer._3_os.Database;
-import com.bitdubai.wallet_platform_api.layer._3_os.DatabaseSystem;
+import com.bitdubai.wallet_platform_api.layer._3_os.CantOpenDatabaseException;
+import com.bitdubai.wallet_platform_api.layer._3_os.PluginDatabase;
+import com.bitdubai.wallet_platform_api.layer._3_os.PluginDatabaseSystem;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDatabase;
+
+import java.util.UUID;
 
 /**
  * Created by ciencias on 20.01.15.
  */
-public class AndroidDatabaseSystem extends SQLiteOpenHelper implements DatabaseSystem {
+public class AndroidPluginDatabaseSystem extends SQLiteOpenHelper implements PluginDatabaseSystem {
 
     Context mContext;
     private static String mDatabaseName = "";
@@ -21,7 +23,7 @@ public class AndroidDatabaseSystem extends SQLiteOpenHelper implements DatabaseS
     SQLiteDatabase mDatabase;
     private static final int DATABASE_VERSION = 1;
 
-    public AndroidDatabaseSystem(Context context) {
+    public AndroidPluginDatabaseSystem(Context context) {
         super(context, mDatabaseName, null, DATABASE_VERSION);
         mContext = context;
     }
@@ -29,23 +31,18 @@ public class AndroidDatabaseSystem extends SQLiteOpenHelper implements DatabaseS
 
 
     @Override
-    public Database getDatabase(String databaseName) {
+    public PluginDatabase openDatabase(UUID ownerId, String databaseName) throws CantOpenDatabaseException {
         return null;
     }
 
     @Override
-    public Database createDatabase(String databaseName) {
+    public PluginDatabase createDatabase(UUID ownerId, String databaseName) {
 
          mDatabase = SQLiteDatabase.openOrCreateDatabase(mContext.getFilesDir() +"/" + databaseName, null, null);
 
         return null;
     }
 
-    @Override
-    public Database createDatabase(String databaseName, String databaschema) {
-
-        return null;
-    }
 
     @Override
     public void setContext(Object context) {

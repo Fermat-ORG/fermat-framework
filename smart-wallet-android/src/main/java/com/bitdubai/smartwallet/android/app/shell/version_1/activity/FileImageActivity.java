@@ -8,17 +8,9 @@ import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.content.ContentValues;
-import android.os.Environment;
 import android.support.v4.app.FragmentActivity;
 
 import android.view.View;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.BufferedInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.File;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.android.app.common.version_1.classes.MyApplication;
 import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidImageFile;
@@ -29,7 +21,7 @@ import com.bitdubai.wallet_platform_api.layer._3_os.FilePrivacy;
 import com.bitdubai.wallet_platform_api.layer._3_os.CantPersistFileException;
 import android.content.Context;
 import android.widget.TextView;
-import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.database_system.AndroidDatabaseSystem;
+import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.database_system.AndroidPluginDatabaseSystem;
 
 
 /**
@@ -197,7 +189,7 @@ public class FileImageActivity extends FragmentActivity {
         {
             //create DB
 
-            AndroidDatabaseSystem dbmanager = new AndroidDatabaseSystem(mContext);
+            AndroidPluginDatabaseSystem dbmanager = new AndroidPluginDatabaseSystem(mContext);
 
             dbmanager.createDatabase("dbExample");
 
@@ -217,7 +209,7 @@ public class FileImageActivity extends FragmentActivity {
         {
             //create DB
 
-            AndroidDatabaseSystem dbmanager = new AndroidDatabaseSystem(mContext);
+            AndroidPluginDatabaseSystem dbmanager = new AndroidPluginDatabaseSystem(mContext);
         String tableSchema =   "CREATE TABLE Table1 (Id INTEGER PRIMARY KEY, name TEXT, type TEXT)";
             dbmanager.createTable("dbExample",tableSchema);
 
@@ -241,7 +233,7 @@ public class FileImageActivity extends FragmentActivity {
             initialValues.put("name", "NN");
             initialValues.put("type", "A");
 
-            AndroidDatabaseSystem dbmanager = new AndroidDatabaseSystem(mContext);
+            AndroidPluginDatabaseSystem dbmanager = new AndroidPluginDatabaseSystem(mContext);
 
             dbmanager.insertRecord("dbExample","Table1",initialValues);
 
@@ -259,7 +251,7 @@ public class FileImageActivity extends FragmentActivity {
     public void onDeleteRecordClicked(View v)   {
         try
         {
-            AndroidDatabaseSystem dbmanager = new AndroidDatabaseSystem(mContext);
+            AndroidPluginDatabaseSystem dbmanager = new AndroidPluginDatabaseSystem(mContext);
 
             dbmanager.deleteRow("dbExample","Table1","Id=",1);
 
@@ -277,7 +269,7 @@ public class FileImageActivity extends FragmentActivity {
     public void onUpdateRecordClicked(View v)   {
         try
         {
-            AndroidDatabaseSystem dbmanager = new AndroidDatabaseSystem(mContext);
+            AndroidPluginDatabaseSystem dbmanager = new AndroidPluginDatabaseSystem(mContext);
             ContentValues initialValues = new ContentValues();
 
             initialValues.put("name", "CC");

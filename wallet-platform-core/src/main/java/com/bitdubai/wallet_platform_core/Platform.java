@@ -212,7 +212,7 @@ public class Platform  {
 
         UserManager userManager =  ((UserLayer) mUserLayer).getUserManager();
 
-        ((DealsWithFileSystem) userManager).setFileSystem(os.getFileSystem());
+        ((DealsWithFileSystem) userManager).setPluginFileSystem(os.getFileSystem());
         ((DealsWithEvents) userManager).setEventManager(eventManager);
 
         /**
@@ -222,7 +222,7 @@ public class Platform  {
 
         CryptoNetworkService cryptoNetworkService =  ((CryptoNetworkLayer) mCryptoNetworkLayer).getCryptoNetwork(CryptoNetworks.BITCOIN);
 
-        ((DealsWithFileSystem) cryptoNetworkService).setFileSystem(os.getFileSystem());
+        ((DealsWithFileSystem) cryptoNetworkService).setPluginFileSystem(os.getFileSystem());
         ((DealsWithEvents) cryptoNetworkService).setEventManager(eventManager);
 
         /**
@@ -231,7 +231,7 @@ public class Platform  {
 
         ModuleService walletManager =  ((ModuleLayer) mModuleLayer).getWalletManager();
 
-        ((DealsWithFileSystem) walletManager).setFileSystem(os.getFileSystem());
+        ((DealsWithFileSystem) walletManager).setPluginFileSystem(os.getFileSystem());
         ((DealsWithEvents) walletManager).setEventManager(eventManager);
 
         walletManager.run();
@@ -246,7 +246,7 @@ public class Platform  {
 
         try {
 
-            PlatformFile platformStateFile =  os.getFileSystem().getFile(
+            PluginFile platformStateFile =  os.getFileSystem().getFile(
                     DeviceDirectory.PLATFORM.getName(),
                     PlatformFileName.LAST_STATE.getFileName(),
                     FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT
@@ -308,7 +308,7 @@ public class Platform  {
                 throw new CantStartPlatformException();
             }
 
-            PlatformFile platformStateFile =  os.getFileSystem().createFile(
+            PluginFile platformStateFile =  os.getFileSystem().createFile(
                     DeviceDirectory.PLATFORM.getName(),
                     PlatformFileName.LAST_STATE.getFileName(),
                     FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT
