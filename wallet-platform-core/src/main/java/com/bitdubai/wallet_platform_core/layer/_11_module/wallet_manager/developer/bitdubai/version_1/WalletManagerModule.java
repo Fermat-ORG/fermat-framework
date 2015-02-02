@@ -25,7 +25,7 @@ import java.util.UUID;
 public class WalletManagerModule implements PlatformService, WalletManager, DealsWithEvents, DealsWithFileSystem, Plugin {
     
     /**
-     * ModuleService Interface member variables.
+     * PlatformService Interface member variables.
      */
     ServiceStatus serviceStatus;
     List<EventListener> listenersAdded = new ArrayList<>();
@@ -58,6 +58,62 @@ public class WalletManagerModule implements PlatformService, WalletManager, Deal
         this.serviceStatus = ServiceStatus.CREATED;
     }
 
+
+    /**
+     * PlatformService Interface implementation.
+     */
+
+    @Override
+    public void start() {
+
+        /**
+         * I will initialize the handling of com.bitdubai.platform events.
+         */
+
+        EventListener eventListener;
+        EventHandler eventHandler;
+
+        eventListener = eventManager.getNewListener(EventType.USER_CREATED);
+        eventHandler = new UserCreatedEventHandler();
+        ((UserCreatedEventHandler) eventHandler).setWalletManager(this);
+        eventListener.setEventHandler(eventHandler);
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);
+
+        eventListener = eventManager.getNewListener(EventType.USER_LOGGED_IN);
+        eventHandler = new UserLoggedInEventHandler();
+        ((UserLoggedInEventHandler) eventHandler).setWalletManager(this);
+        eventListener.setEventHandler(eventHandler);
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);
+
+        this.serviceStatus = ServiceStatus.STARTED;
+    }
+
+    @Override
+    public void pause() {
+    }
+
+    @Override
+    public void stop() {
+
+        /**
+         * I will remove all the event listeners registered with the event manager.
+         */
+
+        for (EventListener eventListener : listenersAdded) {
+            eventManager.removeListener(eventListener);
+        }
+
+        listenersAdded.clear();
+    }
+
+    @Override
+    public ServiceStatus getStatus() {
+        return this.serviceStatus;
+    }
+    
+    
     /**
      * WalletManager Interface implementation.
      */
@@ -176,59 +232,7 @@ public class WalletManagerModule implements PlatformService, WalletManager, Deal
 
     }
 
-    /**
-     * Module Interface implementation.
-     */
 
-    @Override
-    public void start() {
-
-        /**
-         * I will initialize the handling of com.bitdubai.platform events.
-         */
-
-        EventListener eventListener;
-        EventHandler eventHandler;
-
-        eventListener = eventManager.getNewListener(EventType.USER_CREATED);
-        eventHandler = new UserCreatedEventHandler();
-        ((UserCreatedEventHandler) eventHandler).setWalletManager(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
-
-        eventListener = eventManager.getNewListener(EventType.USER_LOGGED_IN);
-        eventHandler = new UserLoggedInEventHandler();
-        ((UserLoggedInEventHandler) eventHandler).setWalletManager(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
-
-        this.serviceStatus = ServiceStatus.STARTED;
-    }
-
-    @Override
-    public void pause() {
-    }
-
-    @Override
-    public void stop() {
-
-        /**
-         * I will remove all the event listeners registered with the event manager.
-         */
-
-        for (EventListener eventListener : listenersAdded) {
-            eventManager.removeListener(eventListener);
-        }
-
-        listenersAdded.clear();
-    }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return this.serviceStatus;
-    }
 
     /**
      * UsesFileSystem Interface implementation.
