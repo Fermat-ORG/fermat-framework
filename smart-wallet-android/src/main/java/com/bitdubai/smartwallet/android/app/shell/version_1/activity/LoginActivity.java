@@ -39,7 +39,7 @@ public class LoginActivity extends Activity {
          LocalDevice localDevice = new LocalDevice();
 
         /**
-         * Initially, the APP will run with one user created when the APP run for the
+         * Initially, the APP will start with one user created when the APP start for the
          * first time and the user was asked which was his intended use of the APP was.
          * During this situation the system will bypass this first activity and navigate
          * directly into the {@link DesktopActivity}

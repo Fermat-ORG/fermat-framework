@@ -19,7 +19,7 @@ public class DeveloperBitDubai implements NetworkServiceDeveloper {
     public DeveloperBitDubai () {
 
         /**
-         * I will choose from the different versions of my implementations which one to run. Now there is only one, so
+         * I will choose from the different versions of my implementations which one to start. Now there is only one, so
          * it is easy to choose.
          */
 

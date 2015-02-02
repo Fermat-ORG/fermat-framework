@@ -2,6 +2,8 @@ package com.bitdubai.wallet_platform_core.layer._11_module.wallet_manager.develo
 
 
 
+import com.bitdubai.wallet_platform_api.DealsWithPluginIdentity;
+import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.layer._11_module.wallet_manager.*;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.DeviceDirectory;
 import com.bitdubai.wallet_platform_api.layer._2_event.*;
@@ -10,7 +12,7 @@ import com.bitdubai.wallet_platform_api.layer._2_event.manager.EventType;
 import com.bitdubai.wallet_platform_api.layer._2_event.manager.EventHandler;
 import com.bitdubai.wallet_platform_api.layer._2_event.manager.EventListener;
 import com.bitdubai.wallet_platform_api.layer._3_os.*;
-import com.bitdubai.wallet_platform_api.layer._11_module.ModuleService;
+import com.bitdubai.wallet_platform_api.PlatformService;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.ServiceStatus;
 
 import java.util.ArrayList;
@@ -20,13 +22,17 @@ import java.util.UUID;
 /**
  * Created by ciencias on 21.01.15.
  */
-public class WalletManagerModule implements ModuleService, WalletManager, DealsWithEvents, DealsWithFileSystem {
-
+public class WalletManagerModule implements PlatformService, WalletManager, DealsWithEvents, DealsWithFileSystem, Plugin {
+    
+    /**
+     * ModuleService Interface member variables.
+     */
+    ServiceStatus serviceStatus;
+    List<EventListener> listenersAdded = new ArrayList<>();
+    
     /**
      * WalletManager Interface member variables.
      */
-
-    ServiceStatus status;
     UUID userId;
 
     List<WalletManagerWallet> userWallets;
@@ -41,9 +47,15 @@ public class WalletManagerModule implements ModuleService, WalletManager, DealsW
      */
     EventManager eventManager;
 
+    /**
+     * Plugin Interface member variables.
+     */
+    UUID pluginId;
+    
+
     public WalletManagerModule (){
         userWallets = new ArrayList<>();
-        this.status = ServiceStatus.CREATED;
+        this.serviceStatus = ServiceStatus.CREATED;
     }
 
     /**
@@ -60,10 +72,9 @@ public class WalletManagerModule implements ModuleService, WalletManager, DealsW
 
         try
         {
-            UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
             
             PluginFile pluginFile = this.pluginFileSystem.getFile(
-                    moduleId,
+                    pluginId,
                     DeviceDirectory.LOCAL_WALLETS.getName(),
                     userId.toString(),
                     FilePrivacy.PRIVATE,
@@ -84,7 +95,7 @@ public class WalletManagerModule implements ModuleService, WalletManager, DealsW
                 System.err.println("CantLoadFileException: " + cantLoadFileException.getMessage());
                 cantLoadFileException.printStackTrace();
 
-                this.status = ServiceStatus.PAUSED;
+                this.serviceStatus = ServiceStatus.PAUSED;
 
                 throw new CantLoadWalletsException();
             }
@@ -93,6 +104,12 @@ public class WalletManagerModule implements ModuleService, WalletManager, DealsW
             for ( String walletId : walletsId)
             {
                 WalletManagerWallet wallet = new Wallet();
+                
+                ((DealsWithFileSystem) wallet).setPluginFileSystem(pluginFileSystem);
+                ((DealsWithEvents) wallet).setEventManager(eventManager);
+                ((DealsWithPluginIdentity) wallet).setPluginId(pluginId);
+             
+               
                 try
                 {
                     wallet.loadWallet(UUID.fromString(walletId));
@@ -138,6 +155,10 @@ public class WalletManagerModule implements ModuleService, WalletManager, DealsW
 
         WalletManagerWallet wallet = new Wallet();
 
+        ((DealsWithFileSystem) wallet).setPluginFileSystem(pluginFileSystem);
+        ((DealsWithEvents) wallet).setEventManager(eventManager);
+        ((DealsWithPluginIdentity) wallet).setPluginId(pluginId);
+        
         try
         {
             wallet.createWallet(WalletType.DEFAULT);
@@ -160,7 +181,7 @@ public class WalletManagerModule implements ModuleService, WalletManager, DealsW
      */
 
     @Override
-    public void run() {
+    public void start() {
 
         /**
          * I will initialize the handling of com.bitdubai.platform events.
@@ -173,17 +194,17 @@ public class WalletManagerModule implements ModuleService, WalletManager, DealsW
         eventHandler = new UserCreatedEventHandler();
         ((UserCreatedEventHandler) eventHandler).setWalletManager(this);
         eventListener.setEventHandler(eventHandler);
-        eventManager.registerListener(eventListener);
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);
 
         eventListener = eventManager.getNewListener(EventType.USER_LOGGED_IN);
         eventHandler = new UserLoggedInEventHandler();
         ((UserLoggedInEventHandler) eventHandler).setWalletManager(this);
         eventListener.setEventHandler(eventHandler);
-        eventManager.registerListener(eventListener);
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);
 
-
-
-        this.status = ServiceStatus.RUNNING;
+        this.serviceStatus = ServiceStatus.STARTED;
     }
 
     @Override
@@ -192,11 +213,21 @@ public class WalletManagerModule implements ModuleService, WalletManager, DealsW
 
     @Override
     public void stop() {
+
+        /**
+         * I will remove all the event listeners registered with the event manager.
+         */
+
+        for (EventListener eventListener : listenersAdded) {
+            eventManager.removeListener(eventListener);
+        }
+
+        listenersAdded.clear();
     }
 
     @Override
     public ServiceStatus getStatus() {
-        return this.status;
+        return this.serviceStatus;
     }
 
     /**
@@ -217,4 +248,13 @@ public class WalletManagerModule implements ModuleService, WalletManager, DealsW
         this.eventManager = eventManager;
     }
 
+    /**
+     * DealsWithPluginIdentity methods implementation.
+     */
+
+    @Override
+    public void setId(UUID pluginId) {
+        this.pluginId = pluginId;
+    }
 }
+

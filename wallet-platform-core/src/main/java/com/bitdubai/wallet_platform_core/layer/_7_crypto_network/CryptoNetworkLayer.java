@@ -1,9 +1,9 @@
 package com.bitdubai.wallet_platform_core.layer._7_crypto_network;
 
+import com.bitdubai.wallet_platform_api.PlatformService;
 import com.bitdubai.wallet_platform_api.layer.CantStartLayerException;
 import com.bitdubai.wallet_platform_api.layer.PlatformLayer;
 import com.bitdubai.wallet_platform_api.layer._7_crypto_network.CantStartSubsystemException;
-import com.bitdubai.wallet_platform_api.layer._7_crypto_network.CryptoNetworkService;
 import com.bitdubai.wallet_platform_api.layer._7_crypto_network.CryptoNetworkSubsystem;
 import com.bitdubai.wallet_platform_api.layer._7_crypto_network.CryptoNetworks;
 import com.bitdubai.wallet_platform_core.layer._7_crypto_network.bitcoin.BitcoinSubsystem;
@@ -77,9 +77,9 @@ public class CryptoNetworkLayer implements PlatformLayer {
     }
 
 
-    public CryptoNetworkService getCryptoNetwork (CryptoNetworks pCryptoNetwork) {
+    public PlatformService getCryptoNetwork (CryptoNetworks pCryptoNetwork) {
 
-        CryptoNetworkService cryptoNetworkService = null;
+        PlatformService cryptoNetworkService = null;
 
         switch (pCryptoNetwork) {
 

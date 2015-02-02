@@ -12,7 +12,7 @@ import com.bitdubai.wallet_platform_api.layer._3_os.OsDeveloper;
  */
 
 /**
- * Each developer might have different versions of their own implementation. This object chooses which version to run.
+ * Each developer might have different versions of their own implementation. This object chooses which version to start.
  */
 
 public class DeveloperBitDubai implements OsDeveloper, Licensor {

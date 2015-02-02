@@ -33,7 +33,7 @@ public class UserLayer implements PlatformLayer {
             System.err.println("CantStartSubsystemException: " + e.getMessage());
 
             /**
-             * The com.bitdubai.platform cannot run without performing licensing operations, that's why I throw this exception.
+             * The com.bitdubai.platform cannot start without performing licensing operations, that's why I throw this exception.
              */
             throw new CantStartLayerException();
         }

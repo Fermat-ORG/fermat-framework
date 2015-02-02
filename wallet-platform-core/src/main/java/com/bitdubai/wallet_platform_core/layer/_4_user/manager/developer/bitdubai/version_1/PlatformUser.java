@@ -1,5 +1,6 @@
 package com.bitdubai.wallet_platform_core.layer._4_user.manager.developer.bitdubai.version_1;
 
+import com.bitdubai.wallet_platform_api.DealsWithPluginIdentity;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.DeviceDirectory;
 import com.bitdubai.wallet_platform_api.layer._2_event.*;
 import com.bitdubai.wallet_platform_api.layer._2_event.manager.DealsWithEvents;
@@ -16,7 +17,7 @@ import java.util.UUID;
 /**
  * Created by ciencias on 22.01.15.
  */
-public class PlatformUser implements User,DealsWithFileSystem, DealsWithEvents {
+public class PlatformUser implements User,DealsWithFileSystem, DealsWithEvents, DealsWithPluginIdentity {
 
     /**
      * User Interface member variables.
@@ -36,6 +37,10 @@ public class PlatformUser implements User,DealsWithFileSystem, DealsWithEvents {
      */
     EventManager eventManager;
 
+    /**
+     * DealsWithPluginIdentity Interface member variables.
+     */
+    UUID pluginId;
 
     /**
      * User Interface implementation.
@@ -167,10 +172,8 @@ public class PlatformUser implements User,DealsWithFileSystem, DealsWithEvents {
 
     private void persist() throws CantPersistUserException{
 
-        UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
-
         PluginFile file = this.pluginFileSystem.createFile(
-                moduleId,
+                pluginId,
                 DeviceDirectory.LOCAL_USERS.getName(),
                 this.userId.toString(),
                 FilePrivacy.PRIVATE,
@@ -196,12 +199,9 @@ public class PlatformUser implements User,DealsWithFileSystem, DealsWithEvents {
     private void load() throws CantLoadUserException {
 
         try {
-
-            UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
-
             
             PluginFile file = this.pluginFileSystem.getFile(
-                    moduleId,
+                    pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
                     this.userId.toString(),
                     FilePrivacy.PRIVATE,
@@ -227,4 +227,12 @@ public class PlatformUser implements User,DealsWithFileSystem, DealsWithEvents {
     }
 
 
+    /**
+     * DealsWithPluginIdentity methods implementation.
+     */
+
+    @Override
+    public void setPluginId(UUID pluginId) {
+        this.pluginId = pluginId;
+    }
 }

@@ -1,6 +1,7 @@
 package com.bitdubai.wallet_platform_core.layer._11_module.wallet_manager.developer.bitdubai.version_1;
 
 
+import com.bitdubai.wallet_platform_api.DealsWithPluginIdentity;
 import com.bitdubai.wallet_platform_api.layer._11_module.wallet_manager.*;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.DeviceDirectory;
 import com.bitdubai.wallet_platform_api.layer._1_definition.event.PlatformEvent;
@@ -18,7 +19,7 @@ import java.util.UUID;
 /**
  * Created by ciencias on 25.01.15.
  */
-public class Wallet implements WalletManagerWallet, DealsWithEvents, DealsWithFileSystem {
+public class Wallet implements WalletManagerWallet, DealsWithEvents, DealsWithFileSystem, DealsWithPluginIdentity {
 
     UUID walletId;
     String walletName = "";
@@ -35,7 +36,11 @@ public class Wallet implements WalletManagerWallet, DealsWithEvents, DealsWithFi
      */
     EventManager eventManager;
 
-
+    /**
+     * DealsWithPluginIdentity Interface member variables.
+     */
+    UUID pluginId;
+    
     /**
      * Wallet Interface implementation.
      */
@@ -171,11 +176,8 @@ public class Wallet implements WalletManagerWallet, DealsWithEvents, DealsWithFi
 
     private void persist() throws CantPersistWalletException {
 
-        UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
-
-
         PluginFile file = this.pluginFileSystem.createFile(
-                moduleId,
+                pluginId,
                 DeviceDirectory.LOCAL_WALLETS.getName(),
                 this.walletId.toString(),
                 FilePrivacy.PRIVATE,
@@ -201,10 +203,8 @@ public class Wallet implements WalletManagerWallet, DealsWithEvents, DealsWithFi
 
         try {
 
-            UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
-            
             PluginFile file = this.pluginFileSystem.getFile(
-                    moduleId,
+                    pluginId,
                     DeviceDirectory.LOCAL_WALLETS.getName(),
                     this.walletId.toString(),
                     FilePrivacy.PRIVATE,
@@ -229,5 +229,14 @@ public class Wallet implements WalletManagerWallet, DealsWithEvents, DealsWithFi
         }
     }
 
+
+    /**
+     * DealsWithPluginIdentity methods implementation.
+     */
+
+    @Override
+    public void setPluginId(UUID pluginId) {
+        this.pluginId = pluginId;
+    }
 
 }

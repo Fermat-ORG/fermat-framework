@@ -6,7 +6,7 @@ import com.bitdubai.wallet_platform_api.PluginNotRecognizedException;
 import com.bitdubai.wallet_platform_api.layer.CantStartLayerException;
 import com.bitdubai.wallet_platform_api.layer.PlatformLayer;
 
-import com.bitdubai.wallet_platform_api.layer._11_module.ModuleService;
+import com.bitdubai.wallet_platform_api.PlatformService;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.DeviceDirectory;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.PlatformFileName;
 import com.bitdubai.wallet_platform_api.layer._1_definition.event.DealWithEventMonitor;
@@ -26,7 +26,6 @@ import com.bitdubai.wallet_platform_api.layer._4_user.manager.LoginFailedExcepti
 import com.bitdubai.wallet_platform_core.layer._5_license.LicenseLayer;
 import com.bitdubai.wallet_platform_core.layer._6_world.WorldLayer;
 import com.bitdubai.wallet_platform_core.layer._7_crypto_network.CryptoNetworkLayer;
-import com.bitdubai.wallet_platform_api.layer._7_crypto_network.CryptoNetworkService;
 import com.bitdubai.wallet_platform_api.layer._7_crypto_network.CryptoNetworks;
 import com.bitdubai.wallet_platform_core.layer._8_communication.CommunicationLayer;
 import com.bitdubai.wallet_platform_core.layer._9_network_service.NetworkServiceLayer;
@@ -156,8 +155,8 @@ public class Platform  {
         /**
          * Here I will be starting all the platforms layers. It is required that none of them fails. That does not mean
          * that a layer will have at least one service to offer. It depends on each layer. If one believes its lack of
-         * services prevent the whole com.bitdubai.platform to run, then it will throw an exception that will effectively prevent the
-         * com.bitdubai.platform to run.
+         * services prevent the whole com.bitdubai.platform to start, then it will throw an exception that will effectively prevent the
+         * com.bitdubai.platform to start.
          */
 
         try {
@@ -261,22 +260,93 @@ public class Platform  {
          * it can load and save and load information from persistent media and also raise events.
          */
 
-        CryptoNetworkService cryptoNetworkService =  ((CryptoNetworkLayer) mCryptoNetworkLayer).getCryptoNetwork(CryptoNetworks.BITCOIN);
+        PlatformService cryptoNetworkService =  ((CryptoNetworkLayer) mCryptoNetworkLayer).getCryptoNetwork(CryptoNetworks.BITCOIN);
 
         ((DealsWithFileSystem) cryptoNetworkService).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) cryptoNetworkService).setEventManager(eventManager);
 
+        try
+        {
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsManager.getPluginId((Plugin) cryptoNetworkService);
+            ((Plugin) cryptoNetworkService).setId(pluginID);
+
+            cryptoNetworkService.start();
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+            /**
+             * Even if it is not desirable, the platform can still start without one crypto network. I will simply ask
+             * this module to stop running. 
+             */
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+            
+            cryptoNetworkService.stop();
+        }
+        
+        
+        
         /**
          * I will give the Wallet Manager access to the File System and to the Event Manager
          */
 
-        ModuleService walletManager =  ((ModuleLayer) mModuleLayer).getWalletManager();
+        PlatformService walletManager =  ((ModuleLayer) mModuleLayer).getWalletManager();
 
         ((DealsWithFileSystem) walletManager).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) walletManager).setEventManager(eventManager);
 
-        walletManager.run();
 
+        try
+        {
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsManager.getPluginId((Plugin) walletManager);
+            ((Plugin) walletManager).setId(pluginID);
+
+            walletManager.start();
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+            /**
+             * The wallet manager is a critical component for the platform to run. Whiteout it there is no platform.
+             */
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        walletManager.start();
+
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         /**
          * Now I will recover the last state, in order to allow the end user to continue where he was.The first thing
          * to do is to get the file where the last state was saved.

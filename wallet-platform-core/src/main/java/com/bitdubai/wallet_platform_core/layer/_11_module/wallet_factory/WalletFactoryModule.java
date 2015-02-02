@@ -1,14 +1,14 @@
 package com.bitdubai.wallet_platform_core.layer._11_module.wallet_factory;
 
-import com.bitdubai.wallet_platform_api.layer._11_module.ModuleService;
+import com.bitdubai.wallet_platform_api.PlatformService;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.ServiceStatus;
 
 /**
  * Created by ciencias on 30.12.14.
  */
-public class WalletFactoryModule implements ModuleService {
+public class WalletFactoryModule implements PlatformService {
     @Override
-    public void run() {
+    public void start() {
 
     }
 

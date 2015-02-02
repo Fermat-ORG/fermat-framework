@@ -1,7 +1,7 @@
 package com.bitdubai.wallet_platform_core.layer._11_module.wallet_runtime;
 
 import com.bitdubai.wallet_platform_api.layer._11_module.CantStartSubsystemException;
-import com.bitdubai.wallet_platform_api.layer._11_module.ModuleService;
+import com.bitdubai.wallet_platform_api.PlatformService;
 import com.bitdubai.wallet_platform_api.layer._11_module.ModuleSubsystem;
 
 /**
@@ -10,7 +10,7 @@ import com.bitdubai.wallet_platform_api.layer._11_module.ModuleSubsystem;
 public class WalletRuntimeSubsystem implements ModuleSubsystem {
 
     @Override
-    public ModuleService getModule() {
+    public PlatformService getModule() {
         return null;
     }
 

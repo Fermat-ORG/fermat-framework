@@ -58,7 +58,7 @@ public class PluginsManager {
             if (arrayPosition < AMOUNT_OF_KNOWN_PLUGINS)
             {
                 /**
-                 * Under this condition, means that since the last time the platform run, new plugins were added to the 
+                 * Under this condition, means that since the last time the platform start, new plugins were added to the
                  * platform, and as these new plugins needs new ids, we are going to create one for each of them. 
                  */
 
@@ -76,7 +76,7 @@ public class PluginsManager {
                 catch (CantPersistFileException cantPersistFileException )
                 {
                     /**
-                     * If I cannot save this file, It means the Plugin Manager cannot run,
+                     * If I cannot save this file, It means the Plugin Manager cannot start,
                      */
                     System.err.println("CantPersistFileException: " + cantPersistFileException.getMessage());
                     cantPersistFileException.printStackTrace();
@@ -106,7 +106,7 @@ public class PluginsManager {
             catch (CantPersistFileException cantPersistFileException )
             {
                 /**
-                 * If I cannot save this file, It means the Plugin Manager cannot run,
+                 * If I cannot save this file, It means the Plugin Manager cannot start,
                  */
                 System.err.println("CantPersistFileException: " + cantPersistFileException.getMessage());
                 cantPersistFileException.printStackTrace();

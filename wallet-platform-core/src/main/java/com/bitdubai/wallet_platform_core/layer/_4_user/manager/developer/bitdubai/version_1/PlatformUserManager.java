@@ -17,6 +17,7 @@ import java.util.UUID;
  */
 public class PlatformUserManager implements UserManager,DealsWithFileSystem, DealsWithEvents, Plugin {
 
+    // todo:implement a service interface, geeralizar la interface actual
     /**
      * UserManager Interface member variables.
      */

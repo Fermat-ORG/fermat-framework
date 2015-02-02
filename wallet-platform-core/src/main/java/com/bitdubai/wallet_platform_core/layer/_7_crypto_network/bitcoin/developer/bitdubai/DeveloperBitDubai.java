@@ -1,6 +1,6 @@
 package com.bitdubai.wallet_platform_core.layer._7_crypto_network.bitcoin.developer.bitdubai;
 
-import com.bitdubai.wallet_platform_api.layer._7_crypto_network.CryptoNetworkService;
+import com.bitdubai.wallet_platform_api.PlatformService;
 import com.bitdubai.wallet_platform_api.layer._7_crypto_network.CryptoNetworkDeveloper;
 import com.bitdubai.wallet_platform_core.layer._7_crypto_network.bitcoin.developer.bitdubai.version_1.BitcoinCryptoNetworkService;
 
@@ -9,17 +9,17 @@ import com.bitdubai.wallet_platform_core.layer._7_crypto_network.bitcoin.develop
  */
 public class DeveloperBitDubai implements CryptoNetworkDeveloper {
 
-    CryptoNetworkService mCryptoNetworkService;
+    PlatformService mCryptoNetworkService;
 
     @Override
-    public CryptoNetworkService getCryptoNetwork() {
+    public PlatformService getCryptoNetwork() {
         return mCryptoNetworkService;
     }
 
     public DeveloperBitDubai () {
 
         /**
-         * I will choose from the different versions of my implementations which one to run. Now there is only one, so
+         * I will choose from the different versions of my implementations which one to start. Now there is only one, so
          * it is easy to choose.
          */
 

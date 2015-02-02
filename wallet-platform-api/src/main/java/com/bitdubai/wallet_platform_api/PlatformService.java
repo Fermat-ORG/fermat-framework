@@ -1,13 +1,13 @@
-package com.bitdubai.wallet_platform_api.layer._11_module;
+package com.bitdubai.wallet_platform_api;
 
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.ServiceStatus;
 
 /**
  * Created by ciencias on 30.12.14.
  */
-public interface ModuleService {
+public interface PlatformService {
 
-    public void run();
+    public void start();
 
     public void pause();
 

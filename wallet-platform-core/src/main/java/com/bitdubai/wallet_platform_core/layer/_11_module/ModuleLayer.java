@@ -3,7 +3,7 @@ package com.bitdubai.wallet_platform_core.layer._11_module;
 import com.bitdubai.wallet_platform_api.layer.CantStartLayerException;
 import com.bitdubai.wallet_platform_api.layer.PlatformLayer;
 import com.bitdubai.wallet_platform_api.layer._11_module.CantStartSubsystemException;
-import com.bitdubai.wallet_platform_api.layer._11_module.ModuleService;
+import com.bitdubai.wallet_platform_api.PlatformService;
 import com.bitdubai.wallet_platform_api.layer._11_module.ModuleSubsystem;
 import com.bitdubai.wallet_platform_core.layer._11_module.wallet_manager.WalletManagerSubsystem;
 import com.bitdubai.wallet_platform_core.layer._11_module.wallet_runtime.WalletRuntimeSubsystem;
@@ -14,14 +14,14 @@ import com.bitdubai.wallet_platform_core.layer._11_module.wallet_runtime.WalletR
 public class ModuleLayer implements PlatformLayer {
 
 
-    ModuleService mWalletRuntime;
-    ModuleService mWalletManager;
+    PlatformService mWalletRuntime;
+    PlatformService mWalletManager;
 
-    public ModuleService getWalletRuntime() {
+    public PlatformService getWalletRuntime() {
         return mWalletRuntime;
     }
 
-    public ModuleService getWalletManager() {
+    public PlatformService getWalletManager() {
         return mWalletManager;
     }
 

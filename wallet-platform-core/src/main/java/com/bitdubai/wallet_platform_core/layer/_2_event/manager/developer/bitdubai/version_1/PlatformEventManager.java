@@ -84,7 +84,7 @@ public class PlatformEventManager implements EventManager, DealWithEventMonitor 
 
 
     @Override
-    public void registerListener(EventListener listener) {
+    public void addListener(EventListener listener) {
 
 
         switch (listener.getEventType()) {
@@ -111,6 +111,39 @@ public class PlatformEventManager implements EventManager, DealWithEventMonitor 
 
         }
     }
+
+    @Override
+    public void removeListener(EventListener listener) {
+
+        List<EventListener> listeners = listenersUserLoggedInEvent; // Just assign one of the possible values.
+
+        switch (listener.getEventType()) {
+
+            case USER_CREATED:
+                listeners = listenersUserLoggedInEvent;
+                break;
+
+            case USER_LOGGED_IN:
+                listeners = listenersUserLoggedInEvent;
+                break;
+
+            case USER_LOGGED_OUT:
+                listeners = listenersUserLoggedOutEvent;
+                break;
+
+            case WALLET_WENT_ONLINE:
+                listeners = listenersWalletWentOnlineEvent;
+                break;
+
+            case WALLET_CREATED:
+                listeners = listenersWalletCreatedEvent;
+                break;
+        }
+
+        listeners.remove(listener);
+
+    }
+    
 
     @Override
     public void raiseEvent(PlatformEvent platformEvent) {

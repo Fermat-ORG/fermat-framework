@@ -13,7 +13,9 @@ public EventListener getNewListener (EventType eventType);
 
 public PlatformEvent getNewEvent(EventType eventType);
 
-public void registerListener(EventListener listener);
+public void addListener(EventListener listener);
+    
+public void removeListener(EventListener listener);
 
 public void raiseEvent(PlatformEvent platformEvent);
 
