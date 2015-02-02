@@ -60,7 +60,10 @@ public class WalletManagerModule implements ModuleService, WalletManager, DealsW
 
         try
         {
+            UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
+            
             PluginFile pluginFile = this.pluginFileSystem.getFile(
+                    moduleId,
                     DeviceDirectory.LOCAL_WALLETS.getName(),
                     userId.toString(),
                     FilePrivacy.PRIVATE,

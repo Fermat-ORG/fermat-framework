@@ -171,7 +171,11 @@ public class Wallet implements WalletManagerWallet, DealsWithEvents, DealsWithFi
 
     private void persist() throws CantPersistWalletException {
 
+        UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
+
+
         PluginFile file = this.pluginFileSystem.createFile(
+                moduleId,
                 DeviceDirectory.LOCAL_WALLETS.getName(),
                 this.walletId.toString(),
                 FilePrivacy.PRIVATE,
@@ -196,7 +200,11 @@ public class Wallet implements WalletManagerWallet, DealsWithEvents, DealsWithFi
     private void load() throws CantLoadWalletException {
 
         try {
+
+            UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
+            
             PluginFile file = this.pluginFileSystem.getFile(
+                    moduleId,
                     DeviceDirectory.LOCAL_WALLETS.getName(),
                     this.walletId.toString(),
                     FilePrivacy.PRIVATE,

@@ -18,4 +18,8 @@ public class SQlLitePluginDatabase implements PluginDatabase {
         return LocalPersonalUsersIds;
     }
 
+    @Override
+    public void createTable(String tableName) {
+
+    }
 }

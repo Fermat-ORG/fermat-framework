@@ -167,7 +167,10 @@ public class PlatformUser implements User,DealsWithFileSystem, DealsWithEvents {
 
     private void persist() throws CantPersistUserException{
 
+        UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
+
         PluginFile file = this.pluginFileSystem.createFile(
+                moduleId,
                 DeviceDirectory.LOCAL_USERS.getName(),
                 this.userId.toString(),
                 FilePrivacy.PRIVATE,
@@ -193,7 +196,12 @@ public class PlatformUser implements User,DealsWithFileSystem, DealsWithEvents {
     private void load() throws CantLoadUserException {
 
         try {
+
+            UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
+
+            
             PluginFile file = this.pluginFileSystem.getFile(
+                    moduleId,
                     DeviceDirectory.LOCAL_USERS.getName(),
                     this.userId.toString(),
                     FilePrivacy.PRIVATE,

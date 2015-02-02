@@ -246,7 +246,10 @@ public class Platform  {
 
         try {
 
+            UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque tiene que usar el file system para la plataform.
+            
             PluginFile platformStateFile =  os.getFileSystem().getFile(
+                    moduleId ,
                     DeviceDirectory.PLATFORM.getName(),
                     PlatformFileName.LAST_STATE.getFileName(),
                     FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT
@@ -308,7 +311,10 @@ public class Platform  {
                 throw new CantStartPlatformException();
             }
 
+            UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque tiene que usar el file system para la plataform.
+
             PluginFile platformStateFile =  os.getFileSystem().createFile(
+                    moduleId,
                     DeviceDirectory.PLATFORM.getName(),
                     PlatformFileName.LAST_STATE.getFileName(),
                     FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT

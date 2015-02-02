@@ -23,6 +23,8 @@ import android.content.Context;
 import android.widget.TextView;
 import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.database_system.AndroidPluginDatabaseSystem;
 
+import java.util.UUID;
+
 
 /**
  * Created by Natalia on 29/01/2015.
@@ -109,7 +111,9 @@ public class FileImageActivity extends FragmentActivity {
         {
             //load binary to memory
 
-            AndroidFile filemanager = new AndroidFile(mContext,"","example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
+            UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
+
+            AndroidFile filemanager = new AndroidFile(moduleId, mContext,"","example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
 
             filemanager.setContent("Text Content Test File Binary");
             filemanager.loadToMemory();
@@ -129,7 +133,9 @@ public class FileImageActivity extends FragmentActivity {
         {
             //load binary to memory
 
-            AndroidFile filemanager = new AndroidFile(mContext,"","example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
+            UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
+
+            AndroidFile filemanager = new AndroidFile(moduleId, mContext,"","example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
 
             filemanager.setContent("Text Content to Test File Binary");
             filemanager.persistToMedia();
@@ -148,7 +154,9 @@ public class FileImageActivity extends FragmentActivity {
         {
             //load binary to memory
 
-            AndroidFile filemanager = new AndroidFile(mContext,"","example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
+            UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
+
+            AndroidFile filemanager = new AndroidFile(moduleId, mContext,"","example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
 
             filemanager.loadFromMemory();
 
@@ -169,7 +177,9 @@ public class FileImageActivity extends FragmentActivity {
         {
             //load binary to memory
 
-            AndroidFile filemanager = new AndroidFile(mContext,"","example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
+            UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
+
+            AndroidFile filemanager = new AndroidFile(moduleId, mContext,"","example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
 
             filemanager.loadFromMedia();
 
@@ -191,7 +201,9 @@ public class FileImageActivity extends FragmentActivity {
 
             AndroidPluginDatabaseSystem dbmanager = new AndroidPluginDatabaseSystem(mContext);
 
-            dbmanager.createDatabase("dbExample");
+            UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
+
+            dbmanager.createDatabase( moduleId, "dbExample");
 
             TextView  result = (TextView)findViewById(R.id.result_text);
             result.setText("DB Created");
