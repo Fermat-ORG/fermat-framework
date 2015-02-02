@@ -4,3 +4,6 @@
 [submodule "libraries"]
 	path = libraries
 	url = ../libraries.git
+[submodule "libraries/libraries"]
+	path = libraries/libraries
+	url = https://github.com/bitDubai/libraries
