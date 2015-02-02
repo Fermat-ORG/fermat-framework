@@ -1,6 +1,8 @@
 package com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1;
 
 import android.content.Context;
+import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidPlatformFileSystem;
+import com.bitdubai.wallet_platform_api.layer._3_os.PlatformFileSystem;
 import com.bitdubai.wallet_platform_api.layer._3_os.PluginDatabaseSystem;
 import com.bitdubai.wallet_platform_api.layer._3_os.PluginFileSystem;
 import com.bitdubai.wallet_platform_api.layer._3_os.Os;
@@ -13,31 +15,38 @@ import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1
  */
 public class AndroidOs implements Os {
 
-    PluginDatabaseSystem mPluginDatabaseSystem;
-    PluginFileSystem mPluginFileSystem;
+    PluginDatabaseSystem pluginDatabaseSystem;
+    PluginFileSystem pluginFileSystem;
+    PlatformFileSystem platformFileSystem;
     Context mContext;
 
     @Override
-    public PluginDatabaseSystem getPluginsDatabaseSystem() {
-        return mPluginDatabaseSystem;
+    public PluginDatabaseSystem getPluginDatabaseSystem() {
+        return this.pluginDatabaseSystem;
+    }
+
+    @Override
+    public PlatformFileSystem getPlatformFileSystem() {
+        return this.platformFileSystem;
     }
 
     @Override
     public void setContext(Object context) {
         mContext = (Context) context;
-        mPluginFileSystem.setContext(context);
-        mPluginDatabaseSystem.setContext(context);
+        this.pluginFileSystem.setContext(context);
+        this.pluginDatabaseSystem.setContext(context);
     }
 
     @Override
-    public PluginFileSystem getFileSystem() {
-        return mPluginFileSystem;
+    public PluginFileSystem getPlugInFileSystem() {
+        return this.pluginFileSystem;
     }
 
 
     public AndroidOs() {
-        mPluginDatabaseSystem = new AndroidPluginDatabaseSystem(mContext);
-        mPluginFileSystem = new AndroidPluginFileSystem();
+        this.pluginDatabaseSystem = new AndroidPluginDatabaseSystem(mContext);
+        this.pluginFileSystem = new AndroidPluginFileSystem();
+        this.platformFileSystem = new AndroidPlatformFileSystem();
     }
 
 }

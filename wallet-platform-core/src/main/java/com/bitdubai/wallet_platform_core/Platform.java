@@ -1,5 +1,8 @@
 package com.bitdubai.wallet_platform_core;
 
+import com.bitdubai.wallet_platform_api.CantInitializePluginsManagerException;
+import com.bitdubai.wallet_platform_api.Plugin;
+import com.bitdubai.wallet_platform_api.PluginNotRecognizedException;
 import com.bitdubai.wallet_platform_api.layer.CantStartLayerException;
 import com.bitdubai.wallet_platform_api.layer.PlatformLayer;
 
@@ -107,6 +110,8 @@ public class Platform  {
 
     User mLoggedInUser;
     PlatformEventMonitor eventMonitor;
+    
+    PluginsManager pluginsManager;
 
     public User getLoggedInUser() {
         return mLoggedInUser;
@@ -170,9 +175,9 @@ public class Platform  {
             mModuleLayer.start();
             mAgentLayer.start();
         }
-        catch (CantStartLayerException CantStartLayerException) {
-            System.err.println("CantStartLayerException: " + CantStartLayerException.getMessage());
-            CantStartLayerException.printStackTrace();
+        catch (CantStartLayerException cantStartLayerException) {
+            System.err.println("CantStartLayerException: " + cantStartLayerException.getMessage());
+            cantStartLayerException.printStackTrace();
             throw new CantStartPlatformException();
         }
 
@@ -206,14 +211,50 @@ public class Platform  {
         os.setContext(this.context);
 
         /**
+         * I will initialize the Plugin Manager
+         */
+
+        try
+        {
+            pluginsManager = new PluginsManager(os.getPlatformFileSystem());
+        }
+        catch (CantInitializePluginsManagerException cantInitializePluginsManagerException) {
+            System.err.println("CantInitializePluginsManager: " + cantInitializePluginsManagerException.getMessage());
+            cantInitializePluginsManagerException.printStackTrace();
+            throw new CantStartPlatformException();
+        }
+
+        /**
          * I will give the User Manager access to the File System so it can load and save user information from
          * persistent media.
          */
 
         UserManager userManager =  ((UserLayer) mUserLayer).getUserManager();
 
-        ((DealsWithFileSystem) userManager).setPluginFileSystem(os.getFileSystem());
+        ((DealsWithFileSystem) userManager).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) userManager).setEventManager(eventManager);
+        
+        try
+        {
+            /**
+             * As any other plugin, this one will need its identity in order to access the data he persisted before.
+             */
+        
+            UUID pluginID = pluginsManager.getPluginId((Plugin) userManager);
+            ((Plugin) userManager).setId(pluginID);
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+            /**
+             * In this case this exception means the platform cannot start, as it cannot work without and active user
+             * Manager.  
+             */
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+            throw new CantStartPlatformException();
+        }
+        
+
 
         /**
          * I will give the Crypto Wallet Manager of each crypto network access to the File System and Event Manager so
@@ -222,7 +263,7 @@ public class Platform  {
 
         CryptoNetworkService cryptoNetworkService =  ((CryptoNetworkLayer) mCryptoNetworkLayer).getCryptoNetwork(CryptoNetworks.BITCOIN);
 
-        ((DealsWithFileSystem) cryptoNetworkService).setPluginFileSystem(os.getFileSystem());
+        ((DealsWithFileSystem) cryptoNetworkService).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) cryptoNetworkService).setEventManager(eventManager);
 
         /**
@@ -231,7 +272,7 @@ public class Platform  {
 
         ModuleService walletManager =  ((ModuleLayer) mModuleLayer).getWalletManager();
 
-        ((DealsWithFileSystem) walletManager).setPluginFileSystem(os.getFileSystem());
+        ((DealsWithFileSystem) walletManager).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) walletManager).setEventManager(eventManager);
 
         walletManager.run();
@@ -246,10 +287,7 @@ public class Platform  {
 
         try {
 
-            UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque tiene que usar el file system para la plataform.
-            
-            PluginFile platformStateFile =  os.getFileSystem().getFile(
-                    moduleId ,
+            PlatformFile platformStateFile =  os.getPlatformFileSystem().getFile(
                     DeviceDirectory.PLATFORM.getName(),
                     PlatformFileName.LAST_STATE.getFileName(),
                     FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT
@@ -311,10 +349,7 @@ public class Platform  {
                 throw new CantStartPlatformException();
             }
 
-            UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque tiene que usar el file system para la plataform.
-
-            PluginFile platformStateFile =  os.getFileSystem().createFile(
-                    moduleId,
+             PlatformFile platformStateFile =  os.getPlatformFileSystem().createFile(
                     DeviceDirectory.PLATFORM.getName(),
                     PlatformFileName.LAST_STATE.getFileName(),
                     FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT
@@ -333,12 +368,6 @@ public class Platform  {
                 throw new CantStartPlatformException();
             }
         }
-
-        /**
-         *
-         */
-
-
 
     }
 }

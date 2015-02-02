@@ -5,11 +5,12 @@ package com.bitdubai.wallet_platform_api.layer._3_os;
  */
 public interface Os {
 
-    PluginFileSystem getFileSystem();
-    PluginDatabaseSystem getPluginsDatabaseSystem();
+    PluginFileSystem getPlugInFileSystem();
     
-    
-    
+    PluginDatabaseSystem getPluginDatabaseSystem();
+
+    PlatformFileSystem getPlatformFileSystem();
+            
     void setContext (Object context);
 
 }

@@ -16,4 +16,8 @@ public class CantPersistFileException extends Exception {
         return "Cant persist to media the file " + mFileName;
     }
 
+    public String getFileName() {
+        return  mFileName;
+    }
+
 }
