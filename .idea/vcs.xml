@@ -2,6 +2,7 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/libraries" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/wallet-platform-crypto-network-bitcoin-bitdubai" vcs="Git" />
   </component>
 </project>

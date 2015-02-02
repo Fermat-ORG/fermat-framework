@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/bitDubai-system.iml" filepath="$PROJECT_DIR$/bitDubai-system.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libraries/libraries.iml" filepath="$PROJECT_DIR$/libraries/libraries.iml" />
       <module fileurl="file://$PROJECT_DIR$/smart-wallet-android/smart-wallet-android.iml" filepath="$PROJECT_DIR$/smart-wallet-android/smart-wallet-android.iml" />
       <module fileurl="file://$PROJECT_DIR$/wallet-platform-api/wallet-platform-api.iml" filepath="$PROJECT_DIR$/wallet-platform-api/wallet-platform-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/wallet-platform-core/wallet-platform-core.iml" filepath="$PROJECT_DIR$/wallet-platform-core/wallet-platform-core.iml" />
