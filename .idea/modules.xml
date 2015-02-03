@@ -7,6 +7,7 @@
       <module fileurl="file://$PROJECT_DIR$/wallet-platform-api/wallet-platform-api.iml" filepath="$PROJECT_DIR$/wallet-platform-api/wallet-platform-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/wallet-platform-core/wallet-platform-core.iml" filepath="$PROJECT_DIR$/wallet-platform-core/wallet-platform-core.iml" />
       <module fileurl="file://$PROJECT_DIR$/wallet-platform-crypto-network-bitcoin-bitdubai/wallet-platform-crypto-network-bitcoin-bitdubai.iml" filepath="$PROJECT_DIR$/wallet-platform-crypto-network-bitcoin-bitdubai/wallet-platform-crypto-network-bitcoin-bitdubai.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wallet-platform-crypto-network-bitcoin-bitdubai/wallet-platform-crypto-network-bitcoin-bitdubai.iml" filepath="$PROJECT_DIR$/wallet-platform-crypto-network-bitcoin-bitdubai/wallet-platform-crypto-network-bitcoin-bitdubai.iml" />
       <module fileurl="file://$PROJECT_DIR$/wallet-platform-plugin-module-wallet-manager-bitdubai/wallet-platform-plugin-module-wallet-manager-bitdubai.iml" filepath="$PROJECT_DIR$/wallet-platform-plugin-module-wallet-manager-bitdubai/wallet-platform-plugin-module-wallet-manager-bitdubai.iml" />
     </modules>
   </component>
