@@ -3,7 +3,7 @@ package com.bitdubai.wallet_platform_core.layer._3_os.android;
 import com.bitdubai.wallet_platform_api.layer._3_os.Os;
 import com.bitdubai.wallet_platform_api.layer._3_os.OsSubsystem;
 import com.bitdubai.wallet_platform_api.layer._3_os.WrongOsException;
-import com.bitdubai.wallet_platform_dev.layer._3_os.android.developer.bitdubai.DeveloperBitDubai;
+
 
 /**
  * Created by ciencias on 30.12.14.
@@ -33,8 +33,14 @@ public class AndroidOsSubsystem implements OsSubsystem {
          */
 
         if (areWeOnAndroid() == true) {
-            DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
-            mAndroidOs = developerBitDubai.getAndroidOs();
+
+        /**
+         * A bug in Android Studio is preventing this to work in this way. Thats why it is commented. The OS is selected
+         * whitin the wallet APP and sent to the Platform already selected. We will live with this for a while.
+         */
+            
+        //    DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
+        //    mAndroidOs = developerBitDubai.getAndroidOs();
         }
         else
         {

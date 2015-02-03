@@ -1,4 +1,4 @@
-package com.bitdubai.wallet_platform_core.layer._4_user.manager.developer;
+package com.bitdubai.wallet_platform_core.layer._4_user.manager.developer.bitdubai;
 
 import com.bitdubai.wallet_platform_api.layer._4_user.UserManager;
 import com.bitdubai.wallet_platform_api.layer._4_user.UserDeveloper;
