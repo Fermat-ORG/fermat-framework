@@ -1,4 +1,4 @@
-package com.bitdubai.wallet_platform_core.layer._11_module.wallet_manager.developer.bitdubai.version_1;
+package com.bitdubai.wallet_platform_plugin.layer._11_module.wallet_manager.developer.bitdubai.version_1;
 
 import com.bitdubai.wallet_platform_api.layer._11_module.ModuleNotRunningException;
 import com.bitdubai.wallet_platform_api.PlatformService;

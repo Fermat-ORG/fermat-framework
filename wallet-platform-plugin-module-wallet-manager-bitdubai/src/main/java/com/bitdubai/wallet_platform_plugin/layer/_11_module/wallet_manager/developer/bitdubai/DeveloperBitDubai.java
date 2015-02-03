@@ -1,8 +1,8 @@
-package com.bitdubai.wallet_platform_core.layer._11_module.wallet_manager.developer.bitdubai;
+package com.bitdubai.wallet_platform_plugin.layer._11_module.wallet_manager.developer.bitdubai;
 
 import com.bitdubai.wallet_platform_api.PlatformService;
 import com.bitdubai.wallet_platform_api.layer._11_module.ModuleDeveloper;
-import com.bitdubai.wallet_platform_core.layer._11_module.wallet_manager.developer.bitdubai.version_1.WalletManagerModule;
+import com.bitdubai.wallet_platform_plugin.layer._11_module.wallet_manager.developer.bitdubai.version_1.WalletManagerModule;
 
 
 /**

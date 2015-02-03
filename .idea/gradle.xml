@@ -13,6 +13,7 @@
             <option value="$PROJECT_DIR$/wallet-platform-api" />
             <option value="$PROJECT_DIR$/wallet-platform-core" />
             <option value="$PROJECT_DIR$/wallet-platform-crypto-network-bitcoin-bitdubai" />
+            <option value="$PROJECT_DIR$/wallet-platform-plugin-module-wallet-manager-bitdubai" />
           </set>
         </option>
       </GradleProjectSettings>

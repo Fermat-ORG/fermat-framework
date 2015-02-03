@@ -9,6 +9,7 @@ dependencies {
 
     compile project(':wallet-platform-api')
     compile project(':wallet-platform-crypto-network-bitcoin-bitdubai')
+    compile project(':wallet-platform-plugin-module-wallet-manager-bitdubai')
 
 }
 

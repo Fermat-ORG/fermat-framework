@@ -7,15 +7,12 @@ import com.bitdubai.wallet_platform_api.layer._2_event.manager.DealsWithEvents;
 import com.bitdubai.wallet_platform_api.layer._2_event.EventManager;
 import com.bitdubai.wallet_platform_api.layer._2_event.manager.EventHandler;
 import com.bitdubai.wallet_platform_api.layer._2_event.manager.EventListener;
-import com.bitdubai.wallet_platform_api.layer._2_event.manager.EventType;
 import com.bitdubai.wallet_platform_api.layer._3_os.PluginFileSystem;
 import com.bitdubai.wallet_platform_api.layer._3_os.DealsWithFileSystem;
 import com.bitdubai.wallet_platform_api.layer._4_user.manager.CantCreateUserException;
 import com.bitdubai.wallet_platform_api.layer._4_user.manager.CantLoadUserException;
 import com.bitdubai.wallet_platform_api.layer._4_user.User;
 import com.bitdubai.wallet_platform_api.layer._4_user.UserManager;
-import com.bitdubai.wallet_platform_core.layer._11_module.wallet_manager.developer.bitdubai.version_1.UserCreatedEventHandler;
-import com.bitdubai.wallet_platform_core.layer._11_module.wallet_manager.developer.bitdubai.version_1.UserLoggedInEventHandler;
 
 import java.util.ArrayList;
 import java.util.List;
