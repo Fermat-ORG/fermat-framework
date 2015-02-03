@@ -58,7 +58,7 @@ public class HomeFragment extends  Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.wallets_teens_fragment_send_and_receive, container, false);
+        rootView = inflater.inflate(R.layout.wallets_factory_fragment_send_and_receive, container, false);
 
         return rootView;
     }
@@ -70,43 +70,6 @@ public class HomeFragment extends  Fragment {
         lv = (ExpandableListView) view.findViewById(R.id.expListView);
         lv.setAdapter(new ExpandableListAdapter(contacts, transactions));
         lv.setGroupIndicator(null);
-
-        lv.setOnItemClickListener(null);
-
-     /*  lv.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
-
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-
-                Intent intent;
-                 intent = new Intent(getActivity(), SentDetailActivity.class);
-                startActivity(intent);
-
-                return true;
-            }
-        });*/
-
-        lv.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
-
-            @Override
-            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
-
-                if (groupPosition == 0) {
-
-                    Intent intent;
-                    intent = new Intent(getActivity(), SendToNewContactActivity.class);
-                    startActivity(intent);
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-        });
-
-
-
 
     }
 
@@ -177,7 +140,7 @@ public class HomeFragment extends  Fragment {
 
             TextView tv;
             if (groupPosition == 0) {
-                convertView = inf.inflate(R.layout.wallets_teens_multiple_fragments_titles_list_item, parent, false);
+                convertView = inf.inflate(R.layout.wallets_factory_multiple_fragments_titles_list_item, parent, false);
 
                 tv = ((TextView)convertView.findViewById(R.id.title));
                 tv.setText("Total balance in all accounts");
@@ -192,7 +155,7 @@ public class HomeFragment extends  Fragment {
                         case 1:
                             //never gets here
 
-                            convertView = inf.inflate(R.layout.wallets_teens_fragment_home_list_item, parent, false);
+                            convertView = inf.inflate(R.layout.wallets_factory_fragment_home_list_item, parent, false);
 
                             tv = ((TextView)convertView.findViewById(R.id.balance));
                             tv.setText(balances[groupPosition-1]);
@@ -211,7 +174,7 @@ public class HomeFragment extends  Fragment {
                             break;
 
                         case 2:
-                            convertView = inf.inflate(R.layout.wallets_teens_multiple_fragments_titles_list_item, parent, false);
+                            convertView = inf.inflate(R.layout.wallets_factory_multiple_fragments_titles_list_item, parent, false);
 
                             tv = ((TextView)convertView.findViewById(R.id.title));
                             tv.setText("Requests received waiting to be accepted");
@@ -221,7 +184,7 @@ public class HomeFragment extends  Fragment {
 
                         case 3: case 4:case 5:case 6:case 8:case 9:
 
-                        convertView = inf.inflate(R.layout.wallets_teens_multiple_fragments_request_received_list_item, parent, false);
+                        convertView = inf.inflate(R.layout.wallets_factory_multiple_fragments_request_received_list_item, parent, false);
                         account_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
 
 
@@ -277,7 +240,7 @@ public class HomeFragment extends  Fragment {
                         }
                         break;
                         case 7:
-                            convertView = inf.inflate(R.layout.wallets_teens_multiple_fragments_titles_list_item, parent, false);
+                            convertView = inf.inflate(R.layout.wallets_factory_multiple_fragments_titles_list_item, parent, false);
                             tv = ((TextView)convertView.findViewById(R.id.title));
                             tv.setText("Requests sent waiting to be accepted");
                             tv.setTypeface(MyApplication.getDefaultTypeface());

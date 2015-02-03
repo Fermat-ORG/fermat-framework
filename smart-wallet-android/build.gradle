@@ -17,6 +17,7 @@ android {
                            'src/main/structured_res/app/subapp/shop/version_1',
                            'src/main/structured_res/app/subapp/shop_manager/version_1',
                            'src/main/structured_res/app/subapp/wallet_factory/version_1',
+                           'src/main/structured_res/app/subapp/wallet_factory/version_2',
                            'src/main/structured_res/app/subapp/wallet_store/version_1',
                            'src/main/structured_res/app/subapp/publisher/version_1',
                            'src/main/structured_res/app/subapp/wallet_manager/version_1',
