@@ -112,14 +112,12 @@ public class Platform  {
     
     PluginsManager pluginsManager;
 
-    public User getLoggedInUser() {
-        return mLoggedInUser;
-    }
-
     Object context;
     Os os;
 
 
+    
+    
     public void Platform () {
 
          /**
@@ -128,6 +126,17 @@ public class Platform  {
 
         eventMonitor = new PlatformEventMonitor();
     }
+
+
+
+    
+    
+    
+    public User getLoggedInUser() {
+        return mLoggedInUser;
+    }
+    
+    
 
     /**
      * Somebody is starting the com.bitdubai.platform. The com.bitdubai.platform is portable. That somebody is OS dependent and has access to

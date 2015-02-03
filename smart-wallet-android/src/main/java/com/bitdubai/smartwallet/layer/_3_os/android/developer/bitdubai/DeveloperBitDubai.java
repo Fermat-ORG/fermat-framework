@@ -1,4 +1,4 @@
-package com.bitdubai.wallet_platform_dev.layer._3_os.android.developer.bitdubai;
+package com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai;
 
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.TimeFrequency;

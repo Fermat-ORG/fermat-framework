@@ -3,7 +3,7 @@ package com.bitdubai.wallet_platform_core.layer._4_user.manager;
 import com.bitdubai.wallet_platform_api.layer._4_user.UserManager;
 import com.bitdubai.wallet_platform_api.layer._4_user.UserSubsystem;
 import com.bitdubai.wallet_platform_api.layer._4_user.manager.CantStartSubsystemException;
-import com.bitdubai.wallet_platform_core.layer._4_user.manager.developer.DeveloperBitDubai;
+import com.bitdubai.wallet_platform_core.layer._4_user.manager.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by ciencias on 22.01.15.

@@ -3,7 +3,7 @@ package com.bitdubai.wallet_platform_core.layer._7_crypto_network.bitcoin;
 import com.bitdubai.wallet_platform_api.PlatformService;
 import com.bitdubai.wallet_platform_api.layer._7_crypto_network.CantStartSubsystemException;
 import com.bitdubai.wallet_platform_api.layer._7_crypto_network.CryptoNetworkSubsystem;
-import com.bitdubai.wallet_platform_core.layer._7_crypto_network.bitcoin.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.wallet_platform_dev.layer._7_crypto_network.bitcoin.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by ciencias on 30.12.14.
