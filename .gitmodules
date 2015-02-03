@@ -7,3 +7,6 @@
 [submodule "wallet-platform-plugin-module-wallet-manager-bitdubai"]
 	path = wallet-platform-plugin-module-wallet-manager-bitdubai
 	url = https://github.com/bitDubai/wallet-platform-plugin-module-wallet-manager-bitdubai
+[submodule "wallet-platform-plugin-crypto-network-bitcoin-bitdubai"]
+	path = wallet-platform-plugin-crypto-network-bitcoin-bitdubai
+	url = https://github.com/bitDubai/wallet-platform-plugin-crypto-network-bitcoin-bitdubai
