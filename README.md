@@ -20,27 +20,6 @@ Is a P2P com.bitdubai.platform with an open architecture that allows highly segm
 Is an extension of the core banking systems banks usually have. It allows traditional banks to create "crypto products" in their own systems adding all the missing components necessary to make that happen.  
 
 
-# Project Ownership
-
-While being bootstrapped the ownership of the project remains within its contributors. The intention is that at a certain point in time the project will become VC-backed and be turned into a company, as this is the fastest way to reach the goal. All contributors will emerge as co-founders and their share will be calculated based on the amount of hours invested in the project multiplied by a factor ranging from 1 to 10 assigned to each contributor. The value of this constant is determined by the given contributor's expertise and should be approved by the others.
-
-## Contributors
-
-updated 19 Jan 15
-
-| Name (paid by)  | Expertise | Hours Contributed  | Project Shares |
-| ------------- | ------------- | ------------- | ------------- |
-| Luis Fernando Molina  | 10  | 1,313  | 13,130  |
-| Guillermo Villanueva  | 10  | 240  | 2,400  |
-| Loui Molina  | 1  | 254  | 254  |
-| Andrey Molina  | 1  | 15  | 15  |
-| Thais Molina  | 1  | 3  | 3  |
-| Hernan Calabrese  | 8  | 15  | 120  |
-| Eniko Jokai  | 10  | 31  | 310  |
-| Natalia Cortez (LFM)  | 5  | 120  | 600  |
-| Damien Calvignac   | 7  | 10  | 70  |
-
-You can contribute with your own expertise and time or by hiring a developer that contributes code on your behalf. If you are interested in doing so send an email to contribution@bitdubai.com . 
 
 # Problems & Solutions
 
