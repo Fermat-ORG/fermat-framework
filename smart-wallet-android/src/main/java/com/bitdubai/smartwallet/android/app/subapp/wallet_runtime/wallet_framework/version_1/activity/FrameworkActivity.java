@@ -19,8 +19,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-
-
 import com.bitdubai.smartwallet.android.app.common.version_1.classes.MyApplication;
 import com.bitdubai.smartwallet.android.app.common.version_1.fragment.NavigationDrawerFragment;
 import com.bitdubai.smartwallet.android.app.common.version_1.classes.PagerSlidingTabStrip;
@@ -29,18 +27,12 @@ import com.bitdubai.smartwallet.android.app.subapp.wallet_runtime.wallet_segment
 import com.bitdubai.smartwallet.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.DiscountsFragment;
 import com.bitdubai.smartwallet.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.HomeFragment;
 import com.bitdubai.smartwallet.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.SendFragment;
-//import com.bitdubai.smartwallet.android.app.subapp.walletframework.wallets.kids.BalanceFragment;
-
-
 import com.bitdubai.smartwallet.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.BalanceFragment;
-
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ReceiveFragment;
 import com.bitdubai.smartwallet.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.RefillFragment;
 import com.bitdubai.smartwallet.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ShopFragment;
-import com.bitdubai.smartwallet.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.kids.sub_segment.all.developer.bitdubai.version_1.fragment.TicketFragment;
 
-//public class FrameworkActivity extends FragmentActivity {
 public class FrameworkActivity extends FragmentActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
@@ -548,7 +540,7 @@ public class FrameworkActivity extends FragmentActivity
                     currentFragment =   HomeFragment.newInstance(position);
                     break;
                 case 1:
-                    {currentFragment =  BalanceFragment.newInstance(position);}
+                    currentFragment =  BalanceFragment.newInstance(position);
                     break;
                 case 2:
                     currentFragment =  SendFragment.newInstance(position);
@@ -561,6 +553,9 @@ public class FrameworkActivity extends FragmentActivity
                     break;
                 case 5:
                     currentFragment =  RefillFragment.newInstance(position);
+                    break;
+                case 6:
+                    currentFragment =   DiscountsFragment.newInstance(position);
                     break;
                 default:
                     currentFragment =   DiscountsFragment.newInstance(position);
