@@ -7,9 +7,3 @@ include 'wallet-platform-api'
 include 'wallet-platform-plugin-module-wallet-manager-bitdubai'
 
 include 'wallet-platform-plugin-crypto-network-bitcoin-bitdubai'
-
-include 'wallet-platform-plugin-module-wallet-store-bitdubai'
-
-include 'wallet-platform-plugin-module-wallet-publisher-bitdubai'
-
-include 'wallet-platform-plugin-module-wallet-runtime-bitdubai'
