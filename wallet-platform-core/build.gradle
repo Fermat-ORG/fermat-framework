@@ -13,6 +13,9 @@ dependencies {
     compile project(':wallet-platform-api')
     compile project(':wallet-platform-plugin-crypto-network-bitcoin-bitdubai')
     compile project(':wallet-platform-plugin-module-wallet-manager-bitdubai')
+    compile project(':wallet-platform-plugin-module-wallet-store-bitdubai')
+    compile project(':wallet-platform-plugin-module-wallet-publisher-bitdubai')
+    compile project(':wallet-platform-plugin-module-wallet-runtime-bitdubai')
 
 }
 

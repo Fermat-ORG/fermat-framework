@@ -4,13 +4,14 @@ import com.bitdubai.wallet_platform_core.layer._9_network_service.review.version
 import com.bitdubai.wallet_platform_core.layer._9_network_service.review.version_1.Likeable;
 import com.bitdubai.wallet_platform_core.layer._9_network_service.review.version_1.Reviewable;
 import com.bitdubai.wallet_platform_core.layer._10_middleware.wallet.developer.bitdubai.version_1.engine.license.License;
+import com.bitdubai.wallet_platform_plugin.layer._11_module.wallet_store.developer.bitdubai.version_1.CommercialWallet;
 
 import java.util.List;
 
 /**
  * Created by ciencias on 28.12.14.
  */
-public class CommercialInstalledWallet implements  CommercialWallet, Reviewable, Likeable, Dislikeable {
+public class CommercialInstalledWallet implements CommercialWallet, Reviewable, Likeable, Dislikeable {
 
 
     private List<License> mLicense;
