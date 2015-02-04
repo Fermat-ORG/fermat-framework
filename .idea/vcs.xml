@@ -5,6 +5,9 @@
     <mapping directory="$PROJECT_DIR$/libraries" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/wallet-platform-plugin-crypto-network-bitcoin-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/wallet-platform-plugin-module-wallet-manager-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/wallet-platform-plugin-module-wallet-publisher-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/wallet-platform-plugin-module-wallet-runtime-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/wallet-platform-plugin-module-wallet-store-bitdubai" vcs="Git" />
   </component>
 </project>
 
