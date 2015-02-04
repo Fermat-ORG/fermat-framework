@@ -2,7 +2,7 @@ package com.bitdubai.wallet_platform_core.layer._11_module.wallet_runtime.develo
 
 import com.bitdubai.wallet_platform_api.PlatformService;
 import com.bitdubai.wallet_platform_api.layer._11_module.ModuleDeveloper;
-import com.bitdubai.wallet_platform_core.layer._11_module.wallet_runtime.developer.bitdubai.version_1.WalletRuntimeModule;
+import com.bitdubai.wallet_platform_plugin.layer._11_module.wallet_runtime.developer.bitdubai.version_1.WalletRuntimeModule;
 
 /**
  * Created by ciencias on 21.01.15.
