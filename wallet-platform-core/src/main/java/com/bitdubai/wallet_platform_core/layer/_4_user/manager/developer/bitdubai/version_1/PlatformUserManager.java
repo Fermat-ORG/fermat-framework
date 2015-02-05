@@ -1,12 +1,12 @@
 package com.bitdubai.wallet_platform_core.layer._4_user.manager.developer.bitdubai.version_1;
 
-import com.bitdubai.wallet_platform_api.PlatformService;
+import com.bitdubai.wallet_platform_api.Service;
 import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.ServiceStatus;
-import com.bitdubai.wallet_platform_api.layer._2_event.manager.DealsWithEvents;
-import com.bitdubai.wallet_platform_api.layer._2_event.EventManager;
-import com.bitdubai.wallet_platform_api.layer._2_event.manager.EventHandler;
-import com.bitdubai.wallet_platform_api.layer._2_event.manager.EventListener;
+import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.DealsWithEvents;
+import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventManager;
+import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventHandler;
+import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventListener;
 import com.bitdubai.wallet_platform_api.layer._3_os.PluginFileSystem;
 import com.bitdubai.wallet_platform_api.layer._3_os.DealsWithFileSystem;
 import com.bitdubai.wallet_platform_api.layer._4_user.manager.CantCreateUserException;
@@ -21,7 +21,7 @@ import java.util.UUID;
 /**
  * Created by ciencias on 22.01.15.
  */
-public class PlatformUserManager implements PlatformService,UserManager,DealsWithFileSystem, DealsWithEvents, Plugin {
+public class PlatformUserManager implements Service, UserManager,DealsWithFileSystem, DealsWithEvents, Plugin {
 
     /**
      * PlatformService Interface member variables.

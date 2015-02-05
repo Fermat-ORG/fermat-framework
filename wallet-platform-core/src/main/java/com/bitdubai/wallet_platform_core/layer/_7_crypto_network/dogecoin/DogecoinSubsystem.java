@@ -1,6 +1,6 @@
 package com.bitdubai.wallet_platform_core.layer._7_crypto_network.dogecoin;
 
-import com.bitdubai.wallet_platform_api.PlatformService;
+import com.bitdubai.wallet_platform_api.Service;
 import com.bitdubai.wallet_platform_api.layer._7_crypto_network.CantStartSubsystemException;
 import com.bitdubai.wallet_platform_api.layer._7_crypto_network.CryptoNetworkSubsystem;
 
@@ -14,7 +14,7 @@ public class DogecoinSubsystem implements CryptoNetworkSubsystem {
     }
 
     @Override
-    public PlatformService getCryptoNetwork() {
+    public Service getCryptoNetwork() {
         return null;
     }
 }

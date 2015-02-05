@@ -1,12 +1,12 @@
 package com.bitdubai.wallet_platform_core.layer._11_module.shell;
 
-import com.bitdubai.wallet_platform_api.PlatformService;
+import com.bitdubai.wallet_platform_api.Service;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.ServiceStatus;
 
 /**
  * Created by ciencias on 30.12.14.
  */
-public class ShellModule implements PlatformService {
+public class ShellModule implements Service {
     @Override
     public void start() {
 

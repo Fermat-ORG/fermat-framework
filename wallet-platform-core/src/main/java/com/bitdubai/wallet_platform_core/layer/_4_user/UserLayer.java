@@ -1,20 +1,21 @@
 package com.bitdubai.wallet_platform_core.layer._4_user;
 
+import com.bitdubai.wallet_platform_api.Service;
 import com.bitdubai.wallet_platform_api.layer.CantStartLayerException;
 import com.bitdubai.wallet_platform_api.layer.PlatformLayer;
 import com.bitdubai.wallet_platform_api.layer._4_user.UserManager;
 import com.bitdubai.wallet_platform_api.layer._4_user.UserSubsystem;
 import com.bitdubai.wallet_platform_api.layer._4_user.manager.CantStartSubsystemException;
-import com.bitdubai.wallet_platform_core.layer._4_user.manager.ManagerSubsystem;
+import com.bitdubai.wallet_platform_core.layer._4_user.manager.UserManagerSubsystem;
 
 /**
  * Created by ciencias on 22.01.15.
  */
 public class UserLayer implements PlatformLayer {
 
-    UserManager mUserManager;
+    Service mUserManager;
 
-    public UserManager getUserManager() {
+    public Service getUserManager() {
         return mUserManager;
     }
 
@@ -23,7 +24,7 @@ public class UserLayer implements PlatformLayer {
         /**
          * Let's start the Login Subsystem;
          */
-        UserSubsystem loginSubsystem = new ManagerSubsystem();
+        UserSubsystem loginSubsystem = new UserManagerSubsystem();
 
         try {
             loginSubsystem.start();

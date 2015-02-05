@@ -1,5 +1,6 @@
 package com.bitdubai.wallet_platform_api.layer._4_user;
 
+import com.bitdubai.wallet_platform_api.Service;
 import com.bitdubai.wallet_platform_api.layer._4_user.manager.CantStartSubsystemException;
 
 /**
@@ -7,5 +8,5 @@ import com.bitdubai.wallet_platform_api.layer._4_user.manager.CantStartSubsystem
  */
 public interface UserSubsystem {
     public void start () throws CantStartSubsystemException;
-    public UserManager getUserManager();
+    public Service getUserManager();
 }

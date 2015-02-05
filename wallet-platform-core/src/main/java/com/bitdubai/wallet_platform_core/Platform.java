@@ -6,16 +6,16 @@ import com.bitdubai.wallet_platform_api.PluginNotRecognizedException;
 import com.bitdubai.wallet_platform_api.layer.CantStartLayerException;
 import com.bitdubai.wallet_platform_api.layer.PlatformLayer;
 
-import com.bitdubai.wallet_platform_api.PlatformService;
+import com.bitdubai.wallet_platform_api.Service;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.DeviceDirectory;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.PlatformFileName;
 import com.bitdubai.wallet_platform_api.layer._1_definition.event.DealWithEventMonitor;
-import com.bitdubai.wallet_platform_api.layer._2_event.manager.DealsWithEvents;
+import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.DealsWithEvents;
+import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventManager;
 import com.bitdubai.wallet_platform_api.layer._3_os.*;
 import com.bitdubai.wallet_platform_api.layer._4_user.User;
 import com.bitdubai.wallet_platform_api.layer._4_user.UserManager;
-import com.bitdubai.wallet_platform_core.layer._2_event.EventLayer;
-import com.bitdubai.wallet_platform_api.layer._2_event.EventManager;
+import com.bitdubai.wallet_platform_core.layer._2_platform_service.PlatformServiceLayer;
 
 import com.bitdubai.wallet_platform_core.layer._1_definition.DefinitionLayer;
 import com.bitdubai.wallet_platform_core.layer._3_os.OsLayer;
@@ -44,7 +44,7 @@ public class Platform  {
 
 
     PlatformLayer mDefinitionLayer = new DefinitionLayer();
-    PlatformLayer mEventLayer = new EventLayer();
+    PlatformLayer mEventLayer = new PlatformServiceLayer();
     PlatformLayer mOsLayer = new OsLayer();
     PlatformLayer mUserLayer = new UserLayer();
     PlatformLayer mLicesnseLayer = new LicenseLayer();
@@ -192,7 +192,7 @@ public class Platform  {
 
 
         /**
-         * The OS and Event Manager will need to be handled to several other objects. I will have them handly.
+         * The OS and Event Manager will need to be handled to several other objects.
          */
 
         if (os == null) {
@@ -204,7 +204,7 @@ public class Platform  {
             this.os  = ((OsLayer) mOsLayer).getOs();
         }
 
-        EventManager eventManager = ((EventLayer) mEventLayer).getEventManager();
+        Service eventManager = ((PlatformServiceLayer) mEventLayer).getEventManager();
 
         /**
          * I will give the Event Monitor to the Event Manager, in order to allow it to monitor listeners exceptions..
@@ -237,10 +237,10 @@ public class Platform  {
          * persistent media.
          */
 
-        UserManager userManager =  ((UserLayer) mUserLayer).getUserManager();
+        Service userManager =  ((UserLayer) mUserLayer).getUserManager();
 
         ((DealsWithFileSystem) userManager).setPluginFileSystem(os.getPlugInFileSystem());
-        ((DealsWithEvents) userManager).setEventManager(eventManager);
+        ((DealsWithEvents) userManager).setEventManager((EventManager) eventManager);
         
         try
         {
@@ -250,6 +250,8 @@ public class Platform  {
         
             UUID pluginID = pluginsManager.getPluginId((Plugin) userManager);
             ((Plugin) userManager).setId(pluginID);
+            
+            userManager.start();
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -259,6 +261,9 @@ public class Platform  {
              */
             System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
             pluginNotRecognizedException.printStackTrace();
+
+            userManager.stop();
+            
             throw new CantStartPlatformException();
         }
         
@@ -269,10 +274,10 @@ public class Platform  {
          * it can load and save and load information from persistent media and also raise events.
          */
 
-        PlatformService cryptoNetworkService =  ((CryptoNetworkLayer) mCryptoNetworkLayer).getCryptoNetwork(CryptoNetworks.BITCOIN);
+        Service cryptoNetworkService =  ((CryptoNetworkLayer) mCryptoNetworkLayer).getCryptoNetwork(CryptoNetworks.BITCOIN);
 
         ((DealsWithFileSystem) cryptoNetworkService).setPluginFileSystem(os.getPlugInFileSystem());
-        ((DealsWithEvents) cryptoNetworkService).setEventManager(eventManager);
+        ((DealsWithEvents) cryptoNetworkService).setEventManager((EventManager) eventManager);
 
         try
         {
@@ -303,10 +308,10 @@ public class Platform  {
          * I will give the Wallet Manager access to the File System and to the Event Manager
          */
 
-        PlatformService walletManager =  ((ModuleLayer) mModuleLayer).getWalletManager();
+        Service walletManager =  ((ModuleLayer) mModuleLayer).getWalletManager();
 
         ((DealsWithFileSystem) walletManager).setPluginFileSystem(os.getPlugInFileSystem());
-        ((DealsWithEvents) walletManager).setEventManager(eventManager);
+        ((DealsWithEvents) walletManager).setEventManager((EventManager) eventManager);
 
 
         try
@@ -388,7 +393,7 @@ public class Platform  {
 
             try
             {
-                ((UserLayer) mUserLayer).getUserManager().loadUser(userId);
+                ((UserManager) ((UserLayer) mUserLayer).getUserManager()).loadUser(userId);
             }
             catch (CantLoadUserException cantLoadUserException)
             {
@@ -416,7 +421,7 @@ public class Platform  {
 
             try {
 
-                newUser = ((UserLayer) mUserLayer).getUserManager().createUser();
+                newUser = ((UserManager) ((UserLayer) mUserLayer).getUserManager()).createUser();
                 newUser.login("");
 
             } catch (CantCreateUserException | LoginFailedException exception) {
