@@ -1,6 +1,3 @@
-[submodule "wallet-platform-crypto-network-bitcoin-bitdubai"]
-	path = wallet-platform-crypto-network-bitcoin-bitdubai
-	url = ../wallet-platform-crypto-network-bitcoin-bitdubai.git
 [submodule "libraries"]
 	path = libraries
 	url = https://github.com/bitDubai/libraries
