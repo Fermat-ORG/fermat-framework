@@ -79,6 +79,11 @@ public class PlatformUserManager implements PlatformService,UserManager,DealsWit
     }
 
     @Override
+    public void resume() {
+
+    }
+
+    @Override
     public void stop() {
 
         /**

@@ -18,6 +18,11 @@ public class WalletPublisherModule implements PlatformService {
     }
 
     @Override
+    public void resume() {
+
+    }
+
+    @Override
     public void stop() {
 
     }

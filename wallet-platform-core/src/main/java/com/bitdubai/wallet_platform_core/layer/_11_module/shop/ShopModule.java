@@ -18,6 +18,11 @@ public class ShopModule implements PlatformService {
     }
 
     @Override
+    public void resume() {
+
+    }
+
+    @Override
     public void stop() {
 
     }

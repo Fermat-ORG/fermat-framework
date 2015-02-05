@@ -10,6 +10,8 @@ public interface PlatformService {
     public void start();
 
     public void pause();
+    
+    public void resume();
 
     public void stop();
 

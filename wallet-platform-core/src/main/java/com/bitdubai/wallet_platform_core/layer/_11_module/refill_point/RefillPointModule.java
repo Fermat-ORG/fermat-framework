@@ -18,6 +18,11 @@ public class RefillPointModule implements PlatformService {
     }
 
     @Override
+    public void resume() {
+
+    }
+
+    @Override
     public void stop() {
 
     }
