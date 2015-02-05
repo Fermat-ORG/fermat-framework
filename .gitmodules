@@ -10,3 +10,12 @@
 [submodule "wallet-platform-plugin-crypto-network-bitcoin-bitdubai"]
 	path = wallet-platform-plugin-crypto-network-bitcoin-bitdubai
 	url = https://github.com/bitDubai/wallet-platform-plugin-crypto-network-bitcoin-bitdubai
+[submodule "wallet-platform-plugin-module-wallet-publisher-bitdubai"]
+	path = wallet-platform-plugin-module-wallet-publisher-bitdubai
+	url = https://github.com/bitDubai/wallet-platform-plugin-module-wallet-publisher-bitdubai.git
+[submodule "wallet-platform-plugin-module-wallet-runtime-bitdubai"]
+	path = wallet-platform-plugin-module-wallet-runtime-bitdubai
+	url = https://github.com/bitDubai/wallet-platform-plugin-module-wallet-runtime-bitdubai.git
+[submodule "wallet-platform-plugin-module-wallet-store-bitdubai"]
+	path = wallet-platform-plugin-module-wallet-store-bitdubai
+	url = https://github.com/bitDubai/wallet-platform-plugin-module-wallet-store-bitdubai.git
