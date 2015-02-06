@@ -1,8 +1,7 @@
 package com.bitdubai.wallet_platform_core.layer._2_platform_service.event_manager;
 
-import com.bitdubai.wallet_platform_api.Service;
+import com.bitdubai.wallet_platform_api.Addon;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.CantStartSubsystemException;
-import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventManager;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.PlatformServiceSubsystem;
 import com.bitdubai.wallet_platform_core.layer._2_platform_service.event_manager.developer.DeveloperBitDubai;
 
@@ -11,11 +10,11 @@ import com.bitdubai.wallet_platform_core.layer._2_platform_service.event_manager
  */
 public class EventManagerSubsystem implements PlatformServiceSubsystem {
 
-    Service mEventManager;
+    Addon addon;
 
     @Override
-    public Service getService() {
-        return mEventManager;
+    public Addon getAddon() {
+        return addon;
     }
 
     @Override
@@ -27,7 +26,7 @@ public class EventManagerSubsystem implements PlatformServiceSubsystem {
 
         try {
             DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
-            mEventManager = developerBitDubai.getEventManager();
+            addon = developerBitDubai.getAddon();
         }
         catch (Exception e)
         {

@@ -1,5 +1,6 @@
 package com.bitdubai.wallet_platform_core.layer._5_license;
 
+import com.bitdubai.wallet_platform_api.Addon;
 import com.bitdubai.wallet_platform_api.layer.CantStartLayerException;
 import com.bitdubai.wallet_platform_api.layer.PlatformLayer;
 import com.bitdubai.wallet_platform_api.layer._5_license.CantStartSubsystemException;
@@ -13,14 +14,14 @@ import com.bitdubai.wallet_platform_core.layer._5_license.wallet.WalletLicenseSu
  */
 public class LicenseLayer implements PlatformLayer {
 
-    LicenseManager mComponentLicenseManager;
-    LicenseManager mUseLicenseManager;
+    Addon mComponentLicenseManager;
+    Addon mUseLicenseManager;
 
-    public LicenseManager getComponentLicenseManager() {
+    public Addon getComponentLicenseManager() {
         return mComponentLicenseManager;
     }
 
-    public LicenseManager getUseLicenseManager() {
+    public Addon getUseLicenseManager() {
         return mUseLicenseManager;
     }
 
@@ -34,7 +35,7 @@ public class LicenseLayer implements PlatformLayer {
 
         try {
             componentLicenseSubsystem.start();
-            mComponentLicenseManager = ((LicenseSubsystem) componentLicenseSubsystem).getLicenseManager();
+            mComponentLicenseManager = ((LicenseSubsystem) componentLicenseSubsystem).getAddon();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());
@@ -52,7 +53,7 @@ public class LicenseLayer implements PlatformLayer {
 
         try {
             useLicenseSubsystem.start();
-            mUseLicenseManager = ((LicenseSubsystem) useLicenseSubsystem).getLicenseManager();
+            mUseLicenseManager = ((LicenseSubsystem) useLicenseSubsystem).getAddon();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());

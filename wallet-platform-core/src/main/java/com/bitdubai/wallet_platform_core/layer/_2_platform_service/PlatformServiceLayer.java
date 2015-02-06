@@ -1,6 +1,6 @@
 package com.bitdubai.wallet_platform_core.layer._2_platform_service;
 
-import com.bitdubai.wallet_platform_api.Service;
+import com.bitdubai.wallet_platform_api.Addon;
 import com.bitdubai.wallet_platform_api.layer.CantStartLayerException;
 import com.bitdubai.wallet_platform_api.layer.PlatformLayer;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.CantStartSubsystemException;
@@ -13,14 +13,14 @@ import com.bitdubai.wallet_platform_core.layer._2_platform_service.event_manager
  */
 public class PlatformServiceLayer implements PlatformLayer {
 
-    Service eventManager;
-    Service errorManager;
+    Addon eventManager;
+    Addon errorManager;
 
-    public Service getEventManager() {
+    public Addon getEventManager() {
         return this.eventManager;
     }
 
-    public Service getErrorManager() {
+    public Addon getErrorManager() {
         return this.errorManager;
     }
 
@@ -35,7 +35,7 @@ public class PlatformServiceLayer implements PlatformLayer {
 
         try {
             eventManagerSubsystem.start();
-            this.eventManager = ((PlatformServiceSubsystem) eventManagerSubsystem).getService();
+            this.eventManager = ((PlatformServiceSubsystem) eventManagerSubsystem).getAddon();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());
@@ -53,7 +53,7 @@ public class PlatformServiceLayer implements PlatformLayer {
 
         try {
             errorManagerSubsystem.start();
-            this.errorManager = ((PlatformServiceSubsystem) errorManagerSubsystem).getService();
+            this.errorManager = ((PlatformServiceSubsystem) errorManagerSubsystem).getAddon();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());

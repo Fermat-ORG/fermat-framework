@@ -1,5 +1,6 @@
 package com.bitdubai.wallet_platform_core.layer._4_user.manager.developer.bitdubai.version_1;
 
+import com.bitdubai.wallet_platform_api.Addon;
 import com.bitdubai.wallet_platform_api.Service;
 import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.ServiceStatus;
@@ -23,7 +24,7 @@ import java.util.UUID;
 /**
  * Created by ciencias on 22.01.15.
  */
-public class PlatformUserManagerAddonRoot implements Service, UserManager,DealsWithFileSystem, DealsWithEvents, DealsWithErrors,Plugin {
+public class PlatformUserManagerAddonRoot implements Service, UserManager,DealsWithFileSystem, DealsWithEvents, DealsWithErrors, Addon {
 
     /**
      * PlatformService Interface member variables.
@@ -194,12 +195,4 @@ public class PlatformUserManagerAddonRoot implements Service, UserManager,DealsW
 
     }
 
-    /**
-     * Plugin Interface implementation.
-     */
-    
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
 }

@@ -1,6 +1,6 @@
 package com.bitdubai.wallet_platform_core.layer._4_user;
 
-import com.bitdubai.wallet_platform_api.Service;
+import com.bitdubai.wallet_platform_api.Addon;
 import com.bitdubai.wallet_platform_api.layer.CantStartLayerException;
 import com.bitdubai.wallet_platform_api.layer.PlatformLayer;
 import com.bitdubai.wallet_platform_api.layer._4_user.UserSubsystem;
@@ -12,10 +12,10 @@ import com.bitdubai.wallet_platform_core.layer._4_user.manager.UserManagerSubsys
  */
 public class UserLayer implements PlatformLayer {
 
-    Service mUserManager;
+    Addon addon;
 
-    public Service getUserManager() {
-        return mUserManager;
+    public Addon getUserManager() {
+        return addon;
     }
 
     public void start() throws CantStartLayerException {
@@ -27,7 +27,7 @@ public class UserLayer implements PlatformLayer {
 
         try {
             loginSubsystem.start();
-            mUserManager = ((UserSubsystem) loginSubsystem).getUserManager();
+            addon = ((UserSubsystem) loginSubsystem).getAddon();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());

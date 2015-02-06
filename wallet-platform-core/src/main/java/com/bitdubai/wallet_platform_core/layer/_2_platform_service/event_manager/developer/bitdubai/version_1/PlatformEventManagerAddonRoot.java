@@ -1,6 +1,7 @@
 package com.bitdubai.wallet_platform_core.layer._2_platform_service.event_manager.developer.bitdubai.version_1;
 
 
+import com.bitdubai.wallet_platform_api.Addon;
 import com.bitdubai.wallet_platform_api.Service;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.wallet_platform_api.layer._1_definition.event.DealWithEventMonitor;
@@ -15,7 +16,7 @@ import java.util.List;
 /**
  * Created by ciencias on 23.01.15.
  */
-public class PlatformEventManagerAddonRoot implements Service, EventManager, DealWithEventMonitor {
+public class PlatformEventManagerAddonRoot implements Service, EventManager, DealWithEventMonitor, Addon {
 
     private List<EventListener> listenersUserCreatedEvent;
     private List<EventListener> listenersUserLoggedInEvent;

@@ -1,20 +1,20 @@
 package com.bitdubai.wallet_platform_core.layer._2_platform_service.event_manager.developer;
 
-import com.bitdubai.wallet_platform_api.Service;
-import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventDeveloper;
+import com.bitdubai.wallet_platform_api.Addon;
+import com.bitdubai.wallet_platform_api.AddonDeveloper;
 import com.bitdubai.wallet_platform_core.layer._2_platform_service.event_manager.developer.bitdubai.version_1.PlatformEventManagerAddonRoot;
 
 
 /**
  * Created by ciencias on 23.01.15.
  */
-public class DeveloperBitDubai implements EventDeveloper {
+public class DeveloperBitDubai implements AddonDeveloper {
 
-    Service mEventManager;
+    Addon addon;
 
     @Override
-    public Service getEventManager() {
-        return mEventManager;
+    public Addon getAddon() {
+        return addon;
     }
 
 
@@ -25,7 +25,7 @@ public class DeveloperBitDubai implements EventDeveloper {
          * it is easy to choose.
          */
 
-        mEventManager = new PlatformEventManagerAddonRoot();
+        addon = new PlatformEventManagerAddonRoot();
 
     }
 }

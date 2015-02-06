@@ -1,19 +1,19 @@
 package com.bitdubai.wallet_platform_core.layer._5_license.plugin.developer;
 
-import com.bitdubai.wallet_platform_api.layer._5_license.LicenseDeveloper;
-import com.bitdubai.wallet_platform_api.layer._5_license.LicenseManager;
+import com.bitdubai.wallet_platform_api.Addon;
+import com.bitdubai.wallet_platform_api.AddonDeveloper;
 import com.bitdubai.wallet_platform_core.layer._5_license.plugin.developer.bitdubai.version_1.PluginLicenseManagerAddonRoot;
 
 /**
  * Created by ciencias on 21.01.15.
  */
-public class DeveloperBitDubai implements LicenseDeveloper {
+public class DeveloperBitDubai implements AddonDeveloper {
 
-    LicenseManager mLicenseManager;
+    Addon addon;
 
     @Override
-    public LicenseManager getLicenseManager() {
-        return mLicenseManager;
+    public Addon getAddon() {
+        return addon;
     }
 
     public DeveloperBitDubai () {
@@ -23,7 +23,7 @@ public class DeveloperBitDubai implements LicenseDeveloper {
          * it is easy to choose.
          */
 
-        mLicenseManager = new PluginLicenseManagerAddonRoot();
+        addon = new PluginLicenseManagerAddonRoot();
 
     }
 }

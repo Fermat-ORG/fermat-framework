@@ -1,7 +1,7 @@
 package com.bitdubai.wallet_platform_core.layer._5_license.wallet;
 
+import com.bitdubai.wallet_platform_api.Addon;
 import com.bitdubai.wallet_platform_api.layer._5_license.CantStartSubsystemException;
-import com.bitdubai.wallet_platform_api.layer._5_license.LicenseManager;
 import com.bitdubai.wallet_platform_api.layer._5_license.LicenseSubsystem;
 import com.bitdubai.wallet_platform_core.layer._5_license.wallet.developer.DeveloperBitDubai;
 
@@ -10,11 +10,11 @@ import com.bitdubai.wallet_platform_core.layer._5_license.wallet.developer.Devel
  */
 public class WalletLicenseSubsystem implements LicenseSubsystem {
 
-    private LicenseManager mLicenseManager;
+    private Addon addon;
 
     @Override
-    public LicenseManager getLicenseManager() {
-        return mLicenseManager;
+    public Addon getAddon() {
+        return addon;
     }
 
     @Override
@@ -25,7 +25,7 @@ public class WalletLicenseSubsystem implements LicenseSubsystem {
 
         try {
             DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
-            mLicenseManager = developerBitDubai.getLicenseManager();
+            addon = developerBitDubai.getAddon();
         }
         catch (Exception e)
         {

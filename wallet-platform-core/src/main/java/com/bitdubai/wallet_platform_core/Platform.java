@@ -204,7 +204,7 @@ public class Platform  {
             this.os  = ((OsLayer) mOsLayer).getOs();
         }
 
-        Service eventManager = ((PlatformServiceLayer) mEventLayer).getEventManager();
+        Service eventManager = (Service) ((PlatformServiceLayer) mEventLayer).getEventManager();
 
         /**
          * I will give the Event Monitor to the Event Manager, in order to allow it to monitor listeners exceptions..
@@ -237,7 +237,7 @@ public class Platform  {
          * persistent media.
          */
 
-        Service userManager =  ((UserLayer) mUserLayer).getUserManager();
+        Service userManager = (Service) ((UserLayer) mUserLayer).getUserManager();
 
         ((DealsWithFileSystem) userManager).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) userManager).setEventManager((EventManager) eventManager);
@@ -250,7 +250,7 @@ public class Platform  {
         
             UUID pluginID = pluginsManager.getPluginId((Plugin) userManager);
             ((Plugin) userManager).setId(pluginID);
-            
+
             userManager.start();
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
