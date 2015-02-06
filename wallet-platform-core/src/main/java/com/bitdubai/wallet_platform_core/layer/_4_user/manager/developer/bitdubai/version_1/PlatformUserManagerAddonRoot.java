@@ -23,7 +23,7 @@ import java.util.UUID;
 /**
  * Created by ciencias on 22.01.15.
  */
-public class PlatformUserManager implements Service, UserManager,DealsWithFileSystem, DealsWithEvents, DealsWithErrors,Plugin {
+public class PlatformUserManagerAddonRoot implements Service, UserManager,DealsWithFileSystem, DealsWithEvents, DealsWithErrors,Plugin {
 
     /**
      * PlatformService Interface member variables.

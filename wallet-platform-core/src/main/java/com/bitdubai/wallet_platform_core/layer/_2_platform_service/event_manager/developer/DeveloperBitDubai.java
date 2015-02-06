@@ -2,8 +2,7 @@ package com.bitdubai.wallet_platform_core.layer._2_platform_service.event_manage
 
 import com.bitdubai.wallet_platform_api.Service;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventDeveloper;
-import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventManager;
-import com.bitdubai.wallet_platform_core.layer._2_platform_service.event_manager.developer.bitdubai.version_1.PlatformEventManager;
+import com.bitdubai.wallet_platform_core.layer._2_platform_service.event_manager.developer.bitdubai.version_1.PlatformEventManagerAddonRoot;
 
 
 /**
@@ -26,7 +25,7 @@ public class DeveloperBitDubai implements EventDeveloper {
          * it is easy to choose.
          */
 
-        mEventManager = new PlatformEventManager();
+        mEventManager = new PlatformEventManagerAddonRoot();
 
     }
 }

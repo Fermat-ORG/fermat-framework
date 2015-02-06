@@ -3,7 +3,7 @@ package com.bitdubai.wallet_platform_core.layer._4_user.manager.developer.bitdub
 
 import com.bitdubai.wallet_platform_api.Service;
 import com.bitdubai.wallet_platform_api.layer._4_user.UserDeveloper;
-import com.bitdubai.wallet_platform_core.layer._4_user.manager.developer.bitdubai.version_1.PlatformUserManager;
+import com.bitdubai.wallet_platform_core.layer._4_user.manager.developer.bitdubai.version_1.PlatformUserManagerAddonRoot;
 
 
 /**
@@ -25,7 +25,7 @@ public class DeveloperBitDubai implements UserDeveloper {
          * it is easy to choose.
          */
 
-        mUserManager = new PlatformUserManager();
+        mUserManager = new PlatformUserManagerAddonRoot();
 
     }
 }

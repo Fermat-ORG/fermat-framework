@@ -15,7 +15,7 @@ import java.util.List;
 /**
  * Created by ciencias on 23.01.15.
  */
-public class PlatformEventManager implements Service, EventManager, DealWithEventMonitor {
+public class PlatformEventManagerAddonRoot implements Service, EventManager, DealWithEventMonitor {
 
     private List<EventListener> listenersUserCreatedEvent;
     private List<EventListener> listenersUserLoggedInEvent;
@@ -27,7 +27,7 @@ public class PlatformEventManager implements Service, EventManager, DealWithEven
 
     EventMonitor eventMonitor;
 
-    public PlatformEventManager() {
+    public PlatformEventManagerAddonRoot() {
 
         listenersUserCreatedEvent = new ArrayList<>();
         listenersUserLoggedInEvent = new ArrayList<>();

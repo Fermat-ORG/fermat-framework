@@ -2,7 +2,7 @@ package com.bitdubai.wallet_platform_core.layer._10_middleware.wallet.developer.
 
 import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.PluginDeveloper;
-import com.bitdubai.wallet_platform_core.layer._10_middleware.wallet.developer.bitdubai.version_1.WalletMiddewareEngine;
+import com.bitdubai.wallet_platform_core.layer._10_middleware.wallet.developer.bitdubai.version_1.WalletPluginRoot;
 
 /**
  * Created by ciencias on 20.01.15.
@@ -23,7 +23,7 @@ public class DeveloperBitDubai implements PluginDeveloper {
          * it is easy to choose.
          */
 
-        plugin = new WalletMiddewareEngine();
+        plugin = new WalletPluginRoot();
 
     }
 

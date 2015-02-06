@@ -7,7 +7,7 @@ import java.util.UUID;
 /**
  * Created by ciencias on 20.01.15.
  */
-public class WalletMiddewareEngine implements MiddlewareEngine, Plugin {
+public class WalletPluginRoot implements MiddlewareEngine, Plugin {
     @Override
     public void setId(UUID pluginId) {
 
