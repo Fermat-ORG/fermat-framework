@@ -7,7 +7,9 @@ import com.bitdubai.wallet_platform_api.layer._11_module.CantStartSubsystemExcep
 import com.bitdubai.wallet_platform_api.Service;
 import com.bitdubai.wallet_platform_api.layer._11_module.ModuleSubsystem;
 import com.bitdubai.wallet_platform_core.layer._11_module.wallet_manager.WalletManagerSubsystem;
+import com.bitdubai.wallet_platform_core.layer._11_module.wallet_publisher.WalletPublisherSubsystem;
 import com.bitdubai.wallet_platform_core.layer._11_module.wallet_runtime.WalletRuntimeSubsystem;
+import com.bitdubai.wallet_platform_core.layer._11_module.wallet_store.WalletStoreSubsystem;
 
 /**
  * Created by ciencias on 03.01.15.
@@ -17,6 +19,8 @@ public class ModuleLayer implements PlatformLayer {
 
     Plugin mWalletRuntime;
     Plugin mWalletManager;
+    Plugin mWalletPublisher;
+    Plugin mWalletStore;
 
     public Plugin getWalletRuntime() {
         return mWalletRuntime;
@@ -24,6 +28,15 @@ public class ModuleLayer implements PlatformLayer {
 
     public Plugin getWalletManager() {
         return mWalletManager;
+    }
+    
+    public Plugin getmWalletPublisher() {
+        return mWalletPublisher;
+    }
+    
+    public Plugin getmWalletStore() {
+        return mWalletStore;
+        
     }
 
     @Override
@@ -53,6 +66,33 @@ public class ModuleLayer implements PlatformLayer {
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());
+        }
+        
+        /**
+         * Let's try to start the wallet publisher subsystem.
+         */
+        ModuleSubsystem walletPublisherSubsystem = new WalletPublisherSubsystem();
+        
+        try {
+            walletPublisherSubsystem.start();
+            mWalletPublisher = ((ModuleSubsystem) walletPublisherSubsystem).getPlugin();
+                        
+        }catch (CantStartSubsystemException e) {
+            System.err.println("CantStartSubsystemException: " + e.getMessage());
+            
+        }
+        /**
+         * Let's try to start the wallet store subsystem.
+         */
+        ModuleSubsystem walletStoreSubsystem = new WalletStoreSubsystem();
+        
+        try {
+            walletStoreSubsystem.start();
+            mWalletStore  = ((ModuleSubsystem) walletStoreSubsystem).getPlugin();
+            
+        }catch (CantStartSubsystemException e){
+            System.err.println("CantStartSubsystemException: " + e.getMessage());
+            
         }
 
     }
