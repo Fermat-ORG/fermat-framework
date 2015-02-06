@@ -3,6 +3,8 @@ package com.bitdubai.wallet_platform_core.layer._4_user.manager.developer.bitdub
 import com.bitdubai.wallet_platform_api.Service;
 import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.ServiceStatus;
+import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.ErrorManager;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventManager;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventHandler;
@@ -21,7 +23,7 @@ import java.util.UUID;
 /**
  * Created by ciencias on 22.01.15.
  */
-public class PlatformUserManager implements Service, UserManager,DealsWithFileSystem, DealsWithEvents, Plugin {
+public class PlatformUserManager implements Service, UserManager,DealsWithFileSystem, DealsWithEvents, DealsWithErrors,Plugin {
 
     /**
      * PlatformService Interface member variables.
@@ -101,13 +103,7 @@ public class PlatformUserManager implements Service, UserManager,DealsWithFileSy
     public ServiceStatus getStatus() {
         return this.serviceStatus;
     }
-    
-    
-    
-    
-    
-    
-    
+
     
     /**
      * UserManager Interface implementation.
@@ -188,6 +184,14 @@ public class PlatformUserManager implements Service, UserManager,DealsWithFileSy
     @Override
     public void setEventManager(EventManager eventManager) {
         this.eventManager = eventManager;
+    }
+
+    /**
+     *DealWithErrors Interface implementation.
+     */
+    @Override
+    public void setErrorManager(ErrorManager errorManager) {
+
     }
 
     /**

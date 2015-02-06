@@ -2,6 +2,8 @@ package com.bitdubai.wallet_platform_core.layer._4_user.manager.developer.bitdub
 
 import com.bitdubai.wallet_platform_api.DealsWithPluginIdentity;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.DeviceDirectory;
+import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.ErrorManager;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.*;
 import com.bitdubai.wallet_platform_api.layer._1_definition.event.PlatformEvent;
 import com.bitdubai.wallet_platform_api.layer._3_os.*;
@@ -13,7 +15,7 @@ import java.util.UUID;
 /**
  * Created by ciencias on 22.01.15.
  */
-public class PlatformUser implements User,DealsWithFileSystem, DealsWithEvents, DealsWithPluginIdentity {
+public class PlatformUser implements User,DealsWithFileSystem, DealsWithEvents, DealsWithErrors, DealsWithPluginIdentity {
 
     /**
      * User Interface member variables.
@@ -145,6 +147,14 @@ public class PlatformUser implements User,DealsWithFileSystem, DealsWithEvents, 
     @Override
     public void setEventManager(EventManager eventManager) {
         this.eventManager = eventManager;
+    }
+
+    /**
+     *DealWithErrors Interface implementation.
+     */
+    @Override
+    public void setErrorManager(ErrorManager errorManager) {
+
     }
 
     /**
