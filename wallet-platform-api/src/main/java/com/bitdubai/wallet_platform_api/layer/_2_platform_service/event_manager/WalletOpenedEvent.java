@@ -1,4 +1,4 @@
-package com.bitdubai.wallet_platform_api.layer._2_event.manager;
+package com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager;
 
 import com.bitdubai.wallet_platform_api.layer._1_definition.event.PlatformEvent;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventSource;
