@@ -1,11 +1,12 @@
 package com.bitdubai.wallet_platform_api.layer._11_module;
 
-import com.bitdubai.wallet_platform_api.Service;
+import com.bitdubai.wallet_platform_api.Plugin;
+
 
 /**
  * Created by ciencias on 21.01.15.
  */
 public interface ModuleSubsystem {
     public void start () throws CantStartSubsystemException;
-    public Service getModule();
+    public Plugin getPlugin();
 }

@@ -1,5 +1,6 @@
 package com.bitdubai.wallet_platform_core.layer._11_module;
 
+import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.layer.CantStartLayerException;
 import com.bitdubai.wallet_platform_api.layer.PlatformLayer;
 import com.bitdubai.wallet_platform_api.layer._11_module.CantStartSubsystemException;
@@ -14,14 +15,14 @@ import com.bitdubai.wallet_platform_core.layer._11_module.wallet_runtime.WalletR
 public class ModuleLayer implements PlatformLayer {
 
 
-    Service mWalletRuntime;
-    Service mWalletManager;
+    Plugin mWalletRuntime;
+    Plugin mWalletManager;
 
-    public Service getWalletRuntime() {
+    public Plugin getWalletRuntime() {
         return mWalletRuntime;
     }
 
-    public Service getWalletManager() {
+    public Plugin getWalletManager() {
         return mWalletManager;
     }
 
@@ -35,7 +36,7 @@ public class ModuleLayer implements PlatformLayer {
 
         try {
             walletRuntimeSubsystem.start();
-            mWalletRuntime = ((ModuleSubsystem) walletRuntimeSubsystem).getModule();
+            mWalletRuntime = ((ModuleSubsystem) walletRuntimeSubsystem).getPlugin();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());
@@ -48,7 +49,7 @@ public class ModuleLayer implements PlatformLayer {
 
         try {
             walletRuntimeSubsystem.start();
-            mWalletManager = ((ModuleSubsystem) walletManagerSubsystem).getModule();
+            mWalletManager = ((ModuleSubsystem) walletManagerSubsystem).getPlugin();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());

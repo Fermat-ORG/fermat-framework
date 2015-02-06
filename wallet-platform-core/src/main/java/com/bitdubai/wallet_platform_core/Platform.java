@@ -308,7 +308,7 @@ public class Platform  {
          * I will give the Wallet Manager access to the File System and to the Event Manager
          */
 
-        Service walletManager =  ((ModuleLayer) mModuleLayer).getWalletManager();
+        Plugin walletManager =  ((ModuleLayer) mModuleLayer).getWalletManager();
 
         ((DealsWithFileSystem) walletManager).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) walletManager).setEventManager((EventManager) eventManager);
@@ -323,7 +323,7 @@ public class Platform  {
             UUID pluginID = pluginsManager.getPluginId((Plugin) walletManager);
             ((Plugin) walletManager).setId(pluginID);
 
-            walletManager.start();
+            ((Service) walletManager).start();
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -337,26 +337,7 @@ public class Platform  {
         }
         
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        walletManager.start();
 
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
