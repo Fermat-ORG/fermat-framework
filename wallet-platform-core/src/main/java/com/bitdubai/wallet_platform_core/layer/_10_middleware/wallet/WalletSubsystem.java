@@ -1,8 +1,8 @@
 package com.bitdubai.wallet_platform_core.layer._10_middleware.wallet;
 
 
+import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.layer._10_middleware.CantStartSubsystemException;
-import com.bitdubai.wallet_platform_api.layer._10_middleware.MiddlewareEngine;
 import com.bitdubai.wallet_platform_api.layer._10_middleware.MiddlewareSubsystem;
 import com.bitdubai.wallet_platform_core.layer._10_middleware.wallet.developer.bitdubai.DeveloperBitDubai;
 
@@ -11,11 +11,11 @@ import com.bitdubai.wallet_platform_core.layer._10_middleware.wallet.developer.b
  */
 public class WalletSubsystem implements MiddlewareSubsystem {
 
-    MiddlewareEngine mMiddlewareEngine;
+    Plugin plugin;
 
     @Override
-    public MiddlewareEngine getMiddlewareEngine() {
-        return mMiddlewareEngine;
+    public Plugin getPlugin() {
+        return null;
     }
 
     @Override
@@ -27,7 +27,7 @@ public class WalletSubsystem implements MiddlewareSubsystem {
 
         try {
             DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
-            mMiddlewareEngine = developerBitDubai.getMiddlewareEngine();
+            plugin = developerBitDubai.getPlugin();
         }
         catch (Exception e)
         {

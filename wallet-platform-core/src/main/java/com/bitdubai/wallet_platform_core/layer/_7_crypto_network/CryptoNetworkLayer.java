@@ -1,6 +1,6 @@
 package com.bitdubai.wallet_platform_core.layer._7_crypto_network;
 
-import com.bitdubai.wallet_platform_api.Service;
+import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.layer.CantStartLayerException;
 import com.bitdubai.wallet_platform_api.layer.PlatformLayer;
 import com.bitdubai.wallet_platform_api.layer._7_crypto_network.CantStartSubsystemException;
@@ -25,13 +25,13 @@ import java.util.List;
 
 public class CryptoNetworkLayer implements PlatformLayer {
 
-    List<CryptoNetworkSubsystem> mCryptoNetworkSubsystems;
+    List<CryptoNetworkSubsystem> plugin;
 
      @Override
     public void start() throws CantStartLayerException {
 
 
-        mCryptoNetworkSubsystems = new ArrayList<>();
+        plugin = new ArrayList<>();
         CryptoNetworkSubsystem cryptoNetworkSubsystem;
 
 
@@ -41,7 +41,7 @@ public class CryptoNetworkLayer implements PlatformLayer {
         cryptoNetworkSubsystem = new BitcoinSubsystem();
         try {
             cryptoNetworkSubsystem.start();
-            mCryptoNetworkSubsystems.add(cryptoNetworkSubsystem);
+            plugin.add(cryptoNetworkSubsystem);
         }
         catch (CantStartSubsystemException e) {
             System.err.println("CantStartCryptoNetworkException: " + e.getMessage());
@@ -53,7 +53,7 @@ public class CryptoNetworkLayer implements PlatformLayer {
         cryptoNetworkSubsystem = new LitecoinSubsystem();
         try {
             cryptoNetworkSubsystem.start();
-            mCryptoNetworkSubsystems.add(cryptoNetworkSubsystem);
+            plugin.add(cryptoNetworkSubsystem);
         }
         catch (CantStartSubsystemException e) {
             System.err.println("CantStartCryptoNetworkException: " + e.getMessage());
@@ -65,21 +65,21 @@ public class CryptoNetworkLayer implements PlatformLayer {
         cryptoNetworkSubsystem = new DogecoinSubsystem();
         try {
             cryptoNetworkSubsystem.start();
-            mCryptoNetworkSubsystems.add(cryptoNetworkSubsystem);
+            plugin.add(cryptoNetworkSubsystem);
         }
         catch (CantStartSubsystemException e) {
             System.err.println("CantStartCryptoNetworkException: " + e.getMessage());
         }
 
-        if (mCryptoNetworkSubsystems.size() == 0) {
+        if (plugin.size() == 0) {
             throw new CantStartLayerException();
         }
     }
 
 
-    public Service getCryptoNetwork (CryptoNetworks pCryptoNetwork) {
+    public Plugin getCryptoNetwork (CryptoNetworks pCryptoNetwork) {
 
-        Service cryptoNetworkService = null;
+        Plugin cryptoNetworkPlugin = null;
 
         switch (pCryptoNetwork) {
 
@@ -87,7 +87,7 @@ public class CryptoNetworkLayer implements PlatformLayer {
 
                 BitcoinSubsystem bitcoinSubsystem = null;
 
-                for (CryptoNetworkSubsystem cryptoNetworkSubsystem : mCryptoNetworkSubsystems)
+                for (CryptoNetworkSubsystem cryptoNetworkSubsystem : plugin)
                 {
                     try {
                         if (bitcoinSubsystem == null) {
@@ -96,7 +96,7 @@ public class CryptoNetworkLayer implements PlatformLayer {
                     }
                     catch (Exception e) {}
                 }
-                cryptoNetworkService =  bitcoinSubsystem.getCryptoNetwork();
+                cryptoNetworkPlugin =  bitcoinSubsystem.getPlugin();
 
                 break;
 
@@ -106,7 +106,7 @@ public class CryptoNetworkLayer implements PlatformLayer {
                 break;
         }
 
-        return cryptoNetworkService;
+        return cryptoNetworkPlugin;
 
     }
 }

@@ -1,9 +1,9 @@
 package com.bitdubai.wallet_platform_core.layer._10_middleware;
 
+import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.layer.CantStartLayerException;
 import com.bitdubai.wallet_platform_api.layer.PlatformLayer;
 import com.bitdubai.wallet_platform_api.layer._10_middleware.CantStartSubsystemException;
-import com.bitdubai.wallet_platform_api.layer._10_middleware.MiddlewareEngine;
 import com.bitdubai.wallet_platform_api.layer._10_middleware.MiddlewareSubsystem;
 import com.bitdubai.wallet_platform_core.layer._10_middleware.shell.ShellSubsystem;
 import com.bitdubai.wallet_platform_core.layer._10_middleware.wallet.WalletSubsystem;
@@ -13,14 +13,14 @@ import com.bitdubai.wallet_platform_core.layer._10_middleware.wallet.WalletSubsy
  */
 public class MiddlewareLayer implements PlatformLayer {
 
-    private MiddlewareEngine mShellEngine;
-    private MiddlewareEngine mWalletEngine;
+    private Plugin mShellEngine;
+    private Plugin mWalletEngine;
 
-    public MiddlewareEngine getShellEngine() {
+    public Plugin getShellEngine() {
         return mShellEngine;
     }
 
-    public MiddlewareEngine getWalletEngine() {
+    public Plugin getWalletEngine() {
         return mWalletEngine;
     }
 
@@ -34,7 +34,7 @@ public class MiddlewareLayer implements PlatformLayer {
 
         try {
             shellSubsystem.start();
-            mShellEngine = ((MiddlewareSubsystem) shellSubsystem).getMiddlewareEngine();
+            mShellEngine = ((MiddlewareSubsystem) shellSubsystem).getPlugin();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());
@@ -47,7 +47,7 @@ public class MiddlewareLayer implements PlatformLayer {
 
         try {
             walletSubsystem.start();
-            mWalletEngine = ((MiddlewareSubsystem) walletSubsystem).getMiddlewareEngine();
+            mWalletEngine = ((MiddlewareSubsystem) walletSubsystem).getPlugin();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());

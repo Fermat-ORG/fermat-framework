@@ -1,19 +1,19 @@
 package com.bitdubai.wallet_platform_core.layer._10_middleware.wallet.developer.bitdubai;
 
-import com.bitdubai.wallet_platform_api.layer._10_middleware.MiddlewareEngine;
-import com.bitdubai.wallet_platform_api.layer._10_middleware.MiddlewareEngineDeveloper;
+import com.bitdubai.wallet_platform_api.Plugin;
+import com.bitdubai.wallet_platform_api.PluginDeveloper;
 import com.bitdubai.wallet_platform_core.layer._10_middleware.wallet.developer.bitdubai.version_1.WalletMiddewareEngine;
 
 /**
  * Created by ciencias on 20.01.15.
  */
-public class DeveloperBitDubai implements MiddlewareEngineDeveloper {
+public class DeveloperBitDubai implements PluginDeveloper {
 
-    MiddlewareEngine mMiddlewareEngine;
+    Plugin plugin;
 
     @Override
-    public MiddlewareEngine getMiddlewareEngine() {
-        return mMiddlewareEngine;
+    public Plugin getPlugin() {
+        return null;
     }
 
     public DeveloperBitDubai() {
@@ -23,7 +23,8 @@ public class DeveloperBitDubai implements MiddlewareEngineDeveloper {
          * it is easy to choose.
          */
 
-        mMiddlewareEngine = new WalletMiddewareEngine();
+        plugin = new WalletMiddewareEngine();
 
     }
+
 }

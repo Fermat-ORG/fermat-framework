@@ -1,6 +1,6 @@
 package com.bitdubai.wallet_platform_core.layer._7_crypto_network.bitcoin;
 
-import com.bitdubai.wallet_platform_api.Service;
+import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.layer._7_crypto_network.CantStartSubsystemException;
 import com.bitdubai.wallet_platform_api.layer._7_crypto_network.CryptoNetworkSubsystem;
 import com.bitdubai.wallet_platform_dev.layer._7_crypto_network.bitcoin.developer.bitdubai.DeveloperBitDubai;
@@ -10,11 +10,11 @@ import com.bitdubai.wallet_platform_dev.layer._7_crypto_network.bitcoin.develope
  */
 public class BitcoinSubsystem implements CryptoNetworkSubsystem {
 
-    Service mCryptoNetworkService;
+    Plugin plugin;
 
     @Override
-    public Service getCryptoNetwork() {
-        return mCryptoNetworkService;
+    public Plugin getPlugin() {
+        return null;
     }
 
     @Override
@@ -27,7 +27,7 @@ public class BitcoinSubsystem implements CryptoNetworkSubsystem {
 
         try {
             DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
-            mCryptoNetworkService = developerBitDubai.getCryptoNetwork();
+            plugin = developerBitDubai.getPlugin();
         }
         catch (Exception e)
         {

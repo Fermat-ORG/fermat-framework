@@ -274,7 +274,7 @@ public class Platform  {
          * it can load and save and load information from persistent media and also raise events.
          */
 
-        Service cryptoNetworkService =  ((CryptoNetworkLayer) mCryptoNetworkLayer).getCryptoNetwork(CryptoNetworks.BITCOIN);
+        Service cryptoNetworkService = (Service) ((CryptoNetworkLayer) mCryptoNetworkLayer).getCryptoNetwork(CryptoNetworks.BITCOIN);
 
         ((DealsWithFileSystem) cryptoNetworkService).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) cryptoNetworkService).setEventManager((EventManager) eventManager);
@@ -298,7 +298,7 @@ public class Platform  {
              */
             System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
             pluginNotRecognizedException.printStackTrace();
-            
+
             cryptoNetworkService.stop();
         }
         
