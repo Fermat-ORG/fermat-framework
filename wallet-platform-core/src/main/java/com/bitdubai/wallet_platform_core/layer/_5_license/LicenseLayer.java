@@ -5,8 +5,8 @@ import com.bitdubai.wallet_platform_api.layer.PlatformLayer;
 import com.bitdubai.wallet_platform_api.layer._5_license.CantStartSubsystemException;
 import com.bitdubai.wallet_platform_api.layer._5_license.LicenseManager;
 import com.bitdubai.wallet_platform_api.layer._5_license.LicenseSubsystem;
-import com.bitdubai.wallet_platform_core.layer._5_license.component.ComponentLicenseSubsystem;
-import com.bitdubai.wallet_platform_core.layer._5_license.use.UseLicenseSubsystem;
+import com.bitdubai.wallet_platform_core.layer._5_license.plugin.PluginLicenseSubsystem;
+import com.bitdubai.wallet_platform_core.layer._5_license.wallet.WalletLicenseSubsystem;
 
 /**
  * Created by ciencias on 30.12.14.
@@ -30,7 +30,7 @@ public class LicenseLayer implements PlatformLayer {
         /**
          * Let's start the Component License Manager;
          */
-        LicenseSubsystem componentLicenseSubsystem = new ComponentLicenseSubsystem();
+        LicenseSubsystem componentLicenseSubsystem = new PluginLicenseSubsystem();
 
         try {
             componentLicenseSubsystem.start();
@@ -48,7 +48,7 @@ public class LicenseLayer implements PlatformLayer {
         /**
          * Let's start the Component License Manager;
          */
-        LicenseSubsystem useLicenseSubsystem = new UseLicenseSubsystem();
+        LicenseSubsystem useLicenseSubsystem = new WalletLicenseSubsystem();
 
         try {
             useLicenseSubsystem.start();

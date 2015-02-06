@@ -1,15 +1,15 @@
-package com.bitdubai.wallet_platform_core.layer._5_license.component;
+package com.bitdubai.wallet_platform_core.layer._5_license.plugin;
 
 import com.bitdubai.wallet_platform_api.layer._5_license.CantStartSubsystemException;
 import com.bitdubai.wallet_platform_api.layer._5_license.LicenseManager;
 import com.bitdubai.wallet_platform_api.layer._5_license.LicenseSubsystem;
-import com.bitdubai.wallet_platform_core.layer._5_license.component.developer.DeveloperBitDubai;
+import com.bitdubai.wallet_platform_core.layer._5_license.plugin.developer.DeveloperBitDubai;
 
 
 /**
  * Created by ciencias on 21.01.15.
  */
-public class ComponentLicenseSubsystem implements LicenseSubsystem {
+public class PluginLicenseSubsystem implements LicenseSubsystem {
 
     private LicenseManager mLicenseManager;
 
