@@ -151,6 +151,8 @@ public class AndroidDatabaseTable implements  DatabaseTable {
         //filter
         String  strFilter = getFilter();
 
+            if(strFilter.length() > 0 ) strFilter = " WHERE " + strFilter;
+
         ContentValues recordUpdateList = new ContentValues();
 
         for (int i = 0; i < columns.size(); ++i) {
