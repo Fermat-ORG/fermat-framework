@@ -5,7 +5,9 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.bitdubai.wallet_platform_api.layer._3_os.DatabaseFilterType;
 import com.bitdubai.wallet_platform_api.layer._3_os.DatabaseTable;
+import com.bitdubai.wallet_platform_api.layer._3_os.DatabaseTableColumn;
 import com.bitdubai.wallet_platform_api.layer._3_os.DatabaseTableFilter;
 import com.bitdubai.wallet_platform_api.layer._3_os.DatabaseTableRecord;
 
@@ -18,11 +20,12 @@ import java.util.List;
 /**
  * Created by toshiba on 09/02/2015.
  */
-public class AndroideDatabaseTable implements  DatabaseTable {
+public class AndroidDatabaseTable implements  DatabaseTable {
     Context mContext;
 
     String mTableName;
     SQLiteDatabase mDatabase;
+    AndroidDatabaseTableFilter mTableFilter;
 
     public void setContext(Object context) {
         mContext = (Context) context;
@@ -73,29 +76,61 @@ public class AndroideDatabaseTable implements  DatabaseTable {
     @Override
     public List<DatabaseTableRecord> getRecords()
     {
+        AndroidDatabaseRecord record  = new AndroidDatabaseRecord();
+        List<String> values = new ArrayList<String>();
 
-        List<DatabaseTableRecord> records ;
+        List<DatabaseTableRecord> records = new ArrayList<DatabaseTableRecord>() ;
+        AndroidPluginDatabaseSystem dbPlugIn = new AndroidPluginDatabaseSystem(mContext);
+        mDatabase = dbPlugIn.getDatabase();
+
+        //filter
+        String  strFilter = getFilter();
+
+        if(strFilter.length() > 0 ) strFilter = " WHERE " + strFilter;
+
+        try {
+            Cursor c = mDatabase.rawQuery("SELECT * FROM "+ mTableName + strFilter, null);
+            int numRows = c.getCount();
+            c.moveToFirst();
+            for (int i = 0; i < numRows; ++i) {
+                values.add(c.getString(i));
+                c.moveToNext();
+            }
+        } catch (Exception e) {
+            throw  e;
+        }
+
+        mDatabase.close();
+        record.setValues(values);
+        records.add(record);
         return null;
     }
     @Override
     public DatabaseTableRecord getEmptyRecord()
     {
-        return null;
+        DatabaseTableRecord record = new AndroidDatabaseRecord() ;
+        return record;
     }
 
     public void addFilter (DatabaseTableFilter filter)
     {
+        mTableFilter = new AndroidDatabaseTableFilter();
+        AndroidDatabaseTableColumn column = new AndroidDatabaseTableColumn();
 
+        mTableFilter.setColumn(filter.getColumn());
+        mTableFilter.setType(filter.getType());
+        mTableFilter.setValue(filter.getValue());
     }
 
     public void clearAllFilters()
     {
-
+        mTableFilter = null;
     }
 
     public List<DatabaseTableFilter> getFilters()
     {
-        List<DatabaseTableFilter> filter ;
+        List<DatabaseTableFilter> filter = new ArrayList<DatabaseTableFilter>();
+        filter.add(mTableFilter);
 
         return null;
     }
@@ -103,11 +138,18 @@ public class AndroideDatabaseTable implements  DatabaseTable {
     @Override
     public void updateRecord (DatabaseTableRecord record)
     {
+        try
+        {
+
+
         AndroidPluginDatabaseSystem dbPlugIn = new AndroidPluginDatabaseSystem(mContext);
         mDatabase = dbPlugIn.getDatabase();
 
         List<String> records =  record.getValues();
         List<String> columns = this.getColumns();
+
+        //filter
+        String  strFilter = getFilter();
 
         ContentValues recordUpdateList = new ContentValues();
 
@@ -115,16 +157,20 @@ public class AndroideDatabaseTable implements  DatabaseTable {
             recordUpdateList.put(columns.get(i), records.get(i));
         }
 
-        List<DatabaseTableFilter> filter = getFilters();
 
-        mDatabase.update(mTableName, recordUpdateList, columns.get(0) +"=" + records.get(0), null);
+        mDatabase.update(mTableName, recordUpdateList, strFilter, null);
         mDatabase.close();
+
+       }catch (Exception e)
+        {
+            throw e;
+        }
     }
 
 
 
 
-    public  ArrayList<Row> getAllRows(String databaseName, String tableName) {
+ /*   public  ArrayList<Row> getAllRows(String databaseName, String tableName) {
         mDatabase = SQLiteDatabase.openDatabase(mContext.getFilesDir() + "/" + databaseName, null, SQLiteDatabase.OPEN_READWRITE);
 
         ArrayList<Row>  rec = new  ArrayList<Row>();
@@ -178,7 +224,7 @@ public class AndroideDatabaseTable implements  DatabaseTable {
 
         mDatabase.close();
         return rec;
-    }
+    }*/
 
     public void deleteRow(String databaseName, String tableName, String keyId, long keyValue) {
         mDatabase = SQLiteDatabase.openDatabase(mContext.getFilesDir() +"/" + databaseName,null,SQLiteDatabase.OPEN_READWRITE);
@@ -188,7 +234,43 @@ public class AndroideDatabaseTable implements  DatabaseTable {
     }
 
 
+public String getFilter()
+{
+    List<DatabaseTableFilter> filters = getFilters();
 
+    String  strFilter = "";
+    for (int j = 0; j < filters.size(); ++j) {
+
+        DatabaseTableColumn filterColumn  = filters.get(j).getColumn();
+        String filterType = filters.get(j).getType().name();
+
+//STRING, INTEGER, MONEY
+
+        if( filterColumn.getName() != ""){
+
+            switch (filterType){
+                case "EQUAL":
+                    filterType = "=";
+                    break;
+                case "GRATER_THAN":
+                    filterType = ">";
+                    break;
+                case "LESS_THAN":
+                    filterType = "<";
+                    break;
+                case "LIKE":
+                    filterType = "LIKE";
+                    break;
+            }
+
+            if (strFilter.length() > 0) strFilter += " AND " ;
+            strFilter =  filterColumn.getName() + filterType + filters.get(j).getValue();
+
+        }
+
+    }
+    return strFilter;
+}
     public class Row implements Serializable {
 
         private static final long serialVersionUID = -8730067026050196758L;

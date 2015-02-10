@@ -9,5 +9,8 @@ public interface DatabaseTableFilter {
     public void setColumn (DatabaseTableColumn column);
     public void setType (DatabaseFilterType type);
     public void setValue (String value);
+    public DatabaseTableColumn  getColumn ();
+    public String getValue ();
+    public DatabaseFilterType getType ();
     
 }

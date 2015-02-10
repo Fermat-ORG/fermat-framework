@@ -7,7 +7,7 @@ import com.bitdubai.wallet_platform_api.layer._3_os.DatabaseTableFilter;
 /**
  * Created by toshiba on 09/02/2015.
  */
-public class AndroideDatabaseTableFilter implements DatabaseTableFilter {
+public class AndroidDatabaseTableFilter implements DatabaseTableFilter {
     DatabaseTableColumn mColumn;
     DatabaseFilterType mType;
     String mValue;
@@ -21,8 +21,23 @@ public class AndroideDatabaseTableFilter implements DatabaseTableFilter {
     {
         mType = type;
     }
+
+    public DatabaseFilterType getType()
+    {
+        return mType;
+    }
+
     public void setValue (String value)
     {
         mValue = value;
+    }
+
+    public String getValue ()
+    {
+        return mValue;
+    }
+    public DatabaseTableColumn  getColumn ()
+    {
+        return mColumn;
     }
 }

@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Created by toshiba on 09/02/2015.
  */
-public class AndroideDatabaseRecord implements DatabaseTableRecord {
+public class AndroidDatabaseRecord implements DatabaseTableRecord {
     List<String> mValues;
     public List<String> getValues()
     {
