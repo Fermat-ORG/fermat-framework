@@ -39,7 +39,7 @@ public class AndroidFile implements PluginFile {
         mContent = content;
     }
 
-    public AndroidFile (UUID ownerId, Context context, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
+    public AndroidFile (UUID ownerId, Context context, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
 
         mOwnerId = ownerId;
         mContext = context;
@@ -97,7 +97,7 @@ public class AndroidFile implements PluginFile {
         }
     }
 
-
+    @Override
     public void loadFromMemory() throws CantLoadFileException {
 
         FileInputStream inputStream;
@@ -122,6 +122,7 @@ public class AndroidFile implements PluginFile {
         }
     }
 
+    @Override
     public void loadFromMedia() throws CantPersistFileException {
 
         File file = new File(mContext.getFilesDir(), mFileName);

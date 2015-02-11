@@ -7,11 +7,12 @@ import com.bitdubai.wallet_platform_api.layer._3_os.CantLoadFileException;
 import com.bitdubai.wallet_platform_api.layer._3_os.CantPersistFileException;
 import com.bitdubai.wallet_platform_api.layer._3_os.FileLifeSpan;
 import com.bitdubai.wallet_platform_api.layer._3_os.FilePrivacy;
-import com.bitdubai.wallet_platform_api.layer._3_os.PluginFile;
+import com.bitdubai.wallet_platform_api.layer._3_os.PluginImageFile;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.UUID;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -20,7 +21,7 @@ import android.os.Environment;
 /**
  * Created by Natalia on 29/01/2015.
  */
-public class AndroidImageFile implements PluginFile {
+public class AndroidImageFile implements PluginImageFile {
 
     Context mContext;
     String mContent;
@@ -28,7 +29,7 @@ public class AndroidImageFile implements PluginFile {
     String mdirectoryName;
     FilePrivacy mPrivacyLevel;
     FileLifeSpan mLifeSpan;
-
+    UUID mOwnerId;
     Bitmap mBitmapImage;
     @Override
     public String getContent() {
@@ -40,15 +41,27 @@ public class AndroidImageFile implements PluginFile {
         mContent = content;
     }
 
-    public AndroidImageFile (Context context, final Bitmap bitmapImage, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
+    @Override
+    public void setBitMap(Object bitMap){
+        mBitmapImage = (Bitmap)bitMap;
+    }
+    @Override
+    public Object getBitMap(){
+        return mBitmapImage;
+    }
+
+    public AndroidImageFile (UUID ownerId,Context context,String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
 
         mContext = context;
         mFileName = fileName;
         mPrivacyLevel = privacyLevel;
         mLifeSpan = lifeSpan;
-        mBitmapImage = bitmapImage;
+
+        mOwnerId = ownerId;
 
     }
+
+
 
     @Override
     public void persistToMedia() throws CantPersistFileException {
@@ -75,7 +88,7 @@ public class AndroidImageFile implements PluginFile {
     }
 
     @Override
-    public void loadToMemory() throws CantLoadFileException {
+    public void peristToMemory() throws CantLoadFileException {
 
         FileOutputStream  outStream;
 
@@ -92,7 +105,8 @@ public class AndroidImageFile implements PluginFile {
         }
     }
 
-    public Bitmap loadfromMemory() throws CantLoadFileException {
+    @Override
+    public void loadFromMemory() throws CantLoadFileException {
 
         Bitmap bitmapA = null;
         FileInputStream inputStream;
@@ -101,7 +115,7 @@ public class AndroidImageFile implements PluginFile {
             bitmapA = BitmapFactory.decodeStream(inputStream);
             inputStream.close();
 
-            return bitmapA;
+            mBitmapImage = bitmapA;
         } catch (Exception e) {
             System.err.println("Error trying to load a file to memory: " + e.getMessage());
             e.printStackTrace();
@@ -109,16 +123,18 @@ public class AndroidImageFile implements PluginFile {
         }
     }
 
-    public Bitmap loadToMedia() throws CantPersistFileException {
 
-        File sdCardDirectory = Environment.getExternalStorageDirectory();
+
+    @Override
+    public void loadFromMedia() throws CantPersistFileException {
+
         File file = new File(Environment.getExternalStorageDirectory() + "/" + mFileName);
         try {
 
             final FileInputStream  imageStream = new FileInputStream(file);
             final Bitmap bImage = BitmapFactory.decodeStream(imageStream);
 
-            return bImage;
+            mBitmapImage = bImage;
         } catch (Exception e) {
             System.err.println("Error trying to persist file: " + e.getMessage());
             e.printStackTrace();
@@ -127,4 +143,3 @@ public class AndroidImageFile implements PluginFile {
     }
 
 }
-

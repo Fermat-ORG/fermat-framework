@@ -15,14 +15,14 @@ public class AndroidPluginFileSystem implements PluginFileSystem {
     @Override
     public PluginFile getFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException {
 
-        AndroidFile newFile = new AndroidFile(ownerId, mContext, directoryName, fileName, privacyLevel, lifeSpan);
+        AndroidFile newFile = new AndroidFile(ownerId, mContext, fileName, privacyLevel, lifeSpan);
 
         try {
-            newFile.loadToMemory();
+            newFile.loadFromMemory();
             return newFile;
         }
         catch (CantLoadFileException e){
-            System.err.println("LoginFailedException: " + e.getMessage());
+            System.err.println("GetFailedException: " + e.getMessage());
             e.printStackTrace();
             throw new FileNotFoundException();
         }
@@ -31,7 +31,7 @@ public class AndroidPluginFileSystem implements PluginFileSystem {
     @Override
     public PluginFile createFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) {
 
-        return new AndroidFile(ownerId, mContext, directoryName, fileName, privacyLevel, lifeSpan);
+        return new AndroidFile(ownerId, mContext,fileName, privacyLevel, lifeSpan);
     }
 
     @Override
