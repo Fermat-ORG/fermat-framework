@@ -16,8 +16,8 @@ import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1
 import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.database_system.AndroidDatabaseTable;
 import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.database_system.AndroidDatabaseTableFilter;
 import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.database_system.AndroidDatabaseTableColumn;
-import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidImageFile;
-import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidFile;
+import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidPluginImageSystem;
+import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidPluginFileSystem;
 import com.bitdubai.wallet_platform_api.layer._3_os.CantLoadFileException;
 import com.bitdubai.wallet_platform_api.layer._3_os.DatabaseDataType;
 import com.bitdubai.wallet_platform_api.layer._3_os.DatabaseFilterType;
@@ -28,6 +28,8 @@ import com.bitdubai.wallet_platform_api.layer._3_os.CantPersistFileException;
 import android.content.Context;
 import android.widget.TextView;
 import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.database_system.AndroidPluginDatabaseSystem;
+import com.bitdubai.wallet_platform_api.layer._3_os.PluginFile;
+import com.bitdubai.wallet_platform_api.layer._3_os.PluginImageFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -54,12 +56,18 @@ public class FileImageActivity extends FragmentActivity {
 
     public void onMemoryClicked(View v) throws CantLoadFileException  {
         //save image in memory
+        UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
+
         ImageView  imageA = (ImageView)findViewById(R.id.imageView5);
         imageA.setImageBitmap(null);
         final Bitmap myBitmap  = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.usd_100);
 
-        AndroidImageFile filemanager = new AndroidImageFile(mContext,myBitmap,"usd_100", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
-        filemanager.loadToMemory();
+        AndroidPluginImageSystem filemanager = new AndroidPluginImageSystem();
+        filemanager.setContext(mContext);
+
+        PluginImageFile file = filemanager.createFile(moduleId,"","usd_100", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
+        file.setBitMap(myBitmap);
+        file.peristToMemory();
 
         TextView  result = (TextView)findViewById(R.id.result_text);
         result.setText("Image Persisted to Memory");
@@ -67,25 +75,34 @@ public class FileImageActivity extends FragmentActivity {
 
     public void onFromMemoryClicked(View v) throws CantLoadFileException  {
         //load image from memory
+        UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
 
         Bitmap myBitmap = null;
 
+        AndroidPluginImageSystem filemanager = new AndroidPluginImageSystem();
+        filemanager.setContext(mContext);
 
-        AndroidImageFile filemanager = new AndroidImageFile(mContext,myBitmap,"usd_100", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
-        myBitmap = filemanager.loadfromMemory();
+        PluginImageFile file = filemanager.createFile(moduleId,"","usd_100", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
+
+        file.loadFromMemory();
+        myBitmap = (Bitmap)file.getBitMap();
         ImageView  imageA = (ImageView)findViewById(R.id.imageView5);
         imageA.setImageBitmap(myBitmap);
     }
 
     public void onMediaClicked(View v) throws CantPersistFileException {
         //save image in sdcard
+        UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
+
         ImageView  imageA = (ImageView)findViewById(R.id.imageView5);
         imageA.setImageBitmap(null);
         final Bitmap myBitmap  = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.usd_100);
 
-        AndroidImageFile filemanager = new AndroidImageFile(mContext,myBitmap,"usd_100.jpg", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
-        filemanager.persistToMedia();
-
+        AndroidPluginImageSystem filemanager = new AndroidPluginImageSystem();
+        filemanager.setContext(mContext);
+        PluginImageFile file = filemanager.createFile(moduleId,"","usd_100", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
+        file.setBitMap(myBitmap);
+        file.persistToMedia();
         TextView  result = (TextView)findViewById(R.id.result_text);
         result.setText("Image Persisted to Media");
     }
@@ -94,13 +111,18 @@ public class FileImageActivity extends FragmentActivity {
         try
         {
             //load image from sdcard
+            UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
+
             ImageView  imageA = (ImageView)findViewById(R.id.imageView5);
             imageA.setImageDrawable(null);
 
             Bitmap myBitmap = null;
+            AndroidPluginImageSystem filemanager = new AndroidPluginImageSystem();
+            filemanager.setContext(mContext);
+            PluginImageFile file = filemanager.createFile(moduleId,"","usd_100", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
 
-            AndroidImageFile filemanager = new AndroidImageFile(mContext,myBitmap,"usd_100.jpg", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
-            myBitmap = filemanager.loadToMedia();
+            file.persistToMedia();
+            myBitmap = (Bitmap)file.getBitMap();
             Drawable d = new BitmapDrawable(getResources(),myBitmap);
 
             imageA.setImageBitmap(myBitmap);
@@ -120,10 +142,15 @@ public class FileImageActivity extends FragmentActivity {
 
             UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
 
-            AndroidFile filemanager = new AndroidFile(moduleId, mContext,"","example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
 
-            filemanager.setContent("Text Content Test File Binary");
-            filemanager.loadToMemory();
+            AndroidPluginFileSystem filemanager = new AndroidPluginFileSystem();
+            filemanager.setContext(mContext);
+
+            PluginFile file = filemanager.createFile(moduleId,"","example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
+
+            file.setContent("Text Content Test File Binary");
+            file.loadToMemory();
+
             TextView  result = (TextView)findViewById(R.id.result_text);
             result.setText("Binary loaded to Memory");
         }
@@ -142,10 +169,13 @@ public class FileImageActivity extends FragmentActivity {
 
             UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
 
-            AndroidFile filemanager = new AndroidFile(moduleId, mContext,"","example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
+            AndroidPluginFileSystem filemanager = new AndroidPluginFileSystem();
+            filemanager.setContext(mContext);
 
-            filemanager.setContent("Text Content to Test File Binary");
-            filemanager.persistToMedia();
+            PluginFile file = filemanager.createFile(moduleId,"","example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
+
+            file.setContent("Text Content to Test File Binary");
+            file.persistToMedia();
             TextView  result = (TextView)findViewById(R.id.result_text);
             result.setText("Binary loaded to Media");
         }
@@ -162,13 +192,15 @@ public class FileImageActivity extends FragmentActivity {
             //load binary to memory
 
             UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
+            AndroidPluginFileSystem filemanager = new AndroidPluginFileSystem();
+            filemanager.setContext(mContext);
 
-            AndroidFile filemanager = new AndroidFile(moduleId, mContext,"","example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
+            PluginFile file = filemanager.createFile(moduleId,"","example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
 
-            filemanager.loadFromMemory();
+            file.loadFromMemory();
 
             TextView  result = (TextView)findViewById(R.id.result_text);
-            result.setText( filemanager.getContent());
+            result.setText( file.getContent());
         }
         catch (Exception e)
         {
@@ -186,12 +218,15 @@ public class FileImageActivity extends FragmentActivity {
 
             UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
 
-            AndroidFile filemanager = new AndroidFile(moduleId, mContext,"","example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
+            AndroidPluginFileSystem filemanager = new AndroidPluginFileSystem();
+            filemanager.setContext(mContext);
 
-            filemanager.loadFromMedia();
+            PluginFile file = filemanager.createFile(moduleId,"","example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
+
+            file.loadFromMedia();
 
             TextView  result = (TextView)findViewById(R.id.result_text);
-            result.setText( filemanager.getContent());
+            result.setText( file.getContent());
         }
         catch (Exception e)
         {
