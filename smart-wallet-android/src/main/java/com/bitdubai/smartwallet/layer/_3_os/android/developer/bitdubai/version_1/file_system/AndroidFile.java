@@ -27,6 +27,7 @@ public class AndroidFile implements PluginFile {
     String mFileName;
     FilePrivacy mPrivacyLevel;
     FileLifeSpan mLifeSpan;
+    UUID mOwnerId;
 
     @Override
     public String getContent() {
@@ -40,6 +41,7 @@ public class AndroidFile implements PluginFile {
 
     public AndroidFile (UUID ownerId, Context context, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
 
+        mOwnerId = ownerId;
         mContext = context;
         mFileName = fileName;
         mPrivacyLevel = privacyLevel;

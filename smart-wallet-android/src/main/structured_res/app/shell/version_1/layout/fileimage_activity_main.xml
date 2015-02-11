@@ -141,6 +141,12 @@
             android:id="@+id/button12"
             android:layout_gravity="right" android:onClick="onInsertRecordClicked" />
 
+        <Button
+            android:layout_width="157dp"
+            android:layout_height="wrap_content"
+            android:text="Select Record"
+            android:id="@+id/button16"
+            android:layout_gravity="right" android:onClick="onSelectRecordClicked" />
 
     </LinearLayout>
 

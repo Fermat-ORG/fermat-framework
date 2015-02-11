@@ -3,17 +3,28 @@ package com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_
 import android.content.ContentValues;
 import android.content.Context;
 import com.bitdubai.wallet_platform_api.layer._3_os.CantOpenDatabaseException;
+import com.bitdubai.wallet_platform_api.layer._3_os.DatabaseTable;
+import com.bitdubai.wallet_platform_api.layer._3_os.DatabaseTableColumn;
+import com.bitdubai.wallet_platform_api.layer._3_os.DatabaseTableFilter;
+import com.bitdubai.wallet_platform_api.layer._3_os.DatabaseTableRecord;
 import com.bitdubai.wallet_platform_api.layer._3_os.PluginDatabase;
 import com.bitdubai.wallet_platform_api.layer._3_os.PluginDatabaseSystem;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.Cursor;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
+import java.sql.SQLException;
+
+
 
 /**
  * Created by ciencias on 20.01.15.
  */
-public class AndroidPluginDatabaseSystem extends SQLiteOpenHelper implements PluginDatabaseSystem {
+public class AndroidPluginDatabaseSystem extends SQLiteOpenHelper implements PluginDatabaseSystem{
 
     Context mContext;
     private static String mDatabaseName = "";
@@ -32,22 +43,30 @@ public class AndroidPluginDatabaseSystem extends SQLiteOpenHelper implements Plu
 
     @Override
     public PluginDatabase openDatabase(UUID ownerId, String databaseName) throws CantOpenDatabaseException {
+        mDatabase = SQLiteDatabase.openDatabase(mContext.getFilesDir() +"/" + databaseName,null,SQLiteDatabase.OPEN_READWRITE);
         return null;
     }
 
     @Override
     public PluginDatabase createDatabase(UUID ownerId, String databaseName) {
 
-         mDatabase = SQLiteDatabase.openOrCreateDatabase(mContext.getFilesDir() +"/" + databaseName, null, null);
+        mDatabase = SQLiteDatabase.openOrCreateDatabase(mContext.getFilesDir() +"/" + databaseName, null, null);
 
         return null;
     }
 
 
+    public SQLiteDatabase getDatabase() {
+        return mDatabase;
+
+    }
+
     @Override
     public void setContext(Object context) {
         mContext = (Context) context;
     }
+
+
 
     public void createTable(String databaseName, String tableSchema) {
 
@@ -57,56 +76,12 @@ public class AndroidPluginDatabaseSystem extends SQLiteOpenHelper implements Plu
 
     }
 
-    public void insertRecord(String databaseName, String tableName, ContentValues recordList) {
-
-        mTableName = tableName;
-        mDatabase = SQLiteDatabase.openDatabase(mContext.getFilesDir() +"/" + databaseName,null,SQLiteDatabase.OPEN_READWRITE);
-
-        mDatabase.insert(tableName,null,recordList);
-
-    }
-
-    public void updateRow(String databaseName, String tableName, String keyId, long keyValue, ContentValues recordUpdateList) {
-
-        mDatabase = SQLiteDatabase.openDatabase(mContext.getFilesDir() +"/" + databaseName,null,SQLiteDatabase.OPEN_READWRITE);
-        mDatabase.update(tableName, recordUpdateList, keyId +"=" + keyValue, null);
-    }
-
-   /* public List<Row> fetchAllRows() {
-        ArrayList<Row> ret = new ArrayList<Row>();
-        try {
-            Cursor c =
-                    db.query(DATABASE_TABLE, new String[] {
-                            "_id", "code", "name"}, null, null, null, null, null);
-            int numRows = c.count();
-            c.first();
-            for (int i = 0; i < numRows; ++i) {
-                Row row = new Row();
-                row._Id = c.getLong(0);
-                row.code = c.getString(1);
-                row.name = c.getString(2);
-                ret.add(row);
-                c.next();
-            }
-        } catch (SQLException e) {
-            Log.e("Exception on query", e.toString());
-        }
-        return ret;
-    }*/
-
-    public void deleteRow(String databaseName, String tableName, String keyId, long keyValue) {
-        mDatabase = SQLiteDatabase.openDatabase(mContext.getFilesDir() +"/" + databaseName,null,SQLiteDatabase.OPEN_READWRITE);
-
-        mDatabase.delete(tableName, keyId + keyValue, null);
-    }
-    // Creating Tables
     @Override
     public void onCreate(SQLiteDatabase db) {
 
         db.execSQL(mTableSchema);
     }
 
-    // Upgrading database
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop older table if existed

@@ -8,8 +8,10 @@ import java.util.List;
  */
 public interface DatabaseTable {
     
-    public List<TableColumn> getColumns();
-    
+    //public List<TableColumn> getColumns();
+
+    public List<String> getColumns();
+
     public List<DatabaseTableRecord> getRecords();
 
     public DatabaseTableRecord getEmptyRecord();

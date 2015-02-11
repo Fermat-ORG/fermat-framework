@@ -7,15 +7,21 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.content.ContentValues;
 import android.support.v4.app.FragmentActivity;
 
 import android.view.View;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.smartwallet.android.app.common.version_1.classes.MyApplication;
+import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.database_system.AndroidDatabaseRecord;
+import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.database_system.AndroidDatabaseTable;
+import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.database_system.AndroidDatabaseTableFilter;
+import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.database_system.AndroidDatabaseTableColumn;
 import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidImageFile;
 import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidFile;
 import com.bitdubai.wallet_platform_api.layer._3_os.CantLoadFileException;
+import com.bitdubai.wallet_platform_api.layer._3_os.DatabaseDataType;
+import com.bitdubai.wallet_platform_api.layer._3_os.DatabaseFilterType;
+import com.bitdubai.wallet_platform_api.layer._3_os.DatabaseTableRecord;
 import com.bitdubai.wallet_platform_api.layer._3_os.FileLifeSpan;
 import com.bitdubai.wallet_platform_api.layer._3_os.FilePrivacy;
 import com.bitdubai.wallet_platform_api.layer._3_os.CantPersistFileException;
@@ -23,8 +29,9 @@ import android.content.Context;
 import android.widget.TextView;
 import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.database_system.AndroidPluginDatabaseSystem;
 
+import java.util.List;
 import java.util.UUID;
-
+import java.util.ArrayList;
 
 /**
  * Created by Natalia on 29/01/2015.
@@ -222,7 +229,7 @@ public class FileImageActivity extends FragmentActivity {
             //create DB
 
             AndroidPluginDatabaseSystem dbmanager = new AndroidPluginDatabaseSystem(mContext);
-        String tableSchema =   "CREATE TABLE Table1 (Id INTEGER PRIMARY KEY, name TEXT, type TEXT)";
+            String tableSchema =   "CREATE TABLE Table1 (Id INTEGER PRIMARY KEY, name TEXT, type TEXT)";
             dbmanager.createTable("dbExample",tableSchema);
 
             TextView  result = (TextView)findViewById(R.id.result_text);
@@ -239,15 +246,24 @@ public class FileImageActivity extends FragmentActivity {
     public void onInsertRecordClicked(View v)   {
         try
         {
-            //create DB
-            ContentValues initialValues = new ContentValues();
-            initialValues.put("Id", 1);
-            initialValues.put("name", "NN");
-            initialValues.put("type", "A");
+            //insert record
+            AndroidPluginDatabaseSystem dbPlugIn = new AndroidPluginDatabaseSystem(mContext);
+            UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
 
-            AndroidPluginDatabaseSystem dbmanager = new AndroidPluginDatabaseSystem(mContext);
+            dbPlugIn.openDatabase(moduleId,"dbExample");
 
-            dbmanager.insertRecord("dbExample","Table1",initialValues);
+            AndroidDatabaseTable dbmanager = new AndroidDatabaseTable();
+            dbmanager.setTableName("Table1");
+
+            List<String> values = new ArrayList<String>();
+            values.add("1");
+            values.add("natty");
+            values.add("A");
+
+
+            AndroidDatabaseRecord records  = new AndroidDatabaseRecord();
+            records.setValues(values);
+            dbmanager.insertRecord(records);
 
             TextView  result = (TextView)findViewById(R.id.result_text);
             result.setText("Record Inserted");
@@ -263,17 +279,23 @@ public class FileImageActivity extends FragmentActivity {
     public void onDeleteRecordClicked(View v)   {
         try
         {
-            AndroidPluginDatabaseSystem dbmanager = new AndroidPluginDatabaseSystem(mContext);
+            AndroidPluginDatabaseSystem dbPlugIn = new AndroidPluginDatabaseSystem(mContext);
+            UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
+
+            dbPlugIn.openDatabase(moduleId,"dbExample");
+
+            AndroidDatabaseTable dbmanager = new AndroidDatabaseTable();
+            dbmanager.setTableName("Table1");
 
             dbmanager.deleteRow("dbExample","Table1","Id=",1);
 
             TextView  result = (TextView)findViewById(R.id.result_text);
-            result.setText("Record Inserted");
+            result.setText("Record deleted");
         }
         catch (Exception e)
         {
             TextView  result = (TextView)findViewById(R.id.result_text);
-            result.setText("Error Inserted Record");
+            result.setText("Error deleted Record");
         }
 
     }
@@ -281,12 +303,69 @@ public class FileImageActivity extends FragmentActivity {
     public void onUpdateRecordClicked(View v)   {
         try
         {
-            AndroidPluginDatabaseSystem dbmanager = new AndroidPluginDatabaseSystem(mContext);
-            ContentValues initialValues = new ContentValues();
+            AndroidPluginDatabaseSystem dbPlugIn = new AndroidPluginDatabaseSystem(mContext);
+            UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
 
-            initialValues.put("name", "CC");
-            initialValues.put("type", "B");
-            dbmanager.updateRow("dbExample","Table1","Id=",1,initialValues);
+            dbPlugIn.openDatabase(moduleId,"dbExample");
+
+            AndroidDatabaseTable dbmanager = new AndroidDatabaseTable();
+
+            dbmanager.setTableName("Table1");
+
+            List<String> values = new ArrayList<String>();
+            values.add("1");
+            values.add("CC");
+            values.add("B");
+            //"Id=",1
+
+            //filter
+            AndroidDatabaseTableFilter filter = new AndroidDatabaseTableFilter();
+            filter.setValue("1");
+            filter.setType(DatabaseFilterType.EQUAL);
+
+            AndroidDatabaseTableColumn filterColum = new AndroidDatabaseTableColumn();
+            filterColum.setName("Id");
+            filterColum.setType(DatabaseDataType.INTEGER);
+            filter.setColumn(filterColum);
+            AndroidDatabaseRecord records  = new AndroidDatabaseRecord();
+            records.setValues(values);
+            dbmanager.updateRecord(records);
+
+            TextView  result = (TextView)findViewById(R.id.result_text);
+            result.setText("Record Updated");
+        }
+        catch (Exception e)
+        {
+            TextView  result = (TextView)findViewById(R.id.result_text);
+            result.setText("Error Updated Record");
+        }
+
+    }
+
+    public void onSelectRecordClicked(View v)   {
+        try
+        {
+            AndroidPluginDatabaseSystem dbPlugIn = new AndroidPluginDatabaseSystem(mContext);
+            UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
+
+            dbPlugIn.openDatabase(moduleId,"dbExample");
+
+            AndroidDatabaseTable dbmanager = new AndroidDatabaseTable();
+
+            dbmanager.setTableName("Table1");
+
+
+            //filter
+            AndroidDatabaseTableFilter filter = new AndroidDatabaseTableFilter();
+            filter.setValue("1");
+            filter.setType(DatabaseFilterType.EQUAL);
+
+            AndroidDatabaseTableColumn filterColum = new AndroidDatabaseTableColumn();
+            filterColum.setName("Id");
+            filterColum.setType(DatabaseDataType.INTEGER);
+            filter.setColumn(filterColum);
+
+            List<DatabaseTableRecord> records = dbmanager.getRecords();
 
             TextView  result = (TextView)findViewById(R.id.result_text);
             result.setText("Record Updated");
