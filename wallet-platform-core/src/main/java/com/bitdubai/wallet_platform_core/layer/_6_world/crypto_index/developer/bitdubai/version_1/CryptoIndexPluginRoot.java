@@ -16,7 +16,7 @@ import java.util.UUID;
 /**
  * Created by loui on 12/02/15.
  */
-public class CryptoIndexPluginRoot implements Service, CommunicationChannel, DealsWithEvents, DealsWithErrors, DealsWithFileSystem, Plugin {
+public class CryptoIndexPluginRoot implements Service,  DealsWithEvents, DealsWithErrors, DealsWithFileSystem, Plugin {
  
     //TODO: implement this methods correctly.
 

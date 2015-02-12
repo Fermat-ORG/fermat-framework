@@ -113,7 +113,7 @@ public class Platform  {
     
     PluginsManager pluginsManager;
 
-    Object context;
+    Object osContext;
     Os os;
 
 
@@ -145,8 +145,8 @@ public class Platform  {
      * the OS through this reference.
      */
 
-    public void setContext (Object context){
-        this.context = context;
+    public void setOsContext(Object osContext){
+        this.osContext = osContext;
     }
 
     /**
@@ -214,10 +214,10 @@ public class Platform  {
         ((DealWithEventMonitor) eventManager).setEventMonitor(eventMonitor);
 
         /**
-         * I will set the context to the Os in order to enable access to the underlying Os objects.
+         * I will set the osContext to the Os in order to enable access to the underlying Os objects.
          */
 
-        os.setContext(this.context);
+        os.setContext(this.osContext);
 
         /**
          * I will initialize the Plugin Manager

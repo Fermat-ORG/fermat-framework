@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.bitdubai.smartwallet.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.SentHistoryActivity">
+    tools:osContext="com.bitdubai.smartwallet.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.SentHistoryActivity">
     <item android:id="@+id/action_settings" android:title="@string/action_settings"
         android:orderInCategory="100" android:showAsAction="never" />
 </menu>

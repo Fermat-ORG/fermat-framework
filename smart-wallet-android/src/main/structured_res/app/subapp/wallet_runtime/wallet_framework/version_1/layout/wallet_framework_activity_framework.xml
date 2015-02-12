@@ -5,7 +5,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.bitdubai.smartwallet.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.FrameworkActivity">
+    tools:osContext="com.bitdubai.smartwallet.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.FrameworkActivity">
 
     <!-- As the main content view, the view below consumes the entire
          space available using match_parent in both dimensions. -->
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/colors"
             android:layout_below="@+id/tabs"
-            tools:context=".MainActivity" />
+            tools:osContext=".MainActivity" />
 
 
     </RelativeLayout>

@@ -12,6 +12,8 @@ import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.
 import com.bitdubai.wallet_platform_api.layer._3_os.File_System.DealsWithFileSystem;
 import com.bitdubai.wallet_platform_api.layer._3_os.File_System.PluginFileSystem;
 import com.bitdubai.wallet_platform_api.layer._8_communication.CommunicationChannel;
+import com.bitdubai.wallet_platform_api.layer._8_communication.OnlineChannel;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -96,6 +98,15 @@ public class CloudCommunicationChannelPluginRoot implements Service, Communicati
     @Override
     public ServiceStatus getStatus() {
         return this.serviceStatus;
+    }
+
+    /**
+     * CommunicationChannel Interface implementation.
+     */
+    @Override
+    public OnlineChannel createOnlineChannel() {
+
+        return new CloudOnlineChannel();
     }
     
     /**

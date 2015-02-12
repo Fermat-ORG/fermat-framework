@@ -4,7 +4,7 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.bitdubai.smartwallet.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.ChatOverTrxActivity"
+    tools:osContext="com.bitdubai.smartwallet.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.ChatOverTrxActivity"
     tools:ignore="MergeRootFrame"
 
     />

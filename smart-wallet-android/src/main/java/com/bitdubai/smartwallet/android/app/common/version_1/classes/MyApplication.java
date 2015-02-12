@@ -102,7 +102,7 @@ public class MyApplication extends Application {
         try {
 
 
-            mPlatform.setContext(this);
+            mPlatform.setOsContext(this);
             mPlatform.setOs(new AndroidOsAddonRoot());
             mPlatform.start();
 
