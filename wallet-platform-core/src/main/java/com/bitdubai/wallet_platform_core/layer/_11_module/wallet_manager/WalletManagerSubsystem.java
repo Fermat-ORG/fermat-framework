@@ -15,7 +15,7 @@ public class WalletManagerSubsystem  implements ModuleSubsystem {
     
     @Override
     public Plugin getPlugin() {
-        return null;
+        return plugin;
     }
 
     @Override

@@ -101,10 +101,6 @@ public class MyApplication extends Application {
 
         mPlatform = new Platform();
 
-
-
-
-
         try {
 
 

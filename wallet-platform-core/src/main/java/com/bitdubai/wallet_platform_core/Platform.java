@@ -172,7 +172,7 @@ public class Platform  {
 
             mDefinitionLayer.start();
             mEventLayer.start();
-            mOsLayer.start();
+            //mOsLayer.start();
             mUserLayer.start();
             mLicesnseLayer.start();
             mWorldLayer.start();

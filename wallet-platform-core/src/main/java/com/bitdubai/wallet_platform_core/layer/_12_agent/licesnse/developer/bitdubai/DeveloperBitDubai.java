@@ -2,12 +2,15 @@ package com.bitdubai.wallet_platform_core.layer._12_agent.licesnse.developer.bit
 
 import com.bitdubai.wallet_platform_api.layer._12_agent.AIAgent;
 import com.bitdubai.wallet_platform_api.layer._12_agent.AgentLayerDeveloper;
+import com.bitdubai.wallet_platform_api.layer._1_definition.enums.CryptoCurrency;
+import com.bitdubai.wallet_platform_api.layer._1_definition.enums.TimeFrequency;
+import com.bitdubai.wallet_platform_api.layer._5_license.PluginLicensor;
 import com.bitdubai.wallet_platform_core.layer._12_agent.licesnse.developer.bitdubai.version_1.LicenseAgent;
 
 /**
  * Created by ciencias on 21.01.15.
  */
-public class DeveloperBitDubai implements AgentLayerDeveloper {
+public class DeveloperBitDubai implements AgentLayerDeveloper, PluginLicensor {
 
     AIAgent mAIAgent;
 
@@ -25,5 +28,25 @@ public class DeveloperBitDubai implements AgentLayerDeveloper {
 
         mAIAgent = new LicenseAgent();
 
+    }
+
+    @Override
+    public int getAmountToPay() {
+        return 100;
+    }
+
+    @Override
+    public CryptoCurrency getCryptoCurrency() {
+        return CryptoCurrency.BITCOIN;
+    }
+
+    @Override
+    public String getAddress() {
+        return "13gpMizSNvQCbJzAPyGCUnfUGqFD8ryzcv";
+    }
+
+    @Override
+    public TimeFrequency getTimePeriod() {
+        return TimeFrequency.MONTHLY;
     }
 }
