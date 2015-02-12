@@ -2,17 +2,17 @@ package com.bitdubai.wallet_platform_core.layer._8_communication.cloud.developer
 
 import com.bitdubai.wallet_platform_api.layer._4_user.User;
 import com.bitdubai.wallet_platform_api.layer._8_communication.CantConnectToUserException;
-import com.bitdubai.wallet_platform_api.layer._8_communication.OnlineConnection;
+import com.bitdubai.wallet_platform_api.layer._8_communication.UserToUserOnlineConnection;
 
 /**
  * Created by ciencias on 2/12/15.
  */
-public class CloudOnlineConnection implements OnlineConnection {
+public class CloudUserToUserOnlineConnection implements UserToUserOnlineConnection {
 
     User userFrom;
     User userTo;
     
-    public CloudOnlineConnection (User userFrom, User userTo) {
+    public CloudUserToUserOnlineConnection(User userFrom, User userTo) {
         
         this.userFrom = userFrom;
         this.userTo = userTo;

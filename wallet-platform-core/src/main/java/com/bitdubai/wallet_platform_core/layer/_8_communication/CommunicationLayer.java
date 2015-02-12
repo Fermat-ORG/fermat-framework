@@ -74,7 +74,7 @@ public class CommunicationLayer implements PlatformLayer, DealsWithPlatformConte
      * CommunicationLayer Interface implementation.
      */
     
-    public OnlineConnection connectTo (User user) throws CantConnectToUserException {
+    public UserToUserOnlineConnection connectTo (User user) throws CantConnectToUserException {
         /**
          * The communication layer knows several ways to establish an online connection. It also have a procedure with
          * which it will try several of these ways until it finds a connection to the desired user.
@@ -85,11 +85,11 @@ public class CommunicationLayer implements PlatformLayer, DealsWithPlatformConte
          */
 
         OnlineChannel onlineChannel = ((CommunicationChannel) mCloudPlugin).createOnlineChannel();
-        OnlineConnection onlineConnection =  onlineChannel.createOnlineConnection(platformContext.getLoggedInUser(), user);
+        UserToUserOnlineConnection userToUserOnlineConnection =  onlineChannel.createOnlineConnection(platformContext.getLoggedInUser(), user);
         
         try
         {
-            onlineConnection.connect();
+            userToUserOnlineConnection.connect();
         }
         catch (CantConnectToUserException cantConnectToUserException)
         {
@@ -103,7 +103,7 @@ public class CommunicationLayer implements PlatformLayer, DealsWithPlatformConte
         }
         
         
-        return onlineConnection;
+        return userToUserOnlineConnection;
     }
 
     /**

@@ -7,5 +7,5 @@ import com.bitdubai.wallet_platform_api.layer._4_user.User;
  */
 public interface OnlineChannel {
 
-    public OnlineConnection createOnlineConnection (User userFrom, User userTo);
+    public UserToUserOnlineConnection createOnlineConnection (User userFrom, User userTo);
 }
