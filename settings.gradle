@@ -1,4 +1,4 @@
-include 'smart-wallet-android', ':wallet-platform-core'
+include 'smart-wallet-android', ':wallet-platform-core', ':wallet-platform-draft'
 
 include 'wallet-platform-core'
 
@@ -13,4 +13,3 @@ include 'wallet-platform-plugin-module-wallet-publisher-bitdubai'
 include 'wallet-platform-plugin-module-wallet-runtime-bitdubai'
 
 include 'wallet-platform-plugin-module-wallet-store-bitdubai'
-
