@@ -11,13 +11,23 @@ public class AndroidPlatformFileSystem implements PlatformFileSystem {
     Context mContext;
     @Override
     public PlatformDataFile getFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException {
-        return null;
+        AndroidPlatformDataFile newFile = new AndroidPlatformDataFile( mContext, directoryName,fileName, privacyLevel, lifeSpan);
+
+        try {
+            newFile.loadFromMemory();
+            return newFile;
+        }
+        catch (CantLoadFileException e){
+            System.err.println("GetFailedException: " + e.getMessage());
+            e.printStackTrace();
+            throw new FileNotFoundException();
+        }
 
     }
 
     @Override
     public PlatformDataFile createFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) {
-        return null;
+        return new AndroidPlatformDataFile( mContext,directoryName,fileName, privacyLevel, lifeSpan);
     }
 
     @Override
