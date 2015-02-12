@@ -28,7 +28,7 @@ public class PlatformUserManagerAddonRoot implements Service, UserManager,DealsW
     /**
      * PlatformService Interface member variables.
      */
-    ServiceStatus serviceStatus;
+    ServiceStatus serviceStatus = ServiceStatus.CREATED;
     List<EventListener> listenersAdded = new ArrayList<>();
         
     /**
@@ -78,10 +78,15 @@ public class PlatformUserManagerAddonRoot implements Service, UserManager,DealsW
 
     @Override
     public void pause() {
+
+        this.serviceStatus = ServiceStatus.PAUSED;
+
     }
 
     @Override
     public void resume() {
+
+        this.serviceStatus = ServiceStatus.STARTED;
 
     }
 
@@ -97,6 +102,9 @@ public class PlatformUserManagerAddonRoot implements Service, UserManager,DealsW
         }
 
         listenersAdded.clear();
+
+        this.serviceStatus = ServiceStatus.STOPPED;
+
     }
 
     @Override
@@ -160,12 +168,12 @@ public class PlatformUserManagerAddonRoot implements Service, UserManager,DealsW
 
     }
 
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
 
 
     /**

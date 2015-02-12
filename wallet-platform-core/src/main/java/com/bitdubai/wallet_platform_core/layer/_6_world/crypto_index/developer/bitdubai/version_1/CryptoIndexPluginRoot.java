@@ -24,7 +24,7 @@ public class CryptoIndexPluginRoot implements Service, DealsWithEvents, DealsWit
     /**
      * PlatformService Interface member variables.
      */
-    ServiceStatus serviceStatus;
+    ServiceStatus serviceStatus = ServiceStatus.CREATED;
     List<EventListener> listenersAdded = new ArrayList<>();
     
     /**
@@ -42,11 +42,7 @@ public class CryptoIndexPluginRoot implements Service, DealsWithEvents, DealsWit
      */
     UUID pluginId;
 
-    public CryptoIndexPluginRoot(){
-        this.serviceStatus = ServiceStatus.CREATED;        
-    }
-    
-    
+
     @Override
     public void start() {
         /**
@@ -62,11 +58,14 @@ public class CryptoIndexPluginRoot implements Service, DealsWithEvents, DealsWit
     @Override
     public void pause() {
 
+        this.serviceStatus = ServiceStatus.PAUSED;
     }
 
     @Override
     public void resume() {
 
+
+        this.serviceStatus = ServiceStatus.STARTED;
     }
 
     @Override
@@ -81,7 +80,9 @@ public class CryptoIndexPluginRoot implements Service, DealsWithEvents, DealsWit
         }
 
         listenersAdded.clear();
-        
+
+        this.serviceStatus = ServiceStatus.STOPPED;
+
     }
     
     @Override

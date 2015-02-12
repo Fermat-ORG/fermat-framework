@@ -4,7 +4,7 @@ import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.PluginDeveloper;
 import com.bitdubai.wallet_platform_api.layer._11_module.CantStartSubsystemException;
 import com.bitdubai.wallet_platform_api.layer._11_module.ModuleSubsystem;
-import com.bitdubai.wallet_platform_plugin.layer._11_module.wallet_manager.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.wallet_platform_draft.layer._11_module.wallet_manager.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by ciencias on 30.12.14.

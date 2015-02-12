@@ -16,7 +16,7 @@ import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1
 import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.database_system.AndroidDatabaseTable;
 import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.database_system.AndroidDatabaseTableFilter;
 import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.database_system.AndroidDatabaseTableColumn;
-import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidPluginImageSystem;
+// import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidPluginImageSystem;
 import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidPluginFileSystem;
 import com.bitdubai.wallet_platform_api.layer._3_os.File_System.CantLoadFileException;
 import com.bitdubai.wallet_platform_api.layer._3_os.Database_System.DatabaseDataType;
@@ -61,18 +61,18 @@ public class FileImageActivity extends FragmentActivity {
         ImageView  imageA = (ImageView)findViewById(R.id.imageView5);
         imageA.setImageBitmap(null);
         final Bitmap myBitmap  = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.usd_100);
-
+/*
         AndroidPluginImageSystem filemanager = new AndroidPluginImageSystem();
         filemanager.setContext(mContext);
 
         PluginImageFile file = filemanager.createFile(moduleId,"","usd_100", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
         file.setBitMap(myBitmap);
         file.peristToMemory();
-
+*/
         TextView  result = (TextView)findViewById(R.id.result_text);
         result.setText("Image Persisted to Memory");
     }
-
+/*
     public void onFromMemoryClicked(View v) throws CantLoadFileException  {
         //load image from memory
         UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
@@ -410,7 +410,7 @@ public class FileImageActivity extends FragmentActivity {
             TextView  result = (TextView)findViewById(R.id.result_text);
             result.setText("Error Updated Record");
         }
-
     }
+*/
 
 }

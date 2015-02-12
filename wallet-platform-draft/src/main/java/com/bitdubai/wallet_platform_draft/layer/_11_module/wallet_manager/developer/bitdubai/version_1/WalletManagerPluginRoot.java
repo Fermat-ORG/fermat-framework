@@ -1,4 +1,4 @@
-package com.bitdubai.wallet_platform_plugin.layer._11_module.wallet_manager.developer.bitdubai.version_1;
+package com.bitdubai.wallet_platform_draft.layer._11_module.wallet_manager.developer.bitdubai.version_1;
 
 
 
@@ -49,7 +49,7 @@ public class WalletManagerPluginRoot implements Service, WalletManager, DealsWit
      * Plugin Interface member variables.
      */
     UUID pluginId;
-    
+
 
     public WalletManagerPluginRoot(){
         userWallets = new ArrayList<>();
