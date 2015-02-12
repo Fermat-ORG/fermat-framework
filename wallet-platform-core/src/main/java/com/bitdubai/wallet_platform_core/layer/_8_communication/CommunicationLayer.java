@@ -1,5 +1,7 @@
 package com.bitdubai.wallet_platform_core.layer._8_communication;
 
+import com.bitdubai.wallet_platform_api.DealsWithPlatformContext;
+import com.bitdubai.wallet_platform_api.PlatformContext;
 import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.layer.CantStartLayerException;
 import com.bitdubai.wallet_platform_api.layer.PlatformLayer;
@@ -15,7 +17,7 @@ import com.bitdubai.wallet_platform_core.layer._8_communication.cloud.CloudSubsy
  * I am going to establish several communication channels. I will use each one when appropriate.
  */
 
-public class CommunicationLayer implements PlatformLayer {
+public class CommunicationLayer implements PlatformLayer, DealsWithPlatformContext {
 
     /*private Plugin mBluetoohPlugin;
     */
@@ -28,7 +30,11 @@ public class CommunicationLayer implements PlatformLayer {
     private Plugin mP2PPlugin;
     private Plugin mSMSPlugin;
     private Plugin mUriPlugin;
+    */
+    
+    PlatformContext platformContext;
 
+     /*
     public Plugin getBluetoohPlugin() {
         return mBluetoohPlugin;
     }
@@ -64,8 +70,11 @@ public class CommunicationLayer implements PlatformLayer {
     }
     */
 
-
-    public OnlineConnection connectTo (User user) {
+    /**
+     * CommunicationLayer Interface implementation.
+     */
+    
+    public OnlineConnection connectTo (User user) throws CantConnectToUserException {
         /**
          * The communication layer knows several ways to establish an online connection. It also have a procedure with
          * which it will try several of these ways until it finds a connection to the desired user.
@@ -76,13 +85,30 @@ public class CommunicationLayer implements PlatformLayer {
          */
 
         OnlineChannel onlineChannel = ((CommunicationChannel) mCloudPlugin).createOnlineChannel();
-        OnlineConnection onlineConnection =  onlineChannel.createOnlineConnection(user, user);
-        onlineConnection.connect();
+        OnlineConnection onlineConnection =  onlineChannel.createOnlineConnection(platformContext.getLoggedInUser(), user);
+        
+        try
+        {
+            onlineConnection.connect();
+        }
+        catch (CantConnectToUserException cantConnectToUserException)
+        {
+            System.err.println("CantConnectToUserException: " + cantConnectToUserException.getMessage());
 
-        // TODO: resolver el problema del usuario logeado, de donde lo saco.
-
+            /**
+             * Since this is the only implementation of a communication channel if the connection cannot be established
+             * then there is no other option but to throw the exception again.
+             */
+            throw cantConnectToUserException;
+        }
+        
+        
         return onlineConnection;
     }
+
+    /**
+     * PlatformLayer Interface implementation.
+     */
     
     @Override
     public void start() throws CantStartLayerException {
@@ -105,5 +131,14 @@ public class CommunicationLayer implements PlatformLayer {
              */
             throw new CantStartLayerException();
         }
+    }
+
+    /**
+     * DealsWithPlatformContext Interface implementation.
+     */
+    
+    @Override
+    public void setPlatformContext(PlatformContext platformContext) {
+        this.platformContext = platformContext;
     }
 }

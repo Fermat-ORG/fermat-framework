@@ -12,7 +12,7 @@ public interface OnlineConnection {
 
     public User getRemoteUser ();
     
-    public void connect();
+    public void connect() throws CantConnectToUserException;
     
     public void disconnect();
     
