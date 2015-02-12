@@ -25,11 +25,11 @@ import java.util.UUID;
  * Hi! I am a cloud service which centralizes the communications between system users.
  */
 
-public class CloudCommunicationChannel implements Service, CommunicationChannel, DealsWithEvents, DealsWithErrors, DealsWithFileSystem, Plugin {
+public class CloudCommunicationChannelPluginRoot implements Service, CommunicationChannel, DealsWithEvents, DealsWithErrors, DealsWithFileSystem, Plugin {
 
 
     /**
-     * PlatformService Interface member variables.
+     * Service Interface member variables.
      */
     ServiceStatus serviceStatus;
     List<EventListener> listenersAdded = new ArrayList<>();
@@ -49,7 +49,7 @@ public class CloudCommunicationChannel implements Service, CommunicationChannel,
      */
     UUID pluginId;
 
-    public CloudCommunicationChannel() {
+    public CloudCommunicationChannelPluginRoot() {
 
         this.serviceStatus = ServiceStatus.CREATED;
     }

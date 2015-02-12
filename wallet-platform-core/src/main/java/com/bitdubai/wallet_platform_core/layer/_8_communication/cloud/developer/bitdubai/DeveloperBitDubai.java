@@ -5,13 +5,15 @@ import com.bitdubai.wallet_platform_api.layer._1_definition.enums.TimeFrequency;
 import com.bitdubai.wallet_platform_api.layer._5_license.PluginLicensor;
 import com.bitdubai.wallet_platform_api.layer._8_communication.CommunicationChannel;
 import com.bitdubai.wallet_platform_api.layer._8_communication.CommunicationChannelDeveloper;
-import com.bitdubai.wallet_platform_core.layer._8_communication.cloud.developer.bitdubai.version_1.CloudCommunicationChannel;
+import com.bitdubai.wallet_platform_core.layer._8_communication.cloud.developer.bitdubai.version_1.CloudCommunicationChannelPluginRoot;
 
 /**
  * Created by ciencias on 20.01.15.
  */
 public class DeveloperBitDubai implements CommunicationChannelDeveloper, PluginLicensor {
 
+    //TODO: Deberia ser Pluin Develper
+    
     CommunicationChannel mCommunicationChannel;
 
     @Override
@@ -26,7 +28,7 @@ public class DeveloperBitDubai implements CommunicationChannelDeveloper, PluginL
          * it is easy to choose.
          */
 
-        mCommunicationChannel = new CloudCommunicationChannel();
+        mCommunicationChannel = new CloudCommunicationChannelPluginRoot();
 
     }
 
