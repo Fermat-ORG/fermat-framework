@@ -10,13 +10,13 @@ import com.bitdubai.wallet_platform_api.layer._3_os.File_System.*;
 public class AndroidPlatformFileSystem implements PlatformFileSystem {
     Context mContext;
     @Override
-    public PlatformFile getFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException {
+    public PlatformDataFile getFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException {
         return null;
 
     }
 
     @Override
-    public PlatformFile createFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) {
+    public PlatformDataFile createFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) {
         return null;
     }
 

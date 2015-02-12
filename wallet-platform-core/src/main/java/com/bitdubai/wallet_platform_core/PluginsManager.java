@@ -23,15 +23,15 @@ public class PluginsManager {
         
         this.platformFileSystem = platformFileSystem;
 
-        PlatformFile platformFile;
+        PlatformDataFile platformDataFile;
         
         try
         {
-            platformFile =  platformFileSystem.getFile("Platform", "PluginsIds", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            platformDataFile =  platformFileSystem.getFile("Platform", "PluginsIds", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
 
             try
             {
-                platformFile.loadToMemory();
+                platformDataFile.loadToMemory();
             }
             catch (CantLoadFileException cantLoadFileException)
             {
@@ -44,7 +44,7 @@ public class PluginsManager {
                 throw new CantInitializePluginsManagerException();
             }
 
-            String[] stringPluginIds = platformFile.getContent().split(";" , -1);
+            String[] stringPluginIds = platformDataFile.getContent().split(";" , -1);
 
             Integer arrayPosition = 0;
 
@@ -71,7 +71,7 @@ public class PluginsManager {
 
                 try
                 {
-                    savePluginIds(platformFile);
+                    savePluginIds(platformDataFile);
                 }
                 catch (CantPersistFileException cantPersistFileException )
                 {
@@ -89,7 +89,7 @@ public class PluginsManager {
         }
         catch (FileNotFoundException fileNotFoundException)
         {
-            platformFile =  platformFileSystem.createFile("Platform", "PluginsIds", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            platformDataFile =  platformFileSystem.createFile("Platform", "PluginsIds", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
 
 
             for (int arrayPosition = 0; arrayPosition < AMOUNT_OF_KNOWN_PLUGINS; arrayPosition++) {
@@ -101,7 +101,7 @@ public class PluginsManager {
 
             try
             {
-                savePluginIds(platformFile);
+                savePluginIds(platformDataFile);
             }
             catch (CantPersistFileException cantPersistFileException )
             {
@@ -150,7 +150,7 @@ public class PluginsManager {
     
     
     
-    private void savePluginIds(PlatformFile platformFile) throws CantPersistFileException{
+    private void savePluginIds(PlatformDataFile platformDataFile) throws CantPersistFileException{
 
         String fileContent = "";
                 
@@ -160,11 +160,11 @@ public class PluginsManager {
             
         }
 
-        platformFile.setContent(fileContent);
+        platformDataFile.setContent(fileContent);
 
         try
         {
-            platformFile.persistToMedia();
+            platformDataFile.persistToMedia();
         }
         catch (CantPersistFileException cantPersistFileException )
         {

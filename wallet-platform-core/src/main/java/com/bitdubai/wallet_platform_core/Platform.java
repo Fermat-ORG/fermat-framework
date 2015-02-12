@@ -356,7 +356,7 @@ public class Platform  {
 
         try {
 
-            PlatformFile platformStateFile =  os.getPlatformFileSystem().getFile(
+            PlatformDataFile platformStateFile =  os.getPlatformFileSystem().getFile(
                     DeviceDirectory.PLATFORM.getName(),
                     PlatformFileName.LAST_STATE.getFileName(),
                     FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT
@@ -418,7 +418,7 @@ public class Platform  {
                 throw new CantStartPlatformException();
             }
 
-             PlatformFile platformStateFile =  os.getPlatformFileSystem().createFile(
+             PlatformDataFile platformStateFile =  os.getPlatformFileSystem().createFile(
                     DeviceDirectory.PLATFORM.getName(),
                     PlatformFileName.LAST_STATE.getFileName(),
                     FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT

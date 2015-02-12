@@ -178,7 +178,7 @@ public class PlatformUser implements User,DealsWithFileSystem, DealsWithEvents, 
 
     private void persist() throws CantPersistUserException{
 
-        PluginFile file = this.pluginFileSystem.createFile(
+        PluginDataFile file = this.pluginFileSystem.createDataFile(
                 pluginId,
                 DeviceDirectory.LOCAL_USERS.getName(),
                 this.userId.toString(),
@@ -206,7 +206,7 @@ public class PlatformUser implements User,DealsWithFileSystem, DealsWithEvents, 
 
         try {
             
-            PluginFile file = this.pluginFileSystem.getFile(
+            PluginDataFile file = this.pluginFileSystem.getDataFile(
                     pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
                     this.userId.toString(),

@@ -28,7 +28,7 @@ import com.bitdubai.wallet_platform_api.layer._3_os.File_System.CantPersistFileE
 import android.content.Context;
 import android.widget.TextView;
 import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.database_system.AndroidPluginDatabaseSystem;
-import com.bitdubai.wallet_platform_api.layer._3_os.File_System.PluginFile;
+import com.bitdubai.wallet_platform_api.layer._3_os.File_System.PluginDataFile;
 import com.bitdubai.wallet_platform_api.layer._3_os.File_System.PluginImageFile;
 
 import java.util.List;
@@ -146,7 +146,7 @@ public class FileImageActivity extends FragmentActivity {
             AndroidPluginFileSystem filemanager = new AndroidPluginFileSystem();
             filemanager.setContext(mContext);
 
-            PluginFile file = filemanager.createFile(moduleId,"","example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
+            PluginDataFile file = filemanager.createDataFile(moduleId, "", "example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
 
             file.setContent("Text Content Test File Binary");
             file.loadToMemory();
@@ -172,7 +172,7 @@ public class FileImageActivity extends FragmentActivity {
             AndroidPluginFileSystem filemanager = new AndroidPluginFileSystem();
             filemanager.setContext(mContext);
 
-            PluginFile file = filemanager.createFile(moduleId,"","example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
+            PluginDataFile file = filemanager.createDataFile(moduleId, "", "example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
 
             file.setContent("Text Content to Test File Binary");
             file.persistToMedia();
@@ -195,7 +195,7 @@ public class FileImageActivity extends FragmentActivity {
             AndroidPluginFileSystem filemanager = new AndroidPluginFileSystem();
             filemanager.setContext(mContext);
 
-            PluginFile file = filemanager.createFile(moduleId,"","example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
+            PluginDataFile file = filemanager.createDataFile(moduleId, "", "example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
 
             file.loadFromMemory();
 
@@ -221,7 +221,7 @@ public class FileImageActivity extends FragmentActivity {
             AndroidPluginFileSystem filemanager = new AndroidPluginFileSystem();
             filemanager.setContext(mContext);
 
-            PluginFile file = filemanager.createFile(moduleId,"","example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
+            PluginDataFile file = filemanager.createDataFile(moduleId, "", "example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
 
             file.loadFromMedia();
 

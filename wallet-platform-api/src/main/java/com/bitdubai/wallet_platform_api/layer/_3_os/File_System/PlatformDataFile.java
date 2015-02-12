@@ -3,7 +3,7 @@ package com.bitdubai.wallet_platform_api.layer._3_os.File_System;
 /**
  * Created by ciencias on 01.02.15.
  */
-public interface PlatformFile {
+public interface PlatformDataFile {
 
     public String getContent ();
 

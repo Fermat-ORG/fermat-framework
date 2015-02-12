@@ -20,7 +20,7 @@ import java.util.UUID;
  * PERMANENT.
  */
 
-public class AndroidPluginFile implements PluginFile {
+public class AndroidPluginDataFile implements PluginDataFile {
 
     Context mContext;
     String mContent;
@@ -39,7 +39,7 @@ public class AndroidPluginFile implements PluginFile {
         mContent = content;
     }
 
-    public AndroidPluginFile(UUID ownerId, Context context, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
+    public AndroidPluginDataFile(UUID ownerId, Context context, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
 
         mOwnerId = ownerId;
         mContext = context;
