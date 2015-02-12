@@ -1,24 +1,13 @@
 package com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.database_system;
 
-import android.content.ContentValues;
 import android.content.Context;
-import com.bitdubai.wallet_platform_api.layer._3_os.CantOpenDatabaseException;
-import com.bitdubai.wallet_platform_api.layer._3_os.DatabaseTable;
-import com.bitdubai.wallet_platform_api.layer._3_os.DatabaseTableColumn;
-import com.bitdubai.wallet_platform_api.layer._3_os.DatabaseTableFilter;
-import com.bitdubai.wallet_platform_api.layer._3_os.DatabaseTableRecord;
-import com.bitdubai.wallet_platform_api.layer._3_os.PluginDatabase;
-import com.bitdubai.wallet_platform_api.layer._3_os.PluginDatabaseSystem;
+import com.bitdubai.wallet_platform_api.layer._3_os.File_System.CantOpenDatabaseException;
+import com.bitdubai.wallet_platform_api.layer._3_os.Database_System.Database;
+import com.bitdubai.wallet_platform_api.layer._3_os.Database_System.PluginDatabaseSystem;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.Cursor;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
-import java.sql.SQLException;
-
 
 
 /**
@@ -42,13 +31,13 @@ public class AndroidPluginDatabaseSystem extends SQLiteOpenHelper implements Plu
 
 
     @Override
-    public PluginDatabase openDatabase(UUID ownerId, String databaseName) throws CantOpenDatabaseException {
+    public Database openDatabase(UUID ownerId, String databaseName) throws CantOpenDatabaseException {
         mDatabase = SQLiteDatabase.openDatabase(mContext.getFilesDir() +"/" + databaseName,null,SQLiteDatabase.OPEN_READWRITE);
         return null;
     }
 
     @Override
-    public PluginDatabase createDatabase(UUID ownerId, String databaseName) {
+    public Database createDatabase(UUID ownerId, String databaseName) {
 
         mDatabase = SQLiteDatabase.openOrCreateDatabase(mContext.getFilesDir() +"/" + databaseName, null, null);
 

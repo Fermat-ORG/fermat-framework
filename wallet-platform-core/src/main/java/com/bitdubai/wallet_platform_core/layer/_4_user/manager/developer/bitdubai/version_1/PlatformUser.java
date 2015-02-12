@@ -6,7 +6,7 @@ import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.ErrorManager;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.*;
 import com.bitdubai.wallet_platform_api.layer._1_definition.event.PlatformEvent;
-import com.bitdubai.wallet_platform_api.layer._3_os.*;
+import com.bitdubai.wallet_platform_api.layer._3_os.File_System.*;
 import com.bitdubai.wallet_platform_api.layer._4_user.*;
 import com.bitdubai.wallet_platform_api.layer._4_user.manager.*;
 
@@ -221,7 +221,7 @@ public class PlatformUser implements User,DealsWithFileSystem, DealsWithEvents, 
             this.password = values[1];
 
         }
-        catch (FileNotFoundException|CantLoadFileException ex)
+        catch (FileNotFoundException |CantLoadFileException ex)
         {
             /**
              * This is bad, but lets handle it...

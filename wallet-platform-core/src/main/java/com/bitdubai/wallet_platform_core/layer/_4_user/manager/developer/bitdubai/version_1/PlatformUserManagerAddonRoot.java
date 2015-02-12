@@ -2,7 +2,6 @@ package com.bitdubai.wallet_platform_core.layer._4_user.manager.developer.bitdub
 
 import com.bitdubai.wallet_platform_api.Addon;
 import com.bitdubai.wallet_platform_api.Service;
-import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.ErrorManager;
@@ -10,8 +9,8 @@ import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventManager;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventHandler;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventListener;
-import com.bitdubai.wallet_platform_api.layer._3_os.PluginFileSystem;
-import com.bitdubai.wallet_platform_api.layer._3_os.DealsWithFileSystem;
+import com.bitdubai.wallet_platform_api.layer._3_os.File_System.PluginFileSystem;
+import com.bitdubai.wallet_platform_api.layer._3_os.File_System.DealsWithFileSystem;
 import com.bitdubai.wallet_platform_api.layer._4_user.manager.CantCreateUserException;
 import com.bitdubai.wallet_platform_api.layer._4_user.manager.CantLoadUserException;
 import com.bitdubai.wallet_platform_api.layer._4_user.User;

@@ -18,18 +18,18 @@ import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1
 import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.database_system.AndroidDatabaseTableColumn;
 import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidPluginImageSystem;
 import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidPluginFileSystem;
-import com.bitdubai.wallet_platform_api.layer._3_os.CantLoadFileException;
-import com.bitdubai.wallet_platform_api.layer._3_os.DatabaseDataType;
-import com.bitdubai.wallet_platform_api.layer._3_os.DatabaseFilterType;
-import com.bitdubai.wallet_platform_api.layer._3_os.DatabaseTableRecord;
-import com.bitdubai.wallet_platform_api.layer._3_os.FileLifeSpan;
-import com.bitdubai.wallet_platform_api.layer._3_os.FilePrivacy;
-import com.bitdubai.wallet_platform_api.layer._3_os.CantPersistFileException;
+import com.bitdubai.wallet_platform_api.layer._3_os.File_System.CantLoadFileException;
+import com.bitdubai.wallet_platform_api.layer._3_os.Database_System.DatabaseDataType;
+import com.bitdubai.wallet_platform_api.layer._3_os.Database_System.DatabaseFilterType;
+import com.bitdubai.wallet_platform_api.layer._3_os.Database_System.DatabaseTableRecord;
+import com.bitdubai.wallet_platform_api.layer._3_os.File_System.FileLifeSpan;
+import com.bitdubai.wallet_platform_api.layer._3_os.File_System.FilePrivacy;
+import com.bitdubai.wallet_platform_api.layer._3_os.File_System.CantPersistFileException;
 import android.content.Context;
 import android.widget.TextView;
 import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.database_system.AndroidPluginDatabaseSystem;
-import com.bitdubai.wallet_platform_api.layer._3_os.PluginFile;
-import com.bitdubai.wallet_platform_api.layer._3_os.PluginImageFile;
+import com.bitdubai.wallet_platform_api.layer._3_os.File_System.PluginFile;
+import com.bitdubai.wallet_platform_api.layer._3_os.File_System.PluginImageFile;
 
 import java.util.List;
 import java.util.UUID;

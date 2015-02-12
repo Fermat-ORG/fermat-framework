@@ -2,9 +2,9 @@ package com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_
 
 import android.content.Context;
 import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidPlatformFileSystem;
-import com.bitdubai.wallet_platform_api.layer._3_os.PlatformFileSystem;
-import com.bitdubai.wallet_platform_api.layer._3_os.PluginDatabaseSystem;
-import com.bitdubai.wallet_platform_api.layer._3_os.PluginFileSystem;
+import com.bitdubai.wallet_platform_api.layer._3_os.File_System.PlatformFileSystem;
+import com.bitdubai.wallet_platform_api.layer._3_os.Database_System.PluginDatabaseSystem;
+import com.bitdubai.wallet_platform_api.layer._3_os.File_System.PluginFileSystem;
 import com.bitdubai.wallet_platform_api.layer._3_os.Os;
 import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.database_system.AndroidPluginDatabaseSystem;
 import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidPluginFileSystem;
@@ -13,7 +13,7 @@ import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1
 /**
  * Created by ciencias on 20.01.15.
  */
-public class AndroidOs implements Os {
+public class AndroidOsAddonRoot implements Os {
 
     PluginDatabaseSystem pluginDatabaseSystem;
     PluginFileSystem pluginFileSystem;
@@ -43,7 +43,7 @@ public class AndroidOs implements Os {
     }
 
 
-    public AndroidOs() {
+    public AndroidOsAddonRoot() {
         this.pluginDatabaseSystem = new AndroidPluginDatabaseSystem(mContext);
         this.pluginFileSystem = new AndroidPluginFileSystem();
         this.platformFileSystem = new AndroidPlatformFileSystem();

@@ -3,13 +3,13 @@ package com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_
 import android.content.Context;
 import android.graphics.Bitmap;
 
-import com.bitdubai.wallet_platform_api.layer._3_os.CantLoadFileException;
-import com.bitdubai.wallet_platform_api.layer._3_os.FileLifeSpan;
-import com.bitdubai.wallet_platform_api.layer._3_os.FileNotFoundException;
-import com.bitdubai.wallet_platform_api.layer._3_os.FilePrivacy;
+import com.bitdubai.wallet_platform_api.layer._3_os.File_System.CantLoadFileException;
+import com.bitdubai.wallet_platform_api.layer._3_os.File_System.FileLifeSpan;
+import com.bitdubai.wallet_platform_api.layer._3_os.File_System.FileNotFoundException;
+import com.bitdubai.wallet_platform_api.layer._3_os.File_System.FilePrivacy;
 
-import com.bitdubai.wallet_platform_api.layer._3_os.PluginImageSystem;
-import com.bitdubai.wallet_platform_api.layer._3_os.PluginImageFile;
+import com.bitdubai.wallet_platform_api.layer._3_os.File_System.PluginImageSystem;
+import com.bitdubai.wallet_platform_api.layer._3_os.File_System.PluginImageFile;
 
 import java.util.UUID;
 

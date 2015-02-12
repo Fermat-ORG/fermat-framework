@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="590.75" y="282.0">com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidPluginImageSystem</node>
+    <node x="164.0" y="21.0">com.bitdubai.wallet_platform_api.layer._3_os.File_System.FilePrivacy</node>
+    <node x="232.75" y="282.0">com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidPluginFileSystem</node>
+    <node x="938.75" y="21.0">com.bitdubai.wallet_platform_api.layer._3_os.File_System.FileLifeSpan</node>
+    <node x="24.0" y="377.0">com.bitdubai.wallet_platform_api.layer._3_os.File_System.PlatformFileSystem</node>
+    <node x="614.75" y="171.5">com.bitdubai.wallet_platform_api.layer._3_os.File_System.PluginImageSystem</node>
+    <node x="282.0" y="10.5">com.bitdubai.wallet_platform_api.layer._3_os.File_System.CantLoadFileException</node>
+    <node x="417.75" y="182.0">com.bitdubai.wallet_platform_api.layer._3_os.File_System.FileNotFoundException</node>
+    <node x="245.0" y="377.0">com.bitdubai.wallet_platform_api.layer._3_os.File_System.DealsWithFileSystem</node>
+    <node x="789.75" y="161.0">com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidImageFile</node>
+    <node x="189.0" y="572.0">com.bitdubai.wallet_platform_api.layer._3_os.File_System.CantOpenDatabaseException</node>
+    <node x="1066.75" y="0.0">com.bitdubai.wallet_platform_api.layer._3_os.File_System.PluginImageFile</node>
+    <node x="730.75" y="0.0">com.bitdubai.wallet_platform_api.layer._3_os.File_System.CantPersistFileException</node>
+    <node x="0.0" y="10.5">com.bitdubai.wallet_platform_api.layer._3_os.File_System.PluginFile</node>
+    <node x="0.0" y="572.0">com.bitdubai.wallet_platform_api.layer._3_os.File_System.PlatformFile</node>
+    <node x="88.75" y="171.5">com.bitdubai.wallet_platform_api.layer._3_os.File_System.PluginFileSystem</node>
+    <node x="253.75" y="171.5">com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidFile</node>
+    <node x="0.0" y="477.0">com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidPlatformFileSystem</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidPluginFileSystem" target="com.bitdubai.wallet_platform_api.layer._3_os.File_System.PluginFileSystem">
+      <point x="-62.0" y="-25.0" />
+      <point x="263.75" y="257.0" />
+      <point x="161.25" y="257.0" />
+      <point x="0.0" y="25.0" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidPluginFileSystem" target="com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidFile">
+      <point x="0.0" y="-25.0" />
+      <point x="0.0" y="25.0" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidImageFile" target="com.bitdubai.wallet_platform_api.layer._3_os.File_System.FileLifeSpan">
+      <point x="32.799999999999955" y="-35.5" />
+      <point x="904.55" y="131.0" />
+      <point x="1019.75" y="131.0" />
+      <point x="27.0" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidPluginFileSystem" target="com.bitdubai.wallet_platform_api.layer._3_os.File_System.FileNotFoundException">
+      <point x="62.0" y="-25.0" />
+      <point x="387.75" y="257.0" />
+      <point x="462.0" y="257.0" />
+      <point x="-44.25" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidFile" target="com.bitdubai.wallet_platform_api.layer._3_os.File_System.FilePrivacy">
+      <point x="-28.80000000000001" y="-25.0" />
+      <point x="296.95" y="131.0" />
+      <point x="188.5" y="131.0" />
+      <point x="-24.5" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidPlatformFileSystem" target="com.bitdubai.wallet_platform_api.layer._3_os.File_System.PlatformFileSystem">
+      <point x="0.0" y="-25.0" />
+      <point x="0.0" y="25.0" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidPluginImageSystem" target="com.bitdubai.wallet_platform_api.layer._3_os.File_System.PluginImageSystem">
+      <point x="0.0" y="-25.0" />
+      <point x="0.0" y="25.0" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidFile" target="com.bitdubai.wallet_platform_api.layer._3_os.File_System.CantLoadFileException">
+      <point x="0.0" y="-25.0" />
+      <point x="-43.75" y="25.0" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidFile" target="com.bitdubai.wallet_platform_api.layer._3_os.File_System.FileLifeSpan">
+      <point x="57.60000000000002" y="-25.0" />
+      <point x="383.35" y="121.0" />
+      <point x="965.75" y="121.0" />
+      <point x="-27.0" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidFile" target="com.bitdubai.wallet_platform_api.layer._3_os.File_System.CantPersistFileException">
+      <point x="28.80000000000001" y="-25.0" />
+      <point x="354.55" y="111.0" />
+      <point x="777.75" y="111.0" />
+      <point x="-47.0" y="35.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidPluginImageSystem" target="com.bitdubai.wallet_platform_api.layer._3_os.File_System.FileNotFoundException">
+      <point x="-67.66666666666674" y="-25.0" />
+      <point x="624.5833333333333" y="257.0" />
+      <point x="550.5" y="257.0" />
+      <point x="44.25" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidFile" target="com.bitdubai.wallet_platform_api.layer._3_os.File_System.PluginFile">
+      <point x="-57.599999999999994" y="-25.0" />
+      <point x="268.15" y="141.0" />
+      <point x="72.0" y="141.0" />
+      <point x="0.0" y="25.0" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidImageFile" target="com.bitdubai.wallet_platform_api.layer._3_os.File_System.CantPersistFileException">
+      <point x="0.0" y="-35.5" />
+      <point x="47.0" y="35.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidImageFile" target="com.bitdubai.wallet_platform_api.layer._3_os.File_System.FilePrivacy">
+      <point x="-65.60000000000002" y="-35.5" />
+      <point x="806.15" y="101.0" />
+      <point x="237.5" y="101.0" />
+      <point x="24.5" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidImageFile" target="com.bitdubai.wallet_platform_api.layer._3_os.File_System.CantLoadFileException">
+      <point x="-32.799999999999955" y="-35.5" />
+      <point x="838.95" y="91.0" />
+      <point x="413.25" y="91.0" />
+      <point x="43.75" y="25.0" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidImageFile" target="com.bitdubai.wallet_platform_api.layer._3_os.File_System.PluginImageFile">
+      <point x="65.60000000000002" y="-35.5" />
+      <point x="937.35" y="141.0" />
+      <point x="1148.75" y="141.0" />
+      <point x="0.0" y="35.5" />
+    </edge>
+    <edge source="com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidPluginImageSystem" target="com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidImageFile">
+      <point x="67.66666666666663" y="-25.0" />
+      <point x="759.9166666666666" y="257.0" />
+      <point x="871.75" y="257.0" />
+      <point x="0.0" y="35.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="571.0" y="307.5" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Properties</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

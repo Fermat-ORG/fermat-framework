@@ -13,16 +13,14 @@ import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
 import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.view.Window;
 import android.widget.TextView;
 
-import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.AndroidOs;
+import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.AndroidOsAddonRoot;
 import com.bitdubai.wallet_platform_api.CantStartPlatformException;
 import com.bitdubai.smartwallet.R;
-import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_core.Platform;
 
 
@@ -105,7 +103,7 @@ public class MyApplication extends Application {
 
 
             mPlatform.setContext(this);
-            mPlatform.setOs(new AndroidOs());
+            mPlatform.setOs(new AndroidOsAddonRoot());
             mPlatform.start();
 
            //Context mContext;

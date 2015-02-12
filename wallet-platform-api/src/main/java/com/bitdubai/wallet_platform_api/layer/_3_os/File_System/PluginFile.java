@@ -1,22 +1,22 @@
-package com.bitdubai.wallet_platform_api.layer._3_os;
+package com.bitdubai.wallet_platform_api.layer._3_os.File_System;
 
 /**
- * Created by Natalia on 11/02/2015.
+ * Created by ciencias on 22.01.15.
  */
-public interface PluginImageFile {
+public interface PluginFile {
+
     public String getContent ();
 
     public void setContent (String content);
 
-    public Object getBitMap ();
-
-    public void setBitMap (Object bitMap);
-
     public void persistToMedia() throws CantPersistFileException;
 
-    public void peristToMemory () throws CantLoadFileException;
+    public void loadToMemory () throws CantLoadFileException;
 
     public void loadFromMemory() throws CantLoadFileException;
 
     public void loadFromMedia() throws CantPersistFileException;
+
+
+
 }

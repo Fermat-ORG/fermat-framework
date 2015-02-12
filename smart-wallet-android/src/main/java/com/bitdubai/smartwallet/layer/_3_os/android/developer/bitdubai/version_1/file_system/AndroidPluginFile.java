@@ -2,7 +2,7 @@ package com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_
 
 import android.content.Context;
 
-import com.bitdubai.wallet_platform_api.layer._3_os.*;
+import com.bitdubai.wallet_platform_api.layer._3_os.File_System.*;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,7 +20,7 @@ import java.util.UUID;
  * PERMANENT.
  */
 
-public class AndroidFile implements PluginFile {
+public class AndroidPluginFile implements PluginFile {
 
     Context mContext;
     String mContent;
@@ -39,7 +39,7 @@ public class AndroidFile implements PluginFile {
         mContent = content;
     }
 
-    public AndroidFile (UUID ownerId, Context context, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
+    public AndroidPluginFile(UUID ownerId, Context context, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
 
         mOwnerId = ownerId;
         mContext = context;
