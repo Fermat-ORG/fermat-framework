@@ -8,10 +8,10 @@ import com.bitdubai.wallet_platform_api.layer._3_os.File_System.*;
  * Created by ciencias on 02.02.15.
  */
 public class AndroidPlatformFileSystem implements PlatformFileSystem {
-    Context mContext;
+    Context context;
     @Override
     public PlatformDataFile getFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException {
-        AndroidPlatformDataFile newFile = new AndroidPlatformDataFile( mContext, directoryName,fileName, privacyLevel, lifeSpan);
+        AndroidPlatformDataFile newFile = new AndroidPlatformDataFile( this.context, directoryName,fileName, privacyLevel, lifeSpan);
 
         try {
             newFile.loadFromMemory();
@@ -27,11 +27,11 @@ public class AndroidPlatformFileSystem implements PlatformFileSystem {
 
     @Override
     public PlatformDataFile createFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) {
-        return new AndroidPlatformDataFile( mContext,directoryName,fileName, privacyLevel, lifeSpan);
+        return new AndroidPlatformDataFile( this.context,directoryName,fileName, privacyLevel, lifeSpan);
     }
 
     @Override
     public void setContext(Object context) {
-        mContext = (Context)context;
+        this.context = (Context)context;
     }
 }

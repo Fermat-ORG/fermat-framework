@@ -16,14 +16,13 @@ import java.util.UUID;
 
 public class AndroidPluginFileSystem implements PluginFileSystem {
 
-    Context mContext;
+    Context context;
     
-    //TODO: Vamos a manejar las variables a nivel de modulo sin la m en el nombre para seguir los guidelines de java. en este caso mContext seria context y cuando lo usas dentro del codigo ponele siempre this.context para diferenciarlo de variables locales de los metodos o de los parametros. Anda gradualmente reemplazando todas las varialbes con m adelante con este criterio.
 
     @Override
     public PluginDataFile getDataFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException {
 
-        AndroidPluginDataFile newFile = new AndroidPluginDataFile(ownerId, mContext, fileName, privacyLevel, lifeSpan);
+        AndroidPluginDataFile newFile = new AndroidPluginDataFile(ownerId, this.context, fileName, privacyLevel, lifeSpan);
 
         try {
             newFile.loadFromMemory();
@@ -39,11 +38,11 @@ public class AndroidPluginFileSystem implements PluginFileSystem {
     @Override
     public PluginDataFile createDataFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) {
 
-        return new AndroidPluginDataFile(ownerId, mContext,fileName, privacyLevel, lifeSpan);
+        return new AndroidPluginDataFile(ownerId, this.context,fileName, privacyLevel, lifeSpan);
     }
 
     @Override
     public void setContext(Object context) {
-        mContext = (Context) context;
+        this.context = (Context) context;
     }
 }

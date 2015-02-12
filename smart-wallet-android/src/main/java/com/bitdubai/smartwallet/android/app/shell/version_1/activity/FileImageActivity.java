@@ -146,12 +146,12 @@ public class FileImageActivity extends FragmentActivity {
 
             UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
 
-            AndroidPlatformFileSystem filemanager = new AndroidPlatformFileSystem();
-           // AndroidPluginFileSystem filemanager = new AndroidPluginFileSystem();
+            //AndroidPlatformFileSystem filemanager = new AndroidPlatformFileSystem();
+           AndroidPluginFileSystem filemanager = new AndroidPluginFileSystem();
             filemanager.setContext(mContext);
 
-            PlatformDataFile file = filemanager.createFile("", "example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
-
+          //  PlatformDataFile file = filemanager.createFile("", "example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
+            PluginDataFile file = filemanager.createDataFile(moduleId,"PlugIn", "example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
             file.setContent("Text Content Test File Binary");
             file.loadToMemory();
 
@@ -178,7 +178,7 @@ public class FileImageActivity extends FragmentActivity {
             AndroidPlatformFileSystem filemanager = new AndroidPlatformFileSystem();
             filemanager.setContext(mContext);
 
-            PlatformDataFile file = filemanager.createFile("PlatForm", "example1.txt", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            PlatformDataFile file = filemanager.createFile("PlatForm1", "example1.txt", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
 
           //  PluginDataFile file = filemanager.createDataFile(moduleId, "", "example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
 
@@ -200,11 +200,11 @@ public class FileImageActivity extends FragmentActivity {
             //load binary from memory
 
             UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
-          //  AndroidPluginFileSystem filemanager = new AndroidPluginFileSystem();
-            AndroidPlatformFileSystem filemanager = new AndroidPlatformFileSystem();
+            AndroidPluginFileSystem filemanager = new AndroidPluginFileSystem();
+            //AndroidPlatformFileSystem filemanager = new AndroidPlatformFileSystem();
             filemanager.setContext(mContext);
-            PlatformDataFile file = filemanager.createFile("PlatForm", "example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
-           // PluginDataFile file = filemanager.createDataFile(moduleId, "PlugIn", "example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
+            //PlatformDataFile file = filemanager.createFile("PlatForm", "example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
+            PluginDataFile file = filemanager.createDataFile(moduleId, "PlugIn", "example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
 
             file.loadFromMemory();
 
@@ -232,7 +232,7 @@ public class FileImageActivity extends FragmentActivity {
 
             filemanager.setContext(mContext);
 
-            PlatformDataFile file = filemanager.createFile("PlatForm", "example1.txt", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            PlatformDataFile file = filemanager.createFile("PlatForm1", "example1.txt", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
 
            // PluginDataFile file = filemanager.createDataFile(moduleId, "", "example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
 
