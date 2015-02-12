@@ -308,19 +308,20 @@ public class Platform  {
         /**
          * I will give the Wallet Manager access to the File System and to the Event Manager
          */
-
+/*
         Plugin walletManager =  ((ModuleLayer) mModuleLayer).getWalletManager();
 
         ((DealsWithFileSystem) walletManager).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) walletManager).setEventManager((EventManager) eventManager);
-
-
+*/
+/*
         try
         {
+            */
             /**
              * As any other plugin, this one will need its identity in order to access the data it persisted before.
              */
-
+/*
             UUID pluginID = pluginsManager.getPluginId((Plugin) walletManager);
             ((Plugin) walletManager).setId(pluginID);
 
@@ -328,15 +329,17 @@ public class Platform  {
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
+          */
             /**
              * The wallet manager is a critical component for the platform to run. Whiteout it there is no platform.
              */
+    /*
             System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
             pluginNotRecognizedException.printStackTrace();
 
             throw new CantStartPlatformException();
         }
-        
+    */
         
 
         

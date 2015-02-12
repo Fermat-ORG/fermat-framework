@@ -1,5 +1,6 @@
 package com.bitdubai.wallet_platform_core.layer._8_communication.cloud;
 
+import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.layer._8_communication.CantStartSubsystemException;
 import com.bitdubai.wallet_platform_api.layer._8_communication.CommunicationChannel;
 import com.bitdubai.wallet_platform_api.layer._8_communication.CommunicationSubsystem;
@@ -10,11 +11,11 @@ import com.bitdubai.wallet_platform_core.layer._8_communication.cloud.developer.
  */
 public class CloudSubsystem implements CommunicationSubsystem {
 
-    private CommunicationChannel mCommunicationChannel;
+    private Plugin plugin;
 
     @Override
-    public CommunicationChannel getCommunicationChannel() {
-        return null;
+    public Plugin getPlugin() {
+        return plugin;
     }
 
     @Override
@@ -26,13 +27,14 @@ public class CloudSubsystem implements CommunicationSubsystem {
 
         try {
             DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
-            mCommunicationChannel = developerBitDubai.getCommunicationChannel();
+            plugin = developerBitDubai.getPlugin();
         }
         catch (Exception e)
         {
             System.err.println("Exception: " + e.getMessage());
             throw new CantStartSubsystemException();
         }
+
     }
 
 

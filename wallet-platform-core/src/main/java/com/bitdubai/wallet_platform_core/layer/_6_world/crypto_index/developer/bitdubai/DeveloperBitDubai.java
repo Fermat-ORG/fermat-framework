@@ -1,20 +1,18 @@
-package com.bitdubai.wallet_platform_core.layer._8_communication.cloud.developer.bitdubai;
+package com.bitdubai.wallet_platform_core.layer._6_world.crypto_index.developer.bitdubai;
 
 import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.PluginDeveloper;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.TimeFrequency;
 import com.bitdubai.wallet_platform_api.layer._5_license.PluginLicensor;
-import com.bitdubai.wallet_platform_api.layer._8_communication.CommunicationChannel;
-import com.bitdubai.wallet_platform_api.layer._8_communication.CommunicationChannelDeveloper;
-import com.bitdubai.wallet_platform_core.layer._8_communication.cloud.developer.bitdubai.version_1.CloudCommunicationChannelPluginRoot;
+import com.bitdubai.wallet_platform_core.layer._6_world.crypto_index.developer.bitdubai.version_1.CryptoIndexPluginRoot;
 
 /**
- * Created by ciencias on 20.01.15.
+ * Created by loui on 12/02/15.
  */
 public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
 
-    
+
     Plugin plugin;
 
     @Override
@@ -29,7 +27,7 @@ public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
          * it is easy to choose.
          */
 
-        plugin = new CloudCommunicationChannelPluginRoot();
+        plugin = new CryptoIndexPluginRoot();
 
     }
 

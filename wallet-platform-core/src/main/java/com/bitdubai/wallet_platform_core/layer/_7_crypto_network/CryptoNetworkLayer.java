@@ -7,9 +7,10 @@ import com.bitdubai.wallet_platform_api.layer._7_crypto_network.CantStartSubsyst
 import com.bitdubai.wallet_platform_api.layer._7_crypto_network.CryptoNetworkSubsystem;
 import com.bitdubai.wallet_platform_api.layer._7_crypto_network.CryptoNetworks;
 import com.bitdubai.wallet_platform_core.layer._7_crypto_network.bitcoin.BitcoinSubsystem;
+/*
 import com.bitdubai.wallet_platform_core.layer._7_crypto_network.dogecoin.DogecoinSubsystem;
 import com.bitdubai.wallet_platform_core.layer._7_crypto_network.litecoin.LitecoinSubsystem;
-
+*/
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +51,7 @@ public class CryptoNetworkLayer implements PlatformLayer {
         /**
          * Lets see if we have an implementation to access the litecoin network.
          */
+        /*
         cryptoNetworkSubsystem = new LitecoinSubsystem();
         try {
             cryptoNetworkSubsystem.start();
@@ -58,10 +60,12 @@ public class CryptoNetworkLayer implements PlatformLayer {
         catch (CantStartSubsystemException e) {
             System.err.println("CantStartCryptoNetworkException: " + e.getMessage());
         }
-
+         */
+         
         /**
          * Lets see if we have an implementation to access the dogecoin network.
          */
+         /*
         cryptoNetworkSubsystem = new DogecoinSubsystem();
         try {
             cryptoNetworkSubsystem.start();
@@ -74,6 +78,7 @@ public class CryptoNetworkLayer implements PlatformLayer {
         if (plugin.size() == 0) {
             throw new CantStartLayerException();
         }
+         */
     }
 
 

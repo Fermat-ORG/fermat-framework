@@ -6,10 +6,11 @@ import com.bitdubai.wallet_platform_api.layer._3_os.Os;
 import com.bitdubai.wallet_platform_api.layer._3_os.OsSubsystem;
 import com.bitdubai.wallet_platform_api.layer._3_os.WrongOsException;
 import com.bitdubai.wallet_platform_core.layer._3_os.android.AndroidOsSubsystem;
+/*
 import com.bitdubai.wallet_platform_core.layer._3_os.ios.IosOsSubsystem;
 import com.bitdubai.wallet_platform_core.layer._3_os.linux.LinuxOsSubsystem;
 import com.bitdubai.wallet_platform_core.layer._3_os.windows.WindowsOsSubsystem;
-
+*/
 
 /**
  * Created by ciencias on 30.12.14.
@@ -43,7 +44,7 @@ public class OsLayer implements PlatformLayer {
                 System.err.println("WrongOsException: " + e.getMessage());
             }
         }
-
+/*
         if (mOs == null) {
             osSubsystem = new IosOsSubsystem();
             try {
@@ -76,7 +77,7 @@ public class OsLayer implements PlatformLayer {
                 System.err.println("WrongOsException: " + e.getMessage());
             }
         }
-
+*/
         if (mOs == null) {
             throw new CantStartLayerException();
         }

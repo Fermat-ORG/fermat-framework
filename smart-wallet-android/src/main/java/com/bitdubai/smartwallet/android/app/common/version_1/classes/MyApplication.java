@@ -86,7 +86,7 @@ public class MyApplication extends Application {
     }
 
 
-
+/*
     private Platform mPlatform;
 
 
@@ -122,7 +122,7 @@ public class MyApplication extends Application {
        }
 
     }
-
+*/
 
     public static void setActionBarProperties(Activity activity, Window window,  PagerSlidingTabStrip pTabs, ActionBar pActionBar, Resources context,  TextView abTitle, String pTitle) {
         actionBar = pActionBar;

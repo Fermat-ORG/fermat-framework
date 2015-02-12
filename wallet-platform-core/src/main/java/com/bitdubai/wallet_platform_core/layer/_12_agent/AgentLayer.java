@@ -5,7 +5,7 @@ import com.bitdubai.wallet_platform_api.layer.PlatformLayer;
 import com.bitdubai.wallet_platform_api.layer._12_agent.AIAgent;
 import com.bitdubai.wallet_platform_api.layer._12_agent.AgentSubsystem;
 import com.bitdubai.wallet_platform_api.layer._12_agent.CantStartSubsystemException;
-import com.bitdubai.wallet_platform_core.layer._12_agent.licesnse.LicenseSubsystem;
+// import com.bitdubai.wallet_platform_core.layer._12_agent.licesnse.LicenseSubsystem;
 
 
 /**
@@ -15,10 +15,12 @@ public class AgentLayer implements PlatformLayer {
 
     AIAgent mLicenseAgent;
 
+    /*
     public AIAgent getLicenseAgent() {
-        return mLicenseAgent;
-    }
 
+        return mLicenseAgent;
+    } 
+    */
 
     @Override
     public void start()  throws CantStartLayerException {
@@ -27,6 +29,7 @@ public class AgentLayer implements PlatformLayer {
         /**
          * I will start now the license agent.
          */
+        /*
         AgentSubsystem licenseSubsystem = new LicenseSubsystem();
 
         try {
@@ -35,12 +38,14 @@ public class AgentLayer implements PlatformLayer {
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());
-
+*/
             /**
              * The license agent is vital for the com.bitdubai.platform to work. Without it starting there is no way to use the
              * com.bitdubai.platform itself.
              */
-            throw new CantStartLayerException();
+  /*          throw new CantStartLayerException();
+        
         }
+    */    
     }
 }
