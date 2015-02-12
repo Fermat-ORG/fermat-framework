@@ -1,20 +1,20 @@
-package com.bitdubai.wallet_platform_draft.layer._9_network_service.user;
+package com.bitdubai.wallet_platform_core.layer._9_network_service.user;
 
+import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.layer._9_network_service.CantStartSubsystemException;
-import com.bitdubai.wallet_platform_api.layer._9_network_service.NetworkService;
 import com.bitdubai.wallet_platform_api.layer._9_network_service.NetworkSubsystem;
-import com.bitdubai.wallet_platform_draft.layer._9_network_service.user.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.wallet_platform_core.layer._9_network_service.user.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by ciencias on 20.01.15.
  */
 public class UserSubsystem implements NetworkSubsystem{
 
-    NetworkService mNetworkService;
+    Plugin plugin;
 
     @Override
-    public NetworkService getNetworkService() {
-        return mNetworkService;
+    public Plugin getPlugin() {
+        return plugin;
     }
 
     @Override
@@ -26,7 +26,7 @@ public class UserSubsystem implements NetworkSubsystem{
 
         try {
             DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
-            mNetworkService = developerBitDubai.getNetworkService();
+            plugin = developerBitDubai.getPlugin();
         }
         catch (Exception e)
         {
