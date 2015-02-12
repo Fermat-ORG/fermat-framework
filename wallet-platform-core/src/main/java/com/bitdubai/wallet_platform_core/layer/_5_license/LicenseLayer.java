@@ -4,7 +4,6 @@ import com.bitdubai.wallet_platform_api.Addon;
 import com.bitdubai.wallet_platform_api.layer.CantStartLayerException;
 import com.bitdubai.wallet_platform_api.layer.PlatformLayer;
 import com.bitdubai.wallet_platform_api.layer._5_license.CantStartSubsystemException;
-import com.bitdubai.wallet_platform_api.layer._5_license.LicenseManager;
 import com.bitdubai.wallet_platform_api.layer._5_license.LicenseSubsystem;
 import com.bitdubai.wallet_platform_core.layer._5_license.plugin.PluginLicenseSubsystem;
 import com.bitdubai.wallet_platform_core.layer._5_license.wallet.WalletLicenseSubsystem;

@@ -20,7 +20,7 @@ import com.bitdubai.wallet_platform_core.layer._2_platform_service.PlatformServi
 
 import com.bitdubai.wallet_platform_core.layer._1_definition.DefinitionLayer;
 import com.bitdubai.wallet_platform_core.layer._3_os.OsLayer;
-import com.bitdubai.wallet_platform_core.layer._4_user.*;
+import com.bitdubai.wallet_platform_core.layer._4_user.UserLayer;
 import com.bitdubai.wallet_platform_api.layer._4_user.manager.CantCreateUserException;
 import com.bitdubai.wallet_platform_api.layer._4_user.manager.CantLoadUserException;
 import com.bitdubai.wallet_platform_api.layer._4_user.manager.LoginFailedException;
