@@ -2,7 +2,6 @@ package com.bitdubai.wallet_platform_core.layer._8_communication.cloud;
 
 import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.layer._8_communication.CantStartSubsystemException;
-import com.bitdubai.wallet_platform_api.layer._8_communication.CommunicationChannel;
 import com.bitdubai.wallet_platform_api.layer._8_communication.CommunicationSubsystem;
 import com.bitdubai.wallet_platform_core.layer._8_communication.cloud.developer.bitdubai.DeveloperBitDubai;
 

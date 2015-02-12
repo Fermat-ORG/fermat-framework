@@ -11,7 +11,6 @@ import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventManager;
 import com.bitdubai.wallet_platform_api.layer._3_os.File_System.DealsWithFileSystem;
 import com.bitdubai.wallet_platform_api.layer._3_os.File_System.PluginFileSystem;
-import com.bitdubai.wallet_platform_api.layer._8_communication.CommunicationChannel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +24,7 @@ public class CryptoIndexPluginRoot implements Service, DealsWithEvents, DealsWit
     /**
      * PlatformService Interface member variables.
      */
-    ServiceStatus serviceStatus;
+    ServiceStatus serviceStatus = ServiceStatus.CREATED;
     List<EventListener> listenersAdded = new ArrayList<>();
     
     /**
@@ -43,11 +42,7 @@ public class CryptoIndexPluginRoot implements Service, DealsWithEvents, DealsWit
      */
     UUID pluginId;
 
-    public CryptoIndexPluginRoot(){
-        this.serviceStatus = ServiceStatus.CREATED;        
-    }
-    
-    
+
     @Override
     public void start() {
         /**
@@ -63,11 +58,14 @@ public class CryptoIndexPluginRoot implements Service, DealsWithEvents, DealsWit
     @Override
     public void pause() {
 
+        this.serviceStatus = ServiceStatus.PAUSED;
     }
 
     @Override
     public void resume() {
 
+
+        this.serviceStatus = ServiceStatus.STARTED;
     }
 
     @Override
@@ -82,7 +80,9 @@ public class CryptoIndexPluginRoot implements Service, DealsWithEvents, DealsWit
         }
 
         listenersAdded.clear();
-        
+
+        this.serviceStatus = ServiceStatus.STOPPED;
+
     }
     
     @Override

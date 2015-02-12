@@ -17,25 +17,20 @@ import java.util.List;
  * Created by ciencias on 23.01.15.
  */
 public class PlatformEventManagerAddonRoot implements Service, EventManager, DealWithEventMonitor, Addon {
-
-    private List<EventListener> listenersUserCreatedEvent;
-    private List<EventListener> listenersUserLoggedInEvent;
-    private List<EventListener> listenersUserLoggedOutEvent;
-    private List<EventListener> listenersWalletCreatedEvent;
-    private List<EventListener> listenersWalletWentOnlineEvent;
-
-
+    
+    /**
+     * Service Interface member variables.
+     */
+    ServiceStatus serviceStatus = ServiceStatus.CREATED;
+    
+    private List<EventListener> listenersUserCreatedEvent = new ArrayList<>();
+    private List<EventListener> listenersUserLoggedInEvent = new ArrayList<>();
+    private List<EventListener> listenersUserLoggedOutEvent = new ArrayList<>();
+    private List<EventListener> listenersWalletCreatedEvent = new ArrayList<>();
+    private List<EventListener> listenersWalletWentOnlineEvent = new ArrayList<>();
 
     EventMonitor eventMonitor;
 
-    public PlatformEventManagerAddonRoot() {
-
-        listenersUserCreatedEvent = new ArrayList<>();
-        listenersUserLoggedInEvent = new ArrayList<>();
-        listenersUserLoggedOutEvent = new ArrayList<>();
-        listenersWalletCreatedEvent = new ArrayList<>();
-        listenersWalletWentOnlineEvent = new ArrayList<>();
-    }
 
     /**
      * PlatformService Interface implementation.
@@ -44,26 +39,34 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
     @Override
     public void start() {
 
+        this.serviceStatus = ServiceStatus.STARTED;
+
     }
 
     @Override
     public void pause() {
+
+        this.serviceStatus = ServiceStatus.STARTED;
 
     }
 
     @Override
     public void resume() {
 
+        this.serviceStatus = ServiceStatus.STARTED;
+
     }
 
     @Override
     public void stop() {
 
+        this.serviceStatus = ServiceStatus.STARTED;
+
     }
 
     @Override
     public ServiceStatus getStatus() {
-        return null;
+        return serviceStatus;
     }
 
     /**

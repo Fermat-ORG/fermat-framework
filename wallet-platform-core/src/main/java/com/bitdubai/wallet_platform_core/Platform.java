@@ -1,12 +1,9 @@
 package com.bitdubai.wallet_platform_core;
 
-import com.bitdubai.wallet_platform_api.CantInitializePluginsManagerException;
-import com.bitdubai.wallet_platform_api.Plugin;
-import com.bitdubai.wallet_platform_api.PluginNotRecognizedException;
+import com.bitdubai.wallet_platform_api.*;
 import com.bitdubai.wallet_platform_api.layer.CantStartLayerException;
 import com.bitdubai.wallet_platform_api.layer.PlatformLayer;
 
-import com.bitdubai.wallet_platform_api.Service;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.DeviceDirectory;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.PlatformFileName;
 import com.bitdubai.wallet_platform_api.layer._1_definition.event.DealWithEventMonitor;
@@ -20,7 +17,7 @@ import com.bitdubai.wallet_platform_core.layer._2_platform_service.PlatformServi
 
 import com.bitdubai.wallet_platform_core.layer._1_definition.DefinitionLayer;
 import com.bitdubai.wallet_platform_core.layer._3_os.OsLayer;
-import com.bitdubai.wallet_platform_core.layer._4_user.*;
+import com.bitdubai.wallet_platform_core.layer._4_user.UserLayer;
 import com.bitdubai.wallet_platform_api.layer._4_user.manager.CantCreateUserException;
 import com.bitdubai.wallet_platform_api.layer._4_user.manager.CantLoadUserException;
 import com.bitdubai.wallet_platform_api.layer._4_user.manager.LoginFailedException;
@@ -33,7 +30,6 @@ import com.bitdubai.wallet_platform_core.layer._9_network_service.NetworkService
 import com.bitdubai.wallet_platform_core.layer._10_middleware.MiddlewareLayer;
 import com.bitdubai.wallet_platform_core.layer._11_module.ModuleLayer;
 import com.bitdubai.wallet_platform_core.layer._12_agent.AgentLayer;
-import com.bitdubai.wallet_platform_api.CantStartPlatformException;
 
 import java.util.UUID;
 
@@ -108,11 +104,13 @@ public class Platform  {
     }
 
 
-    User mLoggedInUser;
+
     PlatformEventMonitor eventMonitor;
     
     PluginsManager pluginsManager;
 
+    CorePlatformContext corePlatformContext;
+    
     Object osContext;
     Os os;
 
@@ -126,16 +124,13 @@ public class Platform  {
          */
 
         eventMonitor = new PlatformEventMonitor();
+
+        corePlatformContext = new CorePlatformContext();
     }
 
 
 
-    
-    
-    
-    public User getLoggedInUser() {
-        return mLoggedInUser;
-    }
+
     
     
 
@@ -191,6 +186,14 @@ public class Platform  {
         }
 
 
+        /**
+         * Some Layers need the Platform context.
+         */
+        
+        ((DealsWithPlatformContext) mCommunicationLayer).setPlatformContext(corePlatformContext);
+
+        
+        
 
         /**
          * The OS and Event Manager will need to be handled to several other objects.

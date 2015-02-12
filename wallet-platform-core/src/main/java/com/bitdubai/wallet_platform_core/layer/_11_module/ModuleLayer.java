@@ -8,9 +8,7 @@ import com.bitdubai.wallet_platform_api.layer._11_module.ModuleSubsystem;
 /*
 import com.bitdubai.wallet_platform_core.layer._11_module.wallet_manager.WalletManagerSubsystem;
 import com.bitdubai.wallet_platform_core.layer._11_module.wallet_publisher.WalletPublisherSubsystem;
-*/
-import com.bitdubai.wallet_platform_core.layer._11_module.wallet_runtime.WalletRuntimeSubsystem;
-/*
+import com.bitdubai.wallet_platform_draft.layer._11_module.wallet_runtime.WalletRuntimeSubsystem;
 import com.bitdubai.wallet_platform_core.layer._11_module.wallet_store.WalletStoreSubsystem;
 */
 /**
@@ -47,6 +45,7 @@ public class ModuleLayer implements PlatformLayer {
         /**
          * Let's try to start the wallet runtime subsystem.
          */
+        /*
         ModuleSubsystem walletRuntimeSubsystem = new WalletRuntimeSubsystem();
 
         try {
@@ -56,7 +55,7 @@ public class ModuleLayer implements PlatformLayer {
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());
         }
-
+        */
         /**
          * Let's try to start the wallet manager subsystem.
          */

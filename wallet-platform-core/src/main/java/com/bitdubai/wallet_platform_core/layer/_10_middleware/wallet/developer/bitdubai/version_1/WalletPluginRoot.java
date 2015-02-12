@@ -24,7 +24,7 @@ public class WalletPluginRoot implements Service, MiddlewareEngine, DealsWithEve
     /**
      * Service Interface member variables.
      */
-    ServiceStatus serviceStatus;
+    ServiceStatus serviceStatus = ServiceStatus.CREATED;
     List<EventListener> listenersAdded = new ArrayList<>();
     
     /**
@@ -43,11 +43,6 @@ public class WalletPluginRoot implements Service, MiddlewareEngine, DealsWithEve
     UUID pluginId;
 
 
-    public WalletPluginRoot() {
-
-        this.serviceStatus = ServiceStatus.CREATED;
-    }
-
     @Override
     public void start() {
         /**
@@ -63,10 +58,14 @@ public class WalletPluginRoot implements Service, MiddlewareEngine, DealsWithEve
     @Override
     public void pause() {
 
+        this.serviceStatus = ServiceStatus.PAUSED;
+
     }
 
     @Override
     public void resume() {
+
+        this.serviceStatus = ServiceStatus.STARTED;
 
     }
 
@@ -82,7 +81,9 @@ public class WalletPluginRoot implements Service, MiddlewareEngine, DealsWithEve
         }
 
         listenersAdded.clear();
-        
+
+        this.serviceStatus = ServiceStatus.STOPPED;
+
     }
 
     @Override

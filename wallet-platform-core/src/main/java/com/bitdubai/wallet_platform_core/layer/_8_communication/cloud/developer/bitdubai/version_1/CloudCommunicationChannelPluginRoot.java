@@ -33,7 +33,7 @@ public class CloudCommunicationChannelPluginRoot implements Service, Communicati
     /**
      * Service Interface member variables.
      */
-    ServiceStatus serviceStatus;
+    ServiceStatus serviceStatus = ServiceStatus.CREATED;
     List<EventListener> listenersAdded = new ArrayList<>();
 
     /**
@@ -51,11 +51,6 @@ public class CloudCommunicationChannelPluginRoot implements Service, Communicati
      */
     UUID pluginId;
 
-    public CloudCommunicationChannelPluginRoot() {
-
-        this.serviceStatus = ServiceStatus.CREATED;
-    }
-
     @Override
     public void start() {
         /**
@@ -72,10 +67,14 @@ public class CloudCommunicationChannelPluginRoot implements Service, Communicati
     @Override
     public void pause() {
 
+        this.serviceStatus = ServiceStatus.PAUSED;
+
     }
 
     @Override
     public void resume() {
+
+        this.serviceStatus = ServiceStatus.STARTED;
 
     }
 
@@ -92,7 +91,8 @@ public class CloudCommunicationChannelPluginRoot implements Service, Communicati
         }
 
         listenersAdded.clear();
-        
+        this.serviceStatus = ServiceStatus.STOPPED;
+
     }
 
     @Override
