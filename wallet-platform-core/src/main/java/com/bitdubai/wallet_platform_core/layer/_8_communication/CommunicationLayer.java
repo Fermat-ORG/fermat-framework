@@ -73,37 +73,36 @@ public class CommunicationLayer implements PlatformLayer, DealsWithPlatformConte
     /**
      * CommunicationLayer Interface implementation.
      */
-    
-    public UserToUserOnlineConnection connectTo (User user) throws CantConnectToUserException {
-        /**
-         * The communication layer knows several ways to establish an online connection. It also have a procedure with
-         * which it will try several of these ways until it finds a connection to the desired user.
-         */
-        /**
-         * As of today, there is only one way possible to connect to other users, and it is via the Cloud connection
-         * channel.
-         */
 
-        OnlineChannel onlineChannel = ((CommunicationChannel) mCloudPlugin).createOnlineChannel();
-        UserToUserOnlineConnection userToUserOnlineConnection =  onlineChannel.createOnlineConnection(platformContext.getLoggedInUser(), user);
+    
+    /**
+     * Note that it is not possible for the caller of this method to specify which is local user. This user is grabbed
+     * from the current logged in user stored on the Platform context. 
+     */
+
+
+    public UserToUserOnlineConnection connectTo (User user) throws CantConnectToUserException {
+
+        LayerUserToUserOnlineConnection layerUserToUserOnlineConnection = new LayerUserToUserOnlineConnection(platformContext.getLoggedInUser(), user);
+
+        layerUserToUserOnlineConnection.setCloudPlugin(mCloudPlugin);
         
         try
         {
-            userToUserOnlineConnection.connect();
+            layerUserToUserOnlineConnection.connect();
         }
         catch (CantConnectToUserException cantConnectToUserException)
         {
             System.err.println("CantConnectToUserException: " + cantConnectToUserException.getMessage());
 
             /**
-             * Since this is the only implementation of a communication channel if the connection cannot be established
-             * then there is no other option but to throw the exception again.
+             * I can't do anything with this exception here. I throw it again.
              */
             throw cantConnectToUserException;
         }
         
-        
-        return userToUserOnlineConnection;
+        return layerUserToUserOnlineConnection;
+
     }
 
     /**
