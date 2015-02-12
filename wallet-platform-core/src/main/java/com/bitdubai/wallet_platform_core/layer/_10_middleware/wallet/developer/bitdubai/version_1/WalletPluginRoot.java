@@ -22,7 +22,7 @@ import java.util.UUID;
 public class WalletPluginRoot implements Service, MiddlewareEngine, DealsWithEvents, DealsWithErrors, DealsWithFileSystem, Plugin {
 
     /**
-     * PlatformService Interface member variables.
+     * Service Interface member variables.
      */
     ServiceStatus serviceStatus;
     List<EventListener> listenersAdded = new ArrayList<>();
