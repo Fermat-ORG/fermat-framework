@@ -120,7 +120,7 @@ public class Platform  {
 
     
     
-    public void Platform () {
+    public Platform () {
 
          /**
          * The event monitor is intended to handle exceptions on listeners, in order to take appropiate action.
@@ -249,9 +249,10 @@ public class Platform  {
          */
 
         Service errorManager = (Service) ((PlatformServiceLayer) mEventLayer).getErrorManager();
-        corePlatformContext.addAddon((Addon) errorManager, Addons.EVENT_MANAGER);
+        corePlatformContext.addAddon((Addon) errorManager, Addons.ERROR_MANAGER);
 
 
+        
         /**
          * -----------------------------
          * Addon Event Manager

@@ -8,39 +8,42 @@ import com.bitdubai.wallet_platform_api.layer._1_definition.enums.Plugins;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by ciencias on 2/12/15.
  */
 public class CorePlatformContext implements PlatformContext {
 
-    List<Addon> addons = new ArrayList<>();
-    List<Plugin> plugins = new ArrayList<>();
+    Map addons = new HashMap();
+    Map plugins = new HashMap();
     
     public void addAddon (Addon addon, Addons descriptor) {
-        
-        addons.add(descriptor.getIndex(),addon);
-        
+
+        addons.put(descriptor.getKey(),addon);
+
     }
     
     
     public Addon getAddon (Addons descriptor){
-        
-        return addons.get(descriptor.getIndex());
+
+        return (Addon) addons.get(descriptor.getKey());
+
     }
 
 
     public void addPlugin (Plugin plugin, Plugins descriptor) {
 
-        plugins.add(descriptor.getIndex(),plugin);
+        plugins.put(descriptor.getIndex(),plugin);
 
     }
 
 
     public Plugin getPlugin (Plugins descriptor){
 
-        return plugins.get(descriptor.getIndex());
+        return (Plugin) plugins.get(descriptor.getIndex());
     }
 
 
