@@ -237,7 +237,9 @@ public class Platform  {
          * * * * 
          */
 
-        
+
+
+
 
         /**
          * -----------------------------
@@ -247,18 +249,18 @@ public class Platform  {
          */
 
         Service errorManager = (Service) ((PlatformServiceLayer) mEventLayer).getErrorManager();
-        corePlatformContext.addAddon((Addon) errorManager, Addons.ERROR_MANAGER);
+        corePlatformContext.addAddon((Addon) errorManager, Addons.EVENT_MANAGER);
 
 
         /**
          * -----------------------------
          * Addon Event Manager
          * -----------------------------
-         * * * * 
+         * * * *
          */
 
-        
-        
+
+
         Service eventManager = (Service) ((PlatformServiceLayer) mEventLayer).getEventManager();
         corePlatformContext.addAddon((Addon) eventManager, Addons.EVENT_MANAGER);
 
