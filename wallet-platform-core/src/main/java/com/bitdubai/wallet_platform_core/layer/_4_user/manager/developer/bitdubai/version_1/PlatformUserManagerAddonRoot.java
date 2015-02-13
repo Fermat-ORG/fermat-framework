@@ -23,6 +23,13 @@ import java.util.UUID;
 /**
  * Created by ciencias on 22.01.15.
  */
+
+/**
+ * The User Manager knows the users managed by the current device.
+ * 
+ * It is responsible for login in users to the current device.
+ */
+
 public class PlatformUserManagerAddonRoot implements Service, UserManager,DealsWithFileSystem, DealsWithEvents, DealsWithErrors, Addon {
 
     /**
