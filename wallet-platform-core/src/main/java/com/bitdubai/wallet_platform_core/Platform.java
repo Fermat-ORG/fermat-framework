@@ -513,7 +513,7 @@ public class Platform  {
          * I will give the Wallet Middleware access to the File System and to the Event Manager
          */
 
-        Plugin walletMiddleware =  ((MiddlewareLayer) mMiddlewareayer).getWalletEngine();
+        Plugin walletMiddleware = ((MiddlewareLayer) mMiddlewareayer).getWalletPlugin();
 
         ((DealsWithFileSystem) walletMiddleware).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) walletMiddleware).setEventManager((EventManager) eventManager);

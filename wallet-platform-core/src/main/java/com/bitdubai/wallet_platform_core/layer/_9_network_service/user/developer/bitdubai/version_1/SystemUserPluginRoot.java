@@ -77,8 +77,7 @@ public class SystemUserPluginRoot implements Service, NetworkService, UserNetwor
      */  
     
     public void userLoggedIn (User user){
-        
-        
+
     }
 
     public void userLoggedOut (User user){

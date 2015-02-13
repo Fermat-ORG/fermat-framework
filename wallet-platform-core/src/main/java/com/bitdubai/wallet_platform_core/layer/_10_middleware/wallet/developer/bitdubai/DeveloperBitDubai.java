@@ -16,7 +16,7 @@ public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
 
     @Override
     public Plugin getPlugin() {
-        return null;
+        return plugin;
     }
 
     public DeveloperBitDubai() {

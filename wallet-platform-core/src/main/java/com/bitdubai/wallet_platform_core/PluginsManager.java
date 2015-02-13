@@ -4,7 +4,13 @@ import com.bitdubai.wallet_platform_api.CantInitializePluginsManagerException;
 import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.PluginNotRecognizedException;
 import com.bitdubai.wallet_platform_api.layer._3_os.File_System.*;
+import com.bitdubai.wallet_platform_core.layer._10_middleware.wallet.developer.bitdubai.version_1.WalletPluginRoot;
+import com.bitdubai.wallet_platform_core.layer._6_world.crypto_index.developer.bitdubai.version_1.CryptoIndexPluginRoot;
 import com.bitdubai.wallet_platform_core.layer._7_crypto_network.bitcoin.BitcoinSubsystem;
+import com.bitdubai.wallet_platform_core.layer._8_communication.cloud.developer.bitdubai.version_1.CloudCommunicationChannelPluginRoot;
+import com.bitdubai.wallet_platform_plugin.layer._11_module.wallet_manager.developer.bitdubai.version_1.WalletManagerPluginRoot;
+import com.bitdubai.wallet_platform_plugin.layer._11_module.wallet_runtime.developer.bitdubai.version_1.WalletRuntimePluginRoot;
+import com.bitdubai.wallet_platform_plugin.layer._7_crypto_network.bitcoin.developer.bitdubai.version_1.BitcoinCryptoNetworkPluginRoot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -135,8 +141,8 @@ public class PluginsManager {
         if (pluginIndex == 0) {
             try
             {
-                BitcoinSubsystem tryType;
-                tryType = (BitcoinSubsystem) plugin;
+                CryptoIndexPluginRoot tryType;
+                tryType = (CryptoIndexPluginRoot) plugin;
                 pluginIndex = 1;
             }
             catch (Exception e)
@@ -147,6 +153,79 @@ public class PluginsManager {
             }
         }
 
+        if (pluginIndex == 0) {
+            try
+            {
+                BitcoinCryptoNetworkPluginRoot tryType;
+                tryType = (BitcoinCryptoNetworkPluginRoot) plugin;
+                pluginIndex = 2;
+            }
+            catch (Exception e)
+            {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
+
+        if (pluginIndex == 0) {
+            try
+            {
+                CloudCommunicationChannelPluginRoot tryType;
+                tryType = (CloudCommunicationChannelPluginRoot) plugin;
+                pluginIndex = 3;
+            }
+            catch (Exception e)
+            {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
+
+        if (pluginIndex == 0) {
+            try
+            {
+                WalletPluginRoot tryType;
+                tryType = (WalletPluginRoot) plugin;
+                pluginIndex = 4;
+            }
+            catch (Exception e)
+            {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
+        if (pluginIndex == 0) {
+            try
+            {
+                WalletManagerPluginRoot tryType;
+                tryType = (WalletManagerPluginRoot) plugin;
+                pluginIndex = 5;
+            }
+            catch (Exception e)
+            {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
+        if (pluginIndex == 0) {
+            try
+            {
+                WalletRuntimePluginRoot tryType;
+                tryType = (WalletRuntimePluginRoot) plugin;
+                pluginIndex = 6;
+            }
+            catch (Exception e)
+            {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
+        
         if (pluginIndex > 0) {
             return pluginIds.get(pluginIndex);
         }

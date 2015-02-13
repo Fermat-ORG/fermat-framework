@@ -13,17 +13,17 @@ import com.bitdubai.wallet_platform_core.layer._10_middleware.wallet.WalletSubsy
  */
 public class MiddlewareLayer implements PlatformLayer {
 
-    private Plugin mShellEngine;
-    private Plugin mWalletEngine;
+    private Plugin mShellPlugin;
+    private Plugin mWalletPlugin;
 
    /*
-    public Plugin getShellEngine() {
-        return mShellEngine;
+    public Plugin getShellPlugin() {
+        return mShellPlugin;
     }
     */
 
-    public Plugin getWalletEngine() {
-        return mWalletEngine;
+    public Plugin getWalletPlugin() {
+        return mWalletPlugin;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class MiddlewareLayer implements PlatformLayer {
 
         try {
             shellSubsystem.start();
-            mShellEngine = ((MiddlewareSubsystem) shellSubsystem).getPlugin();
+            mShellPlugin = ((MiddlewareSubsystem) shellSubsystem).getPlugin();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());
@@ -51,7 +51,7 @@ public class MiddlewareLayer implements PlatformLayer {
 
         try {
             walletSubsystem.start();
-            mWalletEngine = ((MiddlewareSubsystem) walletSubsystem).getPlugin();
+            mWalletPlugin = walletSubsystem.getPlugin();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());
