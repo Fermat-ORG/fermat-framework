@@ -4,13 +4,24 @@ import android.content.Context;
 
 import com.bitdubai.wallet_platform_api.layer._3_os.File_System.*;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.security.MessageDigest;
+import java.util.Arrays;
 import java.util.UUID;
+
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import android.util.Base64;
 /**
  * Created by ciencias on 22.01.15.
  */
@@ -22,89 +33,111 @@ import java.util.UUID;
 
 public class AndroidPluginDataFile implements PluginDataFile {
 
-    Context mContext;
-    String mContent;
-    String mFileName;
-    FilePrivacy mPrivacyLevel;
-    FileLifeSpan mLifeSpan;
-    UUID mOwnerId;
+    Context context;
+    String content;
+    String fileName;
+    FilePrivacy privacyLevel;
+    FileLifeSpan lifeSpan;
+    String directoryName;
+    UUID ownerId;
 
     @Override
     public String getContent() {
-        return mContent;
+        return this.content;
     }
 
     @Override
     public void setContent(String content) {
-        mContent = content;
+        this.content = content;
     }
 
     public AndroidPluginDataFile(UUID ownerId, Context context, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
 
-        mOwnerId = ownerId;
-        mContext = context;
-        mFileName = fileName;
-        mPrivacyLevel = privacyLevel;
-        mLifeSpan = lifeSpan;
+        this.ownerId = ownerId;
+        this.context = context;
+       this.fileName = fileName;
+       this.privacyLevel = privacyLevel;
+       this.lifeSpan = lifeSpan;
 
     }
 
     @Override
     public void persistToMedia() throws CantPersistFileException {
 
-        File file = new File(mContext.getFilesDir(), mFileName);
+        File storagePath = new File(this.context.getFilesDir()+"/"+ this.directoryName);
+        storagePath.mkdirs();
+        File file = new File(storagePath, fileName);
 
-        FileOutputStream outputStream;
+        OutputStream outputStream;
+
+        //encript file content with ownerId key
 
         try {
-            outputStream = mContext.openFileOutput(mFileName, Context.MODE_PRIVATE);
-            outputStream.write(mContent.getBytes());
+
+            //outputStream = this.context.openFileOutput( file.getPath(), Context.MODE_PRIVATE);
+            outputStream =  new BufferedOutputStream(new FileOutputStream(file));
+            outputStream.write(this.content.getBytes());
             outputStream.close();
         } catch (Exception e) {
             System.err.println("Error trying to persist file: " + e.getMessage());
             e.printStackTrace();
-            throw new CantPersistFileException(mFileName);
+            throw new CantPersistFileException(this.fileName);
         }
     }
-
     @Override
     public void loadToMemory() throws CantLoadFileException {
 
+        String path = this.context.getFilesDir() + "/" + this.directoryName;
+        File internalDir = new File(path);
 
-        File file = new File(mContext.getFilesDir(), mFileName);
+        if (!internalDir.exists()) {
+            //let's try to create it
+            try {
+                internalDir.mkdir();
+            } catch (SecurityException secEx) {
+                //handle the exception
+                secEx.printStackTrace(System.out);
+                internalDir = null;
+                throw secEx;
+            }
+        }
+
+        String encriptado = this.Encriptar(this.content);
+        File file = new File(internalDir, this.fileName);
         try {
             FileWriter fw = new FileWriter(file);
-            fw.write(mContent);
+            fw.write(encriptado);
             fw.close();
         }
         catch (Exception e) {
             System.err.println("Error trying to load a file to memory: " + e.getMessage());
             e.printStackTrace();
-            throw new CantLoadFileException(mFileName);
+            throw new CantLoadFileException(this.fileName);
         }
 
 
-        FileInputStream inputStream;
+      /*  FileInputStream inputStream;
 
         try {
-            inputStream = mContext.openFileInput(mFileName);
-            inputStream.read(mContent.getBytes());
+            inputStream = this.context.openFileInput(this.fileName);
+            inputStream.read(this.content.getBytes());
             inputStream.close();
         } catch (Exception e) {
             System.err.println("Error trying to load a file to memory: " + e.getMessage());
             e.printStackTrace();
-            throw new CantLoadFileException(mFileName);
-        }
+            throw new CantLoadFileException(this.fileName);
+        }*/
     }
 
     @Override
     public void loadFromMemory() throws CantLoadFileException {
-
-        FileInputStream inputStream;
+        File file = new File(this.context.getFilesDir() +"/"+ this.directoryName, this.fileName);
+        InputStream inputStream;
         try {
-            inputStream = mContext.openFileInput(mFileName);
-
+           // inputStream = this.context.openFileInput(this.fileName);
+            inputStream =  new BufferedInputStream(new FileInputStream(file));
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             StringBuilder sb = new StringBuilder();
             String line;
@@ -113,24 +146,33 @@ public class AndroidPluginDataFile implements PluginDataFile {
             }
             inputStream.close();
 
-            mContent = sb.toString();
+            String desencriptado = "";
+            try {
+                desencriptado = this.Desencriptar(sb.toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            this.content = desencriptado;
 
         } catch (Exception e) {
             System.err.println("Error trying to load a file to memory: " + e.getMessage());
             e.printStackTrace();
-            throw new CantLoadFileException(mFileName);
+            throw new CantLoadFileException(this.fileName);
         }
     }
 
     @Override
     public void loadFromMedia() throws CantPersistFileException {
 
-        File file = new File(mContext.getFilesDir(), mFileName);
-        FileInputStream inputStream;
+
+        File file = new File(this.context.getFilesDir() +"/"+ this.directoryName, this.fileName);
+        InputStream inputStream ;
 
 
         try {
-            inputStream = mContext.openFileInput(mFileName);
+            //inputStream = this.context.openFileInput(this.fileName);
+            inputStream =  new BufferedInputStream(new FileInputStream(file));
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
 
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
@@ -141,13 +183,62 @@ public class AndroidPluginDataFile implements PluginDataFile {
             }
             inputStream.close();
 
-            mContent = sb.toString();
+            this.content = sb.toString();
             inputStream.close();
         } catch (Exception e) {
             System.err.println("Error trying to persist file: " + e.getMessage());
             e.printStackTrace();
-            throw new CantPersistFileException(mFileName);
+            throw new CantPersistFileException(this.fileName);
         }
+    }
+
+    private  String Encriptar(String texto) {
+
+        String secretKey = this.ownerId.toString(); //llave para encriptar datos
+        String base64EncryptedString = "";
+
+        try {
+
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] digestOfPassword = md.digest(secretKey.getBytes("utf-8"));
+            byte[] keyBytes = Arrays.copyOf(digestOfPassword, 24);
+
+            SecretKey key = new SecretKeySpec(keyBytes, "DESede");
+            Cipher cipher = Cipher.getInstance("DESede");
+            cipher.init(Cipher.ENCRYPT_MODE, key);
+
+            byte[] plainTextBytes = texto.getBytes("utf-8");
+            byte[] buf = cipher.doFinal(plainTextBytes);
+            byte[] base64Bytes = Base64.encode(buf, 1);
+            base64EncryptedString = new String(base64Bytes);
+
+        } catch (Exception ex) {
+        }
+        return base64EncryptedString;
+    }
+
+    private  String Desencriptar(String textoEncriptado) throws Exception {
+
+        String secretKey = this.ownerId.toString(); //llave para encriptar datos
+        String base64EncryptedString = "";
+
+        try {
+            byte[] message = Base64.decode(textoEncriptado.getBytes("utf-8"), 1);
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            byte[] digestOfPassword = md.digest(secretKey.getBytes("utf-8"));
+            byte[] keyBytes = Arrays.copyOf(digestOfPassword, 24);
+            SecretKey key = new SecretKeySpec(keyBytes, "DESede");
+
+            Cipher decipher = Cipher.getInstance("DESede");
+            decipher.init(Cipher.DECRYPT_MODE, key);
+
+            byte[] plainText = decipher.doFinal(message);
+
+            base64EncryptedString = new String(plainText, "UTF-8");
+
+        } catch (Exception ex) {
+        }
+        return base64EncryptedString;
     }
 
 }

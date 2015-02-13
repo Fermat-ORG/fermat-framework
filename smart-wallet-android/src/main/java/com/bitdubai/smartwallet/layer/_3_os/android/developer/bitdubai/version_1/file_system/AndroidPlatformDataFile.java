@@ -7,12 +7,16 @@ import android.content.Context;
 
 import com.bitdubai.wallet_platform_api.layer._3_os.File_System.*;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.io.InputStream;
 import java.io.FileWriter;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.BufferedOutputStream;
 
 
 public class AndroidPlatformDataFile implements PlatformDataFile {
@@ -45,22 +49,17 @@ public class AndroidPlatformDataFile implements PlatformDataFile {
     @Override
     public void persistToMedia() throws CantPersistFileException {
 
-        File file = new File(this.context.getFilesDir()+"/"+ this.directoryName, this.fileName);
-        if (!file.exists()) {
-            //let's try to create it
-            try {
-                file.mkdir();
-            } catch (SecurityException secEx) {
-                //handle the exception
-                secEx.printStackTrace(System.out);
-                file = null;
-            }
-        }
+        File storagePath = new File(this.context.getFilesDir()+"/"+ this.directoryName);
+        storagePath.mkdirs();
+        File file = new File(storagePath, fileName);
 
-        FileOutputStream outputStream;
+        OutputStream  outputStream;
+
 
         try {
-            outputStream = this.context.openFileOutput(this.fileName, Context.MODE_PRIVATE);
+
+            //outputStream = this.context.openFileOutput( file.getPath(), Context.MODE_PRIVATE);
+            outputStream =  new BufferedOutputStream(new FileOutputStream(file));
             outputStream.write(this.content.getBytes());
             outputStream.close();
         } catch (Exception e) {
@@ -145,12 +144,14 @@ public class AndroidPlatformDataFile implements PlatformDataFile {
     @Override
     public void loadFromMedia() throws CantPersistFileException {
 
+
         File file = new File(this.context.getFilesDir() +"/"+ this.directoryName, this.fileName);
-        FileInputStream inputStream;
+        InputStream inputStream ;
 
 
         try {
-            inputStream = this.context.openFileInput(this.fileName);
+            //inputStream = this.context.openFileInput(this.fileName);
+            inputStream =  new BufferedInputStream(new FileInputStream(file));
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
 
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
