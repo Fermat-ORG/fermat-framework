@@ -165,7 +165,7 @@ public class PluginsManager {
 
         try
         {
-            platformDataFile.persistToMedia();
+            platformDataFile.persistToMedia();// Natalia TODO: Debugear desde aca
         }
         catch (CantPersistFileException cantPersistFileException )
         {
