@@ -6,6 +6,8 @@ import com.bitdubai.wallet_platform_api.PluginNotRecognizedException;
 import com.bitdubai.wallet_platform_api.layer._3_os.File_System.*;
 import com.bitdubai.wallet_platform_core.layer._7_crypto_network.bitcoin.BitcoinSubsystem;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -14,17 +16,16 @@ import java.util.UUID;
 public class PluginsManager {
 
     private PlatformFileSystem platformFileSystem;
-    private UUID[] pluginIds = {};
     private final Integer AMOUNT_OF_KNOWN_PLUGINS = 1;
-
+    private List<UUID> pluginIds = new ArrayList<>();
 
 
     public  PluginsManager (PlatformFileSystem platformFileSystem) throws CantInitializePluginsManagerException {
-        
+
         this.platformFileSystem = platformFileSystem;
 
         PlatformDataFile platformDataFile;
-        
+
         try
         {
             platformDataFile =  platformFileSystem.getFile("Platform", "PluginsIds", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
@@ -50,11 +51,11 @@ public class PluginsManager {
 
             for (String stringPluginId : stringPluginIds ) {
 
-                pluginIds[arrayPosition] = (UUID.fromString(stringPluginId));
+                pluginIds.add(arrayPosition, UUID.fromString(stringPluginId));
 
                 arrayPosition++;
             }
-            
+
             if (arrayPosition < AMOUNT_OF_KNOWN_PLUGINS)
             {
                 /**
@@ -66,7 +67,7 @@ public class PluginsManager {
 
                     UUID newId =  UUID.randomUUID();
 
-                    pluginIds[index] = newId;
+                    pluginIds.add(index, newId);
                 }
 
                 try
@@ -83,7 +84,7 @@ public class PluginsManager {
                     cantPersistFileException.getFileName();
                     throw new CantInitializePluginsManagerException();
                 }
-            
+
             }
 
         }
@@ -93,10 +94,10 @@ public class PluginsManager {
 
 
             for (int arrayPosition = 0; arrayPosition < AMOUNT_OF_KNOWN_PLUGINS; arrayPosition++) {
-            
+
                 UUID newId =  UUID.randomUUID();
 
-                pluginIds[arrayPosition] = newId;
+                pluginIds.add(arrayPosition, newId);
             }
 
             try
@@ -115,14 +116,14 @@ public class PluginsManager {
             }
 
         }
-               
+
     }
-    
+
     public UUID getPluginId(Plugin plugin) throws PluginNotRecognizedException{
-        
-        UUID pluginId; 
+
+        UUID pluginId;
         Integer pluginIndex = 0;
-        
+
         if (pluginIndex == 0) {
             try
             {
@@ -130,34 +131,34 @@ public class PluginsManager {
                 tryType = (BitcoinSubsystem) plugin;
                 pluginIndex = 1;
             }
-            catch (Exception e) 
+            catch (Exception e)
             {
                 /**
                  * If this fails, is because this is not the index for this plug in.
-                 */ 
+                 */
             }
         }
-        
+
         if (pluginIndex > 0) {
-            return pluginIds[pluginIndex]; 
+            return pluginIds.get(pluginIndex);
         }
         else
         {
             throw new PluginNotRecognizedException();
         }
-       
+
     }
-    
-    
-    
+
+
+
     private void savePluginIds(PlatformDataFile platformDataFile) throws CantPersistFileException{
 
         String fileContent = "";
-                
+
         for (int arrayPosition = 0; arrayPosition < AMOUNT_OF_KNOWN_PLUGINS; arrayPosition++) {
 
-            fileContent = fileContent + pluginIds[arrayPosition].toString() + ";"; 
-            
+            fileContent = fileContent + pluginIds.get(arrayPosition).toString() + ";";
+
         }
 
         platformDataFile.setContent(fileContent);
@@ -176,8 +177,8 @@ public class PluginsManager {
             cantPersistFileException.getFileName();
             throw new CantPersistFileException(cantPersistFileException.getFileName());
         }
-       
-        
+
+
     }
-    
+
 }

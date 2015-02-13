@@ -17,9 +17,10 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.view.Window;
 import android.widget.TextView;
-
 import com.bitdubai.smartwallet.R;
-
+import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.AndroidOsAddonRoot;
+import com.bitdubai.wallet_platform_api.CantStartPlatformException;
+import com.bitdubai.wallet_platform_core.Platform;
 
 public class MyApplication extends Application {
 
@@ -83,7 +84,6 @@ public class MyApplication extends Application {
     }
 
 
-/*
     private Platform mPlatform;
 
 
@@ -99,27 +99,25 @@ public class MyApplication extends Application {
         try {
 
 
-            mPlatform.setOsContext(this);
             mPlatform.setOs(new AndroidOsAddonRoot());
             mPlatform.start();
 
-           //Context mContext;
-           // mContext = this.getApplicationContext();
+            //Context mContext;
+            // mContext = this.getApplicationContext();
 
-           // File file = new File(mContext.getFilesDir(), "Platform_Last_State");
+            // File file = new File(mContext.getFilesDir(), "Platform_Last_State");
 
             //Context context = getContext();
 
             //Platform com.bitdubai.platform = new Platform(this.getApplicationContext());
-           // mPlatform = com.bitdubai.platform;
+            // mPlatform = com.bitdubai.platform;
         }
         catch (CantStartPlatformException e) {
-           System.err.println("CantStartPlatformException: " + e.getMessage());
+            System.err.println("CantStartPlatformException: " + e.getMessage());
 
-       }
+        }
 
     }
-*/
 
     public static void setActionBarProperties(Activity activity, Window window,  PagerSlidingTabStrip pTabs, ActionBar pActionBar, Resources context,  TextView abTitle, String pTitle) {
         actionBar = pActionBar;
