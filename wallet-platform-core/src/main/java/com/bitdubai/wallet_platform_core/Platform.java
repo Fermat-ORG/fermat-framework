@@ -424,7 +424,7 @@ public class Platform  {
          * I will give the plugin access to the File System so it can load and save and load information from persistent 
          * media.
          */
-
+// Luis TODO: Debugear desde aca - en la proxima linea da error,
         Plugin cryptoNetworkService = ((CryptoNetworkLayer) mCryptoNetworkLayer).getCryptoNetwork(CryptoNetworks.BITCOIN);
 
         ((DealsWithFileSystem) cryptoNetworkService).setPluginFileSystem(os.getPlugInFileSystem());

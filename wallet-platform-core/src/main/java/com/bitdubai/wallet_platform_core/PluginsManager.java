@@ -28,6 +28,8 @@ public class PluginsManager {
 
         try
         {
+
+
             platformDataFile =  platformFileSystem.getFile("Platform", "PluginsIds", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
 
             try
@@ -49,12 +51,18 @@ public class PluginsManager {
 
             Integer arrayPosition = 0;
 
-            for (String stringPluginId : stringPluginIds ) {
+             for (String stringPluginId : stringPluginIds ) {
 
-                pluginIds.add(arrayPosition, UUID.fromString(stringPluginId));
+                    if(stringPluginId != "")
+                    {
+                        pluginIds.add(arrayPosition, UUID.fromString(stringPluginId));
 
-                arrayPosition++;
-            }
+                        arrayPosition++;
+                    }
+
+                }
+
+
 
             if (arrayPosition < AMOUNT_OF_KNOWN_PLUGINS)
             {
@@ -165,7 +173,7 @@ public class PluginsManager {
 
         try
         {
-            platformDataFile.persistToMedia();// Natalia TODO: Debugear desde aca
+            platformDataFile.persistToMedia();
         }
         catch (CantPersistFileException cantPersistFileException )
         {
