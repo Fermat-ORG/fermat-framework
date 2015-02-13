@@ -43,6 +43,8 @@ import java.util.ArrayList;
 public class FileImageActivity extends FragmentActivity {
     View rootView;
     private static Context mContext;
+    private UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +62,6 @@ public class FileImageActivity extends FragmentActivity {
 
     public void onMemoryClicked(View v) throws CantLoadFileException  {
         //save image in memory
-        UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
 
         ImageView  imageA = (ImageView)findViewById(R.id.imageView5);
         imageA.setImageBitmap(null);
@@ -79,7 +80,6 @@ public class FileImageActivity extends FragmentActivity {
 
     public void onFromMemoryClicked(View v) throws CantLoadFileException  {
         //load image from memory
-        UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
 
         Bitmap myBitmap = null;
 
@@ -96,7 +96,6 @@ public class FileImageActivity extends FragmentActivity {
 
     public void onMediaClicked(View v) throws CantPersistFileException {
         //save image in sdcard
-        UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
 
         ImageView  imageA = (ImageView)findViewById(R.id.imageView5);
         imageA.setImageBitmap(null);
@@ -115,7 +114,6 @@ public class FileImageActivity extends FragmentActivity {
         try
         {
             //load image from sdcard
-            UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
 
             ImageView  imageA = (ImageView)findViewById(R.id.imageView5);
             imageA.setImageDrawable(null);
@@ -144,7 +142,6 @@ public class FileImageActivity extends FragmentActivity {
         {
             //load binary to memory
 
-            UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
 
             //AndroidPlatformFileSystem filemanager = new AndroidPlatformFileSystem();
            AndroidPluginFileSystem filemanager = new AndroidPluginFileSystem();
@@ -171,7 +168,6 @@ public class FileImageActivity extends FragmentActivity {
         {
             //persist binary to media
 
-            UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
 
            // AndroidPluginFileSystem filemanager = new AndroidPluginFileSystem();
 
@@ -199,14 +195,14 @@ public class FileImageActivity extends FragmentActivity {
         {
             //load binary from memory
 
-            UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
-            AndroidPluginFileSystem filemanager = new AndroidPluginFileSystem();
+              AndroidPluginFileSystem filemanager = new AndroidPluginFileSystem();
             //AndroidPlatformFileSystem filemanager = new AndroidPlatformFileSystem();
             filemanager.setContext(mContext);
+            moduleId = UUID.randomUUID();
             //PlatformDataFile file = filemanager.createFile("PlatForm", "example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
             PluginDataFile file = filemanager.createDataFile(moduleId, "PlugIn", "example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
 
-            file.loadFromMemory();
+
 
             TextView  result = (TextView)findViewById(R.id.result_text);
             result.setText( file.getContent());
@@ -225,7 +221,6 @@ public class FileImageActivity extends FragmentActivity {
         {
             //load binary from media
 
-            UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
 
            // AndroidPluginFileSystem filemanager = new AndroidPluginFileSystem();
             AndroidPlatformFileSystem filemanager = new AndroidPlatformFileSystem();
@@ -256,7 +251,6 @@ public class FileImageActivity extends FragmentActivity {
 
             AndroidPluginDatabaseSystem dbmanager = new AndroidPluginDatabaseSystem(mContext);
 
-            UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
 
             dbmanager.createDatabase( moduleId, "dbExample");
 
@@ -278,7 +272,7 @@ public class FileImageActivity extends FragmentActivity {
 
             AndroidPluginDatabaseSystem dbmanager = new AndroidPluginDatabaseSystem(mContext);
             String tableSchema =   "CREATE TABLE Table1 (Id INTEGER PRIMARY KEY, name TEXT, type TEXT)";
-            dbmanager.createTable("dbExample",tableSchema);
+           // dbmanager.createTable("dbExample",tableSchema);
 
             TextView  result = (TextView)findViewById(R.id.result_text);
             result.setText("Table Created");
@@ -296,7 +290,6 @@ public class FileImageActivity extends FragmentActivity {
         {
             //insert record
             AndroidPluginDatabaseSystem dbPlugIn = new AndroidPluginDatabaseSystem(mContext);
-            UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
 
             dbPlugIn.openDatabase(moduleId,"dbExample");
 
@@ -328,7 +321,6 @@ public class FileImageActivity extends FragmentActivity {
         try
         {
             AndroidPluginDatabaseSystem dbPlugIn = new AndroidPluginDatabaseSystem(mContext);
-            UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
 
             dbPlugIn.openDatabase(moduleId,"dbExample");
 
@@ -352,7 +344,6 @@ public class FileImageActivity extends FragmentActivity {
         try
         {
             AndroidPluginDatabaseSystem dbPlugIn = new AndroidPluginDatabaseSystem(mContext);
-            UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
 
             dbPlugIn.openDatabase(moduleId,"dbExample");
 
@@ -394,7 +385,6 @@ public class FileImageActivity extends FragmentActivity {
         try
         {
             AndroidPluginDatabaseSystem dbPlugIn = new AndroidPluginDatabaseSystem(mContext);
-            UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
 
             dbPlugIn.openDatabase(moduleId,"dbExample");
 

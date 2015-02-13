@@ -42,8 +42,42 @@ public class AndroidPluginDataFile implements PluginDataFile {
     UUID ownerId;
 
     @Override
-    public String getContent() {
-        return this.content;
+    public String getContent() throws WrongOwnerIdException{
+        try {
+            File file = new File(this.context.getFilesDir() +"/"+ this.directoryName, this.fileName);
+            InputStream inputStream;
+
+            // inputStream = this.context.openFileInput(this.fileName);
+            inputStream =  new BufferedInputStream(new FileInputStream(file));
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                sb.append(line);
+            }
+            inputStream.close();
+
+            String dencryptContent = "";
+            try {
+                dencryptContent = this.Desencriptar(sb.toString());
+                this.content = dencryptContent;
+                return this.content;
+            } catch (javax.crypto.BadPaddingException e) {
+                e.printStackTrace();
+                throw e;
+            }
+
+
+        } catch (Exception e1) {
+            System.err.println("Error trying to load a file from memory: " + e1.getMessage());
+            e1.printStackTrace();
+            throw new WrongOwnerIdException();
+
+        }
+
+
     }
 
     @Override
@@ -71,10 +105,12 @@ public class AndroidPluginDataFile implements PluginDataFile {
         OutputStream outputStream;
 
         //encript file content with ownerId key
-
+            String encryptContent = this.Encriptar(this.content);
             //outputStream = this.context.openFileOutput( file.getPath(), Context.MODE_PRIVATE);
+
+
             outputStream =  new BufferedOutputStream(new FileOutputStream(file));
-            outputStream.write(this.content.getBytes());
+            outputStream.write(encryptContent.getBytes());
             outputStream.close();
         } catch (Exception e) {
             System.err.println("Error trying to persist file: " + e.getMessage());
@@ -100,11 +136,11 @@ public class AndroidPluginDataFile implements PluginDataFile {
             }
         }
 
-        String encriptado = this.Encriptar(this.content);
+        String encryptContent = this.Encriptar(this.content);
         File file = new File(internalDir, this.fileName);
 
             FileWriter fw = new FileWriter(file);
-            fw.write(encriptado);
+            fw.write(encryptContent);
             fw.close();
         }
         catch (Exception e) {
@@ -127,39 +163,7 @@ public class AndroidPluginDataFile implements PluginDataFile {
         }*/
     }
 
-    @Override
-    public void loadFromMemory() throws CantLoadFileException {
-        try {
-        File file = new File(this.context.getFilesDir() +"/"+ this.directoryName, this.fileName);
-        InputStream inputStream;
 
-           // inputStream = this.context.openFileInput(this.fileName);
-            inputStream =  new BufferedInputStream(new FileInputStream(file));
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                sb.append(line);
-            }
-            inputStream.close();
-
-            String desencriptado = "";
-            try {
-                desencriptado = this.Desencriptar(sb.toString());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            this.content = desencriptado;
-
-        } catch (Exception e) {
-            System.err.println("Error trying to load a file to memory: " + e.getMessage());
-            e.printStackTrace();
-            throw new CantLoadFileException(this.fileName);
-        }
-    }
 
     @Override
     public void loadFromMedia() throws CantPersistFileException {
@@ -182,7 +186,17 @@ public class AndroidPluginDataFile implements PluginDataFile {
             }
             inputStream.close();
 
-            this.content = sb.toString();
+            String dencryptContent = "";
+            try {
+                dencryptContent = this.Desencriptar(sb.toString());
+
+            } catch (javax.crypto.BadPaddingException e) {
+                e.printStackTrace();
+                throw e;
+            }
+
+            this.content = dencryptContent;
+
             inputStream.close();
         } catch (Exception e) {
             System.err.println("Error trying to persist file: " + e.getMessage());
@@ -216,7 +230,7 @@ public class AndroidPluginDataFile implements PluginDataFile {
         return base64EncryptedString;
     }
 
-    private  String Desencriptar(String textoEncriptado) throws Exception {
+    private  String Desencriptar(String textoEncriptado) throws javax.crypto.BadPaddingException {
 
         String secretKey = this.ownerId.toString(); //llave para encriptar datos
         String base64EncryptedString = "";
@@ -234,11 +248,15 @@ public class AndroidPluginDataFile implements PluginDataFile {
             byte[] plainText = decipher.doFinal(message);
 
             base64EncryptedString = new String(plainText, "UTF-8");
+            return base64EncryptedString;
 
         } catch (Exception ex) {
-            String strError = ex.getMessage();
+            throw  new javax.crypto.BadPaddingException("invalid owner id");
+
         }
-        return base64EncryptedString;
+
     }
+
+
 
 }

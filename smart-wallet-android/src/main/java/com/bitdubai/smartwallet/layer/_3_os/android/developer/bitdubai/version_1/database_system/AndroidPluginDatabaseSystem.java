@@ -1,6 +1,8 @@
 package com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.database_system;
 
 import android.content.Context;
+
+import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidPluginDataFile;
 import com.bitdubai.wallet_platform_api.layer._3_os.File_System.CantOpenDatabaseException;
 import com.bitdubai.wallet_platform_api.layer._3_os.Database_System.Database;
 import com.bitdubai.wallet_platform_api.layer._3_os.Database_System.PluginDatabaseSystem;
@@ -33,15 +35,15 @@ public class AndroidPluginDatabaseSystem extends SQLiteOpenHelper implements Plu
     @Override
     public Database openDatabase(UUID ownerId, String databaseName) throws CantOpenDatabaseException {
         mDatabase = SQLiteDatabase.openDatabase(mContext.getFilesDir() +"/" + databaseName,null,SQLiteDatabase.OPEN_READWRITE);
-        return null;
+        return new AndroidDatabase();
+
     }
 
     @Override
     public Database createDatabase(UUID ownerId, String databaseName) {
 
         mDatabase = SQLiteDatabase.openOrCreateDatabase(mContext.getFilesDir() +"/" + databaseName, null, null);
-
-        return null;
+        return new AndroidDatabase();
     }
 
 
@@ -56,14 +58,6 @@ public class AndroidPluginDatabaseSystem extends SQLiteOpenHelper implements Plu
     }
 
 
-
-    public void createTable(String databaseName, String tableSchema) {
-
-        mTableSchema = tableSchema;
-        mDatabase = SQLiteDatabase.openDatabase(mContext.getFilesDir() +"/" + databaseName,null,SQLiteDatabase.OPEN_READWRITE);
-        onCreate(mDatabase);
-
-    }
 
     @Override
     public void onCreate(SQLiteDatabase db) {

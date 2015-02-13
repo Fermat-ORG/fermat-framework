@@ -25,7 +25,7 @@ public class AndroidPluginFileSystem implements PluginFileSystem {
         AndroidPluginDataFile newFile = new AndroidPluginDataFile(ownerId, this.context, fileName, privacyLevel, lifeSpan);
 
         try {
-            newFile.loadFromMemory();
+            newFile.loadToMemory();
             return newFile;
         }
         catch (CantLoadFileException e){
