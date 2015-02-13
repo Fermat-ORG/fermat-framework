@@ -78,7 +78,7 @@ public class ContactsFragment extends Fragment {
 
         //@SuppressWarnings("unchecked")
         //ArrayList<App> list = (ArrayList<App>) getArguments().get("list");
-        gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.wallets_kids_fragment_contacts, mlist));
+        gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.wallets_kids_fragment_contacts_filter, mlist));
 
         //        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
         //  public void onItemClick(AdapterView<?> parent, View v,

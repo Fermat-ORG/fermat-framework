@@ -120,7 +120,7 @@ public class CommunityFragment extends Fragment {
             gridView.setNumColumns(3);
         }
 
-        gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.wallet_kids_fragment_community_filter, mlist));
+        gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.wallets_kids_fragment_community_filter, mlist));
 
         return gridView;
     }

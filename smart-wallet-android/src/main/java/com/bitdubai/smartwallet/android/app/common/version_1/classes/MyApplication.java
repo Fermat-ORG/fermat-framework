@@ -102,20 +102,20 @@ public class MyApplication extends Application {
             mPlatform.setOs(new AndroidOsAddonRoot());
             mPlatform.start();
 
-            //Context mContext;
-            // mContext = this.getApplicationContext();
+           //Context mContext;
+           // mContext = this.getApplicationContext();
 
-            // File file = new File(mContext.getFilesDir(), "Platform_Last_State");
+           // File file = new File(mContext.getFilesDir(), "Platform_Last_State");
 
             //Context context = getContext();
 
             //Platform com.bitdubai.platform = new Platform(this.getApplicationContext());
-            // mPlatform = com.bitdubai.platform;
+           // mPlatform = com.bitdubai.platform;
         }
         catch (CantStartPlatformException e) {
-            System.err.println("CantStartPlatformException: " + e.getMessage());
+           System.err.println("CantStartPlatformException: " + e.getMessage());
 
-        }
+       }
 
     }
 
