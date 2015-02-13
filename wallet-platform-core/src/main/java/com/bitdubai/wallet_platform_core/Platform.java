@@ -246,10 +246,8 @@ public class Platform  {
          * * * * 
          */
 
-        
-        
-        // Loui TODO: Agregar el Error Manager de manera similar al event Manager. (Lo de pasarle el event Monitor no va)
-
+        Service errorManager = (Service) ((PlatformServiceLayer) mEventLayer).getErrorManager();
+        corePlatformContext.addAddon((Addon) errorManager, Addons.ERROR_MANAGER);
 
 
         /**
@@ -337,7 +335,6 @@ public class Platform  {
         
         
         
-        
         /**
          * -----------------------------------------------------------------------------------------------------------
          * Plugins initialization
@@ -360,8 +357,60 @@ public class Platform  {
         }
 
 
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        /**
+         * -----------------------------
+         * Plugin Crypto Index World
+         * -----------------------------
+         * * * * 
+         */
 
-        // Loui TODO: Falta el world Cryto Index
+
+
+        /**
+         * I will give the Crypto Index plugin access to the File System so it can load and save information from persistent
+         * media.
+         */
+
+        Plugin WorldService = ((WorldLayer)  mWorldLayer).getmCryptoIndex();
+
+        ((DealsWithFileSystem) WorldService).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) WorldService).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(WorldService, Plugins.CRYPTO_INDEX);
+        
+        try
+        {
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+        
+            UUID pluginID = pluginsManager.getPluginId(WorldService);
+            (WorldService).setId(pluginID);
+
+            ((Service) WorldService).start();
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+        }
+
+
+        
+        
+        
+        
         
         
 
@@ -379,12 +428,12 @@ public class Platform  {
          * media.
          */
 
-        Service cryptoNetworkService = (Service) ((CryptoNetworkLayer) mCryptoNetworkLayer).getCryptoNetwork(CryptoNetworks.BITCOIN);
+        Plugin cryptoNetworkService = ((CryptoNetworkLayer) mCryptoNetworkLayer).getCryptoNetwork(CryptoNetworks.BITCOIN);
 
         ((DealsWithFileSystem) cryptoNetworkService).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) cryptoNetworkService).setEventManager((EventManager) eventManager);
 
-        corePlatformContext.addPlugin((Plugin) cryptoNetworkService, Plugins.BITCOIN_CRYPTO_NETWORK);
+        corePlatformContext.addPlugin(cryptoNetworkService, Plugins.BITCOIN_CRYPTO_NETWORK);
 
         try
         {
@@ -392,10 +441,10 @@ public class Platform  {
              * As any other plugin, this one will need its identity in order to access the data it persisted before.
              */
 
-            UUID pluginID = pluginsManager.getPluginId((Plugin) cryptoNetworkService);
-            ((Plugin) cryptoNetworkService).setId(pluginID);
+            UUID pluginID = pluginsManager.getPluginId(cryptoNetworkService);
+            (cryptoNetworkService).setId(pluginID);
 
-            cryptoNetworkService.start();
+            ((Service)cryptoNetworkService).start();
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -406,20 +455,118 @@ public class Platform  {
             System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
             pluginNotRecognizedException.printStackTrace();
 
-            cryptoNetworkService.stop();
+            ((Service)cryptoNetworkService).stop();
         }
 
 
-
-
-        // Loui TODO: Falta el communication cloud (Plugin)
-
-
-
-        // Loui TODO: Falta el middleware wallet. (Plugin)
         
         
+        
+        
+        
+        
+        
+        
+        /**
+         * -----------------------------
+         * Plugin Cloud Communication
+         * -----------------------------
+         * * * * 
+         */
+        
+        
+        
 
+        /**
+         * I will give the Cloud Communication access to the File System and to the Event Manager
+         */
+        
+        Plugin cloudCommunication = ((CommunicationLayer) mCommunicationLayer).getCloudPlugin();
+        
+        ((DealsWithFileSystem) cloudCommunication).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) cloudCommunication).setEventManager((EventManager) eventManager);
+        
+        corePlatformContext.addPlugin(cloudCommunication, Plugins.CLOUD_CHANNEL);
+        
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsManager.getPluginId(cloudCommunication);
+            (cloudCommunication).setId(pluginID);
+
+            ((Service) cloudCommunication).start();
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
+
+        
+        
+        
+        
+        
+        
+        
+        
+        /**
+         * -----------------------------
+         * Plugin Wallet Middleware
+         * -----------------------------
+         * * * * 
+         */
+
+
+
+        /**
+         * I will give the Wallet Middleware access to the File System and to the Event Manager
+         */
+
+        Plugin walletMiddleware =  ((MiddlewareLayer) mMiddlewareayer).getWalletEngine();
+
+        ((DealsWithFileSystem) walletMiddleware).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) walletMiddleware).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(walletMiddleware, Plugins.WALLET_MIDDLEWARE);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsManager.getPluginId(walletMiddleware);
+            (walletMiddleware).setId(pluginID);
+
+            ((Service) walletMiddleware).start();
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
+
+        
+
+        
+        
+        
+        
         /**
          * -----------------------------
          * Plugin Wallet Manager
@@ -438,7 +585,7 @@ public class Platform  {
         ((DealsWithFileSystem) walletManager).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) walletManager).setEventManager((EventManager) eventManager);
 
-        corePlatformContext.addPlugin((Plugin) walletManager, Plugins.WALLET_MANAGER_MODULE);
+        corePlatformContext.addPlugin(walletManager, Plugins.WALLET_MANAGER_MODULE);
         
         try
         {
@@ -447,8 +594,8 @@ public class Platform  {
              * As any other plugin, this one will need its identity in order to access the data it persisted before.
              */
 
-            UUID pluginID = pluginsManager.getPluginId((Plugin) walletManager);
-            ((Plugin) walletManager).setId(pluginID);
+            UUID pluginID = pluginsManager.getPluginId(walletManager);
+            (walletManager).setId(pluginID);
 
             ((Service) walletManager).start();
         }
@@ -464,18 +611,56 @@ public class Platform  {
 
             throw new CantStartPlatformException();
         }
-    
 
 
 
 
 
-// Loui TODO: Falta el wallet runtime. (Plugin)
+        
+        
+        
+        
+        
+        /**
+         * -----------------------------
+         * Plugin Wallet Runtime
+         * -----------------------------
+         * * * * 
+         */
 
 
 
+        /**
+         * I will give the Wallet Runtime access to the File System and to the Event Manager
+         */
 
+        Plugin walletRuntime =  ((ModuleLayer) mModuleLayer).getWalletRuntime();
 
+        ((DealsWithFileSystem) walletRuntime).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) walletRuntime).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(walletRuntime, Plugins.WALLET_RUNTIME_MODULE);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsManager.getPluginId(walletRuntime);
+            (walletRuntime).setId(pluginID);
+
+            ((Service) walletRuntime).start();
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
 
 
 
@@ -593,3 +778,4 @@ public class Platform  {
 
     }
 }
+
