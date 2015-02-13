@@ -16,7 +16,7 @@ import java.util.UUID;
 public class PluginsManager {
 
     private PlatformFileSystem platformFileSystem;
-    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 1;
+    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 6;
     private List<UUID> pluginIds = new ArrayList<>();
 
 

@@ -406,12 +406,6 @@ public class Platform  {
 
         }
 
-
-        
-        
-        
-        
-        
         
 
         /**
@@ -458,23 +452,15 @@ public class Platform  {
             ((Service)cryptoNetworkService).stop();
         }
 
+        
 
-        
-        
-        
-        
-        
-        
-        
-        
         /**
          * -----------------------------
          * Plugin Cloud Communication
          * -----------------------------
          * * * * 
          */
-        
-        
+
         
 
         /**
@@ -509,15 +495,8 @@ public class Platform  {
             throw new CantStartPlatformException();
         }
 
+        
 
-        
-        
-        
-        
-        
-        
-        
-        
         /**
          * -----------------------------
          * Plugin Wallet Middleware
@@ -561,12 +540,7 @@ public class Platform  {
         }
 
 
-        
 
-        
-        
-        
-        
         /**
          * -----------------------------
          * Plugin Wallet Manager
@@ -614,13 +588,6 @@ public class Platform  {
 
 
 
-
-
-        
-        
-        
-        
-        
         /**
          * -----------------------------
          * Plugin Wallet Runtime
