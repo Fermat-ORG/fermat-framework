@@ -6,6 +6,7 @@ import com.bitdubai.wallet_platform_api.layer.PlatformLayer;
 
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.DeviceDirectory;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.PlatformFileName;
+import com.bitdubai.wallet_platform_api.layer._11_module.Modules;
 import com.bitdubai.wallet_platform_api.layer._1_definition.event.DealWithEventMonitor;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventManager;
@@ -378,6 +379,8 @@ public class Platform  {
             }
 
             UUID userId =  UUID.fromString(platformStateFile.getContent());
+            
+            // Luis TODO: de aca tiene que sacar no solo el usuario sino tambien el modulo donde estuvo por ultima vez
 
             try
             {
@@ -397,12 +400,12 @@ public class Platform  {
         catch (FileNotFoundException fileNotFoundException)
         {
             /**
-             * If there is no last state file, I assume this is the first time the com.bitdubai.platform is running on this device.
+             * If there is no last state file, I assume this is the first time the platform is running on this device.
              * Under this situation I will do the following;
              *
              * 1) Create a new User with no password.
              * 2) Auto login that user.
-             * 3) Save the last state of the com.bitdubai.platform.
+             * 3) Save the last state of the platform.
              */
 
             User newUser;
@@ -411,6 +414,8 @@ public class Platform  {
 
                 newUser = ((UserManager) ((UserLayer) mUserLayer).getUserManager()).createUser();
                 newUser.login("");
+                
+                // Luis TODO; como se conecta esto con el communication layer que usa el usuario logeado del Platform Context? 
 
             } catch (CantCreateUserException | LoginFailedException exception) {
                 /**
@@ -427,7 +432,9 @@ public class Platform  {
                     FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT
             );
 
-            platformStateFile.setContent(newUser.getId().toString());
+            String content = newUser.getId().toString() + ";" + Modules.WALLET_RUNTIME.getModuleName();
+            
+            platformStateFile.setContent(content);
 
             try {
                 platformStateFile.persistToMedia();
