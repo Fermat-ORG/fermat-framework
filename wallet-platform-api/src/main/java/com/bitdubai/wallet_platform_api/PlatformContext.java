@@ -1,5 +1,7 @@
 package com.bitdubai.wallet_platform_api;
 
+import com.bitdubai.wallet_platform_api.layer._1_definition.enums.Addons;
+import com.bitdubai.wallet_platform_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.wallet_platform_api.layer._4_user.User;
 
 /**
@@ -7,8 +9,16 @@ import com.bitdubai.wallet_platform_api.layer._4_user.User;
  */
 public interface PlatformContext {
 
-    public User getLoggedInUser();
+    public void addAddon (Addon addon, Addons descriptor);
 
-    public void setLoggedInUser(User loggedInUser);
+
+    public Addon getAddon (Addons descriptor);
+
+
+    public void addPlugin (Plugin plugin, Plugins descriptor);
+
+
+    public Plugin getPlugin (Plugins descriptor);
+
     
 }

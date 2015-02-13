@@ -5,7 +5,9 @@ import com.bitdubai.wallet_platform_api.PlatformContext;
 import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.layer.CantStartLayerException;
 import com.bitdubai.wallet_platform_api.layer.PlatformLayer;
+import com.bitdubai.wallet_platform_api.layer._1_definition.enums.Addons;
 import com.bitdubai.wallet_platform_api.layer._4_user.User;
+import com.bitdubai.wallet_platform_api.layer._4_user.UserManager;
 import com.bitdubai.wallet_platform_api.layer._8_communication.*;
 import com.bitdubai.wallet_platform_core.layer._8_communication.cloud.CloudSubsystem;
 
@@ -82,8 +84,11 @@ public class CommunicationLayer implements PlatformLayer, DealsWithPlatformConte
 
 
     public UserToUserOnlineConnection connectTo (User user) throws CantConnectToUserException {
+        
+        
+        User loggedinUser = ((UserManager) platformContext.getAddon(Addons.USER_MANAGER)).getLoggedInUser();
 
-        LayerUserToUserOnlineConnection layerUserToUserOnlineConnection = new LayerUserToUserOnlineConnection(platformContext.getLoggedInUser(), user);
+        LayerUserToUserOnlineConnection layerUserToUserOnlineConnection = new LayerUserToUserOnlineConnection(loggedinUser, user);
 
         layerUserToUserOnlineConnection.setCloudPlugin(mCloudPlugin);
         
