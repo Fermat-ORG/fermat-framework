@@ -6,6 +6,12 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import com.bitdubai.smartwallet.R;
+import com.bitdubai.smartwallet.android.app.common.version_1.classes.MyApplication;
+import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.AndroidOsAddonRoot;
+import android.content.Context;
+
+import com.bitdubai.wallet_platform_api.CantStartPlatformException;
+import com.bitdubai.wallet_platform_core.Platform;
 
 
 public class LoginActivity extends Activity {
@@ -16,6 +22,22 @@ public class LoginActivity extends Activity {
         setContentView(R.layout.app_activity_main);
 
 
+ try {
+        Platform platform = MyApplication.getPlatform();
+         Context mContext = this.getApplicationContext();
+
+          AndroidOsAddonRoot Os = new AndroidOsAddonRoot();
+
+          Os.setContext(this);
+         platform.setOs(Os);
+         platform.start();
+
+
+         }
+         catch (CantStartPlatformException e) {
+         System.err.println("CantStartPlatformException: " + e.getMessage());
+
+        }
 
         /**
          * Get access to the com.bitdubai.platform.

@@ -11,6 +11,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.InputStream;
 import java.io.FileWriter;
@@ -21,11 +22,13 @@ import java.io.BufferedOutputStream;
 
 public class AndroidPlatformDataFile implements PlatformDataFile {
     Context context;
-    String content;
+    String content = "";
     String fileName;
     FilePrivacy privacyLevel;
     FileLifeSpan lifeSpan;
     String directoryName;
+
+
 
     public AndroidPlatformDataFile( Context context,String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
 
@@ -36,8 +39,36 @@ public class AndroidPlatformDataFile implements PlatformDataFile {
         this.directoryName = directoryName;
 
     }
-    public String getContent ()
+    public String getContent()
     {
+
+        try {
+            InputStream inputStream;
+
+            File file = new File(this.context.getFilesDir() +"/"+ this.directoryName, this.fileName);
+            // inputStream = this.context.openFileInput(this.fileName);
+            inputStream =  new BufferedInputStream(new FileInputStream(file));
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                sb.append(line);
+            }
+            inputStream.close();
+
+            this.content = sb.toString();
+
+        } catch (Exception e) {
+            System.err.println("Error trying to load a file from memory: " + e.getMessage());
+            e.printStackTrace();
+            try {
+                throw e;
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+        }
         return this.content;
     }
 
@@ -48,15 +79,20 @@ public class AndroidPlatformDataFile implements PlatformDataFile {
 
     @Override
     public void persistToMedia() throws CantPersistFileException {
+        try {
 
-        File storagePath = new File(this.context.getFilesDir()+"/"+ this.directoryName);
+
+          String path = this.context.getFilesDir().toString();
+
+            if(this.directoryName != "")
+                path +="/"+ this.directoryName;
+
+
+        File storagePath = new File(path);
         storagePath.mkdirs();
         File file = new File(storagePath, fileName);
 
         OutputStream  outputStream;
-
-
-        try {
 
             //outputStream = this.context.openFileOutput( file.getPath(), Context.MODE_PRIVATE);
             outputStream =  new BufferedOutputStream(new FileOutputStream(file));
@@ -71,7 +107,7 @@ public class AndroidPlatformDataFile implements PlatformDataFile {
 
     @Override
     public void loadToMemory() throws CantLoadFileException {
-
+        try {
 // Create directory into internal memory;
 
         String path = this.context.getFilesDir() + "/" + this.directoryName;
@@ -89,9 +125,10 @@ public class AndroidPlatformDataFile implements PlatformDataFile {
             }
         }
 
+
         File file = new File(internalDir, this.fileName);
 
-        try {
+
             FileWriter fw = new FileWriter(file);
             fw.write(this.content);
             fw.close();
@@ -103,7 +140,7 @@ public class AndroidPlatformDataFile implements PlatformDataFile {
         }
 
 
-        FileInputStream inputStream;
+       /* FileInputStream inputStream;
 
         try {
             inputStream = this.context.openFileInput(this.fileName);
@@ -113,13 +150,13 @@ public class AndroidPlatformDataFile implements PlatformDataFile {
             System.err.println("Error trying to load a file to memory: " + e.getMessage());
             e.printStackTrace();
             throw new CantLoadFileException(this.fileName);
-        }
+        }*/
     }
 
     @Override
     public void loadFromMemory() throws CantLoadFileException {
 
-        FileInputStream inputStream;
+       /* FileInputStream inputStream;
         try {
             inputStream = this.context.openFileInput(this.fileName);
 
@@ -138,18 +175,19 @@ public class AndroidPlatformDataFile implements PlatformDataFile {
             System.err.println("Error trying to load a file to memory: " + e.getMessage());
             e.printStackTrace();
             throw new CantLoadFileException(this.fileName);
-        }
+        }*/
+
     }
 
     @Override
     public void loadFromMedia() throws CantPersistFileException {
 
-
+        try {
         File file = new File(this.context.getFilesDir() +"/"+ this.directoryName, this.fileName);
         InputStream inputStream ;
 
 
-        try {
+
             //inputStream = this.context.openFileInput(this.fileName);
             inputStream =  new BufferedInputStream(new FileInputStream(file));
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);

@@ -63,7 +63,7 @@ public class AndroidPluginDataFile implements PluginDataFile {
 
     @Override
     public void persistToMedia() throws CantPersistFileException {
-
+        try {
         File storagePath = new File(this.context.getFilesDir()+"/"+ this.directoryName);
         storagePath.mkdirs();
         File file = new File(storagePath, fileName);
@@ -71,8 +71,6 @@ public class AndroidPluginDataFile implements PluginDataFile {
         OutputStream outputStream;
 
         //encript file content with ownerId key
-
-        try {
 
             //outputStream = this.context.openFileOutput( file.getPath(), Context.MODE_PRIVATE);
             outputStream =  new BufferedOutputStream(new FileOutputStream(file));
@@ -86,7 +84,7 @@ public class AndroidPluginDataFile implements PluginDataFile {
     }
     @Override
     public void loadToMemory() throws CantLoadFileException {
-
+        try {
         String path = this.context.getFilesDir() + "/" + this.directoryName;
         File internalDir = new File(path);
 
@@ -104,7 +102,7 @@ public class AndroidPluginDataFile implements PluginDataFile {
 
         String encriptado = this.Encriptar(this.content);
         File file = new File(internalDir, this.fileName);
-        try {
+
             FileWriter fw = new FileWriter(file);
             fw.write(encriptado);
             fw.close();
@@ -131,9 +129,10 @@ public class AndroidPluginDataFile implements PluginDataFile {
 
     @Override
     public void loadFromMemory() throws CantLoadFileException {
+        try {
         File file = new File(this.context.getFilesDir() +"/"+ this.directoryName, this.fileName);
         InputStream inputStream;
-        try {
+
            // inputStream = this.context.openFileInput(this.fileName);
             inputStream =  new BufferedInputStream(new FileInputStream(file));
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
@@ -165,12 +164,12 @@ public class AndroidPluginDataFile implements PluginDataFile {
     @Override
     public void loadFromMedia() throws CantPersistFileException {
 
-
+        try {
         File file = new File(this.context.getFilesDir() +"/"+ this.directoryName, this.fileName);
         InputStream inputStream ;
 
 
-        try {
+
             //inputStream = this.context.openFileInput(this.fileName);
             inputStream =  new BufferedInputStream(new FileInputStream(file));
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
@@ -237,6 +236,7 @@ public class AndroidPluginDataFile implements PluginDataFile {
             base64EncryptedString = new String(plainText, "UTF-8");
 
         } catch (Exception ex) {
+            String strError = ex.getMessage();
         }
         return base64EncryptedString;
     }

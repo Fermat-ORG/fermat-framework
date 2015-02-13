@@ -84,10 +84,10 @@ public class MyApplication extends Application {
     }
 
 
-    private Platform mPlatform;
+    private static Platform mPlatform;
 
 
-    public Platform getPlatform() {
+    public static Platform getPlatform() {
         return mPlatform;
     }
 
@@ -96,26 +96,27 @@ public class MyApplication extends Application {
 
         mPlatform = new Platform();
 
-        try {
+        // try {
 
+        // mContext = this.getApplicationContext();
 
-            mPlatform.setOs(new AndroidOsAddonRoot());
-            mPlatform.start();
+        //  AndroidOsAddonRoot Os = new AndroidOsAddonRoot();
 
-            //Context mContext;
-            // mContext = this.getApplicationContext();
+        ///  Os.setContext(this);
+        //  mPlatform.setOs(Os);
+        //  mPlatform.start();
 
-            // File file = new File(mContext.getFilesDir(), "Platform_Last_State");
+        // File file = new File(mContext.getFilesDir(), "Platform_Last_State");
 
-            //Context context = getContext();
+        //Context context = getContext();
 
-            //Platform com.bitdubai.platform = new Platform(this.getApplicationContext());
-            // mPlatform = com.bitdubai.platform;
-        }
-        catch (CantStartPlatformException e) {
-            System.err.println("CantStartPlatformException: " + e.getMessage());
+        //Platform com.bitdubai.platform = new Platform(this.getApplicationContext());
+        // mPlatform = com.bitdubai.platform;
+        // }
+        // catch (CantStartPlatformException e) {
+        //   System.err.println("CantStartPlatformException: " + e.getMessage());
 
-        }
+        // }
 
     }
 
