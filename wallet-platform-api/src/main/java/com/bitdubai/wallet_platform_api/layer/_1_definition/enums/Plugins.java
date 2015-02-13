@@ -10,7 +10,8 @@ public enum Plugins {
     CLOUD_CHANNEL (801),
     USER_NETWORK_SERVICE (901),
     WALLET_MIDDLEWARE (1001),
-    WALLET_RUNTIME_MODULE (1101);
+    WALLET_RUNTIME_MODULE (1101),
+    WALLET_MANAGER_MODULE (1102);
 
     private final int index;
 

@@ -18,8 +18,8 @@ public class ModuleLayer implements PlatformLayer {
 
 
     Plugin mWalletRuntime;
-  /*
     Plugin mWalletManager;
+ /*
     Plugin mWalletPublisher;
     Plugin mWalletStore;
 */
@@ -27,10 +27,12 @@ public class ModuleLayer implements PlatformLayer {
         return mWalletRuntime;
     }
 /*
+
+ */
     public Plugin getWalletManager() {
         return mWalletManager;
     }
-    
+/*    
     public Plugin getmWalletPublisher() {
         return mWalletPublisher;
     }

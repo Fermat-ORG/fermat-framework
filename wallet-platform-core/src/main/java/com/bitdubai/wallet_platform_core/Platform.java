@@ -4,9 +4,11 @@ import com.bitdubai.wallet_platform_api.*;
 import com.bitdubai.wallet_platform_api.layer.CantStartLayerException;
 import com.bitdubai.wallet_platform_api.layer.PlatformLayer;
 
+import com.bitdubai.wallet_platform_api.layer._1_definition.enums.Addons;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.DeviceDirectory;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.PlatformFileName;
 import com.bitdubai.wallet_platform_api.layer._11_module.Modules;
+import com.bitdubai.wallet_platform_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.wallet_platform_api.layer._1_definition.event.DealWithEventMonitor;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventManager;
@@ -156,20 +158,42 @@ public class Platform  {
     }
 
 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     public void start() throws CantStartPlatformException {
 
+        
+
+        /**
+         * -----------------------------------------------------------------------------------------------------------
+         * Layers initialization
+         * -----------------------------------------------------------------------------------------------------------
+         * * * * 
+         */
+        
         /**
          * Here I will be starting all the platforms layers. It is required that none of them fails. That does not mean
          * that a layer will have at least one service to offer. It depends on each layer. If one believes its lack of
-         * services prevent the whole com.bitdubai.platform to start, then it will throw an exception that will effectively prevent the
-         * com.bitdubai.platform to start.
+         * services prevent the whole platform to start, then it will throw an exception that will effectively prevent 
+         * the platform to start.
          */
 
         try {
 
             mDefinitionLayer.start();
             mEventLayer.start();
-            //mOsLayer.start();
+            //mOsLayer.start(); // Due to an Android bug is not possible to handle this here.
             mUserLayer.start();
             mLicesnseLayer.start();
             mWorldLayer.start();
@@ -195,7 +219,68 @@ public class Platform  {
 
         
         
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
 
+        /**
+         * -----------------------------------------------------------------------------------------------------------
+         * Addons initialization
+         * -----------------------------------------------------------------------------------------------------------
+         * * * * 
+         */
+
+        
+
+        /**
+         * -----------------------------
+         * Addon Error Manager
+         * -----------------------------
+         * * * * 
+         */
+
+        
+        
+        // Loui TODO: Agregar el Error Manager de manera similar al event Manager. (Lo de pasarle el event Monitor no va)
+
+
+
+        /**
+         * -----------------------------
+         * Addon Event Manager
+         * -----------------------------
+         * * * * 
+         */
+
+        
+        
+        Service eventManager = (Service) ((PlatformServiceLayer) mEventLayer).getEventManager();
+        corePlatformContext.addAddon((Addon) eventManager, Addons.EVENT_MANAGER);
+
+        /**
+         * I will give the Event Monitor to the Event Manager, in order to allow it to monitor listeners exceptions.
+         */
+
+        ((DealWithEventMonitor) eventManager).setEventMonitor(eventMonitor);
+
+
+
+        /**
+         * -----------------------------
+         * Addon Os
+         * -----------------------------
+         * * * * 
+         */
+
+        
+        
         /**
          * The OS and Event Manager will need to be handled to several other objects.
          */
@@ -207,24 +292,61 @@ public class Platform  {
              */
 
             this.os  = ((OsLayer) mOsLayer).getOs();
+
+            /**
+             * I will set the osContext to the Os in order to enable access to the underlying Os objects.
+             */
+
+            os.setContext(this.osContext);
         }
 
-        Service eventManager = (Service) ((PlatformServiceLayer) mEventLayer).getEventManager();
 
+        
         /**
-         * I will give the Event Monitor to the Event Manager, in order to allow it to monitor listeners exceptions..
+         * -----------------------------
+         * Addon User Manager
+         * -----------------------------
+         * * * * 
+         */ 
+
+
+        
+        /**
+         * I will give the User Manager access to the File System so it can load and save user information from
+         * persistent media.
          */
 
-        ((DealWithEventMonitor) eventManager).setEventMonitor(eventMonitor);
+        Service userManager = (Service) ((UserLayer) mUserLayer).getUserManager();
 
+        ((DealsWithFileSystem) userManager).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) userManager).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addAddon((Addon) userManager, Addons.USER_MANAGER);
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         /**
-         * I will set the osContext to the Os in order to enable access to the underlying Os objects.
+         * -----------------------------------------------------------------------------------------------------------
+         * Plugins initialization
+         * -----------------------------------------------------------------------------------------------------------
+         * * * * 
          */
 
-        os.setContext(this.osContext);
-
         /**
-         * I will initialize the Plugin Manager
+         * I will initialize the Plugin Manager, the one who assigns identities to each plug in.
          */
 
         try
@@ -237,52 +359,32 @@ public class Platform  {
             throw new CantStartPlatformException();
         }
 
+
+
+        // Loui TODO: Falta el world Cryto Index
+        
+        
+
         /**
-         * I will give the User Manager access to the File System so it can load and save user information from
-         * persistent media.
+         * -----------------------------
+         * Plugin Bitcoin Crypto Network
+         * -----------------------------
+         * * * * 
          */
-
-        Service userManager = (Service) ((UserLayer) mUserLayer).getUserManager();
-
-        ((DealsWithFileSystem) userManager).setPluginFileSystem(os.getPlugInFileSystem());
-        ((DealsWithEvents) userManager).setEventManager((EventManager) eventManager);
         
-        try
-        {
-            /**
-             * As any other plugin, this one will need its identity in order to access the data he persisted before.
-             */
         
-            UUID pluginID = pluginsManager.getPluginId((Plugin) userManager);
-            ((Plugin) userManager).setId(pluginID);
-
-            userManager.start();
-        }
-        catch (PluginNotRecognizedException pluginNotRecognizedException)
-        {
-            /**
-             * In this case this exception means the platform cannot start, as it cannot work without and active user
-             * Manager.  
-             */
-            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
-            pluginNotRecognizedException.printStackTrace();
-
-            userManager.stop();
-            
-            throw new CantStartPlatformException();
-        }
-        
-
 
         /**
-         * I will give the Crypto Wallet Manager of each crypto network access to the File System and Event Manager so
-         * it can load and save and load information from persistent media and also raise events.
+         * I will give the plugin access to the File System so it can load and save and load information from persistent 
+         * media.
          */
 
         Service cryptoNetworkService = (Service) ((CryptoNetworkLayer) mCryptoNetworkLayer).getCryptoNetwork(CryptoNetworks.BITCOIN);
 
         ((DealsWithFileSystem) cryptoNetworkService).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) cryptoNetworkService).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin((Plugin) cryptoNetworkService, Plugins.BITCOIN_CRYPTO_NETWORK);
 
         try
         {
@@ -306,26 +408,45 @@ public class Platform  {
 
             cryptoNetworkService.stop();
         }
+
+
+
+
+        // Loui TODO: Falta el communication cloud (Plugin)
+
+
+
+        // Loui TODO: Falta el middleware wallet. (Plugin)
+        
+        
+
+        /**
+         * -----------------------------
+         * Plugin Wallet Manager
+         * -----------------------------
+         * * * * 
+         */
         
         
         
         /**
          * I will give the Wallet Manager access to the File System and to the Event Manager
          */
-/*
+
         Plugin walletManager =  ((ModuleLayer) mModuleLayer).getWalletManager();
 
         ((DealsWithFileSystem) walletManager).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) walletManager).setEventManager((EventManager) eventManager);
-*/
-/*
+
+        corePlatformContext.addPlugin((Plugin) walletManager, Plugins.WALLET_MANAGER_MODULE);
+        
         try
         {
-            */
+
             /**
              * As any other plugin, this one will need its identity in order to access the data it persisted before.
              */
-/*
+
             UUID pluginID = pluginsManager.getPluginId((Plugin) walletManager);
             ((Plugin) walletManager).setId(pluginID);
 
@@ -333,21 +454,43 @@ public class Platform  {
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
-          */
+          
             /**
              * The wallet manager is a critical component for the platform to run. Whiteout it there is no platform.
              */
-    /*
+    
             System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
             pluginNotRecognizedException.printStackTrace();
 
             throw new CantStartPlatformException();
         }
-    */
-        
+    
 
-        
-        
+
+
+
+
+// Loui TODO: Falta el wallet runtime. (Plugin)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /**
+         * -----------------------------------------------------------------------------------------------------------
+         * Recover last state
+         * -----------------------------------------------------------------------------------------------------------
+         * * * * 
+         */
         
         
         /**
