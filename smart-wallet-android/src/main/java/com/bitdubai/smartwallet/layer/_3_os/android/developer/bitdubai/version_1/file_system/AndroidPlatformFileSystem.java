@@ -2,6 +2,8 @@ package com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_
 
 import android.content.Context;
 
+import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.AndroidOsAddonRoot;
+import com.bitdubai.wallet_platform_api.Addon;
 import com.bitdubai.wallet_platform_api.layer._3_os.File_System.*;
 
 /**
@@ -11,10 +13,11 @@ public class AndroidPlatformFileSystem implements PlatformFileSystem {
     Context context;
     @Override
     public PlatformDataFile getFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException {
+
         AndroidPlatformDataFile newFile = new AndroidPlatformDataFile( this.context, directoryName,fileName, privacyLevel, lifeSpan);
 
         try {
-            newFile.loadFromMemory();
+            newFile.loadToMemory();
             return newFile;
         }
         catch (CantLoadFileException e){
@@ -32,6 +35,8 @@ public class AndroidPlatformFileSystem implements PlatformFileSystem {
 
     @Override
     public void setContext(Object context) {
+
         this.context = (Context)context;
+
     }
 }

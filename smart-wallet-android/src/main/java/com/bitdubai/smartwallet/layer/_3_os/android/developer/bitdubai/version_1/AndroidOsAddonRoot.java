@@ -35,6 +35,7 @@ public class AndroidOsAddonRoot implements Os {
         mContext = (Context) context;
         this.pluginFileSystem.setContext(context);
         this.pluginDatabaseSystem.setContext(context);
+        this.platformFileSystem.setContext(context);
     }
 
     @Override
