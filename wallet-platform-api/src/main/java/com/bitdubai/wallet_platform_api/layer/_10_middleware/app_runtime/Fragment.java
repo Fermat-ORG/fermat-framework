@@ -5,9 +5,9 @@ package com.bitdubai.wallet_platform_api.layer._10_middleware.app_runtime;
  */
 public interface Fragment {
 
-    public String getName();
+    public Fragments getType();
 
-    public void setName(String name);
+    public void setType(Fragments type);
 
 
 }

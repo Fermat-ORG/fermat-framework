@@ -3,6 +3,9 @@ package com.bitdubai.wallet_platform_core.layer._10_middleware.app_runtime.devel
 import com.bitdubai.wallet_platform_api.layer._10_middleware.app_runtime.Activities;
 import com.bitdubai.wallet_platform_api.layer._10_middleware.app_runtime.Activity;
 import com.bitdubai.wallet_platform_api.layer._10_middleware.app_runtime.Fragment;
+import com.bitdubai.wallet_platform_api.layer._10_middleware.app_runtime.Fragments;
+
+import java.util.Map;
 
 /**
  * Created by ciencias on 2/14/15.
@@ -10,14 +13,15 @@ import com.bitdubai.wallet_platform_api.layer._10_middleware.app_runtime.Fragmen
 public class RuntimeActivity implements Activity {
 
     Activities type;
+    Map<Fragments, Fragment> fragments;
+
 
     /**
      * RuntimeActivity interface implementation.
      */
 
-    public void addFragment (Fragment activity){
-
-
+    public void addFragment (Fragment fragment){
+        fragments.put(fragment.getType(), fragment);
     }
 
     /**
