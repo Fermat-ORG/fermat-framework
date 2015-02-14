@@ -93,7 +93,7 @@ public class MyApplication extends Application {
 
     public MyApplication () {
         super();
-
+/*
         mPlatform = new Platform();
 
          try {
@@ -118,7 +118,7 @@ public class MyApplication extends Application {
            System.err.println("CantStartPlatformException: " + e.getMessage());
 
          }
-
+*/
     }
 
     public static void setActionBarProperties(Activity activity, Window window,  PagerSlidingTabStrip pTabs, ActionBar pActionBar, Resources context,  TextView abTitle, String pTitle) {

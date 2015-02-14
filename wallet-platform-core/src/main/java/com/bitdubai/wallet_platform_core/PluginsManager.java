@@ -4,6 +4,7 @@ import com.bitdubai.wallet_platform_api.CantInitializePluginsManagerException;
 import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.PluginNotRecognizedException;
 import com.bitdubai.wallet_platform_api.layer._3_os.File_System.*;
+import com.bitdubai.wallet_platform_core.layer._10_middleware.app_runtime.developer.bitdubai.version_1.AppRuntimePluginRoot;
 import com.bitdubai.wallet_platform_core.layer._10_middleware.wallet.developer.bitdubai.version_1.WalletPluginRoot;
 import com.bitdubai.wallet_platform_core.layer._6_world.crypto_index.developer.bitdubai.version_1.CryptoIndexPluginRoot;
 import com.bitdubai.wallet_platform_core.layer._7_crypto_network.bitcoin.BitcoinSubsystem;
@@ -143,7 +144,7 @@ public class PluginsManager {
             {
                 CryptoIndexPluginRoot tryType;
                 tryType = (CryptoIndexPluginRoot) plugin;
-                pluginIndex = 1;
+                pluginIndex = 0;
             }
             catch (Exception e)
             {
@@ -158,7 +159,7 @@ public class PluginsManager {
             {
                 BitcoinCryptoNetworkPluginRoot tryType;
                 tryType = (BitcoinCryptoNetworkPluginRoot) plugin;
-                pluginIndex = 2;
+                pluginIndex = 1;
             }
             catch (Exception e)
             {
@@ -173,7 +174,7 @@ public class PluginsManager {
             {
                 CloudCommunicationChannelPluginRoot tryType;
                 tryType = (CloudCommunicationChannelPluginRoot) plugin;
-                pluginIndex = 3;
+                pluginIndex = 2;
             }
             catch (Exception e)
             {
@@ -188,7 +189,7 @@ public class PluginsManager {
             {
                 WalletPluginRoot tryType;
                 tryType = (WalletPluginRoot) plugin;
-                pluginIndex = 4;
+                pluginIndex = 3;
             }
             catch (Exception e)
             {
@@ -202,7 +203,7 @@ public class PluginsManager {
             {
                 WalletManagerPluginRoot tryType;
                 tryType = (WalletManagerPluginRoot) plugin;
-                pluginIndex = 5;
+                pluginIndex = 4;
             }
             catch (Exception e)
             {
@@ -216,6 +217,21 @@ public class PluginsManager {
             {
                 WalletRuntimePluginRoot tryType;
                 tryType = (WalletRuntimePluginRoot) plugin;
+                pluginIndex = 5;
+            }
+            catch (Exception e)
+            {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
+
+        if (pluginIndex == 0) {
+            try
+            {
+                AppRuntimePluginRoot tryType;
+                tryType = (AppRuntimePluginRoot) plugin;
                 pluginIndex = 6;
             }
             catch (Exception e)
@@ -225,9 +241,9 @@ public class PluginsManager {
                  */
             }
         }
-        
+
         if (pluginIndex > 0) {
-            return pluginIds.get(pluginIndex);
+              return pluginIds.get(pluginIndex);
         }
         else
         {

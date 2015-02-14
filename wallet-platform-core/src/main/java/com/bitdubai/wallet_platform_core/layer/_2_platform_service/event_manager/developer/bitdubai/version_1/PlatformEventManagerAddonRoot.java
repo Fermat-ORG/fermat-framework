@@ -28,6 +28,9 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
     private List<EventListener> listenersUserLoggedOutEvent = new ArrayList<>();
     private List<EventListener> listenersWalletCreatedEvent = new ArrayList<>();
     private List<EventListener> listenersWalletWentOnlineEvent = new ArrayList<>();
+    private List<EventListener> listenersWalletOpenedEvent = new ArrayList<>();
+    private List<EventListener> listenersWalletClosedEvent = new ArrayList<>();
+            
 
     EventMonitor eventMonitor;
 
@@ -89,9 +92,15 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
 
             case WALLET_CREATED:
                 return new WalletCreatedEventListener(EventType.WALLET_CREATED, this.eventMonitor);
-
+            
             case WALLET_WENT_ONLINE:
                 return new WalletWentOnlineEventListener(EventType.WALLET_WENT_ONLINE, this.eventMonitor);
+            
+            case WALLET_OPENED:
+                return new WalletOpenedEventListener(EventType.WALLET_OPENED, this.eventMonitor);
+            
+            case WALLET_CLOSED:
+                return new WalletClosedEventListener(EventType.WALLET_CLOSED, this.eventMonitor);
         }
         return null;
     }
@@ -115,6 +124,12 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
 
             case WALLET_WENT_ONLINE:
                 return new WalletWentOnlineEvent(EventType.WALLET_WENT_ONLINE);
+            
+            case WALLET_OPENED:
+                return new WalletOpenedEvent(EventType.WALLET_OPENED);
+            
+            case WALLET_CLOSED:
+                return new WalletClosedEvent(EventType.WALLET_CLOSED);
         }
         return null;
     }
@@ -144,6 +159,14 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
 
             case WALLET_WENT_ONLINE:
                 listenersWalletWentOnlineEvent.add(listener);
+                break;
+            
+            case WALLET_OPENED:
+                listenersWalletOpenedEvent.add(listener);
+                break;
+            
+            case WALLET_CLOSED:
+                listenersWalletClosedEvent.add(listener);
                 break;
 
         }
@@ -175,6 +198,15 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
             case WALLET_CREATED:
                 listeners = listenersWalletCreatedEvent;
                 break;
+            
+            case WALLET_OPENED:
+                listeners = listenersWalletOpenedEvent;
+                break;
+            
+            case WALLET_CLOSED:
+                listeners = listenersWalletClosedEvent;
+                break;
+            
         }
 
         listeners.remove(listener);
@@ -207,6 +239,14 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
 
             case WALLET_CREATED:
                 listeners = listenersWalletCreatedEvent;
+                break;
+
+            case WALLET_OPENED:
+                listeners = listenersWalletOpenedEvent;
+                break;
+
+            case WALLET_CLOSED:
+                listeners = listenersWalletClosedEvent;
                 break;
         }
 

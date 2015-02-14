@@ -5,6 +5,8 @@ import com.bitdubai.wallet_platform_api.layer.CantStartLayerException;
 import com.bitdubai.wallet_platform_api.layer.PlatformLayer;
 import com.bitdubai.wallet_platform_api.layer._11_module.CantStartSubsystemException;
 import com.bitdubai.wallet_platform_api.layer._11_module.ModuleSubsystem;
+import com.bitdubai.wallet_platform_plugin.layer._11_module.wallet_manager.WalletManagerSubsystem;
+import com.bitdubai.wallet_platform_plugin.layer._11_module.wallet_runtime.developer.WalletRuntimeSubsystem;
 /*
 import com.bitdubai.wallet_platform_core.layer._11_module.wallet_manager.WalletManagerSubsystem;
 import com.bitdubai.wallet_platform_core.layer._11_module.wallet_publisher.WalletPublisherSubsystem;
@@ -47,31 +49,31 @@ public class ModuleLayer implements PlatformLayer {
         /**
          * Let's try to start the wallet runtime subsystem.
          */
-        /*
+
         ModuleSubsystem walletRuntimeSubsystem = new WalletRuntimeSubsystem();
 
         try {
             walletRuntimeSubsystem.start();
-            mWalletRuntime = ((ModuleSubsystem) walletRuntimeSubsystem).getPlugin();
+            mWalletRuntime = walletRuntimeSubsystem.getPlugin();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());
         }
-        */
+
         /**
          * Let's try to start the wallet manager subsystem.
          */
-        /*
+
         ModuleSubsystem walletManagerSubsystem = new WalletManagerSubsystem();
 
         try {
-            walletRuntimeSubsystem.start();
-            mWalletManager = ((ModuleSubsystem) walletManagerSubsystem).getPlugin();
+            walletManagerSubsystem.start();
+            mWalletManager = walletManagerSubsystem.getPlugin();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());
         }
-        */
+
         /**
          * Let's try to start the wallet publisher subsystem.
          */

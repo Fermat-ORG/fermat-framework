@@ -26,9 +26,9 @@ public class LoginActivity extends Activity {
         Platform platform = MyApplication.getPlatform();
          Context mContext = this.getApplicationContext();
 
-          AndroidOsAddonRoot Os = new AndroidOsAddonRoot();
+         AndroidOsAddonRoot Os = new AndroidOsAddonRoot();
 
-          Os.setContext(this);
+         Os.setContext(this);
          platform.setOs(Os);
          platform.start();
 

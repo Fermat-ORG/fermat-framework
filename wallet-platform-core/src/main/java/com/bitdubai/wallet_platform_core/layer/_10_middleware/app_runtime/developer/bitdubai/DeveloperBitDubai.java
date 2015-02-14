@@ -1,14 +1,14 @@
-package com.bitdubai.wallet_platform_draft.layer._11_module.wallet_runtime.developer.bitdubai;
+package com.bitdubai.wallet_platform_core.layer._10_middleware.app_runtime.developer.bitdubai;
 
 import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.PluginDeveloper;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.TimeFrequency;
 import com.bitdubai.wallet_platform_api.layer._5_license.PluginLicensor;
-import com.bitdubai.wallet_platform_plugin.layer._11_module.wallet_runtime.developer.bitdubai.version_1.WalletRuntimePluginRoot;
+import com.bitdubai.wallet_platform_core.layer._10_middleware.app_runtime.developer.bitdubai.version_1.AppRuntimePluginRoot;
 
 /**
- * Created by ciencias on 21.01.15.
+ * Created by loui on 14/02/15.
  */
 public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
 
@@ -26,7 +26,7 @@ public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
          * it is easy to choose.
          */
 
-        plugin = new WalletRuntimePluginRoot();
+        plugin = new AppRuntimePluginRoot();
 
     }
 
@@ -49,4 +49,5 @@ public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
     public TimeFrequency getTimePeriod() {
         return TimeFrequency.MONTHLY;
     }
+
 }

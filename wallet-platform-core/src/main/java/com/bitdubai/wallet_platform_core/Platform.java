@@ -311,7 +311,7 @@ public class Platform  {
 
         Service userManager = (Service) ((UserLayer) mUserLayer).getUserManager();
 
-        ((DealsWithPluginFileSystem) userManager).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithPlatformFileSystem) userManager).setPlatformFileSystem(os.getPlatformFileSystem());
         ((DealsWithEvents) userManager).setEventManager((EventManager) eventManager);
 
         corePlatformContext.addAddon((Addon) userManager, Addons.USER_MANAGER);
@@ -416,7 +416,6 @@ public class Platform  {
          * I will give the plugin access to the File System so it can load and save and load information from persistent 
          * media.
          */
-// Luis TODO: Debugear desde aca - en la proxima linea da error,
         Plugin cryptoNetworkService = ((CryptoNetworkLayer) mCryptoNetworkLayer).getCryptoNetwork(CryptoNetworks.BITCOIN);
 
         ((DealsWithPluginFileSystem) cryptoNetworkService).setPluginFileSystem(os.getPlugInFileSystem());
@@ -490,6 +489,44 @@ public class Platform  {
             throw new CantStartPlatformException();
         }
 
+
+        /**
+         * -------------------------------
+         * Plugin App Runtime Middleware 
+         * -------------------------------
+         * * * * 
+         */
+
+        Plugin appRuntimeMiddleware = ((MiddlewareLayer) mMiddlewareayer).getmAppRuntimePlugin();
+
+        ((DealsWithPluginFileSystem) appRuntimeMiddleware).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) appRuntimeMiddleware).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(appRuntimeMiddleware, Plugins.APP_RUNTIME_MIDDLEWARE);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsManager.getPluginId(appRuntimeMiddleware);
+            (appRuntimeMiddleware).setId(pluginID);
+
+            ((Service) appRuntimeMiddleware).start();
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
+        
         
 
         /**
