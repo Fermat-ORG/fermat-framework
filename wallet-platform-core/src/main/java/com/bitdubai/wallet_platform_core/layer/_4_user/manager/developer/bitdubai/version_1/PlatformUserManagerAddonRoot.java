@@ -234,7 +234,7 @@ public class PlatformUserManagerAddonRoot implements Service, UserManager, Deals
     
     
     
-    private void recoverLastState () {
+    private void recoverLastState () throws CantCreateUserException {
 
         try {
 
@@ -286,16 +286,16 @@ public class PlatformUserManagerAddonRoot implements Service, UserManager, Deals
              * 3) Save the last state of the platform.
              */
 
-            User newUser;
+            User newUser = this.createUser();
+
 
             try {
 
-                newUser = ((UserManager) this).createUser();
                 newUser.login("");
 
                 // Luis TODO; como se conecta esto con el communication layer que usa el usuario logeado del Platform Context?
 
-            } catch (CantCreateUserException | LoginFailedException exception) {
+            } catch (LoginFailedException exception) {
                 /**
                  * This really should never happen. But if it does...
                  */

@@ -15,7 +15,7 @@ import java.util.UUID;
 /**
  * Created by ciencias on 22.01.15.
  */
-public class PlatformUser implements User,DealsWithPlatformFileSystem, DealsWithEvents, DealsWithErrors, DealsWithPluginIdentity {
+public class PlatformUser implements User,DealsWithPlatformFileSystem, DealsWithEvents, DealsWithErrors {
 
     /**
      * User Interface member variables.
@@ -38,7 +38,6 @@ public class PlatformUser implements User,DealsWithPlatformFileSystem, DealsWith
     /**
      * DealsWithPluginIdentity Interface member variables.
      */
-    UUID pluginId;
 
     /**
      * User Interface implementation.
@@ -178,8 +177,7 @@ public class PlatformUser implements User,DealsWithPlatformFileSystem, DealsWith
 
     private void persist() throws CantPersistUserException{
 
-        PluginDataFile file = this.pluginFileSystem.createDataFile(
-                pluginId,
+        PlatformDataFile file = this.platformFileSystem.createFile(
                 DeviceDirectory.LOCAL_USERS.getName(),
                 this.userId.toString(),
                 FilePrivacy.PRIVATE,
@@ -206,8 +204,7 @@ public class PlatformUser implements User,DealsWithPlatformFileSystem, DealsWith
 
         try {
             
-            PluginDataFile file = this.pluginFileSystem.getDataFile(
-                    pluginId,
+            PlatformDataFile file = this.platformFileSystem.getFile(
                     DeviceDirectory.LOCAL_USERS.getName(),
                     this.userId.toString(),
                     FilePrivacy.PRIVATE,
@@ -222,7 +219,7 @@ public class PlatformUser implements User,DealsWithPlatformFileSystem, DealsWith
             this.password = values[1];
 
         }
-        catch (FileNotFoundException |CantLoadFileException | WrongOwnerIdException ex)
+        catch (FileNotFoundException |CantLoadFileException  ex)
         {
             /**
              * This is bad, but lets handle it...
@@ -238,8 +235,4 @@ public class PlatformUser implements User,DealsWithPlatformFileSystem, DealsWith
      * DealsWithPluginIdentity methods implementation.
      */
 
-    @Override
-    public void setPluginId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
 }
