@@ -4,14 +4,8 @@ package com.bitdubai.wallet_platform_core.layer._10_middleware.app_runtime.devel
  * Created by ciencias on 2/14/15.
  */
 
-import com.bitdubai.wallet_platform_api.layer._10_middleware.app_runtime.Activities;
-import com.bitdubai.wallet_platform_api.layer._10_middleware.app_runtime.Apps;
-import com.bitdubai.wallet_platform_api.layer._10_middleware.app_runtime.Fragments;
-import com.bitdubai.wallet_platform_api.layer._10_middleware.app_runtime.SubApps;
-import com.bitdubai.wallet_platform_core.layer._10_middleware.app_runtime.developer.bitdubai.version_1.structure.RuntimeActivity;
-import com.bitdubai.wallet_platform_core.layer._10_middleware.app_runtime.developer.bitdubai.version_1.structure.RuntimeApp;
-import com.bitdubai.wallet_platform_core.layer._10_middleware.app_runtime.developer.bitdubai.version_1.structure.RuntimeFragment;
-import com.bitdubai.wallet_platform_core.layer._10_middleware.app_runtime.developer.bitdubai.version_1.structure.RuntimeSubApp;
+import com.bitdubai.wallet_platform_api.layer._10_middleware.app_runtime.*;
+import com.bitdubai.wallet_platform_core.layer._10_middleware.app_runtime.developer.bitdubai.version_1.structure.*;
 
 /**
  * The App Runtime is the module in charge of the UI navigation structure. A user is always at a certain point in this 
@@ -19,7 +13,9 @@ import com.bitdubai.wallet_platform_core.layer._10_middleware.app_runtime.develo
  */
 
 
-
+/**
+ * A Navigation stack is maintained by this plugin to allow the user to go back all the stack down to the root if necessary.
+ */
 
 
 
@@ -59,6 +55,7 @@ public class AppRuntimePluginRoot {
         RuntimeSubApp subApp;
         RuntimeActivity runtimeActivity;
         RuntimeFragment runtimeFragment;
+        RuntimeWallet runtimeWallet;
 
         runtimeApp = new RuntimeApp();
 
@@ -111,9 +108,13 @@ public class AppRuntimePluginRoot {
         subApp.setType(SubApps.CWP_WALLET_RUNTIME);
         runtimeApp.addSubApp(subApp);
 
+        runtimeWallet = new RuntimeWallet();
+        runtimeWallet.setType(Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL);
+        subApp.addWallet(runtimeWallet);
+
         runtimeActivity= new RuntimeActivity();
-        runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL);
-        subApp.addActivity(runtimeActivity);
+        runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_MAIN);
+        runtimeWallet.addActivity(runtimeActivity);
 
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_PROFILE);
