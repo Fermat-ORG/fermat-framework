@@ -13,18 +13,19 @@ public class RuntimeFragment implements Fragment {
     /**
      * RuntimeFragment interface implementation.
      */
-
+    public void setType(Fragments type) {
+        this.type = type;
+    }
 
 
     /**
      * SubApp interface implementation.
      */
 
+    @Override
     public Fragments getType() {
         return type;
     }
 
-    public void setType(Fragments type) {
-        this.type = type;
-    }
+
 }

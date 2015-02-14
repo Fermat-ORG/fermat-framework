@@ -134,7 +134,7 @@ public class AppRuntimePluginRoot implements Service, MiddlewareEngine, DealsWit
     }
     
     /**
-     * DealsWithPluginIdentity methods implmentation. 
+     * DealsWithPluginIdentity methods implementation. 
      */
     
     @Override
@@ -168,6 +168,10 @@ public class AppRuntimePluginRoot implements Service, MiddlewareEngine, DealsWit
         RuntimeActivity runtimeActivity;
         RuntimeFragment runtimeFragment;
         RuntimeWallet runtimeWallet;
+        RuntimeTitleBar runtimeTitleBar;
+        RuntimeSideMenu runtimeSideMenu;
+        RuntimeMainMenu runtimeMainMenu;
+        RuntimeMenuItem runtimeMenuItem;
 
         runtimeApp = new RuntimeApp();
 
@@ -227,6 +231,19 @@ public class AppRuntimePluginRoot implements Service, MiddlewareEngine, DealsWit
         runtimeActivity= new RuntimeActivity();
         runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_MAIN);
         runtimeWallet.addActivity(runtimeActivity);
+
+        runtimeTitleBar = new RuntimeTitleBar();
+        runtimeTitleBar.setLabel("Kids Wallet");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeSideMenu = new RuntimeSideMenu();
+        
+        runtimeMenuItem = new RuntimeMenuItem();
+        runtimeMenuItem.setLabel("Menu item 1");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_MAIN); // Solo es un ej.
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        
+        runtimeActivity.setSideMenu(runtimeSideMenu);
 
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_PROFILE);

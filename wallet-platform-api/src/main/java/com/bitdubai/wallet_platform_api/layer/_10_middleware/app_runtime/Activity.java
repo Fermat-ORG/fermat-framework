@@ -7,6 +7,6 @@ public interface Activity {
 
     public Activities getType();
 
-    public void setType(Activities type);
-    
+
+
 }

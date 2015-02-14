@@ -7,7 +7,7 @@ public interface Fragment {
 
     public Fragments getType();
 
-    public void setType(Fragments type);
+
 
 
 }

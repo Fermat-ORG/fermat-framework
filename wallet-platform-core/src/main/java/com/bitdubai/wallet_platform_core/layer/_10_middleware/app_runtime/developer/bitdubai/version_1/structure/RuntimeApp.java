@@ -18,6 +18,10 @@ public class RuntimeApp implements App {
     /**
      * RuntimeApp interface implementation.
      */
+
+    public void setType(Apps type) {
+        this.type = type;
+    }
     
     public void addSubApp (SubApp subApp){
         subApps.put(subApp.getType(), subApp);
@@ -28,13 +32,17 @@ public class RuntimeApp implements App {
      * App interface implementation.
      */
 
+    @Override
     public Apps getType() {
         return type;
     }
 
-    public void setType(Apps type) {
-        this.type = type;
+    @Override
+    public Map<SubApps, SubApp> getSubApps(){
+        return subApps;
     }
+            
+    
 
     
     

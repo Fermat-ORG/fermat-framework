@@ -20,6 +20,10 @@ public class RuntimeWallet implements Wallet {
      * RuntimeWallet interface implementation.
      */
 
+    public void setType(Wallets type) {
+        this.type = type;
+    }
+    
     public void addActivity (Activity activity){
         activities.put(activity.getType(), activity);
     }
@@ -30,11 +34,10 @@ public class RuntimeWallet implements Wallet {
      * Wallet interface implementation.
      */
 
+    @Override
     public Wallets getType() {
         return type;
     }
 
-    public void setType(Wallets type) {
-        this.type = type;
-    }
+
 }
