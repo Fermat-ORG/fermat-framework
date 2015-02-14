@@ -21,7 +21,7 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.app_activity_main);
 
-
+/*
  try {
         Platform platform = MyApplication.getPlatform();
          Context mContext = this.getApplicationContext();
@@ -38,7 +38,7 @@ public class LoginActivity extends Activity {
          System.err.println("CantStartPlatformException: " + e.getMessage());
 
         }
-
+*/
         /**
          * Get access to the com.bitdubai.platform.
          */

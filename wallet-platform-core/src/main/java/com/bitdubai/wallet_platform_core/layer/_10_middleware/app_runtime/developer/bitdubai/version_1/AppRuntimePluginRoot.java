@@ -313,7 +313,9 @@ public class AppRuntimePluginRoot implements Service, MiddlewareEngine, AppRunti
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_COMMUNITY);
         runtimeActivity.addFragment(runtimeFragment);
-        
+        /**
+         * End of Wallet Kids fragments.
+         * */
         
         
         runtimeSubApp = new RuntimeSubApp();
@@ -327,10 +329,207 @@ public class AppRuntimePluginRoot implements Service, MiddlewareEngine, AppRunti
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_STORE_MAIN);
         runtimeActivity.addFragment(runtimeFragment);
+
+
+        runtimeWallet = new RuntimeWallet();
+        runtimeWallet.setType(Wallets.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI);
+        runtimeSubApp.addWallet(runtimeWallet);
+
+
+        runtimeActivity= new RuntimeActivity();
+        runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_MAIN);
+        runtimeSubApp.addActivity(runtimeActivity);
+
+        runtimeTitleBar = new RuntimeTitleBar();
+        runtimeTitleBar.setLabel("Adults Wallet");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeSideMenu = new RuntimeSideMenu();
+
+        runtimeMenuItem = new RuntimeMenuItem();
+        runtimeMenuItem.setLabel("Contacts");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new RuntimeMenuItem();
+        runtimeMenuItem.setLabel("Accounts");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_ACCOUNTS);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new RuntimeMenuItem();
+        runtimeMenuItem.setLabel("Banks");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_BANKS);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new RuntimeMenuItem();
+        runtimeMenuItem.setLabel("Coupons");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_COUPONS);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new RuntimeMenuItem();
+        runtimeMenuItem.setLabel("Discounts");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_DISCOUNTS);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new RuntimeMenuItem();
+        runtimeMenuItem.setLabel("Vouchers");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_VOUCHERS);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new RuntimeMenuItem();
+        runtimeMenuItem.setLabel("Gift Cards");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_GIFT_CARDS);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new RuntimeMenuItem();
+        runtimeMenuItem.setLabel("Clones");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CLONES);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new RuntimeMenuItem();
+        runtimeMenuItem.setLabel("Childs");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CHILDS);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new RuntimeMenuItem();
+        runtimeMenuItem.setLabel("Exit");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_MANAGER_MAIN);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
         
+        runtimeActivity.setSideMenu(runtimeSideMenu);
+
+        runtimeTabStrip = new RuntimeTabStrip();
+
+        runtimeTabStrip.addTab("Home");
+        runtimeTabStrip.addTab("Balance");
+        runtimeTabStrip.addTab("Send");
+        runtimeTabStrip.addTab("Receive");
+        runtimeTabStrip.addTab("Shops");
+        runtimeTabStrip.addTab("Refill");
+        runtimeTabStrip.addTab("Discounts");
+
+        runtimeFragment = new RuntimeFragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_HOME);
+        runtimeActivity.addFragment(runtimeFragment);
+
+        runtimeFragment = new RuntimeFragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_BALANCE);
+        runtimeActivity.addFragment(runtimeFragment);
+
+        runtimeFragment = new RuntimeFragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SEND);
+        runtimeActivity.addFragment(runtimeFragment);
+
+        runtimeFragment = new RuntimeFragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_RECEIVE);
+        runtimeActivity.addFragment(runtimeFragment);
+
+        runtimeFragment = new RuntimeFragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOPS);
+        runtimeActivity.addFragment(runtimeFragment);
+
+        runtimeFragment = new RuntimeFragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_REFFIL);
+        runtimeActivity.addFragment(runtimeFragment);
+
+        runtimeFragment = new RuntimeFragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_DISCOUNTS);
+        runtimeActivity.addFragment(runtimeFragment);
+        /**
+         * End of Wallet Adults tabs.
+         */
         
+        runtimeActivity= new RuntimeActivity();
+        runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_SHOPS);
+        runtimeSubApp.addActivity(runtimeActivity);
+        
+        runtimeTabStrip = new RuntimeTabStrip();
+
+        runtimeTabStrip.addTab("Shop");
+        runtimeTabStrip.addTab("Products");
+        runtimeTabStrip.addTab("Reviews");
+        runtimeTabStrip.addTab("Chat");
+        runtimeTabStrip.addTab("History");
+        runtimeTabStrip.addTab("Map");
+
+        runtimeFragment = new RuntimeFragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_SHOP);
+        runtimeActivity.addFragment(runtimeFragment);
+
+        runtimeFragment = new RuntimeFragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_PRODUCTS);
+        runtimeActivity.addFragment(runtimeFragment);
+
+        runtimeFragment = new RuntimeFragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_REVIEWS);
+        runtimeActivity.addFragment(runtimeFragment);
+
+        runtimeFragment = new RuntimeFragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_CHAT);
+        runtimeActivity.addFragment(runtimeFragment);
+
+        runtimeFragment = new RuntimeFragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_HISTORY);
+        runtimeActivity.addFragment(runtimeFragment);
+
+        runtimeFragment = new RuntimeFragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_MAP);
+        runtimeActivity.addFragment(runtimeFragment);
+        /**
+         * End of SHOPS tabs.
+         */
+        
+        runtimeActivity= new RuntimeActivity();
+        runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_REFFILS);
+        runtimeSubApp.addActivity(runtimeActivity);
+//-----------------------------------------------------------------------------------
+        runtimeActivity= new RuntimeActivity();
+        runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED);
+        runtimeSubApp.addActivity(runtimeActivity);
+
+        runtimeFragment = new RuntimeFragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED);
+        runtimeActivity.addFragment(runtimeFragment);
+//------------------------------------------------------------------------------------
+        runtimeActivity= new RuntimeActivity();
+        runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_REQUEST_SEND);
+        runtimeSubApp.addActivity(runtimeActivity);
+        
+        runtimeFragment = new RuntimeFragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_ADULTS_ALL_REQUEST_SEND);
+        runtimeActivity.addFragment(runtimeFragment);        
+//-----------------------------------------------------------------------------------
+        runtimeActivity= new RuntimeActivity();
+        runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_ACCOUNTS);
+        runtimeSubApp.addActivity(runtimeActivity);
+
+
+
+
+        runtimeTabStrip = new RuntimeTabStrip();
+
+        runtimeTabStrip.addTab("Debits");
+        runtimeTabStrip.addTab("Credits");
+        runtimeTabStrip.addTab("All");
+
+
+        runtimeFragment = new RuntimeFragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_DEBITS);
+        runtimeActivity.addFragment(runtimeFragment);
+
+        runtimeFragment = new RuntimeFragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNT_CREDITS);
+        runtimeActivity.addFragment(runtimeFragment);
+
+        runtimeFragment = new RuntimeFragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_ALL);
+        runtimeActivity.addFragment(runtimeFragment);
+
+        /**
+         * End of Wallet Accounts tabs.
+         */
+
         
     }
-
 
 }
