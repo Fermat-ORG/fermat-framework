@@ -9,7 +9,7 @@ import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventHandler;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventListener;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventManager;
-import com.bitdubai.wallet_platform_api.layer._3_os.File_System.DealsWithFileSystem;
+import com.bitdubai.wallet_platform_api.layer._3_os.File_System.DealsWithPluginFileSystem;
 import com.bitdubai.wallet_platform_api.layer._3_os.File_System.PluginFileSystem;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import java.util.UUID;
 /**
  * Created by loui on 12/02/15.
  */
-public class CryptoIndexPluginRoot implements Service, DealsWithEvents, DealsWithErrors, DealsWithFileSystem, Plugin {
+public class CryptoIndexPluginRoot implements Service, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
     
     /**
      * PlatformService Interface member variables.

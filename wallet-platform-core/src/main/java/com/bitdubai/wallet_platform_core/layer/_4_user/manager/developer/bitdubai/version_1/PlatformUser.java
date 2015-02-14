@@ -15,7 +15,7 @@ import java.util.UUID;
 /**
  * Created by ciencias on 22.01.15.
  */
-public class PlatformUser implements User,DealsWithFileSystem, DealsWithEvents, DealsWithErrors, DealsWithPluginIdentity {
+public class PlatformUser implements User,DealsWithPlatformFileSystem, DealsWithEvents, DealsWithErrors, DealsWithPluginIdentity {
 
     /**
      * User Interface member variables.
@@ -26,9 +26,9 @@ public class PlatformUser implements User,DealsWithFileSystem, DealsWithEvents, 
     UserStatus status;
 
     /**
-     * UsesFileSystem Interface member variables.
+     * DealsWithPlatformFileSystem Interface member variables.
      */
-    PluginFileSystem pluginFileSystem;
+    PlatformFileSystem platformFileSystem;
 
     /**
      * DealWithEvents Interface member variables.
@@ -131,12 +131,12 @@ public class PlatformUser implements User,DealsWithFileSystem, DealsWithEvents, 
 
 
     /**
-     * UsesFileSystem Interface implementation.
+     * DealsWithPlatformFileSystem Interface implementation.
      */
 
     @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
+    public void setPlatformFileSystem(PlatformFileSystem platformFileSystem) {
+        this.platformFileSystem = platformFileSystem;
     }
 
 

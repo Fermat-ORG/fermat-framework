@@ -1,7 +1,11 @@
 package com.bitdubai.wallet_platform_core.layer._4_user.manager.developer.bitdubai.version_1;
 
 import com.bitdubai.wallet_platform_api.Addon;
+import com.bitdubai.wallet_platform_api.CantStartPlatformException;
 import com.bitdubai.wallet_platform_api.Service;
+import com.bitdubai.wallet_platform_api.layer._11_module.Modules;
+import com.bitdubai.wallet_platform_api.layer._1_definition.enums.DeviceDirectory;
+import com.bitdubai.wallet_platform_api.layer._1_definition.enums.PlatformFileName;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.ErrorManager;
@@ -9,12 +13,12 @@ import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventManager;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventHandler;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventListener;
-import com.bitdubai.wallet_platform_api.layer._3_os.File_System.PluginFileSystem;
-import com.bitdubai.wallet_platform_api.layer._3_os.File_System.DealsWithFileSystem;
+import com.bitdubai.wallet_platform_api.layer._3_os.File_System.*;
 import com.bitdubai.wallet_platform_api.layer._4_user.manager.CantCreateUserException;
 import com.bitdubai.wallet_platform_api.layer._4_user.manager.CantLoadUserException;
 import com.bitdubai.wallet_platform_api.layer._4_user.User;
 import com.bitdubai.wallet_platform_api.layer._4_user.UserManager;
+import com.bitdubai.wallet_platform_api.layer._4_user.manager.LoginFailedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +34,7 @@ import java.util.UUID;
  * It is responsible for login in users to the current device.
  */
 
-public class PlatformUserManagerAddonRoot implements Service, UserManager,DealsWithFileSystem, DealsWithEvents, DealsWithErrors, Addon {
+public class PlatformUserManagerAddonRoot implements Service, UserManager, DealsWithPlatformFileSystem, DealsWithEvents, DealsWithErrors, Addon {
 
     /**
      * PlatformService Interface member variables.
@@ -44,9 +48,9 @@ public class PlatformUserManagerAddonRoot implements Service, UserManager,DealsW
     User mLoggedInUser;
 
     /**
-     * UsesFileSystem Interface member variables.
+     * DealsWithPlatformFileSystem Interface member variables.
      */
-    PluginFileSystem pluginFileSystem;
+    PlatformFileSystem platformFileSystem;
 
     /**
      * DealWithEvents Interface member variables.
@@ -66,8 +70,26 @@ public class PlatformUserManagerAddonRoot implements Service, UserManager,DealsW
     @Override
     public void start() {
 
+
         /**
-         * I will initialize the handling of com.bitdubai.platform events.
+         * Now I will recover the last state, If there was a user logged in before closing the APP the last time, I will
+         * re-loggin it,  
+         */
+
+
+        /**
+         * If there is no last state file, I assume this is the first time the platform is running on this device.
+         * Under this situation I will do the following;
+         *
+         * 1) Create a new User with no password.
+         * 2) Auto login that user.
+         * 3) Save the last state for future use.
+         */
+        
+        
+        
+        /**
+         * I will initialize the handling of platform events.
          */
 
         EventListener eventListener;
@@ -135,7 +157,7 @@ public class PlatformUserManagerAddonRoot implements Service, UserManager,DealsW
         try
         {
             User user = new PlatformUser();
-            ((DealsWithFileSystem) user).setPluginFileSystem(this.pluginFileSystem);
+            ((DealsWithPlatformFileSystem) user).setPlatformFileSystem(this.platformFileSystem);
             user.createUser();
 
             return user;
@@ -158,7 +180,7 @@ public class PlatformUserManagerAddonRoot implements Service, UserManager,DealsW
         try
         {
             User user = new PlatformUser();
-            ((DealsWithFileSystem) user).setPluginFileSystem(this.pluginFileSystem);
+            ((DealsWithPlatformFileSystem) user).setPlatformFileSystem(this.platformFileSystem);
             user.loadUser(id);
 
             mLoggedInUser = user;
@@ -184,12 +206,12 @@ public class PlatformUserManagerAddonRoot implements Service, UserManager,DealsW
 
 
     /**
-     * UsesFileSystem Interface implementation.
+     * DealsWithPlatformFileSystem Interface implementation.
      */
 
     @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
+    public void setPlatformFileSystem(PlatformFileSystem platformFileSystem) {
+        this.platformFileSystem = platformFileSystem;
     }
 
     /**
@@ -209,4 +231,102 @@ public class PlatformUserManagerAddonRoot implements Service, UserManager,DealsW
 
     }
 
+    
+    
+    
+    private void recoverLastState () {
+
+        try {
+
+            PlatformDataFile platformStateFile =  this.platformFileSystem.getFile(
+                    DeviceDirectory.PLATFORM.getName(),
+                    PlatformFileName.LAST_STATE.getFileName(),
+                    FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT
+            );
+
+            try {
+                platformStateFile.loadToMemory();
+            }
+            catch (CantLoadFileException cantLoadFileException) {
+                /**
+                 * This really should never happen. But if it does...
+                 */
+                System.err.println("CantLoadFileException: " + cantLoadFileException.getMessage());
+                cantLoadFileException.printStackTrace();
+               // throw new CantStartPlatformException();  TODO: Luis checkear esto
+            }
+
+            UUID userId =  UUID.fromString(platformStateFile.getContent());
+
+            // Luis TODO: de aca tiene que sacar no solo el usuario sino tambien el modulo donde estuvo por ultima vez
+
+            try
+            {
+                ((UserManager) this).loadUser(userId);
+            }
+            catch (CantLoadUserException cantLoadUserException)
+            {
+                /**
+                 * This really should never happen. But if it does...
+                 */
+                System.err.println("CantLoadUserException: " + cantLoadUserException.getMessage());
+                cantLoadUserException.printStackTrace();
+                // throw new CantStartPlatformException();  TODO: Luis checkear esto
+            }
+
+        }
+        catch (FileNotFoundException fileNotFoundException)
+        {
+            /**
+             * If there is no last state file, I assume this is the first time the platform is running on this device.
+             * Under this situation I will do the following;
+             *
+             * 1) Create a new User with no password.
+             * 2) Auto login that user.
+             * 3) Save the last state of the platform.
+             */
+
+            User newUser;
+
+            try {
+
+                newUser = ((UserManager) this).createUser();
+                newUser.login("");
+
+                // Luis TODO; como se conecta esto con el communication layer que usa el usuario logeado del Platform Context?
+
+            } catch (CantCreateUserException | LoginFailedException exception) {
+                /**
+                 * This really should never happen. But if it does...
+                 */
+                System.err.println("LoginFailedException or CantCreateUserException: " + exception.getMessage());
+                exception.printStackTrace();
+                // throw new CantStartPlatformException();  TODO: Luis checkear esto
+            }
+
+            PlatformDataFile platformStateFile =  this.platformFileSystem.createFile(
+                    DeviceDirectory.PLATFORM.getName(),
+                    PlatformFileName.LAST_STATE.getFileName(),
+                    FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT
+            );
+
+            String content = newUser.getId().toString() + ";" + Modules.WALLET_RUNTIME.getModuleName();
+
+            platformStateFile.setContent(content);
+
+            try {
+                platformStateFile.persistToMedia();
+            } catch (CantPersistFileException cantPersistFileException) {
+                /**
+                 * This really should never happen. But if it does...
+                 */
+                System.err.println("Cant persist com.bitdubai.platform state to media: " + cantPersistFileException.getMessage());
+                cantPersistFileException.printStackTrace();
+                // throw new CantStartPlatformException();  TODO: Luis checkear esto
+            }
+        }
+
+
+    }
+    
 }

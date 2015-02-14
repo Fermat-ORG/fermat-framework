@@ -5,25 +5,17 @@ import com.bitdubai.wallet_platform_api.layer.CantStartLayerException;
 import com.bitdubai.wallet_platform_api.layer.PlatformLayer;
 
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.Addons;
-import com.bitdubai.wallet_platform_api.layer._1_definition.enums.DeviceDirectory;
-import com.bitdubai.wallet_platform_api.layer._1_definition.enums.PlatformFileName;
-import com.bitdubai.wallet_platform_api.layer._11_module.Modules;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.wallet_platform_api.layer._1_definition.event.DealWithEventMonitor;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventManager;
 import com.bitdubai.wallet_platform_api.layer._3_os.*;
 import com.bitdubai.wallet_platform_api.layer._3_os.File_System.*;
-import com.bitdubai.wallet_platform_api.layer._4_user.User;
-import com.bitdubai.wallet_platform_api.layer._4_user.UserManager;
 import com.bitdubai.wallet_platform_core.layer._2_platform_service.PlatformServiceLayer;
 
 import com.bitdubai.wallet_platform_core.layer._1_definition.DefinitionLayer;
 import com.bitdubai.wallet_platform_core.layer._3_os.OsLayer;
 import com.bitdubai.wallet_platform_core.layer._4_user.UserLayer;
-import com.bitdubai.wallet_platform_api.layer._4_user.manager.CantCreateUserException;
-import com.bitdubai.wallet_platform_api.layer._4_user.manager.CantLoadUserException;
-import com.bitdubai.wallet_platform_api.layer._4_user.manager.LoginFailedException;
 import com.bitdubai.wallet_platform_core.layer._5_license.LicenseLayer;
 import com.bitdubai.wallet_platform_core.layer._6_world.WorldLayer;
 import com.bitdubai.wallet_platform_core.layer._7_crypto_network.CryptoNetworkLayer;
@@ -319,7 +311,7 @@ public class Platform  {
 
         Service userManager = (Service) ((UserLayer) mUserLayer).getUserManager();
 
-        ((DealsWithFileSystem) userManager).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithPluginFileSystem) userManager).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) userManager).setEventManager((EventManager) eventManager);
 
         corePlatformContext.addAddon((Addon) userManager, Addons.USER_MANAGER);
@@ -385,7 +377,7 @@ public class Platform  {
 
         Plugin WorldService = ((WorldLayer)  mWorldLayer).getmCryptoIndex();
 
-        ((DealsWithFileSystem) WorldService).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithPluginFileSystem) WorldService).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) WorldService).setEventManager((EventManager) eventManager);
 
         corePlatformContext.addPlugin(WorldService, Plugins.CRYPTO_INDEX);
@@ -427,7 +419,7 @@ public class Platform  {
 // Luis TODO: Debugear desde aca - en la proxima linea da error,
         Plugin cryptoNetworkService = ((CryptoNetworkLayer) mCryptoNetworkLayer).getCryptoNetwork(CryptoNetworks.BITCOIN);
 
-        ((DealsWithFileSystem) cryptoNetworkService).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithPluginFileSystem) cryptoNetworkService).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) cryptoNetworkService).setEventManager((EventManager) eventManager);
 
         corePlatformContext.addPlugin(cryptoNetworkService, Plugins.BITCOIN_CRYPTO_NETWORK);
@@ -472,7 +464,7 @@ public class Platform  {
         
         Plugin cloudCommunication = ((CommunicationLayer) mCommunicationLayer).getCloudPlugin();
         
-        ((DealsWithFileSystem) cloudCommunication).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithPluginFileSystem) cloudCommunication).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) cloudCommunication).setEventManager((EventManager) eventManager);
         
         corePlatformContext.addPlugin(cloudCommunication, Plugins.CLOUD_CHANNEL);
@@ -515,7 +507,7 @@ public class Platform  {
 
         Plugin walletMiddleware = ((MiddlewareLayer) mMiddlewareayer).getWalletPlugin();
 
-        ((DealsWithFileSystem) walletMiddleware).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithPluginFileSystem) walletMiddleware).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) walletMiddleware).setEventManager((EventManager) eventManager);
 
         corePlatformContext.addPlugin(walletMiddleware, Plugins.WALLET_MIDDLEWARE);
@@ -559,7 +551,7 @@ public class Platform  {
 
         Plugin walletManager =  ((ModuleLayer) mModuleLayer).getWalletManager();
 
-        ((DealsWithFileSystem) walletManager).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithPluginFileSystem) walletManager).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) walletManager).setEventManager((EventManager) eventManager);
 
         corePlatformContext.addPlugin(walletManager, Plugins.WALLET_MANAGER_MODULE);
@@ -606,7 +598,7 @@ public class Platform  {
 
         Plugin walletRuntime =  ((ModuleLayer) mModuleLayer).getWalletRuntime();
 
-        ((DealsWithFileSystem) walletRuntime).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithPluginFileSystem) walletRuntime).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) walletRuntime).setEventManager((EventManager) eventManager);
 
         corePlatformContext.addPlugin(walletRuntime, Plugins.WALLET_RUNTIME_MODULE);
@@ -636,115 +628,6 @@ public class Platform  {
 
 
 
-
-
-
-
-        /**
-         * -----------------------------------------------------------------------------------------------------------
-         * Recover last state
-         * -----------------------------------------------------------------------------------------------------------
-         * * * * 
-         */
-        
-        
-        /**
-         * Now I will recover the last state, in order to allow the end user to continue where he was.The first thing
-         * to do is to get the file where the last state was saved.
-         *
-         * It is important to note that the recover of the last state comes after all the initialization process is done,
-         * because if not, events raised during this recovery could not be handled by the corresponding listeners.
-         */
-
-        try {
-
-            PlatformDataFile platformStateFile =  os.getPlatformFileSystem().getFile(
-                    DeviceDirectory.PLATFORM.getName(),
-                    PlatformFileName.LAST_STATE.getFileName(),
-                    FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT
-            );
-
-            try {
-                platformStateFile.loadToMemory();
-            }
-            catch (CantLoadFileException cantLoadFileException) {
-                /**
-                 * This really should never happen. But if it does...
-                 */
-                System.err.println("CantLoadFileException: " + cantLoadFileException.getMessage());
-                cantLoadFileException.printStackTrace();
-                throw new CantStartPlatformException();
-            }
-
-            UUID userId =  UUID.fromString(platformStateFile.getContent());
-            
-            // Luis TODO: de aca tiene que sacar no solo el usuario sino tambien el modulo donde estuvo por ultima vez
-
-            try
-            {
-                ((UserManager) ((UserLayer) mUserLayer).getUserManager()).loadUser(userId);
-            }
-            catch (CantLoadUserException cantLoadUserException)
-            {
-                /**
-                 * This really should never happen. But if it does...
-                 */
-                System.err.println("CantLoadUserException: " + cantLoadUserException.getMessage());
-                cantLoadUserException.printStackTrace();
-                throw new CantStartPlatformException();
-            }
-
-        }
-        catch (FileNotFoundException fileNotFoundException)
-        {
-            /**
-             * If there is no last state file, I assume this is the first time the platform is running on this device.
-             * Under this situation I will do the following;
-             *
-             * 1) Create a new User with no password.
-             * 2) Auto login that user.
-             * 3) Save the last state of the platform.
-             */
-
-            User newUser;
-
-            try {
-
-                newUser = ((UserManager) ((UserLayer) mUserLayer).getUserManager()).createUser();
-                newUser.login("");
-                
-                // Luis TODO; como se conecta esto con el communication layer que usa el usuario logeado del Platform Context? 
-
-            } catch (CantCreateUserException | LoginFailedException exception) {
-                /**
-                 * This really should never happen. But if it does...
-                 */
-                System.err.println("LoginFailedException or CantCreateUserException: " + exception.getMessage());
-                exception.printStackTrace();
-                throw new CantStartPlatformException();
-            }
-
-             PlatformDataFile platformStateFile =  os.getPlatformFileSystem().createFile(
-                    DeviceDirectory.PLATFORM.getName(),
-                    PlatformFileName.LAST_STATE.getFileName(),
-                    FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT
-            );
-
-            String content = newUser.getId().toString() + ";" + Modules.WALLET_RUNTIME.getModuleName();
-            
-            platformStateFile.setContent(content);
-
-            try {
-                platformStateFile.persistToMedia();
-            } catch (CantPersistFileException cantPersistFileException) {
-                /**
-                 * This really should never happen. But if it does...
-                 */
-                System.err.println("Cant persist com.bitdubai.platform state to media: " + cantPersistFileException.getMessage());
-                cantPersistFileException.printStackTrace();
-                throw new CantStartPlatformException();
-            }
-        }
 
     }
 }

@@ -109,27 +109,27 @@ public class AppRuntimePluginRoot {
         runtimeApp.addSubApp(subApp);
 
         runtimeWallet = new RuntimeWallet();
-        runtimeWallet.setType(Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL);
+        runtimeWallet.setType(Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI);
         subApp.addWallet(runtimeWallet);
 
         runtimeActivity= new RuntimeActivity();
-        runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_MAIN);
+        runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_MAIN);
         runtimeWallet.addActivity(runtimeActivity);
 
         runtimeFragment = new RuntimeFragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_PROFILE);
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_PROFILE);
         runtimeActivity.addFragment(runtimeFragment);
 
         runtimeFragment = new RuntimeFragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_DESKTOP);
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_DESKTOP);
         runtimeActivity.addFragment(runtimeFragment);
 
         runtimeFragment = new RuntimeFragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_CONTACTS);
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_CONTACTS);
         runtimeActivity.addFragment(runtimeFragment);
 
         runtimeFragment = new RuntimeFragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_COMMUNITY);
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_COMMUNITY);
         runtimeActivity.addFragment(runtimeFragment);
         
         
