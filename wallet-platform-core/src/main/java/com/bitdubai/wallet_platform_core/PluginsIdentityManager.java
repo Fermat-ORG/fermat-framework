@@ -20,14 +20,14 @@ import java.util.UUID;
 /**
  * Created by ciencias on 02.02.15.
  */
-public class PluginsManager {
+public class PluginsIdentityManager {
 
     private PlatformFileSystem platformFileSystem;
     private final Integer AMOUNT_OF_KNOWN_PLUGINS = 6;
     private List<UUID> pluginIds = new ArrayList<>();
 
 
-    public  PluginsManager (PlatformFileSystem platformFileSystem) throws CantInitializePluginsManagerException {
+    public PluginsIdentityManager(PlatformFileSystem platformFileSystem) throws CantInitializePluginsManagerException {
 
         this.platformFileSystem = platformFileSystem;
 

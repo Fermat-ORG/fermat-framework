@@ -2,6 +2,8 @@ package com.bitdubai.wallet_platform_core.layer._6_world.crypto_index.developer.
 
 import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.Service;
+import com.bitdubai.wallet_platform_api.layer._1_definition.enums.CryptoCurrency;
+import com.bitdubai.wallet_platform_api.layer._1_definition.enums.FiatCurrency;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.ErrorManager;
@@ -11,6 +13,9 @@ import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventManager;
 import com.bitdubai.wallet_platform_api.layer._3_os.File_System.DealsWithPluginFileSystem;
 import com.bitdubai.wallet_platform_api.layer._3_os.File_System.PluginFileSystem;
+import com.bitdubai.wallet_platform_api.layer._6_world.crypto_index.CryptoCurrencyNotSupportedException;
+import com.bitdubai.wallet_platform_api.layer._6_world.crypto_index.CryptoIndex;
+import com.bitdubai.wallet_platform_api.layer._6_world.crypto_index.FiatCurrencyNotSupportedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +24,14 @@ import java.util.UUID;
 /**
  * Created by loui on 12/02/15.
  */
-public class CryptoIndexPluginRoot implements Service, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
+
+/**
+ * This plugin mission is to provide the current market price of the different crypto currencies. To accomplish that 
+ * goal, it will check one or more indexes as needed.
+ * * *
+ */
+
+public class CryptoIndexPluginRoot implements Service, CryptoIndex, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
     
     /**
      * PlatformService Interface member variables.
@@ -46,7 +58,7 @@ public class CryptoIndexPluginRoot implements Service, DealsWithEvents, DealsWit
     @Override
     public void start() {
         /**
-         * I will initialize the handling of com.bitdubai.platform events.
+         * I will initialize the handling of platform events.
          */
 
         EventListener eventListener;
@@ -90,6 +102,16 @@ public class CryptoIndexPluginRoot implements Service, DealsWithEvents, DealsWit
         return this.serviceStatus;
     }
 
+
+    /**
+     * CryptoIndex Interface implementation.
+     */
+    
+    @Override
+    public double getCurrentMarketPrice(FiatCurrency fiatCurrency, CryptoCurrency cryptoCurrency) throws FiatCurrencyNotSupportedException, CryptoCurrencyNotSupportedException {
+        return 0;
+    }
+    
     /**
      * UsesFileSystem Interface implementation.
      */
@@ -126,4 +148,5 @@ public class CryptoIndexPluginRoot implements Service, DealsWithEvents, DealsWit
         this.pluginId = pluginId;
     }
 
+  
 }

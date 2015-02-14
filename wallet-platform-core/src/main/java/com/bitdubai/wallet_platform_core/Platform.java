@@ -102,7 +102,7 @@ public class Platform  {
 
     PlatformEventMonitor eventMonitor;
     
-    PluginsManager pluginsManager;
+    PluginsIdentityManager pluginsIdentityManager;
 
     CorePlatformContext corePlatformContext;
     
@@ -343,7 +343,7 @@ public class Platform  {
 
         try
         {
-            pluginsManager = new PluginsManager(os.getPlatformFileSystem());
+            pluginsIdentityManager = new PluginsIdentityManager(os.getPlatformFileSystem());
         }
         catch (CantInitializePluginsManagerException cantInitializePluginsManagerException) {
             System.err.println("CantInitializePluginsManager: " + cantInitializePluginsManagerException.getMessage());
@@ -388,7 +388,7 @@ public class Platform  {
              * As any other plugin, this one will need its identity in order to access the data it persisted before.
              */
         
-            UUID pluginID = pluginsManager.getPluginId(WorldService);
+            UUID pluginID = pluginsIdentityManager.getPluginId(WorldService);
             (WorldService).setId(pluginID);
 
             ((Service) WorldService).start();
@@ -429,7 +429,7 @@ public class Platform  {
              * As any other plugin, this one will need its identity in order to access the data it persisted before.
              */
 
-            UUID pluginID = pluginsManager.getPluginId(cryptoNetworkService);
+            UUID pluginID = pluginsIdentityManager.getPluginId(cryptoNetworkService);
             (cryptoNetworkService).setId(pluginID);
 
             ((Service)cryptoNetworkService).start();
@@ -475,7 +475,7 @@ public class Platform  {
              * As any other plugin, this one will need its identity in order to access the data it persisted before.
              */
 
-            UUID pluginID = pluginsManager.getPluginId(cloudCommunication);
+            UUID pluginID = pluginsIdentityManager.getPluginId(cloudCommunication);
             (cloudCommunication).setId(pluginID);
 
             ((Service) cloudCommunication).start();
@@ -511,7 +511,7 @@ public class Platform  {
              * As any other plugin, this one will need its identity in order to access the data it persisted before.
              */
 
-            UUID pluginID = pluginsManager.getPluginId(appRuntimeMiddleware);
+            UUID pluginID = pluginsIdentityManager.getPluginId(appRuntimeMiddleware);
             (appRuntimeMiddleware).setId(pluginID);
 
             ((Service) appRuntimeMiddleware).start();
@@ -556,7 +556,7 @@ public class Platform  {
              * As any other plugin, this one will need its identity in order to access the data it persisted before.
              */
 
-            UUID pluginID = pluginsManager.getPluginId(walletMiddleware);
+            UUID pluginID = pluginsIdentityManager.getPluginId(walletMiddleware);
             (walletMiddleware).setId(pluginID);
 
             ((Service) walletMiddleware).start();
@@ -600,7 +600,7 @@ public class Platform  {
              * As any other plugin, this one will need its identity in order to access the data it persisted before.
              */
 
-            UUID pluginID = pluginsManager.getPluginId(walletManager);
+            UUID pluginID = pluginsIdentityManager.getPluginId(walletManager);
             (walletManager).setId(pluginID);
 
             ((Service) walletManager).start();
@@ -647,7 +647,7 @@ public class Platform  {
              * As any other plugin, this one will need its identity in order to access the data it persisted before.
              */
 
-            UUID pluginID = pluginsManager.getPluginId(walletRuntime);
+            UUID pluginID = pluginsIdentityManager.getPluginId(walletRuntime);
             (walletRuntime).setId(pluginID);
 
             ((Service) walletRuntime).start();
