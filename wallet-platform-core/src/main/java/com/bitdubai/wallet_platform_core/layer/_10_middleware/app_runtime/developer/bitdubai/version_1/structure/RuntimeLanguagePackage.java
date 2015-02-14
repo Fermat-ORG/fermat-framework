@@ -38,18 +38,22 @@ public class RuntimeLanguagePackage implements LanguagePackage {
      * LanguagePackage Interface implementation.
      */
 
+    @Override
     public User getAuthor() {
         return author;
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public Languages getLanguage() {
         return language;
     }
 
+    @Override
     public Map<String, String> getTranslation() {
         return translation;
     }

@@ -14,6 +14,7 @@ public class RuntimeActivity implements Activity {
     TitleBar titleBar;
     SideMenu sideMenu;
     MainMenu mainMenu;
+    TabStrip tabStrip;
 
     /**
      * RuntimeActivity interface implementation.
@@ -39,6 +40,10 @@ public class RuntimeActivity implements Activity {
         this.mainMenu = mainMenu;
     }
     
+    public void setTabStrip(TabStrip tabStrip) {
+        this.tabStrip = tabStrip;
+    }
+    
     /**
      * SubApp interface implementation.
      */
@@ -48,6 +53,28 @@ public class RuntimeActivity implements Activity {
         return type;
     }
 
-  
+    @Override
+    public Map<Fragments, Fragment> getFragments() {
+        return fragments;
+    }
 
+    @Override
+    public TitleBar getTitleBar() {
+        return titleBar;
+    }
+
+    @Override
+    public SideMenu getSideMenu() {
+        return sideMenu;
+    }
+
+    @Override
+    public MainMenu getMainMenu() {
+        return mainMenu;
+    }
+
+    @Override
+    public TabStrip getTabStrip() {
+        return tabStrip;
+    }
 }

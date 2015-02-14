@@ -35,7 +35,7 @@ import java.util.UUID;
 
 
 
-public class AppRuntimePluginRoot implements Service, MiddlewareEngine, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
+public class AppRuntimePluginRoot implements Service, MiddlewareEngine, AppRuntime, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
 
     /**
      * Service Interface member variables.
@@ -66,6 +66,14 @@ public class AppRuntimePluginRoot implements Service, MiddlewareEngine, DealsWit
 
            EventListener eventListener;
            EventHandler eventHandler;
+
+
+           /**
+            * At this time the only thing I can do is a factory reset. Once there should be a possibility to add
+            * functionality based on wallets downloaded by users this wont be an option.
+            * * *
+            */
+           factoryReset();
 
            this.serviceStatus = ServiceStatus.STARTED;
            
@@ -106,6 +114,41 @@ public class AppRuntimePluginRoot implements Service, MiddlewareEngine, DealsWit
         return this.serviceStatus;
     }
 
+    /**
+     * AppRuntime Interface implementation.
+     */
+
+    @Override
+    public App getApp(Apps app) {
+        return null;
+    }
+
+    @Override
+    public Apps getLastApp() {
+        return null;
+    }
+
+    @Override
+    public SubApps getLastSubApp() {
+        return null;
+    }
+
+    @Override
+    public Wallets getLastWallet() {
+        return null;
+    }
+
+    @Override
+    public Activities getLasActivity() {
+        return null;
+    }
+
+    @Override
+    public Fragments getLastFragment() {
+        return null;
+    }
+    
+    
     /**
      * UsesFileSystem Interface implementation.
      */
@@ -164,7 +207,7 @@ public class AppRuntimePluginRoot implements Service, MiddlewareEngine, DealsWit
     private void factoryReset() {
 
         RuntimeApp runtimeApp;
-        RuntimeSubApp subApp;
+        RuntimeSubApp runtimeSubApp;
         RuntimeActivity runtimeActivity;
         RuntimeFragment runtimeFragment;
         RuntimeWallet runtimeWallet;
@@ -172,19 +215,20 @@ public class AppRuntimePluginRoot implements Service, MiddlewareEngine, DealsWit
         RuntimeSideMenu runtimeSideMenu;
         RuntimeMainMenu runtimeMainMenu;
         RuntimeMenuItem runtimeMenuItem;
+        RuntimeTabStrip runtimeTabStrip;
 
         runtimeApp = new RuntimeApp();
 
         runtimeApp.setType(Apps.CRYPTO_WALLET_PLATFORM);
        
         
-        subApp = new RuntimeSubApp();
-        subApp.setType(SubApps.CWP_SHELL);
-        runtimeApp.addSubApp(subApp);
+        runtimeSubApp = new RuntimeSubApp();
+        runtimeSubApp.setType(SubApps.CWP_SHELL);
+        runtimeApp.addSubApp(runtimeSubApp);
 
         runtimeActivity= new RuntimeActivity();
         runtimeActivity.setType(Activities.CWP_SHELL_LOGIN);
-        subApp.addActivity(runtimeActivity);
+        runtimeSubApp.addActivity(runtimeActivity);
         
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_SHELL_LOGIN);
@@ -192,13 +236,13 @@ public class AppRuntimePluginRoot implements Service, MiddlewareEngine, DealsWit
         
         
         
-        subApp = new RuntimeSubApp();
-        subApp.setType(SubApps.CWP_WALLET_FACTORY);
-        runtimeApp.addSubApp(subApp);
+        runtimeSubApp = new RuntimeSubApp();
+        runtimeSubApp.setType(SubApps.CWP_WALLET_FACTORY);
+        runtimeApp.addSubApp(runtimeSubApp);
 
         runtimeActivity= new RuntimeActivity();
         runtimeActivity.setType(Activities.CWP_WALLET_FACTORY_MAIN);
-        subApp.addActivity(runtimeActivity);
+        runtimeSubApp.addActivity(runtimeActivity);
 
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_FACTORY_MAIN);
@@ -206,13 +250,13 @@ public class AppRuntimePluginRoot implements Service, MiddlewareEngine, DealsWit
         
         
 
-        subApp = new RuntimeSubApp();
-        subApp.setType(SubApps.CWP_WALLET_MANAGER);
-        runtimeApp.addSubApp(subApp);
+        runtimeSubApp = new RuntimeSubApp();
+        runtimeSubApp.setType(SubApps.CWP_WALLET_MANAGER);
+        runtimeApp.addSubApp(runtimeSubApp);
 
         runtimeActivity= new RuntimeActivity();
         runtimeActivity.setType(Activities.CWP_WALLET_MANAGER_MAIN);
-        subApp.addActivity(runtimeActivity);
+        runtimeSubApp.addActivity(runtimeActivity);
 
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_MANAGER_MAIN);
@@ -220,13 +264,13 @@ public class AppRuntimePluginRoot implements Service, MiddlewareEngine, DealsWit
 
         
         
-        subApp = new RuntimeSubApp();
-        subApp.setType(SubApps.CWP_WALLET_RUNTIME);
-        runtimeApp.addSubApp(subApp);
+        runtimeSubApp = new RuntimeSubApp();
+        runtimeSubApp.setType(SubApps.CWP_WALLET_RUNTIME);
+        runtimeApp.addSubApp(runtimeSubApp);
 
         runtimeWallet = new RuntimeWallet();
         runtimeWallet.setType(Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI);
-        subApp.addWallet(runtimeWallet);
+        runtimeSubApp.addWallet(runtimeWallet);
 
         runtimeActivity= new RuntimeActivity();
         runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_MAIN);
@@ -244,6 +288,15 @@ public class AppRuntimePluginRoot implements Service, MiddlewareEngine, DealsWit
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
         
         runtimeActivity.setSideMenu(runtimeSideMenu);
+
+        runtimeTabStrip = new RuntimeTabStrip();
+        
+        runtimeTabStrip.addTab("Profile");
+        runtimeTabStrip.addTab("Desktop");
+        runtimeTabStrip.addTab("Contacts");
+        runtimeTabStrip.addTab("Community");
+
+        runtimeActivity.setTabStrip(runtimeTabStrip);
 
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_PROFILE);
@@ -263,13 +316,13 @@ public class AppRuntimePluginRoot implements Service, MiddlewareEngine, DealsWit
         
         
         
-        subApp = new RuntimeSubApp();
-        subApp.setType(SubApps.CWP_WALLET_STORE);
-        runtimeApp.addSubApp(subApp);
+        runtimeSubApp = new RuntimeSubApp();
+        runtimeSubApp.setType(SubApps.CWP_WALLET_STORE);
+        runtimeApp.addSubApp(runtimeSubApp);
 
         runtimeActivity= new RuntimeActivity();
         runtimeActivity.setType(Activities.CWP_WALLET_STORE_MAIN);
-        subApp.addActivity(runtimeActivity);
+        runtimeSubApp.addActivity(runtimeActivity);
 
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_STORE_MAIN);
@@ -278,5 +331,6 @@ public class AppRuntimePluginRoot implements Service, MiddlewareEngine, DealsWit
         
         
     }
-    
+
+
 }
