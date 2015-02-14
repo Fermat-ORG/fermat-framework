@@ -5,7 +5,7 @@ package com.bitdubai.wallet_platform_api.layer._3_os.File_System;
  */
 public interface PluginDataFile {
 
-    public String getContent ();
+    public String getContent () throws WrongOwnerIdException;
 
     public void setContent (String content);
 
@@ -13,7 +13,7 @@ public interface PluginDataFile {
 
     public void loadToMemory () throws CantLoadFileException;
 
-    public void loadFromMemory() throws CantLoadFileException;
+
 
     public void loadFromMedia() throws CantPersistFileException;
 

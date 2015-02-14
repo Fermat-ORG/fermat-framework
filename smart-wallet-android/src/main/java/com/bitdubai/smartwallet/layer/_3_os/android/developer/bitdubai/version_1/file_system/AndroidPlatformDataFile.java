@@ -59,17 +59,15 @@ public class AndroidPlatformDataFile implements PlatformDataFile {
             inputStream.close();
 
             this.content = sb.toString();
+            return this.content;
 
         } catch (Exception e) {
             System.err.println("Error trying to load a file from memory: " + e.getMessage());
             e.printStackTrace();
-            try {
-                throw e;
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
+
+            return null;
         }
-        return this.content;
+
     }
 
     public void setContent (String content)
@@ -153,31 +151,6 @@ public class AndroidPlatformDataFile implements PlatformDataFile {
         }*/
     }
 
-    @Override
-    public void loadFromMemory() throws CantLoadFileException {
-
-       /* FileInputStream inputStream;
-        try {
-            inputStream = this.context.openFileInput(this.fileName);
-
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                sb.append(line);
-            }
-            inputStream.close();
-
-            this.content = sb.toString();
-
-        } catch (Exception e) {
-            System.err.println("Error trying to load a file to memory: " + e.getMessage());
-            e.printStackTrace();
-            throw new CantLoadFileException(this.fileName);
-        }*/
-
-    }
 
     @Override
     public void loadFromMedia() throws CantPersistFileException {

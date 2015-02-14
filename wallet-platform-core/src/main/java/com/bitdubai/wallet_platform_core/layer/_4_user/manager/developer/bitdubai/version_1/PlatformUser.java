@@ -215,13 +215,14 @@ public class PlatformUser implements User,DealsWithFileSystem, DealsWithEvents, 
             );
 
             file.loadToMemory();
+
             String[] values = file.getContent().split(";", -1);
 
-            this.userName = values[0];
+           this.userName = values[0];
             this.password = values[1];
 
         }
-        catch (FileNotFoundException |CantLoadFileException ex)
+        catch (FileNotFoundException |CantLoadFileException | WrongOwnerIdException ex)
         {
             /**
              * This is bad, but lets handle it...
