@@ -18,4 +18,6 @@ public interface FiatAccount {
     public void setLabel(String label) ;
 
     public void setName(String name) ;
+
+    public double availableBalance ();
 }

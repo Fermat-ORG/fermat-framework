@@ -6,6 +6,7 @@ import com.bitdubai.wallet_platform_api.layer._1_definition.enums.FiatCurrency;
 /**
  * Created by ciencias on 2/15/15.
  */
+
 public class MiddlewareFiatAccount implements FiatAccount  {
     
     Double balance;
@@ -40,4 +41,12 @@ public class MiddlewareFiatAccount implements FiatAccount  {
     public void setName(String name) {
         this.name = name;
     }
+    
+    public double availableBalance (){
+        
+        // Luis: TODO: Calculate the available balance for this account.
+        
+        return 0;
+    }
+    
 }
