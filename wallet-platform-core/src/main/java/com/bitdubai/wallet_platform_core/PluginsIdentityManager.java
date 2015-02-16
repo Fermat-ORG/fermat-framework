@@ -7,10 +7,9 @@ import com.bitdubai.wallet_platform_api.layer._3_os.File_System.*;
 import com.bitdubai.wallet_platform_core.layer._10_middleware.app_runtime.developer.bitdubai.version_1.AppRuntimePluginRoot;
 import com.bitdubai.wallet_platform_core.layer._10_middleware.wallet.developer.bitdubai.version_1.WalletPluginRoot;
 import com.bitdubai.wallet_platform_core.layer._6_world.crypto_index.developer.bitdubai.version_1.CryptoIndexPluginRoot;
-import com.bitdubai.wallet_platform_core.layer._7_crypto_network.bitcoin.BitcoinSubsystem;
 import com.bitdubai.wallet_platform_core.layer._8_communication.cloud.developer.bitdubai.version_1.CloudCommunicationChannelPluginRoot;
-import com.bitdubai.wallet_platform_plugin.layer._11_module.wallet_manager.developer.bitdubai.version_1.WalletManagerPluginRoot;
-import com.bitdubai.wallet_platform_plugin.layer._11_module.wallet_runtime.developer.bitdubai.version_1.WalletRuntimePluginRoot;
+import com.bitdubai.wallet_platform_plugin.layer._12_module.wallet_manager.developer.bitdubai.version_1.WalletManagerPluginRoot;
+import com.bitdubai.wallet_platform_plugin.layer._12_module.wallet_runtime.developer.bitdubai.version_1.WalletRuntimePluginRoot;
 import com.bitdubai.wallet_platform_plugin.layer._7_crypto_network.bitcoin.developer.bitdubai.version_1.BitcoinCryptoNetworkPluginRoot;
 
 import java.util.ArrayList;

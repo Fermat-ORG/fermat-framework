@@ -2,7 +2,7 @@ package com.bitdubai.wallet_platform_core.layer._6_world;
 
 import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.layer.PlatformLayer;
-import com.bitdubai.wallet_platform_api.layer._11_module.CantStartSubsystemException;
+import com.bitdubai.wallet_platform_api.layer._12_module.CantStartSubsystemException;
 import com.bitdubai.wallet_platform_api.layer._6_world.WorldSubsystem;
 import com.bitdubai.wallet_platform_core.layer._6_world.crypto_index.CryptoIndexSubsystem;
 

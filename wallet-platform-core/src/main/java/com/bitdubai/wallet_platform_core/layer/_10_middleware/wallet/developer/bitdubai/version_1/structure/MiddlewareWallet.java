@@ -11,6 +11,21 @@ import java.util.List;
 /**
  * Created by ciencias on 2/15/15.
  */
+
+/**
+ * The Middleware Wallet manages the information about the funds the user have in a wallet. It has a multi-layer design.
+ * 
+ * The top one is the Account Layer, that is what users sees, their accounts.
+ * 
+ * The middle layer is the Crypto Value Layer, that is what the user has in crypto currencies.
+ * 
+ * The bottom layer is the Value Chunk Layer, that represents the chunks of crypto the user have, maintaining the
+ * relationship with the price it was bought.
+ * 
+ * * * * * *
+ * * * 
+ */
+
 public class MiddlewareWallet implements Wallet {
     
     List<FiatAccount> fiatAccounts;

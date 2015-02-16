@@ -23,8 +23,8 @@ import com.bitdubai.wallet_platform_api.layer._7_crypto_network.CryptoNetworks;
 import com.bitdubai.wallet_platform_core.layer._8_communication.CommunicationLayer;
 import com.bitdubai.wallet_platform_core.layer._9_network_service.NetworkServiceLayer;
 import com.bitdubai.wallet_platform_core.layer._10_middleware.MiddlewareLayer;
-import com.bitdubai.wallet_platform_core.layer._11_module.ModuleLayer;
-import com.bitdubai.wallet_platform_core.layer._12_agent.AgentLayer;
+import com.bitdubai.wallet_platform_core.layer._12_module.ModuleLayer;
+import com.bitdubai.wallet_platform_core.layer._13_agent.AgentLayer;
 
 import java.util.UUID;
 
