@@ -3,6 +3,8 @@ package com.bitdubai.wallet_platform_core.layer._10_middleware.wallet.developer.
 import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.Service;
 import com.bitdubai.wallet_platform_api.layer._10_middleware.MiddlewareEngine;
+import com.bitdubai.wallet_platform_api.layer._10_middleware.WalletManager;
+import com.bitdubai.wallet_platform_api.layer._10_middleware.wallet.CantCreateWalletException;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.ErrorManager;
@@ -10,8 +12,10 @@ import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventHandler;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventListener;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventManager;
+import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventType;
 import com.bitdubai.wallet_platform_api.layer._3_os.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.wallet_platform_api.layer._3_os.file_system.PluginFileSystem;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -19,24 +23,24 @@ import java.util.UUID;
 /**
  * Created by ciencias on 20.01.15.
  */
-public class WalletPluginRoot implements Service, MiddlewareEngine, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
+public class WalletPluginRoot implements Service, MiddlewareEngine, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin, WalletManager {
 
     /**
      * Service Interface member variables.
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
     List<EventListener> listenersAdded = new ArrayList<>();
-    
+
     /**
      * UsesFileSystem Interface member variables.
      */
     PluginFileSystem pluginFileSystem;
-    
+
     /**
      * DealWithEvents Interface member variables.
      */
     EventManager eventManager;
-    
+
     /**
      * Plugin Interface member variables.
      */
@@ -55,7 +59,7 @@ public class WalletPluginRoot implements Service, MiddlewareEngine, DealsWithEve
     /**
      * Service Interface implementation.
      */
-    
+
     @Override
     public void start() {
         /**
@@ -64,6 +68,13 @@ public class WalletPluginRoot implements Service, MiddlewareEngine, DealsWithEve
 
         EventListener eventListener;
         EventHandler eventHandler;
+
+        eventListener = eventManager.getNewListener(EventType.WALLET_CREATED);
+        eventHandler = new WalletCreatedEventHandler();
+        ((WalletCreatedEventHandler) eventHandler).setWalletmanager(this);
+        eventListener.setEventHandler(eventHandler);
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);
 
         this.serviceStatus = ServiceStatus.STARTED;
     }
@@ -104,6 +115,20 @@ public class WalletPluginRoot implements Service, MiddlewareEngine, DealsWithEve
         return this.serviceStatus;
     }
 
+    /**
+     * WalletManager methods implmentation.
+     */
+
+    @Override
+    public void loadWallet(UUID walletId) {
+
+    }
+
+    @Override
+    public void createWallet(UUID walletId) throws CantCreateWalletException {
+
+    }
+
 
     /**
      * UsesFileSystem Interface implementation.
@@ -126,7 +151,7 @@ public class WalletPluginRoot implements Service, MiddlewareEngine, DealsWithEve
     /**
      *DealWithErrors Interface implementation.
      */
-    
+
     @Override
     public void setErrorManager(ErrorManager errorManager) {
 
@@ -140,4 +165,5 @@ public class WalletPluginRoot implements Service, MiddlewareEngine, DealsWithEve
     public void setId(UUID pluginId) {
         this.pluginId = pluginId;
     }
+
 }
