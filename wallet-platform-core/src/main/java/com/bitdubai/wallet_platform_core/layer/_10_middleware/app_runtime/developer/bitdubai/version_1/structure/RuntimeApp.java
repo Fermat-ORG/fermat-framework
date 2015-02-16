@@ -4,7 +4,9 @@ import com.bitdubai.wallet_platform_api.layer._10_middleware.app_runtime.App;
 import com.bitdubai.wallet_platform_api.layer._10_middleware.app_runtime.Apps;
 import com.bitdubai.wallet_platform_api.layer._10_middleware.app_runtime.SubApp;
 import com.bitdubai.wallet_platform_api.layer._10_middleware.app_runtime.SubApps;
+import java.util.ArrayList;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -13,7 +15,7 @@ import java.util.Map;
 public class RuntimeApp implements App {
 
     Apps type;
-    Map<SubApps, SubApp> subApps;
+    Map<SubApps, SubApp> subApps = new HashMap<SubApps, SubApp>() ;
 
     /**
      * RuntimeApp interface implementation.

@@ -19,8 +19,8 @@ public class AndroidOsAddonRoot implements Os {
     PluginDatabaseSystem pluginDatabaseSystem;
     PluginFileSystem pluginFileSystem;
     PlatformFileSystem platformFileSystem;
-    LocationSystem locationSystem;
     Context mContext;
+    LocationSystem pluginLocationSystem;
 
     @Override
     public PluginDatabaseSystem getPluginDatabaseSystem() {
@@ -33,17 +33,6 @@ public class AndroidOsAddonRoot implements Os {
     }
 
     @Override
-    public PluginFileSystem getPlugInFileSystem() {
-        return this.pluginFileSystem;
-    }
-
-    @Override
-    public LocationSystem getLocationSystem() {
-        return this.locationSystem;
-    }
-
-
-    @Override
     public void setContext(Object context) {
         mContext = (Context) context;
         this.pluginFileSystem.setContext(context);
@@ -51,7 +40,14 @@ public class AndroidOsAddonRoot implements Os {
         this.platformFileSystem.setContext(context);
     }
 
- 
+    @Override
+    public PluginFileSystem getPlugInFileSystem() {
+        return this.pluginFileSystem;
+   }
+    @Override
+    public LocationSystem getLocationSystem(){
+        return this.pluginLocationSystem;
+    }
 
     public AndroidOsAddonRoot() {
         this.pluginDatabaseSystem = new AndroidPluginDatabaseSystem(mContext);
