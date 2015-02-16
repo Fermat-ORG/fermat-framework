@@ -34,4 +34,12 @@ public interface Wallet {
 
     public void transferFromCryptoToFiat (  CryptoAccount cryptoAccountFrom, FiatAccount fiatAccountTo, Double amountFrom, Double amountTo);
 
+    public void debitFiatAccount (FiatAccount fiatAccount,Double amount);
+
+    public void creditFiatAccount (FiatAccount fiatAccount,Double amount);
+
+    public void debitCryptoAccount (CryptoAccount cryptoAccount,Double amount);
+
+    public void creditCryptoAccount (CryptoAccount cryptoAccount,Double amount);
+    
 }
