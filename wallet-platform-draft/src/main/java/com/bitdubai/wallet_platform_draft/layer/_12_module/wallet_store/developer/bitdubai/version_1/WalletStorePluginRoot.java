@@ -9,8 +9,8 @@ import com.bitdubai.wallet_platform_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.ErrorManager;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.*;
-import com.bitdubai.wallet_platform_api.layer._3_os.File_System.DealsWithFileSystem;
-import com.bitdubai.wallet_platform_api.layer._3_os.File_System.PluginFileSystem;
+import com.bitdubai.wallet_platform_api.layer._3_os.file_system.DealsWithFileSystem;
+import com.bitdubai.wallet_platform_api.layer._3_os.file_system.PluginFileSystem;
 
 import java.util.ArrayList;
 import java.util.List;

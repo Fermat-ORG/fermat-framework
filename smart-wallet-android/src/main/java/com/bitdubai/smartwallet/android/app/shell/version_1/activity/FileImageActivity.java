@@ -1,7 +1,5 @@
 package com.bitdubai.smartwallet.android.app.shell.version_1.activity;
 
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -19,19 +17,18 @@ import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1
 import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidPlatformFileSystem;
 
 import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidPluginFileSystem;
-import com.bitdubai.wallet_platform_api.layer._3_os.File_System.CantLoadFileException;
-import com.bitdubai.wallet_platform_api.layer._3_os.Database_System.DatabaseDataType;
-import com.bitdubai.wallet_platform_api.layer._3_os.Database_System.DatabaseFilterType;
-import com.bitdubai.wallet_platform_api.layer._3_os.Database_System.DatabaseTableRecord;
-import com.bitdubai.wallet_platform_api.layer._3_os.File_System.FileLifeSpan;
-import com.bitdubai.wallet_platform_api.layer._3_os.File_System.FilePrivacy;
-import com.bitdubai.wallet_platform_api.layer._3_os.File_System.CantPersistFileException;
+import com.bitdubai.wallet_platform_api.layer._3_os.file_system.CantLoadFileException;
+import com.bitdubai.wallet_platform_api.layer._3_os.database_system.DatabaseDataType;
+import com.bitdubai.wallet_platform_api.layer._3_os.database_system.DatabaseFilterType;
+import com.bitdubai.wallet_platform_api.layer._3_os.database_system.DatabaseTableRecord;
+import com.bitdubai.wallet_platform_api.layer._3_os.file_system.FileLifeSpan;
+import com.bitdubai.wallet_platform_api.layer._3_os.file_system.FilePrivacy;
+import com.bitdubai.wallet_platform_api.layer._3_os.file_system.CantPersistFileException;
 import android.content.Context;
 import android.widget.TextView;
 import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.database_system.AndroidPluginDatabaseSystem;
-import com.bitdubai.wallet_platform_api.layer._3_os.File_System.PlatformDataFile;
-import com.bitdubai.wallet_platform_api.layer._3_os.File_System.PluginDataFile;
-import com.bitdubai.wallet_platform_api.layer._3_os.File_System.PluginImageFile;
+import com.bitdubai.wallet_platform_api.layer._3_os.file_system.PlatformDataFile;
+import com.bitdubai.wallet_platform_api.layer._3_os.file_system.PluginDataFile;
 
 import java.util.List;
 import java.util.UUID;

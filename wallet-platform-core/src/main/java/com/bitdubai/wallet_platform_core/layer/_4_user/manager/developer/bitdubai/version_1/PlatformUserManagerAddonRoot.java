@@ -12,7 +12,7 @@ import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventManager;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventHandler;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventListener;
-import com.bitdubai.wallet_platform_api.layer._3_os.File_System.*;
+import com.bitdubai.wallet_platform_api.layer._3_os.file_system.*;
 import com.bitdubai.wallet_platform_api.layer._4_user.manager.CantCreateUserException;
 import com.bitdubai.wallet_platform_api.layer._4_user.manager.CantLoadUserException;
 import com.bitdubai.wallet_platform_api.layer._4_user.User;

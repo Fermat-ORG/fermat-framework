@@ -1,12 +1,11 @@
 package com.bitdubai.wallet_platform_core.layer._4_user.manager.developer.bitdubai.version_1;
 
-import com.bitdubai.wallet_platform_api.DealsWithPluginIdentity;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.DeviceDirectory;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.ErrorManager;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.*;
 import com.bitdubai.wallet_platform_api.layer._1_definition.event.PlatformEvent;
-import com.bitdubai.wallet_platform_api.layer._3_os.File_System.*;
+import com.bitdubai.wallet_platform_api.layer._3_os.file_system.*;
 import com.bitdubai.wallet_platform_api.layer._4_user.*;
 import com.bitdubai.wallet_platform_api.layer._4_user.manager.*;
 

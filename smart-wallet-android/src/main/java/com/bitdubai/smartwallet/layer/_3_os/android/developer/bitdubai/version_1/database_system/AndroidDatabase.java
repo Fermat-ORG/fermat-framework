@@ -1,8 +1,6 @@
 package com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.database_system;
 
-import android.database.sqlite.SQLiteDatabase;
-
-import com.bitdubai.wallet_platform_api.layer._3_os.Database_System.Database;
+import com.bitdubai.wallet_platform_api.layer._3_os.database_system.Database;
 
 import java.util.ArrayList;
 import java.util.List;

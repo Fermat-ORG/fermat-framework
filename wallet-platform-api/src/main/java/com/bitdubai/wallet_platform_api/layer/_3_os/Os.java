@@ -1,19 +1,22 @@
 package com.bitdubai.wallet_platform_api.layer._3_os;
 
-import com.bitdubai.wallet_platform_api.layer._3_os.Database_System.PluginDatabaseSystem;
-import com.bitdubai.wallet_platform_api.layer._3_os.File_System.PlatformFileSystem;
-import com.bitdubai.wallet_platform_api.layer._3_os.File_System.PluginFileSystem;
+import com.bitdubai.wallet_platform_api.layer._3_os.database_system.PluginDatabaseSystem;
+import com.bitdubai.wallet_platform_api.layer._3_os.file_system.PlatformFileSystem;
+import com.bitdubai.wallet_platform_api.layer._3_os.file_system.PluginFileSystem;
+import com.bitdubai.wallet_platform_api.layer._3_os.location_system.LocationSystem;
 
 /**
  * Created by ciencias on 03.01.15.
  */
 public interface Os {
 
-    PluginFileSystem getPlugInFileSystem();
-    
-    PluginDatabaseSystem getPluginDatabaseSystem();
+    public PluginFileSystem getPlugInFileSystem();
 
-    PlatformFileSystem getPlatformFileSystem();
+    public PluginDatabaseSystem getPluginDatabaseSystem();
+
+    public PlatformFileSystem getPlatformFileSystem();
+
+    public LocationSystem getLocationSystem();
             
     void setContext (Object context);
 

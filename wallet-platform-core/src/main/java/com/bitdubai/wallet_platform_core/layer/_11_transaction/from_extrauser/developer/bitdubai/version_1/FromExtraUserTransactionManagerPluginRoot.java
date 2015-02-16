@@ -6,7 +6,6 @@ package com.bitdubai.wallet_platform_core.layer._11_transaction.from_extrauser.d
 
 import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.Service;
-import com.bitdubai.wallet_platform_api.layer._12_module.wallet_runtime.WalletRuntime;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.ErrorManager;
@@ -14,9 +13,8 @@ import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventHandler;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventListener;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventManager;
-import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventType;
-import com.bitdubai.wallet_platform_api.layer._3_os.File_System.DealsWithPluginFileSystem;
-import com.bitdubai.wallet_platform_api.layer._3_os.File_System.PluginFileSystem;
+import com.bitdubai.wallet_platform_api.layer._3_os.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.wallet_platform_api.layer._3_os.file_system.PluginFileSystem;
 
 import java.util.ArrayList;
 import java.util.List;

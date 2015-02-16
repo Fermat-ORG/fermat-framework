@@ -2,12 +2,13 @@ package com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_
 
 import android.content.Context;
 import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidPlatformFileSystem;
-import com.bitdubai.wallet_platform_api.layer._3_os.File_System.PlatformFileSystem;
-import com.bitdubai.wallet_platform_api.layer._3_os.Database_System.PluginDatabaseSystem;
-import com.bitdubai.wallet_platform_api.layer._3_os.File_System.PluginFileSystem;
+import com.bitdubai.wallet_platform_api.layer._3_os.file_system.PlatformFileSystem;
+import com.bitdubai.wallet_platform_api.layer._3_os.database_system.PluginDatabaseSystem;
+import com.bitdubai.wallet_platform_api.layer._3_os.file_system.PluginFileSystem;
 import com.bitdubai.wallet_platform_api.layer._3_os.Os;
 import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.database_system.AndroidPluginDatabaseSystem;
 import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidPluginFileSystem;
+import com.bitdubai.wallet_platform_api.layer._3_os.location_system.LocationSystem;
 
 
 /**
@@ -18,6 +19,7 @@ public class AndroidOsAddonRoot implements Os {
     PluginDatabaseSystem pluginDatabaseSystem;
     PluginFileSystem pluginFileSystem;
     PlatformFileSystem platformFileSystem;
+    LocationSystem locationSystem;
     Context mContext;
 
     @Override
@@ -31,6 +33,17 @@ public class AndroidOsAddonRoot implements Os {
     }
 
     @Override
+    public PluginFileSystem getPlugInFileSystem() {
+        return this.pluginFileSystem;
+    }
+
+    @Override
+    public LocationSystem getLocationSystem() {
+        return this.locationSystem;
+    }
+
+
+    @Override
     public void setContext(Object context) {
         mContext = (Context) context;
         this.pluginFileSystem.setContext(context);
@@ -38,11 +51,7 @@ public class AndroidOsAddonRoot implements Os {
         this.platformFileSystem.setContext(context);
     }
 
-    @Override
-    public PluginFileSystem getPlugInFileSystem() {
-        return this.pluginFileSystem;
-    }
-
+ 
 
     public AndroidOsAddonRoot() {
         this.pluginDatabaseSystem = new AndroidPluginDatabaseSystem(mContext);

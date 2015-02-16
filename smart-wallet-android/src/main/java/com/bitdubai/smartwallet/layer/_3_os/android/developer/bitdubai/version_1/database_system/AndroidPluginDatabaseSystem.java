@@ -2,10 +2,9 @@ package com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_
 
 import android.content.Context;
 
-import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidPluginDataFile;
-import com.bitdubai.wallet_platform_api.layer._3_os.File_System.CantOpenDatabaseException;
-import com.bitdubai.wallet_platform_api.layer._3_os.Database_System.Database;
-import com.bitdubai.wallet_platform_api.layer._3_os.Database_System.PluginDatabaseSystem;
+import com.bitdubai.wallet_platform_api.layer._3_os.file_system.CantOpenDatabaseException;
+import com.bitdubai.wallet_platform_api.layer._3_os.database_system.Database;
+import com.bitdubai.wallet_platform_api.layer._3_os.database_system.PluginDatabaseSystem;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
 
