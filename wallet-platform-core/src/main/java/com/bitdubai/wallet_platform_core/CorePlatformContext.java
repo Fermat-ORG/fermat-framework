@@ -36,14 +36,14 @@ public class CorePlatformContext implements PlatformContext {
 
     public void addPlugin (Plugin plugin, Plugins descriptor) {
 
-        plugins.put(descriptor.getIndex(),plugin);
+        plugins.put(descriptor.getKey(),plugin);
 
     }
 
 
     public Plugin getPlugin (Plugins descriptor){
 
-        return (Plugin) plugins.get(descriptor.getIndex());
+        return (Plugin) plugins.get(descriptor.getKey());
     }
 
 

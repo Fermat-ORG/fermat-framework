@@ -6,6 +6,9 @@ import com.bitdubai.wallet_platform_api.PluginNotRecognizedException;
 import com.bitdubai.wallet_platform_api.layer._3_os.File_System.*;
 import com.bitdubai.wallet_platform_core.layer._10_middleware.app_runtime.developer.bitdubai.version_1.AppRuntimePluginRoot;
 import com.bitdubai.wallet_platform_core.layer._10_middleware.wallet.developer.bitdubai.version_1.WalletPluginRoot;
+import com.bitdubai.wallet_platform_core.layer._11_transaction.from_extrauser.developer.bitdubai.version_1.FromExtraUserTransactionManagerPluginRoot;
+import com.bitdubai.wallet_platform_core.layer._11_transaction.interuser.developer.bitdubai.version_1.InterUserTransactionManagerPluginRoot;
+import com.bitdubai.wallet_platform_core.layer._11_transaction.interwallet.developer.bitdubai.version_1.InterWalletTransactionManagerPluginRoot;
 import com.bitdubai.wallet_platform_core.layer._6_world.crypto_index.developer.bitdubai.version_1.CryptoIndexPluginRoot;
 import com.bitdubai.wallet_platform_core.layer._8_communication.cloud.developer.bitdubai.version_1.CloudCommunicationChannelPluginRoot;
 import com.bitdubai.wallet_platform_plugin.layer._12_module.wallet_manager.developer.bitdubai.version_1.WalletManagerPluginRoot;
@@ -22,7 +25,7 @@ import java.util.UUID;
 public class PluginsIdentityManager {
 
     private PlatformFileSystem platformFileSystem;
-    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 6;
+    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 9;
     private List<UUID> pluginIds = new ArrayList<>();
 
 
@@ -240,6 +243,55 @@ public class PluginsIdentityManager {
                  */
             }
         }
+
+        if (pluginIndex == 0) {
+            try
+            {
+                FromExtraUserTransactionManagerPluginRoot tryType;
+                tryType = (FromExtraUserTransactionManagerPluginRoot) plugin;
+                pluginIndex = 7;
+            }
+            catch (Exception e)
+            {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
+
+
+        if (pluginIndex == 0) {
+            try
+            {
+                InterUserTransactionManagerPluginRoot tryType;
+                tryType = (InterUserTransactionManagerPluginRoot) plugin;
+                pluginIndex = 8;
+            }
+            catch (Exception e)
+            {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
+
+
+        if (pluginIndex == 0) {
+            try
+            {
+                InterWalletTransactionManagerPluginRoot tryType;
+                tryType = (InterWalletTransactionManagerPluginRoot) plugin;
+                pluginIndex = 9;
+            }
+            catch (Exception e)
+            {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
+        
+        
 
         if (pluginIndex > 0) {
               return pluginIds.get(pluginIndex);
