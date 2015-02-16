@@ -43,6 +43,19 @@ public class WalletPluginRoot implements Service, MiddlewareEngine, DealsWithEve
     UUID pluginId;
 
 
+    /**
+     * WalletPluginRoot Interface implementation.
+     */
+
+    public void walletCreated (UUID walletId){
+        // LOUI: TODO: Escuchar el evento Wallet Created y ejecutar este metodo. (Crear el handler y lo que haga falta)
+
+    }
+
+    /**
+     * Service Interface implementation.
+     */
+    
     @Override
     public void start() {
         /**

@@ -7,6 +7,7 @@ import com.bitdubai.wallet_platform_api.layer._1_definition.enums.CryptoCurrency
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.FiatCurrency;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by ciencias on 2/15/15.
@@ -32,6 +33,8 @@ public class MiddlewareWallet implements Wallet {
     
     List<FiatAccount> fiatAccounts;
     List<CryptoAccount> cryptoAccounts;
+    
+
    
     public FiatAccount createFiatAccount (FiatCurrency fiatCurrency){
         
