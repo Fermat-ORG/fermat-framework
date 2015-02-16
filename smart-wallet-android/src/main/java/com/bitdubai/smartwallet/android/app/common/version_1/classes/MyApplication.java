@@ -93,10 +93,10 @@ public class MyApplication extends Application {
 
     public MyApplication () {
         super();
-/*
+
         mPlatform = new Platform();
 
-         try {
+     /*    try {
 
         // mContext = this.getApplicationContext();
 

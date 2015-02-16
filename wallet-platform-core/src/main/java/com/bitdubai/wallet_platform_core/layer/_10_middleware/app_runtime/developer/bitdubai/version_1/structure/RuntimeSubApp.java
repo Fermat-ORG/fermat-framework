@@ -3,6 +3,7 @@ package com.bitdubai.wallet_platform_core.layer._10_middleware.app_runtime.devel
 import com.bitdubai.wallet_platform_api.layer._10_middleware.app_runtime.*;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.Languages;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -11,9 +12,10 @@ import java.util.Map;
 public class RuntimeSubApp implements SubApp {
 
     SubApps type;
-    Map<Activities, Activity> activities;
-    Map<Wallets, Wallet> wallets;
-    Map<String,LanguagePackage> languagePackages;
+    Map<Activities, Activity> activities = new  HashMap<Activities, Activity>();
+    Map<Wallets, Wallet> wallets= new  HashMap<Wallets, Wallet>();
+    Map<String,LanguagePackage> languagePackages = new HashMap<String,LanguagePackage>();
+
 
     /**
      * RuntimeSubApp interface implementation.

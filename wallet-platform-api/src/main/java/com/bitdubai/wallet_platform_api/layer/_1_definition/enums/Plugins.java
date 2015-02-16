@@ -19,7 +19,7 @@ public enum Plugins {
 
     private final String key;
 
-    Plugins(String key) {
+     Plugins(String key) {
         this.key = key;
     }
 

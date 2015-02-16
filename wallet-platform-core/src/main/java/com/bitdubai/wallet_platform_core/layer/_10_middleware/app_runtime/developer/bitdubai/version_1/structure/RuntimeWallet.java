@@ -5,6 +5,7 @@ import com.bitdubai.wallet_platform_api.layer._10_middleware.app_runtime.Activit
 import com.bitdubai.wallet_platform_api.layer._10_middleware.app_runtime.Wallet;
 import com.bitdubai.wallet_platform_api.layer._10_middleware.app_runtime.Wallets;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -13,7 +14,7 @@ import java.util.Map;
 public class RuntimeWallet implements Wallet {
 
     Wallets type;
-    Map<Activities, Activity> activities;
+    Map<Activities, Activity> activities = new HashMap<Activities, Activity>();
 
 
     /**

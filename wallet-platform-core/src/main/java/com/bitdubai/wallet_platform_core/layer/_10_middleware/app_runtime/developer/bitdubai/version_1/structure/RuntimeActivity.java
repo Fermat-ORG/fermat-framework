@@ -2,6 +2,7 @@ package com.bitdubai.wallet_platform_core.layer._10_middleware.app_runtime.devel
 
 import com.bitdubai.wallet_platform_api.layer._10_middleware.app_runtime.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -10,7 +11,7 @@ import java.util.Map;
 public class RuntimeActivity implements Activity {
 
     Activities type;
-    Map<Fragments, Fragment> fragments;
+    Map<Fragments, Fragment> fragments = new HashMap<Fragments, Fragment>();
     TitleBar titleBar;
     SideMenu sideMenu;
     MainMenu mainMenu;

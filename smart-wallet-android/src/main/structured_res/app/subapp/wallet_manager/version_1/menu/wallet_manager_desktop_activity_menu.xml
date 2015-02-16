@@ -52,4 +52,10 @@
         android:orderInCategory="100"
         android:showAsAction="never"
         android:icon="@drawable/ic_action_settings"/>
+    <item
+        android:id="@+id/action_runtime"
+        android:title="Runtime"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:icon="@drawable/ic_action_settings"/>
 </menu>
