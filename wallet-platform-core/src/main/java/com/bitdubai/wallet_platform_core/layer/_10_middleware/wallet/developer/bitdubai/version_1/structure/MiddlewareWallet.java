@@ -22,6 +22,8 @@ import java.util.List;
  * The bottom layer is the Value Chunk Layer, that represents the chunks of crypto the user have, maintaining the
  * relationship with the price it was bought.
  * 
+ * The wallet also manages inter account transactions.
+ * 
  * * * * * *
  * * * 
  */
@@ -73,8 +75,20 @@ public class MiddlewareWallet implements Wallet {
         cryptoAccounts.size();
     }
     
+    public void transferFromFiatToFiat (FiatAccount fiatAccountFrom, FiatAccount fiatAccountTo, Double amountFrom, Double amountTo){
+                
+    }
     
-    
+    public void transferFromCryptoToCrypto (CryptoAccount cryptoAccountFrom, CryptoAccount cryptoAccountTo, Double amountFrom, Double amountTo){
 
+    }
+
+    public void transferFromFiatToCrypto (FiatAccount fiatAccountFrom, CryptoAccount cryptoAccountTo, Double amountFrom, Double amountTo){
+
+    }
+
+    public void transferFromCryptoToFiat (  CryptoAccount cryptoAccountFrom, FiatAccount fiatAccountTo, Double amountFrom, Double amountTo){
+
+    }
     
 }
