@@ -1,0 +1,9 @@
+https://www.websequencediagrams.com
+
+title USER_LOGGED_IN Event
+
+UserManager/PlatformUser-> Event Manager:Raise USER_LOGGED_IN Event.
+
+Event Manager ->WalletManager/WalletManagerpluginRoot:Listen To USER_LOGGED_IN Event.
+
+note right of UserManager/PlatformUser:

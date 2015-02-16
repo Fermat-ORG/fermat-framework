@@ -1,0 +1,17 @@
+https://www.websequencediagrams.com
+
+title USER_CREATED Event
+
+User Manager/PlatformUser -> Event Manager:Raise Event USER_CREATED.
+
+Event Manager ->WalletManagerPluginRoot:Listen To USER_CREATED Event.
+
+Event Manager ->BitcoinCryptoNetworkPluginRoot:Listen To USER_CREATED Event.
+
+note right of WalletManagerPluginRoot:create default wallet.
+
+note right of BitcoinCryptoNetworkPluginRoot:create crypto wallet.
+
+note right of User Manager/PlatformUser:created when there is no user.
+
+note right of User Manager/PlatformUser:requested by the user.
