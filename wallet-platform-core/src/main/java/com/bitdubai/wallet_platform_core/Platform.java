@@ -106,12 +106,16 @@ public class Platform  {
     
     PluginsIdentityManager pluginsIdentityManager;
 
+
     CorePlatformContext corePlatformContext;
     
     Object osContext;
     Os os;
 
-
+    
+    public CorePlatformContext getCorePlatformContext() {
+        return corePlatformContext;
+    }
     
     
     public Platform () {
@@ -499,6 +503,8 @@ public class Platform  {
          * * * * 
          */
 
+        
+        
         Plugin appRuntimeMiddleware = ((MiddlewareLayer) mMiddlewareayer).getmAppRuntimePlugin();
 
         ((DealsWithPluginFileSystem) appRuntimeMiddleware).setPluginFileSystem(os.getPlugInFileSystem());
@@ -572,7 +578,9 @@ public class Platform  {
 
             throw new CantStartPlatformException();
         }
-//-------------------------------------------------------------------------------------
+
+        
+        
         /**
          * ----------------------------------
          * Plugin From Extra User Transaction
@@ -580,6 +588,8 @@ public class Platform  {
          * * * * 
          */
 
+        
+        
         /**
          * I will give the From Extra User Transaction access to the File System and to the Event Manager
          */
@@ -613,6 +623,8 @@ public class Platform  {
             throw new CantStartPlatformException();
         }
 
+        
+        
         /**
          * ----------------------------------
          * Plugin Inter User Transaction
@@ -620,6 +632,8 @@ public class Platform  {
          * * * *
          */
 
+        
+        
         /**
          * I will give the Inter User Transaction access to the File System and to the Event Manager
          */
@@ -653,6 +667,8 @@ public class Platform  {
             throw new CantStartPlatformException();
         }
 
+        
+        
         /**
          * ----------------------------------
          * Plugin Inter Wallet Transaction
@@ -660,6 +676,8 @@ public class Platform  {
          * * * *
          */
 
+        
+        
         /**
          * I will give the Inter Wallet Transaction access to the File System and to the Event Manager
          */
@@ -669,7 +687,7 @@ public class Platform  {
         ((DealsWithPluginFileSystem) interWalletTransaction).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) interWalletTransaction).setEventManager((EventManager) eventManager);
 
-        corePlatformContext.addPlugin(interWalletTransaction, Plugins.FROM_EXTRA_USER_TRANSACTION);
+        corePlatformContext.addPlugin(interWalletTransaction, Plugins.INTER_WALLET_TRANSACTION);
 
         try
         {
@@ -694,7 +712,7 @@ public class Platform  {
         }
 
 
-//-------------------------------------------------------------------------------------        
+      
         /**
          * -----------------------------
          * Plugin Wallet Manager
