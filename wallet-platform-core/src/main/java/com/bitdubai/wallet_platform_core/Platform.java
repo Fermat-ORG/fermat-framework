@@ -201,6 +201,7 @@ public class Platform  {
             mMiddlewareayer.start();
             mModuleLayer.start();
             mAgentLayer.start();
+            mTransactionLayer.start();
         }
         catch (CantStartLayerException cantStartLayerException) {
             System.err.println("CantStartLayerException: " + cantStartLayerException.getMessage());
@@ -596,9 +597,8 @@ public class Platform  {
 
         Plugin fromExtraUserTransaction = ((TransactionLayer) mTransactionLayer).getFromExtraUserPlugin();
 
-        ((DealsWithPluginFileSystem) fromExtraUserTransaction).setPluginFileSystem(os.getPlugInFileSystem());
-        ((DealsWithEvents) fromExtraUserTransaction).setEventManager((EventManager) eventManager);
-
+    ((DealsWithPluginFileSystem) fromExtraUserTransaction).setPluginFileSystem(os.getPlugInFileSystem());
+    ((DealsWithEvents) fromExtraUserTransaction).setEventManager((EventManager) eventManager);
         corePlatformContext.addPlugin(fromExtraUserTransaction, Plugins.FROM_EXTRA_USER_TRANSACTION);
 
         try

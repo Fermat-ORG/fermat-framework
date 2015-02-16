@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Toast;
 
 
+import com.bitdubai.smartwallet.android.app.RuntimeAppActivity;
 import com.bitdubai.smartwallet.android.app.common.version_1.fragment.NavigationDrawerFragment;
 import com.bitdubai.smartwallet.android.app.subapp.shop.version_1.activity.ShopActivity;
 import com.bitdubai.smartwallet.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.FrameworkActivity;
@@ -131,6 +132,21 @@ public class DesktopActivity extends FragmentActivity
             {
                 Intent intent;
                 intent = new Intent(this, FileImageActivity.class);
+                startActivity(intent);
+            }
+            catch (Exception ex)
+            {
+                String strError = ex.getMessage();
+            }
+
+
+            return true;
+        }
+        if (id == R.id.action_runtime) {
+            try
+            {
+                Intent intent;
+                intent = new Intent(this, RuntimeAppActivity.class);
                 startActivity(intent);
             }
             catch (Exception ex)
