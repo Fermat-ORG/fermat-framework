@@ -19,11 +19,16 @@ import com.bitdubai.wallet_platform_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.wallet_platform_core.Platform;
 
 import com.bitdubai.smartwallet.R;
+import com.bitdubai.wallet_platform_core.layer._10_middleware.app_runtime.developer.bitdubai.version_1.structure.*;
 
 
 import com.bitdubai.wallet_platform_core.layer._10_middleware.app_runtime.developer.bitdubai.version_1.AppRuntimePluginRoot;
 
 import com.bitdubai.wallet_platform_core.CorePlatformContext;
+import com.bitdubai.wallet_platform_core.layer._10_middleware.app_runtime.developer.bitdubai.version_1.structure.RuntimeSubApp;
+
+import java.util.Map;
+import java.util.Iterator;
 /**
  * Created by toshiba on 16/02/2015.
  */
@@ -48,7 +53,33 @@ public class RuntimeAppActivity extends Activity {
 
             AppRuntime appRuntimeMiddleware =  (AppRuntime)platformContext.getPlugin(Plugins.APP_RUNTIME_MIDDLEWARE);
 
-           Apps apps = appRuntimeMiddleware.getLastApp();
+           App app = appRuntimeMiddleware.getLastApp();
+
+            Map<SubApps, SubApp> subapps = app.getSubApps();
+
+            Iterator<Map.Entry<SubApps, SubApp>>  entries = subapps.entrySet().iterator();
+            while (entries.hasNext()) {
+                Map.Entry<SubApps, SubApp> thisEntry =  entries.next();
+                RuntimeSubApp subApp = (RuntimeSubApp)thisEntry.getValue();
+                SubApps type = subApp.getType();
+                Map<Activities, com.bitdubai.wallet_platform_api.layer._10_middleware.app_runtime.Activity> activities = subApp.getActivities();
+                Map<Wallets, Wallet> wallets = subApp.getWallets();
+                Iterator<Map.Entry<Activities, com.bitdubai.wallet_platform_api.layer._10_middleware.app_runtime.Activity>>  eactivities = activities.entrySet().iterator();
+
+                while (eactivities.hasNext()) {
+                    Map.Entry<Activities, com.bitdubai.wallet_platform_api.layer._10_middleware.app_runtime.Activity> activityEntry =  eactivities.next();
+                    try {
+                        RuntimeActivity activity = (RuntimeActivity)activityEntry.getValue();
+                    }
+                    catch (Exception e){
+
+                    }
+
+
+                }
+
+            }
+
 
 
         }

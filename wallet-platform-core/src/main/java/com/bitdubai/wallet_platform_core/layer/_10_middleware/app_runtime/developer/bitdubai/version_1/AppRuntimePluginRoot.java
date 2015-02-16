@@ -42,7 +42,7 @@ public class AppRuntimePluginRoot implements Service, MiddlewareEngine, AppRunti
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
     List<EventListener> listenersAdded = new ArrayList<>();
-
+    List<App> listApps = new ArrayList<>();
     /**
      * UsesFileSystem Interface member variables.
      */
@@ -120,12 +120,13 @@ public class AppRuntimePluginRoot implements Service, MiddlewareEngine, AppRunti
 
     @Override
     public App getApp(Apps app) {
+
         return null;
     }
 
     @Override
-    public Apps getLastApp() {
-        return null;
+    public App getLastApp() {
+        return listApps.get(0);
     }
 
     @Override
@@ -313,6 +314,8 @@ public class AppRuntimePluginRoot implements Service, MiddlewareEngine, AppRunti
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_COMMUNITY);
         runtimeActivity.addFragment(runtimeFragment);
+
+
         /**
          * End of Wallet Kids fragments.
          * */
@@ -525,6 +528,7 @@ public class AppRuntimePluginRoot implements Service, MiddlewareEngine, AppRunti
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_ALL);
         runtimeActivity.addFragment(runtimeFragment);
 
+        listApps.add(runtimeApp);
         /**
          * End of Wallet Accounts tabs.
          */
