@@ -237,70 +237,70 @@ public class WalletDesktopFragment extends Fragment {
             {
                 case "wallet_store_cover_photo_girl":
                     holder.imageView.setImageResource(R.drawable.icono_piggy_pink);
-                    holder.imageView.setTag("1");
+                    holder.imageView.setTag("FrameworkActivity|1");
                     break;
                 case "wallet_store_cover_photo_boy":
                     holder.imageView.setImageResource(R.drawable.icono_piggy_yellow);
-                    holder.imageView.setTag("2");
+                    holder.imageView.setTag("FrameworkActivity|2");
                     break;
                 case "wallet_store_cover_photo_lady":
                     holder.imageView.setImageResource(R.drawable.wallet_1);
-                    holder.imageView.setTag("3");
+                    holder.imageView.setTag("FrameworkActivity|3");
                     break;
                 case "wallet_store_cover_photo_young":
                     holder.imageView.setImageResource(R.drawable.wallet_2);
-                    holder.imageView.setTag("4");
+                    holder.imageView.setTag("FrameworkActivity|4");
                     break;
                 case "wallet_store_cover_photo_boca_juniors":
                     holder.imageView.setImageResource(R.drawable.icono_club_1);
-                    holder.imageView.setTag("10");
+                    holder.imageView.setTag("FrameworkActivity|10");
                     break;
                 case "wallet_store_cover_photo_carrefour":
                     holder.imageView.setImageResource(R.drawable.icono_retailer_1);
-                    holder.imageView.setTag("7");
+                    holder.imageView.setTag("FrameworkActivity|7");
                     break;
                 case "wallet_store_cover_photo_gucci":
                     holder.imageView.setImageResource(R.drawable.wallet_4);
-                    holder.imageView.setTag("6");
+                    holder.imageView.setTag("FrameworkActivity|6");
                     break;
                 case "wallet_store_cover_photo_bank_itau":
                     holder.imageView.setImageResource(R.drawable.icono_banco_1);
-                    holder.imageView.setTag("8");
+                    holder.imageView.setTag("FrameworkActivity|8");
                     break;
                 case "wallet_store_cover_photo_mcdonals":
                     holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_mcdonals);
-                    holder.imageView.setTag("11");
+                    holder.imageView.setTag("FrameworkActivity|11");
                     break;
                 case "wallet_store_cover_photo_vans":
                     holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_vans);
                     break;
                 case "wallet_store_cover_photo_samsung":
                     holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_samsung);
-                    holder.imageView.setTag("11");
+                    holder.imageView.setTag("FrameworkActivity|12");
                     break;
                 case "wallet_store_cover_photo_bank_popular":
                     holder.imageView.setImageResource(R.drawable.icono_banco_2);
-                    holder.imageView.setTag("9");
+                    holder.imageView.setTag("FrameworkActivity|9");
                     break;
                 case "wallet_store_cover_photo_sony":
                     holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_sony);
-                    holder.imageView.setTag("11");
+                    holder.imageView.setTag("FrameworkActivity|13");
                     break;
                 case "wallet_store_cover_photo_hp":
                     holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_hp);
-                    holder.imageView.setTag("11");
+                    holder.imageView.setTag("FrameworkActivity|14");
                     break;
                 case "wallet_store_cover_photo_bmw":
                     holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_bmw);
-                    holder.imageView.setTag("11");
+                    holder.imageView.setTag("FrameworkActivity|15");
                     break;
                 case "wallet_store_cover_photo_billabong":
                     holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_billabong);
-                    holder.imageView.setTag("11");
+                    holder.imageView.setTag("FrameworkActivity|16");
                     break;
                 case "wallet_store_cover_photo_starbucks":
                     holder.imageView.setImageResource(R.drawable.wallet_store_cover_photo_starbucks);
-                    holder.imageView.setTag("11");
+                    holder.imageView.setTag("FrameworkActivity|17");
                     break;
             }
 

@@ -9,12 +9,12 @@ public interface AppRuntime {
     
     public App getLastApp ();
 
-    public SubApps getLastSubApp ();
+    public SubApp getLastSubApp ();
 
-    public Wallets getLastWallet ();
+    public Wallet getLastWallet ();
     
-    public Activities getLasActivity ();
+    public Activity getLasActivity ();
     
-    public Fragments getLastFragment ();
+    public Fragment getLastFragment ();
     
 }
