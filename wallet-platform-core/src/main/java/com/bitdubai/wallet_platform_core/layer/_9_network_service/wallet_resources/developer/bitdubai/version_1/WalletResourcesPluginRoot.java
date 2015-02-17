@@ -20,8 +20,44 @@ import java.util.UUID;
 /**
  * Created by loui on 17/02/15.
  */
+
+/**
+ * This plugin is designed to look up for the resources needed by a newly installed wallet. We are talking about the 
+ * navigation structure, plus the images needed by the wallet to be able to run.
+ * 
+ * It will try to gather those resources from other peers or a centralized location provided by the wallet developer 
+ * if it is not possible.
+ * 
+ * It will also serve other peers with these resources when needed.
+ *  
+ * * * * * * * 
+ */
+
 public class WalletResourcesPluginRoot implements Service, NetworkService, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem,Plugin {
 
+    
+    // Loui; TODO: El evento actual WALLET_INSTALLED ahora pasa a ser BEGUN_WALLET_ISNTALLATION
+    
+    // Loui: TODO: Debe escuchar el evento BEGUN_WALLET_ISNTALLATION y el handler ejecutar el metodo checkResources (tipo de wallet, developer, version, publisher), el tipo de wallet, developer es un enum en definitions
+    
+    // Loui; TODO: Tiene que disparar un evento cuando obtenga todos los recursos de una nueva wallet por primera vez: WALLET_RESOURCES_INSTALLED 
+    
+    // Loui; TODO; El AppRuntime, debe escuchar ese evento y ejecutar el mentodo : addToNavigationStructure (String navegationStructure, y los parametros que identifican el tipo de wallet)
+
+    // Loui; TODO: EL AppRuntime, debe disparar el evento NAVIGATION_STRUCTURE_UPDATED con los parametros que identifique el tipo de wallet. 
+
+    // Loui: TODO: El Wallet Manager tambien escucha el evento WALLET_RESOURCES_INSTALLED y cuando se entera, permite actualiza internamente el progreso de la instalacion, que incluye la creacion de su propio wallet
+
+    // Loui: TODO: El Wallet Manager tambien escucha el evento NAVIGATION_STRUCTURE_UPDATED y cuando se entera, permite que el usuario abra la nueva billetera instalada y obviamente setea el estado de la instalacion en un 100%. El handler le ejecuta el metodo: enableWallet ()
+    
+    // Loui TODO: EL Middleware Wallet tiene que disparar el evento WALLET_CREATED cuando termina de crear su wallet. Notar que es el mismo evento que dispara el Wallet Manager. Para poder distinguirlos, cada quien tiene que setear en el source del evento quien es que lo disparo. Y obviamente el handler tiene que tener en cuenta solo los eventos no disparados por el mismo. Entonces hay que actualizar el disparo del Wallet Manager para que agregue el source, el handler actual que lo toma, y el nuevo que lo dispara tambien tiene que setearse como source.
+    
+    // Loui; TODO El Wallet Mangager tiene que escuchar el evento WALLET_CREATED enviado por el middleware Wallet y el handler asegurarse que no sea el mismo y ejecutar el metodo que corresponda. Realmente va a considerra la wallet instaladad cuando haya recibido este evento y todos los otros que esperaba.
+    
+    
+
+    
+    
     /**
      * Service Interface member variables.
      */

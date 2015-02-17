@@ -20,6 +20,20 @@ import java.util.UUID;
 /**
  * Created by loui on 17/02/15.
  */
+
+/**
+ * This plugin handles the information that constitutes a wallet; The resources and the navigation structure. When a new
+ * wallet is installed in the local device, it is in charge of finding those two things, either from other peers, or from
+ * a centralized location.
+ * 
+ * A wallet can be run only when it has both its navigation structure on place and the resources it is based upon (like
+ * images, sound files and the like)
+ * 
+ * This plug in is also ready to share that information with other peers when requested.
+ * 
+ * * * * * 
+ */
+
 public class WalletStorePluginRoot implements Service, NetworkService, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem,Plugin {
 
     /**
@@ -52,7 +66,7 @@ public class WalletStorePluginRoot implements Service, NetworkService, DealsWith
     @Override
     public void start() {
         /**
-         * I will initialize the handling of com.bitdubai.platform events.
+         * I will initialize the handling of platform events.
          */
 
         EventListener eventListener;

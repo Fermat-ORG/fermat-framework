@@ -20,6 +20,17 @@ import java.util.UUID;
 /**
  * Created by loui on 17/02/15.
  */
+
+/**
+ * This plugin is in charge of finding the banks notes of a certain country, downloading them and storing them in the 
+ * local device.
+ * 
+ * Initially it will look into a centralized place, but afterwords it will implement a method to download it from peers.
+ * 
+ * * * * *
+ * * * 
+ */
+
 public class BankNotesPluginRoot implements Service, NetworkService, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem,Plugin {
 
     /**

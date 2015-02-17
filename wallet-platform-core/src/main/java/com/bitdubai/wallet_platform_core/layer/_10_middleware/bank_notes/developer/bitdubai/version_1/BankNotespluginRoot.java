@@ -21,6 +21,14 @@ import java.util.UUID;
 /**
  * Created by loui on 17/02/15.
  */
+
+/**
+ * This plugin handles a layer of image representation of the balance of a wallet. Basically it keeps the state of the
+ * position, rotation and scale of bank notes of different face value on several XY planes. Each plane will later be 
+ * interpreted by the UI as needed.
+ * * * *
+ */
+
 public class BankNotespluginRoot implements Service, MiddlewareEngine, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
 
     /**
