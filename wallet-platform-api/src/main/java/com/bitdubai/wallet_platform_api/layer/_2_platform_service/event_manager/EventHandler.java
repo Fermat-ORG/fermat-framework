@@ -7,6 +7,6 @@ import com.bitdubai.wallet_platform_api.layer._1_definition.event.PlatformEvent;
  */
 public interface EventHandler {
 
-    public void raiseEvent (PlatformEvent platformEvent) throws Exception;
+    public void handleEvent(PlatformEvent platformEvent) throws Exception;
 
 }

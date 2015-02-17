@@ -37,7 +37,7 @@ public class WalletClosedEventListener implements EventListener {
 
         try
         {
-            this.eventHandler.raiseEvent(platformEvent);
+            this.eventHandler.handleEvent(platformEvent);
         }
         catch (Exception exception)
         {

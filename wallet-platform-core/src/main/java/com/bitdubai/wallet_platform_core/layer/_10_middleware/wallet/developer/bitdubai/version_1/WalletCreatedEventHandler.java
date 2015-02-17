@@ -23,7 +23,7 @@ public class WalletCreatedEventHandler implements EventHandler {
     }
 
     @Override
-    public  void raiseEvent(PlatformEvent platformEvent) throws Exception {
+    public  void handleEvent(PlatformEvent platformEvent) throws Exception {
         UUID walletId = ((WalletCreatedEvent) platformEvent).getWalletId();
 
 
