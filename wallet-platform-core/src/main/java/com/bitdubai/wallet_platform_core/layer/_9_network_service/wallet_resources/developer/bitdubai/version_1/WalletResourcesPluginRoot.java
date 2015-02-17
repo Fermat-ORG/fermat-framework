@@ -9,6 +9,7 @@ import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventHandler;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventListener;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventManager;
+import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventType;
 import com.bitdubai.wallet_platform_api.layer._3_os.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.wallet_platform_api.layer._3_os.file_system.PluginFileSystem;
 import com.bitdubai.wallet_platform_api.layer._9_network_service.NetworkService;
@@ -36,9 +37,8 @@ import java.util.UUID;
 public class WalletResourcesPluginRoot implements Service, NetworkService, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem,Plugin {
 
     
-    // Loui; TODO: El evento actual WALLET_INSTALLED ahora pasa a ser BEGUN_WALLET_ISNTALLATION
-    
-    // Loui: TODO: Debe escuchar el evento BEGUN_WALLET_ISNTALLATION y el handler ejecutar el metodo checkResources (tipo de wallet, developer, version, publisher), el tipo de wallet, developer es un enum en definitions
+
+    // Loui: TODO: Debe escuchar el evento BEGUN_WALLET_INSTALLATION y el handler ejecutar el metodo checkResources (tipo de wallet, developer, version, publisher), el tipo de wallet, developer es un enum en definitions
     
     // Loui; TODO: Tiene que disparar un evento cuando obtenga todos los recursos de una nueva wallet por primera vez: WALLET_RESOURCES_INSTALLED 
     
@@ -94,6 +94,14 @@ public class WalletResourcesPluginRoot implements Service, NetworkService, Deals
         EventListener eventListener;
         EventHandler eventHandler;
 
+        eventListener = eventManager.getNewListener(EventType.BEGUN_WALLET_INSTALLATION);
+        eventHandler = new BegunWalletInstallationEventHandler();
+        ((BegunWalletInstallationEventHandler) eventHandler).setNetworkService(this);
+        eventListener.setEventHandler(eventHandler);
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);
+        
+        
         this.serviceStatus = ServiceStatus.STARTED;
 
     }

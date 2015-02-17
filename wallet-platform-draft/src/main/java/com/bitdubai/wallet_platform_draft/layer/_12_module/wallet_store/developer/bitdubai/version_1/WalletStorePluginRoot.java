@@ -61,15 +61,15 @@ public class WalletStorePluginRoot implements Service, WalletStore, DealsWithEve
         EventHandler eventHandler;
 
         eventListener = eventManager.getNewListener(EventType.WALLET_INSTALLED);
-        eventHandler = new WalletInstalledEventHandler();
-        ((WalletInstalledEventHandler) eventHandler).setWalletStore(this);
+        eventHandler = new BegunWalletInstallationEventHandler();
+        ((BegunWalletInstallationEventHandler) eventHandler).setWalletStore(this);
         eventListener.setEventHandler(eventHandler);
         eventManager.addListener(eventListener);
         listenersAdded.add(eventListener);
 
         eventListener = eventManager.getNewListener(EventType.WALLET_UNINSTALLED);
-        eventHandler = new WalletInstalledEventHandler();
-        ((WalletInstalledEventHandler) eventHandler).setWalletStore(this);
+        eventHandler = new BegunWalletInstallationEventHandler();
+        ((BegunWalletInstallationEventHandler) eventHandler).setWalletStore(this);
         eventListener.setEventHandler(eventHandler);
         eventManager.addListener(eventListener);
         listenersAdded.add(eventListener);

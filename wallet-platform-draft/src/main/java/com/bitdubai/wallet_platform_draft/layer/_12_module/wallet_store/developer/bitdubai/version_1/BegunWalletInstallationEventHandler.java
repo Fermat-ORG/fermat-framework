@@ -14,7 +14,7 @@ import java.util.UUID;
 /**
  * Created by loui on 05/02/15.
  */
-public class WalletInstalledEventHandler implements EventHandler {
+public class BegunWalletInstallationEventHandler implements EventHandler {
     WalletStore walletStore;
 
     public void setWalletStore (WalletStore walletStore){
@@ -24,7 +24,7 @@ public class WalletInstalledEventHandler implements EventHandler {
     @Override
     public void raiseEvent(PlatformEvent platformEvent) throws Exception {
         
-        UUID walletId = ((WalletInstalledEvent)platformEvent).getWalletId();
+        UUID walletId = ((BegunWalletInstallationEvent)platformEvent).getWalletId();
         
         
         if(((Service) this.walletStore).getStatus() == ServiceStatus.STARTED) {
