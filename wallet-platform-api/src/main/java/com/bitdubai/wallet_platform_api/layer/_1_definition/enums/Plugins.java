@@ -18,7 +18,8 @@ public enum Plugins {
     INTER_WALLET_TRANSACTION("Inter Wallet Transaction"),
     TO_EXTRA_USER_TRANSACTION("To Extra User Transaction"),
     BANK_NOTES_MIDDLEWARE("Bank Notes Middleware"),
-    BANK_NOTES_NETWORK_SERVICE("Bank Notes Network Service");
+    BANK_NOTES_NETWORK_SERVICE("Bank Notes Network Service"),
+    WALLET_RESOURCES_NETWORK_SERVICE("Wallet Resources Network Service");
 
     private final String key;
 

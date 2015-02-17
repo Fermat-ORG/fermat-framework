@@ -544,15 +544,15 @@ public class Platform  {
 
 
         /**
-         * I will give the Bank Notes Middleware access to the File System and to the Event Manager
+         * I will give the Bank Notes Network Service access to the File System and to the Event Manager
          */
 
-        Plugin bankNotesNetworkService = ((NetworkServiceLayer) mNetworkServiceLayer).getmBankNotesPlugin();
+        Plugin bankNotesNetworkService = ((NetworkServiceLayer) mNetworkServiceLayer).getBankNotesPlugin();
 
         ((DealsWithPluginFileSystem) bankNotesNetworkService).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) bankNotesNetworkService).setEventManager((EventManager) eventManager);
 
-        corePlatformContext.addPlugin(bankNotesNetworkService, Plugins.WALLET_MIDDLEWARE);
+        corePlatformContext.addPlugin(bankNotesNetworkService, Plugins.BANK_NOTES_NETWORK_SERVICE);
 
         try
         {
@@ -575,7 +575,47 @@ public class Platform  {
 
             throw new CantStartPlatformException();
         }
+        /**
+         * -----------------------------
+         * Plugin Wallet Resources Network Service
+         * -----------------------------
+         * * * *
+         */
 
+
+
+        /**
+         * I will give the Wallet Resources Network Service access to the File System and to the Event Manager
+         */
+
+        Plugin walletResourcesNetworkService = ((NetworkServiceLayer) mNetworkServiceLayer).getWalletResources();
+
+        ((DealsWithPluginFileSystem) walletResourcesNetworkService).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) walletResourcesNetworkService).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(walletResourcesNetworkService, Plugins.BANK_NOTES_NETWORK_SERVICE);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(walletResourcesNetworkService);
+            (walletResourcesNetworkService).setId(pluginID);
+
+            ((Service) walletResourcesNetworkService).start();
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
 
         /**
          * -----------------------------
@@ -595,7 +635,7 @@ public class Platform  {
         ((DealsWithPluginFileSystem) bankNotesMiddleware).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) bankNotesMiddleware).setEventManager((EventManager) eventManager);
 
-        corePlatformContext.addPlugin(bankNotesMiddleware, Plugins.WALLET_MIDDLEWARE);
+        corePlatformContext.addPlugin(bankNotesMiddleware, Plugins.BANK_NOTES_MIDDLEWARE);
 
         try
         {

@@ -7,6 +7,7 @@ import com.bitdubai.wallet_platform_api.layer._9_network_service.CantStartSubsys
 import com.bitdubai.wallet_platform_api.layer._9_network_service.NetworkSubsystem;
 import com.bitdubai.wallet_platform_core.layer._9_network_service.bank_notes.BankNotesSubsystem;
 import com.bitdubai.wallet_platform_core.layer._9_network_service.user.UserSubsystem;
+import com.bitdubai.wallet_platform_core.layer._9_network_service.wallet_resources.WalletResourcesSubsystem;
 
 /**
  * Created by ciencias on 03.01.15.
@@ -15,16 +16,22 @@ public class NetworkServiceLayer implements PlatformLayer {
 
     private Plugin mUserPlugin;
 
-    private Plugin mBankNotesPlugin;    
+    private Plugin mBankNotesPlugin;
     
+    private Plugin mWalletResources;
+
+
     public Plugin getUserPlugin() {
         return mUserPlugin;
     }
 
-    public Plugin getmBankNotesPlugin() {
+    public Plugin getBankNotesPlugin() {
         return mBankNotesPlugin;
     }
 
+    public Plugin getWalletResources() {
+        return mWalletResources;
+    }
 
     @Override
     public void start() throws CantStartLayerException {
@@ -73,5 +80,26 @@ public class NetworkServiceLayer implements PlatformLayer {
         }
 
 
+        /**
+         * Let's try to start the Bank Notes subsystem.
+         */
+
+        NetworkSubsystem walletResources = new WalletResourcesSubsystem();
+
+        try {
+            walletResources.start();
+            mWalletResources = (walletResources).getPlugin();
+
+        } catch (CantStartSubsystemException e) {
+            System.err.println("CantStartCryptoNetworkException: " + e.getMessage());
+
+            /**
+             * Since this is the only implementation, if this does not start, then the layer can't start either.
+             */
+
+            throw new CantStartLayerException();
+
+        }
+        
     }
 }
