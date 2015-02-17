@@ -15,7 +15,9 @@ public enum Plugins {
     WALLET_MANAGER_MODULE ("Wallet Manager Module"),
     FROM_EXTRA_USER_TRANSACTION("From Extra User Transaction"),
     INTER_USER_TRANSACTION("Inter User Transaction"),
-    INTER_WALLET_TRANSACTION("Inter Wallet Transaction");
+    INTER_WALLET_TRANSACTION("Inter Wallet Transaction"),
+    TO_EXTRA_USER_TRANSACTION("To Extra User Transaction"),
+    BANK_NOTES_MIDDLEWARE("Bank Notes Middleware");
 
     private final String key;
 

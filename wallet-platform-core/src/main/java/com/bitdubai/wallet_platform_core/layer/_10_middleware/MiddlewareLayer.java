@@ -7,6 +7,7 @@ import com.bitdubai.wallet_platform_api.layer._10_middleware.CantStartSubsystemE
 import com.bitdubai.wallet_platform_api.layer._10_middleware.MiddlewareSubsystem;
 // import com.bitdubai.wallet_platform_core.layer._10_middleware.shell.ShellSubsystem;
 import com.bitdubai.wallet_platform_core.layer._10_middleware.app_runtime.AppRuntimeSubsystem;
+import com.bitdubai.wallet_platform_core.layer._10_middleware.bank_notes.BankNotesSubsystem;
 import com.bitdubai.wallet_platform_core.layer._10_middleware.wallet.WalletSubsystem;
 
 /**
@@ -17,6 +18,8 @@ public class MiddlewareLayer implements PlatformLayer {
     private Plugin mShellPlugin;
     private Plugin mWalletPlugin;
     private Plugin mAppRuntimePlugin;
+    private Plugin mBankNotesPlugin;
+
 
    /*
     public Plugin getShellPlugin() {
@@ -31,6 +34,12 @@ public class MiddlewareLayer implements PlatformLayer {
     public Plugin getWalletPlugin() {
         return mWalletPlugin;
     }
+
+
+    public Plugin getmBankNotesPlugin() {
+        return mBankNotesPlugin;
+    }
+
 
     @Override
     public void start() throws CantStartLayerException {
@@ -65,8 +74,8 @@ public class MiddlewareLayer implements PlatformLayer {
             System.err.println("CantStartSubsystemException: " + e.getMessage());
         }
 
-        
-        
+
+
         /**
          * Let's try to start the wallet subsystem.
          */
@@ -79,6 +88,20 @@ public class MiddlewareLayer implements PlatformLayer {
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());
         }
+
+        /**
+         * Let's try to start the wallet subsystem.
+         */
+        MiddlewareSubsystem bankNotesSubsystem = new BankNotesSubsystem();
+
+        try {
+            bankNotesSubsystem.start();
+            mWalletPlugin = bankNotesSubsystem.getPlugin();
+
+        } catch (CantStartSubsystemException e) {
+            System.err.println("CantStartSubsystemException: " + e.getMessage());
+        }
+
 
     }
 }

@@ -535,8 +535,51 @@ public class Platform  {
             throw new CantStartPlatformException();
         }
 
-        
-        
+
+        /**
+         * -----------------------------
+         * Plugin Bank Notes Middleware
+         * -----------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the Bank Notes Middleware access to the File System and to the Event Manager
+         */
+
+        Plugin bankNotesMiddleware = ((MiddlewareLayer) mMiddlewareayer).getmBankNotesPlugin();
+
+        ((DealsWithPluginFileSystem) bankNotesMiddleware).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) bankNotesMiddleware).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(bankNotesMiddleware, Plugins.WALLET_MIDDLEWARE);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(bankNotesMiddleware);
+            (bankNotesMiddleware).setId(pluginID);
+
+            ((Service) bankNotesMiddleware).start();
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
+
+
 
         /**
          * -----------------------------
@@ -711,8 +754,50 @@ public class Platform  {
             throw new CantStartPlatformException();
         }
 
+        /**
+         * ----------------------------------
+         * Plugin To Extra User Transaction
+         * ----------------------------------
+         * * * *
+         */
 
-      
+
+
+        /**
+         * I will give the To Extra User Transaction access to the File System and to the Event Manager
+         */
+
+        Plugin toExtraUserTransaction = ((TransactionLayer) mTransactionLayer).getToExtraUserPlugin();
+
+        ((DealsWithPluginFileSystem) toExtraUserTransaction).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) toExtraUserTransaction).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(toExtraUserTransaction, Plugins.TO_EXTRA_USER_TRANSACTION);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(interWalletTransaction);
+            (interWalletTransaction).setId(pluginID);
+
+            ((Service) toExtraUserTransaction).start();
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
+
+
         /**
          * -----------------------------
          * Plugin Wallet Manager

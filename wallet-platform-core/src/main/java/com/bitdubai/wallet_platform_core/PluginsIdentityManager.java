@@ -6,10 +6,12 @@ import com.bitdubai.wallet_platform_api.PluginNotRecognizedException;
 import com.bitdubai.wallet_platform_api.layer._3_os.file_system.*;
 import com.bitdubai.wallet_platform_api.layer._3_os.file_system.PluginFileSystem;
 import com.bitdubai.wallet_platform_core.layer._10_middleware.app_runtime.developer.bitdubai.version_1.AppRuntimePluginRoot;
+import com.bitdubai.wallet_platform_core.layer._10_middleware.bank_notes.developer.bitdubai.version_1.BankNotespluginRoot;
 import com.bitdubai.wallet_platform_core.layer._10_middleware.wallet.developer.bitdubai.version_1.WalletPluginRoot;
 import com.bitdubai.wallet_platform_core.layer._11_transaction.from_extrauser.developer.bitdubai.version_1.FromExtraUserTransactionManagerPluginRoot;
 import com.bitdubai.wallet_platform_core.layer._11_transaction.interuser.developer.bitdubai.version_1.InterUserTransactionManagerPluginRoot;
 import com.bitdubai.wallet_platform_core.layer._11_transaction.interwallet.developer.bitdubai.version_1.InterWalletTransactionManagerPluginRoot;
+import com.bitdubai.wallet_platform_core.layer._11_transaction.to_extrauser.developer.bitsubai.version_1.ToExtraUserTransactionManagerPluginRoot;
 import com.bitdubai.wallet_platform_core.layer._6_world.crypto_index.developer.bitdubai.version_1.CryptoIndexPluginRoot;
 import com.bitdubai.wallet_platform_core.layer._8_communication.cloud.developer.bitdubai.version_1.CloudCommunicationChannelPluginRoot;
 import com.bitdubai.wallet_platform_plugin.layer._12_module.wallet_manager.developer.bitdubai.version_1.WalletManagerPluginRoot;
@@ -26,7 +28,7 @@ import java.util.UUID;
 public class PluginsIdentityManager {
 
     private PlatformFileSystem platformFileSystem;
-    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 11;
+    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 13;
     private List<UUID> pluginIds = new ArrayList<>();
 
 
@@ -306,6 +308,37 @@ public class PluginsIdentityManager {
                  */
             }
         }
+
+        if (pluginIndex == 0) {
+            try
+            {
+                ToExtraUserTransactionManagerPluginRoot tryType;
+                tryType = (ToExtraUserTransactionManagerPluginRoot) plugin;
+                pluginIndex = 11;
+            }
+            catch (Exception e)
+            {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
+
+        if (pluginIndex == 0) {
+            try
+            {
+                BankNotespluginRoot tryType;
+                tryType = (BankNotespluginRoot) plugin;
+                pluginIndex = 12;
+            }
+            catch (Exception e)
+            {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
+
 
         if (pluginIndex > 0) {
 

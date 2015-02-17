@@ -1,11 +1,8 @@
-package com.bitdubai.wallet_platform_core.layer._11_transaction.to_extrauser.developer.bitsubai.version_1;
-
-/**
- * Created by ciencias on 2/16/15.
- */
+package com.bitdubai.wallet_platform_core.layer._10_middleware.bank_notes.developer.bitdubai.version_1;
 
 import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.Service;
+import com.bitdubai.wallet_platform_api.layer._10_middleware.MiddlewareEngine;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.ErrorManager;
@@ -13,6 +10,7 @@ import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventHandler;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventListener;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventManager;
+import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventType;
 import com.bitdubai.wallet_platform_api.layer._3_os.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.wallet_platform_api.layer._3_os.file_system.PluginFileSystem;
 
@@ -21,14 +19,12 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Every transaction sent outside of the system is a handled and recorded by this plugin.
+ * Created by loui on 17/02/15.
  */
-
-public class ToExtraUserTransactionManagerPluginRoot implements Service, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
-
+public class BankNotespluginRoot implements Service, MiddlewareEngine, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
 
     /**
-     * PlatformService Interface member variables.
+     * Service Interface member variables.
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
     List<EventListener> listenersAdded = new ArrayList<>();
@@ -49,9 +45,8 @@ public class ToExtraUserTransactionManagerPluginRoot implements Service, DealsWi
     UUID pluginId;
 
     /**
-     * PlatformService Interface implementation.
+     * Service Interface implementation.
      */
-
 
     @Override
     public void start() {
@@ -62,7 +57,6 @@ public class ToExtraUserTransactionManagerPluginRoot implements Service, DealsWi
         EventListener eventListener;
         EventHandler eventHandler;
 
-
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
@@ -70,13 +64,14 @@ public class ToExtraUserTransactionManagerPluginRoot implements Service, DealsWi
     public void pause() {
 
         this.serviceStatus = ServiceStatus.PAUSED;
+
     }
 
     @Override
     public void resume() {
 
-
         this.serviceStatus = ServiceStatus.STARTED;
+
     }
 
     @Override
@@ -91,6 +86,9 @@ public class ToExtraUserTransactionManagerPluginRoot implements Service, DealsWi
         }
 
         listenersAdded.clear();
+
+        this.serviceStatus = ServiceStatus.STOPPED;
+
     }
 
     @Override
@@ -98,10 +96,15 @@ public class ToExtraUserTransactionManagerPluginRoot implements Service, DealsWi
         return this.serviceStatus;
     }
 
+    /**
+     * WalletManager methods implmentation.
+     */
+
 
     /**
      * UsesFileSystem Interface implementation.
      */
+
     @Override
     public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
         this.pluginFileSystem = pluginFileSystem;
@@ -119,6 +122,7 @@ public class ToExtraUserTransactionManagerPluginRoot implements Service, DealsWi
     /**
      *DealWithErrors Interface implementation.
      */
+
     @Override
     public void setErrorManager(ErrorManager errorManager) {
 
@@ -132,7 +136,5 @@ public class ToExtraUserTransactionManagerPluginRoot implements Service, DealsWi
     public void setId(UUID pluginId) {
         this.pluginId = pluginId;
     }
-
-
 
 }
