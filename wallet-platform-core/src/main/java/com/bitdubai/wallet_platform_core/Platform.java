@@ -11,6 +11,7 @@ import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventManager;
 import com.bitdubai.wallet_platform_api.layer._3_os.*;
 import com.bitdubai.wallet_platform_api.layer._3_os.file_system.*;
+import com.bitdubai.wallet_platform_api.layer._9_network_service.NetworkService;
 import com.bitdubai.wallet_platform_core.layer._11_transaction.TransactionLayer;
 import com.bitdubai.wallet_platform_core.layer._2_platform_service.PlatformServiceLayer;
 
@@ -495,6 +496,179 @@ public class Platform  {
 
             throw new CantStartPlatformException();
         }
+        
+        
+        /**
+         * -----------------------------
+         * Plugin Bank Notes Network Service
+         * -----------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the Bank Notes Network Service access to the File System and to the Event Manager
+         */
+
+        Plugin bankNotesNetworkService = ((NetworkServiceLayer) mNetworkServiceLayer).getBankNotesPlugin();
+
+        ((DealsWithPluginFileSystem) bankNotesNetworkService).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) bankNotesNetworkService).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(bankNotesNetworkService, Plugins.BANK_NOTES_NETWORK_SERVICE);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(bankNotesNetworkService);
+            (bankNotesNetworkService).setId(pluginID);
+
+            ((Service) bankNotesNetworkService).start();
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+        
+        
+        /**
+         * -----------------------------
+         * Plugin Wallet Resources Network Service
+         * -----------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the Wallet Resources Network Service access to the File System and to the Event Manager
+         */
+
+        Plugin walletResourcesNetworkService = ((NetworkServiceLayer) mNetworkServiceLayer).getWalletResources();
+
+        ((DealsWithPluginFileSystem) walletResourcesNetworkService).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) walletResourcesNetworkService).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(walletResourcesNetworkService, Plugins.BANK_NOTES_NETWORK_SERVICE);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(walletResourcesNetworkService);
+            (walletResourcesNetworkService).setId(pluginID);
+
+            ((Service) walletResourcesNetworkService).start();
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
+        /**
+         * -----------------------------
+         * Plugin Wallet Community Network Service
+         * -----------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the Wallet Community Network Service access to the File System and to the Event Manager
+         */
+
+        Plugin walletCommunityNetworkService = ((NetworkServiceLayer) mNetworkServiceLayer).getWalletCommunity();
+
+        ((DealsWithPluginFileSystem) walletCommunityNetworkService).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) walletCommunityNetworkService).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(walletCommunityNetworkService, Plugins.WALLET_STORE_NETWORK_SERVICE);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(walletCommunityNetworkService);
+            (walletCommunityNetworkService).setId(pluginID);
+
+            ((Service) walletCommunityNetworkService).start();
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
+
+
+        /**
+         * -----------------------------
+         * Plugin Wallet Store Network Service
+         * -----------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the Wallet Store Network Service access to the File System and to the Event Manager
+         */
+
+        Plugin walletStoreNetworkService = ((NetworkServiceLayer) mNetworkServiceLayer).getWalletStore();
+
+        ((DealsWithPluginFileSystem) walletStoreNetworkService).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) walletStoreNetworkService).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(walletStoreNetworkService, Plugins.WALLET_STORE_NETWORK_SERVICE);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(walletStoreNetworkService);
+            (walletStoreNetworkService).setId(pluginID);
+
+            ((Service) walletStoreNetworkService).start();
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
 
 
         /**
@@ -506,7 +680,7 @@ public class Platform  {
 
         
         
-        Plugin appRuntimeMiddleware = ((MiddlewareLayer) mMiddlewareayer).getmAppRuntimePlugin();
+        Plugin appRuntimeMiddleware = ((MiddlewareLayer) mMiddlewareayer).getAppRuntimePlugin();
 
         ((DealsWithPluginFileSystem) appRuntimeMiddleware).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) appRuntimeMiddleware).setEventManager((EventManager) eventManager);
@@ -534,9 +708,52 @@ public class Platform  {
 
             throw new CantStartPlatformException();
         }
+       
 
-        
-        
+        /**
+         * -----------------------------
+         * Plugin Bank Notes Middleware
+         * -----------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the Bank Notes Middleware access to the File System and to the Event Manager
+         */
+
+        Plugin bankNotesMiddleware = ((MiddlewareLayer) mMiddlewareayer).getBankNotesPlugin();
+
+        ((DealsWithPluginFileSystem) bankNotesMiddleware).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) bankNotesMiddleware).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(bankNotesMiddleware, Plugins.BANK_NOTES_MIDDLEWARE);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(bankNotesMiddleware);
+            (bankNotesMiddleware).setId(pluginID);
+
+            ((Service) bankNotesMiddleware).start();
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
+
+
 
         /**
          * -----------------------------
@@ -580,8 +797,48 @@ public class Platform  {
             throw new CantStartPlatformException();
         }
 
-        
-        
+        /**
+         * ----------------------------------
+         * Plugin Wallet Contacts Middleware
+         * ----------------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the Wallet Contacts Middleware access to the File System and to the Event Manager
+         */
+
+        Plugin walletContactsMiddleware = ((MiddlewareLayer) mMiddlewareayer).getWalletContactsPlugin();
+
+        ((DealsWithPluginFileSystem) walletContactsMiddleware).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) walletContactsMiddleware).setEventManager((EventManager) eventManager);
+        corePlatformContext.addPlugin(walletContactsMiddleware, Plugins.WALLET_CONTACTS_MIDDLEWARE);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(walletContactsMiddleware);
+            (walletContactsMiddleware).setId(pluginID);
+
+            ((Service) walletContactsMiddleware).start();
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
+
         /**
          * ----------------------------------
          * Plugin From Extra User Transaction
@@ -597,8 +854,8 @@ public class Platform  {
 
         Plugin fromExtraUserTransaction = ((TransactionLayer) mTransactionLayer).getFromExtraUserPlugin();
 
-    ((DealsWithPluginFileSystem) fromExtraUserTransaction).setPluginFileSystem(os.getPlugInFileSystem());
-    ((DealsWithEvents) fromExtraUserTransaction).setEventManager((EventManager) eventManager);
+        ((DealsWithPluginFileSystem) fromExtraUserTransaction).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) fromExtraUserTransaction).setEventManager((EventManager) eventManager);
         corePlatformContext.addPlugin(fromExtraUserTransaction, Plugins.FROM_EXTRA_USER_TRANSACTION);
 
         try
@@ -711,8 +968,50 @@ public class Platform  {
             throw new CantStartPlatformException();
         }
 
+        /**
+         * ----------------------------------
+         * Plugin To Extra User Transaction
+         * ----------------------------------
+         * * * *
+         */
 
-      
+
+
+        /**
+         * I will give the To Extra User Transaction access to the File System and to the Event Manager
+         */
+
+        Plugin toExtraUserTransaction = ((TransactionLayer) mTransactionLayer).getToExtraUserPlugin();
+
+        ((DealsWithPluginFileSystem) toExtraUserTransaction).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) toExtraUserTransaction).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(toExtraUserTransaction, Plugins.TO_EXTRA_USER_TRANSACTION);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(interWalletTransaction);
+            (interWalletTransaction).setId(pluginID);
+
+            ((Service) toExtraUserTransaction).start();
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
+
+
         /**
          * -----------------------------
          * Plugin Wallet Manager
