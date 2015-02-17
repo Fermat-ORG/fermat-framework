@@ -210,7 +210,7 @@ Most recently a few well-funded startups have started spending money on marketin
 
 ### Android APP proto
 
-[Download the Android APP here](https://github.com/bitDubai/smart-wallet/blob/master/proto/app-debug.apk).
+[Download the Android APP here](https://github.com/bitDubai/smart-wallet/blob/master/proto/smart-wallet-android-debug.apk).
 
 ### Wallet Manager
 
