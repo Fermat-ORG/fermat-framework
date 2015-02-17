@@ -2,16 +2,26 @@ https://www.websequencediagrams.com
 
 title USER_CREATED Event
 
-User Manager/PlatformUser -> Event Manager:Raise Event USER_CREATED.
+User Manager/PlatformUser -> Event Manager:Raise Event USER_CREATED
 
-Event Manager ->WalletManagerPluginRoot:Listen To USER_CREATED Event.
-
-Event Manager ->BitcoinCryptoNetworkPluginRoot:Listen To USER_CREATED Event.
-
-note right of WalletManagerPluginRoot:create default wallet.
-
-note right of BitcoinCryptoNetworkPluginRoot:create crypto wallet.
-
-note right of User Manager/PlatformUser:created when there is no user.
+note right of User Manager/PlatformUser:created when there is no user
 
 note right of User Manager/PlatformUser:requested by the user.
+
+Event Manager ->walletManager/UserCreatedEventHandler: handleEvent USER_CREATED
+
+walletManager/UserCreatedEventHandler ->walletManager:createDefaultWallets.
+
+note right of walletManager:create default wallet.
+
+walletManager-> walletManager/Wallet:createWallet
+
+walletManager/Wallet-> Event Manager:Raise WALLET_CREATED Event.
+
+Event Manager ->Middleware/Wallet:Listen To WALLET_CREATED Event.
+
+note right of Middleware/Wallet:create it's own wallet
+
+Event Manager ->Bitcoin:Listen To WALLET_CREATED Event.
+
+note right of Bitcoin:create crypto wallet.
