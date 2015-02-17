@@ -753,8 +753,48 @@ public class Platform  {
             throw new CantStartPlatformException();
         }
 
-        
-        
+        /**
+         * ----------------------------------
+         * Plugin Wallet Contacts Middleware
+         * ----------------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the Wallet Contacts Middleware access to the File System and to the Event Manager
+         */
+
+        Plugin walletContactsMiddleware = ((MiddlewareLayer) mMiddlewareayer).getWalletContactsPlugin();
+
+        ((DealsWithPluginFileSystem) walletContactsMiddleware).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) walletContactsMiddleware).setEventManager((EventManager) eventManager);
+        corePlatformContext.addPlugin(walletContactsMiddleware, Plugins.WALLET_CONTACTS_MIDDLEWARE);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(walletContactsMiddleware);
+            (walletContactsMiddleware).setId(pluginID);
+
+            ((Service) walletContactsMiddleware).start();
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
+
         /**
          * ----------------------------------
          * Plugin From Extra User Transaction
@@ -770,8 +810,8 @@ public class Platform  {
 
         Plugin fromExtraUserTransaction = ((TransactionLayer) mTransactionLayer).getFromExtraUserPlugin();
 
-    ((DealsWithPluginFileSystem) fromExtraUserTransaction).setPluginFileSystem(os.getPlugInFileSystem());
-    ((DealsWithEvents) fromExtraUserTransaction).setEventManager((EventManager) eventManager);
+        ((DealsWithPluginFileSystem) fromExtraUserTransaction).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) fromExtraUserTransaction).setEventManager((EventManager) eventManager);
         corePlatformContext.addPlugin(fromExtraUserTransaction, Plugins.FROM_EXTRA_USER_TRANSACTION);
 
         try

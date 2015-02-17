@@ -20,7 +20,8 @@ public enum Plugins {
     BANK_NOTES_MIDDLEWARE("Bank Notes Middleware"),
     BANK_NOTES_NETWORK_SERVICE("Bank Notes Network Service"),
     WALLET_RESOURCES_NETWORK_SERVICE("Wallet Resources Network Service"),
-    WALLET_STORE_NETWORK_SERVICE("Wallet Store Network Service");
+    WALLET_STORE_NETWORK_SERVICE("Wallet Store Network Service"),
+    WALLET_CONTACTS_MIDDLEWARE("Wallet Contacts Middleware");
 
     private final String key;
 

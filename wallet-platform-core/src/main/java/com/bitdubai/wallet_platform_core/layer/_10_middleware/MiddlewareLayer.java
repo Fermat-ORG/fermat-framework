@@ -9,6 +9,7 @@ import com.bitdubai.wallet_platform_api.layer._10_middleware.MiddlewareSubsystem
 import com.bitdubai.wallet_platform_core.layer._10_middleware.app_runtime.AppRuntimeSubsystem;
 import com.bitdubai.wallet_platform_core.layer._10_middleware.bank_notes.BankNotesSubsystem;
 import com.bitdubai.wallet_platform_core.layer._10_middleware.wallet.WalletSubsystem;
+import com.bitdubai.wallet_platform_core.layer._10_middleware.wallet_contacts.WalletContactsSubsystem;
 
 /**
  * Created by ciencias on 30.12.14.
@@ -19,6 +20,7 @@ public class MiddlewareLayer implements PlatformLayer {
     private Plugin mWalletPlugin;
     private Plugin mAppRuntimePlugin;
     private Plugin mBankNotesPlugin;
+    private Plugin mWalletContactsPlugin;
 
 
    /*
@@ -38,6 +40,11 @@ public class MiddlewareLayer implements PlatformLayer {
 
     public Plugin getBankNotesPlugin() {
         return mBankNotesPlugin;
+    }
+
+
+    public Plugin getWalletContactsPlugin() {
+        return mWalletContactsPlugin;
     }
 
 
@@ -96,7 +103,20 @@ public class MiddlewareLayer implements PlatformLayer {
 
         try {
             bankNotesSubsystem.start();
-            mWalletPlugin = bankNotesSubsystem.getPlugin();
+            mBankNotesPlugin = bankNotesSubsystem.getPlugin();
+
+        } catch (CantStartSubsystemException e) {
+            System.err.println("CantStartSubsystemException: " + e.getMessage());
+        }
+
+        /**
+         * Let's try to start the wallet subsystem.
+         */
+        MiddlewareSubsystem walletContactsSubsystem = new WalletContactsSubsystem();
+
+        try {
+            walletContactsSubsystem.start();
+            mWalletContactsPlugin = walletContactsSubsystem.getPlugin();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());
