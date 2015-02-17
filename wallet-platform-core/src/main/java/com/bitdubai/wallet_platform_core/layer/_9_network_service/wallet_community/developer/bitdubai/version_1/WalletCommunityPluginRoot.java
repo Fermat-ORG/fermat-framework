@@ -20,6 +20,18 @@ import java.util.UUID;
 /**
  * Created by loui on 17/02/15.
  */
+
+/**
+ * This Plugin maintains a list of Users for each wallet installed. I will include a pre-configured number of users per
+ * wallet type, prioritizing the ones which location is closer to the users average location.
+ * 
+ * 
+ * It also maintains a general list of system users also by average location as the main community.
+ *
+ * * * * 
+ */
+// LOUI; TODO; Escuchar el evento FINISHED_WALLET_INSTALATION que lo debe disparar el wallet manager cuando todo lo que ya sabemos termino. (crea un metodo privado finishedWalletInstallation en el Wallet Manger y disparalo desde ahi)
+
 public class WalletCommunityPluginRoot implements Service, NetworkService, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem,Plugin {
 
     /**
@@ -52,7 +64,7 @@ public class WalletCommunityPluginRoot implements Service, NetworkService, Deals
     @Override
     public void start() {
         /**
-         * I will initialize the handling of com.bitdubai.platform events.
+         * I will initialize the handling of platform events.
          */
 
         EventListener eventListener;
