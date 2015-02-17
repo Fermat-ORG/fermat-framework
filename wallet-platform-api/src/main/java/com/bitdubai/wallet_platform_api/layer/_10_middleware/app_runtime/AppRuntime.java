@@ -7,7 +7,7 @@ public interface AppRuntime {
     
     public App getApp (Apps app);
     
-    public Apps getLastApp ();
+    public App getLastApp ();
 
     public SubApps getLastSubApp ();
 
