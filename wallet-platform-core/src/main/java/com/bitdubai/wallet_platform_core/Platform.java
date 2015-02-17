@@ -534,6 +534,47 @@ public class Platform  {
 
             throw new CantStartPlatformException();
         }
+        /**
+         * -----------------------------
+         * Plugin Bank Notes Network Service
+         * -----------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the Bank Notes Middleware access to the File System and to the Event Manager
+         */
+
+        Plugin bankNotesNetworkService = ((NetworkServiceLayer) mNetworkServiceLayer).getmBankNotesPlugin();
+
+        ((DealsWithPluginFileSystem) bankNotesNetworkService).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) bankNotesNetworkService).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(bankNotesNetworkService, Plugins.WALLET_MIDDLEWARE);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(bankNotesNetworkService);
+            (bankNotesNetworkService).setId(pluginID);
+
+            ((Service) bankNotesNetworkService).start();
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
 
 
         /**
