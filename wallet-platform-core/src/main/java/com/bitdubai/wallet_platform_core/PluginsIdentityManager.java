@@ -4,7 +4,6 @@ import com.bitdubai.wallet_platform_api.CantInitializePluginsManagerException;
 import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.PluginNotRecognizedException;
 import com.bitdubai.wallet_platform_api.layer._3_os.file_system.*;
-import com.bitdubai.wallet_platform_api.layer._3_os.file_system.PluginFileSystem;
 import com.bitdubai.wallet_platform_core.layer._10_middleware.app_runtime.developer.bitdubai.version_1.AppRuntimePluginRoot;
 import com.bitdubai.wallet_platform_core.layer._10_middleware.bank_notes.developer.bitdubai.version_1.BankNotespluginRoot;
 import com.bitdubai.wallet_platform_core.layer._10_middleware.wallet.developer.bitdubai.version_1.WalletPluginRoot;
@@ -16,8 +15,10 @@ import com.bitdubai.wallet_platform_core.layer._6_world.crypto_index.developer.b
 import com.bitdubai.wallet_platform_core.layer._8_communication.cloud.developer.bitdubai.version_1.CloudCommunicationChannelPluginRoot;
 import com.bitdubai.wallet_platform_core.layer._9_network_service.bank_notes.developer.bitdubai.version_1.BankNotesPluginRoot;
 import com.bitdubai.wallet_platform_core.layer._9_network_service.wallet_resources.developer.bitdubai.version_1.WalletResourcesPluginRoot;
+import com.bitdubai.wallet_platform_core.layer._9_network_service.wallet_store.developer.bitdubai.version_1.WalletStorePluginRoot;
 import com.bitdubai.wallet_platform_plugin.layer._12_module.wallet_manager.developer.bitdubai.version_1.WalletManagerPluginRoot;
 import com.bitdubai.wallet_platform_plugin.layer._12_module.wallet_runtime.developer.bitdubai.version_1.WalletRuntimePluginRoot;
+import com.bitdubai.wallet_platform_plugin.layer._12_module.wallet_store.developer.bitdubai.version_1.WalletUninstalledEventHandler;
 import com.bitdubai.wallet_platform_plugin.layer._7_crypto_network.bitcoin.developer.bitdubai.version_1.BitcoinCryptoNetworkPluginRoot;
 
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ import java.util.UUID;
 public class PluginsIdentityManager {
 
     private PlatformFileSystem platformFileSystem;
-    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 15;
+    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 16;
     private List<UUID> pluginIds = new ArrayList<>();
 
 
@@ -370,7 +371,23 @@ public class PluginsIdentityManager {
                  */
             }
         }
-        
+
+        if (pluginIndex == 0) {
+            try
+            {
+                WalletStorePluginRoot tryType;
+                tryType = (WalletStorePluginRoot) plugin;
+                pluginIndex = 15;
+            }
+            catch (Exception e)
+            {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
+
+
         if (pluginIndex > 0) {
 
                 return pluginIds.get(pluginIndex);

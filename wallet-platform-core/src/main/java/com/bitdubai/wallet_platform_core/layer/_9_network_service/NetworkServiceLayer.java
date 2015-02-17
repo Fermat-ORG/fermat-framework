@@ -8,6 +8,7 @@ import com.bitdubai.wallet_platform_api.layer._9_network_service.NetworkSubsyste
 import com.bitdubai.wallet_platform_core.layer._9_network_service.bank_notes.BankNotesSubsystem;
 import com.bitdubai.wallet_platform_core.layer._9_network_service.user.UserSubsystem;
 import com.bitdubai.wallet_platform_core.layer._9_network_service.wallet_resources.WalletResourcesSubsystem;
+import com.bitdubai.wallet_platform_core.layer._9_network_service.wallet_store.WalletStoreSubsystem;
 
 /**
  * Created by ciencias on 03.01.15.
@@ -19,6 +20,8 @@ public class NetworkServiceLayer implements PlatformLayer {
     private Plugin mBankNotesPlugin;
     
     private Plugin mWalletResources;
+
+    private Plugin mWalletStore;
 
 
     public Plugin getUserPlugin() {
@@ -33,6 +36,11 @@ public class NetworkServiceLayer implements PlatformLayer {
         return mWalletResources;
     }
 
+    public Plugin getWalletStore() {
+        return mWalletStore;
+    }
+
+    
     @Override
     public void start() throws CantStartLayerException {
 
@@ -81,7 +89,7 @@ public class NetworkServiceLayer implements PlatformLayer {
 
 
         /**
-         * Let's try to start the Bank Notes subsystem.
+         * Let's try to start the Wallet Resources subsystem.
          */
 
         NetworkSubsystem walletResources = new WalletResourcesSubsystem();
@@ -100,6 +108,26 @@ public class NetworkServiceLayer implements PlatformLayer {
             throw new CantStartLayerException();
 
         }
-        
+
+        /**
+         * Let's try to start the Wallet Store subsystem.
+         */
+
+        NetworkSubsystem walletStore = new WalletStoreSubsystem();
+
+        try {
+            walletStore.start();
+            mWalletStore = (walletStore).getPlugin();
+
+        } catch (CantStartSubsystemException e) {
+            System.err.println("CantStartCryptoNetworkException: " + e.getMessage());
+
+            /**
+             * Since this is the only implementation, if this does not start, then the layer can't start either.
+             */
+
+            throw new CantStartLayerException();
+
+        }
     }
 }

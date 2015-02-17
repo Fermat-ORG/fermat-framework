@@ -27,7 +27,7 @@ public class MiddlewareLayer implements PlatformLayer {
     }
     */
     
-    public Plugin getmAppRuntimePlugin() {
+    public Plugin getAppRuntimePlugin() {
         return mAppRuntimePlugin;
     }
 
@@ -36,7 +36,7 @@ public class MiddlewareLayer implements PlatformLayer {
     }
 
 
-    public Plugin getmBankNotesPlugin() {
+    public Plugin getBankNotesPlugin() {
         return mBankNotesPlugin;
     }
 
