@@ -585,6 +585,50 @@ public class Platform  {
 
         /**
          * -----------------------------
+         * Plugin Wallet Community Network Service
+         * -----------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the Wallet Community Network Service access to the File System and to the Event Manager
+         */
+
+        Plugin walletCommunityNetworkService = ((NetworkServiceLayer) mNetworkServiceLayer).getWalletCommunity();
+
+        ((DealsWithPluginFileSystem) walletCommunityNetworkService).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) walletCommunityNetworkService).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(walletCommunityNetworkService, Plugins.WALLET_STORE_NETWORK_SERVICE);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(walletCommunityNetworkService);
+            (walletCommunityNetworkService).setId(pluginID);
+
+            ((Service) walletCommunityNetworkService).start();
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
+
+
+        /**
+         * -----------------------------
          * Plugin Wallet Store Network Service
          * -----------------------------
          * * * *
