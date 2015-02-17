@@ -20,6 +20,17 @@ import java.util.UUID;
 /**
  * Created by loui on 17/02/15.
  */
+
+/**
+ * This plugin manages list of contacts. When the contacts are system users the actual information and pictures are 
+ * handled by the user network service. When the contacts are non system users, the information is kipped by this plugin.
+ * 
+ * A contact list is associated with one or more wallets. This is useful if a user want to share contacts between 
+ * wallets. A single wallet can be part of more tha one list also.
+ * 
+ * * * * * * 
+ */
+
 public class WalletContactsPluginRoot implements Service, MiddlewareEngine, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
 
     /**
