@@ -142,21 +142,7 @@ public class DesktopActivity extends FragmentActivity
 
             return true;
         }
-        if (id == R.id.action_runtime) {
-            try
-            {
-                Intent intent;
-                intent = new Intent(this, RuntimeAppActivity.class);
-                startActivity(intent);
-            }
-            catch (Exception ex)
-            {
-                String strError = ex.getMessage();
-            }
 
-
-            return true;
-        }
         return super.onOptionsItemSelected(item);
     }
 

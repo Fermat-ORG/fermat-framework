@@ -31,7 +31,7 @@
                 android:src="@drawable/wallet_1"
                 android:layout_alignParentTop="true"
                 android:layout_column="2"
-                android:onClick="onWalletClicked"/>
+                android:onClick="onItemSelectedClicked"/>
             <TextView android:text="App Name"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
