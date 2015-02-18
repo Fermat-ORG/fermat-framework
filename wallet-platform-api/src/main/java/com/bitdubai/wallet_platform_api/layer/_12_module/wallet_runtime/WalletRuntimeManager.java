@@ -5,7 +5,7 @@ import java.util.UUID;
 /**
  * Created by loui on 05/02/15.
  */
-public interface WalletRuntime {
+public interface WalletRuntimeManager {
     
     public void recordOpenedWallet (UUID walletId) throws CantRecordOpenedWalletException; 
     
