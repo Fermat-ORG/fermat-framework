@@ -1,7 +1,6 @@
 package com.bitdubai.smartwallet.android.app;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,9 +10,8 @@ import com.bitdubai.smartwallet.layer._3_os.android.developer.bitdubai.version_1
 import android.content.Context;
 
 import com.bitdubai.wallet_platform_api.CantStartPlatformException;
-import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.layer._10_middleware.app_runtime.*;
-import com.bitdubai.wallet_platform_api.layer._10_middleware.app_runtime.AppRuntime;
+import com.bitdubai.wallet_platform_api.layer._10_middleware.app_runtime.AppRuntimeManager;
 
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.wallet_platform_core.Platform;
@@ -21,8 +19,6 @@ import com.bitdubai.wallet_platform_core.Platform;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.wallet_platform_core.layer._10_middleware.app_runtime.developer.bitdubai.version_1.structure.*;
 
-
-import com.bitdubai.wallet_platform_core.layer._10_middleware.app_runtime.developer.bitdubai.version_1.AppRuntimePluginRoot;
 
 import com.bitdubai.wallet_platform_core.CorePlatformContext;
 import com.bitdubai.wallet_platform_core.layer._10_middleware.app_runtime.developer.bitdubai.version_1.structure.RuntimeSubApp;
@@ -51,7 +47,7 @@ public class RuntimeAppActivity extends Activity {
 
             CorePlatformContext platformContext = platform.getCorePlatformContext();
 
-            AppRuntime appRuntimeMiddleware =  (AppRuntime)platformContext.getPlugin(Plugins.APP_RUNTIME_MIDDLEWARE);
+            AppRuntimeManager appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.APP_RUNTIME_MIDDLEWARE);
 
            App app = appRuntimeMiddleware.getLastApp();
 

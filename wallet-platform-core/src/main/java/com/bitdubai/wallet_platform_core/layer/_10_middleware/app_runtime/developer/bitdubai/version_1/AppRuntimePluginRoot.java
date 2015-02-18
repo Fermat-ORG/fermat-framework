@@ -36,7 +36,7 @@ import java.util.UUID;
 
 
 
-public class AppRuntimePluginRoot implements Service, Middleware, AppRuntime, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
+public class AppRuntimePluginRoot implements Service, Middleware, AppRuntimeManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
 
     /**
      * Service Interface member variables.

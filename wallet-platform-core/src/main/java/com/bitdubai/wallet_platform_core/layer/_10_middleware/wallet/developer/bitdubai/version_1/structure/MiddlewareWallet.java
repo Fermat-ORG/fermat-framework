@@ -2,12 +2,11 @@ package com.bitdubai.wallet_platform_core.layer._10_middleware.wallet.developer.
 
 import com.bitdubai.wallet_platform_api.layer._10_middleware.wallet.CryptoAccount;
 import com.bitdubai.wallet_platform_api.layer._10_middleware.wallet.FiatAccount;
-import com.bitdubai.wallet_platform_api.layer._10_middleware.wallet.Wallet;
+import com.bitdubai.wallet_platform_api.layer._10_middleware.wallet.WalletManager;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.FiatCurrency;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by ciencias on 2/15/15.
@@ -29,7 +28,7 @@ import java.util.UUID;
  * * * 
  */
 
-public class MiddlewareWallet implements Wallet {
+public class MiddlewareWallet implements WalletManager {
     
     List<FiatAccount> fiatAccounts;
     List<CryptoAccount> cryptoAccounts;

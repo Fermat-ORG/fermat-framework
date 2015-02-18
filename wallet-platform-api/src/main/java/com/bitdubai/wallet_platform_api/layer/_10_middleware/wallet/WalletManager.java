@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by ciencias on 2/15/15.
  */
-public interface Wallet {
+public interface WalletManager {
 
     public FiatAccount createFiatAccount (FiatCurrency fiatCurrency);
 
