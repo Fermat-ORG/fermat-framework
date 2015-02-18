@@ -4,16 +4,17 @@ import com.bitdubai.wallet_platform_api.layer._1_definition.event.PlatformEvent;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventHandler;
 import com.bitdubai.wallet_platform_api.layer._9_network_service.CantCheckResourcesException;
 import com.bitdubai.wallet_platform_api.layer._9_network_service.NetworkService;
+import com.bitdubai.wallet_platform_api.layer._9_network_service.wallet_resources.WalletResourcesManager;
 
 
 /**
  * Created by loui on 17/02/15.
  */
 public class BegunWalletInstallationEventHandler implements EventHandler {
-    NetworkService networkService;
+    WalletResourcesManager walletResourcesManager;
     
-    public void setNetworkService(NetworkService networkService){
-        this.networkService = networkService;
+    public void setNetworkService(WalletResourcesManager walletResourcesManager){
+        this.walletResourcesManager = walletResourcesManager;
     }
     
     @Override

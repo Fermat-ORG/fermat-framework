@@ -14,7 +14,7 @@ import java.util.UUID;
  * Created by loui on 05/02/15.
  */
 public class WaleltUninstalledEventHandler implements EventHandler {
-    WalletStore walletStore;
+    WalletStoreManM walletStore;
     
     public void setWalletStore (WalletStore walletStore){
         this.walletStore = walletStore;

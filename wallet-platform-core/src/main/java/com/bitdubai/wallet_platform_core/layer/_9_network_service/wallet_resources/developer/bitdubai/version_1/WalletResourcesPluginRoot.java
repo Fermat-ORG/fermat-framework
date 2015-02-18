@@ -93,14 +93,15 @@ public class WalletResourcesPluginRoot implements Service, NetworkService, Deals
 
         EventListener eventListener;
         EventHandler eventHandler;
-
+        
+/*
         eventListener = eventManager.getNewListener(EventType.BEGUN_WALLET_INSTALLATION);
         eventHandler = new BegunWalletInstallationEventHandler();
-        ((BegunWalletInstallationEventHandler) eventHandler).setNetworkService(this);
+        ((BegunWalletInstallationEventHandler) eventHandler).---------(this);
         eventListener.setEventHandler(eventHandler);
         eventManager.addListener(eventListener);
         listenersAdded.add(eventListener);
-        
+*/      
         
         this.serviceStatus = ServiceStatus.STARTED;
 

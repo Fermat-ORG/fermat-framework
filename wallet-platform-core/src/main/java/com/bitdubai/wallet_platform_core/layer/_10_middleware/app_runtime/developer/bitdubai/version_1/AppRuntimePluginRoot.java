@@ -79,8 +79,8 @@ public class AppRuntimePluginRoot implements Service, Middleware, AppRuntimeMana
            EventListener eventListener;
            EventHandler eventHandler;
            eventListener = eventManager.getNewListener(EventType.WALLET_RESOURCES_INSTALLED);
-           eventHandler = new WalletResourceInstalledEventHandler();
-           ((WalletResourceInstalledEventHandler) eventHandler).setMiddleware(this);
+           eventHandler = new WalletResourcesInstalledEventHandler();
+           ((WalletResourcesInstalledEventHandler) eventHandler).setMiddleware(this);
            eventListener.setEventHandler(eventHandler);
            eventManager.addListener(eventListener);
            listenersAdded.add(eventListener);
