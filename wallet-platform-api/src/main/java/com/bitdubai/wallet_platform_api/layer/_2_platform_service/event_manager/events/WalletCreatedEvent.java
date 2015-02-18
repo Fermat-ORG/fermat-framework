@@ -1,4 +1,4 @@
-package com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager;
+package com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.events;
 
 import com.bitdubai.wallet_platform_api.layer._1_definition.event.PlatformEvent;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventSource;
@@ -7,23 +7,25 @@ import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.
 import java.util.UUID;
 
 /**
- * Created by loui on 05/02/15.
+ * Created by ciencias on 26.01.15.
  */
-public class WalletOpenedEvent implements PlatformEvent {
+public class WalletCreatedEvent implements PlatformEvent {
+
     private UUID walletId;
     private EventType eventType;
     private EventSource eventSource;
-    
+
     public void setWalletId (UUID walletId){
-        this.walletId = walletId;               
+        this.walletId = walletId;
     }
-    
+
     public UUID getWalletId() {
-        return this.walletId;        
+        return this.walletId;
     }
-    
-    public WalletOpenedEvent (EventType eventType){
-        this.eventType = eventType;        
+
+
+    public WalletCreatedEvent (EventType eventType){
+        this.eventType = eventType;
     }
 
 
@@ -42,3 +44,4 @@ public class WalletOpenedEvent implements PlatformEvent {
         return this.eventSource;
     }
 }
+

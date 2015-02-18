@@ -1,18 +1,21 @@
-package com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager;
+package com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.listeners;
 
 import com.bitdubai.wallet_platform_api.layer._1_definition.event.EventMonitor;
 import com.bitdubai.wallet_platform_api.layer._1_definition.event.PlatformEvent;
+import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventHandler;
+import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventListener;
+import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventType;
 
 /**
  * Created by loui on 14/02/15.
  */
-public class WalletClosedEventListener implements EventListener {
+public class WalletOpenedEventListener implements EventListener {
 
     EventMonitor eventMonitor;
     private EventType eventType;
     private EventHandler eventHandler;
 
-    public WalletClosedEventListener (EventType eventType, EventMonitor eventMonitor){
+    public WalletOpenedEventListener (EventType eventType, EventMonitor eventMonitor){
         this.eventType = eventType;
         this.eventMonitor = eventMonitor;
     }

@@ -7,7 +7,7 @@ import com.bitdubai.wallet_platform_api.layer._10_middleware.wallet.CantCreateWa
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.wallet_platform_api.layer._1_definition.event.PlatformEvent;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventHandler;
-import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.WalletCreatedEvent;
+import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.events.WalletCreatedEvent;
 
 import java.util.UUID;
 

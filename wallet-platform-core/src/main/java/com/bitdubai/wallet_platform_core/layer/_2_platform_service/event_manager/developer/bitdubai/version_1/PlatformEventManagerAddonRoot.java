@@ -8,7 +8,8 @@ import com.bitdubai.wallet_platform_api.layer._1_definition.event.DealWithEventM
 import com.bitdubai.wallet_platform_api.layer._1_definition.event.EventMonitor;
 import com.bitdubai.wallet_platform_api.layer._1_definition.event.PlatformEvent;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.*;
-import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.UserCreatedEvent;
+import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.events.*;
+import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.listeners.*;
 
 import java.util.ArrayList;
 import java.util.List;
