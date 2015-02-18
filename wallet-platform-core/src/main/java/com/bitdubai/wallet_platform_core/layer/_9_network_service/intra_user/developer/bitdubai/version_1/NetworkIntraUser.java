@@ -1,14 +1,14 @@
-package com.bitdubai.wallet_platform_core.layer._9_network_service.user.developer.bitdubai.version_1;
+package com.bitdubai.wallet_platform_core.layer._9_network_service.intra_user.developer.bitdubai.version_1;
 
-import com.bitdubai.wallet_platform_api.layer._9_network_service.user.SystemUser;
-import com.bitdubai.wallet_platform_api.layer._9_network_service.user.SystemUserStatus;
+import com.bitdubai.wallet_platform_api.layer._9_network_service.intra_user.IntraUser;
+import com.bitdubai.wallet_platform_api.layer._9_network_service.intra_user.IntraUserStatus;
 
 import java.util.UUID;
 
 /**
  * Created by ciencias on 2/13/15.
  */
-public class NetworkSystemUser implements SystemUser {
+public class NetworkIntraUser implements IntraUser {
     @Override
     public UUID getUserId() {
         return null;
@@ -25,7 +25,7 @@ public class NetworkSystemUser implements SystemUser {
     }
 
     @Override
-    public SystemUserStatus getStatus() {
+    public IntraUserStatus getStatus() {
         return null;
     }
 

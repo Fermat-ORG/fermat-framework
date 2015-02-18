@@ -1,9 +1,9 @@
-package com.bitdubai.wallet_platform_core.layer._4_user.manager.developer.bitdubai;
+package com.bitdubai.wallet_platform_core.layer._4_user.device_user.developer.bitdubai;
 
 
 import com.bitdubai.wallet_platform_api.Addon;
 import com.bitdubai.wallet_platform_api.AddonDeveloper;
-import com.bitdubai.wallet_platform_core.layer._4_user.manager.developer.bitdubai.version_1.PlatformUserManagerAddonRoot;
+import com.bitdubai.wallet_platform_core.layer._4_user.device_user.developer.bitdubai.version_1.DeviceUserAddonRoot;
 
 
 /**
@@ -25,7 +25,7 @@ public class DeveloperBitDubai implements AddonDeveloper {
          * it is easy to choose.
          */
 
-        addon = new PlatformUserManagerAddonRoot();
+        addon = new DeviceUserAddonRoot();
 
     }
 

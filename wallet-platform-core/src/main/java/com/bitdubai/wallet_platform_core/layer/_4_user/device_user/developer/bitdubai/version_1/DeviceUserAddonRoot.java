@@ -1,4 +1,4 @@
-package com.bitdubai.wallet_platform_core.layer._4_user.manager.developer.bitdubai.version_1;
+package com.bitdubai.wallet_platform_core.layer._4_user.device_user.developer.bitdubai.version_1;
 
 import com.bitdubai.wallet_platform_api.Addon;
 import com.bitdubai.wallet_platform_api.Service;
@@ -13,11 +13,11 @@ import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventHandler;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventListener;
 import com.bitdubai.wallet_platform_api.layer._3_os.file_system.*;
-import com.bitdubai.wallet_platform_api.layer._4_user.manager.CantCreateUserException;
-import com.bitdubai.wallet_platform_api.layer._4_user.manager.CantLoadUserException;
-import com.bitdubai.wallet_platform_api.layer._4_user.User;
-import com.bitdubai.wallet_platform_api.layer._4_user.UserManager;
-import com.bitdubai.wallet_platform_api.layer._4_user.manager.LoginFailedException;
+import com.bitdubai.wallet_platform_api.layer._4_user.device_user.exceptions.CantCreateDeviceUserException;
+import com.bitdubai.wallet_platform_api.layer._4_user.device_user.exceptions.CantLoadDeviceUserException;
+import com.bitdubai.wallet_platform_api.layer._4_user.DeviceUser;
+import com.bitdubai.wallet_platform_api.layer._4_user.device_user.DeviceUserManager;
+import com.bitdubai.wallet_platform_api.layer._4_user.device_user.exceptions.LoginFailedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,7 @@ import java.util.UUID;
  * It is responsible for login in users to the current device.
  */
 
-public class PlatformUserManagerAddonRoot implements Service, UserManager, DealsWithPlatformFileSystem, DealsWithEvents, DealsWithErrors, Addon {
+public class DeviceUserAddonRoot implements Service, DeviceUserManager, DealsWithPlatformFileSystem, DealsWithEvents, DealsWithErrors, Addon {
 
     /**
      * PlatformService Interface member variables.
@@ -44,7 +44,7 @@ public class PlatformUserManagerAddonRoot implements Service, UserManager, Deals
     /**
      * UserManager Interface member variables.
      */
-    User mLoggedInUser;
+    DeviceUser mLoggedInDeviceUser;
 
     /**
      * DealsWithPlatformFileSystem Interface member variables.
@@ -146,52 +146,52 @@ public class PlatformUserManagerAddonRoot implements Service, UserManager, Deals
      */
 
     @Override
-    public User getLoggedInUser() {
-        return mLoggedInUser;
+    public DeviceUser getLoggedInUser() {
+        return mLoggedInDeviceUser;
     }
 
     @Override
-    public User createUser() throws CantCreateUserException {
+    public DeviceUser createUser() throws CantCreateDeviceUserException {
 
         try
         {
-            User user = new PlatformUser();
-            ((DealsWithPlatformFileSystem) user).setPlatformFileSystem(this.platformFileSystem);
-            user.createUser();
+            DeviceUser deviceUser = new PlatformDeviceUser();
+            ((DealsWithPlatformFileSystem) deviceUser).setPlatformFileSystem(this.platformFileSystem);
+            deviceUser.createUser();
 
-            return user;
+            return deviceUser;
         }
-        catch (CantCreateUserException cantCreateUserException)
+        catch (CantCreateDeviceUserException cantCreateDeviceUserException)
         {
             /**
              * This is bad, the only thing I can do is to throw the exception again.
              */
-            System.err.println("CantPersistUserException: " + cantCreateUserException.getMessage());
-            cantCreateUserException.printStackTrace();
-            throw cantCreateUserException;
+            System.err.println("CantPersistUserException: " + cantCreateDeviceUserException.getMessage());
+            cantCreateDeviceUserException.printStackTrace();
+            throw cantCreateDeviceUserException;
         }
 
     }
 
     @Override
-    public void loadUser(UUID id) throws CantLoadUserException  {
+    public void loadUser(UUID id) throws CantLoadDeviceUserException {
 
         try
         {
-            User user = new PlatformUser();
-            ((DealsWithPlatformFileSystem) user).setPlatformFileSystem(this.platformFileSystem);
-            user.loadUser(id);
+            DeviceUser deviceUser = new PlatformDeviceUser();
+            ((DealsWithPlatformFileSystem) deviceUser).setPlatformFileSystem(this.platformFileSystem);
+            deviceUser.loadUser(id);
 
-            mLoggedInUser = user;
+            mLoggedInDeviceUser = deviceUser;
         }
-        catch (CantLoadUserException cantLoadUserException)
+        catch (CantLoadDeviceUserException cantLoadDeviceUserException)
         {
             /**
              * This is bad, the only thing I can do is to throw the exception again.
              */
-            System.err.println("CantLoadUserException: " + cantLoadUserException.getMessage());
-            cantLoadUserException.printStackTrace();
-            throw cantLoadUserException;
+            System.err.println("CantLoadUserException: " + cantLoadDeviceUserException.getMessage());
+            cantLoadDeviceUserException.printStackTrace();
+            throw cantLoadDeviceUserException;
         }
 
     }
@@ -233,7 +233,7 @@ public class PlatformUserManagerAddonRoot implements Service, UserManager, Deals
     
     
     
-    private void recoverLastState () throws CantCreateUserException {
+    private void recoverLastState () throws CantCreateDeviceUserException {
 
         try {
 
@@ -261,15 +261,15 @@ public class PlatformUserManagerAddonRoot implements Service, UserManager, Deals
 
             try
             {
-                ((UserManager) this).loadUser(userId);
+                ((DeviceUserManager) this).loadUser(userId);
             }
-            catch (CantLoadUserException cantLoadUserException)
+            catch (CantLoadDeviceUserException cantLoadDeviceUserException)
             {
                 /**
                  * This really should never happen. But if it does...
                  */
-                System.err.println("CantLoadUserException: " + cantLoadUserException.getMessage());
-                cantLoadUserException.printStackTrace();
+                System.err.println("CantLoadUserException: " + cantLoadDeviceUserException.getMessage());
+                cantLoadDeviceUserException.printStackTrace();
                 // throw new CantStartPlatformException();  TODO: Luis checkear esto
             }
 
@@ -285,12 +285,12 @@ public class PlatformUserManagerAddonRoot implements Service, UserManager, Deals
              * 3) Save the last state of the platform.
              */
 
-            User newUser = this.createUser();
+            DeviceUser newDeviceUser = this.createUser();
 
 
             try {
 
-                newUser.login("");
+                newDeviceUser.login("");
 
                 // Luis TODO; como se conecta esto con el communication layer que usa el usuario logeado del Platform Context?
 
@@ -309,7 +309,7 @@ public class PlatformUserManagerAddonRoot implements Service, UserManager, Deals
                     FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT
             );
 
-            String content = newUser.getId().toString() + ";" + Modules.WALLET_RUNTIME.getModuleName();
+            String content = newDeviceUser.getId().toString() + ";" + Modules.WALLET_RUNTIME.getModuleName();
 
             platformStateFile.setContent(content);
 

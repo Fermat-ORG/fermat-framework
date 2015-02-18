@@ -2,7 +2,7 @@ package com.bitdubai.wallet_platform_core.layer._10_middleware.app_runtime.devel
 
 import com.bitdubai.wallet_platform_api.layer._10_middleware.app_runtime.LanguagePackage;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.Languages;
-import com.bitdubai.wallet_platform_api.layer._4_user.User;
+import com.bitdubai.wallet_platform_api.layer._4_user.DeviceUser;
 
 import java.util.Map;
 
@@ -11,13 +11,13 @@ import java.util.Map;
  */
 public class RuntimeLanguagePackage implements LanguagePackage {
     
-    User author;
+    DeviceUser author;
     String name;
     Languages language;
     Map<String,String> translation;
 
 
-    public void setAuthor(User author) {
+    public void setAuthor(DeviceUser author) {
         this.author = author;
     }
 
@@ -39,7 +39,7 @@ public class RuntimeLanguagePackage implements LanguagePackage {
      */
 
     @Override
-    public User getAuthor() {
+    public DeviceUser getAuthor() {
         return author;
     }
 

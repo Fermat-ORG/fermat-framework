@@ -6,7 +6,7 @@ import java.util.UUID;
 /**
  * Created by ciencias on 25.01.15.
  */
-public interface WalletManagerWallet {
+public interface Wallet {
 
     public void createWallet(WalletType walletType)  throws CantCreateWalletException;
 

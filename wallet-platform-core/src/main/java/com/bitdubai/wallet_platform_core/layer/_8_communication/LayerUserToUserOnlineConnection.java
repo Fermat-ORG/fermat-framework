@@ -1,11 +1,9 @@
 package com.bitdubai.wallet_platform_core.layer._8_communication;
 
-import com.bitdubai.wallet_platform_api.DealsWithPlatformContext;
-import com.bitdubai.wallet_platform_api.PlatformContext;
 import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventManager;
-import com.bitdubai.wallet_platform_api.layer._4_user.User;
+import com.bitdubai.wallet_platform_api.layer._4_user.DeviceUser;
 import com.bitdubai.wallet_platform_api.layer._8_communication.CantConnectToUserException;
 import com.bitdubai.wallet_platform_api.layer._8_communication.CommunicationChannel;
 import com.bitdubai.wallet_platform_api.layer._8_communication.OnlineChannel;
@@ -31,11 +29,11 @@ public class LayerUserToUserOnlineConnection implements UserToUserOnlineConnecti
 
 
 
-    User userFrom;
-    User userTo;
+    DeviceUser deviceUserFrom;
+    DeviceUser deviceUserTo;
     
     
-    public LayerUserToUserOnlineConnection (User userFrom, User userTo) {
+    public LayerUserToUserOnlineConnection (DeviceUser deviceUserFrom, DeviceUser deviceUserTo) {
         
         
     }
@@ -47,12 +45,12 @@ public class LayerUserToUserOnlineConnection implements UserToUserOnlineConnecti
     
     
     @Override
-    public User getLocalUser() {
+    public DeviceUser getLocalUser() {
         return null;
     }
 
     @Override
-    public User getRemoteUser() {
+    public DeviceUser getRemoteUser() {
         return null;
     }
 
@@ -70,7 +68,7 @@ public class LayerUserToUserOnlineConnection implements UserToUserOnlineConnecti
          */
 
         OnlineChannel onlineChannel = ((CommunicationChannel) cloudPlugin).createOnlineChannel();
-        UserToUserOnlineConnection userToUserOnlineConnection =  onlineChannel.createOnlineConnection(userFrom, userTo);
+        UserToUserOnlineConnection userToUserOnlineConnection =  onlineChannel.createOnlineConnection(deviceUserFrom, deviceUserTo);
 
         try
         {

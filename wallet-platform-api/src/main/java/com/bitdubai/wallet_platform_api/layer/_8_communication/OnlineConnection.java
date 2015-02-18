@@ -1,6 +1,6 @@
 package com.bitdubai.wallet_platform_api.layer._8_communication;
 
-import com.bitdubai.wallet_platform_api.layer._4_user.User;
+import com.bitdubai.wallet_platform_api.layer._4_user.DeviceUser;
 
 /**
  * Created by ciencias on 2/12/15.
@@ -8,9 +8,9 @@ import com.bitdubai.wallet_platform_api.layer._4_user.User;
 public interface OnlineConnection {
 
 
-    public User getLocalUser ();
+    public DeviceUser getLocalUser ();
 
-    public User getRemoteUser ();
+    public DeviceUser getRemoteUser ();
 
     public void connect() throws CantConnectToUserException;
 

@@ -1,14 +1,14 @@
-package com.bitdubai.wallet_platform_core.layer._4_user.manager;
+package com.bitdubai.wallet_platform_core.layer._4_user.device_user;
 
 import com.bitdubai.wallet_platform_api.Addon;
 import com.bitdubai.wallet_platform_api.layer._4_user.UserSubsystem;
-import com.bitdubai.wallet_platform_api.layer._4_user.manager.CantStartSubsystemException;
-import com.bitdubai.wallet_platform_core.layer._4_user.manager.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.wallet_platform_api.layer._4_user.CantStartSubsystemException;
+import com.bitdubai.wallet_platform_core.layer._4_user.device_user.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by ciencias on 22.01.15.
  */
-public class UserManagerSubsystem implements UserSubsystem {
+public class DeviceUserSubsystem implements UserSubsystem {
 
     Addon addon;
 

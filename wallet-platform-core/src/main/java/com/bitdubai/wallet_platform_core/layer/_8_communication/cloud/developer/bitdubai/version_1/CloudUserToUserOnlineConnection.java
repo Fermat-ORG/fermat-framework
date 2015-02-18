@@ -1,6 +1,6 @@
 package com.bitdubai.wallet_platform_core.layer._8_communication.cloud.developer.bitdubai.version_1;
 
-import com.bitdubai.wallet_platform_api.layer._4_user.User;
+import com.bitdubai.wallet_platform_api.layer._4_user.DeviceUser;
 import com.bitdubai.wallet_platform_api.layer._8_communication.CantConnectToUserException;
 import com.bitdubai.wallet_platform_api.layer._8_communication.UserToUserOnlineConnection;
 
@@ -9,23 +9,23 @@ import com.bitdubai.wallet_platform_api.layer._8_communication.UserToUserOnlineC
  */
 public class CloudUserToUserOnlineConnection implements UserToUserOnlineConnection {
 
-    User userFrom;
-    User userTo;
+    DeviceUser deviceUserFrom;
+    DeviceUser deviceUserTo;
     
-    public CloudUserToUserOnlineConnection(User userFrom, User userTo) {
+    public CloudUserToUserOnlineConnection(DeviceUser deviceUserFrom, DeviceUser deviceUserTo) {
         
-        this.userFrom = userFrom;
-        this.userTo = userTo;
+        this.deviceUserFrom = deviceUserFrom;
+        this.deviceUserTo = deviceUserTo;
     }
     
     @Override
-    public User getLocalUser() {
-        return this.userFrom;
+    public DeviceUser getLocalUser() {
+        return this.deviceUserFrom;
     }
 
     @Override
-    public User getRemoteUser() {
-        return this.userTo;
+    public DeviceUser getRemoteUser() {
+        return this.deviceUserTo;
     }
 
     @Override

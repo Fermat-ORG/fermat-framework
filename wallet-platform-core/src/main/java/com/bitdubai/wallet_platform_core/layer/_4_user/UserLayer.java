@@ -4,8 +4,8 @@ import com.bitdubai.wallet_platform_api.Addon;
 import com.bitdubai.wallet_platform_api.layer.CantStartLayerException;
 import com.bitdubai.wallet_platform_api.layer.PlatformLayer;
 import com.bitdubai.wallet_platform_api.layer._4_user.UserSubsystem;
-import com.bitdubai.wallet_platform_api.layer._4_user.manager.CantStartSubsystemException;
-import com.bitdubai.wallet_platform_core.layer._4_user.manager.UserManagerSubsystem;
+import com.bitdubai.wallet_platform_api.layer._4_user.CantStartSubsystemException;
+import com.bitdubai.wallet_platform_core.layer._4_user.device_user.DeviceUserSubsystem;
 
 /**
  * Created by ciencias on 22.01.15.
@@ -23,7 +23,7 @@ public class UserLayer implements PlatformLayer {
         /**
          * Let's start the Login Subsystem;
          */
-        UserSubsystem loginSubsystem = new UserManagerSubsystem();
+        UserSubsystem loginSubsystem = new DeviceUserSubsystem();
 
         try {
             loginSubsystem.start();

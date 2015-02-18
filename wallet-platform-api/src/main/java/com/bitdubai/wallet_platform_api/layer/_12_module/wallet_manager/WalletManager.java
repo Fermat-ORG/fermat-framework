@@ -8,7 +8,7 @@ import java.util.UUID;
  */
 public interface WalletManager {
 
-    public List<WalletManagerWallet> getUserWallets();
+    public List<Wallet> getUserWallets();
 
     public void loadUserWallets (UUID userId) throws CantLoadWalletsException;
 

@@ -1,6 +1,6 @@
 package com.bitdubai.wallet_platform_core.layer._8_communication.cloud.developer.bitdubai.version_1;
 
-import com.bitdubai.wallet_platform_api.layer._4_user.User;
+import com.bitdubai.wallet_platform_api.layer._4_user.DeviceUser;
 import com.bitdubai.wallet_platform_api.layer._8_communication.OnlineChannel;
 import com.bitdubai.wallet_platform_api.layer._8_communication.UserToUserOnlineConnection;
 
@@ -9,7 +9,7 @@ import com.bitdubai.wallet_platform_api.layer._8_communication.UserToUserOnlineC
  */
 public class CloudOnlineChannel implements OnlineChannel {
     @Override
-    public UserToUserOnlineConnection createOnlineConnection(User userFrom, User userTo) {
+    public UserToUserOnlineConnection createOnlineConnection(DeviceUser deviceUserFrom, DeviceUser deviceUserTo) {
         return null;
     }
 }

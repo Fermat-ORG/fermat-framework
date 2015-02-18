@@ -1,4 +1,4 @@
-package com.bitdubai.wallet_platform_core.layer._9_network_service.user.developer.bitdubai.version_1;
+package com.bitdubai.wallet_platform_core.layer._9_network_service.intra_user.developer.bitdubai.version_1;
 
 import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.Service;
@@ -11,10 +11,10 @@ import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventManager;
 import com.bitdubai.wallet_platform_api.layer._3_os.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.wallet_platform_api.layer._3_os.file_system.PluginFileSystem;
-import com.bitdubai.wallet_platform_api.layer._4_user.User;
+import com.bitdubai.wallet_platform_api.layer._4_user.DeviceUser;
 import com.bitdubai.wallet_platform_api.layer._9_network_service.NetworkService;
-import com.bitdubai.wallet_platform_api.layer._9_network_service.user.SystemUser;
-import com.bitdubai.wallet_platform_api.layer._9_network_service.user.UserNetworkService;
+import com.bitdubai.wallet_platform_api.layer._9_network_service.intra_user.IntraUser;
+import com.bitdubai.wallet_platform_api.layer._9_network_service.intra_user.IntraUserNetworkService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,7 @@ import java.util.UUID;
  * * * * * * * * * * * * * * * * * *
  */
 
-public class SystemUserPluginRoot implements Service, NetworkService, UserNetworkService, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem,Plugin {
+public class IntraUserPluginRoot implements Service, NetworkService, IntraUserNetworkService, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem,Plugin {
 
     
     // Loui TODO: Escuchar el evento User Logged In, y cuando ocurra ejecutar el metodo correspondiente 
@@ -76,11 +76,11 @@ public class SystemUserPluginRoot implements Service, NetworkService, UserNetwor
      * SystemUserPluginRoot Interface implementation.
      */  
     
-    public void userLoggedIn (User user){
+    public void userLoggedIn (DeviceUser deviceUser){
 
     }
 
-    public void userLoggedOut (User user){
+    public void userLoggedOut (DeviceUser deviceUser){
 
 
     }
@@ -145,7 +145,7 @@ public class SystemUserPluginRoot implements Service, NetworkService, UserNetwor
      */
 
     @Override
-    public SystemUser getSystemUser(UUID userId) {
+    public IntraUser getSystemUser(UUID userId) {
         return null;
     }
     

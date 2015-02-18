@@ -1,4 +1,4 @@
-package com.bitdubai.wallet_platform_core.layer._4_user.manager.developer.bitdubai.version_1;
+package com.bitdubai.wallet_platform_core.layer._4_user.device_user.developer.bitdubai.version_1;
 
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.DeviceDirectory;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.DealsWithErrors;
@@ -9,14 +9,18 @@ import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.events.UserLoggedInEvent;
 import com.bitdubai.wallet_platform_api.layer._3_os.file_system.*;
 import com.bitdubai.wallet_platform_api.layer._4_user.*;
-import com.bitdubai.wallet_platform_api.layer._4_user.manager.*;
+import com.bitdubai.wallet_platform_api.layer._4_user.device_user.*;
+import com.bitdubai.wallet_platform_api.layer._4_user.device_user.exceptions.CantCreateDeviceUserException;
+import com.bitdubai.wallet_platform_api.layer._4_user.device_user.exceptions.CantLoadDeviceUserException;
+import com.bitdubai.wallet_platform_api.layer._4_user.device_user.exceptions.CantPersistDeviceUserException;
+import com.bitdubai.wallet_platform_api.layer._4_user.device_user.exceptions.LoginFailedException;
 
 import java.util.UUID;
 
 /**
  * Created by ciencias on 22.01.15.
  */
-public class PlatformUser implements User,DealsWithPlatformFileSystem, DealsWithEvents, DealsWithErrors {
+public class PlatformDeviceUser implements DeviceUser,DealsWithPlatformFileSystem, DealsWithEvents, DealsWithErrors {
 
     /**
      * User Interface member variables.
@@ -24,7 +28,7 @@ public class PlatformUser implements User,DealsWithPlatformFileSystem, DealsWith
     UUID userId;
     String userName = "";
     String password = "";
-    UserStatus status;
+    DeviceUserStatus status;
 
     /**
      * DealsWithPlatformFileSystem Interface member variables.
@@ -49,22 +53,22 @@ public class PlatformUser implements User,DealsWithPlatformFileSystem, DealsWith
      * This method is to be used for creating a new user.
      */
 
-    public void createUser () throws CantCreateUserException {
+    public void createUser () throws CantCreateDeviceUserException {
 
         this.userId = UUID.randomUUID();
-        this.status = UserStatus.LOGGED_OUT;
+        this.status = DeviceUserStatus.LOGGED_OUT;
 
         try {
             persist();
         }
-        catch (CantPersistUserException cantPersistUserException)
+        catch (CantPersistDeviceUserException cantPersistDeviceUserException)
         {
             /**
              * This is bad, but lets handle it...
              */
-            System.err.println("CantPersistUserException: " + cantPersistUserException.getMessage());
-            cantPersistUserException.printStackTrace();
-            throw new CantCreateUserException();
+            System.err.println("CantPersistUserException: " + cantPersistDeviceUserException.getMessage());
+            cantPersistDeviceUserException.printStackTrace();
+            throw new CantCreateDeviceUserException();
         }
 
         /**
@@ -82,21 +86,21 @@ public class PlatformUser implements User,DealsWithPlatformFileSystem, DealsWith
      * destroyed.
      */
 
-    public void loadUser (UUID id) throws CantLoadUserException {
+    public void loadUser (UUID id) throws CantLoadDeviceUserException {
         this.userId = id;
 
         try {
             load();
             this.changeToLoggedInStatus();
         }
-        catch (CantLoadUserException cantLoadUserException)
+        catch (CantLoadDeviceUserException cantLoadDeviceUserException)
         {
             /**
              * This is bad, but lets handle it...
              */
-            System.err.println("CantLoadUserException: " + cantLoadUserException.getMessage());
-            cantLoadUserException.printStackTrace();
-            throw new CantLoadUserException();
+            System.err.println("CantLoadUserException: " + cantLoadDeviceUserException.getMessage());
+            cantLoadDeviceUserException.printStackTrace();
+            throw new CantLoadDeviceUserException();
         }
 
     }
@@ -113,7 +117,7 @@ public class PlatformUser implements User,DealsWithPlatformFileSystem, DealsWith
     }
 
     @Override
-    public UserStatus getStatus() {
+    public DeviceUserStatus getStatus() {
         return this.status;
     }
 
@@ -163,7 +167,7 @@ public class PlatformUser implements User,DealsWithPlatformFileSystem, DealsWith
 
     private void changeToLoggedInStatus(){
 
-        this.status = UserStatus.LOGGED_IN;
+        this.status = DeviceUserStatus.LOGGED_IN;
 
         /**
          * Now I fire the Logged In event.
@@ -176,7 +180,7 @@ public class PlatformUser implements User,DealsWithPlatformFileSystem, DealsWith
     }
 
 
-    private void persist() throws CantPersistUserException{
+    private void persist() throws CantPersistDeviceUserException {
 
         PlatformDataFile file = this.platformFileSystem.createFile(
                 DeviceDirectory.LOCAL_USERS.getName(),
@@ -196,12 +200,12 @@ public class PlatformUser implements User,DealsWithPlatformFileSystem, DealsWith
              */
             System.err.println("CantPersistFileException: " + cantPersistFileException.getMessage());
             cantPersistFileException.printStackTrace();
-            throw new CantPersistUserException();
+            throw new CantPersistDeviceUserException();
         }
     }
 
 
-    private void load() throws CantLoadUserException {
+    private void load() throws CantLoadDeviceUserException {
 
         try {
             
@@ -227,7 +231,7 @@ public class PlatformUser implements User,DealsWithPlatformFileSystem, DealsWith
              */
             System.err.println("FileNotFoundException or CantLoadFileException: " + ex.getMessage());
             ex.printStackTrace();
-            throw new CantLoadUserException();
+            throw new CantLoadDeviceUserException();
         }
     }
 

@@ -6,7 +6,7 @@ import com.bitdubai.wallet_platform_api.layer.PlatformLayer;
 import com.bitdubai.wallet_platform_api.layer._9_network_service.CantStartSubsystemException;
 import com.bitdubai.wallet_platform_api.layer._9_network_service.NetworkSubsystem;
 import com.bitdubai.wallet_platform_core.layer._9_network_service.bank_notes.BankNotesSubsystem;
-import com.bitdubai.wallet_platform_core.layer._9_network_service.user.UserSubsystem;
+import com.bitdubai.wallet_platform_core.layer._9_network_service.intra_user.IntraUserSubsystem;
 import com.bitdubai.wallet_platform_core.layer._9_network_service.wallet_community.WalletCommunitySubsystem;
 import com.bitdubai.wallet_platform_core.layer._9_network_service.wallet_resources.WalletResourcesSubsystem;
 import com.bitdubai.wallet_platform_core.layer._9_network_service.wallet_store.WalletStoreSubsystem;
@@ -55,11 +55,11 @@ public class NetworkServiceLayer implements PlatformLayer {
          * The most essential service is the UserPlugin. I start it now.
          */
 
-        NetworkSubsystem userSubsystem = new UserSubsystem();
+        NetworkSubsystem userSubsystem = new IntraUserSubsystem();
 
         try {
             userSubsystem.start();
-            mUserPlugin = ((UserSubsystem) userSubsystem).getPlugin();
+            mUserPlugin = ((IntraUserSubsystem) userSubsystem).getPlugin();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartCryptoNetworkException: " + e.getMessage());
