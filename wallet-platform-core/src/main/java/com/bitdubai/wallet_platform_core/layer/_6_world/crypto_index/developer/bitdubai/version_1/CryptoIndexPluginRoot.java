@@ -14,7 +14,7 @@ import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.
 import com.bitdubai.wallet_platform_api.layer._3_os.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.wallet_platform_api.layer._3_os.file_system.PluginFileSystem;
 import com.bitdubai.wallet_platform_api.layer._6_world.crypto_index.CryptoCurrencyNotSupportedException;
-import com.bitdubai.wallet_platform_api.layer._6_world.crypto_index.CryptoIndex;
+import com.bitdubai.wallet_platform_api.layer._6_world.crypto_index.CryptoIndexManager;
 import com.bitdubai.wallet_platform_api.layer._6_world.crypto_index.FiatCurrencyNotSupportedException;
 
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ import java.util.UUID;
  * * *
  */
 
-public class CryptoIndexPluginRoot implements Service, CryptoIndex, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
+public class CryptoIndexPluginRoot implements Service, CryptoIndexManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
     
     /**
      * PlatformService Interface member variables.

@@ -2,7 +2,7 @@ package com.bitdubai.wallet_platform_core.layer._10_middleware.wallet_contacts.d
 
 import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.Service;
-import com.bitdubai.wallet_platform_api.layer._10_middleware.MiddlewareEngine;
+import com.bitdubai.wallet_platform_api.layer._10_middleware.Middleware;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.ErrorManager;
@@ -31,7 +31,7 @@ import java.util.UUID;
  * * * * * * 
  */
 
-public class WalletContactsPluginRoot implements Service, MiddlewareEngine, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
+public class WalletContactsPluginRoot implements Service, Middleware, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
 
     /**
      * Service Interface member variables.

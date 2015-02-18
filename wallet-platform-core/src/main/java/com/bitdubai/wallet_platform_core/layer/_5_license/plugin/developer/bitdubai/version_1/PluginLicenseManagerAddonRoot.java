@@ -3,13 +3,13 @@ package com.bitdubai.wallet_platform_core.layer._5_license.plugin.developer.bitd
 import com.bitdubai.wallet_platform_api.Addon;
 import com.bitdubai.wallet_platform_api.Service;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.ServiceStatus;
-import com.bitdubai.wallet_platform_api.layer._5_license.LicenseManager;
+import com.bitdubai.wallet_platform_api.layer._5_license.License;
 
 
 /**
  * Created by ciencias on 21.01.15.
  */
-public class PluginLicenseManagerAddonRoot implements Service, LicenseManager, Addon {
+public class PluginLicenseManagerAddonRoot implements Service, License, Addon {
     
     /**
      * Service Interface member variables.

@@ -6,7 +6,7 @@ package com.bitdubai.wallet_platform_core.layer._10_middleware.app_runtime.devel
 
 import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.Service;
-import com.bitdubai.wallet_platform_api.layer._10_middleware.MiddlewareEngine;
+import com.bitdubai.wallet_platform_api.layer._10_middleware.Middleware;
 import com.bitdubai.wallet_platform_api.layer._10_middleware.app_runtime.*;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.DealsWithErrors;
@@ -36,7 +36,7 @@ import java.util.UUID;
 
 
 
-public class AppRuntimePluginRoot implements Service, MiddlewareEngine, AppRuntime, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
+public class AppRuntimePluginRoot implements Service, Middleware, AppRuntime, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
 
     /**
      * Service Interface member variables.

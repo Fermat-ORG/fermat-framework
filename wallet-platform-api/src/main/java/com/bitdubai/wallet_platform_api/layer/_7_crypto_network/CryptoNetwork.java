@@ -5,7 +5,7 @@ import java.util.UUID;
 /**
  * Created by ciencias on 26.01.15.
  */
-public interface CryptoNetworkManager {
+public interface CryptoNetwork {
 
     public void loadCryptoWallet (UUID walletId);
 

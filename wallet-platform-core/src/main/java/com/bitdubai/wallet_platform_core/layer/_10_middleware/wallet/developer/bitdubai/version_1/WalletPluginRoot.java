@@ -2,7 +2,7 @@ package com.bitdubai.wallet_platform_core.layer._10_middleware.wallet.developer.
 
 import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.Service;
-import com.bitdubai.wallet_platform_api.layer._10_middleware.MiddlewareEngine;
+import com.bitdubai.wallet_platform_api.layer._10_middleware.Middleware;
 import com.bitdubai.wallet_platform_api.layer._10_middleware.WalletManager;
 import com.bitdubai.wallet_platform_api.layer._10_middleware.wallet.CantCreateWalletException;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.ServiceStatus;
@@ -23,7 +23,7 @@ import java.util.UUID;
 /**
  * Created by ciencias on 20.01.15.
  */
-public class WalletPluginRoot implements Service, MiddlewareEngine, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin, WalletManager {
+public class WalletPluginRoot implements Service, Middleware, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin, WalletManager {
 
     /**
      * Service Interface member variables.

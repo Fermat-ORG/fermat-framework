@@ -6,7 +6,7 @@ import com.bitdubai.wallet_platform_api.layer._1_definition.enums.FiatCurrency;
 /**
  * Created by ciencias on 2/14/15.
  */
-public interface CryptoIndex {
+public interface CryptoIndexManager {
     
     public double getCurrentMarketPrice (FiatCurrency fiatCurrency, CryptoCurrency cryptoCurrency) throws FiatCurrencyNotSupportedException,CryptoCurrencyNotSupportedException ;
     
