@@ -28,6 +28,9 @@ import java.util.UUID;
  * A contact list is associated with one or more wallets. This is useful if a user want to share contacts between 
  * wallets. A single wallet can be part of more tha one list also.
  * 
+ * This plugin is also responsible for obtaining for each contact crypto-addresses in order to enable payments to be 
+ * sent to that contact.
+ * 
  * * * * * * 
  */
 

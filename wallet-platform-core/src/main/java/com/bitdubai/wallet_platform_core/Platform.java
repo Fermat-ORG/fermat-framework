@@ -116,6 +116,8 @@ public class Platform  {
     
     public CorePlatformContext getCorePlatformContext() {
         return corePlatformContext;
+        
+        // Luis: TODO: Este metodo debe ser removido y lo que se debe devolver es un context con referencias a los plugins que la interfaz grafica puede acceder, no a todos los que existen como esta ahora mismo.
     }
     
     

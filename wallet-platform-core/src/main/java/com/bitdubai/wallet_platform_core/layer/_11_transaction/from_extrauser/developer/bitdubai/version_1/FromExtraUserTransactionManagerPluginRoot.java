@@ -22,8 +22,7 @@ import java.util.UUID;
 
 /**
  * The From Extra User Transaction Manager Plugin is in charge of coordinating the transactions coming from outside the
- * system, meaning from people not a user of the platform. Usually this situation is detected by the crypto network plugin
- * monitoring the crypto network and seeing an incoming payment.
+ * system, meaning from people not a user of the platform.
  * 
  * This plugin knows which wallet to store the funds.
  * 
@@ -33,7 +32,7 @@ import java.util.UUID;
  * For that reason it is necessary this middle man, to get sure any incoming payment for any wallet that ever existed is
  * not lost.
  * 
- * It can send the funds to a default wallet is some is defined or stored itself until the user manually release them.
+ * It can send the funds to a default wallet if some is defined or stored itself until the user manually release them.
  * 
  * It is also a centralized place where to query all of the incoming transaction from outside the system.
  *
@@ -74,7 +73,7 @@ public class FromExtraUserTransactionManagerPluginRoot implements Service, Deals
     @Override
     public void start() {
         /**
-         * I will initialize the handling of com.bitdubai.platform events.
+         * I will initialize the handling of platform events.
          */
 
         EventListener eventListener;
