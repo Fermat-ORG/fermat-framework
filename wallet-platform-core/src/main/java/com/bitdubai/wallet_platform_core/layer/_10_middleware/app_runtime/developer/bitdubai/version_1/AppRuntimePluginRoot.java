@@ -15,6 +15,7 @@ import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventHandler;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventListener;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventManager;
+import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventType;
 import com.bitdubai.wallet_platform_api.layer._3_os.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.wallet_platform_api.layer._3_os.file_system.PluginFileSystem;
 import com.bitdubai.wallet_platform_core.layer._10_middleware.app_runtime.developer.bitdubai.version_1.structure.*;
@@ -64,9 +65,16 @@ public class AppRuntimePluginRoot implements Service, MiddlewareEngine, AppRunti
             * I will initialize the handling of com.bitdubai.platform events.
             */
 
+           //TODO
+
            EventListener eventListener;
            EventHandler eventHandler;
-
+           eventListener = eventManager.getNewListener(EventType.WALLET_RESOURCES_INSTALLED);
+           eventHandler = new WalletResourceInstalledEventHandler();
+           ((WalletResourceInstalledEventHandler) eventHandler).setMiddleware(this);
+           eventListener.setEventHandler(eventHandler);
+           eventManager.addListener(eventListener);
+           listenersAdded.add(eventListener);
 
            /**
             * At this time the only thing I can do is a factory reset. Once there should be a possibility to add
@@ -148,8 +156,14 @@ public class AppRuntimePluginRoot implements Service, MiddlewareEngine, AppRunti
     public Fragments getLastFragment() {
         return null;
     }
-    
-    
+
+/*
+    PlatformEvent platformEvent = eventManager.getNewEvent(EventType.NAVIGATION_STRUCTURE_UPDATED);
+    ((NavigationStructureUpdatedEvent) platformEvent).--------(this.-------);
+    eventManager.raiseEvent(platformEvent);
+*/
+
+
     /**
      * UsesFileSystem Interface implementation.
      */

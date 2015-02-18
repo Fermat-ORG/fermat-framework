@@ -28,8 +28,13 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
     private List<EventListener> listenersUserLoggedOutEvent = new ArrayList<>();
     private List<EventListener> listenersWalletCreatedEvent = new ArrayList<>();
     private List<EventListener> listenersWalletWentOnlineEvent = new ArrayList<>();
+    private List<EventListener> listenersWalletInstalledEvent = new ArrayList<>();
+    private List<EventListener> listenersWalletUninstalledEvent = new ArrayList<>();
+    private List<EventListener> listenersBegunWalletInstallationEvent = new ArrayList<>();
+    private List<EventListener> listenersWalletResourcesInstalledEvent = new ArrayList<>();
     private List<EventListener> listenersWalletOpenedEvent = new ArrayList<>();
     private List<EventListener> listenersWalletClosedEvent = new ArrayList<>();
+    private List<EventListener> listenersNavigationStructureUpdatedEvent = new ArrayList<>();
             
 
     EventMonitor eventMonitor;
@@ -49,7 +54,7 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
     @Override
     public void pause() {
 
-        this.serviceStatus = ServiceStatus.STARTED;
+        this.serviceStatus = ServiceStatus.PAUSED;
 
     }
 
@@ -63,7 +68,7 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
     @Override
     public void stop() {
 
-        this.serviceStatus = ServiceStatus.STARTED;
+        this.serviceStatus = ServiceStatus.STOPPED;
 
     }
 
@@ -101,6 +106,21 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
             
             case WALLET_CLOSED:
                 return new WalletClosedEventListener(EventType.WALLET_CLOSED, this.eventMonitor);
+
+            case WALLET_INSTALLED:
+                return new WalletInstalledEventListener(EventType.WALLET_INSTALLED, this.eventMonitor);
+
+            case WALLET_UNINSTALLED:
+                return new WalletUninstalledEventListener(EventType.WALLET_UNINSTALLED, this.eventMonitor);
+
+            case BEGUN_WALLET_INSTALLATION:
+                return new BegunWalletInstallationEventListener(EventType.BEGUN_WALLET_INSTALLATION, this.eventMonitor);
+
+            case WALLET_RESOURCES_INSTALLED:
+                return new WalletResourcesInstalledEventListener(EventType.WALLET_RESOURCES_INSTALLED, this.eventMonitor);
+            
+            case NAVIGATION_STRUCTURE_UPDATED:
+                return new NavigationStructureUpdatedEventListener(EventType.NAVIGATION_STRUCTURE_UPDATED, this.eventMonitor);
         }
         return null;
     }
@@ -130,6 +150,21 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
             
             case WALLET_CLOSED:
                 return new WalletClosedEvent(EventType.WALLET_CLOSED);
+            
+            case WALLET_INSTALLED:
+                return new WalletInstalledEvent(EventType.WALLET_INSTALLED);
+
+            case WALLET_UNINSTALLED:
+                return new WalletUninstalledEvent(EventType.WALLET_UNINSTALLED);
+
+            case BEGUN_WALLET_INSTALLATION:
+                return new BegunWalletInstallationEvent(EventType.BEGUN_WALLET_INSTALLATION);
+
+            case WALLET_RESOURCES_INSTALLED:
+                return new WalletResourcesInstalledEvent(EventType.WALLET_RESOURCES_INSTALLED);
+
+            case NAVIGATION_STRUCTURE_UPDATED:
+                return new NavigationStructureUpdatedEvent(EventType.NAVIGATION_STRUCTURE_UPDATED);
         }
         return null;
     }
@@ -168,7 +203,26 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
             case WALLET_CLOSED:
                 listenersWalletClosedEvent.add(listener);
                 break;
+            
+            case WALLET_INSTALLED:
+                listenersWalletInstalledEvent.add(listener);
+                break;
+            
+            case WALLET_UNINSTALLED:
+                listenersWalletUninstalledEvent.add(listener);
+                break;
+            
+            case BEGUN_WALLET_INSTALLATION:
+                listenersBegunWalletInstallationEvent.add(listener);
+                break;
+            
+            case WALLET_RESOURCES_INSTALLED:
+                listenersWalletResourcesInstalledEvent.add(listener);
+                break;
 
+            case NAVIGATION_STRUCTURE_UPDATED:
+                listenersNavigationStructureUpdatedEvent.add(listener);
+                break;
         }
     }
 
@@ -180,7 +234,7 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
         switch (listener.getEventType()) {
 
             case USER_CREATED:
-                listeners = listenersUserLoggedInEvent;
+                listeners = listenersUserCreatedEvent;
                 break;
 
             case USER_LOGGED_IN:
@@ -205,6 +259,26 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
             
             case WALLET_CLOSED:
                 listeners = listenersWalletClosedEvent;
+                break;
+            
+            case WALLET_INSTALLED:
+                listeners = listenersWalletInstalledEvent;
+                break;
+            
+            case WALLET_UNINSTALLED:
+                listeners = listenersWalletUninstalledEvent;
+                break;
+            
+            case BEGUN_WALLET_INSTALLATION:
+                listeners = listenersBegunWalletInstallationEvent;
+                break;
+            
+            case WALLET_RESOURCES_INSTALLED:
+                listeners = listenersWalletResourcesInstalledEvent;
+                break;
+            
+            case NAVIGATION_STRUCTURE_UPDATED:
+                listeners = listenersNavigationStructureUpdatedEvent;
                 break;
             
         }
@@ -222,7 +296,7 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
         switch (platformEvent.getEventType()) {
 
             case USER_CREATED:
-                listeners = listenersUserLoggedInEvent;
+                listeners = listenersUserCreatedEvent;
                 break;
 
             case USER_LOGGED_IN:
@@ -248,6 +322,27 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
             case WALLET_CLOSED:
                 listeners = listenersWalletClosedEvent;
                 break;
+
+            case WALLET_INSTALLED:
+                listeners = listenersWalletInstalledEvent;
+                break;
+
+            case WALLET_UNINSTALLED:
+                listeners = listenersWalletUninstalledEvent;
+                break;
+
+            case BEGUN_WALLET_INSTALLATION:
+                listeners = listenersBegunWalletInstallationEvent;
+                break;
+
+            case WALLET_RESOURCES_INSTALLED:
+                listeners = listenersWalletResourcesInstalledEvent;
+                break;
+
+            case NAVIGATION_STRUCTURE_UPDATED:
+                listeners = listenersNavigationStructureUpdatedEvent;
+                break;
+
         }
 
         for (EventListener eventListener : listeners) {
