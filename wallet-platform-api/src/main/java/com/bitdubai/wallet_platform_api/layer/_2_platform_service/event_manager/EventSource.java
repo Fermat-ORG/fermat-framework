@@ -10,5 +10,7 @@ public enum EventSource {
     network_service_wallet_resources_plugin,
     middleware_app_runtime_plugin,
     user_device_user_plugin,
+    network_service_intra_user_plugin,
+    network_service_wallet_community_plugin,
     middleware_wallet_plugin
 }

@@ -13,5 +13,7 @@ public interface WalletManager {
     public void loadUserWallets (UUID userId) throws CantLoadWalletsException;
 
     public void createDefaultWallets (UUID userId) throws CantCreateDefaultWalletsException;
+    
+    public void enableWallet() throws CantEnableWalletException;
 }
 

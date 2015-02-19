@@ -43,7 +43,7 @@ public class WalletResourcesPluginRoot implements Service, NetworkService,Wallet
 
 
 
-    // Loui: TODO: Debe escuchar el evento BEGUN_WALLET_INSTALLATION y el handler ejecutar el metodo checkResources (tipo de wallet, developer, version, publisher), el tipo de wallet, developer es un enum en definitions
+    // Loui: TODO: --Debe escuchar el evento BEGUN_WALLET_INSTALLATION y el handler ejecutar el metodo checkResources (tipo de wallet, developer, version, publisher), el tipo de wallet, developer es un enum en definitions
     
     // Loui; TODO: Tiene que disparar un evento cuando obtenga todos los recursos de una nueva wallet por primera vez: WALLET_RESOURCES_INSTALLED 
     
@@ -160,8 +160,8 @@ public class WalletResourcesPluginRoot implements Service, NetworkService,Wallet
         eventManager.raiseEvent(platformEvent);
 
     }
-    
-    
+
+
     
     /**
      * UsesFileSystem Interface implementation.

@@ -6,13 +6,16 @@ import com.bitdubai.wallet_platform_api.layer._11_middleware.Middleware;
 import com.bitdubai.wallet_platform_api.layer._11_middleware.WalletManager;
 import com.bitdubai.wallet_platform_api.layer._11_middleware.wallet.CantCreateWalletException;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.ServiceStatus;
+import com.bitdubai.wallet_platform_api.layer._1_definition.event.PlatformEvent;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.ErrorManager;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventHandler;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventListener;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventManager;
+import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventSource;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventType;
+import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.events.WalletCreatedEvent;
 import com.bitdubai.wallet_platform_api.layer._3_os.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.wallet_platform_api.layer._3_os.file_system.PluginFileSystem;
 
@@ -25,6 +28,8 @@ import java.util.UUID;
  */
 public class WalletPluginRoot implements Service, Middleware, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin, WalletManager {
 
+    UUID walletId;
+    
     /**
      * Service Interface member variables.
      */
@@ -112,6 +117,10 @@ public class WalletPluginRoot implements Service, Middleware, DealsWithEvents, D
     @Override
     public void createWallet(UUID walletId) throws CantCreateWalletException {
 
+        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.WALLET_CREATED);
+        ((WalletCreatedEvent) platformEvent).setWalletId(this.walletId);
+        platformEvent.setSource(EventSource.middleware_wallet_plugin);
+        eventManager.raiseEvent(platformEvent);
     }
 
     

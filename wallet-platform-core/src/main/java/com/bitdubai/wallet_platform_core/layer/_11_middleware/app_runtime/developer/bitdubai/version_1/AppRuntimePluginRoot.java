@@ -138,6 +138,8 @@ public class AppRuntimePluginRoot implements Service, Middleware, AppRuntimeMana
         ((NavigationStructureUpdatedEvent) platformEvent).----------(this.-----);
         eventManager.raiseEvent(platformEvent);
         */
+
+
     }
 
     /**
@@ -175,11 +177,6 @@ public class AppRuntimePluginRoot implements Service, Middleware, AppRuntimeMana
          return listFragments.get(lastFragment);
     }
 
-/*
-    PlatformEvent platformEvent = eventManager.getNewEvent(EventType.NAVIGATION_STRUCTURE_UPDATED);
-    ((NavigationStructureUpdatedEvent) platformEvent).--------(this.-------);
-    eventManager.raiseEvent(platformEvent);
-*/
 
 
     /**
