@@ -36,6 +36,7 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
     private List<EventListener> listenersWalletOpenedEvent = new ArrayList<>();
     private List<EventListener> listenersWalletClosedEvent = new ArrayList<>();
     private List<EventListener> listenersNavigationStructureUpdatedEvent = new ArrayList<>();
+    private List<EventListener> listenersFinisehdWalletInstallationEvent = new ArrayList<>();
             
 
     EventMonitor eventMonitor;
@@ -122,6 +123,9 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
             
             case NAVIGATION_STRUCTURE_UPDATED:
                 return new NavigationStructureUpdatedEventListener(EventType.NAVIGATION_STRUCTURE_UPDATED, this.eventMonitor);
+            
+            case FINISHED_WALLET_INSTALLATION:
+                return new FinishedWalletInstallationEventListener(EventType.FINISHED_WALLET_INSTALLATION, this.eventMonitor);
         }
         return null;
     }
@@ -166,6 +170,9 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
 
             case NAVIGATION_STRUCTURE_UPDATED:
                 return new NavigationStructureUpdatedEvent(EventType.NAVIGATION_STRUCTURE_UPDATED);
+            
+            case FINISHED_WALLET_INSTALLATION:
+                return new FinishedWalletInstallationEvent(EventType.FINISHED_WALLET_INSTALLATION);
         }
         return null;
     }
@@ -224,6 +231,10 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
             case NAVIGATION_STRUCTURE_UPDATED:
                 listenersNavigationStructureUpdatedEvent.add(listener);
                 break;
+            
+            case FINISHED_WALLET_INSTALLATION:
+                listenersFinisehdWalletInstallationEvent.add(listener);
+                break;
         }
     }
 
@@ -280,6 +291,10 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
             
             case NAVIGATION_STRUCTURE_UPDATED:
                 listeners = listenersNavigationStructureUpdatedEvent;
+                break;
+            
+            case FINISHED_WALLET_INSTALLATION:
+                listeners = listenersFinisehdWalletInstallationEvent;
                 break;
             
         }
@@ -342,6 +357,10 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
 
             case NAVIGATION_STRUCTURE_UPDATED:
                 listeners = listenersNavigationStructureUpdatedEvent;
+                break;
+            
+            case FINISHED_WALLET_INSTALLATION:
+                listeners = listenersFinisehdWalletInstallationEvent;
                 break;
 
         }

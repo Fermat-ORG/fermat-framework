@@ -6,8 +6,8 @@ package com.bitdubai.wallet_platform_core.layer._11_middleware.app_runtime.devel
 
 import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.Service;
-import com.bitdubai.wallet_platform_api.layer._10_middleware.Middleware;
-import com.bitdubai.wallet_platform_api.layer._10_middleware.app_runtime.*;
+import com.bitdubai.wallet_platform_api.layer._11_middleware.Middleware;
+import com.bitdubai.wallet_platform_api.layer._11_middleware.app_runtime.*;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.ErrorManager;
@@ -80,7 +80,7 @@ public class AppRuntimePluginRoot implements Service, Middleware, AppRuntimeMana
            EventHandler eventHandler;
            eventListener = eventManager.getNewListener(EventType.WALLET_RESOURCES_INSTALLED);
            eventHandler = new WalletResourcesInstalledEventHandler();
-           ((WalletResourcesInstalledEventHandler) eventHandler).setMiddleware(this);
+           ((WalletResourcesInstalledEventHandler) eventHandler).setAppRuntimeManager(this);
            eventListener.setEventHandler(eventHandler);
            eventManager.addListener(eventListener);
            listenersAdded.add(eventListener);
@@ -129,6 +129,15 @@ public class AppRuntimePluginRoot implements Service, Middleware, AppRuntimeMana
     @Override
     public ServiceStatus getStatus() { 
         return this.serviceStatus;
+    }
+
+    public void addToNavigationStructure() {
+
+        /*
+        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.NAVIGATION_STRUCTURE_UPDATED);
+        ((NavigationStructureUpdatedEvent) platformEvent).----------(this.-----);
+        eventManager.raiseEvent(platformEvent);
+        */
     }
 
     /**

@@ -2,8 +2,8 @@ package com.bitdubai.wallet_platform_core.layer._11_middleware.wallet;
 
 
 import com.bitdubai.wallet_platform_api.Plugin;
-import com.bitdubai.wallet_platform_api.layer._10_middleware.CantStartSubsystemException;
-import com.bitdubai.wallet_platform_api.layer._10_middleware.MiddlewareSubsystem;
+import com.bitdubai.wallet_platform_api.layer._11_middleware.CantStartSubsystemException;
+import com.bitdubai.wallet_platform_api.layer._11_middleware.MiddlewareSubsystem;
 import com.bitdubai.wallet_platform_core.layer._11_middleware.wallet.developer.bitdubai.DeveloperBitDubai;
 
 /**

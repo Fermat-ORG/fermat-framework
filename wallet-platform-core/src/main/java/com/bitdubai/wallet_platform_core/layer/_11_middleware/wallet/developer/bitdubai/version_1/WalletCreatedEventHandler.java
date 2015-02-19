@@ -1,9 +1,9 @@
 package com.bitdubai.wallet_platform_core.layer._11_middleware.wallet.developer.bitdubai.version_1;
 
 import com.bitdubai.wallet_platform_api.Service;
-import com.bitdubai.wallet_platform_api.layer._10_middleware.MiddlewareNotStartedException;
-import com.bitdubai.wallet_platform_api.layer._10_middleware.WalletManager;
-import com.bitdubai.wallet_platform_api.layer._10_middleware.wallet.CantCreateWalletException;
+import com.bitdubai.wallet_platform_api.layer._11_middleware.MiddlewareNotStartedException;
+import com.bitdubai.wallet_platform_api.layer._11_middleware.WalletManager;
+import com.bitdubai.wallet_platform_api.layer._11_middleware.wallet.CantCreateWalletException;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.wallet_platform_api.layer._1_definition.event.PlatformEvent;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventHandler;

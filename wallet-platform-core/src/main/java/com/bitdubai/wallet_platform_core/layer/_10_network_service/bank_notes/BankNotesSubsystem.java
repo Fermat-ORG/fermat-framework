@@ -1,8 +1,8 @@
 package com.bitdubai.wallet_platform_core.layer._10_network_service.bank_notes;
 
 import com.bitdubai.wallet_platform_api.Plugin;
-import com.bitdubai.wallet_platform_api.layer._11_network_service.CantStartSubsystemException;
-import com.bitdubai.wallet_platform_api.layer._11_network_service.NetworkSubsystem;
+import com.bitdubai.wallet_platform_api.layer._10_network_service.CantStartSubsystemException;
+import com.bitdubai.wallet_platform_api.layer._10_network_service.NetworkSubsystem;
 import com.bitdubai.wallet_platform_core.layer._10_network_service.bank_notes.developer.bitdubai.DeveloperBitDubai;
 
 /**

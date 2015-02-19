@@ -2,6 +2,7 @@ package com.bitdubai.wallet_platform_core.layer._10_network_service.intra_user.d
 
 import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.Service;
+import com.bitdubai.wallet_platform_api.layer._10_network_service.intra_user.IntraUserManager;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.ErrorManager;
@@ -9,12 +10,15 @@ import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventHandler;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventListener;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventManager;
+import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventType;
 import com.bitdubai.wallet_platform_api.layer._3_os.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.wallet_platform_api.layer._3_os.file_system.PluginFileSystem;
 import com.bitdubai.wallet_platform_api.layer._4_user.DeviceUser;
-import com.bitdubai.wallet_platform_api.layer._11_network_service.NetworkService;
-import com.bitdubai.wallet_platform_api.layer._11_network_service.intra_user.IntraUser;
-import com.bitdubai.wallet_platform_api.layer._11_network_service.intra_user.IntraUserNetworkService;
+import com.bitdubai.wallet_platform_api.layer._10_network_service.NetworkService;
+import com.bitdubai.wallet_platform_api.layer._10_network_service.intra_user.IntraUser;
+import com.bitdubai.wallet_platform_api.layer._10_network_service.intra_user.IntraUserNetworkService;
+import com.bitdubai.wallet_platform_core.layer._10_network_service.intra_user.developer.bitdubai.version_1.EventHandlers.UserLoggedInEventHandler;
+import com.bitdubai.wallet_platform_core.layer._10_network_service.intra_user.developer.bitdubai.version_1.EventHandlers.UserLoggedOutEventHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +47,7 @@ import java.util.UUID;
  * * * * * * * * * * * * * * * * * *
  */
 
-public class IntraUserPluginRoot implements Service, NetworkService, IntraUserNetworkService, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem,Plugin {
+public class IntraUserPluginRoot implements Service, NetworkService, IntraUserNetworkService, IntraUserManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem,Plugin {
 
     
     // Loui TODO: Escuchar el evento User Logged In, y cuando ocurra ejecutar el metodo correspondiente 
@@ -98,6 +102,20 @@ public class IntraUserPluginRoot implements Service, NetworkService, IntraUserNe
         EventListener eventListener;
         EventHandler eventHandler;
 
+        eventListener = eventManager.getNewListener(EventType.USER_LOGGED_IN);
+        eventHandler = new UserLoggedInEventHandler();
+        ((UserLoggedInEventHandler) eventHandler).setIntraUserManager(this);
+        eventListener.setEventHandler(eventHandler);
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);
+
+        eventListener = eventManager.getNewListener(EventType.USER_LOGGED_OUT);
+        eventHandler = new UserLoggedOutEventHandler();
+        ((UserLoggedOutEventHandler) eventHandler).setIntraUserManager(this);
+        eventListener.setEventHandler(eventHandler);
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);
+        
         this.serviceStatus = ServiceStatus.STARTED;
         
     }

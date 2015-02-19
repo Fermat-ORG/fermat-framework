@@ -2,9 +2,9 @@ package com.bitdubai.wallet_platform_core.layer._11_middleware.wallet.developer.
 
 import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.Service;
-import com.bitdubai.wallet_platform_api.layer._10_middleware.Middleware;
-import com.bitdubai.wallet_platform_api.layer._10_middleware.WalletManager;
-import com.bitdubai.wallet_platform_api.layer._10_middleware.wallet.CantCreateWalletException;
+import com.bitdubai.wallet_platform_api.layer._11_middleware.Middleware;
+import com.bitdubai.wallet_platform_api.layer._11_middleware.WalletManager;
+import com.bitdubai.wallet_platform_api.layer._11_middleware.wallet.CantCreateWalletException;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.ErrorManager;
@@ -45,16 +45,6 @@ public class WalletPluginRoot implements Service, Middleware, DealsWithEvents, D
      * Plugin Interface member variables.
      */
     UUID pluginId;
-
-
-    /**
-     * WalletPluginRoot Interface implementation.
-     */
-
-    public void walletCreated (UUID walletId){
-        // LOUI: TODO: Escuchar el evento Wallet Created y ejecutar este metodo. (Crear el handler y lo que haga falta)
-
-    }
 
     /**
      * Service Interface implementation.
@@ -120,14 +110,16 @@ public class WalletPluginRoot implements Service, Middleware, DealsWithEvents, D
      */
 
     @Override
+    public void createWallet(UUID walletId) throws CantCreateWalletException {
+
+    }
+
+    
+    @Override
     public void loadWallet(UUID walletId) {
 
     }
 
-    @Override
-    public void createWallet(UUID walletId) throws CantCreateWalletException {
-
-    }
 
 
     /**

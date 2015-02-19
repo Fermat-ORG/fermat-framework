@@ -1,6 +1,6 @@
 package com.bitdubai.wallet_platform_core.layer._11_middleware.app_runtime.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.wallet_platform_api.layer._10_middleware.app_runtime.TabStrip;
+import com.bitdubai.wallet_platform_api.layer._11_middleware.app_runtime.TabStrip;
 
 import java.util.List;
 import java.util.ArrayList;

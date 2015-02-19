@@ -11,7 +11,7 @@ import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventManager;
 import com.bitdubai.wallet_platform_api.layer._3_os.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.wallet_platform_api.layer._3_os.file_system.PluginFileSystem;
-import com.bitdubai.wallet_platform_api.layer._11_network_service.NetworkService;
+import com.bitdubai.wallet_platform_api.layer._10_network_service.NetworkService;
 
 import java.util.ArrayList;
 import java.util.List;

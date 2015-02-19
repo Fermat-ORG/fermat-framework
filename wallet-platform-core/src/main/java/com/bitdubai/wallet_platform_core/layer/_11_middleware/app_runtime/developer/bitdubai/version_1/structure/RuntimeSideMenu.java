@@ -1,7 +1,7 @@
 package com.bitdubai.wallet_platform_core.layer._11_middleware.app_runtime.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.wallet_platform_api.layer._10_middleware.app_runtime.MenuItem;
-import com.bitdubai.wallet_platform_api.layer._10_middleware.app_runtime.SideMenu;
+import com.bitdubai.wallet_platform_api.layer._11_middleware.app_runtime.MenuItem;
+import com.bitdubai.wallet_platform_api.layer._11_middleware.app_runtime.SideMenu;
 
 import java.util.ArrayList;
 import java.util.List;

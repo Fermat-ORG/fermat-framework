@@ -1,7 +1,7 @@
 package com.bitdubai.wallet_platform_core.layer._10_network_service.intra_user.developer.bitdubai.version_1;
 
-import com.bitdubai.wallet_platform_api.layer._11_network_service.intra_user.IntraUser;
-import com.bitdubai.wallet_platform_api.layer._11_network_service.intra_user.IntraUserStatus;
+import com.bitdubai.wallet_platform_api.layer._10_network_service.intra_user.IntraUser;
+import com.bitdubai.wallet_platform_api.layer._10_network_service.intra_user.IntraUserStatus;
 
 import java.util.UUID;
 

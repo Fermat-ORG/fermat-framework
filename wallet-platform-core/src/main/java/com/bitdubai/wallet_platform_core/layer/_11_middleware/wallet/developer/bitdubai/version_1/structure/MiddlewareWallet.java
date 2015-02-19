@@ -1,8 +1,8 @@
 package com.bitdubai.wallet_platform_core.layer._11_middleware.wallet.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.wallet_platform_api.layer._10_middleware.wallet.CryptoAccount;
-import com.bitdubai.wallet_platform_api.layer._10_middleware.wallet.FiatAccount;
-import com.bitdubai.wallet_platform_api.layer._10_middleware.wallet.WalletManager;
+import com.bitdubai.wallet_platform_api.layer._11_middleware.wallet.CryptoAccount;
+import com.bitdubai.wallet_platform_api.layer._11_middleware.wallet.FiatAccount;
+import com.bitdubai.wallet_platform_api.layer._11_middleware.wallet.WalletManager;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.FiatCurrency;
 
