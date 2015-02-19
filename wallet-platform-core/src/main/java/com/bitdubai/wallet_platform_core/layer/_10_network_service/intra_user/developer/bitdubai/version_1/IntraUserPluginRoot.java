@@ -50,9 +50,9 @@ import java.util.UUID;
 public class IntraUserPluginRoot implements Service, NetworkService, IntraUserNetworkService, IntraUserManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem,Plugin {
 
     
-    // Loui TODO: Escuchar el evento User Logged In, y cuando ocurra ejecutar el metodo correspondiente 
+   // Loui TODO: Escuchar el evento User Logged In, y  -- cuando ocurra ejecutar el metodo correspondiente.--
 
-    // Loui TODO: Escuchar el evento User Logged Out, y cuando ocurra ejecutar el metodo correspondiente 
+   // Loui TODO: Escuchar el evento User Logged Out, y -- cuando ocurra ejecutar el metodo correspondiente.--
 
     /**
      * Service Interface member variables.

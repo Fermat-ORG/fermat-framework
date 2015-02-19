@@ -5,13 +5,16 @@ import com.bitdubai.wallet_platform_api.Service;
 import com.bitdubai.wallet_platform_api.layer._10_network_service.CantCheckResourcesException;
 import com.bitdubai.wallet_platform_api.layer._10_network_service.wallet_resources.WalletResourcesManager;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.ServiceStatus;
+import com.bitdubai.wallet_platform_api.layer._1_definition.event.PlatformEvent;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.ErrorManager;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventHandler;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventListener;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventManager;
+import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventSource;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventType;
+import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.events.WalletResourcesInstalledEvent;
 import com.bitdubai.wallet_platform_api.layer._3_os.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.wallet_platform_api.layer._3_os.file_system.PluginFileSystem;
 import com.bitdubai.wallet_platform_api.layer._10_network_service.NetworkService;
@@ -44,17 +47,17 @@ public class WalletResourcesPluginRoot implements Service, NetworkService,Wallet
     
     // Loui; TODO: Tiene que disparar un evento cuando obtenga todos los recursos de una nueva wallet por primera vez: WALLET_RESOURCES_INSTALLED 
     
-    // Loui; TODO; El AppRuntime, debe escuchar ese evento y ejecutar el mentodo : addToNavigationStructure (String navegationStructure, y los parametros que identifican el tipo de wallet)
+    // Loui; TODO; El AppRuntime, debe escuchar ese evento y --ejecutar el mentodo : addToNavigationStructure-- (String navegationStructure, y los parametros que identifican el tipo de wallet)
 
-    // Loui; TODO: EL AppRuntime, debe disparar el evento NAVIGATION_STRUCTURE_UPDATED con los parametros que identifique el tipo de wallet. 
+    // Loui; TODO: EL AppRuntime, --debe disparar el evento NAVIGATION_STRUCTURE_UPDATED con los parametros que identifique el tipo de wallet--.
 
-    // Loui: TODO: El Wallet Manager tambien escucha el evento WALLET_RESOURCES_INSTALLED y cuando se entera, permite actualiza internamente el progreso de la instalacion, que incluye la creacion de su propio wallet
+    // Loui: TODO: El Wallet Manager tambien escucha el evento WALLET_RESOURCES_INSTALLED y --cuando se entera, permite actualiza internamente el progreso de la instalacion, que incluye la creacion de su propio wallet--
 
-    // Loui: TODO: El Wallet Manager tambien escucha el evento NAVIGATION_STRUCTURE_UPDATED y cuando se entera, permite que el usuario abra la nueva billetera instalada y obviamente setea el estado de la instalacion en un 100%. El handler le ejecuta el metodo: enableWallet ()
+    // Loui: TODO: El Wallet Manager tambien escucha el evento NAVIGATION_STRUCTURE_UPDATED y cuando se entera, --permite que el usuario abra la nueva billetera instalada y obviamente setea el estado de la instalacion en un 100%. El handler le ejecuta el metodo: enableWallet ()--
     
     // Loui TODO: EL Middleware Wallet tiene que disparar el evento WALLET_CREATED cuando termina de crear su wallet. Notar que es el mismo evento que dispara el Wallet Manager. Para poder distinguirlos, cada quien tiene que setear en el source del evento quien es que lo disparo. Y obviamente el handler tiene que tener en cuenta solo los eventos no disparados por el mismo. Entonces hay que actualizar el disparo del Wallet Manager para que agregue el source, el handler actual que lo toma, y el nuevo que lo dispara tambien tiene que setearse como source.
 
-    // Loui; TODO El Wallet Mangager tiene que escuchar el evento WALLET_CREATED enviado por el middleware Wallet y el handler asegurarse que no sea el mismo y ejecutar el metodo que corresponda. Realmente va a considerra la wallet instaladad cuando haya recibido este evento y todos los otros que esperaba.
+    // Loui; TODO El Wallet Mangager tiene que escuchar el evento WALLET_CREATED enviado por el middleware Wallet y --el handler asegurarse que no sea el mismo y ejecutar el metodo que corresponda. Realmente va a considerra la wallet instaladad cuando haya recibido este evento y todos los otros que esperaba--.
 
     
 
@@ -151,11 +154,11 @@ public class WalletResourcesPluginRoot implements Service, NetworkService,Wallet
     @Override
     public void checkResources() throws CantCheckResourcesException {
 
-/*
+
         PlatformEvent platformEvent = eventManager.getNewEvent(EventType.WALLET_RESOURCES_INSTALLED);
-        ((WalletResourcesInstalledEvent) platformEvent).setWalletId(this.walletId);
+        ((WalletResourcesInstalledEvent) platformEvent).setSource(EventSource.network_service_wallet_resources_plugin);
         eventManager.raiseEvent(platformEvent);
-*/
+
     }
     
     

@@ -74,7 +74,7 @@ public class AppRuntimePluginRoot implements Service, Middleware, AppRuntimeMana
             * I will initialize the handling of com.bitdubai.platform events.
             */
 
-           //TODO
+           //Loui TODO: compĺetar el event Handler.
 
            EventListener eventListener;
            EventHandler eventHandler;

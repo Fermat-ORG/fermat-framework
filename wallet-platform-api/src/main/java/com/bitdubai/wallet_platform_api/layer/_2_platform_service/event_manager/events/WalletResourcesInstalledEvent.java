@@ -10,7 +10,7 @@ import java.util.UUID;
  * Created by loui on 18/02/15.
  */
 public class WalletResourcesInstalledEvent implements PlatformEvent {
-   //TODO: cambiar walletType por la variable correspodiente del tipo de dato correspondiente.
+   //Loui TODO: cambiar walletType por la variable correspodiente del tipo de dato correspondiente.
     private UUID walletType;
     private EventType eventType;
     private EventSource eventSource;

@@ -2,6 +2,7 @@ package com.bitdubai.wallet_platform_core.layer._10_network_service.wallet_commu
 
 import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.Service;
+import com.bitdubai.wallet_platform_api.layer._10_network_service.wallet_community.WalletCommunityManager;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.ErrorManager;
@@ -9,9 +10,11 @@ import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventHandler;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventListener;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventManager;
+import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventType;
 import com.bitdubai.wallet_platform_api.layer._3_os.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.wallet_platform_api.layer._3_os.file_system.PluginFileSystem;
 import com.bitdubai.wallet_platform_api.layer._10_network_service.NetworkService;
+import com.bitdubai.wallet_platform_core.layer._10_network_service.wallet_community.developer.bitdubai.version_1.EventHandlers.FinishedWalletinstallationEventHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +33,9 @@ import java.util.UUID;
  *
  * * * * 
  */
-// LOUI; TODO; Escuchar el evento FINISHED_WALLET_INSTALATION que lo debe disparar el wallet manager cuando todo lo que ya sabemos termino. (crea un metodo privado finishedWalletInstallation en el Wallet Manger y disparalo desde ahi)
+// LOUI; TODO; Escuchar el evento FINISHED_WALLET_INSTALATION que -- lo debe disparar el wallet manager cuando todo lo que ya sabemos termino--. (crea un metodo privado finishedWalletInstallation en el Wallet Manger y disparalo desde ahi)
 
-public class WalletCommunityPluginRoot implements Service, NetworkService, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem,Plugin {
+public class WalletCommunityPluginRoot implements Service, NetworkService, WalletCommunityManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem,Plugin {
 
     /**
      * Service Interface member variables.
@@ -69,7 +72,14 @@ public class WalletCommunityPluginRoot implements Service, NetworkService, Deals
 
         EventListener eventListener;
         EventHandler eventHandler;
-
+        
+        eventListener = eventManager.getNewListener(EventType.FINISHED_WALLET_INSTALLATION);
+        eventHandler = new FinishedWalletinstallationEventHandler();
+        ((FinishedWalletinstallationEventHandler) eventHandler).setWalletCommunityManager(this);
+        eventListener.setEventHandler(eventHandler);
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);
+        
         this.serviceStatus = ServiceStatus.STARTED;
 
     }
