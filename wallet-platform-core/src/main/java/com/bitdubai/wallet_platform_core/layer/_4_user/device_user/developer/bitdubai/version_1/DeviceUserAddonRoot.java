@@ -2,7 +2,7 @@ package com.bitdubai.wallet_platform_core.layer._4_user.device_user.developer.bi
 
 import com.bitdubai.wallet_platform_api.Addon;
 import com.bitdubai.wallet_platform_api.Service;
-import com.bitdubai.wallet_platform_api.layer._12_module.Modules;
+import com.bitdubai.wallet_platform_api.layer._13_module.Modules;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.DeviceDirectory;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.PlatformFileName;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.ServiceStatus;

@@ -1,9 +1,9 @@
-package com.bitdubai.wallet_platform_plugin.layer._12_module.wallet_store.developer.bitdubai.version_1;
+package com.bitdubai.wallet_platform_plugin.layer._13_module.wallet_store.developer.bitdubai.version_1;
 
 import com.bitdubai.wallet_platform_api.Service;
-import com.bitdubai.wallet_platform_api.layer._12_module.ModuleNotRunningException;
-import com.bitdubai.wallet_platform_api.layer._12_module.wallet_store.CantRecordUninstalledWalletException;
-import com.bitdubai.wallet_platform_api.layer._12_module.wallet_store.WalletStore;
+import com.bitdubai.wallet_platform_api.layer._13_module.ModuleNotRunningException;
+import com.bitdubai.wallet_platform_api.layer._13_module.wallet_store.CantRecordUninstalledWalletException;
+import com.bitdubai.wallet_platform_api.layer._13_module.wallet_store.WalletStore;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.wallet_platform_api.layer._1_definition.event.PlatformEvent;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.*;

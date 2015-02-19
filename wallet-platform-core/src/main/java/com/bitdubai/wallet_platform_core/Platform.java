@@ -11,8 +11,7 @@ import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventManager;
 import com.bitdubai.wallet_platform_api.layer._3_os.*;
 import com.bitdubai.wallet_platform_api.layer._3_os.file_system.*;
-import com.bitdubai.wallet_platform_api.layer._9_network_service.NetworkService;
-import com.bitdubai.wallet_platform_core.layer._11_transaction.TransactionLayer;
+import com.bitdubai.wallet_platform_core.layer._12_transaction.TransactionLayer;
 import com.bitdubai.wallet_platform_core.layer._2_platform_service.PlatformServiceLayer;
 
 import com.bitdubai.wallet_platform_core.layer._1_definition.DefinitionLayer;
@@ -22,11 +21,11 @@ import com.bitdubai.wallet_platform_core.layer._5_license.LicenseLayer;
 import com.bitdubai.wallet_platform_core.layer._6_world.WorldLayer;
 import com.bitdubai.wallet_platform_core.layer._7_crypto_network.CryptoNetworkLayer;
 import com.bitdubai.wallet_platform_api.layer._7_crypto_network.CryptoNetworks;
-import com.bitdubai.wallet_platform_core.layer._8_communication.CommunicationLayer;
-import com.bitdubai.wallet_platform_core.layer._9_network_service.NetworkServiceLayer;
-import com.bitdubai.wallet_platform_core.layer._10_middleware.MiddlewareLayer;
-import com.bitdubai.wallet_platform_core.layer._12_module.ModuleLayer;
-import com.bitdubai.wallet_platform_core.layer._13_agent.AgentLayer;
+import com.bitdubai.wallet_platform_core.layer._9_communication.CommunicationLayer;
+import com.bitdubai.wallet_platform_core.layer._10_network_service.NetworkServiceLayer;
+import com.bitdubai.wallet_platform_core.layer._11_middleware.MiddlewareLayer;
+import com.bitdubai.wallet_platform_core.layer._13_module.ModuleLayer;
+import com.bitdubai.wallet_platform_core.layer._14_agent.AgentLayer;
 
 import java.util.UUID;
 

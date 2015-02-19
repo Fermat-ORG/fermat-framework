@@ -1,7 +1,7 @@
 package com.bitdubai.wallet_platform_draft.layer._13_agent.licesnse.developer.bitdubai;
 
-import com.bitdubai.wallet_platform_api.layer._13_agent.AIAgent;
-import com.bitdubai.wallet_platform_api.layer._13_agent.AgentLayerDeveloper;
+import com.bitdubai.wallet_platform_api.layer._14_agent.AIAgent;
+import com.bitdubai.wallet_platform_api.layer._14_agent.AgentLayerDeveloper;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.TimeFrequency;
 import com.bitdubai.wallet_platform_api.layer._5_license.PluginLicensor;

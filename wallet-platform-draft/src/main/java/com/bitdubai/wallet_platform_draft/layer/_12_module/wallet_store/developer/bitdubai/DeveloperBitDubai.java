@@ -1,11 +1,11 @@
-package com.bitdubai.wallet_platform_plugin.layer._12_module.wallet_store.developer.bitdubai;
+package com.bitdubai.wallet_platform_plugin.layer._13_module.wallet_store.developer.bitdubai;
 
 import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.PluginDeveloper;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.TimeFrequency;
 import com.bitdubai.wallet_platform_api.layer._5_license.PluginLicensor;
-import com.bitdubai.wallet_platform_plugin.layer._12_module.wallet_store.developer.bitdubai.version_1.WalletStorePluginRoot;
+import com.bitdubai.wallet_platform_plugin.layer._13_module.wallet_store.developer.bitdubai.version_1.WalletStorePluginRoot;
 
 /**
  * Created by loui on 04/02/15.
