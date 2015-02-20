@@ -5,12 +5,16 @@ import com.bitdubai.wallet_platform_api.Service;
 import com.bitdubai.wallet_platform_api.layer._10_network_service.NetworkService;
 import com.bitdubai.wallet_platform_api.layer._10_network_service.money.MoneyManager;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.ServiceStatus;
+import com.bitdubai.wallet_platform_api.layer._1_definition.event.PlatformEvent;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.ErrorManager;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventHandler;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventListener;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventManager;
+import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventSource;
+import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventType;
+import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.events.MoneyReceivedEvent;
 import com.bitdubai.wallet_platform_api.layer._3_os.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.wallet_platform_api.layer._3_os.file_system.PluginFileSystem;
 import java.util.ArrayList;
@@ -99,6 +103,15 @@ public class MoneyPluginRoot implements Service, NetworkService, MoneyManager, D
     }
 
     public void sendMoney(){
+
+        
+    }
+
+    private void moneyReceived(){
+
+        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.MONEY_RECEIVED);
+        ((MoneyReceivedEvent) platformEvent).setSource(EventSource.NETWORK_SERVICE_MONEY_PLUGIN);
+        eventManager.raiseEvent(platformEvent);
         
     }
     

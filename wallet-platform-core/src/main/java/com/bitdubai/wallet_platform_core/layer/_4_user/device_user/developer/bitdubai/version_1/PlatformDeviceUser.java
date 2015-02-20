@@ -77,7 +77,7 @@ public class PlatformDeviceUser implements DeviceUser,DealsWithPlatformFileSyste
 
         PlatformEvent platformEvent = eventManager.getNewEvent(EventType.USER_CREATED);
         ((UserCreatedEvent) platformEvent).setUserId(this.userId );
-        platformEvent.setSource(EventSource.user_device_user_plugin);
+        platformEvent.setSource(EventSource.USER_DEVICE_USER_PLUGIN);
         eventManager.raiseEvent(platformEvent);
 
     }
@@ -176,7 +176,7 @@ public class PlatformDeviceUser implements DeviceUser,DealsWithPlatformFileSyste
 
         PlatformEvent platformEvent = eventManager.getNewEvent(EventType.USER_LOGGED_IN);
         ((UserLoggedInEvent) platformEvent).setUserId(this.userId );
-        platformEvent.setSource(EventSource.user_device_user_plugin);
+        platformEvent.setSource(EventSource.USER_DEVICE_USER_PLUGIN);
         eventManager.raiseEvent(platformEvent);
 
     }

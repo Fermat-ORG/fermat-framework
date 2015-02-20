@@ -4,14 +4,16 @@ package com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager
  * Created by ciencias on 24.01.15.
  */
 public enum EventSource {
-    user_device_user_plugin,
-    crypto_network_bitcoin_plugin,
-    communication_cloud_plugin,
-    network_service_intra_user_plugin,
-    network_service_wallet_resources_plugin,
-    network_service_wallet_community_plugin,
-    middleware_app_runtime_plugin,
-    middleware_wallet_contacts_plugin,
-    middleware_wallet_plugin,
-    module_wallet_manager_plugin
+    USER_DEVICE_USER_PLUGIN,
+    CRYPTO_NETWORK_BITCOIN_PLUGIN,
+    COMMUNICATION_CLOUD_PLUGIN,
+    NETWORK_SERVICE_INTRA_USER_PLUGIN,
+    NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN,
+    NETWORK_SERVICE_WALLET_COMMUNITY_PLUGIN,
+    MIDDLEWARE_APP_RUNTIME_PLUGIN,
+    MIDDLEWARE_WALLET_CONTACTS_PLUGIN,
+    MIDDLEWARE_WALLET_PLUGIN,
+    MODULE_WALLET_MANAGER_PLUGIN,
+    NETWORK_SERVICE_MONEY_PLUGIN
+    
     }

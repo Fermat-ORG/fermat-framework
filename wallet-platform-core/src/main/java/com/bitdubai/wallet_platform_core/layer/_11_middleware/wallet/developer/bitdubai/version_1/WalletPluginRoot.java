@@ -119,7 +119,7 @@ public class WalletPluginRoot implements Service, Middleware, DealsWithEvents, D
 
         PlatformEvent platformEvent = eventManager.getNewEvent(EventType.WALLET_CREATED);
         ((WalletCreatedEvent) platformEvent).setWalletId(this.walletId);
-        platformEvent.setSource(EventSource.middleware_wallet_plugin);
+        platformEvent.setSource(EventSource.MIDDLEWARE_WALLET_PLUGIN);
         eventManager.raiseEvent(platformEvent);
     }
 

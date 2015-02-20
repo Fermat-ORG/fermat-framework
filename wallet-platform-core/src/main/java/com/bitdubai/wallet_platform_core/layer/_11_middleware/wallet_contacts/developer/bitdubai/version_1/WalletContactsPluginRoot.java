@@ -113,7 +113,7 @@ public class WalletContactsPluginRoot implements Service, Middleware, DealsWithE
     public void createContact(){
 
         PlatformEvent platformEvent = eventManager.getNewEvent(EventType.INTRA_USER_CONTACT_CREATED);
-        ((IntraUserContactCreatedEvent) platformEvent).setSource(EventSource.middleware_wallet_contacts_plugin);
+        ((IntraUserContactCreatedEvent) platformEvent).setSource(EventSource.MIDDLEWARE_WALLET_CONTACTS_PLUGIN);
         eventManager.raiseEvent(platformEvent);
 
     }

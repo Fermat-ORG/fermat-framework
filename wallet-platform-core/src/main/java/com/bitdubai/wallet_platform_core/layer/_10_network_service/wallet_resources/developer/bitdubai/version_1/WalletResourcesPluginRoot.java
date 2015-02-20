@@ -156,7 +156,7 @@ public class WalletResourcesPluginRoot implements Service, NetworkService,Wallet
 
 
         PlatformEvent platformEvent = eventManager.getNewEvent(EventType.WALLET_RESOURCES_INSTALLED);
-        ((WalletResourcesInstalledEvent) platformEvent).setSource(EventSource.network_service_wallet_resources_plugin);
+        ((WalletResourcesInstalledEvent) platformEvent).setSource(EventSource.NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN);
         eventManager.raiseEvent(platformEvent);
 
     }

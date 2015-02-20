@@ -94,6 +94,11 @@ public class OutgoingExtrauserPluginRoot implements Service, Transaction, Outgoi
         return this.serviceStatus;
     }
 
+    public void createFiatTransaction (/*TODO:ExtraUser,Wallet, Account, fiatAmount*/){
+        
+        
+    }
+    
 
     /**
      * UsesFileSystem Interface implementation.

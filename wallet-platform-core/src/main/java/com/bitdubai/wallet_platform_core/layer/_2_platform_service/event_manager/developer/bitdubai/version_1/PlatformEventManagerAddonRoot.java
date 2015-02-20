@@ -38,6 +38,7 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
     private List<EventListener> listenersNavigationStructureUpdatedEvent = new ArrayList<>();
     private List<EventListener> listenersFinishedWalletInstallationEvent = new ArrayList<>();
     private List<EventListener> listenersIntraUserContactCreatedEvent = new ArrayList<>();
+    private List<EventListener> listenersMoneyReceivedEvent = new ArrayList<>();
             
 
     EventMonitor eventMonitor;
@@ -130,6 +131,9 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
 
             case INTRA_USER_CONTACT_CREATED:
                 return new IntraUserContactCreatedEventListener(EventType.INTRA_USER_CONTACT_CREATED, this.eventMonitor);
+            
+            case MONEY_RECEIVED:
+                return new MoneyReceivedEventListener(EventType.MONEY_RECEIVED, this.eventMonitor);
         }
         return null;
     }
@@ -180,6 +184,9 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
             
             case INTRA_USER_CONTACT_CREATED:
                 return new IntraUserContactCreatedEvent(EventType.INTRA_USER_CONTACT_CREATED);
+            
+            case MONEY_RECEIVED:
+                return new MoneyReceivedEvent(EventType.MONEY_RECEIVED);
         }
         return null;
     }
@@ -246,6 +253,10 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
             case INTRA_USER_CONTACT_CREATED:
                 listenersIntraUserContactCreatedEvent.add(listener);
                 break;
+            
+            case MONEY_RECEIVED:
+                listenersMoneyReceivedEvent.add(listener);
+                break;
         }
     }
 
@@ -310,6 +321,10 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
             
             case INTRA_USER_CONTACT_CREATED:
                 listeners = listenersIntraUserContactCreatedEvent;
+                break;
+            
+            case MONEY_RECEIVED:
+                listeners = listenersMoneyReceivedEvent;
                 break;
             
         }
@@ -380,6 +395,10 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
             
             case INTRA_USER_CONTACT_CREATED:
                 listeners = listenersIntraUserContactCreatedEvent;
+                break;
+            
+            case MONEY_RECEIVED:
+                listeners = listenersMoneyReceivedEvent;
                 break;
 
         }

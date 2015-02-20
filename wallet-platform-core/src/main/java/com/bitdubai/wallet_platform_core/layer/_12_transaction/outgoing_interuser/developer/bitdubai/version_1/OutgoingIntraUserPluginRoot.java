@@ -4,7 +4,6 @@ import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.Service;
 import com.bitdubai.wallet_platform_api.layer._12_transaction.Transaction;
 import com.bitdubai.wallet_platform_api.layer._12_transaction.outgoing_intrauser.OutgoingIntraUserManager;
-import com.bitdubai.wallet_platform_api.layer._13_module.wallet_manager.Wallet;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.error_manager.ErrorManager;
@@ -96,7 +95,7 @@ public class OutgoingIntraUserPluginRoot implements Service,Transaction,Outgoing
     }
 
     
-    public void createFiatTransaction (/*User user,*/ Wallet wallet /*, Account account, FiatAmount fiatAmount*/){
+    public void createFiatTransaction (/*TODO:User user, Wallet wallet , Account account, FiatAmount fiatAmount*/){
         
         
     }
