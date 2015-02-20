@@ -72,14 +72,14 @@ public class WalletCommunityPluginRoot implements Service, NetworkService, Walle
 
         EventListener eventListener;
         EventHandler eventHandler;
-        
+/*
         eventListener = eventManager.getNewListener(EventType.FINISHED_WALLET_INSTALLATION);
         eventHandler = new FinishedWalletinstallationEventHandler();
         ((FinishedWalletinstallationEventHandler) eventHandler).setWalletCommunityManager(this);
         eventListener.setEventHandler(eventHandler);
         eventManager.addListener(eventListener);
         listenersAdded.add(eventListener);
-        
+  */
         this.serviceStatus = ServiceStatus.STARTED;
 
     }
