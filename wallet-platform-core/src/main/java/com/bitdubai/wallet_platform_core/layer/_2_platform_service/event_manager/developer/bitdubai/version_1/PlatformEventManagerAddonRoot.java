@@ -39,8 +39,23 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
     private List<EventListener> listenersFinishedWalletInstallationEvent = new ArrayList<>();
     private List<EventListener> listenersIntraUserContactCreatedEvent = new ArrayList<>();
     private List<EventListener> listenersMoneyReceivedEvent = new ArrayList<>();
-            
-
+    private List<EventListener> listenersIncomingCryptoReceivedEvent = new ArrayList<>();
+    private List<EventListener> listenersIncomingCryptoReceptionConfirmedEvent = new ArrayList<>();
+    private List<EventListener> listenersIncomingCryptoReversedEvent = new ArrayList<>();
+    private List<EventListener> listenersIncomingCryptoIdentifiedFromExtraUserEvent = new ArrayList<>();
+    private List<EventListener> listenersIncomingCryptoIdentifiedFromIntraUserEvent = new ArrayList<>();
+    private List<EventListener> listenersIncomingCryptoIdentifiedFromDeviceUserEvent = new ArrayList<>();
+    private List<EventListener> listenersIncomingCryptoReceivedFromExtraUserEvent = new ArrayList<>();
+    private List<EventListener> listenersIncomingCryptoReceivedFromIntraUserEvent = new ArrayList<>();
+    private List<EventListener> listenersIncomingCryptoReceivedFromDeviceUserEvent = new ArrayList<>();
+    private List<EventListener> listenersIncomingCryptoReceptionConfirmedFromExtraUserEvent = new ArrayList<>();
+    private List<EventListener> listenersIncomingCryptoReceptionConfirmedFromIntraUserEvent = new ArrayList<>();
+    private List<EventListener> listenersIncomingCryptoReceptionConfirmedFromDeviceUserEvent = new ArrayList<>();
+    private List<EventListener> listenersIncomingCryptoReversedFromIntraUserEvent = new ArrayList<>(); 
+    private List<EventListener> listenersIncomingCryptoReversedFromExtraUserEvent = new ArrayList<>();
+    private List<EventListener> listenersIncomingCryptoReversedFromDeviceUserEvent = new ArrayList<>();
+    
+    
     EventMonitor eventMonitor;
 
 
@@ -134,6 +149,52 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
             
             case MONEY_RECEIVED:
                 return new MoneyReceivedEventListener(EventType.MONEY_RECEIVED, this.eventMonitor);
+            
+            case INCOMING_CRYPTO_RECEIVED:
+                return new IncomingCryptoReceivedEventListener(EventType.INCOMING_CRYPTO_RECEIVED, this.eventMonitor);
+            
+            case INCOMING_CRYPTO_RECEPTION_CONFIRMED:
+                return new IncomingCryptoReceptionConfirmedEventListener(EventType.INCOMING_CRYPTO_RECEPTION_CONFIRMED, this.eventMonitor);
+            
+            case INCOMING_CRYPTO_REVERSED:
+                return new IncomingCryptoReversedEventListener(EventType.INCOMING_CRYPTO_REVERSED, this.eventMonitor);
+            
+            case INCOMING_CRYPTO_IDENTIFIED_FROM_EXTRA_USER:
+                return new IncomingCryptoIdentifiedFromExtraUserEventListener(EventType.INCOMING_CRYPTO_IDENTIFIED_FROM_EXTRA_USER, this.eventMonitor);
+            
+            case INCOMING_CRYPTO_IDENTIFIED_FROM_INTRA_USER:
+                return new IncomingCryptoIdentifiedFromIntraUserEventListener(EventType.INCOMING_CRYPTO_IDENTIFIED_FROM_INTRA_USER, this.eventMonitor);
+            
+            case INCOMING_CRYPTO_IDENTIFIED_FROM_DEVICE_USER:
+                return new IncomingCryptoIdentifiedFromDeviceUserEventListener(EventType.INCOMING_CRYPTO_IDENTIFIED_FROM_DEVICE_USER, this.eventMonitor);
+            
+            case INCOMING_CRYPTO_RECEIVED_FROM_EXTRA_USER:
+                return new IncomingCryptoReceivedFromExtraUserEventListener(EventType.INCOMING_CRYPTO_RECEIVED_FROM_EXTRA_USER, this.eventMonitor);
+            
+            case INCOMING_CRYPTO_RECEIVED_FROM_INTRA_USER:
+                return new IncomingCryptoReceivedFromIntraUserEventListener(EventType.INCOMING_CRYPTO_RECEIVED_FROM_INTRA_USER,this.eventMonitor);
+            
+            case INCOMING_CRYPTO_RECEIVED_FROM_DEVICE_USER:
+                return new IncomingCryptoReceivedFromDeviceUserEventListener(EventType.INCOMING_CRYPTO_RECEIVED_FROM_DEVICE_USER, this.eventMonitor);
+            
+            case INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_EXTRA_USER:
+                return new IncomingCryptoReceptionConfirmedFromExtraUserEventListener(EventType.INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_EXTRA_USER, this.eventMonitor);
+            
+            case INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_INTRA_USER:
+                return new IncomingCryptoReceptionConfirmedFromIntraUserEventListener(EventType.INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_INTRA_USER, this.eventMonitor);
+            
+            case INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_DEVICE_USER:
+                return new IncomingCryptoReceptionConfirmedFromDeviceUserEventListener(EventType.INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_DEVICE_USER, this.eventMonitor);
+            
+            case INCOMING_CRYPTO_REVERSED_FROM_EXTRA_USER:
+                return new IncomingCryptoReversedFromExtraUserEventListener(EventType.INCOMING_CRYPTO_REVERSED_FROM_EXTRA_USER, this.eventMonitor);
+            
+            case INCOMING_CRYPTO_REVERSED_FROM_DEVICE_USER:
+                return new IncomingCryptoReversedFromDeviceUserEventListener(EventType.INCOMING_CRYPTO_REVERSED_FROM_DEVICE_USER, this.eventMonitor);
+            
+            case INCOMING_CRYPTO_REVERSED_FROM_INTRA_USER:
+                return new IncomingCryptoReversedFromIntraUserEventListener(EventType.INCOMING_CRYPTO_REVERSED_FROM_INTRA_USER, this.eventMonitor);
+            
         }
         return null;
     }
@@ -187,6 +248,52 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
             
             case MONEY_RECEIVED:
                 return new MoneyReceivedEvent(EventType.MONEY_RECEIVED);
+            
+            case INCOMING_CRYPTO_RECEIVED:
+                return new IncomingCryptoReceivedEvent(EventType.INCOMING_CRYPTO_RECEIVED);
+            
+            case INCOMING_CRYPTO_RECEPTION_CONFIRMED:
+                return new IncomingCryptoReceptionConfirmedEvent(EventType.INCOMING_CRYPTO_RECEPTION_CONFIRMED);
+            
+            case INCOMING_CRYPTO_REVERSED:
+                return new IncomingCryptoReversedEvent(EventType.INCOMING_CRYPTO_REVERSED);
+            
+            case INCOMING_CRYPTO_IDENTIFIED_FROM_EXTRA_USER:
+                return new IncomingCryptoIdentifiedFromExtraUserEvent(EventType.INCOMING_CRYPTO_IDENTIFIED_FROM_EXTRA_USER);
+            
+            case INCOMING_CRYPTO_IDENTIFIED_FROM_INTRA_USER:
+                return new IncomingCryptoIdentifiedFromIntraUserEvent(EventType.INCOMING_CRYPTO_IDENTIFIED_FROM_INTRA_USER);
+            
+            case INCOMING_CRYPTO_IDENTIFIED_FROM_DEVICE_USER:
+                return new IncomingCryptoIdentifiedFromDeviceUserEvent(EventType.INCOMING_CRYPTO_IDENTIFIED_FROM_DEVICE_USER);
+            
+            case INCOMING_CRYPTO_RECEIVED_FROM_EXTRA_USER:
+                return new IncomingCryptoReceivedFromExtraUserEvent(EventType.INCOMING_CRYPTO_RECEIVED_FROM_EXTRA_USER);
+            
+            case INCOMING_CRYPTO_RECEIVED_FROM_INTRA_USER:
+                return new IncomingCryptoReceivedFromIntraUserEvent(EventType.INCOMING_CRYPTO_RECEIVED_FROM_INTRA_USER);
+            
+            case INCOMING_CRYPTO_RECEIVED_FROM_DEVICE_USER:
+                return new IncomingCryptoReceivedFromDeviceUserEvent(EventType.INCOMING_CRYPTO_RECEIVED_FROM_DEVICE_USER);
+            
+            case INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_EXTRA_USER:
+                return new IncomingCryptoReceptionConfirmedFromExtraUserEvent(EventType.INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_EXTRA_USER);
+            
+            case INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_INTRA_USER:
+                return new IncomingCryptoReceptionConfirmedFromIntraUserEvent(EventType.INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_INTRA_USER);
+            
+            case INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_DEVICE_USER:
+                return new IncomingCryptoReceptionConfirmedFromDeviceUserEvent(EventType.INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_DEVICE_USER);
+            
+            case INCOMING_CRYPTO_REVERSED_FROM_EXTRA_USER:
+                return new IncomingCryptoReversedFromExtraUserEvent(EventType.INCOMING_CRYPTO_REVERSED_FROM_EXTRA_USER);
+            
+            case INCOMING_CRYPTO_REVERSED_FROM_INTRA_USER:
+                return new IncomingCryptoReversedFromIntraUserEvent(EventType.INCOMING_CRYPTO_REVERSED_FROM_INTRA_USER);
+            
+            case INCOMING_CRYPTO_REVERSED_FROM_DEVICE_USER:
+                return new IncomingCryptoReversedFromDeviceUserEvent(EventType.INCOMING_CRYPTO_REVERSED_FROM_DEVICE_USER);
+            
         }
         return null;
     }
@@ -257,6 +364,67 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
             case MONEY_RECEIVED:
                 listenersMoneyReceivedEvent.add(listener);
                 break;
+            
+            case INCOMING_CRYPTO_RECEIVED:
+                listenersIncomingCryptoReceivedEvent.add(listener);
+                break;
+            
+            case INCOMING_CRYPTO_RECEPTION_CONFIRMED:
+                listenersIncomingCryptoReceptionConfirmedEvent.add(listener);
+                break;
+
+            case INCOMING_CRYPTO_REVERSED:
+                listenersIncomingCryptoReversedEvent.add(listener);
+                break;
+            
+            case INCOMING_CRYPTO_IDENTIFIED_FROM_EXTRA_USER:
+                listenersIncomingCryptoIdentifiedFromExtraUserEvent.add(listener);
+                break;
+            
+            case INCOMING_CRYPTO_IDENTIFIED_FROM_INTRA_USER:
+                listenersIncomingCryptoIdentifiedFromIntraUserEvent.add(listener);
+                break;
+            
+            case INCOMING_CRYPTO_IDENTIFIED_FROM_DEVICE_USER:
+                listenersIncomingCryptoIdentifiedFromDeviceUserEvent.add(listener);
+                break;
+            
+            case INCOMING_CRYPTO_RECEIVED_FROM_EXTRA_USER:
+                listenersIncomingCryptoReceivedFromExtraUserEvent.add(listener);
+                break;
+            
+            case INCOMING_CRYPTO_RECEIVED_FROM_INTRA_USER:
+                listenersIncomingCryptoReceivedFromIntraUserEvent.add(listener);
+                break;
+            
+            case INCOMING_CRYPTO_RECEIVED_FROM_DEVICE_USER:
+                listenersIncomingCryptoReceivedFromDeviceUserEvent.add(listener);
+                break;
+            
+            case INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_EXTRA_USER:
+                listenersIncomingCryptoReceptionConfirmedFromExtraUserEvent.add(listener);
+                break;
+            
+            case INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_INTRA_USER:
+                listenersIncomingCryptoReceptionConfirmedFromIntraUserEvent.add(listener);
+                break;
+            
+            case INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_DEVICE_USER:
+                listenersIncomingCryptoReceptionConfirmedFromDeviceUserEvent.add(listener);
+                break;
+            
+            case INCOMING_CRYPTO_REVERSED_FROM_EXTRA_USER:
+                listenersIncomingCryptoReversedFromExtraUserEvent.add(listener);
+                break;
+            
+            case INCOMING_CRYPTO_REVERSED_FROM_INTRA_USER:
+                listenersIncomingCryptoReversedFromIntraUserEvent.add(listener);
+                break;
+            
+            case INCOMING_CRYPTO_REVERSED_FROM_DEVICE_USER:
+                listenersIncomingCryptoReversedFromDeviceUserEvent.add(listener);
+                break;
+
         }
     }
 
@@ -326,6 +494,66 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
             case MONEY_RECEIVED:
                 listeners = listenersMoneyReceivedEvent;
                 break;
+
+            case INCOMING_CRYPTO_RECEIVED:
+                listeners = listenersIncomingCryptoReceivedEvent;
+                break;
+
+            case INCOMING_CRYPTO_RECEPTION_CONFIRMED:
+                listeners = listenersIncomingCryptoReceptionConfirmedEvent;
+                break;
+
+            case INCOMING_CRYPTO_REVERSED:
+                listeners = listenersIncomingCryptoReversedEvent;
+                break;
+
+            case INCOMING_CRYPTO_IDENTIFIED_FROM_EXTRA_USER:
+                listeners = listenersIncomingCryptoIdentifiedFromExtraUserEvent;
+                break;
+
+            case INCOMING_CRYPTO_IDENTIFIED_FROM_INTRA_USER:
+                listeners = listenersIncomingCryptoIdentifiedFromIntraUserEvent;
+                break;
+
+            case INCOMING_CRYPTO_IDENTIFIED_FROM_DEVICE_USER:
+                listeners = listenersIncomingCryptoIdentifiedFromDeviceUserEvent;
+                break;
+
+            case INCOMING_CRYPTO_RECEIVED_FROM_EXTRA_USER:
+                listeners = listenersIncomingCryptoReceivedFromExtraUserEvent;
+                break;
+
+            case INCOMING_CRYPTO_RECEIVED_FROM_INTRA_USER:
+                listeners = listenersIncomingCryptoReceivedFromIntraUserEvent;
+                break;
+
+            case INCOMING_CRYPTO_RECEIVED_FROM_DEVICE_USER:
+                listeners = listenersIncomingCryptoReceivedFromDeviceUserEvent;
+                break;
+
+            case INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_EXTRA_USER:
+                listeners = listenersIncomingCryptoReceptionConfirmedFromExtraUserEvent;
+                break;
+
+            case INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_INTRA_USER:
+                listeners = listenersIncomingCryptoReceptionConfirmedFromIntraUserEvent;
+                break;
+
+            case INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_DEVICE_USER:
+                listeners = listenersIncomingCryptoReceptionConfirmedFromDeviceUserEvent;
+                break;
+
+            case INCOMING_CRYPTO_REVERSED_FROM_EXTRA_USER:
+                listeners = listenersIncomingCryptoReversedFromExtraUserEvent;
+                break;
+
+            case INCOMING_CRYPTO_REVERSED_FROM_INTRA_USER:
+                listeners = listenersIncomingCryptoReversedFromIntraUserEvent;
+                break;
+
+            case INCOMING_CRYPTO_REVERSED_FROM_DEVICE_USER:
+                listeners = listenersIncomingCryptoReversedFromDeviceUserEvent;
+                break; 
             
         }
 
@@ -401,6 +629,65 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
                 listeners = listenersMoneyReceivedEvent;
                 break;
 
+            case INCOMING_CRYPTO_RECEIVED:
+                listeners = listenersIncomingCryptoReceivedEvent;
+                break;
+
+            case INCOMING_CRYPTO_RECEPTION_CONFIRMED:
+                listeners = listenersIncomingCryptoReceptionConfirmedEvent;
+                break;
+
+            case INCOMING_CRYPTO_REVERSED:
+                listeners = listenersIncomingCryptoReversedEvent;
+                break;
+
+            case INCOMING_CRYPTO_IDENTIFIED_FROM_EXTRA_USER:
+                listeners = listenersIncomingCryptoIdentifiedFromExtraUserEvent;
+                break;
+
+            case INCOMING_CRYPTO_IDENTIFIED_FROM_INTRA_USER:
+                listeners = listenersIncomingCryptoIdentifiedFromIntraUserEvent;
+                break;
+
+            case INCOMING_CRYPTO_IDENTIFIED_FROM_DEVICE_USER:
+                listeners = listenersIncomingCryptoIdentifiedFromDeviceUserEvent;
+                break;
+
+            case INCOMING_CRYPTO_RECEIVED_FROM_EXTRA_USER:
+                listeners = listenersIncomingCryptoReceivedFromExtraUserEvent;
+                break;
+
+            case INCOMING_CRYPTO_RECEIVED_FROM_INTRA_USER:
+                listeners = listenersIncomingCryptoReceivedFromIntraUserEvent;
+                break;
+
+            case INCOMING_CRYPTO_RECEIVED_FROM_DEVICE_USER:
+                listeners = listenersIncomingCryptoReceivedFromDeviceUserEvent;
+                break;
+
+            case INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_EXTRA_USER:
+                listeners = listenersIncomingCryptoReceptionConfirmedFromExtraUserEvent;
+                break;
+
+            case INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_INTRA_USER:
+                listeners = listenersIncomingCryptoReceptionConfirmedFromIntraUserEvent;
+                break;
+
+            case INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_DEVICE_USER:
+                listeners = listenersIncomingCryptoReceptionConfirmedFromDeviceUserEvent;
+                break;
+
+            case INCOMING_CRYPTO_REVERSED_FROM_EXTRA_USER:
+                listeners = listenersIncomingCryptoReversedFromExtraUserEvent;
+                break;
+
+            case INCOMING_CRYPTO_REVERSED_FROM_INTRA_USER:
+                listeners = listenersIncomingCryptoReversedFromIntraUserEvent;
+                break;
+
+            case INCOMING_CRYPTO_REVERSED_FROM_DEVICE_USER:
+                listeners = listenersIncomingCryptoReversedFromDeviceUserEvent;
+                break;
         }
 
         for (EventListener eventListener : listeners) {
