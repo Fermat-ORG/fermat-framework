@@ -68,66 +68,66 @@ public class AppRuntimePluginRoot implements Service, Middleware, AppRuntimeMana
      */
     UUID pluginId;
 
-       @Override
-       public void start(){
-           /**
-            * I will initialize the handling of com.bitdubai.platform events.
-            */
+    @Override
+    public void start(){
+        /**
+         * I will initialize the handling of com.bitdubai.platform events.
+         */
 
-           //Loui TODO: compĺetar el event Handler.
+        //Loui TODO: compĺetar el event Handler.
 
-           EventListener eventListener;
-           EventHandler eventHandler;
-           eventListener = eventManager.getNewListener(EventType.WALLET_RESOURCES_INSTALLED);
-           eventHandler = new WalletResourcesInstalledEventHandler();
-           ((WalletResourcesInstalledEventHandler) eventHandler).setAppRuntimeManager(this);
-           eventListener.setEventHandler(eventHandler);
-           eventManager.addListener(eventListener);
-           listenersAdded.add(eventListener);
+        EventListener eventListener;
+        EventHandler eventHandler;
+        eventListener = eventManager.getNewListener(EventType.WALLET_RESOURCES_INSTALLED);
+        eventHandler = new WalletResourcesInstalledEventHandler();
+        ((WalletResourcesInstalledEventHandler) eventHandler).setAppRuntimeManager(this);
+        eventListener.setEventHandler(eventHandler);
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);
 
-           /**
-            * At this time the only thing I can do is a factory reset. Once there should be a possibility to add
-            * functionality based on wallets downloaded by users this wont be an option.
-            * * *
-            */
-           factoryReset();
+        /**
+         * At this time the only thing I can do is a factory reset. Once there should be a possibility to add
+         * functionality based on wallets downloaded by users this wont be an option.
+         * * *
+         */
+        factoryReset();
 
-           this.serviceStatus = ServiceStatus.STARTED;
-           
-       }
+        this.serviceStatus = ServiceStatus.STARTED;
+
+    }
     @Override
     public void pause(){
-        
+
         this.serviceStatus = ServiceStatus.PAUSED;
-        
+
     }
 
     @Override
     public void resume(){
-        
+
         this.serviceStatus = ServiceStatus.STARTED;
-        
+
     }
-    
+
     @Override
     public void stop(){
 
         /**
          * I will remove all the listeners registered with the event manager. 
          */
-        
+
         for (EventListener eventListener : listenersAdded){
             eventManager.removeListener(eventListener);
         }
-        
+
         listenersAdded.clear();
-        
+
         this.serviceStatus = ServiceStatus.STOPPED;
-        
+
     }
 
     @Override
-    public ServiceStatus getStatus() { 
+    public ServiceStatus getStatus() {
         return this.serviceStatus;
     }
 
@@ -138,8 +138,6 @@ public class AppRuntimePluginRoot implements Service, Middleware, AppRuntimeMana
         ((NavigationStructureUpdatedEvent) platformEvent).----------(this.-----);
         eventManager.raiseEvent(platformEvent);
         */
-
-
     }
 
     /**
@@ -174,9 +172,25 @@ public class AppRuntimePluginRoot implements Service, Middleware, AppRuntimeMana
 
     @Override
     public Fragment getLastFragment() {
-         return listFragments.get(lastFragment);
+        return listFragments.get(lastFragment);
     }
 
+    @Override
+    public Activity getActivity(Activities app) {
+        for (int i = 0; i < listActivities.size(); i++) {
+            if(listActivities.get(i).getType().name().equals(app.name()) ){
+                lastActivity = i;
+                return listActivities.get(i) ;
+            }
+        }
+        return null;
+    }
+
+/*
+    PlatformEvent platformEvent = eventManager.getNewEvent(EventType.NAVIGATION_STRUCTURE_UPDATED);
+    ((NavigationStructureUpdatedEvent) platformEvent).--------(this.-------);
+    eventManager.raiseEvent(platformEvent);
+*/
 
 
     /**
@@ -191,7 +205,7 @@ public class AppRuntimePluginRoot implements Service, Middleware, AppRuntimeMana
     /**
      * DealWithEvents Interface implementation. 
      */
-    
+
     @Override
     public void setEventManager(EventManager eventManager) {
         this.eventManager = eventManager;
@@ -200,34 +214,34 @@ public class AppRuntimePluginRoot implements Service, Middleware, AppRuntimeMana
     /**
      * DealWithErrors Interface implementation. 
      */
-    
+
     @Override
     public void setErrorManager(ErrorManager errorManager) {
-        
+
     }
-    
+
     /**
      * DealsWithPluginIdentity methods implementation. 
      */
-    
+
     @Override
     public void setId(UUID pluginId) {
         this.pluginId = pluginId;
     }
-    
-    
+
+
     /**
      * The first time this plugins runs, it will setup the initial structure for the App, subApp and so on through the local
      * interfaces of the classes involved, 
      */
-     private void firstRunCheck() {
+    private void firstRunCheck() {
 
-         /**
-          * First I check weather this a structure already created, if not I create the "Factory" structure.
-          */
-         
-         
-     }
+        /**
+         * First I check weather this a structure already created, if not I create the "Factory" structure.
+         */
+
+
+    }
 
 
     /**
@@ -250,8 +264,8 @@ public class AppRuntimePluginRoot implements Service, Middleware, AppRuntimeMana
         runtimeApp = new RuntimeApp();
 
         runtimeApp.setType(Apps.CRYPTO_WALLET_PLATFORM);
-       
-        
+
+
         runtimeSubApp = new RuntimeSubApp();
         runtimeSubApp.setType(SubApps.CWP_SHELL);
         runtimeApp.addSubApp(runtimeSubApp);
@@ -266,9 +280,9 @@ public class AppRuntimePluginRoot implements Service, Middleware, AppRuntimeMana
         runtimeFragment.setType(Fragments.CWP_SHELL_LOGIN);
         runtimeActivity.addFragment(runtimeFragment);
         listFragments.add(runtimeFragment);
-        
-        
-        
+
+
+
         runtimeSubApp = new RuntimeSubApp();
         runtimeSubApp.setType(SubApps.CWP_WALLET_FACTORY);
         runtimeApp.addSubApp(runtimeSubApp);
@@ -283,7 +297,7 @@ public class AppRuntimePluginRoot implements Service, Middleware, AppRuntimeMana
         runtimeFragment.setType(Fragments.CWP_WALLET_FACTORY_MAIN);
         runtimeActivity.addFragment(runtimeFragment);
         listFragments.add(runtimeFragment);
-        
+
 
         runtimeSubApp = new RuntimeSubApp();
         runtimeSubApp.setType(SubApps.CWP_WALLET_MANAGER);
@@ -313,8 +327,8 @@ public class AppRuntimePluginRoot implements Service, Middleware, AppRuntimeMana
         runtimeFragment.setType(Fragments.CWP_SHOP_MANAGER_MAIN);
         runtimeActivity.addFragment(runtimeFragment);
         listFragments.add(runtimeFragment);
-        
-        
+
+
         runtimeSubApp = new RuntimeSubApp();
         runtimeSubApp.setType(SubApps.CWP_WALLET_RUNTIME);
         runtimeApp.addSubApp(runtimeSubApp);
@@ -326,25 +340,25 @@ public class AppRuntimePluginRoot implements Service, Middleware, AppRuntimeMana
         listWallets.add(runtimeWallet);
 
         runtimeActivity= new RuntimeActivity();
-        runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_MAIN);
+        runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_VERSION_1_MAIN);
         runtimeWallet.addActivity(runtimeActivity);
-
+        listActivities.add(runtimeActivity);
 
         runtimeTitleBar = new RuntimeTitleBar();
         runtimeTitleBar.setLabel("Kids Wallet");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeSideMenu = new RuntimeSideMenu();
-        
+
         runtimeMenuItem = new RuntimeMenuItem();
         runtimeMenuItem.setLabel("Menu item 1");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_MAIN); // Solo es un ej.
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_VERSION_1_MAIN); // Solo es un ej.
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
-        
+
         runtimeActivity.setSideMenu(runtimeSideMenu);
 
         runtimeTabStrip = new RuntimeTabStrip();
-        
+
         runtimeTabStrip.addTab("Profile");
         runtimeTabStrip.addTab("Desktop");
         runtimeTabStrip.addTab("Contacts");
@@ -376,8 +390,8 @@ public class AppRuntimePluginRoot implements Service, Middleware, AppRuntimeMana
         /**
          * End of Wallet Kids fragments.
          * */
-        
-        
+
+
         runtimeSubApp = new RuntimeSubApp();
         runtimeSubApp.setType(SubApps.CWP_WALLET_STORE);
         runtimeApp.addSubApp(runtimeSubApp);
@@ -459,7 +473,7 @@ public class AppRuntimePluginRoot implements Service, Middleware, AppRuntimeMana
         runtimeMenuItem.setLabel("Exit");
         runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_MANAGER_MAIN);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
-        
+
         runtimeActivity.setSideMenu(runtimeSideMenu);
 
         runtimeTabStrip = new RuntimeTabStrip();
@@ -471,6 +485,9 @@ public class AppRuntimePluginRoot implements Service, Middleware, AppRuntimeMana
         runtimeTabStrip.addTab("Shops");
         runtimeTabStrip.addTab("Refill");
         runtimeTabStrip.addTab("Discounts");
+
+
+        runtimeActivity.setTabStrip(runtimeTabStrip);
 
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_HOME);
@@ -509,12 +526,16 @@ public class AppRuntimePluginRoot implements Service, Middleware, AppRuntimeMana
         /**
          * End of Wallet Adults tabs.
          */
-        
+
         runtimeActivity= new RuntimeActivity();
         runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_SHOPS);
         runtimeSubApp.addActivity(runtimeActivity);
         listActivities.add(runtimeActivity);
-        
+
+        runtimeTitleBar = new RuntimeTitleBar();
+        runtimeTitleBar.setLabel("My Shop");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
         runtimeTabStrip = new RuntimeTabStrip();
 
         runtimeTabStrip.addTab("Shop");
@@ -523,6 +544,8 @@ public class AppRuntimePluginRoot implements Service, Middleware, AppRuntimeMana
         runtimeTabStrip.addTab("Chat");
         runtimeTabStrip.addTab("History");
         runtimeTabStrip.addTab("Map");
+
+        runtimeActivity.setTabStrip(runtimeTabStrip);
 
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_SHOP);
@@ -556,10 +579,11 @@ public class AppRuntimePluginRoot implements Service, Middleware, AppRuntimeMana
         /**
          * End of SHOPS tabs.
          */
-        
+
         runtimeActivity= new RuntimeActivity();
         runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_REFFILS);
         runtimeSubApp.addActivity(runtimeActivity);
+        listActivities.add(runtimeActivity);
 //-----------------------------------------------------------------------------------
         runtimeActivity= new RuntimeActivity();
         runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED);
@@ -575,7 +599,7 @@ public class AppRuntimePluginRoot implements Service, Middleware, AppRuntimeMana
         runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_REQUEST_SEND);
         runtimeSubApp.addActivity(runtimeActivity);
         listActivities.add(runtimeActivity);
-        
+
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_ADULTS_ALL_REQUEST_SEND);
         runtimeActivity.addFragment(runtimeFragment);
@@ -587,14 +611,12 @@ public class AppRuntimePluginRoot implements Service, Middleware, AppRuntimeMana
         listActivities.add(runtimeActivity);
 
 
-
-
         runtimeTabStrip = new RuntimeTabStrip();
 
         runtimeTabStrip.addTab("Debits");
         runtimeTabStrip.addTab("Credits");
         runtimeTabStrip.addTab("All");
-
+        runtimeActivity.setTabStrip(runtimeTabStrip);
 
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_DEBITS);
@@ -616,7 +638,7 @@ public class AppRuntimePluginRoot implements Service, Middleware, AppRuntimeMana
          * End of Wallet Accounts tabs.
          */
 
-        
+
     }
 
 }
