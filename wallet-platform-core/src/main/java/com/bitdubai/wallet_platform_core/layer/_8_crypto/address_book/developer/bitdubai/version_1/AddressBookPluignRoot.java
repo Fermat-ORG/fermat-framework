@@ -2,6 +2,7 @@ package com.bitdubai.wallet_platform_core.layer._8_crypto.address_book.developer
 
 import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.Service;
+import com.bitdubai.wallet_platform_api.layer._10_network_service.intra_user.IntraUser;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.wallet_platform_api.layer._1_definition.money.CryptoAddress;
@@ -14,6 +15,7 @@ import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventType;
 import com.bitdubai.wallet_platform_api.layer._3_os.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.wallet_platform_api.layer._3_os.file_system.PluginFileSystem;
+import com.bitdubai.wallet_platform_api.layer._4_user.DeviceUser;
 import com.bitdubai.wallet_platform_api.layer._8_crypto.Crypto;
 import com.bitdubai.wallet_platform_api.layer._8_crypto.address_book.AddressBookManager;
 
@@ -111,6 +113,10 @@ public class AddressBookPluignRoot implements Service, Crypto, AddressBookManage
         
         
     }
+    
+    public void getCryptoAddress(IntraUser intraUser) {}
+    public void getCryptoAddress(){}
+    public void getCryptoAddress(DeviceUser deviceUser){}
 
     /**
      * UsesFileSystem Interface implementation.
