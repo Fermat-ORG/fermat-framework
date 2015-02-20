@@ -9,7 +9,7 @@ import com.bitdubai.wallet_platform_core.layer._11_middleware.bank_notes.develop
 import com.bitdubai.wallet_platform_core.layer._11_middleware.wallet.developer.bitdubai.version_1.WalletPluginRoot;
 import com.bitdubai.wallet_platform_core.layer._11_middleware.wallet_contacts.developer.bitdubai.version_1.WalletContactsPluginRoot;
 import com.bitdubai.wallet_platform_core.layer._12_transaction.from_extrauser.developer.bitdubai.version_1.FromExtraUserTransactionManagerPluginRoot;
-import com.bitdubai.wallet_platform_core.layer._12_transaction.interuser.developer.bitdubai.version_1.InterUserTransactionManagerPluginRoot;
+import com.bitdubai.wallet_platform_core.layer._12_transaction.intrauser.developer.bitdubai.version_1.IntraUserTransactionManagerPluginRoot;
 import com.bitdubai.wallet_platform_core.layer._12_transaction.interwallet.developer.bitdubai.version_1.InterWalletTransactionManagerPluginRoot;
 import com.bitdubai.wallet_platform_core.layer._12_transaction.to_extrauser.developer.bitsubai.version_1.ToExtraUserTransactionManagerPluginRoot;
 import com.bitdubai.wallet_platform_core.layer._6_world.crypto_index.developer.bitdubai.version_1.CryptoIndexPluginRoot;
@@ -270,8 +270,8 @@ public class PluginsIdentityManager {
         if (pluginIndex == 0) {
             try
             {
-                InterUserTransactionManagerPluginRoot tryType;
-                tryType = (InterUserTransactionManagerPluginRoot) plugin;
+                IntraUserTransactionManagerPluginRoot tryType;
+                tryType = (IntraUserTransactionManagerPluginRoot) plugin;
                 pluginIndex = 8;
             }
             catch (Exception e)

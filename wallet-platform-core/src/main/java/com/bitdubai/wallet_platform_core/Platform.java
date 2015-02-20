@@ -896,7 +896,7 @@ public class Platform  {
          * I will give the Inter User Transaction access to the File System and to the Event Manager
          */
 
-        Plugin interUserTransaction = ((TransactionLayer) mTransactionLayer).getInterUserPlugin();
+        Plugin interUserTransaction = ((TransactionLayer) mTransactionLayer).getIntraUserPlugin();
 
         ((DealsWithPluginFileSystem) interUserTransaction).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) interUserTransaction).setEventManager((EventManager) eventManager);

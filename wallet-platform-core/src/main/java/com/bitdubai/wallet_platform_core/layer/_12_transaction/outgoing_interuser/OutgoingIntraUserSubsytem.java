@@ -1,14 +1,14 @@
-package com.bitdubai.wallet_platform_core.layer._12_transaction.interuser;
+package com.bitdubai.wallet_platform_core.layer._12_transaction.outgoing_interuser;
 
 import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.layer._12_transaction.CantStartSubsystemException;
 import com.bitdubai.wallet_platform_api.layer._12_transaction.TransactionSubsystem;
-import com.bitdubai.wallet_platform_core.layer._12_transaction.interuser.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.wallet_platform_core.layer._12_transaction.outgoing_interuser.developer.bitdubai.DeveloperBitDubai;
 
 /**
- * Created by loui on 16/02/15.
+ * Created by loui on 20/02/15.
  */
-public class InterUserSubsystem implements TransactionSubsystem {
+public class OutgoingIntraUserSubsytem implements TransactionSubsystem {
 
     Plugin plugin;
 

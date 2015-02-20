@@ -1,11 +1,11 @@
-package com.bitdubai.wallet_platform_core.layer._12_transaction.interuser.developer.bitdubai;
+package com.bitdubai.wallet_platform_core.layer._12_transaction.intrauser.developer.bitdubai;
 
 import com.bitdubai.wallet_platform_api.Plugin;
 import com.bitdubai.wallet_platform_api.PluginDeveloper;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.wallet_platform_api.layer._1_definition.enums.TimeFrequency;
 import com.bitdubai.wallet_platform_api.layer._5_license.PluginLicensor;
-import com.bitdubai.wallet_platform_core.layer._12_transaction.interuser.developer.bitdubai.version_1.InterUserTransactionManagerPluginRoot;
+import com.bitdubai.wallet_platform_core.layer._12_transaction.intrauser.developer.bitdubai.version_1.IntraUserTransactionManagerPluginRoot;
 
 /**
  * Created by loui on 16/02/15.
@@ -26,7 +26,7 @@ public class DeveloperBitDubai  implements PluginDeveloper, PluginLicensor {
          * it is easy to choose.
          */
 
-        plugin = new InterUserTransactionManagerPluginRoot();
+        plugin = new IntraUserTransactionManagerPluginRoot();
 
     }
 
