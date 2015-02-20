@@ -8,6 +8,7 @@ import com.bitdubai.wallet_platform_api.layer._12_transaction.TransactionSubsyst
 import com.bitdubai.wallet_platform_core.layer._12_transaction.from_extrauser.FromExtraUserSubsystem;
 import com.bitdubai.wallet_platform_core.layer._12_transaction.intrauser.IntraUserSubsystem;
 import com.bitdubai.wallet_platform_core.layer._12_transaction.interwallet.InterWalletSubsystem;
+import com.bitdubai.wallet_platform_core.layer._12_transaction.outgoing_extrauser.OutgoingExtrauserSubsystem;
 import com.bitdubai.wallet_platform_core.layer._12_transaction.outgoing_interuser.OutgoingIntraUserSubsytem;
 import com.bitdubai.wallet_platform_core.layer._12_transaction.to_extrauser.ToExtrauserSubsystem;
 
@@ -17,11 +18,16 @@ import com.bitdubai.wallet_platform_core.layer._12_transaction.to_extrauser.ToEx
 public class TransactionLayer implements PlatformLayer {
     
     private Plugin mFromExtraUser;
+    
     private Plugin mIntraUser;
+    
     private Plugin mInterWallet;
+    
     private Plugin mToExtraUser;
+    
     private Plugin mOutgoingIntraUser;
     
+    private Plugin mOutgoingExtraUser;
     
     public  Plugin getFromExtraUserPlugin() {
         return mFromExtraUser;
@@ -41,8 +47,11 @@ public class TransactionLayer implements PlatformLayer {
     }
 
     public Plugin getOutgoingIntraUser(){
-        return mOutgoingIntraUser;
-        
+        return mOutgoingIntraUser;   
+    }
+    
+    public Plugin getOutgoingExtraUser(){
+        return mOutgoingExtraUser;        
     }
 
     @Override
@@ -121,9 +130,18 @@ public class TransactionLayer implements PlatformLayer {
             
         }
 
+        /**
+         * Let's try to start the Outgoing Extra User Subsytem. 
+         */
 
+        TransactionSubsystem outgoingExtraUserSubsystem = new OutgoingExtrauserSubsystem();
+        
+        try {
+            outgoingExtraUserSubsystem.start();
+            mOutgoingExtraUser = outgoingExtraUserSubsystem.getPlugin();
+        }catch (CantStartSubsystemException e){
+            System.err.println("CantStartSubsystemException: " + e.getMessage());
 
+        }
     }
-
-
 }
