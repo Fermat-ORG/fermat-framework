@@ -4,19 +4,16 @@ import com.bitdubai.wallet_platform_api.layer._1_definition.event.PlatformEvent;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventSource;
 import com.bitdubai.wallet_platform_api.layer._2_platform_service.event_manager.EventType;
 
-import java.util.UUID;
-
 /**
- * Created by loui on 05/02/15.
+ * Created by loui on 20/02/15.
  */
-public class NavigationStructureUpdatedEvent implements PlatformEvent {
+public class IntraUserContactCreatedEvent implements PlatformEvent {
     private EventType eventType;
     private EventSource eventSource;
 
-    public NavigationStructureUpdatedEvent (EventType eventType){
+    public IntraUserContactCreatedEvent(EventType eventType){
         this.eventType = eventType;
     }
-
 
     @Override
     public EventType getEventType() {

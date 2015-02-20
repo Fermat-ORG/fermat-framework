@@ -36,7 +36,8 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
     private List<EventListener> listenersWalletOpenedEvent = new ArrayList<>();
     private List<EventListener> listenersWalletClosedEvent = new ArrayList<>();
     private List<EventListener> listenersNavigationStructureUpdatedEvent = new ArrayList<>();
-    private List<EventListener> listenersFinisehdWalletInstallationEvent = new ArrayList<>();
+    private List<EventListener> listenersFinishedWalletInstallationEvent = new ArrayList<>();
+    private List<EventListener> listenersIntraUserContactCreatedEvent = new ArrayList<>();
             
 
     EventMonitor eventMonitor;
@@ -126,6 +127,9 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
             
             case FINISHED_WALLET_INSTALLATION:
                 return new FinishedWalletInstallationEventListener(EventType.FINISHED_WALLET_INSTALLATION, this.eventMonitor);
+
+            case INTRA_USER_CONTACT_CREATED:
+                return new IntraUserContactCreatedEventListener(EventType.INTRA_USER_CONTACT_CREATED, this.eventMonitor);
         }
         return null;
     }
@@ -173,6 +177,9 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
             
             case FINISHED_WALLET_INSTALLATION:
                 return new FinishedWalletInstallationEvent(EventType.FINISHED_WALLET_INSTALLATION);
+            
+            case INTRA_USER_CONTACT_CREATED:
+                return new IntraUserContactCreatedEvent(EventType.INTRA_USER_CONTACT_CREATED);
         }
         return null;
     }
@@ -233,7 +240,11 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
                 break;
             
             case FINISHED_WALLET_INSTALLATION:
-                listenersFinisehdWalletInstallationEvent.add(listener);
+                listenersFinishedWalletInstallationEvent.add(listener);
+                break;
+            
+            case INTRA_USER_CONTACT_CREATED:
+                listenersIntraUserContactCreatedEvent.add(listener);
                 break;
         }
     }
@@ -294,7 +305,11 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
                 break;
             
             case FINISHED_WALLET_INSTALLATION:
-                listeners = listenersFinisehdWalletInstallationEvent;
+                listeners = listenersFinishedWalletInstallationEvent;
+                break;
+            
+            case INTRA_USER_CONTACT_CREATED:
+                listeners = listenersIntraUserContactCreatedEvent;
                 break;
             
         }
@@ -360,7 +375,11 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
                 break;
             
             case FINISHED_WALLET_INSTALLATION:
-                listeners = listenersFinisehdWalletInstallationEvent;
+                listeners = listenersFinishedWalletInstallationEvent;
+                break;
+            
+            case INTRA_USER_CONTACT_CREATED:
+                listeners = listenersIntraUserContactCreatedEvent;
                 break;
 
         }

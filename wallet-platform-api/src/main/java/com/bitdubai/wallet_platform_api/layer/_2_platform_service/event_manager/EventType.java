@@ -8,6 +8,7 @@ public enum EventType {
     USER_CREATED, 
     USER_LOGGED_IN, 
     USER_LOGGED_OUT,
+    INTRA_USER_CONTACT_CREATED,
     
     WALLET_CREATED, 
     WALLET_WENT_ONLINE, 
