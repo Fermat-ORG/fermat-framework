@@ -157,10 +157,6 @@ public class Platform  {
         this.os = os;
     }
 
-    // LOUI TODO; No veo que este el evento IncomingCryptoIdentified
-
-    // LOUI TODO; Revisa todo lo que hiciste al detalle, porque son demasiadas cosas las que encontre y solo revisando por arriba.
-
 
 
     public void start() throws CantStartPlatformException {

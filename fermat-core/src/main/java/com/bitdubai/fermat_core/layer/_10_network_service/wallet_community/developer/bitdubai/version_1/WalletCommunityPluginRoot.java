@@ -10,9 +10,11 @@ import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.DealsWith
 import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventHandler;
 import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventType;
 import com.bitdubai.fermat_api.layer._3_os.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer._3_os.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer._10_network_service.NetworkService;
+import com.bitdubai.fermat_core.layer._10_network_service.wallet_community.developer.bitdubai.version_1.EventHandlers.FinishedWalletInstallationEventHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +33,6 @@ import java.util.UUID;
  *
  * * * * 
  */
-// LOUI; TODO; Escuchar el evento FINISHED_WALLET_INSTALATION que -- lo debe disparar el wallet manager cuando todo lo que ya sabemos termino--. (crea un metodo privado finishedWalletInstallation en el Wallet Manger y disparalo desde ahi)
 
 public class WalletCommunityPluginRoot implements Service, NetworkService, WalletCommunityManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem,Plugin {
 
@@ -72,12 +73,12 @@ public class WalletCommunityPluginRoot implements Service, NetworkService, Walle
         EventHandler eventHandler;
 /*
         eventListener = eventManager.getNewListener(EventType.FINISHED_WALLET_INSTALLATION);
-        eventHandler = new FinishedWalletinstallationEventHandler();
-        ((FinishedWalletinstallationEventHandler) eventHandler).setWalletCommunityManager(this);
+        eventHandler = new FinishedWalletInstallationEventHandler();
+        ((FinishedWalletInstallationEventHandler) eventHandler).setWalletCommunityManager(this);
         eventListener.setEventHandler(eventHandler);
         eventManager.addListener(eventListener);
         listenersAdded.add(eventListener);
-  */
+*/
         this.serviceStatus = ServiceStatus.STARTED;
 
     }

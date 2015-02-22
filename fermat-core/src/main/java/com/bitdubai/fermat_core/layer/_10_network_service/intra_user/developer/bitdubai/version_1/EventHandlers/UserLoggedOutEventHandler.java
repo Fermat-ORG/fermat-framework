@@ -10,7 +10,6 @@ import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventHand
 public class UserLoggedOutEventHandler implements EventHandler{
     IntraUserManager intraUserManager;
 
-
     public void setIntraUserManager(IntraUserManager intraUserManager){
         this.intraUserManager = intraUserManager;
         
@@ -18,8 +17,6 @@ public class UserLoggedOutEventHandler implements EventHandler{
     
     @Override
     public void handleEvent(PlatformEvent platformEvent) throws Exception {
-        
 
-        
     }
 }

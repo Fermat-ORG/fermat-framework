@@ -74,8 +74,6 @@ public class AppRuntimePluginRoot implements Service, Middleware, AppRuntimeMana
          * I will initialize the handling of com.bitdubai.platform events.
          */
 
-        //Loui TODO: compĺetar el event Handler.
-
         EventListener eventListener;
         EventHandler eventHandler;
         eventListener = eventManager.getNewListener(EventType.WALLET_RESOURCES_INSTALLED);
@@ -131,7 +129,7 @@ public class AppRuntimePluginRoot implements Service, Middleware, AppRuntimeMana
         return this.serviceStatus;
     }
 
-    public void addToNavigationStructure() {
+    public void addToNavigationStructure(/*String NavigationStructure, WalletType*/) {
 
         /*
         PlatformEvent platformEvent = eventManager.getNewEvent(EventType.NAVIGATION_STRUCTURE_UPDATED);

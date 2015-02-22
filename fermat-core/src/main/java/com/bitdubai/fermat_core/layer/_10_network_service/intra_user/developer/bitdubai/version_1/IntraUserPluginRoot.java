@@ -76,18 +76,6 @@ public class IntraUserPluginRoot implements Service, NetworkService, IntraUserNe
     UUID pluginId;
 
 
-    /**
-     * SystemUserPluginRoot Interface implementation.
-     */  
-    
-    public void userLoggedIn (DeviceUser deviceUser){
-
-    }
-
-    public void userLoggedOut (DeviceUser deviceUser){
-
-
-    }
 
     /**
      * Service Interface implementation.
@@ -155,9 +143,23 @@ public class IntraUserPluginRoot implements Service, NetworkService, IntraUserNe
     public ServiceStatus getStatus() {
         return this.serviceStatus;
     }
+    
+    
+    /**
+     * SystemUserPluginRoot Interface implementation.
+     */
+   
+    public void userLoggedIn (DeviceUser deviceUser){
+
+    }
+
+    public void userLoggedOut (DeviceUser deviceUser){
 
 
+    }
 
+    
+    
     /**
      * UserNetworkService Interface implementation.
      */
