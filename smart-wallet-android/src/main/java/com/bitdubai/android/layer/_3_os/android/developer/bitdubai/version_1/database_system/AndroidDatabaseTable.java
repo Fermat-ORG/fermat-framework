@@ -5,10 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.bitdubai.wallet_platform_api.layer._3_os.database_system.DatabaseTable;
-import com.bitdubai.wallet_platform_api.layer._3_os.database_system.DatabaseTableColumn;
-import com.bitdubai.wallet_platform_api.layer._3_os.database_system.DatabaseTableFilter;
-import com.bitdubai.wallet_platform_api.layer._3_os.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer._3_os.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer._3_os.database_system.DatabaseTableColumn;
+import com.bitdubai.fermat_api.layer._3_os.database_system.DatabaseTableFilter;
+import com.bitdubai.fermat_api.layer._3_os.database_system.DatabaseTableRecord;
 
 
 import java.io.Serializable;

@@ -2,11 +2,11 @@ package com.bitdubai.android.layer._3_os.android.developer.bitdubai.version_1.fi
 
 import android.content.Context;
 
-import com.bitdubai.wallet_platform_api.layer._3_os.file_system.CantLoadFileException;
-import com.bitdubai.wallet_platform_api.layer._3_os.file_system.CantPersistFileException;
-import com.bitdubai.wallet_platform_api.layer._3_os.file_system.FileLifeSpan;
-import com.bitdubai.wallet_platform_api.layer._3_os.file_system.FilePrivacy;
-import com.bitdubai.wallet_platform_api.layer._3_os.file_system.PluginImageFile;
+import com.bitdubai.fermat_api.layer._3_os.file_system.CantLoadFileException;
+import com.bitdubai.fermat_api.layer._3_os.file_system.CantPersistFileException;
+import com.bitdubai.fermat_api.layer._3_os.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer._3_os.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer._3_os.file_system.PluginImageFile;
 
 import java.io.File;
 import java.io.FileInputStream;

@@ -2,13 +2,13 @@ package com.bitdubai.android.layer._3_os.android.developer.bitdubai.version_1;
 
 import android.content.Context;
 import com.bitdubai.android.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidPlatformFileSystem;
-import com.bitdubai.wallet_platform_api.layer._3_os.file_system.PlatformFileSystem;
-import com.bitdubai.wallet_platform_api.layer._3_os.database_system.PluginDatabaseSystem;
-import com.bitdubai.wallet_platform_api.layer._3_os.file_system.PluginFileSystem;
-import com.bitdubai.wallet_platform_api.layer._3_os.Os;
+import com.bitdubai.fermat_api.layer._3_os.file_system.PlatformFileSystem;
+import com.bitdubai.fermat_api.layer._3_os.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer._3_os.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer._3_os.Os;
 import com.bitdubai.android.layer._3_os.android.developer.bitdubai.version_1.database_system.AndroidPluginDatabaseSystem;
 import com.bitdubai.android.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidPluginFileSystem;
-import com.bitdubai.wallet_platform_api.layer._3_os.location_system.LocationSystem;
+import com.bitdubai.fermat_api.layer._3_os.location_system.LocationSystem;
 
 
 /**

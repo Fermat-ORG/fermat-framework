@@ -2,7 +2,7 @@ package com.bitdubai.android.layer._3_os.android.developer.bitdubai.version_1.fi
 
 import android.content.Context;
 
-import com.bitdubai.wallet_platform_api.layer._3_os.file_system.*;
+import com.bitdubai.fermat_api.layer._3_os.file_system.*;
 
 /**
  * Created by ciencias on 02.02.15.

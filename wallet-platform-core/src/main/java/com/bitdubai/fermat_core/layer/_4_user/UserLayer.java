@@ -1,0 +1,44 @@
+package com.bitdubai.fermat_core.layer._4_user;
+
+import com.bitdubai.fermat_api.Addon;
+import com.bitdubai.fermat_api.layer.CantStartLayerException;
+import com.bitdubai.fermat_api.layer.PlatformLayer;
+import com.bitdubai.fermat_api.layer._4_user.UserSubsystem;
+import com.bitdubai.fermat_api.layer._4_user.CantStartSubsystemException;
+import com.bitdubai.fermat_core.layer._4_user.device_user.DeviceUserSubsystem;
+
+/**
+ * Created by ciencias on 22.01.15.
+ */
+public class UserLayer implements PlatformLayer {
+
+    Addon addon;
+
+    public Addon getUserManager() {
+        return addon;
+    }
+
+    public void start() throws CantStartLayerException {
+
+        /**
+         * Let's start the Login Subsystem;
+         */
+        UserSubsystem loginSubsystem = new DeviceUserSubsystem();
+
+        try {
+            loginSubsystem.start();
+            addon = ((UserSubsystem) loginSubsystem).getAddon();
+
+        } catch (CantStartSubsystemException e) {
+            System.err.println("CantStartSubsystemException: " + e.getMessage());
+
+            /**
+             * The com.bitdubai.platform cannot start without performing licensing operations, that's why I throw this exception.
+             */
+            throw new CantStartLayerException();
+        }
+    }
+
+
+
+}

@@ -1,7 +1,7 @@
 package com.bitdubai.android.layer._3_os.android.developer.bitdubai;
 
-import com.bitdubai.wallet_platform_api.Addon;
-import com.bitdubai.wallet_platform_api.AddonDeveloper;
+import com.bitdubai.fermat_api.Addon;
+import com.bitdubai.fermat_api.AddonDeveloper;
 
 /**
  * Created by ciencias on 03.01.15.

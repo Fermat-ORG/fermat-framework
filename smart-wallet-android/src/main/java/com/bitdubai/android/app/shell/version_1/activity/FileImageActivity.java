@@ -17,18 +17,18 @@ import com.bitdubai.android.layer._3_os.android.developer.bitdubai.version_1.dat
 import com.bitdubai.android.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidPlatformFileSystem;
 
 import com.bitdubai.android.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidPluginFileSystem;
-import com.bitdubai.wallet_platform_api.layer._3_os.file_system.CantLoadFileException;
-import com.bitdubai.wallet_platform_api.layer._3_os.database_system.DatabaseDataType;
-import com.bitdubai.wallet_platform_api.layer._3_os.database_system.DatabaseFilterType;
-import com.bitdubai.wallet_platform_api.layer._3_os.database_system.DatabaseTableRecord;
-import com.bitdubai.wallet_platform_api.layer._3_os.file_system.FileLifeSpan;
-import com.bitdubai.wallet_platform_api.layer._3_os.file_system.FilePrivacy;
-import com.bitdubai.wallet_platform_api.layer._3_os.file_system.CantPersistFileException;
+import com.bitdubai.fermat_api.layer._3_os.file_system.CantLoadFileException;
+import com.bitdubai.fermat_api.layer._3_os.database_system.DatabaseDataType;
+import com.bitdubai.fermat_api.layer._3_os.database_system.DatabaseFilterType;
+import com.bitdubai.fermat_api.layer._3_os.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer._3_os.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer._3_os.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer._3_os.file_system.CantPersistFileException;
 import android.content.Context;
 import android.widget.TextView;
 import com.bitdubai.android.layer._3_os.android.developer.bitdubai.version_1.database_system.AndroidPluginDatabaseSystem;
-import com.bitdubai.wallet_platform_api.layer._3_os.file_system.PlatformDataFile;
-import com.bitdubai.wallet_platform_api.layer._3_os.file_system.PluginDataFile;
+import com.bitdubai.fermat_api.layer._3_os.file_system.PlatformDataFile;
+import com.bitdubai.fermat_api.layer._3_os.file_system.PluginDataFile;
 
 import java.util.List;
 import java.util.UUID;

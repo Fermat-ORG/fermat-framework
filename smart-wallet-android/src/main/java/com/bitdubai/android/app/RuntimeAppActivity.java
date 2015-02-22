@@ -43,19 +43,19 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bitdubai.wallet_platform_api.CantStartPlatformException;
+import com.bitdubai.fermat_api.CantStartPlatformException;
 
-import com.bitdubai.wallet_platform_api.layer._11_middleware.app_runtime.*;
-import com.bitdubai.wallet_platform_api.layer._11_middleware.app_runtime.AppRuntimeManager;
+import com.bitdubai.fermat_api.layer._11_middleware.app_runtime.*;
+import com.bitdubai.fermat_api.layer._11_middleware.app_runtime.AppRuntimeManager;
 
-import com.bitdubai.wallet_platform_api.layer._11_middleware.app_runtime.Fragment;
-import com.bitdubai.wallet_platform_api.layer._1_definition.enums.Plugins;
-import com.bitdubai.wallet_platform_core.Platform;
+import com.bitdubai.fermat_api.layer._11_middleware.app_runtime.Fragment;
+import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
+import com.bitdubai.fermat_core.Platform;
 
 import com.bitdubai.smartwallet.R;
-import com.bitdubai.wallet_platform_core.layer._11_middleware.app_runtime.developer.bitdubai.version_1.structure.*;
+import com.bitdubai.fermat_core.layer._11_middleware.app_runtime.developer.bitdubai.version_1.structure.*;
 
-import com.bitdubai.wallet_platform_core.CorePlatformContext;
+import com.bitdubai.fermat_core.CorePlatformContext;
 
 import java.util.List;
 import java.util.Map;
@@ -74,7 +74,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
     private PagerSlidingTabStrip tabStrip;
     private App app;
     private SubApp subApp;
-    private com.bitdubai.wallet_platform_api.layer._11_middleware.app_runtime.Activity activity;
+    private com.bitdubai.fermat_api.layer._11_middleware.app_runtime.Activity activity;
     private Map<Fragments, Fragment> fragments;
     private AppRuntimeManager appRuntimeMiddleware;
     private AndroidOsAddonRoot Os;
@@ -519,7 +519,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
         //  Activities activityType = Activities.CWP_WALLET_MANAGER_MAIN;
         Activities activityType = Activities.getValueFromString(activityKey);
-        com.bitdubai.wallet_platform_api.layer._11_middleware.app_runtime.Activity activity;
+        com.bitdubai.fermat_api.layer._11_middleware.app_runtime.Activity activity;
 
         RuntimeActivity runtimeActivity;
         switch (activityType) {

@@ -18,7 +18,7 @@ import android.text.SpannableString;
 import android.view.Window;
 import android.widget.TextView;
 import com.bitdubai.smartwallet.R;
-import com.bitdubai.wallet_platform_core.Platform;
+import com.bitdubai.fermat_core.Platform;
 
 public class MyApplication extends Application {
 
