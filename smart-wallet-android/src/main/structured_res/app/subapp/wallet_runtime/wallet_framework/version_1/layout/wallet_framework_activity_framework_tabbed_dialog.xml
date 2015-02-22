@@ -25,7 +25,7 @@
         android:textSize="18sp"
         android:typeface="monospace"/>
 
-    <com.bitdubai.smartwallet.android.app.common.version_1.classes.PagerSlidingTabStrip
+    <com.bitdubai.android.app.common.version_1.classes.PagerSlidingTabStrip
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="62dip"
