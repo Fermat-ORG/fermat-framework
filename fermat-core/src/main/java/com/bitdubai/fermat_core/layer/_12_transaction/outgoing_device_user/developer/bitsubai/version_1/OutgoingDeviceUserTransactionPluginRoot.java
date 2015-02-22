@@ -7,7 +7,7 @@ package com.bitdubai.fermat_core.layer._12_transaction.outgoing_device_user.deve
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer._12_transaction.Transaction;
-import com.bitdubai.fermat_api.layer._12_transaction.to_extrauser.ToExtraUserManager;
+import com.bitdubai.fermat_api.layer._12_transaction.outgoing_device_user.OutgoingDeviceUserManager;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer._2_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer._2_platform_service.error_manager.ErrorManager;
@@ -23,10 +23,10 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Every transaction sent outside of the system is a handled and recorded by this plugin.
+ * Every Device User transaction sent outside of the system is a handled and recorded by this plugin.
  */
 
-public class OutgoingDeviceUserTransactionPluginRoot implements Service,Transaction, ToExtraUserManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
+public class OutgoingDeviceUserTransactionPluginRoot implements Service,Transaction, OutgoingDeviceUserManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
 
 
     /**

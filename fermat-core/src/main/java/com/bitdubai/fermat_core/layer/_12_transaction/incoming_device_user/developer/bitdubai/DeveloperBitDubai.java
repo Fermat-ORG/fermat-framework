@@ -1,14 +1,14 @@
-package com.bitdubai.fermat_core.layer._12_transaction.outgoing_inter_user.developer.bitdubai;
+package com.bitdubai.fermat_core.layer._12_transaction.incoming_device_user.developer.bitdubai;
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.PluginDeveloper;
 import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer._1_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer._5_license.PluginLicensor;
-import com.bitdubai.fermat_core.layer._12_transaction.outgoing_inter_user.developer.bitdubai.version_1.OutgoingIntraUserPluginRoot;
+import com.bitdubai.fermat_core.layer._12_transaction.incoming_device_user.developer.bitdubai.version_1.IncomingDeviceUserTransactionPluginRoot;
 
 /**
- * Created by loui on 20/02/15.
+ * Created by loui on 22/02/15.
  */
 public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
 
@@ -26,7 +26,7 @@ public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
          * it is easy to choose.
          */
 
-        plugin = new OutgoingIntraUserPluginRoot();
+        plugin = new IncomingDeviceUserTransactionPluginRoot();
 
     }
 
@@ -50,5 +50,5 @@ public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
     public TimeFrequency getTimePeriod() {
         return TimeFrequency.MONTHLY;
     }
-
 }
+

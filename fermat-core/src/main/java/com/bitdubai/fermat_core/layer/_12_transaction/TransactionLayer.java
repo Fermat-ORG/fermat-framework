@@ -9,7 +9,7 @@ import com.bitdubai.fermat_core.layer._12_transaction.incoming_extra_user.Incomi
 import com.bitdubai.fermat_core.layer._12_transaction.incoming_intra_user.IncomingIntraUserSubsystem;
 import com.bitdubai.fermat_core.layer._12_transaction.inter_wallet.InterWalletSubsystem;
 import com.bitdubai.fermat_core.layer._12_transaction.outgoing_extra_user.OutgoingExtrauserSubsystem;
-import com.bitdubai.fermat_core.layer._12_transaction.outgoing_inter_user.OutgoingIntraUserSubsytem;
+import com.bitdubai.fermat_core.layer._12_transaction.outgoing_intra_user.OutgoingIntraUserSubsytem;
 import com.bitdubai.fermat_core.layer._12_transaction.outgoing_device_user.OutgoingDeviceUserSubsystem;
 
 /**

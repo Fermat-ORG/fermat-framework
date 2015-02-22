@@ -6,6 +6,8 @@ package com.bitdubai.fermat_core.layer._12_transaction.inter_wallet.developer.bi
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer._12_transaction.Transaction;
+import com.bitdubai.fermat_api.layer._12_transaction.interwallet.InterWalletManager;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer._2_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer._2_platform_service.error_manager.ErrorManager;
@@ -26,7 +28,7 @@ import java.util.UUID;
  * * *
  */
 
-public class InterWalletTransactionPluginRoot implements Service, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
+public class InterWalletTransactionPluginRoot implements Service, Transaction, InterWalletManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
 
 
     /**

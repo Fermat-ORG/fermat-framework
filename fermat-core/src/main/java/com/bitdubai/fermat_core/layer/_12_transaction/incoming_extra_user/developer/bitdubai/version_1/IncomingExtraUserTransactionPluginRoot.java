@@ -6,6 +6,8 @@ package com.bitdubai.fermat_core.layer._12_transaction.incoming_extra_user.devel
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer._12_transaction.Transaction;
+import com.bitdubai.fermat_api.layer._12_transaction.incoming_extra_user.IncomingExtraUserManager;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer._2_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer._2_platform_service.error_manager.ErrorManager;
@@ -21,7 +23,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * The From Extra User Transaction Manager Plugin is in charge of coordinating the transactions coming from outside the
+ * The Incoming Extra User Transaction Manager Plugin is in charge of coordinating the transactions coming from outside the
  * system, meaning from people not a user of the platform.
  * 
  * This plugin knows which wallet to store the funds.
@@ -41,7 +43,7 @@ import java.util.UUID;
  * * * 
  */
 
-public class IncomingExtraUserTransactionPluginRoot implements Service, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
+public class IncomingExtraUserTransactionPluginRoot implements Service, Transaction, IncomingExtraUserManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
 
 
     /**

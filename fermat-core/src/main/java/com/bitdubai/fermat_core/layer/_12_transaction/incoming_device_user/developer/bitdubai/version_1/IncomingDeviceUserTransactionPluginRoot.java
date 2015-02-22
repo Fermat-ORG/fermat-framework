@@ -1,9 +1,9 @@
-package com.bitdubai.fermat_core.layer._12_transaction.outgoing_inter_user.developer.bitdubai.version_1;
+package com.bitdubai.fermat_core.layer._12_transaction.incoming_device_user.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer._12_transaction.Transaction;
-import com.bitdubai.fermat_api.layer._12_transaction.outgoing_intrauser.OutgoingIntraUserManager;
+import com.bitdubai.fermat_api.layer._12_transaction.incoming_device_user.IncomingDeviceUserManager;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer._2_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer._2_platform_service.error_manager.ErrorManager;
@@ -19,9 +19,27 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Created by loui on 20/02/15.
+ * Created by loui on 22/02/15.
  */
-public class OutgoingIntraUserPluginRoot implements Service,Transaction,OutgoingIntraUserManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
+
+
+/**
+ * The Incoming Device User Transaction Manager Plugin is in charge of coordinating the transactions coming from the
+ * system, meaning from people user of the platform and the device.
+ *
+ * This plugin knows which wallet to store the funds.
+ *
+ * Usually a crypto address is generated from a particular wallet, and that payment should go there, but there is nothing
+ * preventing a user to uninstall a wallet and discard the underlying structure in which the user interface was relaying.
+ *
+ * For that reason it is necessary this middle man, to get sure any incoming payment for any wallet that ever existed is
+ * not lost.
+ *
+ * It can send the funds to a default wallet if some is defined or stored itself until the user manually release them.
+ */
+
+public class IncomingDeviceUserTransactionPluginRoot implements Service, Transaction, IncomingDeviceUserManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
+
 
     /**
      * PlatformService Interface member variables.
@@ -52,7 +70,7 @@ public class OutgoingIntraUserPluginRoot implements Service,Transaction,Outgoing
     @Override
     public void start() {
         /**
-         * I will initialize the handling of com.bitdubai.platform events.
+         * I will initialize the handling of platform events.
          */
 
         EventListener eventListener;
@@ -94,13 +112,6 @@ public class OutgoingIntraUserPluginRoot implements Service,Transaction,Outgoing
         return this.serviceStatus;
     }
 
-    
-    public void createFiatTransaction (/*TODO:User user, Wallet wallet , Account account, FiatAmount fiatAmount*/){
-        
-        
-    }
-    
-    
 
     /**
      * UsesFileSystem Interface implementation.

@@ -1,14 +1,14 @@
-package com.bitdubai.fermat_core.layer._12_transaction.outgoing_inter_user;
+package com.bitdubai.fermat_core.layer._12_transaction.incoming_device_user;
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer._12_transaction.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer._12_transaction.TransactionSubsystem;
-import com.bitdubai.fermat_core.layer._12_transaction.outgoing_inter_user.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_core.layer._12_transaction.incoming_device_user.developer.bitdubai.DeveloperBitDubai;
 
 /**
- * Created by loui on 20/02/15.
+ * Created by loui on 22/02/15.
  */
-public class OutgoingIntraUserSubsytem implements TransactionSubsystem {
+public class IncomingdeviceUserSubsystem implements TransactionSubsystem {
 
     Plugin plugin;
 
@@ -27,7 +27,9 @@ public class OutgoingIntraUserSubsytem implements TransactionSubsystem {
         try {
             DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
             plugin = developerBitDubai.getPlugin();
-        } catch (Exception e) {
+        }
+        catch (Exception e)
+        {
             System.err.println("Exception: " + e.getMessage());
             throw new CantStartSubsystemException();
         }
