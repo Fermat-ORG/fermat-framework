@@ -284,6 +284,9 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/CaviarDreams.ttf");
         ((MyApplication) this.getApplication()).setDefaultTypeface(tf);
 
+        
+        
+        // NATALIA; TODO;  Este switch ya no puede existir. Toda la navegacion debe provenir del runtime_app plugin.
 
         //specific wallet execution
         switch ( walletId )
@@ -390,6 +393,8 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
             tabStrip.setViewPager(pager);
 
+            // NATALIA; TODO;  Este switch ya no puede existir. Toda la navegacion debe provenir del runtime_app plugin.En este caso hay que ampliar el objeto tabscript en el runtime_app para que maneje los colores, etc y configurarlos en el factoryReset.
+            
             tabStrip.setTypeface(tf,1 );
             //changeColor(currentColor);
             tabStrip.setDividerColor(0xFFFFFFFF);
