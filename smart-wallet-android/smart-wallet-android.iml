@@ -102,10 +102,10 @@
     <orderEntry type="library" exported="" name="support-v4-21.0.2" level="project" />
     <orderEntry type="module" module-name="wallet-platform-plugin-crypto-network-bitcoin-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-api" exported="" />
+    <orderEntry type="module" module-name="fermat-core" exported="" />
     <orderEntry type="module" module-name="wallet-platform-plugin-module-wallet-publisher-bitdubai" exported="" />
     <orderEntry type="module" module-name="wallet-platform-plugin-module-wallet-store-bitdubai" exported="" />
     <orderEntry type="module" module-name="wallet-platform-plugin-module-wallet-manager-bitdubai" exported="" />
     <orderEntry type="module" module-name="wallet-platform-plugin-module-wallet-runtime-bitdubai" exported="" />
-    <orderEntry type="module" module-name="wallet-platform-core" exported="" />
   </component>
 </module>

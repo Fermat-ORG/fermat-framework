@@ -1,6 +1,6 @@
 include 'smart-wallet-android', ':wallet-platform-core', ':wallet-platform-draft'
 
-include 'wallet-platform-core'
+include 'fermat-core'
 
 include 'fermat-api'
 
