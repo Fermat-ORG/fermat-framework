@@ -112,6 +112,16 @@ public class WalletStorePluginRoot implements Service, NetworkService, DealsWith
         return this.serviceStatus;
     }
 
+
+    /**
+     * NetworkService Interface implementation.
+     */
+    
+    @Override
+    public UUID getId() {
+        return null;
+    }
+    
     /**
      * UsesFileSystem Interface implementation.
      */

@@ -127,6 +127,15 @@ public class WalletResourcesPluginRoot implements Service, NetworkService,Wallet
     }
 
     /**
+     * NetworkService Interface implementation.
+     */
+
+    @Override
+    public UUID getId() {
+        return null;
+    }
+    
+    /**
      * WalletResourcesManager Implementation 
      */
 

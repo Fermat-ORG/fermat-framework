@@ -1,14 +1,16 @@
 package com.bitdubai.fermat_core.layer._9_communication;
 
 import com.bitdubai.fermat_api.Plugin;
+import com.bitdubai.fermat_api.layer._10_network_service.NetworkService;
 import com.bitdubai.fermat_api.layer._10_network_service.intra_user.IntraUser;
+import com.bitdubai.fermat_api.layer._1_definition.enums.NetworkServices;
 import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_api.layer._4_user.DeviceUser;
-import com.bitdubai.fermat_api.layer._9_communication.CantConnectToUserException;
+import com.bitdubai.fermat_api.layer._9_communication.CantConnectToRemoteServiceException;
 import com.bitdubai.fermat_api.layer._9_communication.CommunicationChannel;
 import com.bitdubai.fermat_api.layer._9_communication.OnlineChannel;
-import com.bitdubai.fermat_api.layer._9_communication.UserToUserOnlineConnection;
+import com.bitdubai.fermat_api.layer._9_communication.ServiceToServiceOnlineConnection;
 
 import java.util.UUID;
 
@@ -25,40 +27,26 @@ import java.util.UUID;
  * available. 
  */
 
-public class LayerUserToUserOnlineConnection implements UserToUserOnlineConnection, DealsWithEvents{
+public class LayerServiceToServiceOnlineConnection implements ServiceToServiceOnlineConnection, DealsWithEvents{
     
     
     Plugin cloudPlugin;
 
 
 
-    IntraUser localIntraUser;
-    IntraUser remoteIntraUser;
+    NetworkService localNetworkService;
+    UUID remoteNetworkService;
     
     
-    public LayerUserToUserOnlineConnection (IntraUser localIntraUser, UUID remoteIntraUser) {
+    public LayerServiceToServiceOnlineConnection(NetworkServices localNetworkServices, UUID remoteNetworkService) {
         
         
     }
 
 
-    public void  setCloudPlugin(Plugin plugin) {
-        cloudPlugin = plugin;
-    }
-    
-    
-    @Override
-    public DeviceUser getLocalUser() {
-        return null;
-    }
 
     @Override
-    public DeviceUser getRemoteUser() {
-        return null;
-    }
-
-    @Override
-    public void connect() throws CantConnectToUserException {
+    public void connect() throws CantConnectToRemoteServiceException {
 
         /**
          * There are several ways to establish an online connection implemented by different plugins. It is also 
@@ -71,21 +59,21 @@ public class LayerUserToUserOnlineConnection implements UserToUserOnlineConnecti
          */
 
         OnlineChannel onlineChannel = ((CommunicationChannel) cloudPlugin).createOnlineChannel();
-        UserToUserOnlineConnection userToUserOnlineConnection =  onlineChannel.createOnlineConnection(this.localIntraUser, this.remoteIntraUser);
+        ServiceToServiceOnlineConnection serviceToServiceOnlineConnection =  onlineChannel.createOnlineConnection(this.localNetworkService, this.remoteNetworkService);
 
         try
         {
-            userToUserOnlineConnection.connect();
+            serviceToServiceOnlineConnection.connect();
         }
-        catch (CantConnectToUserException cantConnectToUserException)
+        catch (CantConnectToRemoteServiceException cantConnectToRemoteServiceException)
         {
-            System.err.println("CantConnectToUserException: " + cantConnectToUserException.getMessage());
+            System.err.println("CantConnectToUserException: " + cantConnectToRemoteServiceException.getMessage());
 
             /**
              * Since this is the only implementation of a communication channel if the connection cannot be established
              * then there is no other option but to throw the exception again.
              */
-            throw cantConnectToUserException;
+            throw cantConnectToRemoteServiceException;
         }
 
 

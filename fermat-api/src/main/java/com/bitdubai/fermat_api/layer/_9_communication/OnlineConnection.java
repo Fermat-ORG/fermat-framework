@@ -12,7 +12,7 @@ public interface OnlineConnection {
 
     public DeviceUser getRemoteUser ();
 
-    public void connect() throws CantConnectToUserException;
+    public void connect() throws CantConnectToRemoteServiceException;
 
     public void disconnect();
 

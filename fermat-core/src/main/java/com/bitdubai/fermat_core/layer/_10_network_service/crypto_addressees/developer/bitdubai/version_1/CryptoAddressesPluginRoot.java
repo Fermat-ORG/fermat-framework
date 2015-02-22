@@ -98,6 +98,14 @@ public class CryptoAddressesPluginRoot implements Service, NetworkService, Crypt
         return this.serviceStatus;
     }
 
+    /**
+     * NetworkService Interface implementation.
+     */
+
+    @Override
+    public UUID getId() {
+        return null;
+    }
 
     /**
      * UsesFileSystem Interface implementation.

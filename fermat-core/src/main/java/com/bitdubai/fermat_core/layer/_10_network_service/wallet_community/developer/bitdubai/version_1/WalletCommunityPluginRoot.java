@@ -120,6 +120,15 @@ public class WalletCommunityPluginRoot implements Service, NetworkService, Walle
     }
 
     /**
+     * NetworkService Interface implementation.
+     */
+
+    @Override
+    public UUID getId() {
+        return null;
+    }
+    
+    /**
      * UsesFileSystem Interface implementation.
      */
 

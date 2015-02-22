@@ -5,14 +5,11 @@ import com.bitdubai.fermat_api.layer._4_user.DeviceUser;
 /**
  * Created by ciencias on 2/12/15.
  */
-public interface UserToUserOnlineConnection {
+public interface ServiceToServiceOnlineConnection {
 
 
-    public DeviceUser getLocalUser ();
-
-    public DeviceUser getRemoteUser ();
     
-    public void connect() throws CantConnectToUserException;
+    public void connect() throws CantConnectToRemoteServiceException;
     
     public void disconnect();
     

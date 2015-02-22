@@ -1,19 +1,17 @@
 package com.bitdubai.fermat_core.layer._9_communication;
 
-import com.bitdubai.fermat_api.DealsWithPlatformContext;
-import com.bitdubai.fermat_api.PlatformContext;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
 
+import com.bitdubai.fermat_api.layer._10_network_service.NetworkService;
 import com.bitdubai.fermat_api.layer._10_network_service.intra_user.IntraUser;
-import com.bitdubai.fermat_api.layer._1_definition.enums.Addons;
 
-import com.bitdubai.fermat_api.layer._4_user.device_user.DeviceUserManager;
+import com.bitdubai.fermat_api.layer._1_definition.enums.NetworkServices;
 import com.bitdubai.fermat_api.layer._9_communication.*;
 import com.bitdubai.fermat_core.layer._9_communication.cloud.CloudSubsystem;
 
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by ciencias on 31.12.14.
@@ -44,7 +42,7 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
     }
 
 */
-    private IntraUser loggedinIntraUser;
+    private Map<NetworkService,NetworkServices> networkServices = new HashMap();
 
   
     public Plugin getCloudPlugin() {
@@ -122,31 +120,39 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
      * CommunicationLayerManager Interface implementation.
      */
 
+
     @Override
-    public void exposeUser(IntraUser intraUser) {
-        
-        this.loggedinIntraUser = intraUser;
-    
+    public void registerNetworkService(NetworkService networkService, NetworkServices networkServices) {
+        this.networkServices.put(networkService,networkServices );
+        // Luis:TODO: Ademas de guardarlo ahi, se lo tiene que pasar a cada Plugin activo para que lo considere disponible.
     }
 
-    public UserToUserOnlineConnection connectTo (UUID intraUser) throws CantConnectToUserException {
+    @Override
+    public void unregisterNetworkService(NetworkServices networkServices) {
+        this.networkServices.remove(networkServices);
+    }
 
-        LayerUserToUserOnlineConnection layerUserToUserOnlineConnection = new LayerUserToUserOnlineConnection(this.loggedinIntraUser, intraUser);
+    /**
+     * This is the primary method to connect a local network service to a remote network service.
+     */
+    public ServiceToServiceOnlineConnection connectTo (NetworkServices networkServices, UUID networkServiceId) throws CantConnectToRemoteServiceException {
 
-        layerUserToUserOnlineConnection.setCloudPlugin(mCloudPlugin);
+        LayerServiceToServiceOnlineConnection layerUserToUserOnlineConnection = new LayerServiceToServiceOnlineConnection(networkServices, networkServiceId);
+
+        //layerUserToUserOnlineConnection.setCloudPlugin(mCloudPlugin);
 
         try
         {
             layerUserToUserOnlineConnection.connect();
         }
-        catch (CantConnectToUserException cantConnectToUserException)
+        catch (CantConnectToRemoteServiceException cantConnectToRemoteServiceException)
         {
-            System.err.println("CantConnectToUserException: " + cantConnectToUserException.getMessage());
+            System.err.println("CantConnectToUserException: " + cantConnectToRemoteServiceException.getMessage());
 
             /**
              * I can't do anything with this exception here. I throw it again.
              */
-            throw cantConnectToUserException;
+            throw cantConnectToRemoteServiceException;
         }
 
         return layerUserToUserOnlineConnection;

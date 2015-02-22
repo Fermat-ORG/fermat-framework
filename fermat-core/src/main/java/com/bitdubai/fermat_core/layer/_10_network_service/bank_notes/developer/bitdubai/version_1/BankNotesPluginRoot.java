@@ -110,6 +110,15 @@ public class BankNotesPluginRoot implements Service, NetworkService, DealsWithEv
     }
 
     /**
+     * NetworkService Interface implementation.
+     */
+
+    @Override
+    public UUID getId() {
+        return null;
+    }
+    
+    /**
      * UsesFileSystem Interface implementation.
      */
 

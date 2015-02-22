@@ -47,7 +47,23 @@ public class MoneyPluginRoot implements Service, NetworkService, MoneyManager, D
      */
     UUID pluginId;
 
+    
+    /**
+     * MoneyPluginRoot Interface implementation.
+     */
 
+    public void sendMoney(){
+
+
+    }
+
+    private void moneyReceived(){
+
+        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.MONEY_RECEIVED);
+        ((MoneyReceivedEvent) platformEvent).setSource(EventSource.NETWORK_SERVICE_MONEY_PLUGIN);
+        eventManager.raiseEvent(platformEvent);
+
+    }
 
     /**
      * Service Interface implementation.
@@ -102,18 +118,17 @@ public class MoneyPluginRoot implements Service, NetworkService, MoneyManager, D
         return this.serviceStatus;
     }
 
-    public void sendMoney(){
 
-        
+    /**
+     * NetworkService Interface implementation.
+     */
+
+    @Override
+    public UUID getId() {
+        return null;
     }
+    
 
-    private void moneyReceived(){
-
-        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.MONEY_RECEIVED);
-        ((MoneyReceivedEvent) platformEvent).setSource(EventSource.NETWORK_SERVICE_MONEY_PLUGIN);
-        eventManager.raiseEvent(platformEvent);
-        
-    }
     
     /**
      * UsesFileSystem Interface implementation.

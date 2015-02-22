@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer._9_communication;
 
-import com.bitdubai.fermat_api.layer._10_network_service.intra_user.IntraUser;
+import com.bitdubai.fermat_api.layer._10_network_service.NetworkService;
+import com.bitdubai.fermat_api.layer._1_definition.enums.NetworkServices;
 
 import java.util.UUID;
 
@@ -9,7 +10,9 @@ import java.util.UUID;
  */
 public interface CommunicationLayerManager {
     
-    public void exposeUser (IntraUser intraUser);
+    public void registerNetworkService (NetworkService networkService, NetworkServices networkServices);
 
-    public UserToUserOnlineConnection connectTo (UUID intraUser) throws CantConnectToUserException;
+    public void unregisterNetworkService (NetworkServices networkServices);
+
+    public ServiceToServiceOnlineConnection connectTo (NetworkServices networkServices, UUID networkServiceId) throws CantConnectToRemoteServiceException;
 }

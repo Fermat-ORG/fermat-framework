@@ -40,7 +40,7 @@ import java.util.UUID;
  *
  * For a third group it will test from time to time if it is worth having them on the cache at all.
  * 
- * All other plugins providing services on top of a communication involving system users are requested to use connections
+ * All other plugins providing services on top of a communication involving intra users are requested to use connections
  * provided by this plugin, as a way to ensure this plug in can monitor the activity going on and use the statistics to 
  * maintain a good quality cache. 
  *
@@ -162,6 +162,7 @@ public class IntraUserPluginRoot implements Service, NetworkService, IntraUserNe
     }
     
     
+    
     /**
      * SystemUserPluginRoot Interface implementation.
      */
@@ -175,7 +176,14 @@ public class IntraUserPluginRoot implements Service, NetworkService, IntraUserNe
 
     }
 
+    /**
+     * NetworkService Interface implementation.
+     */
     
+    @Override
+    public UUID getId() {
+        return null; // LUIS: TODO: Devolver el ID del IntraUser Logeado.
+    }
     
     /**
      * UserNetworkService Interface implementation.
