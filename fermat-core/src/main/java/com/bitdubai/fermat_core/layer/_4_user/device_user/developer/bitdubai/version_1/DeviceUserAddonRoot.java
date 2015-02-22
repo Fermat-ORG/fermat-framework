@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventMana
 import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventHandler;
 import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_api.layer._3_os.file_system.*;
+import com.bitdubai.fermat_api.layer._4_user.User;
 import com.bitdubai.fermat_api.layer._4_user.device_user.exceptions.CantCreateDeviceUserException;
 import com.bitdubai.fermat_api.layer._4_user.device_user.exceptions.CantLoadDeviceUserException;
 import com.bitdubai.fermat_api.layer._4_user.DeviceUser;
@@ -33,7 +34,7 @@ import java.util.UUID;
  * It is responsible for login in users to the current device.
  */
 
-public class DeviceUserAddonRoot implements Service, DeviceUserManager, DealsWithPlatformFileSystem, DealsWithEvents, DealsWithErrors, Addon {
+public class DeviceUserAddonRoot implements Service, User, DeviceUserManager, DealsWithPlatformFileSystem, DealsWithEvents, DealsWithErrors, Addon {
 
     /**
      * PlatformService Interface member variables.
