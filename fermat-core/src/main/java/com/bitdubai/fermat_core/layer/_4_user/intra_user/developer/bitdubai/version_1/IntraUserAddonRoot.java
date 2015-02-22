@@ -12,6 +12,16 @@ import com.bitdubai.fermat_api.layer._4_user.User;
 /**
  * Created by loui on 22/02/15.
  */
+
+/**
+ * This addon handles the relationship between one device user and several intra users. That means tha a device user
+ * could have many online identities detached from its device identity. In our first implementation it will only have
+ * one, but it is expected in the future to enable that functionality.
+ * 
+ * * * * *
+ * * * * * *
+ */
+
 public class IntraUserAddonRoot implements Service, User,DealsWithEvents, DealsWithErrors,  Addon {
 
     /**

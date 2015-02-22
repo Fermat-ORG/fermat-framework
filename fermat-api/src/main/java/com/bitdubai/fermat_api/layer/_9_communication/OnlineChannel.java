@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer._9_communication;
 
+import com.bitdubai.fermat_api.layer._10_network_service.intra_user.IntraUser;
 import com.bitdubai.fermat_api.layer._4_user.DeviceUser;
 
 /**
@@ -7,5 +8,5 @@ import com.bitdubai.fermat_api.layer._4_user.DeviceUser;
  */
 public interface OnlineChannel {
 
-    public UserToUserOnlineConnection createOnlineConnection (DeviceUser deviceUserFrom, DeviceUser deviceUserTo);
+    public UserToUserOnlineConnection createOnlineConnection (IntraUser localIntraUser, IntraUser remoteIntraUser);
 }

@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.PlatformContext;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
+import com.bitdubai.fermat_api.layer._10_network_service.intra_user.IntraUser;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer._4_user.DeviceUser;
 import com.bitdubai.fermat_api.layer._4_user.device_user.DeviceUserManager;
@@ -83,12 +84,12 @@ public class CommunicationLayer implements PlatformLayer, DealsWithPlatformConte
      */
 
 
-    public UserToUserOnlineConnection connectTo (DeviceUser deviceUser) throws CantConnectToUserException {
+    public UserToUserOnlineConnection connectTo (IntraUser intraUser) throws CantConnectToUserException {
         
         
-        DeviceUser loggedinDeviceUser = ((DeviceUserManager) platformContext.getAddon(Addons.USER_MANAGER)).getLoggedInUser();
+        IntraUser loggedinIntraUser = ((DeviceUserManager) platformContext.getAddon(Addons.USER_MANAGER)).getLoggedInUser();
 
-        LayerUserToUserOnlineConnection layerUserToUserOnlineConnection = new LayerUserToUserOnlineConnection(loggedinDeviceUser, deviceUser);
+        LayerUserToUserOnlineConnection layerUserToUserOnlineConnection = new LayerUserToUserOnlineConnection(loggedinIntraUser, intraUser);
 
         layerUserToUserOnlineConnection.setCloudPlugin(mCloudPlugin);
         

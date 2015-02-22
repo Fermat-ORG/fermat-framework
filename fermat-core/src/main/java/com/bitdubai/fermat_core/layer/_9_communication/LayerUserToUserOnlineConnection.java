@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_core.layer._9_communication;
 
 import com.bitdubai.fermat_api.Plugin;
+import com.bitdubai.fermat_api.layer._10_network_service.intra_user.IntraUser;
 import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_api.layer._4_user.DeviceUser;
@@ -29,11 +30,11 @@ public class LayerUserToUserOnlineConnection implements UserToUserOnlineConnecti
 
 
 
-    DeviceUser deviceUserFrom;
-    DeviceUser deviceUserTo;
+    IntraUser localIntraUser;
+    IntraUser remoteIntraUser;
     
     
-    public LayerUserToUserOnlineConnection (DeviceUser deviceUserFrom, DeviceUser deviceUserTo) {
+    public LayerUserToUserOnlineConnection (IntraUser localIntraUser, IntraUser remoteIntraUser) {
         
         
     }
@@ -68,7 +69,7 @@ public class LayerUserToUserOnlineConnection implements UserToUserOnlineConnecti
          */
 
         OnlineChannel onlineChannel = ((CommunicationChannel) cloudPlugin).createOnlineChannel();
-        UserToUserOnlineConnection userToUserOnlineConnection =  onlineChannel.createOnlineConnection(deviceUserFrom, deviceUserTo);
+        UserToUserOnlineConnection userToUserOnlineConnection =  onlineChannel.createOnlineConnection(this.localIntraUser, this.remoteIntraUser);
 
         try
         {
