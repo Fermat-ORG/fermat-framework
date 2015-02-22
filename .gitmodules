@@ -1,18 +1,18 @@
 [submodule "libraries"]
 	path = libraries
 	url = https://github.com/bitDubai/libraries
-[submodule "wallet-platform-plugin-module-wallet-manager-bitdubai"]
-	path = wallet-platform-plugin-module-wallet-manager-bitdubai
-	url = https://github.com/bitDubai/wallet-platform-plugin-module-wallet-manager-bitdubai
-[submodule "wallet-platform-plugin-crypto-network-bitcoin-bitdubai"]
-	path = wallet-platform-plugin-crypto-network-bitcoin-bitdubai
-	url = https://github.com/bitDubai/wallet-platform-plugin-crypto-network-bitcoin-bitdubai
-[submodule "wallet-platform-plugin-module-wallet-publisher-bitdubai"]
-	path = wallet-platform-plugin-module-wallet-publisher-bitdubai
-	url = https://github.com/bitDubai/wallet-platform-plugin-module-wallet-publisher-bitdubai.git
-[submodule "wallet-platform-plugin-module-wallet-runtime-bitdubai"]
-	path = wallet-platform-plugin-module-wallet-runtime-bitdubai
-	url = https://github.com/bitDubai/wallet-platform-plugin-module-wallet-runtime-bitdubai.git
-[submodule "wallet-platform-plugin-module-wallet-store-bitdubai"]
-	path = wallet-platform-plugin-module-wallet-store-bitdubai
-	url = https://github.com/bitDubai/wallet-platform-plugin-module-wallet-store-bitdubai.git
+[submodule "fermat-plugin-module-wallet-manager-bitdubai"]
+	path = fermat-plugin-module-wallet-manager-bitdubai
+	url = https://github.com/bitDubai/fermat-plugin-module-wallet-manager-bitdubai
+[submodule "fermat-plugin-crypto-network-bitcoin-bitdubai"]
+	path = fermat-plugin-crypto-network-bitcoin-bitdubai
+	url = https://github.com/bitDubai/fermat-plugin-crypto-network-bitcoin-bitdubai
+[submodule "fermat-plugin-module-wallet-publisher-bitdubai"]
+	path = fermat-plugin-module-wallet-publisher-bitdubai
+	url = https://github.com/bitDubai/fermat-plugin-module-wallet-publisher-bitdubai
+[submodule "fermat-plugin-module-wallet-runtime-bitdubai"]
+	path = fermat-plugin-module-wallet-runtime-bitdubai
+	url = https://github.com/bitDubai/fermat-plugin-module-wallet-runtime-bitdubai
+[submodule "fermat-plugin-module-wallet-store-bitdubai"]
+	path = fermat-plugin-module-wallet-store-bitdubai
+	url = https://github.com/bitDubai/fermat-plugin-module-wallet-store-bitdubai

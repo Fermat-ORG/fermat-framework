@@ -11,11 +11,11 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
 
     compile project(':fermat-api')
-    compile project(':wallet-platform-plugin-crypto-network-bitcoin-bitdubai')
-    compile project(':wallet-platform-plugin-module-wallet-manager-bitdubai')
-    compile project(':wallet-platform-plugin-module-wallet-store-bitdubai')
-    compile project(':wallet-platform-plugin-module-wallet-publisher-bitdubai')
-    compile project(':wallet-platform-plugin-module-wallet-runtime-bitdubai')
+    compile project(':fermat-plugin-crypto-network-bitcoin-bitdubai')
+    compile project(':fermat-plugin-module-wallet-manager-bitdubai')
+    compile project(':fermat-plugin-module-wallet-store-bitdubai')
+    compile project(':fermat-plugin-module-wallet-publisher-bitdubai')
+    compile project(':fermat-plugin-module-wallet-runtime-bitdubai')
 
 }
 

@@ -4,12 +4,12 @@ include 'fermat-core'
 
 include 'fermat-api'
 
-include 'wallet-platform-plugin-module-wallet-manager-bitdubai'
+include 'fermat-plugin-module-wallet-manager-bitdubai'
 
-include 'wallet-platform-plugin-crypto-network-bitcoin-bitdubai'
+include 'fermat-plugin-crypto-network-bitcoin-bitdubai'
 
-include 'wallet-platform-plugin-module-wallet-publisher-bitdubai'
+include 'fermat-plugin-module-wallet-publisher-bitdubai'
 
-include 'wallet-platform-plugin-module-wallet-runtime-bitdubai'
+include 'fermat-plugin-module-wallet-runtime-bitdubai'
 
-include 'wallet-platform-plugin-module-wallet-store-bitdubai'
+include 'fermat-plugin-module-wallet-store-bitdubai'
