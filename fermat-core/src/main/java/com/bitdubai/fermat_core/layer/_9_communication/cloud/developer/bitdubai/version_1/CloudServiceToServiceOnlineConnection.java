@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_core.layer._9_communication.cloud.developer.bitdubai.version_1;
 
-import com.bitdubai.fermat_api.layer._4_user.DeviceUser;
+import com.bitdubai.fermat_api.layer._4_user.device_user.DeviceUser;
 import com.bitdubai.fermat_api.layer._9_communication.CantConnectToRemoteServiceException;
 import com.bitdubai.fermat_api.layer._9_communication.ServiceToServiceOnlineConnection;
 

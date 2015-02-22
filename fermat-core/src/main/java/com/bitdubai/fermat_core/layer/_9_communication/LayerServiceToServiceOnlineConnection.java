@@ -2,11 +2,9 @@ package com.bitdubai.fermat_core.layer._9_communication;
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer._10_network_service.NetworkService;
-import com.bitdubai.fermat_api.layer._10_network_service.intra_user.IntraUser;
 import com.bitdubai.fermat_api.layer._1_definition.enums.NetworkServices;
 import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventManager;
-import com.bitdubai.fermat_api.layer._4_user.DeviceUser;
 import com.bitdubai.fermat_api.layer._9_communication.CantConnectToRemoteServiceException;
 import com.bitdubai.fermat_api.layer._9_communication.CommunicationChannel;
 import com.bitdubai.fermat_api.layer._9_communication.OnlineChannel;

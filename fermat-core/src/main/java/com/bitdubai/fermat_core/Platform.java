@@ -21,6 +21,7 @@ import com.bitdubai.fermat_core.layer._5_license.LicenseLayer;
 import com.bitdubai.fermat_core.layer._6_world.WorldLayer;
 import com.bitdubai.fermat_core.layer._7_crypto_network.CryptoNetworkLayer;
 import com.bitdubai.fermat_api.layer._7_crypto_network.CryptoNetworks;
+import com.bitdubai.fermat_core.layer._8_crypto.CryptoLayer;
 import com.bitdubai.fermat_core.layer._9_communication.CommunicationLayer;
 import com.bitdubai.fermat_core.layer._10_network_service.NetworkServiceLayer;
 import com.bitdubai.fermat_core.layer._11_middleware.MiddlewareLayer;
@@ -43,6 +44,7 @@ public class Platform  {
     PlatformLayer mLicesnseLayer = new LicenseLayer();
     PlatformLayer mWorldLayer = new WorldLayer();
     PlatformLayer mCryptoNetworkLayer = new CryptoNetworkLayer();
+    PlatformLayer mCrypto = new CryptoLayer();
     PlatformLayer mCommunicationLayer = new CommunicationLayer();
     PlatformLayer mNetworkServiceLayer = new NetworkServiceLayer();
     PlatformLayer mTransactionLayer = new TransactionLayer();
@@ -78,6 +80,10 @@ public class Platform  {
 
     public PlatformLayer getCryptoNetworkLayer() {
         return mCryptoNetworkLayer;
+    }
+
+    public PlatformLayer getCrypto() {
+        return mCrypto;
     }
 
     public PlatformLayer getCommunicationLayer() {
@@ -186,6 +192,7 @@ public class Platform  {
             mLicesnseLayer.start();
             mWorldLayer.start();
             mCryptoNetworkLayer.start();
+            mCrypto.start();
             mCommunicationLayer.start();
             mNetworkServiceLayer.start();
             mMiddlewareayer.start();
@@ -472,8 +479,45 @@ public class Platform  {
             ((Service)cryptoNetworkService).stop();
         }
 
-        
+        /**
+         * ------------------------------
+         *  Plugin Address Book Crypto
+         * ------------------------------
+         * * * * 
+         */
+        /**
+         * I will give the Cloud Communication access to the File System and to the Event Manager
+         */
 
+        Plugin addressBookCrypto = ((CryptoLayer) mCrypto).getmAddressBook();
+
+        ((DealsWithPluginFileSystem) addressBookCrypto).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) addressBookCrypto).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(addressBookCrypto, Plugins.ADDRESS_BOOK_CRYPTO);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(addressBookCrypto);
+            (addressBookCrypto).setId(pluginID);
+
+            ((Service) addressBookCrypto).start();
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+        
+        
         /**
          * -----------------------------
          * Plugin Cloud Communication
@@ -859,7 +903,7 @@ public class Platform  {
 
         /**
          * ----------------------------------
-         * Plugin From Extra User Transaction
+         * Plugin Incoming Extra User Transaction
          * ----------------------------------
          * * * * 
          */
@@ -870,11 +914,11 @@ public class Platform  {
          * I will give the From Extra User Transaction access to the File System and to the Event Manager
          */
 
-        Plugin fromExtraUserTransaction = ((TransactionLayer) mTransactionLayer).getFromExtraUserPlugin();
+        Plugin incomingExtraUserTransaction = ((TransactionLayer) mTransactionLayer).getIncomingExtraUserPlugin();
 
-        ((DealsWithPluginFileSystem) fromExtraUserTransaction).setPluginFileSystem(os.getPlugInFileSystem());
-        ((DealsWithEvents) fromExtraUserTransaction).setEventManager((EventManager) eventManager);
-        corePlatformContext.addPlugin(fromExtraUserTransaction, Plugins.FROM_EXTRA_USER_TRANSACTION);
+        ((DealsWithPluginFileSystem) incomingExtraUserTransaction).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) incomingExtraUserTransaction).setEventManager((EventManager) eventManager);
+        corePlatformContext.addPlugin(incomingExtraUserTransaction, Plugins.INCOMING_EXTRA_USER_TRANSACTION);
 
         try
         {
@@ -883,10 +927,10 @@ public class Platform  {
              * As any other plugin, this one will need its identity in order to access the data it persisted before.
              */
 
-            UUID pluginID = pluginsIdentityManager.getPluginId(fromExtraUserTransaction);
-            (fromExtraUserTransaction).setId(pluginID);
+            UUID pluginID = pluginsIdentityManager.getPluginId(incomingExtraUserTransaction);
+            (incomingExtraUserTransaction).setId(pluginID);
 
-            ((Service) fromExtraUserTransaction).start();
+            ((Service) incomingExtraUserTransaction).start();
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -902,7 +946,7 @@ public class Platform  {
         
         /**
          * ----------------------------------
-         * Plugin Inter User Transaction
+         * Plugin Incoming Intra User Transaction
          * ----------------------------------
          * * * *
          */
@@ -913,12 +957,12 @@ public class Platform  {
          * I will give the Inter User Transaction access to the File System and to the Event Manager
          */
 
-        Plugin interUserTransaction = ((TransactionLayer) mTransactionLayer).getIntraUserPlugin();
+        Plugin incomingIntraUserTransaction = ((TransactionLayer) mTransactionLayer).getIncomingIntraUserPlugin();
 
-        ((DealsWithPluginFileSystem) interUserTransaction).setPluginFileSystem(os.getPlugInFileSystem());
-        ((DealsWithEvents) interUserTransaction).setEventManager((EventManager) eventManager);
+        ((DealsWithPluginFileSystem) incomingIntraUserTransaction).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) incomingIntraUserTransaction).setEventManager((EventManager) eventManager);
 
-        corePlatformContext.addPlugin(interUserTransaction, Plugins.INTER_USER_TRANSACTION);
+        corePlatformContext.addPlugin(incomingIntraUserTransaction, Plugins.INCOMING_INTRA_USER_TRANSACTION);
 
         try
         {
@@ -927,10 +971,10 @@ public class Platform  {
              * As any other plugin, this one will need its identity in order to access the data it persisted before.
              */
 
-            UUID pluginID = pluginsIdentityManager.getPluginId(interUserTransaction);
-            (interUserTransaction).setId(pluginID);
+            UUID pluginID = pluginsIdentityManager.getPluginId(incomingIntraUserTransaction);
+            (incomingIntraUserTransaction).setId(pluginID);
 
-            ((Service) interUserTransaction).start();
+            ((Service) incomingIntraUserTransaction).start();
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -988,7 +1032,7 @@ public class Platform  {
 
         /**
          * ----------------------------------
-         * Plugin To Extra User Transaction
+         * Plugin Outgoing Extra User Transaction
          * ----------------------------------
          * * * *
          */
@@ -996,15 +1040,15 @@ public class Platform  {
 
 
         /**
-         * I will give the To Extra User Transaction access to the File System and to the Event Manager
+         * I will give the Outgoing Extra User Transaction access to the File System and to the Event Manager
          */
 
-        Plugin toExtraUserTransaction = ((TransactionLayer) mTransactionLayer).getToExtraUserPlugin();
+        Plugin outgoingExtraUserTransaction = ((TransactionLayer) mTransactionLayer).getOutgoingExtraUserPlugin();
 
-        ((DealsWithPluginFileSystem) toExtraUserTransaction).setPluginFileSystem(os.getPlugInFileSystem());
-        ((DealsWithEvents) toExtraUserTransaction).setEventManager((EventManager) eventManager);
+        ((DealsWithPluginFileSystem) outgoingExtraUserTransaction).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) outgoingExtraUserTransaction).setEventManager((EventManager) eventManager);
 
-        corePlatformContext.addPlugin(toExtraUserTransaction, Plugins.TO_EXTRA_USER_TRANSACTION);
+        corePlatformContext.addPlugin(outgoingExtraUserTransaction, Plugins.OUTGOING_EXTRA_USER_TRANSACTION);
 
         try
         {
@@ -1013,10 +1057,145 @@ public class Platform  {
              * As any other plugin, this one will need its identity in order to access the data it persisted before.
              */
 
-            UUID pluginID = pluginsIdentityManager.getPluginId(interWalletTransaction);
-            (interWalletTransaction).setId(pluginID);
+            UUID pluginID = pluginsIdentityManager.getPluginId(outgoingExtraUserTransaction);
+            (outgoingExtraUserTransaction).setId(pluginID);
 
-            ((Service) toExtraUserTransaction).start();
+            ((Service) outgoingExtraUserTransaction).start();
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
+
+
+        /**
+         * ----------------------------------
+         * Plugin Outgoing Device user Transaction
+         * ----------------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the Outgoing Device User Transaction access to the File System and to the Event Manager
+         */
+
+        Plugin outgoingDeviceUserTransaction = ((TransactionLayer) mTransactionLayer).getOutgoingDeviceUserPlugin();
+
+        ((DealsWithPluginFileSystem) outgoingDeviceUserTransaction).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) outgoingDeviceUserTransaction).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(outgoingDeviceUserTransaction, Plugins.OUTGOING_DEVICE_USER_TRANSACTION);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(outgoingDeviceUserTransaction);
+            (outgoingDeviceUserTransaction).setId(pluginID);
+
+            ((Service) outgoingDeviceUserTransaction).start();
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
+
+
+        /**
+         * ----------------------------------
+         * Plugin Incoming Device user Transaction
+         * ----------------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the Incoming Device User Transaction access to the File System and to the Event Manager
+         */
+
+        Plugin outgoingIntraUserTransaction = ((TransactionLayer) mTransactionLayer).getOutgoingIntraUserPlugin();
+
+        ((DealsWithPluginFileSystem) outgoingIntraUserTransaction).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) outgoingIntraUserTransaction).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(outgoingIntraUserTransaction, Plugins.OUTGOING_INTRA_USER_TRANSACTION);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(outgoingIntraUserTransaction);
+            (outgoingIntraUserTransaction).setId(pluginID);
+
+            ((Service) outgoingIntraUserTransaction).start();
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
+
+
+
+
+
+        /**
+         * ----------------------------------
+         * Plugin Incoming Device user Transaction
+         * ----------------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the Incoming Device User Transaction access to the File System and to the Event Manager
+         */
+
+        Plugin incomingDeviceUserTransaction = ((TransactionLayer) mTransactionLayer).getIncomingDeviceUserPlugin();
+
+        ((DealsWithPluginFileSystem) incomingDeviceUserTransaction).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) incomingDeviceUserTransaction).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(incomingDeviceUserTransaction, Plugins.INCOMING_DEVICE_USER_TRANSACTION);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(incomingDeviceUserTransaction);
+            (incomingDeviceUserTransaction).setId(pluginID);
+
+            ((Service) incomingDeviceUserTransaction).start();
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {

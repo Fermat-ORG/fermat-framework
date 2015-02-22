@@ -5,9 +5,9 @@ import com.bitdubai.fermat_api.layer._1_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventHandler;
 
 /**
- * Created by loui on 19/02/15.
+ * Created by loui on 22/02/15.
  */
-public class UserLoggedInEventHandler implements EventHandler{
+public class IntraUserLoggedInEventHandler implements EventHandler {
     IntraUserManager intraUserManager;
 
     public void setIntraUserManager(IntraUserManager intraUserManager){

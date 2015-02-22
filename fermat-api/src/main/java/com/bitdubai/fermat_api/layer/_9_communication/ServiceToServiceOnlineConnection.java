@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_api.layer._9_communication;
 
-import com.bitdubai.fermat_api.layer._4_user.DeviceUser;
+import com.bitdubai.fermat_api.layer._4_user.device_user.DeviceUser;
 
 /**
  * Created by ciencias on 2/12/15.

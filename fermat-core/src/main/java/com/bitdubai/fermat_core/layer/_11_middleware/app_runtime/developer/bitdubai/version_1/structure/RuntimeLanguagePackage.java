@@ -2,7 +2,7 @@ package com.bitdubai.fermat_core.layer._11_middleware.app_runtime.developer.bitd
 
 import com.bitdubai.fermat_api.layer._11_middleware.app_runtime.LanguagePackage;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Languages;
-import com.bitdubai.fermat_api.layer._4_user.DeviceUser;
+import com.bitdubai.fermat_api.layer._4_user.device_user.DeviceUser;
 
 import java.util.Map;
 

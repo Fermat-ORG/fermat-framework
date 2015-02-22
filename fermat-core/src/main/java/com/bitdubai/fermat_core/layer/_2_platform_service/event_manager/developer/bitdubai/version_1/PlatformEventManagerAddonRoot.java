@@ -55,6 +55,7 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
     private List<EventListener> listenersIncomingCryptoReversedFromExtraUserEvent = new ArrayList<>();
     private List<EventListener> listenersIncomingCryptoReversedFromDeviceUserEvent = new ArrayList<>();
     private List<EventListener> listenersIncomingCryptoIdentifiedEvent = new ArrayList<>();
+    private List<EventListener> listenersIntraUserLoggedInEvent = new ArrayList<>();
     
     
     EventMonitor eventMonitor;
@@ -199,6 +200,9 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
             case INCOMING_CRYPTO_IDENTIFIED:
                 return new IncomingCryptoReceivedEventListener(EventType.INCOMING_CRYPTO_IDENTIFIED, this.eventMonitor);
             
+            case INTRA_USER_LOGGED_IN:
+                return new IntraUserLoggedInEventListener(EventType.INTRA_USER_LOGGED_IN, this.eventMonitor);
+            
         }
         return null;
     }
@@ -299,7 +303,10 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
                 return new IncomingCryptoReversedFromDeviceUserEvent(EventType.INCOMING_CRYPTO_REVERSED_FROM_DEVICE_USER);
             
             case INCOMING_CRYPTO_IDENTIFIED:
-                return new IncomingCryptoIdentifiedUserEvent(EventType.INCOMING_CRYPTO_IDENTIFIED);
+                return new IncomingCryptoIdentifiedEvent(EventType.INCOMING_CRYPTO_IDENTIFIED);
+            
+            case INTRA_USER_LOGGED_IN:
+                return new IntraUserLoggedInEvent(EventType.INTRA_USER_LOGGED_IN);
         }
         return null;
     }
@@ -434,6 +441,10 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
             case INCOMING_CRYPTO_IDENTIFIED:
                 listenersIncomingCryptoIdentifiedEvent.add(listener);
                 break;
+            
+            case INTRA_USER_LOGGED_IN:
+                listenersIntraUserLoggedInEvent.add(listener);
+                break;
         }
     }
 
@@ -566,6 +577,10 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
             
             case INCOMING_CRYPTO_IDENTIFIED:
                 listeners = listenersIncomingCryptoIdentifiedEvent;
+                break;
+            
+            case INTRA_USER_LOGGED_IN:
+                listeners = listenersIntraUserLoggedInEvent;
                 break;
             
         }
@@ -704,6 +719,10 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
 
             case INCOMING_CRYPTO_IDENTIFIED:
                 listeners = listenersIncomingCryptoIdentifiedEvent;
+                break;
+            
+            case INTRA_USER_LOGGED_IN:
+                listeners = listenersIntraUserLoggedInEvent;
                 break;
         }
 

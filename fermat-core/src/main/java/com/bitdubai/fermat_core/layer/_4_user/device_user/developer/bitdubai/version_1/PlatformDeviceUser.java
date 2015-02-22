@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer._1_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.events.UserCreatedEvent;
 import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.events.UserLoggedInEvent;
 import com.bitdubai.fermat_api.layer._3_os.file_system.*;
-import com.bitdubai.fermat_api.layer._4_user.*;
+import com.bitdubai.fermat_api.layer._4_user.device_user.DeviceUser;
 import com.bitdubai.fermat_api.layer._4_user.device_user.*;
 import com.bitdubai.fermat_api.layer._4_user.device_user.exceptions.CantCreateDeviceUserException;
 import com.bitdubai.fermat_api.layer._4_user.device_user.exceptions.CantLoadDeviceUserException;

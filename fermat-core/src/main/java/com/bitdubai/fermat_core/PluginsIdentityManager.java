@@ -8,11 +8,15 @@ import com.bitdubai.fermat_core.layer._11_middleware.app_runtime.developer.bitdu
 import com.bitdubai.fermat_core.layer._11_middleware.bank_notes.developer.bitdubai.version_1.BankNotespluginRoot;
 import com.bitdubai.fermat_core.layer._11_middleware.wallet.developer.bitdubai.version_1.WalletPluginRoot;
 import com.bitdubai.fermat_core.layer._11_middleware.wallet_contacts.developer.bitdubai.version_1.WalletContactsPluginRoot;
+import com.bitdubai.fermat_core.layer._12_transaction.incoming_device_user.developer.bitdubai.version_1.IncomingDeviceUserTransactionPluginRoot;
 import com.bitdubai.fermat_core.layer._12_transaction.incoming_extra_user.developer.bitdubai.version_1.IncomingExtraUserTransactionPluginRoot;
 import com.bitdubai.fermat_core.layer._12_transaction.incoming_intra_user.developer.bitdubai.version_1.IncomingIntraUserTransactionPluginRoot;
 import com.bitdubai.fermat_core.layer._12_transaction.inter_wallet.developer.bitdubai.version_1.InterWalletTransactionPluginRoot;
 import com.bitdubai.fermat_core.layer._12_transaction.outgoing_device_user.developer.bitsubai.version_1.OutgoingDeviceUserTransactionPluginRoot;
+import com.bitdubai.fermat_core.layer._12_transaction.outgoing_extra_user.developer.bitdubai.version_1.OutgoingExtrauserPluginRoot;
+import com.bitdubai.fermat_core.layer._12_transaction.outgoing_intra_user.developer.bitdubai.version_1.OutgoingIntraUserPluginRoot;
 import com.bitdubai.fermat_core.layer._6_world.crypto_index.developer.bitdubai.version_1.CryptoIndexPluginRoot;
+import com.bitdubai.fermat_core.layer._8_crypto.address_book.developer.bitdubai.version_1.AddressBookPluginCryptoRoot;
 import com.bitdubai.fermat_core.layer._9_communication.cloud.developer.bitdubai.version_1.CloudCommunicationChannelPluginRoot;
 import com.bitdubai.fermat_core.layer._10_network_service.bank_notes.developer.bitdubai.version_1.BankNotesPluginRoot;
 import com.bitdubai.fermat_core.layer._10_network_service.wallet_community.developer.bitdubai.version_1.WalletCommunityPluginRoot;
@@ -32,7 +36,7 @@ import java.util.UUID;
 public class PluginsIdentityManager {
 
     private PlatformFileSystem platformFileSystem;
-    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 18;
+    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 22;
     private List<UUID> pluginIds = new ArrayList<>();
 
 
@@ -417,6 +421,68 @@ public class PluginsIdentityManager {
                  */
             }
         }
+
+        if (pluginIndex == 0) {
+            try
+            {
+                AddressBookPluginCryptoRoot tryType;
+                tryType = (AddressBookPluginCryptoRoot) plugin;
+                pluginIndex = 18;
+            }
+            catch (Exception e)
+            {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
+
+        if (pluginIndex == 0) {
+            try
+            {
+                IncomingDeviceUserTransactionPluginRoot tryType;
+                tryType = (IncomingDeviceUserTransactionPluginRoot) plugin;
+                pluginIndex = 19;
+            }
+            catch (Exception e)
+            {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
+
+        if (pluginIndex == 0) {
+            try
+            {
+                OutgoingExtrauserPluginRoot tryType;
+                tryType = (OutgoingExtrauserPluginRoot) plugin;
+                pluginIndex = 20;
+            }
+            catch (Exception e)
+            {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
+
+        if (pluginIndex == 0) {
+            try
+            {
+                OutgoingIntraUserPluginRoot tryType;
+                tryType = (OutgoingIntraUserPluginRoot) plugin;
+                pluginIndex = 21;
+            }
+            catch (Exception e)
+            {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
+
+
 
         if (pluginIndex > 0) {
 

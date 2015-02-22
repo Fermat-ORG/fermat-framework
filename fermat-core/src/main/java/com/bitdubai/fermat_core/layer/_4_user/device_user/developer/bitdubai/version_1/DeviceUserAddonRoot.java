@@ -16,7 +16,7 @@ import com.bitdubai.fermat_api.layer._3_os.file_system.*;
 import com.bitdubai.fermat_api.layer._4_user.User;
 import com.bitdubai.fermat_api.layer._4_user.device_user.exceptions.CantCreateDeviceUserException;
 import com.bitdubai.fermat_api.layer._4_user.device_user.exceptions.CantLoadDeviceUserException;
-import com.bitdubai.fermat_api.layer._4_user.DeviceUser;
+import com.bitdubai.fermat_api.layer._4_user.device_user.DeviceUser;
 import com.bitdubai.fermat_api.layer._4_user.device_user.DeviceUserManager;
 import com.bitdubai.fermat_api.layer._4_user.device_user.exceptions.LoginFailedException;
 

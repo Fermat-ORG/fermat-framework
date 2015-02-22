@@ -9,11 +9,11 @@ import java.util.UUID;
 /**
  * Created by loui on 20/02/15.
  */
-public class IncomingCryptoIdentifiedUserEvent implements PlatformEvent {
+public class IncomingCryptoIdentifiedEvent implements PlatformEvent {
     private EventType eventType;
     private EventSource eventSource;
 
-    public IncomingCryptoIdentifiedUserEvent(EventType eventType){
+    public IncomingCryptoIdentifiedEvent(EventType eventType){
         this.eventType = eventType;
     }
 

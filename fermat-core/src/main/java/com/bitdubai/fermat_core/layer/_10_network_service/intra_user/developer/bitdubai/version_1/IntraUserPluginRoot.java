@@ -13,10 +13,11 @@ import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventMana
 import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventType;
 import com.bitdubai.fermat_api.layer._3_os.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer._3_os.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer._4_user.DeviceUser;
+import com.bitdubai.fermat_api.layer._4_user.device_user.DeviceUser;
 import com.bitdubai.fermat_api.layer._10_network_service.NetworkService;
 import com.bitdubai.fermat_api.layer._10_network_service.intra_user.IntraUser;
 import com.bitdubai.fermat_api.layer._10_network_service.intra_user.IntraUserNetworkService;
+import com.bitdubai.fermat_core.layer._10_network_service.intra_user.developer.bitdubai.version_1.EventHandlers.IntraUserLoggedInEventHandler;
 import com.bitdubai.fermat_core.layer._10_network_service.intra_user.developer.bitdubai.version_1.EventHandlers.UserLoggedInEventHandler;
 import com.bitdubai.fermat_core.layer._10_network_service.intra_user.developer.bitdubai.version_1.EventHandlers.UserLoggedOutEventHandler;
 
@@ -120,7 +121,15 @@ public class IntraUserPluginRoot implements Service, NetworkService, IntraUserNe
         eventListener.setEventHandler(eventHandler);
         eventManager.addListener(eventListener);
         listenersAdded.add(eventListener);
-        
+
+        eventListener = eventManager.getNewListener(EventType.INTRA_USER_LOGGED_IN);
+        eventHandler = new IntraUserLoggedInEventHandler();
+        ((IntraUserLoggedInEventHandler) eventHandler).setIntraUserManager(this);
+        eventListener.setEventHandler(eventHandler);
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);
+
+
         this.serviceStatus = ServiceStatus.STARTED;
         
     }

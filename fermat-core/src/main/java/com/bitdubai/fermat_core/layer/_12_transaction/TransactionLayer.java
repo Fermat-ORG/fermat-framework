@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
 import com.bitdubai.fermat_api.layer._12_transaction.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer._12_transaction.TransactionSubsystem;
+import com.bitdubai.fermat_core.layer._12_transaction.incoming_device_user.IncomingdeviceUserSubsystem;
 import com.bitdubai.fermat_core.layer._12_transaction.incoming_extra_user.IncomingExtraUserSubsystem;
 import com.bitdubai.fermat_core.layer._12_transaction.incoming_intra_user.IncomingIntraUserSubsystem;
 import com.bitdubai.fermat_core.layer._12_transaction.inter_wallet.InterWalletSubsystem;
@@ -17,42 +18,51 @@ import com.bitdubai.fermat_core.layer._12_transaction.outgoing_device_user.Outgo
  */
 public class TransactionLayer implements PlatformLayer {
     
-    private Plugin mFromExtraUser;
+    private Plugin mIncomingExtraUser;
+
+    private Plugin mOutgoingExtraUser;
+
+    private Plugin mIncomingDeviceUser;
     
-    private Plugin mIntraUser;
+    private Plugin mOutgoingDeviceUser;
+
+    private Plugin mIncomingIntraUser;
+
+    private Plugin mOutgoingIntraUser;
     
     private Plugin mInterWallet;
     
-    private Plugin mToExtraUser;
-    
-    private Plugin mOutgoingIntraUser;
-    
-    private Plugin mOutgoingExtraUser;
-    
-    public  Plugin getFromExtraUserPlugin() {
-        return mFromExtraUser;
+    public  Plugin getIncomingExtraUserPlugin() {
+        return mIncomingExtraUser;
     }
 
-    public  Plugin getIntraUserPlugin() {
-        return mIntraUser;
+    public  Plugin getIncomingIntraUserPlugin() {
+        return mIncomingIntraUser;
     }
-  
+
+    public  Plugin getIncomingDeviceUserPlugin() {
+        return mIncomingDeviceUser;
+    }
+
     public  Plugin getInterWalletPlugin() {
         return mInterWallet;
     }
 
-    public  Plugin getToExtraUserPlugin() {
-        return mToExtraUser;
-
+    public  Plugin getOutgoingExtraUserPlugin() {
+        return mOutgoingExtraUser;
     }
 
-    public Plugin getOutgoingIntraUser(){
-        return mOutgoingIntraUser;   
+    public  Plugin getOutgoingIntraUserPlugin() {
+        return mOutgoingIntraUser;
+    }
+
+    public  Plugin getOutgoingDeviceUserPlugin() {
+        return mOutgoingDeviceUser;
     }
     
-    public Plugin getOutgoingExtraUser(){
-        return mOutgoingExtraUser;        
-    }
+
+
+
 
     @Override
     public void start() throws CantStartLayerException {
@@ -60,11 +70,11 @@ public class TransactionLayer implements PlatformLayer {
          * Let's try to start the From Extra User subsystem.
          */
 
-        TransactionSubsystem fromExtraUserSubsystem = new IncomingExtraUserSubsystem();
+        TransactionSubsystem incomingExtraUserSubsystem = new IncomingExtraUserSubsystem();
 
         try {
-            fromExtraUserSubsystem.start();
-            mFromExtraUser = fromExtraUserSubsystem.getPlugin();
+            incomingExtraUserSubsystem.start();
+            mIncomingExtraUser = incomingExtraUserSubsystem.getPlugin();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());
@@ -74,11 +84,26 @@ public class TransactionLayer implements PlatformLayer {
          * Let's try to start the Inter User subsystem.
          */
 
-        TransactionSubsystem interUserSubsystem = new IncomingIntraUserSubsystem();
+        TransactionSubsystem incomingIntraUserSubsystem = new IncomingIntraUserSubsystem();
 
         try {
-            interUserSubsystem.start();
-            mIntraUser = interUserSubsystem.getPlugin();
+            incomingIntraUserSubsystem.start();
+            mIncomingIntraUser = incomingIntraUserSubsystem.getPlugin();
+
+        } catch (CantStartSubsystemException e) {
+            System.err.println("CantStartSubsystemException: " + e.getMessage());
+        }
+
+
+        /**
+         * Let's try to start the Inter User subsystem.
+         */
+
+        TransactionSubsystem incomingDeviceUserSubsystem = new IncomingdeviceUserSubsystem();
+
+        try {
+            incomingDeviceUserSubsystem.start();
+            mIncomingDeviceUser = incomingDeviceUserSubsystem.getPlugin();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());
@@ -104,11 +129,11 @@ public class TransactionLayer implements PlatformLayer {
          * Let's try to start the To Extra User subsystem.
          */
 
-        TransactionSubsystem toExtraUserSubsystem = new OutgoingDeviceUserSubsystem();
+        TransactionSubsystem outgoingDeviceUserSubsystem = new OutgoingDeviceUserSubsystem();
 
         try {
-            toExtraUserSubsystem.start();
-            mToExtraUser = toExtraUserSubsystem.getPlugin();
+            outgoingDeviceUserSubsystem.start();
+            mOutgoingDeviceUser = outgoingDeviceUserSubsystem.getPlugin();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());
