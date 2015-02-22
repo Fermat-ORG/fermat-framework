@@ -10,17 +10,8 @@ import java.util.UUID;
  * Created by loui on 20/02/15.
  */
 public class IncomingCryptoReversedFromIntraUserEvent implements PlatformEvent {
-    private UUID walletId;
     private EventType eventType;
     private EventSource eventSource;
-
-    public void setWalletId (UUID walletId){
-        this.walletId = walletId;
-    }
-
-    public UUID getWalletId(){
-        return this.walletId;
-    }
 
     public IncomingCryptoReversedFromIntraUserEvent(EventType eventType){
         this.eventType = eventType;

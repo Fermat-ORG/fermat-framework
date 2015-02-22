@@ -157,26 +157,7 @@ public class Platform  {
         this.os = os;
     }
 
-
-    
-    
-    
-    
-    // LOUI TODO: el paquete y todo lo que tiene adentro que se llama from_extrauser se debe llamar incoming_extra_user dentro del layer transaction
-    
-    // LOUI TODO: interuser debe ser incoming_intra_user
-
-    // LOUI TODO: outgoing:interuser debe ser outgoing_intra_user
-    
-    // LOUI TODO; to_extrauser esta de mas??? deberia ser outgoing_device_user
-
-    // LOUI TODO;faltaria el incoming_device_user
-
-    // LOUI TODO; el que se llama outgoin_extrauser debe ser outgoing_extra_user
-    
-    // LOUI TODO; ek que se llama interwallet debe ser inter_wallet
-
-    // LOUI TODO; No veo que este el evento IncomingCryptoIdentified 
+    // LOUI TODO; No veo que este el evento IncomingCryptoIdentified
 
     // LOUI TODO; Revisa todo lo que hiciste al detalle, porque son demasiadas cosas las que encontre y solo revisando por arriba.
 

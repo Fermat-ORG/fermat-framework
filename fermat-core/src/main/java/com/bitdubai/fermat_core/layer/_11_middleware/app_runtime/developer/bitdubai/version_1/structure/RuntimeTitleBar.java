@@ -10,9 +10,18 @@ import java.awt.*;
 public class RuntimeTitleBar implements TitleBar {
 
     String label;
-    Color color; // Loui TODO: Implementar getter y setter y ponerlos en la interfaz
-    Image backgroundImage; // Loui TODO: Implementar getter y setter y ponerlos en la interfaz
+    Color color; 
+    Image backgroundImage; 
     
+    
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
     public String getLabel() {
         return label;
     }
@@ -20,5 +29,12 @@ public class RuntimeTitleBar implements TitleBar {
     public void setLabel(String label) {
         this.label = label;
     }
-    
+
+    public Image getBackgroundImage() {
+        return backgroundImage;
+    }
+
+    public void setBackgroundImage(Image backgroundImage) {
+        this.backgroundImage = backgroundImage;
+    }
 }

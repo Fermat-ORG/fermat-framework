@@ -5,12 +5,12 @@ import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
 import com.bitdubai.fermat_api.layer._12_transaction.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer._12_transaction.TransactionSubsystem;
-import com.bitdubai.fermat_core.layer._12_transaction.from_extrauser.FromExtraUserSubsystem;
-import com.bitdubai.fermat_core.layer._12_transaction.intrauser.IntraUserSubsystem;
-import com.bitdubai.fermat_core.layer._12_transaction.interwallet.InterWalletSubsystem;
-import com.bitdubai.fermat_core.layer._12_transaction.outgoing_extrauser.OutgoingExtrauserSubsystem;
-import com.bitdubai.fermat_core.layer._12_transaction.outgoing_interuser.OutgoingIntraUserSubsytem;
-import com.bitdubai.fermat_core.layer._12_transaction.to_extrauser.ToExtrauserSubsystem;
+import com.bitdubai.fermat_core.layer._12_transaction.incoming_extra_user.IncomingExtraUserSubsystem;
+import com.bitdubai.fermat_core.layer._12_transaction.incoming_intra_user.IncomingIntraUserSubsystem;
+import com.bitdubai.fermat_core.layer._12_transaction.inter_wallet.InterWalletSubsystem;
+import com.bitdubai.fermat_core.layer._12_transaction.outgoing_extra_user.OutgoingExtrauserSubsystem;
+import com.bitdubai.fermat_core.layer._12_transaction.outgoing_inter_user.OutgoingIntraUserSubsytem;
+import com.bitdubai.fermat_core.layer._12_transaction.outgoing_device_user.OutgoingDeviceUserSubsystem;
 
 /**
  * Created by loui on 16/02/15.
@@ -60,7 +60,7 @@ public class TransactionLayer implements PlatformLayer {
          * Let's try to start the From Extra User subsystem.
          */
 
-        TransactionSubsystem fromExtraUserSubsystem = new FromExtraUserSubsystem();
+        TransactionSubsystem fromExtraUserSubsystem = new IncomingExtraUserSubsystem();
 
         try {
             fromExtraUserSubsystem.start();
@@ -74,7 +74,7 @@ public class TransactionLayer implements PlatformLayer {
          * Let's try to start the Inter User subsystem.
          */
 
-        TransactionSubsystem interUserSubsystem = new IntraUserSubsystem();
+        TransactionSubsystem interUserSubsystem = new IncomingIntraUserSubsystem();
 
         try {
             interUserSubsystem.start();
@@ -104,7 +104,7 @@ public class TransactionLayer implements PlatformLayer {
          * Let's try to start the To Extra User subsystem.
          */
 
-        TransactionSubsystem toExtraUserSubsystem = new ToExtrauserSubsystem();
+        TransactionSubsystem toExtraUserSubsystem = new OutgoingDeviceUserSubsystem();
 
         try {
             toExtraUserSubsystem.start();

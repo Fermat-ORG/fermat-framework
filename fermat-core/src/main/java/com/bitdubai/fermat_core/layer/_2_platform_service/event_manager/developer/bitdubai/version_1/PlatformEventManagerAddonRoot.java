@@ -54,6 +54,7 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
     private List<EventListener> listenersIncomingCryptoReversedFromIntraUserEvent = new ArrayList<>(); 
     private List<EventListener> listenersIncomingCryptoReversedFromExtraUserEvent = new ArrayList<>();
     private List<EventListener> listenersIncomingCryptoReversedFromDeviceUserEvent = new ArrayList<>();
+    private List<EventListener> listenersIncomingCryptoIdentifiedEvent = new ArrayList<>();
     
     
     EventMonitor eventMonitor;
@@ -195,6 +196,9 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
             case INCOMING_CRYPTO_REVERSED_FROM_INTRA_USER:
                 return new IncomingCryptoReversedFromIntraUserEventListener(EventType.INCOMING_CRYPTO_REVERSED_FROM_INTRA_USER, this.eventMonitor);
             
+            case INCOMING_CRYPTO_IDENTIFIED:
+                return new IncomingCryptoReceivedEventListener(EventType.INCOMING_CRYPTO_IDENTIFIED, this.eventMonitor);
+            
         }
         return null;
     }
@@ -294,6 +298,8 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
             case INCOMING_CRYPTO_REVERSED_FROM_DEVICE_USER:
                 return new IncomingCryptoReversedFromDeviceUserEvent(EventType.INCOMING_CRYPTO_REVERSED_FROM_DEVICE_USER);
             
+            case INCOMING_CRYPTO_IDENTIFIED:
+                return new IncomingCryptoIdentifiedUserEvent(EventType.INCOMING_CRYPTO_IDENTIFIED);
         }
         return null;
     }
@@ -425,6 +431,9 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
                 listenersIncomingCryptoReversedFromDeviceUserEvent.add(listener);
                 break;
 
+            case INCOMING_CRYPTO_IDENTIFIED:
+                listenersIncomingCryptoIdentifiedEvent.add(listener);
+                break;
         }
     }
 
@@ -553,7 +562,11 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
 
             case INCOMING_CRYPTO_REVERSED_FROM_DEVICE_USER:
                 listeners = listenersIncomingCryptoReversedFromDeviceUserEvent;
-                break; 
+                break;
+            
+            case INCOMING_CRYPTO_IDENTIFIED:
+                listeners = listenersIncomingCryptoIdentifiedEvent;
+                break;
             
         }
 
@@ -687,6 +700,10 @@ public class PlatformEventManagerAddonRoot implements Service, EventManager, Dea
 
             case INCOMING_CRYPTO_REVERSED_FROM_DEVICE_USER:
                 listeners = listenersIncomingCryptoReversedFromDeviceUserEvent;
+                break;
+
+            case INCOMING_CRYPTO_IDENTIFIED:
+                listeners = listenersIncomingCryptoIdentifiedEvent;
                 break;
         }
 

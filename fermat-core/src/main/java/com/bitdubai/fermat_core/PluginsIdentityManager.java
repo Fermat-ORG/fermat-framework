@@ -8,10 +8,10 @@ import com.bitdubai.fermat_core.layer._11_middleware.app_runtime.developer.bitdu
 import com.bitdubai.fermat_core.layer._11_middleware.bank_notes.developer.bitdubai.version_1.BankNotespluginRoot;
 import com.bitdubai.fermat_core.layer._11_middleware.wallet.developer.bitdubai.version_1.WalletPluginRoot;
 import com.bitdubai.fermat_core.layer._11_middleware.wallet_contacts.developer.bitdubai.version_1.WalletContactsPluginRoot;
-import com.bitdubai.fermat_core.layer._12_transaction.from_extrauser.developer.bitdubai.version_1.FromExtraUserTransactionManagerPluginRoot;
-import com.bitdubai.fermat_core.layer._12_transaction.intrauser.developer.bitdubai.version_1.IntraUserTransactionManagerPluginRoot;
-import com.bitdubai.fermat_core.layer._12_transaction.interwallet.developer.bitdubai.version_1.InterWalletTransactionManagerPluginRoot;
-import com.bitdubai.fermat_core.layer._12_transaction.to_extrauser.developer.bitsubai.version_1.ToExtraUserTransactionManagerPluginRoot;
+import com.bitdubai.fermat_core.layer._12_transaction.incoming_extra_user.developer.bitdubai.version_1.IncomingExtraUserTransactionPluginRoot;
+import com.bitdubai.fermat_core.layer._12_transaction.incoming_intra_user.developer.bitdubai.version_1.IncomingIntraUserTransactionPluginRoot;
+import com.bitdubai.fermat_core.layer._12_transaction.inter_wallet.developer.bitdubai.version_1.InterWalletTransactionPluginRoot;
+import com.bitdubai.fermat_core.layer._12_transaction.outgoing_device_user.developer.bitsubai.version_1.OutgoingDeviceUserTransactionPluginRoot;
 import com.bitdubai.fermat_core.layer._6_world.crypto_index.developer.bitdubai.version_1.CryptoIndexPluginRoot;
 import com.bitdubai.fermat_core.layer._9_communication.cloud.developer.bitdubai.version_1.CloudCommunicationChannelPluginRoot;
 import com.bitdubai.fermat_core.layer._10_network_service.bank_notes.developer.bitdubai.version_1.BankNotesPluginRoot;
@@ -254,8 +254,8 @@ public class PluginsIdentityManager {
         if (pluginIndex == 0) {
             try
             {
-                FromExtraUserTransactionManagerPluginRoot tryType;
-                tryType = (FromExtraUserTransactionManagerPluginRoot) plugin;
+                IncomingExtraUserTransactionPluginRoot tryType;
+                tryType = (IncomingExtraUserTransactionPluginRoot) plugin;
                 pluginIndex = 7;
             }
             catch (Exception e)
@@ -270,8 +270,8 @@ public class PluginsIdentityManager {
         if (pluginIndex == 0) {
             try
             {
-                IntraUserTransactionManagerPluginRoot tryType;
-                tryType = (IntraUserTransactionManagerPluginRoot) plugin;
+                IncomingIntraUserTransactionPluginRoot tryType;
+                tryType = (IncomingIntraUserTransactionPluginRoot) plugin;
                 pluginIndex = 8;
             }
             catch (Exception e)
@@ -286,8 +286,8 @@ public class PluginsIdentityManager {
         if (pluginIndex == 0) {
             try
             {
-                InterWalletTransactionManagerPluginRoot tryType;
-                tryType = (InterWalletTransactionManagerPluginRoot) plugin;
+                InterWalletTransactionPluginRoot tryType;
+                tryType = (InterWalletTransactionPluginRoot) plugin;
                 pluginIndex = 9;
             }
             catch (Exception e)
@@ -316,8 +316,8 @@ public class PluginsIdentityManager {
         if (pluginIndex == 0) {
             try
             {
-                ToExtraUserTransactionManagerPluginRoot tryType;
-                tryType = (ToExtraUserTransactionManagerPluginRoot) plugin;
+                OutgoingDeviceUserTransactionPluginRoot tryType;
+                tryType = (OutgoingDeviceUserTransactionPluginRoot) plugin;
                 pluginIndex = 11;
             }
             catch (Exception e)
