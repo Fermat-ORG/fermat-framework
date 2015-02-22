@@ -50,9 +50,9 @@ import java.util.UUID;
 public class IntraUserPluginRoot implements Service, NetworkService, IntraUserNetworkService, IntraUserManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem,Plugin {
 
     
-   // Loui TODO: Escuchar el evento User Logged In, y  -- cuando ocurra ejecutar el metodo correspondiente.--
+   // Loui TODO: Escuchar el evento Intra User Logged In, y  -- cuando ocurra ejecutar el metodo logIn (UUID userId)
 
-   // Loui TODO: Escuchar el evento User Logged Out, y -- cuando ocurra ejecutar el metodo correspondiente.--
+   // Loui TODO: Escuchar el evento Intra User Logged Out, y -- cuando ocurra ejecutar el metodo logOut (UUID userId)
 
     /**
      * Service Interface member variables.
@@ -76,7 +76,24 @@ public class IntraUserPluginRoot implements Service, NetworkService, IntraUserNe
     UUID pluginId;
 
 
+    /**
+     * IntraUserPluginRoot Interface implementation.
+     */
+    public void logIn (UUID userId) {
+        
+        // LUIS TODO: Aca debe registrar este usuario con el Communication Layer, de manera que pueda ser encontrado remotamente por otros usuarios.
+        
+        // LOUI TODO: Esta clase debe implementar la interface DealsWithCommunicationLayerManager y recibir desde la plataforma la referencia al communicationLayer a traves de la interfase CommunicationLayerManger.
+        
+    }
 
+
+    public void logOut (UUID userId) {
+
+
+    }
+    
+    
     /**
      * Service Interface implementation.
      */

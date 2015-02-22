@@ -5,12 +5,15 @@ import com.bitdubai.fermat_api.PlatformContext;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
+
 import com.bitdubai.fermat_api.layer._10_network_service.intra_user.IntraUser;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer._4_user.DeviceUser;
+
 import com.bitdubai.fermat_api.layer._4_user.device_user.DeviceUserManager;
 import com.bitdubai.fermat_api.layer._9_communication.*;
 import com.bitdubai.fermat_core.layer._9_communication.cloud.CloudSubsystem;
+
+import java.util.UUID;
 
 /**
  * Created by ciencias on 31.12.14.
@@ -20,10 +23,9 @@ import com.bitdubai.fermat_core.layer._9_communication.cloud.CloudSubsystem;
  * I am going to establish several communication channels. I will use each one when appropriate.
  */
 
-public class CommunicationLayer implements PlatformLayer, DealsWithPlatformContext {
+public class CommunicationLayer implements PlatformLayer, CommunicationLayerManager {
 
-    /*private Plugin mBluetoohPlugin;
-    */
+    //private Plugin mBluetoohPlugin;
 
     private Plugin mCloudPlugin;
     /*
@@ -35,14 +37,16 @@ public class CommunicationLayer implements PlatformLayer, DealsWithPlatformConte
     private Plugin mUriPlugin;
     */
     
-    PlatformContext platformContext;
 
      /*
     public Plugin getBluetoohPlugin() {
         return mBluetoohPlugin;
     }
 
-    */
+*/
+    private IntraUser loggedinIntraUser;
+
+  
     public Plugin getCloudPlugin() {
         return mCloudPlugin;
     }
@@ -84,32 +88,7 @@ public class CommunicationLayer implements PlatformLayer, DealsWithPlatformConte
      */
 
 
-    public UserToUserOnlineConnection connectTo (IntraUser intraUser) throws CantConnectToUserException {
-        
-        
-        IntraUser loggedinIntraUser = ((DeviceUserManager) platformContext.getAddon(Addons.USER_MANAGER)).getLoggedInUser();
 
-        LayerUserToUserOnlineConnection layerUserToUserOnlineConnection = new LayerUserToUserOnlineConnection(loggedinIntraUser, intraUser);
-
-        layerUserToUserOnlineConnection.setCloudPlugin(mCloudPlugin);
-        
-        try
-        {
-            layerUserToUserOnlineConnection.connect();
-        }
-        catch (CantConnectToUserException cantConnectToUserException)
-        {
-            System.err.println("CantConnectToUserException: " + cantConnectToUserException.getMessage());
-
-            /**
-             * I can't do anything with this exception here. I throw it again.
-             */
-            throw cantConnectToUserException;
-        }
-        
-        return layerUserToUserOnlineConnection;
-
-    }
 
     /**
      * PlatformLayer Interface implementation.
@@ -138,12 +117,43 @@ public class CommunicationLayer implements PlatformLayer, DealsWithPlatformConte
         }
     }
 
+
     /**
-     * DealsWithPlatformContext Interface implementation.
+     * CommunicationLayerManager Interface implementation.
      */
-    
+
     @Override
-    public void setPlatformContext(PlatformContext platformContext) {
-        this.platformContext = platformContext;
+    public void exposeUser(IntraUser intraUser) {
+        
+        this.loggedinIntraUser = intraUser;
+    
     }
+
+    public UserToUserOnlineConnection connectTo (UUID intraUser) throws CantConnectToUserException {
+
+        LayerUserToUserOnlineConnection layerUserToUserOnlineConnection = new LayerUserToUserOnlineConnection(this.loggedinIntraUser, intraUser);
+
+        layerUserToUserOnlineConnection.setCloudPlugin(mCloudPlugin);
+
+        try
+        {
+            layerUserToUserOnlineConnection.connect();
+        }
+        catch (CantConnectToUserException cantConnectToUserException)
+        {
+            System.err.println("CantConnectToUserException: " + cantConnectToUserException.getMessage());
+
+            /**
+             * I can't do anything with this exception here. I throw it again.
+             */
+            throw cantConnectToUserException;
+        }
+
+        return layerUserToUserOnlineConnection;
+
+    }
+    
+    
+
+
 }

@@ -10,6 +10,8 @@ import com.bitdubai.fermat_api.layer._9_communication.CommunicationChannel;
 import com.bitdubai.fermat_api.layer._9_communication.OnlineChannel;
 import com.bitdubai.fermat_api.layer._9_communication.UserToUserOnlineConnection;
 
+import java.util.UUID;
+
 /**
  * Created by ciencias on 2/12/15.
  */
@@ -34,7 +36,7 @@ public class LayerUserToUserOnlineConnection implements UserToUserOnlineConnecti
     IntraUser remoteIntraUser;
     
     
-    public LayerUserToUserOnlineConnection (IntraUser localIntraUser, IntraUser remoteIntraUser) {
+    public LayerUserToUserOnlineConnection (IntraUser localIntraUser, UUID remoteIntraUser) {
         
         
     }
