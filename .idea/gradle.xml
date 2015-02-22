@@ -9,8 +9,8 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/fermat-api" />
             <option value="$PROJECT_DIR$/smart-wallet-android" />
-            <option value="$PROJECT_DIR$/wallet-platform-api" />
             <option value="$PROJECT_DIR$/wallet-platform-core" />
             <option value="$PROJECT_DIR$/wallet-platform-draft" />
             <option value="$PROJECT_DIR$/wallet-platform-plugin-crypto-network-bitcoin-bitdubai" />

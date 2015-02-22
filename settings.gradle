@@ -2,7 +2,7 @@ include 'smart-wallet-android', ':wallet-platform-core', ':wallet-platform-draft
 
 include 'wallet-platform-core'
 
-include 'wallet-platform-api'
+include 'fermat-api'
 
 include 'wallet-platform-plugin-module-wallet-manager-bitdubai'
 
