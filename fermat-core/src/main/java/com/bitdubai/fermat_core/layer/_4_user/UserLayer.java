@@ -14,10 +14,21 @@ import com.bitdubai.fermat_core.layer._4_user.intra_user.IntraUserSubsystem;
  */
 public class UserLayer implements PlatformLayer {
 
-    Addon addon;
+    Addon userManger;
+    Addon intraUser;
+    Addon extraUser;
+    
+    
+    public Addon getIntraUser(){
+        return intraUser;
+    }
+    
+    public Addon getExtraUser(){
+        return extraUser;
+    }
 
     public Addon getUserManager() {
-        return addon;
+        return userManger;
     }
 
     public void start() throws CantStartLayerException {
@@ -29,7 +40,7 @@ public class UserLayer implements PlatformLayer {
 
         try {
             loginSubsystem.start();
-            addon = ((UserSubsystem) loginSubsystem).getAddon();
+            userManger = ((UserSubsystem) loginSubsystem).getAddon();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());
@@ -45,7 +56,7 @@ public class UserLayer implements PlatformLayer {
 
         try {
             intraUserSubsystem.start();
-            addon = ((UserSubsystem) intraUserSubsystem).getAddon();
+            intraUser = ((UserSubsystem) intraUserSubsystem).getAddon();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());
@@ -60,7 +71,7 @@ public class UserLayer implements PlatformLayer {
 
         try {
             extraUserSubsystem.start();
-            addon = ((UserSubsystem) extraUserSubsystem).getAddon();
+            extraUser = ((UserSubsystem) extraUserSubsystem).getAddon();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());

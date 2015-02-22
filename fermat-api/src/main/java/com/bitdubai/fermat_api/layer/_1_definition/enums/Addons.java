@@ -8,7 +8,9 @@ public enum Addons {
     EVENT_MANAGER ("Event Manager"),
     OS ("Os"),
     USER_MANAGER ("User Manager"),
-    LICENSE_MANAGER ("License Manager");
+    LICENSE_MANAGER ("License Manager"),
+    INTRA_USER("Intra User"),
+    EXTRA_USER("Extra User");
 
     private final String key;
 

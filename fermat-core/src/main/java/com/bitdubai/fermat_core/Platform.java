@@ -312,9 +312,38 @@ public class Platform  {
         ((DealsWithEvents) userManager).setEventManager((EventManager) eventManager);
 
         corePlatformContext.addAddon((Addon) userManager, Addons.USER_MANAGER);
+
+        /**
+         *---------------------------------
+         * Addon Extra User
+         * -------------------------------
+         * * * *  
+         */
+        
+        Service extraUser = (Service) ((UserLayer) mUserLayer).getExtraUser();
+
+        ((DealsWithEvents) extraUser).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addAddon((Addon) extraUser, Addons.EXTRA_USER);
+
+
+
+        /**
+         *-------------------------------
+         * Addon Intra User
+         * -----------------------------
+         * * * *  
+         */
         
         
+        Service intraUser = (Service) ((UserLayer) mUserLayer).getIntraUser();
         
+        ((DealsWithEvents) intraUser).setEventManager((EventManager) eventManager);
+        
+        corePlatformContext.addAddon((Addon) intraUser, Addons.INTRA_USER);
+
+
+
         
         
         
