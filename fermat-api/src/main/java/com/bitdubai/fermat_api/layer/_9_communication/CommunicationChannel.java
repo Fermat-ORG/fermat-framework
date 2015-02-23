@@ -18,7 +18,7 @@ public interface CommunicationChannel {
 
     public ServiceToServiceOnlineConnection acceptIncomingNetworkServiceConnectionRequest (NetworkServices networkService, UUID localNetworkService, UUID remoteNetworkService );
 
-    public ServiceToServiceOnlineConnection rejectIncomingNetworkServiceConnectionRequest (NetworkServices networkService, UUID localNetworkService, UUID remoteNetworkService, RejectConnectionRequestReasons reason );
+    public void rejectIncomingNetworkServiceConnectionRequest (NetworkServices networkService, UUID localNetworkService, UUID remoteNetworkService, RejectConnectionRequestReasons reason );
 
 
 

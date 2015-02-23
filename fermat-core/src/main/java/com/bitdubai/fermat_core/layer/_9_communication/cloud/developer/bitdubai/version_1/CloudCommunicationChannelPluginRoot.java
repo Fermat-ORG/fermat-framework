@@ -127,8 +127,8 @@ public class CloudCommunicationChannelPluginRoot implements Service, Communicati
     }
 
     @Override
-    public ServiceToServiceOnlineConnection rejectIncomingNetworkServiceConnectionRequest(NetworkServices networkService, UUID localNetworkService, UUID remoteNetworkService, RejectConnectionRequestReasons reason) {
-        return null;
+    public void rejectIncomingNetworkServiceConnectionRequest(NetworkServices networkService, UUID localNetworkService, UUID remoteNetworkService, RejectConnectionRequestReasons reason) {
+
     }
 
     @Override

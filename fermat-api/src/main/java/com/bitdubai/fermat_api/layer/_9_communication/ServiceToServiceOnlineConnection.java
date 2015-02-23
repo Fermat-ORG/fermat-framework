@@ -9,8 +9,10 @@ public interface ServiceToServiceOnlineConnection {
 
 
     
-    public void connect() throws CantConnectToRemoteServiceException;
+    public void reConnect() throws CantConnectToRemoteServiceException;
     
     public void disconnect();
+    
+    public ConnectionStatus getStatus();
     
 }

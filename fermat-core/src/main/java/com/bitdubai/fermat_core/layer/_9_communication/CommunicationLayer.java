@@ -24,71 +24,27 @@ import java.util.*;
 
 public class CommunicationLayer implements PlatformLayer, CommunicationLayerManager {
 
-    //private Plugin mBluetoohPlugin;
-
     private Plugin mCloudPlugin;
-    /*
-    private Plugin mEmailPlugin;
-    private Plugin mLanPlugin;
-    private Plugin mNfcPlugin;
-    private Plugin mP2PPlugin;
-    private Plugin mSMSPlugin;
-    private Plugin mUriPlugin;
-    */
+
+
+    /**
+     * CommunicationLayerManager Interface member variables.
+     */
+
+    /**
+     * I keep track of the network services registered because each communication channel can go online and offline at 
+     * anytime, and when it is online, I have to register the network services by myself.
+     * * * 
+     */
     
-
-     /*
-    public Plugin getBluetoohPlugin() {
-        return mBluetoohPlugin;
-    }
-
-*/
      private Map<UUID,NetworkServices> networkServices = new HashMap();
 
   
     public Plugin getCloudPlugin() {
         return mCloudPlugin;
     }
-    /*
 
-    public Plugin getEmailPlugin() {
-        return mEmailPlugin;
-    }
-
-    public Plugin getLanPlugin() {
-        return mLanPlugin;
-    }
-
-    public Plugin getNfcPlugin() {
-        return mNfcPlugin;
-    }
-
-    public Plugin getP2PPlugin() {
-        return mP2PPlugin;
-    }
-
-    public Plugin getSMSPlugin() {
-        return mSMSPlugin;
-    }
-
-    public Plugin getUriPlugin() {
-        return mUriPlugin;
-    }
-    */
-
-    /**
-     * CommunicationLayer Interface implementation.
-     */
-
-    
-    /**
-     * Note that it is not possible for the caller of this method to specify which is local user. This user is grabbed
-     * from the current logged in user stored on the Platform context. 
-     */
-
-
-
-
+ 
     /**
      * PlatformLayer Interface implementation.
      */
@@ -152,12 +108,12 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
     }
 
     @Override
-    public ServiceToServiceOnlineConnection rejectIncomingNetworkServiceConnectionRequest(CommunicationChannels communicationChannel, NetworkServices networkService, UUID localNetworkService, UUID remoteNetworkService, RejectConnectionRequestReasons reason) throws CommunicationChannelNotImplemented {
+    public void rejectIncomingNetworkServiceConnectionRequest(CommunicationChannels communicationChannel, NetworkServices networkService, UUID localNetworkService, UUID remoteNetworkService, RejectConnectionRequestReasons reason) throws CommunicationChannelNotImplemented {
 
         switch (communicationChannel) {
 
             case CLOUD:
-                return ((CommunicationChannel) mCloudPlugin).rejectIncomingNetworkServiceConnectionRequest(networkService, localNetworkService, remoteNetworkService, reason);
+                ((CommunicationChannel) mCloudPlugin).rejectIncomingNetworkServiceConnectionRequest(networkService, localNetworkService, remoteNetworkService, reason);
 
         }
 
@@ -167,15 +123,14 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
     /**
      * This is the primary method to connect a local network service to a remote network service.
      */
-    public ServiceToServiceOnlineConnection connectTo (NetworkServices networkServices, UUID networkServiceId) throws CantConnectToRemoteServiceException {
+    public ServiceToServiceOnlineConnection connectTo (NetworkServices networkServices, UUID remoteNetworkService) throws CantConnectToRemoteServiceException {
 
-        LayerServiceToServiceOnlineConnection layerUserToUserOnlineConnection = new LayerServiceToServiceOnlineConnection(networkServices, networkServiceId);
+        LayerServiceToServiceOnlineConnection layerServiceToServiceOnlineConnection = new LayerServiceToServiceOnlineConnection(networkServices, remoteNetworkService);
 
-        //layerUserToUserOnlineConnection.setCloudPlugin(mCloudPlugin);
 
         try
         {
-            layerUserToUserOnlineConnection.connect();
+            layerServiceToServiceOnlineConnection.connect();
         }
         catch (CantConnectToRemoteServiceException cantConnectToRemoteServiceException)
         {
@@ -187,7 +142,7 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
             throw cantConnectToRemoteServiceException;
         }
 
-        return layerUserToUserOnlineConnection;
+        return (ServiceToServiceOnlineConnection) layerServiceToServiceOnlineConnection;
 
     }
     
