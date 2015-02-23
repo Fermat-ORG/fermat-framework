@@ -3,6 +3,9 @@ package com.bitdubai.android.layer._3_os.android.developer.bitdubai.version_1.fi
 import android.content.Context;
 
 import com.bitdubai.fermat_api.layer._3_os.file_system.*;
+import com.bitdubai.fermat_api.layer._3_os.file_system.exceptions.CantLoadFileException;
+import com.bitdubai.fermat_api.layer._3_os.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_api.layer._3_os.file_system.exceptions.WrongOwnerIdException;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -42,7 +45,7 @@ public class AndroidPluginDataFile implements PluginDataFile {
     UUID ownerId;
 
     @Override
-    public String getContent() throws WrongOwnerIdException{
+    public String getContent() throws WrongOwnerIdException {
         try {
             File file = new File(this.context.getFilesDir() +"/"+ this.directoryName, this.fileName);
             InputStream inputStream;

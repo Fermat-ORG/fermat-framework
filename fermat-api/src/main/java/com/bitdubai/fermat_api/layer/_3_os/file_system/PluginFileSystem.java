@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_api.layer._3_os.file_system;
 
+import com.bitdubai.fermat_api.layer._3_os.file_system.exceptions.FileNotFoundException;
+
 import java.util.UUID;
 
 /**

@@ -4,7 +4,7 @@ package com.bitdubai.fermat_api.layer._3_os.database_system;
  * Created by ciencias on 20.01.15.
  */
 
-import com.bitdubai.fermat_api.layer._3_os.file_system.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer._3_os.file_system.exceptions.CantOpenDatabaseException;
 
 import java.util.UUID;
 

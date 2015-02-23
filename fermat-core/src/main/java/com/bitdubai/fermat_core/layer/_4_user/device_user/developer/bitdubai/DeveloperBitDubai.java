@@ -3,7 +3,7 @@ package com.bitdubai.fermat_core.layer._4_user.device_user.developer.bitdubai;
 
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.AddonDeveloper;
-import com.bitdubai.fermat_core.layer._4_user.device_user.developer.bitdubai.version_1.DeviceUserAddonRoot;
+import com.bitdubai.fermat_core.layer._4_user.device_user.developer.bitdubai.version_1.DeviceUserUserAddonRoot;
 
 
 /**
@@ -25,7 +25,7 @@ public class DeveloperBitDubai implements AddonDeveloper {
          * it is easy to choose.
          */
 
-        addon = new DeviceUserAddonRoot();
+        addon = new DeviceUserUserAddonRoot();
 
     }
 

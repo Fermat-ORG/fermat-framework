@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_api.layer._11_middleware;
 
 
-import com.bitdubai.fermat_api.layer._11_middleware.wallet.CantCreateWalletException;
+import com.bitdubai.fermat_api.layer._11_middleware.wallet.exceptions.CantCreateWalletException;
 
 import java.util.UUID;
 

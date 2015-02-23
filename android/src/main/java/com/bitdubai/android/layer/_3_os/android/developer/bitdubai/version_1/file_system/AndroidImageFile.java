@@ -2,8 +2,8 @@ package com.bitdubai.android.layer._3_os.android.developer.bitdubai.version_1.fi
 
 import android.content.Context;
 
-import com.bitdubai.fermat_api.layer._3_os.file_system.CantLoadFileException;
-import com.bitdubai.fermat_api.layer._3_os.file_system.CantPersistFileException;
+import com.bitdubai.fermat_api.layer._3_os.file_system.exceptions.CantLoadFileException;
+import com.bitdubai.fermat_api.layer._3_os.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer._3_os.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer._3_os.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer._3_os.file_system.PluginImageFile;

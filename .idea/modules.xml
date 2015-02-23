@@ -11,12 +11,6 @@
       <module fileurl="file://$PROJECT_DIR$/fermat-plugin-module-wallet-publisher-bitdubai/src/main/fermat-plugin-module-wallet-publisher-bitdubai.iml" filepath="$PROJECT_DIR$/fermat-plugin-module-wallet-publisher-bitdubai/src/main/fermat-plugin-module-wallet-publisher-bitdubai.iml" />
       <module fileurl="file://$PROJECT_DIR$/fermat-plugin-module-wallet-runtime-bitdubai/src/main/fermat-plugin-module-wallet-runtime-bitdubai.iml" filepath="$PROJECT_DIR$/fermat-plugin-module-wallet-runtime-bitdubai/src/main/fermat-plugin-module-wallet-runtime-bitdubai.iml" />
       <module fileurl="file://$PROJECT_DIR$/fermat-plugin-module-wallet-store-bitdubai/src/main/fermat-plugin-module-wallet-store-bitdubai.iml" filepath="$PROJECT_DIR$/fermat-plugin-module-wallet-store-bitdubai/src/main/fermat-plugin-module-wallet-store-bitdubai.iml" />
-      <module fileurl="file://$PROJECT_DIR$/wallet-platform-core/wallet-platform-core.iml" filepath="$PROJECT_DIR$/wallet-platform-core/wallet-platform-core.iml" />
-      <module fileurl="file://$PROJECT_DIR$/wallet-platform-plugin-crypto-network-bitcoin-bitdubai/wallet-platform-plugin-crypto-network-bitcoin-bitdubai.iml" filepath="$PROJECT_DIR$/wallet-platform-plugin-crypto-network-bitcoin-bitdubai/wallet-platform-plugin-crypto-network-bitcoin-bitdubai.iml" />
-      <module fileurl="file://$PROJECT_DIR$/wallet-platform-plugin-module-wallet-manager-bitdubai/wallet-platform-plugin-module-wallet-manager-bitdubai.iml" filepath="$PROJECT_DIR$/wallet-platform-plugin-module-wallet-manager-bitdubai/wallet-platform-plugin-module-wallet-manager-bitdubai.iml" />
-      <module fileurl="file://$PROJECT_DIR$/wallet-platform-plugin-module-wallet-publisher-bitdubai/wallet-platform-plugin-module-wallet-publisher-bitdubai.iml" filepath="$PROJECT_DIR$/wallet-platform-plugin-module-wallet-publisher-bitdubai/wallet-platform-plugin-module-wallet-publisher-bitdubai.iml" />
-      <module fileurl="file://$PROJECT_DIR$/wallet-platform-plugin-module-wallet-runtime-bitdubai/wallet-platform-plugin-module-wallet-runtime-bitdubai.iml" filepath="$PROJECT_DIR$/wallet-platform-plugin-module-wallet-runtime-bitdubai/wallet-platform-plugin-module-wallet-runtime-bitdubai.iml" />
-      <module fileurl="file://$PROJECT_DIR$/wallet-platform-plugin-module-wallet-store-bitdubai/wallet-platform-plugin-module-wallet-store-bitdubai.iml" filepath="$PROJECT_DIR$/wallet-platform-plugin-module-wallet-store-bitdubai/wallet-platform-plugin-module-wallet-store-bitdubai.iml" />
     </modules>
   </component>
 </project>

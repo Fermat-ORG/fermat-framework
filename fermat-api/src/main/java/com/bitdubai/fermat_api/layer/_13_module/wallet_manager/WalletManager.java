@@ -1,5 +1,9 @@
 package com.bitdubai.fermat_api.layer._13_module.wallet_manager;
 
+import com.bitdubai.fermat_api.layer._13_module.wallet_manager.exceptions.CantCreateDefaultWalletsException;
+import com.bitdubai.fermat_api.layer._13_module.wallet_manager.exceptions.CantEnableWalletException;
+import com.bitdubai.fermat_api.layer._13_module.wallet_manager.exceptions.CantLoadWalletsException;
+
 import java.util.List;
 import java.util.UUID;
 

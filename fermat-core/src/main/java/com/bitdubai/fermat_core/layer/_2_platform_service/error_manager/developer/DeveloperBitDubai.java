@@ -2,7 +2,7 @@ package com.bitdubai.fermat_core.layer._2_platform_service.error_manager.develop
 
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.AddonDeveloper;
-import com.bitdubai.fermat_core.layer._2_platform_service.error_manager.developer.version_1.PlatformErrorManagerAddonRoot;
+import com.bitdubai.fermat_core.layer._2_platform_service.error_manager.developer.version_1.ErrorManagerPlatformServiceAddonRoot;
 
 /**
  * Created by ciencias on 05.02.15.
@@ -24,7 +24,7 @@ public class DeveloperBitDubai implements AddonDeveloper {
          * it is easy to choose.
          */
 
-        addon = new PlatformErrorManagerAddonRoot();
+        addon = new ErrorManagerPlatformServiceAddonRoot();
 
     }
 }

@@ -1,5 +1,8 @@
 package com.bitdubai.fermat_api.layer._13_module.wallet_store;
 
+import com.bitdubai.fermat_api.layer._13_module.wallet_store.exceptions.CantRecordInstalledWalletException;
+import com.bitdubai.fermat_api.layer._13_module.wallet_store.exceptions.CantRecordUninstalledWalletException;
+
 import java.util.UUID;
 
 /**

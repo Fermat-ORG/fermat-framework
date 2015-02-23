@@ -4,26 +4,29 @@ import com.bitdubai.fermat_api.CantInitializePluginsManagerException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.PluginNotRecognizedException;
 import com.bitdubai.fermat_api.layer._3_os.file_system.*;
-import com.bitdubai.fermat_core.layer._11_middleware.app_runtime.developer.bitdubai.version_1.AppRuntimePluginRoot;
-import com.bitdubai.fermat_core.layer._11_middleware.bank_notes.developer.bitdubai.version_1.BankNotespluginRoot;
-import com.bitdubai.fermat_core.layer._11_middleware.wallet.developer.bitdubai.version_1.WalletPluginRoot;
-import com.bitdubai.fermat_core.layer._11_middleware.wallet_contacts.developer.bitdubai.version_1.WalletContactsPluginRoot;
+import com.bitdubai.fermat_api.layer._3_os.file_system.exceptions.CantLoadFileException;
+import com.bitdubai.fermat_api.layer._3_os.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_api.layer._3_os.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_core.layer._11_middleware.app_runtime.developer.bitdubai.version_1.AppRuntimeMiddlewarePluginRoot;
+import com.bitdubai.fermat_core.layer._11_middleware.bank_notes.developer.bitdubai.version_1.BankNotesMiddlewarePluginRoot;
+import com.bitdubai.fermat_core.layer._11_middleware.wallet.developer.bitdubai.version_1.WalletMiddlewarePluginRoot;
+import com.bitdubai.fermat_core.layer._11_middleware.wallet_contacts.developer.bitdubai.version_1.WalletContactsMiddlewarePluginRoot;
 import com.bitdubai.fermat_core.layer._12_transaction.incoming_device_user.developer.bitdubai.version_1.IncomingDeviceUserTransactionPluginRoot;
 import com.bitdubai.fermat_core.layer._12_transaction.incoming_extra_user.developer.bitdubai.version_1.IncomingExtraUserTransactionPluginRoot;
 import com.bitdubai.fermat_core.layer._12_transaction.incoming_intra_user.developer.bitdubai.version_1.IncomingIntraUserTransactionPluginRoot;
 import com.bitdubai.fermat_core.layer._12_transaction.inter_wallet.developer.bitdubai.version_1.InterWalletTransactionPluginRoot;
 import com.bitdubai.fermat_core.layer._12_transaction.outgoing_device_user.developer.bitsubai.version_1.OutgoingDeviceUserTransactionPluginRoot;
-import com.bitdubai.fermat_core.layer._12_transaction.outgoing_extra_user.developer.bitdubai.version_1.OutgoingExtrauserPluginRoot;
-import com.bitdubai.fermat_core.layer._12_transaction.outgoing_intra_user.developer.bitdubai.version_1.OutgoingIntraUserPluginRoot;
-import com.bitdubai.fermat_core.layer._6_world.crypto_index.developer.bitdubai.version_1.CryptoIndexPluginRoot;
-import com.bitdubai.fermat_core.layer._8_crypto.address_book.developer.bitdubai.version_1.AddressBookPluginCryptoRoot;
+import com.bitdubai.fermat_core.layer._12_transaction.outgoing_extra_user.developer.bitdubai.version_1.OutgoingExtraUserTransactionPluginRoot;
+import com.bitdubai.fermat_core.layer._12_transaction.outgoing_intra_user.developer.bitdubai.version_1.OutgoingIntraUserTransactionPluginRoot;
+import com.bitdubai.fermat_core.layer._6_world.crypto_index.developer.bitdubai.version_1.CryptoIndexWorldPluginRoot;
+import com.bitdubai.fermat_core.layer._8_crypto.address_book.developer.bitdubai.version_1.AddressBookCryptoPluginRoot;
 import com.bitdubai.fermat_core.layer._9_communication.cloud.developer.bitdubai.version_1.CloudCommunicationChannelPluginRoot;
-import com.bitdubai.fermat_core.layer._10_network_service.bank_notes.developer.bitdubai.version_1.BankNotesPluginRoot;
-import com.bitdubai.fermat_core.layer._10_network_service.wallet_community.developer.bitdubai.version_1.WalletCommunityPluginRoot;
-import com.bitdubai.fermat_core.layer._10_network_service.wallet_resources.developer.bitdubai.version_1.WalletResourcesPluginRoot;
-import com.bitdubai.fermat_core.layer._10_network_service.wallet_store.developer.bitdubai.version_1.WalletStorePluginRoot;
-import com.bitdubai.fermat_plugin.layer._13_module.wallet_manager.developer.bitdubai.version_1.WalletManagerPluginRoot;
-import com.bitdubai.fermat_plugin.layer._13_module.wallet_runtime.developer.bitdubai.version_1.WalletRuntimePluginRoot;
+import com.bitdubai.fermat_core.layer._10_network_service.bank_notes.developer.bitdubai.version_1.BankNotesNetworkServicePluginRoot;
+import com.bitdubai.fermat_core.layer._10_network_service.wallet_community.developer.bitdubai.version_1.WalletCommunityNetworkServicePluginRoot;
+import com.bitdubai.fermat_core.layer._10_network_service.wallet_resources.developer.bitdubai.version_1.WalletResourcesNetworkServicePluginRoot;
+import com.bitdubai.fermat_core.layer._10_network_service.wallet_store.developer.bitdubai.version_1.WalletStoreNetworkServicePluginRoot;
+import com.bitdubai.fermat_plugin.layer._13_module.wallet_manager.developer.bitdubai.version_1.WalletManagerModulePluginRoot;
+import com.bitdubai.fermat_plugin.layer._13_module.wallet_runtime.developer.bitdubai.version_1.WalletRuntimeModulePluginRoot;
 import com.bitdubai.fermat_plugin.layer._7_crypto_network.bitcoin.developer.bitdubai.version_1.BitcoinCryptoNetworkPluginRoot;
 
 import java.util.ArrayList;
@@ -155,8 +158,8 @@ public class PluginsIdentityManager {
         if (pluginIndex == 0) {
             try
             {
-                CryptoIndexPluginRoot tryType;
-                tryType = (CryptoIndexPluginRoot) plugin;
+                CryptoIndexWorldPluginRoot tryType;
+                tryType = (CryptoIndexWorldPluginRoot) plugin;
                 pluginIndex = 0;
             }
             catch (Exception e)
@@ -200,8 +203,8 @@ public class PluginsIdentityManager {
         if (pluginIndex == 0) {
             try
             {
-                WalletPluginRoot tryType;
-                tryType = (WalletPluginRoot) plugin;
+                WalletMiddlewarePluginRoot tryType;
+                tryType = (WalletMiddlewarePluginRoot) plugin;
                 pluginIndex = 3;
             }
             catch (Exception e)
@@ -214,8 +217,8 @@ public class PluginsIdentityManager {
         if (pluginIndex == 0) {
             try
             {
-                WalletManagerPluginRoot tryType;
-                tryType = (WalletManagerPluginRoot) plugin;
+                WalletManagerModulePluginRoot tryType;
+                tryType = (WalletManagerModulePluginRoot) plugin;
                 pluginIndex = 4;
             }
             catch (Exception e)
@@ -228,8 +231,8 @@ public class PluginsIdentityManager {
         if (pluginIndex == 0) {
             try
             {
-                WalletRuntimePluginRoot tryType;
-                tryType = (WalletRuntimePluginRoot) plugin;
+                WalletRuntimeModulePluginRoot tryType;
+                tryType = (WalletRuntimeModulePluginRoot) plugin;
                 pluginIndex = 5;
             }
             catch (Exception e)
@@ -243,8 +246,8 @@ public class PluginsIdentityManager {
         if (pluginIndex == 0) {
             try
             {
-                AppRuntimePluginRoot tryType;
-                tryType = (AppRuntimePluginRoot) plugin;
+                AppRuntimeMiddlewarePluginRoot tryType;
+                tryType = (AppRuntimeMiddlewarePluginRoot) plugin;
                 pluginIndex = 6;
             }
             catch (Exception e)
@@ -305,8 +308,8 @@ public class PluginsIdentityManager {
         if (pluginIndex == 0) {
             try
             {
-                CryptoIndexPluginRoot tryType;
-                tryType = (CryptoIndexPluginRoot) plugin;
+                CryptoIndexWorldPluginRoot tryType;
+                tryType = (CryptoIndexWorldPluginRoot) plugin;
                 pluginIndex = 10;
             }
             catch (Exception e)
@@ -335,8 +338,8 @@ public class PluginsIdentityManager {
         if (pluginIndex == 0) {
             try
             {
-                BankNotespluginRoot tryType;
-                tryType = (BankNotespluginRoot) plugin;
+                BankNotesMiddlewarePluginRoot tryType;
+                tryType = (BankNotesMiddlewarePluginRoot) plugin;
                 pluginIndex = 12;
             }
             catch (Exception e)
@@ -350,8 +353,8 @@ public class PluginsIdentityManager {
         if (pluginIndex == 0) {
             try
             {
-                BankNotesPluginRoot tryType;
-                tryType = (BankNotesPluginRoot) plugin;
+                BankNotesNetworkServicePluginRoot tryType;
+                tryType = (BankNotesNetworkServicePluginRoot) plugin;
                 pluginIndex = 13;
             }
             catch (Exception e)
@@ -365,8 +368,8 @@ public class PluginsIdentityManager {
         if (pluginIndex == 0) {
             try
             {
-                WalletResourcesPluginRoot tryType;
-                tryType = (WalletResourcesPluginRoot) plugin;
+                WalletResourcesNetworkServicePluginRoot tryType;
+                tryType = (WalletResourcesNetworkServicePluginRoot) plugin;
                 pluginIndex = 14;
             }
             catch (Exception e)
@@ -380,8 +383,8 @@ public class PluginsIdentityManager {
         if (pluginIndex == 0) {
             try
             {
-                WalletStorePluginRoot tryType;
-                tryType = (WalletStorePluginRoot) plugin;
+                WalletStoreNetworkServicePluginRoot tryType;
+                tryType = (WalletStoreNetworkServicePluginRoot) plugin;
                 pluginIndex = 15;
             }
             catch (Exception e)
@@ -395,8 +398,8 @@ public class PluginsIdentityManager {
         if (pluginIndex == 0) {
             try
             {
-                WalletContactsPluginRoot tryType;
-                tryType = (WalletContactsPluginRoot) plugin;
+                WalletContactsMiddlewarePluginRoot tryType;
+                tryType = (WalletContactsMiddlewarePluginRoot) plugin;
                 pluginIndex = 16;
             }
             catch (Exception e)
@@ -410,8 +413,8 @@ public class PluginsIdentityManager {
         if (pluginIndex == 0) {
             try
             {
-                WalletCommunityPluginRoot tryType;
-                tryType = (WalletCommunityPluginRoot) plugin;
+                WalletCommunityNetworkServicePluginRoot tryType;
+                tryType = (WalletCommunityNetworkServicePluginRoot) plugin;
                 pluginIndex = 17;
             }
             catch (Exception e)
@@ -425,8 +428,8 @@ public class PluginsIdentityManager {
         if (pluginIndex == 0) {
             try
             {
-                AddressBookPluginCryptoRoot tryType;
-                tryType = (AddressBookPluginCryptoRoot) plugin;
+                AddressBookCryptoPluginRoot tryType;
+                tryType = (AddressBookCryptoPluginRoot) plugin;
                 pluginIndex = 18;
             }
             catch (Exception e)
@@ -455,8 +458,8 @@ public class PluginsIdentityManager {
         if (pluginIndex == 0) {
             try
             {
-                OutgoingExtrauserPluginRoot tryType;
-                tryType = (OutgoingExtrauserPluginRoot) plugin;
+                OutgoingExtraUserTransactionPluginRoot tryType;
+                tryType = (OutgoingExtraUserTransactionPluginRoot) plugin;
                 pluginIndex = 20;
             }
             catch (Exception e)
@@ -470,8 +473,8 @@ public class PluginsIdentityManager {
         if (pluginIndex == 0) {
             try
             {
-                OutgoingIntraUserPluginRoot tryType;
-                tryType = (OutgoingIntraUserPluginRoot) plugin;
+                OutgoingIntraUserTransactionPluginRoot tryType;
+                tryType = (OutgoingIntraUserTransactionPluginRoot) plugin;
                 pluginIndex = 21;
             }
             catch (Exception e)

@@ -17,13 +17,13 @@ import com.bitdubai.android.layer._3_os.android.developer.bitdubai.version_1.dat
 import com.bitdubai.android.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidPlatformFileSystem;
 
 import com.bitdubai.android.layer._3_os.android.developer.bitdubai.version_1.file_system.AndroidPluginFileSystem;
-import com.bitdubai.fermat_api.layer._3_os.file_system.CantLoadFileException;
+import com.bitdubai.fermat_api.layer._3_os.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer._3_os.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer._3_os.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer._3_os.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer._3_os.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer._3_os.file_system.FilePrivacy;
-import com.bitdubai.fermat_api.layer._3_os.file_system.CantPersistFileException;
+import com.bitdubai.fermat_api.layer._3_os.file_system.exceptions.CantPersistFileException;
 import android.content.Context;
 import android.widget.TextView;
 import com.bitdubai.android.layer._3_os.android.developer.bitdubai.version_1.database_system.AndroidPluginDatabaseSystem;

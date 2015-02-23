@@ -14,7 +14,7 @@ import com.bitdubai.fermat_core.layer._4_user.intra_user.IntraUserSubsystem;
  */
 public class UserLayer implements PlatformLayer {
 
-    Addon userManger;
+    Addon deviceUser;
     Addon intraUser;
     Addon extraUser;
     
@@ -27,8 +27,8 @@ public class UserLayer implements PlatformLayer {
         return extraUser;
     }
 
-    public Addon getUserManager() {
-        return userManger;
+    public Addon getDeviceUser() {
+        return deviceUser;
     }
 
     public void start() throws CantStartLayerException {
@@ -36,11 +36,11 @@ public class UserLayer implements PlatformLayer {
         /**
          * Let's start the Login Subsystem;
          */
-        UserSubsystem loginSubsystem = new DeviceUserSubsystem();
+        UserSubsystem deviceUserSubsystem = new DeviceUserSubsystem();
 
         try {
-            loginSubsystem.start();
-            userManger = ((UserSubsystem) loginSubsystem).getAddon();
+            deviceUserSubsystem.start();
+            deviceUser = deviceUserSubsystem.getAddon();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());
@@ -56,7 +56,7 @@ public class UserLayer implements PlatformLayer {
 
         try {
             intraUserSubsystem.start();
-            intraUser = ((UserSubsystem) intraUserSubsystem).getAddon();
+            intraUser = intraUserSubsystem.getAddon();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());
@@ -71,7 +71,7 @@ public class UserLayer implements PlatformLayer {
 
         try {
             extraUserSubsystem.start();
-            extraUser = ((UserSubsystem) extraUserSubsystem).getAddon();
+            extraUser = extraUserSubsystem.getAddon();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());

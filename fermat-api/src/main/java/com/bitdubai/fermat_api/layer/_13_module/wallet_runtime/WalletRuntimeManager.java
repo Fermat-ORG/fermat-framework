@@ -1,5 +1,8 @@
 package com.bitdubai.fermat_api.layer._13_module.wallet_runtime;
 
+import com.bitdubai.fermat_api.layer._13_module.wallet_runtime.exceptions.CantRecordClosedWalletException;
+import com.bitdubai.fermat_api.layer._13_module.wallet_runtime.exceptions.CantRecordOpenedWalletException;
+
 import java.util.UUID;
 
 /**
@@ -7,7 +10,7 @@ import java.util.UUID;
  */
 public interface WalletRuntimeManager {
     
-    public void recordOpenedWallet (UUID walletId) throws CantRecordOpenedWalletException; 
+    public void recordOpenedWallet (UUID walletId) throws CantRecordOpenedWalletException;
     
     public void recordClosedWallet (UUID walletId) throws CantRecordClosedWalletException;
     

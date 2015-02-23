@@ -210,21 +210,15 @@ public class Platform  {
         /**
          * Some Layers need the Platform context.
          */
-        
-        ((DealsWithPlatformContext) mCommunicationLayer).setPlatformContext(corePlatformContext);
+        try {
+            ((DealsWithPlatformContext) mCommunicationLayer).setPlatformContext(corePlatformContext);
+        }
+        catch (Exception e){
 
+            System.err.println("Error: " + e.getMessage());
+        }
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+
 
         /**
          * -----------------------------------------------------------------------------------------------------------
@@ -313,12 +307,12 @@ public class Platform  {
          * persistent media.
          */
 
-        Service userManager = (Service) ((UserLayer) mUserLayer).getUserManager();
+        Service deviceUser = (Service) ((UserLayer) mUserLayer).getDeviceUser();
 
-        ((DealsWithPlatformFileSystem) userManager).setPlatformFileSystem(os.getPlatformFileSystem());
-        ((DealsWithEvents) userManager).setEventManager((EventManager) eventManager);
+        ((DealsWithPlatformFileSystem) deviceUser).setPlatformFileSystem(os.getPlatformFileSystem());
+        ((DealsWithEvents) deviceUser).setEventManager((EventManager) eventManager);
 
-        corePlatformContext.addAddon((Addon) userManager, Addons.USER_MANAGER);
+        corePlatformContext.addAddon((Addon) deviceUser, Addons.USER_MANAGER);
 
         /**
          *---------------------------------
@@ -328,6 +322,8 @@ public class Platform  {
          */
         
         Service extraUser = (Service) ((UserLayer) mUserLayer).getExtraUser();
+
+        ((DealsWithPlatformFileSystem) extraUser).setPlatformFileSystem(os.getPlatformFileSystem());
 
         ((DealsWithEvents) extraUser).setEventManager((EventManager) eventManager);
 
@@ -344,23 +340,14 @@ public class Platform  {
         
         
         Service intraUser = (Service) ((UserLayer) mUserLayer).getIntraUser();
-        
+
+        ((DealsWithPlatformFileSystem) intraUser).setPlatformFileSystem(os.getPlatformFileSystem());
+
         ((DealsWithEvents) intraUser).setEventManager((EventManager) eventManager);
         
         corePlatformContext.addAddon((Addon) intraUser, Addons.INTRA_USER);
 
 
-
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         /**

@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer._3_os.file_system.DealsWithPluginFileSystem
 import com.bitdubai.fermat_api.layer._3_os.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer._9_communication.CommunicationChannel;
 import com.bitdubai.fermat_api.layer._9_communication.OnlineChannel;
+import com.bitdubai.fermat_core.layer._9_communication.cloud.developer.bitdubai.version_1.structure.CloudOnlineChannel;
 
 import java.util.ArrayList;
 import java.util.List;

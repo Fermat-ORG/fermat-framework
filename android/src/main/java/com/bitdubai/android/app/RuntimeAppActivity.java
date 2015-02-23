@@ -106,11 +106,11 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             this.Os.setContext(this);
             platform.setOs(Os);
 
-            platform.start();
-
             this.platformContext = platform.getCorePlatformContext();
 
             this.appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.APP_RUNTIME_MIDDLEWARE);
+            
+            platform.start();
 
             NavigateActivity();
 

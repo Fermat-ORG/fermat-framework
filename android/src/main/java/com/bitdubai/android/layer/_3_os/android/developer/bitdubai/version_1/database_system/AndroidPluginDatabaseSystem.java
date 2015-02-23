@@ -2,7 +2,7 @@ package com.bitdubai.android.layer._3_os.android.developer.bitdubai.version_1.da
 
 import android.content.Context;
 
-import com.bitdubai.fermat_api.layer._3_os.file_system.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer._3_os.file_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer._3_os.database_system.Database;
 import com.bitdubai.fermat_api.layer._3_os.database_system.PluginDatabaseSystem;
 import android.database.sqlite.SQLiteOpenHelper;

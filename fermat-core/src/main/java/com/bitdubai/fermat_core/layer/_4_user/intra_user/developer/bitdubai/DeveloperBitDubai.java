@@ -2,7 +2,7 @@ package com.bitdubai.fermat_core.layer._4_user.intra_user.developer.bitdubai;
 
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.AddonDeveloper;
-import com.bitdubai.fermat_core.layer._4_user.intra_user.developer.bitdubai.version_1.IntraUserAddonRoot;
+import com.bitdubai.fermat_core.layer._4_user.intra_user.developer.bitdubai.version_1.IntraUserUserAddonRoot;
 
 /**
  * Created by loui on 22/02/15.
@@ -23,7 +23,7 @@ public class DeveloperBitDubai implements AddonDeveloper {
          * it is easy to choose.
          */
 
-        addon = new IntraUserAddonRoot();
+        addon = new IntraUserUserAddonRoot();
 
     }
 
