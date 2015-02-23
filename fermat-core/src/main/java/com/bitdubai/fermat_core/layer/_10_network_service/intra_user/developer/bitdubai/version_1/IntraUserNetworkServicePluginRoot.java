@@ -212,16 +212,14 @@ public class IntraUserNetworkServicePluginRoot implements Service, NetworkServic
         this.pluginFileSystem = pluginFileSystem;
     }
 
-
     /**
      * DealWithEvents Interface implementation.
      */
-    
+
     @Override
     public void setEventManager(EventManager eventManager) {
-
+        this.eventManager = eventManager;
     }
-
 
     /**
      *DealWithErrors Interface implementation.

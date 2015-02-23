@@ -207,18 +207,6 @@ public class Platform  {
         }
 
 
-        /**
-         * Some Layers need the Platform context.
-         */
-        try {
-            ((DealsWithPlatformContext) mCommunicationLayer).setPlatformContext(corePlatformContext);
-        }
-        catch (Exception e){
-
-            System.err.println("Error: " + e.getMessage());
-        }
-        
-
 
         /**
          * -----------------------------------------------------------------------------------------------------------
@@ -312,7 +300,7 @@ public class Platform  {
         ((DealsWithPlatformFileSystem) deviceUser).setPlatformFileSystem(os.getPlatformFileSystem());
         ((DealsWithEvents) deviceUser).setEventManager((EventManager) eventManager);
 
-        corePlatformContext.addAddon((Addon) deviceUser, Addons.USER_MANAGER);
+        corePlatformContext.addAddon((Addon) deviceUser, Addons.DEVICE_USER);
 
         /**
          *---------------------------------
@@ -323,8 +311,8 @@ public class Platform  {
         
         Service extraUser = (Service) ((UserLayer) mUserLayer).getExtraUser();
 
-        ((DealsWithPlatformFileSystem) extraUser).setPlatformFileSystem(os.getPlatformFileSystem());
-
+            ((DealsWithPlatformFileSystem) extraUser).setPlatformFileSystem(os.getPlatformFileSystem());
+        
         ((DealsWithEvents) extraUser).setEventManager((EventManager) eventManager);
 
         corePlatformContext.addAddon((Addon) extraUser, Addons.EXTRA_USER);
@@ -492,8 +480,14 @@ public class Platform  {
 
             UUID pluginID = pluginsIdentityManager.getPluginId(addressBookCrypto);
             (addressBookCrypto).setId(pluginID);
-
-            ((Service) addressBookCrypto).start();
+            
+            try {
+                ((Service) addressBookCrypto).start();
+            }
+            catch (Exception e){
+                System.err.println(e.getMessage());
+                
+            }
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {

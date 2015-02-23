@@ -10,9 +10,11 @@ import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.DealsWith
 import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventHandler;
 import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventType;
 import com.bitdubai.fermat_api.layer._3_os.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer._3_os.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer._10_network_service.NetworkService;
+import com.bitdubai.fermat_core.layer._10_network_service.wallet_community.developer.bitdubai.version_1.event_handlers.FinishedWalletInstallationEventHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,14 +71,14 @@ public class WalletCommunityNetworkServicePluginRoot implements Service, Network
 
         EventListener eventListener;
         EventHandler eventHandler;
-/*
+
         eventListener = eventManager.getNewListener(EventType.FINISHED_WALLET_INSTALLATION);
         eventHandler = new FinishedWalletInstallationEventHandler();
         ((FinishedWalletInstallationEventHandler) eventHandler).setWalletCommunityManager(this);
         eventListener.setEventHandler(eventHandler);
         eventManager.addListener(eventListener);
         listenersAdded.add(eventListener);
-*/
+
         this.serviceStatus = ServiceStatus.STARTED;
 
     }
@@ -142,7 +144,7 @@ public class WalletCommunityNetworkServicePluginRoot implements Service, Network
 
     @Override
     public void setEventManager(EventManager eventManager) {
-
+        this.eventManager = eventManager;
     }
 
 

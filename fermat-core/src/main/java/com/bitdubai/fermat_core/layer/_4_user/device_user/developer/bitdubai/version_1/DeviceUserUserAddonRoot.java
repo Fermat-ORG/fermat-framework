@@ -62,12 +62,6 @@ public class DeviceUserUserAddonRoot implements Service, User, DeviceUserManager
     EventManager eventManager;
 
     /**
-     * Plugin Interface member variables.
-     */
-    UUID pluginId;
-
-
-    /**
      * PlatformService Interface implementation.
      */
 

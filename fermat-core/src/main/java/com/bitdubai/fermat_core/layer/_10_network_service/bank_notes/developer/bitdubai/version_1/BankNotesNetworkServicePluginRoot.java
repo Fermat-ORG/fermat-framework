@@ -134,7 +134,7 @@ public class BankNotesNetworkServicePluginRoot implements Service, NetworkServic
 
     @Override
     public void setEventManager(EventManager eventManager) {
-
+        this.eventManager = eventManager;
     }
 
 

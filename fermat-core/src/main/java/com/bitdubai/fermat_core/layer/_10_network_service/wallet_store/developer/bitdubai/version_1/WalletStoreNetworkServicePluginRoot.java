@@ -138,8 +138,9 @@ public class WalletStoreNetworkServicePluginRoot implements Service, NetworkServ
 
     @Override
     public void setEventManager(EventManager eventManager) {
-
+        this.eventManager = eventManager;
     }
+
 
 
     /**

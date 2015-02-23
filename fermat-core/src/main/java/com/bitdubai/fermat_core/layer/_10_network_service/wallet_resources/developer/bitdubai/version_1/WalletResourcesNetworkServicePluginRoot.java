@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.events.Wa
 import com.bitdubai.fermat_api.layer._3_os.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer._3_os.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer._10_network_service.NetworkService;
+import com.bitdubai.fermat_core.layer._10_network_service.wallet_resources.developer.bitdubai.version_1.event_handlers.BegunWalletInstallationEventHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,7 +78,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
         EventListener eventListener;
         EventHandler eventHandler;
-/*
+
         eventListener = eventManager.getNewListener(EventType.BEGUN_WALLET_INSTALLATION);
         eventHandler = new BegunWalletInstallationEventHandler();
         ((BegunWalletInstallationEventHandler) eventHandler).setWalletResourcesManager(this);
@@ -85,7 +86,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         eventManager.addListener(eventListener);
         listenersAdded.add(eventListener);
 
-  */
+
         this.serviceStatus = ServiceStatus.STARTED;
 
     }
@@ -167,8 +168,9 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
     @Override
     public void setEventManager(EventManager eventManager) {
-
+        this.eventManager = eventManager;
     }
+
 
 
     /**

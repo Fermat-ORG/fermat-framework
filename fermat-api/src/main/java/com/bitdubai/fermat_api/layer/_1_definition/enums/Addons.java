@@ -7,7 +7,7 @@ public enum Addons {
     ERROR_MANAGER ("Error Manager"),
     EVENT_MANAGER ("Event Manager"),
     OS ("Os"),
-    USER_MANAGER ("User Manager"),
+    DEVICE_USER ("Device user"),
     LICENSE_MANAGER ("License Manager"),
     INTRA_USER("Intra User"),
     EXTRA_USER("Extra User");

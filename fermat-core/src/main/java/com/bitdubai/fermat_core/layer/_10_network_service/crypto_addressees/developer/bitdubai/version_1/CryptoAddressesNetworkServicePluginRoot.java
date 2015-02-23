@@ -123,7 +123,7 @@ public class CryptoAddressesNetworkServicePluginRoot implements Service, Network
 
     @Override
     public void setEventManager(EventManager eventManager) {
-
+        this.eventManager = eventManager;
     }
 
 

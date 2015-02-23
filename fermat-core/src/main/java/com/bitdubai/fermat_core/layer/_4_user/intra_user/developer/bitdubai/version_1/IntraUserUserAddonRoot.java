@@ -12,6 +12,8 @@ import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventList
 import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventSource;
 import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventType;
+import com.bitdubai.fermat_api.layer._3_os.file_system.DealsWithPlatformFileSystem;
+import com.bitdubai.fermat_api.layer._3_os.file_system.PlatformFileSystem;
 import com.bitdubai.fermat_api.layer._4_user.User;
 import com.bitdubai.fermat_api.layer._4_user.device_user.DealsWithDeviceUsers;
 import com.bitdubai.fermat_api.layer._4_user.device_user.DeviceUserManager;
@@ -36,7 +38,7 @@ import java.util.UUID;
  * * * * * *
  */
 
-public class IntraUserUserAddonRoot implements Service, User, IntraUserManager, DealsWithEvents, DealsWithErrors, DealsWithDeviceUsers,  Addon {
+public class IntraUserUserAddonRoot implements Service, User, IntraUserManager, DealsWithEvents, DealsWithPlatformFileSystem, DealsWithErrors, DealsWithDeviceUsers,  Addon {
 
     /**
      * Service Interface member variables.
@@ -107,23 +109,46 @@ public class IntraUserUserAddonRoot implements Service, User, IntraUserManager, 
         return serviceStatus;
     }
 
+    /**
+     * DealWithErrors Interface implementation.
+     */
+
     @Override
     public void setErrorManager(ErrorManager errorManager) {
 
     }
 
+    /**
+     * DealWithEvents Interface implementation.
+     */
+
     @Override
     public void setEventManager(EventManager eventManager) {
+        this.eventManager = eventManager;
+    }
+   
+   
+    /**
+     * DealWithPlatformFileSystem Interface implementation.
+     */
+    @Override
+    public void setPlatformFileSystem(PlatformFileSystem platformFileSystem) {
 
     }
-
+        
+    
+    /**
+     * DealWithDeviceUser Interface implementation.
+     */   
     @Override
     public void crateUser(UUID userId) throws CantCreateIntraUserException {
         
     }
-
+    
     @Override
     public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
         
     }
+
+
 }

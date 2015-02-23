@@ -139,14 +139,13 @@ public class MoneyNetworkServicePluginRoot implements Service, NetworkService, M
         this.pluginFileSystem = pluginFileSystem;
     }
 
-
     /**
      * DealWithEvents Interface implementation.
      */
 
     @Override
     public void setEventManager(EventManager eventManager) {
-
+        this.eventManager = eventManager;
     }
 
 

@@ -32,6 +32,7 @@ import com.bitdubai.fermat_api.layer._3_os.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer._4_user.device_user.DeviceUser;
 import com.bitdubai.fermat_api.layer._8_crypto.Crypto;
 import com.bitdubai.fermat_api.layer._8_crypto.address_book.AddressBookManager;
+import com.bitdubai.fermat_api.layer._8_crypto.address_book.exceptions.ExampleException;
 import com.bitdubai.fermat_core.layer._8_crypto.address_book.developer.bitdubai.version_1.event_handlers.IncomingCryptoIdentifiedEventHandler;
 import com.bitdubai.fermat_core.layer._8_crypto.address_book.developer.bitdubai.version_1.event_handlers.IncomingCryptoReceivedEventHandler;
 import com.bitdubai.fermat_core.layer._8_crypto.address_book.developer.bitdubai.version_1.event_handlers.IncomingCryptoReceptionConfimedEventHandler;
@@ -223,6 +224,13 @@ public class AddressBookCryptoPluginRoot implements Service, Crypto, AddressBook
         return this.serviceStatus;
     }
 
+    /**
+     * Address Book Manager implementation. 
+     */
+    @Override
+    public void exampleMethod() throws ExampleException {
+
+    }
     
     /**
      * UsesFileSystem Interface implementation.
@@ -240,7 +248,7 @@ public class AddressBookCryptoPluginRoot implements Service, Crypto, AddressBook
 
     @Override
     public void setEventManager(EventManager eventManager) {
-
+        this.eventManager = eventManager;
     }
 
 
@@ -262,6 +270,7 @@ public class AddressBookCryptoPluginRoot implements Service, Crypto, AddressBook
     public void setId(UUID pluginId) {
         this.pluginId = pluginId;
     }
+
 
 
 }

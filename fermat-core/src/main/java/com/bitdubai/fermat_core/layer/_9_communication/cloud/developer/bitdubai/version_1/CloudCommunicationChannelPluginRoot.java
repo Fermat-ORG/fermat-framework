@@ -123,11 +123,12 @@ public class CloudCommunicationChannelPluginRoot implements Service, Communicati
     /**
      * DealWithEvents Interface implementation.
      */
-    
+
     @Override
     public void setEventManager(EventManager eventManager) {
-
+        this.eventManager = eventManager;
     }
+
 
     
     /**
