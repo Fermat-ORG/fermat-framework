@@ -15,8 +15,15 @@ import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.DealsWith
 import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventHandler;
 import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventType;
 import com.bitdubai.fermat_api.layer._3_os.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer._3_os.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer._8_crypto.address_book.exceptions.ExampleException;
+import com.bitdubai.fermat_core.layer._12_transaction.incoming_intra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoIdentifiedFromIntraUserEventHandler;
+import com.bitdubai.fermat_core.layer._12_transaction.incoming_intra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoReceivedFromIntraUserEventHandler;
+import com.bitdubai.fermat_core.layer._12_transaction.incoming_intra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoReceptionConfirmedFromIntraUserEventHandler;
+import com.bitdubai.fermat_core.layer._12_transaction.incoming_intra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoReversedFromIntraUserEventHandler;
+import com.bitdubai.fermat_core.layer._12_transaction.incoming_intra_user.developer.bitdubai.version_1.event_handlers.MoneyReceivedEventHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,6 +82,46 @@ public class IncomingIntraUserTransactionPluginRoot implements Service, Transact
         EventHandler eventHandler;
 
 
+        eventListener = eventManager.getNewListener(EventType.MONEY_RECEIVED);
+        eventHandler = new MoneyReceivedEventHandler();
+        ((MoneyReceivedEventHandler) eventHandler).setIncomingIntraUserManager(this);
+        eventListener.setEventHandler(eventHandler);
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);
+
+        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_IDENTIFIED_FROM_INTRA_USER);
+        eventHandler = new IncomingCryptoIdentifiedFromIntraUserEventHandler();
+        ((IncomingCryptoIdentifiedFromIntraUserEventHandler) eventHandler).setIncomingIntraUserManager(this);
+        eventListener.setEventHandler(eventHandler);
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);
+
+
+        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_RECEIVED_FROM_INTRA_USER);
+        eventHandler = new IncomingCryptoReceivedFromIntraUserEventHandler();
+        ((IncomingCryptoReceivedFromIntraUserEventHandler) eventHandler).setIncomingIntraUserManager(this);
+        eventListener.setEventHandler(eventHandler);
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);
+
+
+        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_INTRA_USER);
+        eventHandler = new IncomingCryptoReceptionConfirmedFromIntraUserEventHandler();
+        ((IncomingCryptoReceptionConfirmedFromIntraUserEventHandler) eventHandler).setIncomingIntraUserManager(this);
+        eventListener.setEventHandler(eventHandler);
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);
+
+        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_REVERSED_FROM_INTRA_USER);
+        eventHandler = new IncomingCryptoReversedFromIntraUserEventHandler();
+        ((IncomingCryptoReversedFromIntraUserEventHandler) eventHandler).setIncomingIntraUserManager(this);
+        eventListener.setEventHandler(eventHandler);
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);
+        
+        
+
+
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
@@ -111,6 +158,16 @@ public class IncomingIntraUserTransactionPluginRoot implements Service, Transact
     }
 
 
+
+    /**
+     * Incoming Intra User Manager Interface implementation.
+     */
+    
+    @Override
+    public void exampleMethod() throws ExampleException {
+
+    }
+    
     /**
      * UsesFileSystem Interface implementation.
      */
@@ -144,7 +201,6 @@ public class IncomingIntraUserTransactionPluginRoot implements Service, Transact
     public void setId(UUID pluginId) {
         this.pluginId = pluginId;
     }
-
 
 
 }

@@ -15,8 +15,14 @@ import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.DealsWith
 import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventHandler;
 import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventType;
 import com.bitdubai.fermat_api.layer._3_os.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer._3_os.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer._8_crypto.address_book.exceptions.ExampleException;
+import com.bitdubai.fermat_core.layer._12_transaction.incoming_extra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoIdentifiedFromExtraUserEventHandler;
+import com.bitdubai.fermat_core.layer._12_transaction.incoming_extra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoReceivedFromExtraUserEventHandler;
+import com.bitdubai.fermat_core.layer._12_transaction.incoming_extra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoReceptionConfirmedFromExtraUserEventHandler;
+import com.bitdubai.fermat_core.layer._12_transaction.incoming_extra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoReversedFromExtraUserEventHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,6 +88,36 @@ public class IncomingExtraUserTransactionPluginRoot implements Service, Transact
         EventHandler eventHandler;
 
 
+        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_IDENTIFIED_FROM_EXTRA_USER);
+        eventHandler = new IncomingCryptoIdentifiedFromExtraUserEventHandler();
+        ((IncomingCryptoIdentifiedFromExtraUserEventHandler) eventHandler).setIncomingExtraUserManager(this);
+        eventListener.setEventHandler(eventHandler);
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);
+
+
+        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_RECEIVED_FROM_EXTRA_USER);
+        eventHandler = new IncomingCryptoReceivedFromExtraUserEventHandler();
+        ((IncomingCryptoReceivedFromExtraUserEventHandler) eventHandler).setIncomingExtraUserManager(this);
+        eventListener.setEventHandler(eventHandler);
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);
+
+
+        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_EXTRA_USER);
+        eventHandler = new IncomingCryptoReceptionConfirmedFromExtraUserEventHandler();
+        ((IncomingCryptoReceptionConfirmedFromExtraUserEventHandler) eventHandler).setIncomingExtraUserManager(this);
+        eventListener.setEventHandler(eventHandler);
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);
+
+        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_REVERSED_FROM_EXTRA_USER);
+        eventHandler = new IncomingCryptoReversedFromExtraUserEventHandler();
+        ((IncomingCryptoReversedFromExtraUserEventHandler) eventHandler).setIncomingExtraUserManager(this);
+        eventListener.setEventHandler(eventHandler);
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);
+
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
@@ -117,6 +153,14 @@ public class IncomingExtraUserTransactionPluginRoot implements Service, Transact
         return this.serviceStatus;
     }
 
+    /**
+     * IncomingExtraUserManager Interface implementation.
+     */
+
+    @Override
+    public void exampleMethod() throws ExampleException {
+
+    }
 
     /**
      * UsesFileSystem Interface implementation.
@@ -151,7 +195,6 @@ public class IncomingExtraUserTransactionPluginRoot implements Service, Transact
     public void setId(UUID pluginId) {
         this.pluginId = pluginId;
     }
-
 
 
 }

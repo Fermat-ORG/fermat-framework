@@ -11,8 +11,14 @@ import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.DealsWith
 import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventHandler;
 import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventType;
 import com.bitdubai.fermat_api.layer._3_os.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer._3_os.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer._8_crypto.address_book.exceptions.ExampleException;
+import com.bitdubai.fermat_core.layer._12_transaction.incoming_device_user.developer.bitdubai.version_1.Event_handlers.IncomingCryptoIdentifiedFromDeviceUserEventHandler;
+import com.bitdubai.fermat_core.layer._12_transaction.incoming_device_user.developer.bitdubai.version_1.Event_handlers.IncomingCryptoReceivedFromDeviceUserEventHandler;
+import com.bitdubai.fermat_core.layer._12_transaction.incoming_device_user.developer.bitdubai.version_1.Event_handlers.IncomingCryptoReceptionConfirmedFromDeviceUserEventHandler;
+import com.bitdubai.fermat_core.layer._12_transaction.incoming_device_user.developer.bitdubai.version_1.Event_handlers.IncomingCryptoReversedFromDeviceUserEventHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,6 +82,35 @@ public class IncomingDeviceUserTransactionPluginRoot implements Service, Transac
         EventListener eventListener;
         EventHandler eventHandler;
 
+        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_IDENTIFIED_FROM_DEVICE_USER);
+        eventHandler = new IncomingCryptoIdentifiedFromDeviceUserEventHandler();
+        ((IncomingCryptoIdentifiedFromDeviceUserEventHandler) eventHandler).setIncomingDeviceUserManager(this);
+        eventListener.setEventHandler(eventHandler);
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);
+
+
+        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_RECEIVED_FROM_DEVICE_USER);
+        eventHandler = new IncomingCryptoReceivedFromDeviceUserEventHandler();
+        ((IncomingCryptoReceivedFromDeviceUserEventHandler) eventHandler).setIncomingDeviceUserManager(this);
+        eventListener.setEventHandler(eventHandler);
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);
+
+
+        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_DEVICE_USER);
+        eventHandler = new IncomingCryptoReceptionConfirmedFromDeviceUserEventHandler();
+        ((IncomingCryptoReceptionConfirmedFromDeviceUserEventHandler) eventHandler).setIncomingDeviceUserManager(this);
+        eventListener.setEventHandler(eventHandler);
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);
+
+        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_REVERSED_FROM_DEVICE_USER);
+        eventHandler = new IncomingCryptoReversedFromDeviceUserEventHandler();
+        ((IncomingCryptoReversedFromDeviceUserEventHandler) eventHandler).setIncomingDeviceUserManager(this);
+        eventListener.setEventHandler(eventHandler);
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);
 
         this.serviceStatus = ServiceStatus.STARTED;
     }
@@ -112,6 +147,14 @@ public class IncomingDeviceUserTransactionPluginRoot implements Service, Transac
         return this.serviceStatus;
     }
 
+    /**
+     * IncomingDeviceUserManager interface implementation.
+     */
+    
+    @Override
+    public void exampleMethod() throws ExampleException {
+
+    }
 
     /**
      * UsesFileSystem Interface implementation.
