@@ -15,4 +15,10 @@ public interface ServiceToServiceOnlineConnection {
     
     public ConnectionStatus getStatus();
     
+    public void sendMessage (Message message) throws CantSendMessageException;
+    
+    public int getUnreadMessagesCount ();
+    
+    public Message readNextMessage();
+    
 }

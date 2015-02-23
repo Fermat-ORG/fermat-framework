@@ -92,6 +92,23 @@ public class LayerServiceToServiceOnlineConnection implements ServiceToServiceOn
         return this.serviceToServiceOnlineConnection.getStatus();
     }
 
+    @Override
+    public void sendMessage(Message message) throws CantSendMessageException {
+        this.serviceToServiceOnlineConnection.sendMessage(message);
+        // Luis: TODO verificar la excepcion que puede devoler y si es un problema de desconexion actuar en concecuencia.
+    }
+
+    @Override
+    public int getUnreadMessagesCount() {
+        return this.serviceToServiceOnlineConnection.getUnreadMessagesCount();
+    }
+
+    @Override
+    public Message readNextMessage() {
+        return this.serviceToServiceOnlineConnection.readNextMessage();
+    }
+
+
 
     private void connectByAnyChannel() throws CantConnectToRemoteServiceException {
 
