@@ -56,7 +56,12 @@ public class EventManagerPlatformServiceAddonRoot implements Service, EventManag
     private List<EventListener> listenersIncomingCryptoReversedFromDeviceUserEvent = new ArrayList<>();
     private List<EventListener> listenersIncomingCryptoIdentifiedEvent = new ArrayList<>();
     private List<EventListener> listenersIntraUserLoggedInEvent = new ArrayList<>();
-    
+    private List<EventListener> listenersIncomingMoneyRequestReceivedEvent = new ArrayList<>();
+    private List<EventListener> listenersOutgoingMoneyRequestDeliveredEvent = new ArrayList<>();
+    private List<EventListener> listenersIncomingMoneyRequestApprovedEvent = new ArrayList<>();
+    private List<EventListener> listenersIncomingMoneyRequestRejectedEvent = new ArrayList<>();
+    private List<EventListener> listenersOutgoingMoneyRequestApprovedEvent = new ArrayList<>();
+    private List<EventListener> listenersOutgoingMoneyRequestRejectedEvent = new ArrayList<>();
     
     EventMonitor eventMonitor;
 
@@ -203,6 +208,23 @@ public class EventManagerPlatformServiceAddonRoot implements Service, EventManag
             case INTRA_USER_LOGGED_IN:
                 return new IntraUserLoggedInEventListener(EventType.INTRA_USER_LOGGED_IN, this.eventMonitor);
             
+            case INCOMING_MONEY_REQUEST_RECEIVED:
+                return new IncomingMoneyRequestReceivedEventListener(EventType.INCOMING_MONEY_REQUEST_RECEIVED, this.eventMonitor);
+            
+            case OUTGOING_MONEY_REQUEST_DELIVERED:
+                return new OutgoingMoneyRequestDeliveredEventListener(EventType.OUTGOING_MONEY_REQUEST_DELIVERED, this.eventMonitor);
+            
+            case OUTGOING_MONEY_REQUEST_APPROVED:
+                return new OutgoingMoneyRequestApprovedEventListener(EventType.OUTGOING_MONEY_REQUEST_APPROVED, this.eventMonitor);
+            
+            case OUTGOING_MONEY_REQUEST_REJECTED:
+                return new OutgoingMoneyRequestRejectedEventListener(EventType.OUTGOING_MONEY_REQUEST_REJECTED, this.eventMonitor);
+            
+            case INCOMING_MONEY_REQUEST_APPROVED:
+                return new IncomingMoneyRequestApprovedEventListener(EventType.INCOMING_MONEY_REQUEST_APPROVED, this.eventMonitor);
+            
+            case INCOMING_MONEY_REQUEST_REJECTED:
+                return new IncomingMoneyRequestRejectedEventListener(EventType.INCOMING_MONEY_REQUEST_REJECTED, this.eventMonitor);
         }
         return null;
     }
@@ -307,6 +329,24 @@ public class EventManagerPlatformServiceAddonRoot implements Service, EventManag
             
             case INTRA_USER_LOGGED_IN:
                 return new IntraUserLoggedInEvent(EventType.INTRA_USER_LOGGED_IN);
+
+            case INCOMING_MONEY_REQUEST_RECEIVED:
+                return new IncomingMoneyRequestReceivedEvent(EventType.INCOMING_MONEY_REQUEST_RECEIVED);
+
+            case OUTGOING_MONEY_REQUEST_DELIVERED:
+                return new OutgoingMoneyRequestDeliveredEvent(EventType.OUTGOING_MONEY_REQUEST_DELIVERED);
+
+            case OUTGOING_MONEY_REQUEST_APPROVED:
+                return new OutgoingMoneyRequestApprovedEvent(EventType.OUTGOING_MONEY_REQUEST_APPROVED);
+
+            case OUTGOING_MONEY_REQUEST_REJECTED:
+                return new OutgoingMoneyRequestRejectedEvent(EventType.OUTGOING_MONEY_REQUEST_REJECTED);
+
+            case INCOMING_MONEY_REQUEST_APPROVED:
+                return new IncomingMoneyRequestApprovedEvent(EventType.INCOMING_MONEY_REQUEST_APPROVED);
+
+            case INCOMING_MONEY_REQUEST_REJECTED:
+                return new IncomingMoneyRequestRejectedEvent(EventType.INCOMING_MONEY_REQUEST_REJECTED);
         }
         return null;
     }
@@ -445,6 +485,33 @@ public class EventManagerPlatformServiceAddonRoot implements Service, EventManag
             case INTRA_USER_LOGGED_IN:
                 listenersIntraUserLoggedInEvent.add(listener);
                 break;
+
+            case INCOMING_MONEY_REQUEST_RECEIVED:
+                listenersIncomingMoneyRequestReceivedEvent.add(listener);
+                break;
+            
+            case OUTGOING_MONEY_REQUEST_DELIVERED:
+                listenersOutgoingMoneyRequestDeliveredEvent.add(listener);
+                break;
+            
+            case OUTGOING_MONEY_REQUEST_APPROVED:
+                listenersOutgoingMoneyRequestApprovedEvent.add(listener);
+                break;
+            
+            case OUTGOING_MONEY_REQUEST_REJECTED:
+                listenersOutgoingMoneyRequestRejectedEvent.add(listener);
+                break;
+            
+            case INCOMING_MONEY_REQUEST_APPROVED:
+                listenersIncomingMoneyRequestApprovedEvent.add(listener);
+                break;
+            
+            case INCOMING_MONEY_REQUEST_REJECTED:
+                listenersIncomingMoneyRequestRejectedEvent.add(listener);
+                break;
+            
+            
+            
         }
     }
 
@@ -582,6 +649,31 @@ public class EventManagerPlatformServiceAddonRoot implements Service, EventManag
             case INTRA_USER_LOGGED_IN:
                 listeners = listenersIntraUserLoggedInEvent;
                 break;
+            
+            case INCOMING_MONEY_REQUEST_APPROVED:
+                listeners = listenersIncomingMoneyRequestApprovedEvent;
+                break;
+            
+            case INCOMING_MONEY_REQUEST_RECEIVED:
+                listeners = listenersIncomingMoneyRequestReceivedEvent;
+                break;
+            
+            case INCOMING_MONEY_REQUEST_REJECTED:
+                listeners = listenersIncomingMoneyRequestRejectedEvent;
+                break;
+            
+            case OUTGOING_MONEY_REQUEST_APPROVED:
+                listeners = listenersOutgoingMoneyRequestApprovedEvent;
+                break;
+            
+            case OUTGOING_MONEY_REQUEST_DELIVERED:
+                listeners = listenersOutgoingMoneyRequestDeliveredEvent;
+                break;
+            
+            case OUTGOING_MONEY_REQUEST_REJECTED:
+                listeners = listenersOutgoingMoneyRequestRejectedEvent;
+                break;  
+            
             
         }
 
@@ -723,6 +815,30 @@ public class EventManagerPlatformServiceAddonRoot implements Service, EventManag
             
             case INTRA_USER_LOGGED_IN:
                 listeners = listenersIntraUserLoggedInEvent;
+                break;
+
+            case INCOMING_MONEY_REQUEST_APPROVED:
+                listeners = listenersIncomingMoneyRequestApprovedEvent;
+                break;
+
+            case INCOMING_MONEY_REQUEST_RECEIVED:
+                listeners = listenersIncomingMoneyRequestReceivedEvent;
+                break;
+
+            case INCOMING_MONEY_REQUEST_REJECTED:
+                listeners = listenersIncomingMoneyRequestRejectedEvent;
+                break;
+
+            case OUTGOING_MONEY_REQUEST_APPROVED:
+                listeners = listenersOutgoingMoneyRequestApprovedEvent;
+                break;
+
+            case OUTGOING_MONEY_REQUEST_DELIVERED:
+                listeners = listenersOutgoingMoneyRequestDeliveredEvent;
+                break;
+
+            case OUTGOING_MONEY_REQUEST_REJECTED:
+                listeners = listenersOutgoingMoneyRequestRejectedEvent;
                 break;
         }
 
