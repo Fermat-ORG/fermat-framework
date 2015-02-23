@@ -7,9 +7,9 @@ import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventType
 import java.util.UUID;
 
 /**
- * Created by ciencias on 26.01.15.
+ * Created by ciencias on 24.01.15.
  */
-public class UserCreatedEvent implements PlatformEvent {
+public class DeviceUserLoggedInEvent implements PlatformEvent {
 
     private UUID userId;
     private EventType eventType;
@@ -24,7 +24,7 @@ public class UserCreatedEvent implements PlatformEvent {
     }
 
 
-    public UserCreatedEvent (EventType eventType){
+    public DeviceUserLoggedInEvent(EventType eventType){
         this.eventType = eventType;
     }
 

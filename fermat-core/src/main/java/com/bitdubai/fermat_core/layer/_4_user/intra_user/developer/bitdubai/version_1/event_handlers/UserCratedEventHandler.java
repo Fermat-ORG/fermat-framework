@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer._1_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventHandler;
-import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.events.UserCreatedEvent;
+import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.events.DeviceUserCreatedEvent;
 import com.bitdubai.fermat_api.layer._4_user.intra_user.IntraUserManager;
 import com.bitdubai.fermat_api.layer._4_user.intra_user.exceptions.CantCreateIntraUserException;
 
@@ -23,7 +23,7 @@ public class UserCratedEventHandler implements EventHandler {
 
     @Override
     public void handleEvent(PlatformEvent platformEvent) throws Exception {
-        UUID userId = ((UserCreatedEvent)platformEvent).getUserId();
+        UUID userId = ((DeviceUserCreatedEvent)platformEvent).getUserId();
 
 
         if (((Service) this.intraUserManager).getStatus() == ServiceStatus.STARTED) {

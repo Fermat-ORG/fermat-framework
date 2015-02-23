@@ -9,13 +9,13 @@ import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventType
 /**
  * Created by ciencias on 26.01.15.
  */
-public class UserCreatedEventListener implements EventListener {
+public class DeviceUserCreatedEventListener implements EventListener {
 
     EventMonitor eventMonitor;
     private EventType eventType;
     private EventHandler eventHandler;
 
-    public UserCreatedEventListener (EventType eventType, EventMonitor eventMonitor){
+    public DeviceUserCreatedEventListener(EventType eventType, EventMonitor eventMonitor){
         this.eventType = eventType;
         this.eventMonitor = eventMonitor;
     }

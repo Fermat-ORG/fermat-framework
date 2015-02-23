@@ -63,7 +63,7 @@ public class IntraUserUserAddonRoot implements Service, User, IntraUserManager, 
         EventListener eventListener;
         EventHandler eventHandler;
 
-        eventListener = eventManager.getNewListener(EventType.USER_CREATED);
+        eventListener = eventManager.getNewListener(EventType.DEVICE_USER_CREATED);
         eventHandler = new UserCratedEventHandler();
         ((UserCratedEventHandler) eventHandler).setIntraUserManager(this);
         eventListener.setEventHandler(eventHandler);

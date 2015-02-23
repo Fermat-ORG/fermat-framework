@@ -108,14 +108,14 @@ public class IntraUserNetworkServicePluginRoot implements Service, NetworkServic
         EventListener eventListener;
         EventHandler eventHandler;
 
-        eventListener = eventManager.getNewListener(EventType.USER_LOGGED_IN);
+        eventListener = eventManager.getNewListener(EventType.DEVICE_USER_LOGGED_IN);
         eventHandler = new UserLoggedInEventHandler();
         ((UserLoggedInEventHandler) eventHandler).setIntraUserManager(this);
         eventListener.setEventHandler(eventHandler);
         eventManager.addListener(eventListener);
         listenersAdded.add(eventListener);
 
-        eventListener = eventManager.getNewListener(EventType.USER_LOGGED_OUT);
+        eventListener = eventManager.getNewListener(EventType.DEVICE_USER_LOGGED_OUT);
         eventHandler = new UserLoggedOutEventHandler();
         ((UserLoggedOutEventHandler) eventHandler).setIntraUserManager(this);
         eventListener.setEventHandler(eventHandler);

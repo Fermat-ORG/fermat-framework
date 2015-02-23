@@ -7,15 +7,15 @@ import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventType
 import java.util.UUID;
 
 /**
- * Created by ciencias on 24.01.15.
+ * Created by ciencias on 26.01.15.
  */
-public class UserLoggedOutEvent implements PlatformEvent {
+public class DeviceUserCreatedEvent implements PlatformEvent {
 
     private UUID userId;
     private EventType eventType;
     private EventSource eventSource;
 
-    public void setUserId(UUID userId) {
+    public void setUserId (UUID userId){
         this.userId = userId;
     }
 
@@ -23,7 +23,8 @@ public class UserLoggedOutEvent implements PlatformEvent {
         return this.userId;
     }
 
-    public UserLoggedOutEvent(EventType eventType) {
+
+    public DeviceUserCreatedEvent(EventType eventType){
         this.eventType = eventType;
     }
 
@@ -42,6 +43,4 @@ public class UserLoggedOutEvent implements PlatformEvent {
     public EventSource getSource() {
         return this.eventSource;
     }
-
-
 }

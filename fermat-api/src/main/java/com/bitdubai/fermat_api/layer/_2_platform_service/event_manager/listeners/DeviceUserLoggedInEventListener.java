@@ -9,13 +9,13 @@ import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventType
 /**
  * Created by ciencias on 24.01.15.
  */
-public class UserLoggedOutEventListener implements EventListener {
+public class DeviceUserLoggedInEventListener implements EventListener {
 
     EventMonitor eventMonitor;
     private EventType eventType;
     private EventHandler eventHandler;
 
-    public UserLoggedOutEventListener (EventType eventType, EventMonitor eventMonitor){
+    public DeviceUserLoggedInEventListener(EventType eventType, EventMonitor eventMonitor){
         this.eventType = eventType;
         this.eventMonitor = eventMonitor;
     }

@@ -9,13 +9,13 @@ import java.util.UUID;
 /**
  * Created by ciencias on 24.01.15.
  */
-public class UserLoggedInEvent implements PlatformEvent {
+public class DeviceUserLoggedOutEvent implements PlatformEvent {
 
     private UUID userId;
     private EventType eventType;
     private EventSource eventSource;
 
-    public void setUserId (UUID userId){
+    public void setUserId(UUID userId) {
         this.userId = userId;
     }
 
@@ -23,8 +23,7 @@ public class UserLoggedInEvent implements PlatformEvent {
         return this.userId;
     }
 
-
-    public UserLoggedInEvent (EventType eventType){
+    public DeviceUserLoggedOutEvent(EventType eventType) {
         this.eventType = eventType;
     }
 
@@ -43,4 +42,6 @@ public class UserLoggedInEvent implements PlatformEvent {
     public EventSource getSource() {
         return this.eventSource;
     }
+
+
 }

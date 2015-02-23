@@ -5,8 +5,8 @@ import com.bitdubai.fermat_api.layer._2_platform_service.error_manager.DealsWith
 import com.bitdubai.fermat_api.layer._2_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.*;
 import com.bitdubai.fermat_api.layer._1_definition.event.PlatformEvent;
-import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.events.UserCreatedEvent;
-import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.events.UserLoggedInEvent;
+import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.events.DeviceUserCreatedEvent;
+import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.events.DeviceUserLoggedInEvent;
 import com.bitdubai.fermat_api.layer._3_os.file_system.*;
 import com.bitdubai.fermat_api.layer._3_os.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer._3_os.file_system.exceptions.CantPersistFileException;
@@ -78,8 +78,8 @@ public class PlatformDeviceUser implements DeviceUser,DealsWithPlatformFileSyste
          * Now I fire the User Created event.
          */
 
-        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.USER_CREATED);
-        ((UserCreatedEvent) platformEvent).setUserId(this.userId );
+        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.DEVICE_USER_CREATED);
+        ((DeviceUserCreatedEvent) platformEvent).setUserId(this.userId );
         platformEvent.setSource(EventSource.USER_DEVICE_USER_PLUGIN);
         eventManager.raiseEvent(platformEvent);
 
@@ -177,8 +177,8 @@ public class PlatformDeviceUser implements DeviceUser,DealsWithPlatformFileSyste
          * Now I fire the Logged In event.
          */
 
-        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.USER_LOGGED_IN);
-        ((UserLoggedInEvent) platformEvent).setUserId(this.userId );
+        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.DEVICE_USER_LOGGED_IN);
+        ((DeviceUserLoggedInEvent) platformEvent).setUserId(this.userId );
         platformEvent.setSource(EventSource.USER_DEVICE_USER_PLUGIN);
         eventManager.raiseEvent(platformEvent);
 

@@ -93,7 +93,7 @@ public class DeviceUserUserAddonRoot implements Service, User, DeviceUserManager
         EventListener eventListener;
         EventHandler eventHandler;
 
-       // eventListener = eventManager.getNewListener(EventType.USER_CREATED);
+       // eventListener = eventManager.getNewListener(EventType.DEVICE_USER_CREATED);
        // eventHandler = new UserCreatedEventHandler();
        // ((UserCreatedEventHandler) eventHandler).setWalletManager(this);
        // eventListener.setEventHandler(eventHandler);

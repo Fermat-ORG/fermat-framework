@@ -5,9 +5,9 @@ package com.bitdubai.fermat_api.layer._2_platform_service.event_manager;
  */
 public enum EventType {
 
-    USER_CREATED, 
-    USER_LOGGED_IN, 
-    USER_LOGGED_OUT,
+    DEVICE_USER_CREATED,
+    DEVICE_USER_LOGGED_IN,
+    DEVICE_USER_LOGGED_OUT,
     INTRA_USER_LOGGED_IN,
     INTRA_USER_CONTACT_CREATED,
 

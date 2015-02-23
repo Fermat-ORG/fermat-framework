@@ -24,9 +24,9 @@ public class EventManagerPlatformServiceAddonRoot implements Service, EventManag
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
     
-    private List<EventListener> listenersUserCreatedEvent = new ArrayList<>();
-    private List<EventListener> listenersUserLoggedInEvent = new ArrayList<>();
-    private List<EventListener> listenersUserLoggedOutEvent = new ArrayList<>();
+    private List<EventListener> listenersDeviceUserCreatedEvent = new ArrayList<>();
+    private List<EventListener> listenersDeviceUserLoggedInEvent = new ArrayList<>();
+    private List<EventListener> listenersDeviceUserLoggedOutEvent = new ArrayList<>();
     private List<EventListener> listenersWalletCreatedEvent = new ArrayList<>();
     private List<EventListener> listenersWalletWentOnlineEvent = new ArrayList<>();
     private List<EventListener> listenersWalletInstalledEvent = new ArrayList<>();
@@ -107,14 +107,14 @@ public class EventManagerPlatformServiceAddonRoot implements Service, EventManag
 
         switch (eventType) {
 
-            case USER_CREATED:
-                return new UserCreatedEventListener(EventType.USER_CREATED, this.eventMonitor);
+            case DEVICE_USER_CREATED:
+                return new DeviceUserCreatedEventListener(EventType.DEVICE_USER_CREATED, this.eventMonitor);
 
-            case USER_LOGGED_IN:
-                return new UserLoggedInEventListener(EventType.USER_LOGGED_IN, this.eventMonitor);
+            case DEVICE_USER_LOGGED_IN:
+                return new DeviceUserLoggedInEventListener(EventType.DEVICE_USER_LOGGED_IN, this.eventMonitor);
 
-            case USER_LOGGED_OUT:
-                return new UserLoggedOutEventListener(EventType.USER_LOGGED_OUT, this.eventMonitor);
+            case DEVICE_USER_LOGGED_OUT:
+                return new DeviceUserLoggedOutEventListener(EventType.DEVICE_USER_LOGGED_OUT, this.eventMonitor);
 
             case WALLET_CREATED:
                 return new WalletCreatedEventListener(EventType.WALLET_CREATED, this.eventMonitor);
@@ -212,14 +212,14 @@ public class EventManagerPlatformServiceAddonRoot implements Service, EventManag
 
         switch (eventType) {
 
-            case USER_CREATED:
-                return new UserCreatedEvent(EventType.USER_CREATED);
+            case DEVICE_USER_CREATED:
+                return new DeviceUserCreatedEvent(EventType.DEVICE_USER_CREATED);
 
-            case USER_LOGGED_IN:
-                return new UserLoggedInEvent(EventType.USER_LOGGED_IN);
+            case DEVICE_USER_LOGGED_IN:
+                return new DeviceUserLoggedInEvent(EventType.DEVICE_USER_LOGGED_IN);
 
-            case USER_LOGGED_OUT:
-                return new UserLoggedOutEvent(EventType.USER_LOGGED_OUT);
+            case DEVICE_USER_LOGGED_OUT:
+                return new DeviceUserLoggedOutEvent(EventType.DEVICE_USER_LOGGED_OUT);
 
             case WALLET_CREATED:
                 return new WalletCreatedEvent(EventType.WALLET_CREATED);
@@ -318,16 +318,16 @@ public class EventManagerPlatformServiceAddonRoot implements Service, EventManag
 
         switch (listener.getEventType()) {
 
-            case USER_CREATED:
-                listenersUserCreatedEvent.add(listener);
+            case DEVICE_USER_CREATED:
+                listenersDeviceUserCreatedEvent.add(listener);
                 break;
 
-            case USER_LOGGED_IN:
-                listenersUserLoggedInEvent.add(listener);
+            case DEVICE_USER_LOGGED_IN:
+                listenersDeviceUserLoggedInEvent.add(listener);
                 break;
 
-            case USER_LOGGED_OUT:
-                listenersUserLoggedOutEvent.add(listener);
+            case DEVICE_USER_LOGGED_OUT:
+                listenersDeviceUserLoggedOutEvent.add(listener);
                 break;
 
             case WALLET_CREATED:
@@ -451,20 +451,20 @@ public class EventManagerPlatformServiceAddonRoot implements Service, EventManag
     @Override
     public void removeListener(EventListener listener) {
 
-        List<EventListener> listeners = listenersUserLoggedInEvent; // Just assign one of the possible values.
+        List<EventListener> listeners = listenersDeviceUserLoggedInEvent; // Just assign one of the possible values.
 
         switch (listener.getEventType()) {
 
-            case USER_CREATED:
-                listeners = listenersUserCreatedEvent;
+            case DEVICE_USER_CREATED:
+                listeners = listenersDeviceUserCreatedEvent;
                 break;
 
-            case USER_LOGGED_IN:
-                listeners = listenersUserLoggedInEvent;
+            case DEVICE_USER_LOGGED_IN:
+                listeners = listenersDeviceUserLoggedInEvent;
                 break;
 
-            case USER_LOGGED_OUT:
-                listeners = listenersUserLoggedOutEvent;
+            case DEVICE_USER_LOGGED_OUT:
+                listeners = listenersDeviceUserLoggedOutEvent;
                 break;
 
             case WALLET_WENT_ONLINE:
@@ -593,20 +593,20 @@ public class EventManagerPlatformServiceAddonRoot implements Service, EventManag
     @Override
     public void raiseEvent(PlatformEvent platformEvent) {
 
-        List<EventListener> listeners = listenersUserLoggedInEvent; // Just assign one of the possible values.
+        List<EventListener> listeners = listenersDeviceUserLoggedInEvent; // Just assign one of the possible values.
 
         switch (platformEvent.getEventType()) {
 
-            case USER_CREATED:
-                listeners = listenersUserCreatedEvent;
+            case DEVICE_USER_CREATED:
+                listeners = listenersDeviceUserCreatedEvent;
                 break;
 
-            case USER_LOGGED_IN:
-                listeners = listenersUserLoggedInEvent;
+            case DEVICE_USER_LOGGED_IN:
+                listeners = listenersDeviceUserLoggedInEvent;
                 break;
 
-            case USER_LOGGED_OUT:
-                listeners = listenersUserLoggedOutEvent;
+            case DEVICE_USER_LOGGED_OUT:
+                listeners = listenersDeviceUserLoggedOutEvent;
                 break;
 
             case WALLET_WENT_ONLINE:
