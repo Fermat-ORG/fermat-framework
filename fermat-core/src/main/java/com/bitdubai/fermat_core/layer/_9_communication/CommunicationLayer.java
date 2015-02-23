@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer._10_network_service.intra_user.IntraUser;
 
 import com.bitdubai.fermat_api.layer._1_definition.enums.NetworkServices;
 import com.bitdubai.fermat_api.layer._9_communication.*;
+import com.bitdubai.fermat_api.layer._9_communication.cloud.RejectConnectionRequestReasons;
 import com.bitdubai.fermat_core.layer._9_communication.cloud.CloudSubsystem;
 
 import java.util.*;
@@ -42,7 +43,7 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
     }
 
 */
-    private Map<NetworkService,NetworkServices> networkServices = new HashMap();
+     private Map<UUID,NetworkServices> networkServices = new HashMap();
 
   
     public Plugin getCloudPlugin() {
@@ -122,14 +123,45 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
 
 
     @Override
-    public void registerNetworkService(NetworkService networkService, NetworkServices networkServices) {
+    public void registerNetworkService(NetworkServices networkServices,UUID networkService) {
         this.networkServices.put(networkService,networkServices );
-        // Luis:TODO: Ademas de guardarlo ahi, se lo tiene que pasar a cada Plugin activo para que lo considere disponible.
+        
+        ((CommunicationChannel) mCloudPlugin).registerNetworkService(networkServices,networkService);
+        
     }
 
     @Override
-    public void unregisterNetworkService(NetworkServices networkServices) {
-        this.networkServices.remove(networkServices);
+    public void unregisterNetworkService(UUID networkService) {
+        this.networkServices.remove(networkService);
+
+        ((CommunicationChannel) mCloudPlugin).unregisterNetworkService(networkService);
+        
+    }
+
+    @Override
+    public ServiceToServiceOnlineConnection acceptIncomingNetworkServiceConnectionRequest(CommunicationChannels communicationChannel, NetworkServices networkService, UUID localNetworkService, UUID remoteNetworkService) throws  CommunicationChannelNotImplemented {
+
+        switch (communicationChannel) {
+
+            case CLOUD:
+                return ((CommunicationChannel) mCloudPlugin).acceptIncomingNetworkServiceConnectionRequest(networkService, localNetworkService, remoteNetworkService);
+
+        }
+        
+        throw new CommunicationChannelNotImplemented();
+    }
+
+    @Override
+    public ServiceToServiceOnlineConnection rejectIncomingNetworkServiceConnectionRequest(CommunicationChannels communicationChannel, NetworkServices networkService, UUID localNetworkService, UUID remoteNetworkService, RejectConnectionRequestReasons reason) throws CommunicationChannelNotImplemented {
+
+        switch (communicationChannel) {
+
+            case CLOUD:
+                return ((CommunicationChannel) mCloudPlugin).rejectIncomingNetworkServiceConnectionRequest(networkService, localNetworkService, remoteNetworkService, reason);
+
+        }
+
+        throw new CommunicationChannelNotImplemented();
     }
 
     /**

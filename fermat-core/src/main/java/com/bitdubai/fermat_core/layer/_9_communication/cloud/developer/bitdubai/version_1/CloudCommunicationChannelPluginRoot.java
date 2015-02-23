@@ -2,6 +2,7 @@ package com.bitdubai.fermat_core.layer._9_communication.cloud.developer.bitdubai
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer._1_definition.enums.NetworkServices;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer._2_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer._2_platform_service.error_manager.ErrorManager;
@@ -13,11 +14,11 @@ import com.bitdubai.fermat_api.layer._3_os.file_system.DealsWithPluginFileSystem
 import com.bitdubai.fermat_api.layer._3_os.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer._9_communication.CommunicationChannel;
 import com.bitdubai.fermat_api.layer._9_communication.OnlineChannel;
+import com.bitdubai.fermat_api.layer._9_communication.ServiceToServiceOnlineConnection;
+import com.bitdubai.fermat_api.layer._9_communication.cloud.RejectConnectionRequestReasons;
 import com.bitdubai.fermat_core.layer._9_communication.cloud.developer.bitdubai.version_1.structure.CloudOnlineChannel;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by ciencias on 20.01.15.
@@ -37,6 +38,11 @@ public class CloudCommunicationChannelPluginRoot implements Service, Communicati
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
     List<EventListener> listenersAdded = new ArrayList<>();
 
+    /**
+     * CommunicationChannel Interface member variables.
+     */
+    private Map<UUID,NetworkServices> networkServices = new HashMap();
+    
     /**
      * DealWithEvents Interface member variables.
      */
@@ -109,7 +115,27 @@ public class CloudCommunicationChannelPluginRoot implements Service, Communicati
 
         return new CloudOnlineChannel();
     }
-    
+
+    @Override
+    public void registerNetworkService(NetworkServices networkServices, UUID networkService) {
+        this.networkServices.put(networkService,networkServices );
+    }
+
+    @Override
+    public ServiceToServiceOnlineConnection acceptIncomingNetworkServiceConnectionRequest(NetworkServices networkService, UUID localNetworkService, UUID remoteNetworkService) {
+        return null;
+    }
+
+    @Override
+    public ServiceToServiceOnlineConnection rejectIncomingNetworkServiceConnectionRequest(NetworkServices networkService, UUID localNetworkService, UUID remoteNetworkService, RejectConnectionRequestReasons reason) {
+        return null;
+    }
+
+    @Override
+    public void unregisterNetworkService(UUID networkService) {
+        this.networkServices.remove(networkService);
+    }
+
     /**
      * UsesFileSystem Interface implementation.
      */
@@ -151,5 +177,11 @@ public class CloudCommunicationChannelPluginRoot implements Service, Communicati
     }
 
 
+    private void incomingConnectionRequestReceived(){
+        
+        // LOUI TODO: Se debe disparar un evento "IncomingNetworkServiceConnectionRequest" El evento tiene que incluir en el source este modulo, pero ademas el communicationChannel que es del tipo CommunicationChannels, mas networkService del tipo NetworkServices, mas localNetworkServiceId, mas el remoteNetworkServiceId
+
+        
+    }
 
 }
