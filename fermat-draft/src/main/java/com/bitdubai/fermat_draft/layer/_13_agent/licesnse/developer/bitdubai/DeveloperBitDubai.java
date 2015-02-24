@@ -1,10 +1,10 @@
 package com.bitdubai.fermat_draft.layer._13_agent.licesnse.developer.bitdubai;
 
-import com.bitdubai.fermat_api.layer._14_agent.AIAgent;
-import com.bitdubai.fermat_api.layer._14_agent.AgentLayerDeveloper;
+import com.bitdubai.fermat_api.layer._15_agent.AIAgent;
+import com.bitdubai.fermat_api.layer._15_agent.AgentLayerDeveloper;
 import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer._1_definition.enums.TimeFrequency;
-import com.bitdubai.fermat_api.layer._5_license.PluginLicensor;
+import com.bitdubai.fermat_api.layer._6_license.PluginLicensor;
 import com.bitdubai.fermat_draft.layer._13_agent.licesnse.developer.bitdubai.version_1.LicenseAgent;
 
 /**

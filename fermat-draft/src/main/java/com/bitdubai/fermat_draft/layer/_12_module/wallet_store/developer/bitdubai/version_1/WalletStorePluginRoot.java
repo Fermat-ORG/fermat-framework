@@ -1,10 +1,10 @@
-package com.bitdubai.fermat_plugin.layer._13_module.wallet_store.developer.bitdubai.version_1;
+package com.bitdubai.fermat_plugin.layer._14_module.wallet_store.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.layer._13_module.wallet_store.CantRecordInstalledWalletException;
-import com.bitdubai.fermat_api.layer._13_module.wallet_store.CantRecordUninstalledWalletException;
-import com.bitdubai.fermat_api.layer._13_module.wallet_store.WalletStore;
+import com.bitdubai.fermat_api.layer._14_module.wallet_store.CantRecordInstalledWalletException;
+import com.bitdubai.fermat_api.layer._14_module.wallet_store.CantRecordUninstalledWalletException;
+import com.bitdubai.fermat_api.layer._14_module.wallet_store.WalletStore;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer._2_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer._2_platform_service.error_manager.ErrorManager;
