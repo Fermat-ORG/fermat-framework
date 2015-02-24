@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_core.layer._12_middleware.app_runtime.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.Activities;
+import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Activities;
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.MenuItem;
 
 import java.awt.*;

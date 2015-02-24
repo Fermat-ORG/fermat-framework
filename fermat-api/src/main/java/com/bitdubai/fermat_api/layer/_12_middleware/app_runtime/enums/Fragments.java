@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_api.layer._12_middleware.app_runtime;
+package com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums;
 
 /**
  * Created by ciencias on 2/14/15.

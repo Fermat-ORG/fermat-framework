@@ -49,6 +49,8 @@ import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.*;
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.AppRuntimeManager;
 
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.Fragment;
+import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Activities;
+import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Fragments;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.fermat_core.Platform;
 
@@ -69,7 +71,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
     private NavigationDrawerFragment NavigationDrawerFragment;
     private PagerAdapter PagerAdapter;
-    public CharSequence Title;
+    public CharSequence Title; // NATALIA TODO:porque esto es publico?
     private Menu menu;
     private PagerSlidingTabStrip tabStrip;
     private App app;
@@ -89,6 +91,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
     private String walletStyle = "";
     private TabStrip tabs;
     private  TitleBar titleBar;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -201,7 +204,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
                 }
                 catch (Exception e){
-
+                // NATALIA TODO: Esto no lo podes dejar en blanco, fijate lo que estamos poniendo por ahora.
                 }
 
             }
@@ -486,10 +489,12 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
                 ((MyApplication) this.getApplication()).setWalletId(Integer.parseInt(walletId));
                 NavigationDrawerFragment = null;
-                this.PagerAdapter = null;
+                this.PagerAdapter = null; 
                 this.abTitle = null;
                 this.adapter = null;
                 this.pager = null;
+                
+                // NATALIA TODO: Hacete una funcion privada para resetear todas las variables y descargar de la pantalla todo lo que hay.
 
                  activity = this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_VERSION_1_MAIN);
                 NavigateActivity();
@@ -555,6 +560,8 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                 NavigateActivity();
                 //intent = new Intent(this, ShopActivity.class);
                 // startActivity(intent);
+                
+                // NATALIA TODO: No me queda claro si en cada actividad creamos una nueva instancia de esta clase siempre o solo a veces???
                 break;
             case CWP_WALLET_ADULTS_ALL_REFFILS:
                 break;

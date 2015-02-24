@@ -1,5 +1,9 @@
 package com.bitdubai.fermat_api.layer._12_middleware.app_runtime;
 
+import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Activities;
+import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Wallets;
+
 import java.util.Map;
 
 /**

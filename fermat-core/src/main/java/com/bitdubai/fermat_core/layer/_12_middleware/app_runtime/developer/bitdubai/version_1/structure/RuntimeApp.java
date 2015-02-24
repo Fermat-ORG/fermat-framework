@@ -1,9 +1,9 @@
 package com.bitdubai.fermat_core.layer._12_middleware.app_runtime.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.App;
-import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.Apps;
+import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Apps;
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.SubApp;
-import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.SubApps;
+import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.SubApps;
 
 import java.util.HashMap;
 import java.util.Map;

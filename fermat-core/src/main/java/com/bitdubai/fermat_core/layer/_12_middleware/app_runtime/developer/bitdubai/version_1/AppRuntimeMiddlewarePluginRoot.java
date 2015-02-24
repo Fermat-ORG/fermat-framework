@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer._12_middleware.Middleware;
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.*;
+import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.*;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer._2_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer._2_platform_service.error_manager.ErrorManager;
@@ -44,16 +45,16 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, Middleware, AppR
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
     List<EventListener> listenersAdded = new ArrayList<>();
-    List<App> listApps = new ArrayList<>();
-    List<SubApp> listSubApp = new ArrayList<>();
-    List<Activity> listActivities = new ArrayList<>();
-    List<Fragment> listFragments = new ArrayList<>();
-    List<Wallet> listWallets = new ArrayList<>();
-    int lastApp = 0;
-    int lastSubapp = 0;
-    int lastActivity = 0;
-    int lastFragment = 0;
-    int lastWallet = 0;
+    List<App> listApps = new ArrayList<>(); // NATALIA TODO: Esto deberia ser un MAP donde la key es el valor del Enum en cada caso. Arreglar los gets necesarios.
+    List<SubApp> listSubApp = new ArrayList<>(); // NATALIA TODO: Esto deberia ser un MAP donde la key es el valor del Enum en cada caso.
+    List<Activity> listActivities = new ArrayList<>(); // NATALIA TODO: Esto deberia ser un MAP donde la key es el valor del Enum en cada caso.
+    List<Fragment> listFragments = new ArrayList<>(); // NATALIA TODO: Esto deberia ser un MAP donde la key es el valor del Enum en cada caso.
+    List<Wallet> listWallets = new ArrayList<>(); // NATALIA TODO: Esto deberia ser un MAP donde la key es el valor del Enum en cada caso.
+    int lastApp = 0;  // NATALIA TODO: Esto no puede ser de tipo entero, debe ser del tipo de datos del Enum correspondiente.
+    int lastSubapp = 0; // NATALIA TODO: Esto no puede ser de tipo entero, debe ser del tipo de datos del Enum correspondiente.
+    int lastActivity = 0; // NATALIA TODO: Esto no puede ser de tipo entero, debe ser del tipo de datos del Enum correspondiente.
+    int lastFragment = 0; // NATALIA TODO: Esto no puede ser de tipo entero, debe ser del tipo de datos del Enum correspondiente.
+    int lastWallet = 0;// NATALIA TODO: Esto no puede ser de tipo entero, debe ser del tipo de datos del Enum correspondiente.
     /**
      * UsesFileSystem Interface member variables.
      */
@@ -68,6 +69,25 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, Middleware, AppR
      * Plugin Interface member variables.
      */
     UUID pluginId;
+
+
+
+    public void addToNavigationStructure(/*String NavigationStructure, WalletType*/) {
+
+        /*
+        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.NAVIGATION_STRUCTURE_UPDATED);
+        ((NavigationStructureUpdatedEvent) platformEvent).----------(this.-----);
+        eventManager.raiseEvent(platformEvent);
+        */
+    }
+    
+    /*
+    PlatformEvent platformEvent = eventManager.getNewEvent(EventType.NAVIGATION_STRUCTURE_UPDATED);
+    ((NavigationStructureUpdatedEvent) platformEvent).--------(this.-------);
+    eventManager.raiseEvent(platformEvent);
+*/
+
+    
 
     @Override
     public void start(){
@@ -130,14 +150,6 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, Middleware, AppR
         return this.serviceStatus;
     }
 
-    public void addToNavigationStructure(/*String NavigationStructure, WalletType*/) {
-
-        /*
-        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.NAVIGATION_STRUCTURE_UPDATED);
-        ((NavigationStructureUpdatedEvent) platformEvent).----------(this.-----);
-        eventManager.raiseEvent(platformEvent);
-        */
-    }
 
     /**
      * AppRuntime Interface implementation.
@@ -185,11 +197,7 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, Middleware, AppR
         return null;
     }
 
-/*
-    PlatformEvent platformEvent = eventManager.getNewEvent(EventType.NAVIGATION_STRUCTURE_UPDATED);
-    ((NavigationStructureUpdatedEvent) platformEvent).--------(this.-------);
-    eventManager.raiseEvent(platformEvent);
-*/
+
 
 
     /**
