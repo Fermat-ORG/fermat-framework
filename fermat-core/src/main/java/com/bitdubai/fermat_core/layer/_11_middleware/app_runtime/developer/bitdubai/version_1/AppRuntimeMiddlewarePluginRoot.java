@@ -259,7 +259,7 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, Middleware, AppR
         RuntimeMainMenu runtimeMainMenu;
         RuntimeMenuItem runtimeMenuItem;
         RuntimeTabStrip runtimeTabStrip;
-
+        RuntimeTab runtimeTab;
         runtimeApp = new RuntimeApp();
 
         runtimeApp.setType(Apps.CRYPTO_WALLET_PLATFORM);
@@ -358,10 +358,29 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, Middleware, AppR
 
         runtimeTabStrip = new RuntimeTabStrip();
 
-        runtimeTabStrip.addTab("Profile");
-        runtimeTabStrip.addTab("Desktop");
-        runtimeTabStrip.addTab("Contacts");
-        runtimeTabStrip.addTab("Community");
+        runtimeTab = new RuntimeTab();
+        runtimeTab.setLabel("Profile");
+        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_PROFILE);
+        runtimeTabStrip.addTab(runtimeTab);
+
+        runtimeTab = new RuntimeTab();
+        runtimeTab.setLabel("Desktop");
+        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_DESKTOP);
+        runtimeTabStrip.addTab(runtimeTab);
+
+        runtimeTab = new RuntimeTab();
+        runtimeTab.setLabel("Contacts");
+        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_CONTACTS);
+        runtimeTabStrip.addTab(runtimeTab);
+
+        runtimeTab = new RuntimeTab();
+        runtimeTab.setLabel("Community");
+        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_COMMUNITY);
+        runtimeTabStrip.addTab(runtimeTab);
+
+
+        runtimeTabStrip.setDividerColor(0xFFFFFFFF);
+
 
         runtimeActivity.setTabStrip(runtimeTabStrip);
 
@@ -418,7 +437,7 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, Middleware, AppR
         listActivities.add(runtimeActivity);
 
         runtimeTitleBar = new RuntimeTitleBar();
-        runtimeTitleBar.setLabel("Adults Wallet");
+        runtimeTitleBar.setLabel("Ladies wallet");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeSideMenu = new RuntimeSideMenu();
@@ -476,14 +495,37 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, Middleware, AppR
         runtimeActivity.setSideMenu(runtimeSideMenu);
 
         runtimeTabStrip = new RuntimeTabStrip();
+        runtimeTab = new RuntimeTab();
+        runtimeTab.setLabel("Home");
+        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_HOME);
+        runtimeTabStrip.addTab(runtimeTab);
+        runtimeTab = new RuntimeTab();
+        runtimeTab.setLabel("Balance");
+        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_BALANCE);
+        runtimeTabStrip.addTab(runtimeTab);
+        runtimeTab = new RuntimeTab();
+        runtimeTab.setLabel("Send");
+        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SEND);
+        runtimeTabStrip.addTab(runtimeTab);
+        runtimeTab = new RuntimeTab();
+        runtimeTab.setLabel("Receive");
+        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_RECEIVE);
+        runtimeTabStrip.addTab(runtimeTab);
+        runtimeTab = new RuntimeTab();
+        runtimeTab.setLabel("Shops");
+        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOPS);
+        runtimeTabStrip.addTab(runtimeTab);
+        runtimeTab = new RuntimeTab();
+        runtimeTab.setLabel("Refill");
+        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_REFFIL);
+        runtimeTabStrip.addTab(runtimeTab);
+        runtimeTab = new RuntimeTab();
+        runtimeTab.setLabel("Discounts");
+        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_DISCOUNTS);
+        runtimeTabStrip.addTab(runtimeTab);
 
-        runtimeTabStrip.addTab("Home");
-        runtimeTabStrip.addTab("Balance");
-        runtimeTabStrip.addTab("Send");
-        runtimeTabStrip.addTab("Receive");
-        runtimeTabStrip.addTab("Shops");
-        runtimeTabStrip.addTab("Refill");
-        runtimeTabStrip.addTab("Discounts");
+
+        runtimeTabStrip.setDividerColor(0xFFFFFFFF);
 
 
         runtimeActivity.setTabStrip(runtimeTabStrip);
@@ -533,17 +575,42 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, Middleware, AppR
 
         runtimeTitleBar = new RuntimeTitleBar();
         runtimeTitleBar.setLabel("My Shop");
+
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeTabStrip = new RuntimeTabStrip();
+        runtimeTabStrip = new RuntimeTabStrip();
+        runtimeTab = new RuntimeTab();
+        runtimeTab.setLabel("Shop");
+        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_SHOP);
+        runtimeTabStrip.addTab(runtimeTab);
+        runtimeTab = new RuntimeTab();
+        runtimeTab.setLabel("Products");
+        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_PRODUCTS);
+        runtimeTabStrip.addTab(runtimeTab);
+        runtimeTab = new RuntimeTab();
+        runtimeTab.setLabel("Reviews");
+        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_REVIEWS);
+        runtimeTabStrip.addTab(runtimeTab);
+        runtimeTab = new RuntimeTab();
+        runtimeTab.setLabel("Chat");
+        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_CHAT);
+        runtimeTabStrip.addTab(runtimeTab);
+        runtimeTab = new RuntimeTab();
+        runtimeTab.setLabel("History");
+        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_HISTORY);
+        runtimeTabStrip.addTab(runtimeTab);
+        runtimeTab = new RuntimeTab();
+        runtimeTab.setLabel("Map");
+        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_MAP);
+        runtimeTabStrip.addTab(runtimeTab);
 
-        runtimeTabStrip.addTab("Shop");
-        runtimeTabStrip.addTab("Products");
-        runtimeTabStrip.addTab("Reviews");
-        runtimeTabStrip.addTab("Chat");
-        runtimeTabStrip.addTab("History");
-        runtimeTabStrip.addTab("Map");
 
+        runtimeTabStrip.setDividerColor(0xFFFFFFFF);
+        runtimeTabStrip.setIndicatorColor(0xFFFFFFFF);
+        runtimeTabStrip.setIndicatorHeight(9);
+        runtimeTabStrip.setBackgroundColor(0xFF76dc4a);
+        runtimeTabStrip.setTextColor(0xFFFFFFFF);
         runtimeActivity.setTabStrip(runtimeTabStrip);
 
         runtimeFragment = new RuntimeFragment();
@@ -611,10 +678,22 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, Middleware, AppR
 
 
         runtimeTabStrip = new RuntimeTabStrip();
+        runtimeTab = new RuntimeTab();
+        runtimeTab.setLabel("Debits");
+        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_DEBITS);
+        runtimeTabStrip.addTab(runtimeTab);
 
-        runtimeTabStrip.addTab("Debits");
-        runtimeTabStrip.addTab("Credits");
-        runtimeTabStrip.addTab("All");
+        runtimeTab = new RuntimeTab();
+        runtimeTab.setLabel("Credits");
+        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNT_CREDITS);
+        runtimeTabStrip.addTab(runtimeTab);
+
+        runtimeTab = new RuntimeTab();
+        runtimeTab.setLabel("All");
+        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_ALL);
+        runtimeTabStrip.addTab(runtimeTab);
+
+
         runtimeActivity.setTabStrip(runtimeTabStrip);
 
         runtimeFragment = new RuntimeFragment();

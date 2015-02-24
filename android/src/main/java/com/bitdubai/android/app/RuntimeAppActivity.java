@@ -106,11 +106,12 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             this.Os.setContext(this);
             platform.setOs(Os);
 
+            platform.start();
+
             this.platformContext = platform.getCorePlatformContext();
 
             this.appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.APP_RUNTIME_MIDDLEWARE);
-            
-            platform.start();
+
 
             NavigateActivity();
 
@@ -255,6 +256,13 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
             this.abTitle = (TextView) findViewById(titleId);
             abTitle.setTextColor(Color.WHITE);
+            abTitle.setTypeface(MyApplication.getDefaultTypeface());
+            ActionBar actionBar = getActionBar();
+
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setTitle(this.Title );
+          //  actionBar.setIcon(R.drawable.store_icon);
+
 
             getActionBar().show();
         }
@@ -268,9 +276,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
         {
             this.NavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
 
-            this.NavigationDrawerFragment = (NavigationDrawerFragment)
-                    getFragmentManager().findFragmentById(R.id.navigation_drawer);
-            // Set up the drawer.
+               // Set up the drawer.
             this.NavigationDrawerFragment.setUp(
                     R.id.navigation_drawer,
                     (DrawerLayout) findViewById(R.id.drawer_layout));
@@ -280,57 +286,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/CaviarDreams.ttf");
         ((MyApplication) this.getApplication()).setDefaultTypeface(tf);
 
-        
-        
-        // NATALIA; TODO;  Este switch ya no puede existir. Toda la navegacion debe provenir del runtime_app plugin.
 
-        //specific wallet execution
-        switch ( walletId )
-        {
-            case 1:
-                this.Title = "Girl's savings";
-                break;
-
-            case 2:
-                this.Title = "Boy's savings";
-                break;
-
-            case 3:
-                this.Title = "Ladies wallet";
-                break;
-
-            case 4:
-                this.Title = "Young";
-                break;
-
-            case 5:
-                this.Title = "Professional";
-                break;
-
-            case 6:
-                this.Title = "Gucci";
-                break;
-
-            case 7:
-                this.Title = "Carrefour";
-                break;
-
-            case 8:
-                this.Title = "Banco Itau";
-                break;
-
-            case 9:
-                this.Title = "Banco Popular";
-                break;
-
-            case 10:
-                this.Title = "Boca Juniors";
-                break;
-
-            case 11:
-                this.Title = "Barcelona";
-                break;
-        }
 
         if (walletId == 2 || walletId == 1){
 
@@ -341,7 +297,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             try{
                 ((MyApplication) this.getApplication()).setActionBarProperties(this,getWindow(),tabStrip, getActionBar(), getResources(),this.abTitle, this.Title.toString());
 
-                tabStrip.setBackgroundResource(R.drawable.background_tiled_diagonal_light);
+
             }catch(Exception ex)
             {
 
@@ -350,21 +306,11 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
         }
         else {
-            if (walletId > 0 && walletId < 4){
-                this.NavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
-
-                this.NavigationDrawerFragment = (NavigationDrawerFragment)
-                        getFragmentManager().findFragmentById(R.id.navigation_drawer);
-
-
-                // Set up the drawer.
-                this.NavigationDrawerFragment.setUp(
-                        R.id.navigation_drawer,
-                        (DrawerLayout) findViewById(R.id.drawer_layout));
+            if (walletId == 3){
 
                 try{
                     ((MyApplication) this.getApplication()).setActionBarProperties(this,getWindow(),tabStrip, getActionBar(), getResources(),abTitle, Title.toString());
-                    tabStrip.setBackgroundResource(R.drawable.background_tiled_diagonal_light);
+
                 }catch(Exception e)
                 {
                     String strError = e.getMessage();
@@ -378,6 +324,9 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             this.initialisePaging();
         }
         else{
+            ViewPager viewpager = (ViewPager)super.findViewById(R.id.viewpager);
+            viewpager.setVisibility(View.INVISIBLE);
+
             pager = (ViewPager) findViewById(R.id.pager);
             adapter = new MyPagerAdapter(getSupportFragmentManager());
 
@@ -389,17 +338,19 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
             tabStrip.setViewPager(pager);
 
-            // NATALIA; TODO;  Este switch ya no puede existir. Toda la navegacion debe provenir del runtime_app plugin.En este caso hay que ampliar el objeto tabscript en el runtime_app para que maneje los colores, etc y configurarlos en el factoryReset.
-            
-            tabStrip.setTypeface(tf,1 );
-            //changeColor(currentColor);
-            tabStrip.setDividerColor(0xFFFFFFFF);
-            tabStrip.setIndicatorColor(0xFFFFFFFF);
-            tabStrip.setIndicatorHeight(9);
-            tabStrip.setBackgroundColor(0xFF87D2FA);
-            tabStrip.setTextColor(0xFFFFFFFF);
-        }
+            // NATALIA; TODO;.En este caso hay que ampliar el objeto tabscript en el runtime_app para que maneje los colores, etc y configurarlos en el factoryReset.
 
+            tabStrip.setTypeface(tf,1 );
+
+        /*    tabStrip.setDividerColor(tabs.getDividerColor());
+            tabStrip.setIndicatorColor(tabs.getIndicatorColor());
+            tabStrip.setIndicatorHeight(tabs.getIndicatorHeight());
+            tabStrip.setBackgroundColor(tabs.getBackgroundColor());
+            tabStrip.setTextColor(tabs.getTextColor());*/
+
+            tabs.setBackgroundResource(R.drawable.background_tiled_diagonal_light);
+            tabs.setDividerColor(0xFFBBBBBB);
+        }
 
 
 
@@ -652,10 +603,11 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
-            List<String> titleTabs = tabs.getTabs();
+            List<Tab> titleTabs = tabs.getTabs();
             titles = new String[titleTabs.size()];
             for (int i = 0; i < titleTabs.size(); i++) {
-                titles[i] = titleTabs.get(i);
+                Tab tab = titleTabs.get(i);
+                titles[i] = tab.getLabel();
             }
         }
 
@@ -676,21 +628,20 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
             android.support.v4.app.Fragment currentFragment = HomeFragment.newInstance(position);
             Fragments fragmentType = Fragments.CWP_SHELL_LOGIN;
-
-
-            int i = 0;
-            List<android.support.v4.app.Fragment> fragmentos = new Vector<android.support.v4.app.Fragment>();
-            Iterator<Map.Entry<Fragments, Fragment>>  efragments = fragments.entrySet().iterator();
-            while (efragments.hasNext()) {
-                Map.Entry<Fragments, Fragment> fragmentEntry = efragments.next();
-                if (i == position)
+             List<Tab> titleTabs = tabs.getTabs();
+            for (int j = 0; j < titleTabs.size(); j++) {
+                if (j == position)
                 {
-                    fragmentType = fragmentEntry.getValue().getType();
+                    Tab tab = titleTabs.get(j);
+                    fragmentType = tab.getFragment();
                     break;
                 }
-                i++;
+
 
             }
+
+
+
 
 //execute current activity fragments
 
