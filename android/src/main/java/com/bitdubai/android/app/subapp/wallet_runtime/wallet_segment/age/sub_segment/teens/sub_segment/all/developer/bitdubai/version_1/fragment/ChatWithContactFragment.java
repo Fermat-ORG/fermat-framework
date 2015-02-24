@@ -1,11 +1,13 @@
 package com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment;
 
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
@@ -42,8 +44,7 @@ public class ChatWithContactFragment extends android.app.Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        contacts = new String[]{"","","","","","","","","","","","",""};
-        countries = new String[]{};
+         countries = new String[]{};
         states = new String[]{};
         cities = new String[]{};
 
@@ -62,6 +63,139 @@ public class ChatWithContactFragment extends android.app.Fragment {
 
                 {},
         };
+
+        String[]  contacts = new String[]{"Céline Begnis", "Kimberly Brown", "Juan Luis R. Pons", "Karina Rodríguez"
+                ,"Guillermo Villanueva","Lucia Alarcon De Zamacona", "Luis Fernando Molina", "Mariana Duyos", "Pedro Perrotta"
+                , "Simon Cushing","Stephanie Himonidis","Taylor Backus", "Ginny Kaltabanis","Piper Faust","Deniz Caglar"
+                ,"Helen Nisbet","Dea Vanagan","Tim Hunter","Madeleine Jordan","Kate Bryan","Victoria Gandit","Jennifer Johnson"
+                ,"Robert Wint","Kevin Helms","Teddy Truchot","Hélène Derosier","John Smith","Caroline Mignaux","Guillaume Thery"
+                ,"Brant Cryder","Thomas Levy","Louis Stenz" };
+        int groupPosition = 0;
+        String contact_name = MyApplication.getContact();
+
+        for (int i = 0; i < contacts.length; i++) {
+
+            if (contacts[i] == contact_name) {
+                groupPosition = i;
+            }
+        }
+
+        final ViewGroup actionBarLayout = (ViewGroup) super.getActivity().getLayoutInflater().inflate(
+                R.layout.wallet_framework_activity_chat_with_contact_action_bar,
+                null);
+
+        super.getActivity().getActionBar().setDisplayShowHomeEnabled(false);
+        super.getActivity().getActionBar().setDisplayShowTitleEnabled(false);
+        super.getActivity().getActionBar().setDisplayShowCustomEnabled(true);
+        super.getActivity().getActionBar().setCustomView(actionBarLayout);
+
+        TextView tv;
+
+        tv = (TextView) actionBarLayout.findViewById(R.id.contact_name);
+        tv.setTypeface(MyApplication.getDefaultTypeface());
+        tv.setText(contacts[groupPosition].toString());
+
+
+        ImageView profile_picture = (ImageView) actionBarLayout.findViewById(R.id.profile_picture);
+        switch (groupPosition) {
+            case 0:
+                profile_picture.setImageResource(R.drawable.celine_profile_picture);
+                break;
+            case 1:
+                profile_picture.setImageResource(R.drawable.kimberly_profile_picture);
+                break;
+            case 2:
+                profile_picture.setImageResource(R.drawable.juan_profile_picture);
+                break;
+            case 3:
+                profile_picture.setImageResource(R.drawable.karina_profile_picture);
+                break;
+            case 4:
+                profile_picture.setImageResource(R.drawable.guillermo_profile_picture);
+                break;
+            case 5:
+                profile_picture.setImageResource(R.drawable.lucia_profile_picture);
+                break;
+            case 6:
+                profile_picture.setImageResource(R.drawable.luis_profile_picture);
+                break;
+            case 7:
+                profile_picture.setImageResource(R.drawable.mariana_profile_picture);
+                break;
+            case 8:
+                profile_picture.setImageResource(R.drawable.pedro_profile_picture);
+                break;
+            case 9:
+                profile_picture.setImageResource(R.drawable.simon_profile_picture);
+                break;
+            case 10:
+                profile_picture.setImageResource(R.drawable.stephani_profile_picture);
+                break;
+            case 11:
+                profile_picture.setImageResource(R.drawable.taylor_profile_picture);
+                break;
+            case 12:
+                profile_picture.setImageResource(R.drawable.ginny_profile_picture);
+                break;
+            case 13:
+                profile_picture.setImageResource(R.drawable.piper_profile_picture);
+                break;
+            case 14:
+                profile_picture.setImageResource(R.drawable.deniz_profile_picture);
+                break;
+            case 15:
+                profile_picture.setImageResource(R.drawable.helen_profile_picture);
+                break;
+            case 16:
+                profile_picture.setImageResource(R.drawable.dea_profile_picture);
+                break;
+            case 17:
+                profile_picture.setImageResource(R.drawable.tim_profile_picture);
+                break;
+            case 18:
+                profile_picture.setImageResource(R.drawable.madaleine_profile_picture);
+                break;
+            case 19:
+                profile_picture.setImageResource(R.drawable.kate_profile_picture);
+                break;
+            case 20:
+                profile_picture.setImageResource(R.drawable.victoria_profile_picture);
+                break;
+            case 21:
+                profile_picture.setImageResource(R.drawable.jennifer_profile_picture);
+                break;
+            case 22:
+                profile_picture.setImageResource(R.drawable.robert_profile_picture);
+                break;
+            case 23:
+                profile_picture.setImageResource(R.drawable.kevin_profile_picture);
+                break;
+            case 24:
+                profile_picture.setImageResource(R.drawable.teddy_profile_picture);
+                break;
+            case 25:
+                profile_picture.setImageResource(R.drawable.helene_profile_picture);
+                break;
+            case 26:
+                profile_picture.setImageResource(R.drawable.john_profile_picture);
+                break;
+            case 27:
+                profile_picture.setImageResource(R.drawable.caroline_profile_picture);
+                break;
+            case 28:
+                profile_picture.setImageResource(R.drawable.guillaume_profile_picture);
+                break;
+            case 29:
+                profile_picture.setImageResource(R.drawable.brant_profile_picture);
+                break;
+            case 30:
+                profile_picture.setImageResource(R.drawable.thomas_profile_picture);
+                break;
+            case 31:
+                profile_picture.setImageResource(R.drawable.louis_profile_picture);
+                break;
+        }
+
 
     }
 

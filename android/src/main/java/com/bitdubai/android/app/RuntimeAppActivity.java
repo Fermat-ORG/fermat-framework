@@ -9,6 +9,11 @@ import android.os.Bundle;
 import android.support.v4.app.*;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -71,7 +76,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
     private NavigationDrawerFragment NavigationDrawerFragment;
     private PagerAdapter PagerAdapter;
-    public CharSequence Title; // NATALIA TODO:porque esto es publico?
+    public CharSequence Title; // NATALIA TODO:porque esto es publico? LUIS lo usa la funcion Restore Action bar
     private Menu menu;
     private PagerSlidingTabStrip tabStrip;
     private App app;
@@ -91,6 +96,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
     private String walletStyle = "";
     private TabStrip tabs;
     private  TitleBar titleBar; // Comment
+    private boolean firstexecute = true;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,14 +115,15 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             this.Os.setContext(this);
             platform.setOs(Os);
 
-            platform.start();
+            if(firstexecute)  {
+                platform.start();
 
-            this.platformContext = platform.getCorePlatformContext();
+                this.platformContext = platform.getCorePlatformContext();
 
-            this.appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.APP_RUNTIME_MIDDLEWARE);
+                this.appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.APP_RUNTIME_MIDDLEWARE);
+                NavigateActivity();
+            }
 
-
-            NavigateActivity();
 
         }
         catch (CantStartPlatformException e) {
@@ -138,7 +145,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
             while (efragments.hasNext()) {
                 Map.Entry<Fragments, Fragment> fragmentEntry =  efragments.next();
-                try {
+
                     RuntimeFragment fragment = (RuntimeFragment)fragmentEntry.getValue();
                     Fragments type = fragment.getType();
 
@@ -201,12 +208,6 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                             break;
                     }
 
-
-                }
-                catch (Exception e){
-                // NATALIA TODO: Esto no lo podes dejar en blanco, fijate lo que estamos poniendo por ahora.
-                }
-
             }
             this.PagerAdapter  = new PagerAdapter(super.getSupportFragmentManager(), fragments);
             //
@@ -254,6 +255,8 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
         }
 
+
+
         if(titleBar !=null){
             this.Title = activity.getTitleBar().getLabel();
             int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
@@ -262,12 +265,28 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             abTitle.setTypeface(MyApplication.getDefaultTypeface());
             ActionBar actionBar = getActionBar();
 
-            actionBar.setDisplayShowTitleEnabled(true);
+
+            if (walletId == 2 || walletId == 1){
+                getActionBar().setDisplayHomeAsUpEnabled(false);
+                DrawerLayout draw = (DrawerLayout) findViewById(R.id.drawer_layout);
+                draw.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            }else
+            {
+                actionBar.setDisplayShowTitleEnabled(true);
+            }
+
             actionBar.setTitle(this.Title );
           //  actionBar.setIcon(R.drawable.store_icon);
-
-
             getActionBar().show();
+            if (tabStrip != null)
+                try{
+                    ((MyApplication) this.getApplication()).setActionBarProperties(this,getWindow(),tabStrip, getActionBar(), getResources(),this.abTitle, this.Title.toString());
+
+                }catch(Exception ex){
+                    String strError = ex.getMessage();
+                }
+
+
         }
         else
         {
@@ -288,40 +307,6 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/CaviarDreams.ttf");
         ((MyApplication) this.getApplication()).setDefaultTypeface(tf);
-
-
-
-        if (walletId == 2 || walletId == 1){
-
-
-            getActionBar().setDisplayHomeAsUpEnabled(false);
-            DrawerLayout draw = (DrawerLayout) findViewById(R.id.drawer_layout);
-            draw.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-            try{
-                ((MyApplication) this.getApplication()).setActionBarProperties(this,getWindow(),tabStrip, getActionBar(), getResources(),this.abTitle, this.Title.toString());
-
-
-            }catch(Exception ex)
-            {
-
-            }
-
-
-        }
-        else {
-            if (walletId == 3){
-
-                try{
-                    ((MyApplication) this.getApplication()).setActionBarProperties(this,getWindow(),tabStrip, getActionBar(), getResources(),abTitle, Title.toString());
-
-                }catch(Exception e)
-                {
-                    String strError = e.getMessage();
-                }
-
-            }
-        }
-
 
         if(tabs == null && fragments.size() > 1){
             this.initialisePaging();
@@ -362,7 +347,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-        if(this.mainMenumenu != null){
+       // if(this.mainMenumenu != null){
 
             MenuInflater inflater = getMenuInflater();
             switch ( this.activity.getType()) {
@@ -410,6 +395,9 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                     break;
                 case CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS:
                     break;
+                case CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_CHAT:
+                    getMenuInflater().inflate(R.menu.wallet_framework_activity_sent_all_menu, menu);
+                    return true;
                 case CWP_WALLET_ADULTS_ALL_SHOPS:
                     inflater.inflate(R.menu.wallet_shop_activity_account_detail_menu, menu);
                     break;
@@ -430,10 +418,10 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             inflaterClone.setFactory(lif);
 
             return super.onCreateOptionsMenu(menu);
-        }else
-        {
-            return true;
-        }
+       // }else
+       // {
+           // return true;
+       // }
 
     }
 
@@ -460,13 +448,16 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
     public void onItemSelectedClicked(View v) {
 
+        firstexecute = false;
+        ((MyApplication) this.getApplication()).setWalletId(0);
+        MyApplication.setContact("");
         String tagId = v.getTag().toString();
         String activityKey="";
-        String walletId="0";
+        String paramId="0";
 
         if(tagId.contains("|")){
             activityKey =  tagId.split("\\|")[0];
-            walletId =  tagId.split("\\|")[1];
+            paramId =  tagId.split("\\|")[1];
         }
         else
             activityKey =  tagId;
@@ -486,37 +477,23 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
                 break;
             case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_VERSION_1_MAIN:
-
-                ((MyApplication) this.getApplication()).setWalletId(Integer.parseInt(walletId));
-                NavigationDrawerFragment = null;
-                this.PagerAdapter = null; 
-                this.abTitle = null;
-                this.adapter = null;
-                this.pager = null;
-                
-                // NATALIA TODO: Hacete una funcion privada para resetear todas las variables y descargar de la pantalla todo lo que hay.
-
+                cleanWindows();
+                ((MyApplication) this.getApplication()).setWalletId(Integer.parseInt(paramId));
                  activity = this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_VERSION_1_MAIN);
                 NavigateActivity();
                 break;
             case CWP_WALLET_STORE_MAIN:
                 break;
             case CWP_WALLET_ADULTS_ALL_MAIN:
-                if (Integer.parseInt(walletId) > 4)
+                cleanWindows();
+                if (Integer.parseInt(paramId) > 4)
                 {
                     Toast.makeText(getApplicationContext(), "This part of the prototype is not ready yet",
                             Toast.LENGTH_LONG).show();
                 }
                 else
                 {
-
-                    ((MyApplication) this.getApplication()).setWalletId(Integer.parseInt(walletId));
-                    NavigationDrawerFragment = null;
-                    this.PagerAdapter = null;
-                    this.abTitle = null;
-                    this.adapter = null;
-                    this.pager = null;
-
+                    ((MyApplication) this.getApplication()).setWalletId(Integer.parseInt(paramId));
                      activity = this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_ADULTS_ALL_MAIN);
                     NavigateActivity();
 
@@ -546,23 +523,18 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                 break;
             case CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS:
                 break;
+            case CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_CHAT:
+                MyApplication.setContact(paramId);
+                activity = this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_CHAT);
+                Intent intent = new Intent(this, com.bitdubai.android.app.FragmentActivity.class);
+                startActivity(intent);
+                break;
             case CWP_WALLET_ADULTS_ALL_SHOPS:
-                ((MyApplication) this.getApplication()).setWalletId(0);
-                NavigationDrawerFragment = null;
-                this.PagerAdapter = null;
-                this.abTitle = null;
-                this.adapter = null;
-                this.pager = null;
-
-                runtimeActivity= new RuntimeActivity();
-                runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_SHOPS);
+                cleanWindows();
                 activity = this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_ADULTS_ALL_SHOPS);
                 NavigateActivity();
-                //intent = new Intent(this, ShopActivity.class);
-                // startActivity(intent);
-                
-                // NATALIA TODO: No me queda claro si en cada actividad creamos una nueva instancia de esta clase siempre o solo a veces???
-                break;
+
+                    break;
             case CWP_WALLET_ADULTS_ALL_REFFILS:
                 break;
             case CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED:
@@ -579,7 +551,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        super.onActivityResult(requestCode, resultCode,data);
+        super.onActivityResult(requestCode, resultCode, data);
 
     }
 
@@ -599,6 +571,17 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
+
+    }
+
+    private void cleanWindows()
+    {
+        NavigationDrawerFragment = null;
+        this.PagerAdapter = null;
+        this.abTitle = null;
+        this.adapter = null;
+        this.pager = null;
+        this.Title = "";
 
     }
 
@@ -646,9 +629,6 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
 
             }
-
-
-
 
 //execute current activity fragments
 

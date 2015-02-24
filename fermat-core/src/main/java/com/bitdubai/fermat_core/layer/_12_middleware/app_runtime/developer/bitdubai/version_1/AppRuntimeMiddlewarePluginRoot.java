@@ -572,6 +572,30 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, Middleware, AppR
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_DISCOUNTS);
         runtimeActivity.addFragment(runtimeFragment);
         listFragments.add(runtimeFragment);
+
+        runtimeActivity= new RuntimeActivity();
+        runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_CHAT);
+        runtimeWallet.addActivity(runtimeActivity);
+        listActivities.add(runtimeActivity);
+
+        runtimeTitleBar = new RuntimeTitleBar();
+        runtimeTitleBar.setLabel("");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeFragment = new RuntimeFragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_CHAT);
+        runtimeActivity.addFragment(runtimeFragment);
+        listFragments.add(runtimeFragment);
+
+        runtimeTabStrip = new RuntimeTabStrip();
+
+        runtimeTab = new RuntimeTab();
+        runtimeTab.setLabel("");
+        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_CHAT);
+        runtimeTabStrip.addTab(runtimeTab);
+
+        runtimeActivity.setTabStrip(runtimeTabStrip);
+
         /**
          * End of Wallet Adults tabs.
          */
@@ -718,6 +742,9 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, Middleware, AppR
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_ALL);
         runtimeActivity.addFragment(runtimeFragment);
         listFragments.add(runtimeFragment);
+
+
+
 
         listApps.add(runtimeApp);
         /**

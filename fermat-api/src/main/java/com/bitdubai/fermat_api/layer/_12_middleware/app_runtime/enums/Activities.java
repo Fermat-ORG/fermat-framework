@@ -23,6 +23,7 @@ public enum Activities {
     CWP_WALLET_RUNTIME_ADULTS_ALL_CLONES ("ClonesActivity"),
     CWP_WALLET_RUNTIME_ADULTS_ALL_CHILDS ("ChildsActivity"),
     CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS ( "ContactsActivity"),
+    CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_CHAT ( "ContactsChatActivity"),
     CWP_WALLET_ADULTS_ALL_SHOPS ("ShopsActivity"),
     CWP_WALLET_ADULTS_ALL_REFFILS ("ReffillsActivity"),
     CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED ("RequestReceivedActivity"),
