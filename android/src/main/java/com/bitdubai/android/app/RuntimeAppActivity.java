@@ -90,7 +90,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
     private SideMenu sidemenu;
     private String walletStyle = "";
     private TabStrip tabs;
-    private  TitleBar titleBar;
+    private  TitleBar titleBar; // Comment
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
