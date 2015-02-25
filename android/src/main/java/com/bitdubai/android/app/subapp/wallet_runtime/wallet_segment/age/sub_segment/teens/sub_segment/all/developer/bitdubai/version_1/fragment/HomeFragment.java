@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
@@ -11,6 +13,7 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bitdubai.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyLayoutInflaterFactory;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.SendToNewContactActivity;
 import com.bitdubai.android.app.common.version_1.classes.MyApplication;
@@ -38,6 +41,7 @@ public class HomeFragment extends  Fragment {
         f.setArguments(b);
         return f;
     }
+
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,6 +125,9 @@ public class HomeFragment extends  Fragment {
             this.transactions = transactions;
             inf = LayoutInflater.from(getActivity());
         }
+
+
+
 
 
         @Override
@@ -249,7 +256,7 @@ public class HomeFragment extends  Fragment {
                         note.text.setText(notes[groupPosition].toString());
 
                         ImageView  send_message = (ImageView) convertView.findViewById(R.id.icon_edit_profile);
-                        send_message.setTag(contacts[groupPosition].toString());
+                        send_message.setTag("ContactsChatActivity|"+contacts[groupPosition].toString());
 
 
                         switch (groupPosition)

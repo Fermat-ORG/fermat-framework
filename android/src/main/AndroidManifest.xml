@@ -79,6 +79,15 @@
         </activity>
 
         <activity
+            android:name="com.bitdubai.android.app.FragmentActivity"
+            android:label="@string/title_activity_blank" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name="com.bitdubai.android.app.subapp.publisher.version_1.activity.PublisherActivity"
             android:label="Publisher" >
             <meta-data

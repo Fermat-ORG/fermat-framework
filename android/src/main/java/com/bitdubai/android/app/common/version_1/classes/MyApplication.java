@@ -123,8 +123,8 @@ public class MyApplication extends Application {
         actionBar = pActionBar;
         tabs = pTabs;
         // Change the title of the action bar and the typeface
-        SpannableString s = new SpannableString("Unidentified wallet");
-        String color = "";
+        SpannableString s = new SpannableString("");
+        String color = "#F0E173";
         mTitle = pTitle;
         Drawable bg = context.getDrawable(R.drawable.transparent);
         bg.setVisible(false,false);
