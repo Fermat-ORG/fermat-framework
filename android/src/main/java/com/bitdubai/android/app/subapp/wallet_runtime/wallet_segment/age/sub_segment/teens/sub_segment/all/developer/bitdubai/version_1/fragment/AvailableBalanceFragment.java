@@ -1,6 +1,7 @@
 package com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment;
 
 
+import android.app.ActionBar;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -78,6 +79,33 @@ public  class AvailableBalanceFragment extends android.app.Fragment {
                 {},
                 {}
         };
+
+         final ViewGroup actionBarLayout = (ViewGroup) getActivity().getLayoutInflater().inflate(
+                 R.layout.wallets_teens_fragment_account_detail_action_bar,
+                 null);
+
+
+         // Set up your ActionBar
+         final ActionBar actionBar = getActivity().getActionBar();
+         actionBar.setDisplayShowHomeEnabled(false);
+         actionBar.setDisplayShowTitleEnabled(false);
+         actionBar.setDisplayShowCustomEnabled(true);
+         actionBar.setCustomView(actionBarLayout);
+
+         TextView tv;
+
+         tv = (TextView) actionBarLayout.findViewById(R.id.account_type);
+         tv.setTypeface(MyApplication.getDefaultTypeface());
+
+
+         tv = (TextView) actionBarLayout.findViewById(R.id.balance);
+         tv.setTypeface(MyApplication.getDefaultTypeface());
+
+         tv = (TextView) actionBarLayout.findViewById(R.id.balance_available);
+         tv.setTypeface(MyApplication.getDefaultTypeface());
+
+         tv = (TextView) actionBarLayout.findViewById(R.id.account_alias);
+         tv.setTypeface(MyApplication.getDefaultTypeface());
 
     }
 

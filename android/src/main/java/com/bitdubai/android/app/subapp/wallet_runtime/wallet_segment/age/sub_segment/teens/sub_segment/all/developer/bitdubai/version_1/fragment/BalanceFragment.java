@@ -289,6 +289,7 @@ public class BalanceFragment extends ListFragment implements LoaderManager.Loade
             tv = ((TextView)view.findViewById(R.id.balance_available));
             tv.setText(balances_available[position]);
             tv.setTypeface(MyApplication.getDefaultTypeface());
+            tv.setTag("AvailableBalanceActivity");
 
             tv = ((TextView)view.findViewById(R.id.account_alias));
             tv.setText(account_aliases[position]);

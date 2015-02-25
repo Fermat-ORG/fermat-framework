@@ -23,7 +23,10 @@ import com.bitdubai.fermat_core.layer._12_middleware.app_runtime.developer.bitdu
 import com.bitdubai.fermat_core.layer._12_middleware.app_runtime.developer.bitdubai.version_1.structure.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -45,16 +48,16 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, Middleware, AppR
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
     List<EventListener> listenersAdded = new ArrayList<>();
-    List<App> listApps = new ArrayList<>(); // NATALIA TODO: Esto deberia ser un MAP donde la key es el valor del Enum en cada caso. Arreglar los gets necesarios.
-    List<SubApp> listSubApp = new ArrayList<>(); // NATALIA TODO: Esto deberia ser un MAP donde la key es el valor del Enum en cada caso.
-    List<Activity> listActivities = new ArrayList<>(); // NATALIA TODO: Esto deberia ser un MAP donde la key es el valor del Enum en cada caso.
-    List<Fragment> listFragments = new ArrayList<>(); // NATALIA TODO: Esto deberia ser un MAP donde la key es el valor del Enum en cada caso.
-    List<Wallet> listWallets = new ArrayList<>(); // NATALIA TODO: Esto deberia ser un MAP donde la key es el valor del Enum en cada caso.
-    int lastApp = 0;  // NATALIA TODO: Esto no puede ser de tipo entero, debe ser del tipo de datos del Enum correspondiente.
-    int lastSubapp = 0; // NATALIA TODO: Esto no puede ser de tipo entero, debe ser del tipo de datos del Enum correspondiente.
-    int lastActivity = 0; // NATALIA TODO: Esto no puede ser de tipo entero, debe ser del tipo de datos del Enum correspondiente.
-    int lastFragment = 0; // NATALIA TODO: Esto no puede ser de tipo entero, debe ser del tipo de datos del Enum correspondiente.
-    int lastWallet = 0;// NATALIA TODO: Esto no puede ser de tipo entero, debe ser del tipo de datos del Enum correspondiente.
+     Map<Apps, App> listApps = new HashMap<Apps, App>();
+     Map<SubApps, SubApp> listSubApp = new HashMap<SubApps, SubApp>();
+    Map<Activities, Activity> listActivities = new HashMap<Activities, Activity>();
+    Map<Fragments, Fragment> listFragments = new HashMap<Fragments, Fragment>();
+    Map<Wallets, Wallet> listWallets = new HashMap<Wallets, Wallet>();
+    Apps lastApp;
+    SubApps lastSubapp;
+    Activities  lastActivity;
+    Fragments lastFragment;
+    Wallets lastWallet;
     /**
      * UsesFileSystem Interface member variables.
      */
@@ -163,22 +166,69 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, Middleware, AppR
 
     @Override
     public App getLastApp() {
-        return listApps.get(lastApp);
+        Iterator<Map.Entry<Apps, App>> eapp = this.listApps.entrySet().iterator();
+
+        while (eapp.hasNext()) {
+            Map.Entry<Apps, App> appEntry = eapp.next();
+            RuntimeApp app = (RuntimeApp) appEntry.getValue();
+            if(app.getType().name().equals(lastApp.name())){
+                return app;
+            }
+
+
+        }
+        return null;
+
     }
 
     @Override
     public SubApp getLastSubApp() {
-        return listSubApp.get(lastSubapp);
+        Iterator<Map.Entry<SubApps, SubApp>> esubapp = this.listSubApp.entrySet().iterator();
+
+        while (esubapp.hasNext()) {
+            Map.Entry<SubApps, SubApp> subappEntry = esubapp.next();
+            RuntimeSubApp subapp = (RuntimeSubApp) subappEntry.getValue();
+            if(subapp.getType().name().equals(this.lastSubapp.name())){
+                return subapp;
+            }
+
+
+        }
+
+        return null;
     }
 
     @Override
     public Wallet getLastWallet() {
-        return listWallets.get(lastWallet);
+
+        Iterator<Map.Entry<Wallets, Wallet>> ewallet = this.listWallets.entrySet().iterator();
+
+        while (ewallet.hasNext()) {
+            Map.Entry<Wallets, Wallet> walletEntry = ewallet.next();
+            RuntimeWallet wallet = (RuntimeWallet) walletEntry.getValue();
+            if(wallet.getType().name().equals(this.lastWallet.name())){
+                return wallet;
+            }
+
+
+        }
+
+        return null;
     }
 
     @Override
     public Activity getLasActivity() {
-        return listActivities.get(lastActivity);
+        Iterator<Map.Entry<Activities, Activity>> eactivity = this.listActivities.entrySet().iterator();
+
+        while (eactivity.hasNext()) {
+            Map.Entry<Activities, Activity> activityEntry = eactivity.next();
+            RuntimeActivity activity = (RuntimeActivity) activityEntry.getValue();
+            if(activity.getType().name().equals(this.lastActivity.name())){
+                return activity;
+            }
+        }
+
+        return null;
     }
 
     @Override
@@ -188,11 +238,17 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, Middleware, AppR
 
     @Override
     public Activity getActivity(Activities app) {
-        for (int i = 0; i < listActivities.size(); i++) {
-            if(listActivities.get(i).getType().name().equals(app.name()) ){
-                lastActivity = i;
-                return listActivities.get(i) ;
-            }
+        Iterator<Map.Entry<Activities, Activity>> eactivity = this.listActivities.entrySet().iterator();
+
+        while (eactivity.hasNext()) {
+            Map.Entry<Activities, Activity> activityEntry = eactivity.next();
+            RuntimeActivity activity = (RuntimeActivity) activityEntry.getValue();
+             if(activity.getType().name().equals(app.name())){
+                 lastActivity = activity.getType();
+                 return activity;
+             }
+
+
         }
         return null;
     }
@@ -276,80 +332,103 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, Middleware, AppR
         runtimeSubApp = new RuntimeSubApp();
         runtimeSubApp.setType(SubApps.CWP_SHELL);
         runtimeApp.addSubApp(runtimeSubApp);
-        listSubApp.add(runtimeSubApp);
+        listSubApp.put(SubApps.CWP_SHELL,runtimeSubApp);
 
         runtimeActivity= new RuntimeActivity();
         runtimeActivity.setType(Activities.CWP_SHELL_LOGIN);
         runtimeSubApp.addActivity(runtimeActivity);
-        listActivities.add(runtimeActivity);
+        listActivities.put(Activities.CWP_SHELL_LOGIN, runtimeActivity);
 
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_SHELL_LOGIN);
         runtimeActivity.addFragment(runtimeFragment);
-        listFragments.add(runtimeFragment);
+        listFragments.put(Fragments.CWP_SHELL_LOGIN,runtimeFragment);
 
 
 
         runtimeSubApp = new RuntimeSubApp();
         runtimeSubApp.setType(SubApps.CWP_WALLET_FACTORY);
         runtimeApp.addSubApp(runtimeSubApp);
-        listSubApp.add(runtimeSubApp);
+        listSubApp.put(SubApps.CWP_WALLET_FACTORY,runtimeSubApp);
 
         runtimeActivity= new RuntimeActivity();
         runtimeActivity.setType(Activities.CWP_WALLET_FACTORY_MAIN);
         runtimeSubApp.addActivity(runtimeActivity);
-        listActivities.add(runtimeActivity);
+        listActivities.put(Activities.CWP_WALLET_FACTORY_MAIN, runtimeActivity);
 
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_FACTORY_MAIN);
         runtimeActivity.addFragment(runtimeFragment);
-        listFragments.add(runtimeFragment);
+        listFragments.put(Fragments.CWP_WALLET_FACTORY_MAIN,runtimeFragment);
 
 
         runtimeSubApp = new RuntimeSubApp();
         runtimeSubApp.setType(SubApps.CWP_WALLET_MANAGER);
         runtimeApp.addSubApp(runtimeSubApp);
-        listSubApp.add(runtimeSubApp);
-        lastSubapp = 2;
+        listSubApp.put(SubApps.CWP_WALLET_MANAGER,runtimeSubApp);
+        lastSubapp = SubApps.CWP_WALLET_MANAGER;
 
         runtimeActivity= new RuntimeActivity();
         runtimeActivity.setType(Activities.CWP_WALLET_MANAGER_MAIN);
         runtimeSubApp.addActivity(runtimeActivity);
-        listActivities.add(runtimeActivity);
+        listActivities.put(Activities.CWP_WALLET_MANAGER_MAIN, runtimeActivity);
 
-        lastActivity = 2;
+        lastActivity = Activities.CWP_WALLET_MANAGER_MAIN;
 
         runtimeSideMenu = new RuntimeSideMenu();
+
         runtimeMenuItem = new RuntimeMenuItem();
-        runtimeMenuItem.setLabel("");
+        runtimeMenuItem.setLabel("Personal Wallets");
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new RuntimeMenuItem();
+        runtimeMenuItem.setLabel("Shops");
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new RuntimeMenuItem();
+        runtimeMenuItem.setLabel("Commercial wallets");
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new RuntimeMenuItem();
+        runtimeMenuItem.setLabel("Factory Projects");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_FACTORY_MAIN);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new RuntimeMenuItem();
+        runtimeMenuItem.setLabel("Published Wallets");
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new RuntimeMenuItem();
+        runtimeMenuItem.setLabel("Exit");
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
         runtimeActivity.setSideMenu(runtimeSideMenu);
 
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_MANAGER_MAIN);
         runtimeActivity.addFragment(runtimeFragment);
-        listFragments.add(runtimeFragment);
+        listFragments.put(Fragments.CWP_WALLET_MANAGER_MAIN,runtimeFragment);
 
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_SHOP_MANAGER_MAIN);
         runtimeActivity.addFragment(runtimeFragment);
-        listFragments.add(runtimeFragment);
+        listFragments.put(Fragments.CWP_SHOP_MANAGER_MAIN,runtimeFragment);
 
 
         runtimeSubApp = new RuntimeSubApp();
         runtimeSubApp.setType(SubApps.CWP_WALLET_RUNTIME);
         runtimeApp.addSubApp(runtimeSubApp);
-        listSubApp.add(runtimeSubApp);
+        listSubApp.put(SubApps.CWP_WALLET_RUNTIME,runtimeSubApp);
 
         runtimeWallet = new RuntimeWallet();
         runtimeWallet.setType(Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI);
         runtimeSubApp.addWallet(runtimeWallet);
-        listWallets.add(runtimeWallet);
+        listWallets.put(Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI,runtimeWallet);
 
         runtimeActivity= new RuntimeActivity();
         runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_VERSION_1_MAIN);
         runtimeWallet.addActivity(runtimeActivity);
-        listActivities.add(runtimeActivity);
+        listActivities.put(Activities.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_VERSION_1_MAIN, runtimeActivity);
 
         runtimeTitleBar = new RuntimeTitleBar();
         runtimeTitleBar.setLabel("Kids Wallet");
@@ -395,22 +474,22 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, Middleware, AppR
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_PROFILE);
         runtimeActivity.addFragment(runtimeFragment);
-        listFragments.add(runtimeFragment);
+        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_PROFILE,runtimeFragment);
 
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_DESKTOP);
         runtimeActivity.addFragment(runtimeFragment);
-        listFragments.add(runtimeFragment);
+        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_DESKTOP,runtimeFragment);
 
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_CONTACTS);
         runtimeActivity.addFragment(runtimeFragment);
-        listFragments.add(runtimeFragment);
+        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_CONTACTS,runtimeFragment);
 
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_COMMUNITY);
         runtimeActivity.addFragment(runtimeFragment);
-        listFragments.add(runtimeFragment);
+        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_COMMUNITY,runtimeFragment);
 
 
         /**
@@ -421,28 +500,28 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, Middleware, AppR
         runtimeSubApp = new RuntimeSubApp();
         runtimeSubApp.setType(SubApps.CWP_WALLET_STORE);
         runtimeApp.addSubApp(runtimeSubApp);
-        listSubApp.add(runtimeSubApp);
+        listSubApp.put(SubApps.CWP_WALLET_STORE,runtimeSubApp);
 
         runtimeActivity= new RuntimeActivity();
         runtimeActivity.setType(Activities.CWP_WALLET_STORE_MAIN);
         runtimeSubApp.addActivity(runtimeActivity);
-        listActivities.add(runtimeActivity);
+        listActivities.put(Activities.CWP_WALLET_STORE_MAIN, runtimeActivity);
 
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_STORE_MAIN);
         runtimeActivity.addFragment(runtimeFragment);
-        listFragments.add(runtimeFragment);
+        listFragments.put(Fragments.CWP_WALLET_STORE_MAIN,runtimeFragment);
 
 
         runtimeWallet = new RuntimeWallet();
         runtimeWallet.setType(Wallets.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI);
         runtimeSubApp.addWallet(runtimeWallet);
-        listWallets.add(runtimeWallet);
+        listWallets.put(Wallets.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI,runtimeWallet);
 
         runtimeActivity= new RuntimeActivity();
         runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_MAIN);
         runtimeSubApp.addActivity(runtimeActivity);
-        listActivities.add(runtimeActivity);
+        listActivities.put(Activities.CWP_WALLET_ADULTS_ALL_MAIN, runtimeActivity);
 
         runtimeTitleBar = new RuntimeTitleBar();
         runtimeTitleBar.setLabel("Ladies wallet");
@@ -541,42 +620,42 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, Middleware, AppR
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_HOME);
         runtimeActivity.addFragment(runtimeFragment);
-        listFragments.add(runtimeFragment);
+        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_HOME,runtimeFragment);
 
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_BALANCE);
         runtimeActivity.addFragment(runtimeFragment);
-        listFragments.add(runtimeFragment);
+        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_BALANCE,runtimeFragment);
 
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SEND);
         runtimeActivity.addFragment(runtimeFragment);
-        listFragments.add(runtimeFragment);
+        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SEND,runtimeFragment);
 
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_RECEIVE);
         runtimeActivity.addFragment(runtimeFragment);
-        listFragments.add(runtimeFragment);
+        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_RECEIVE,runtimeFragment);
 
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOPS);
         runtimeActivity.addFragment(runtimeFragment);
-        listFragments.add(runtimeFragment);
+        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOPS,runtimeFragment);
 
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_REFFIL);
         runtimeActivity.addFragment(runtimeFragment);
-        listFragments.add(runtimeFragment);
+        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_REFFIL,runtimeFragment);
 
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_DISCOUNTS);
         runtimeActivity.addFragment(runtimeFragment);
-        listFragments.add(runtimeFragment);
+        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_DISCOUNTS,runtimeFragment);
 
         runtimeActivity= new RuntimeActivity();
         runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_CHAT);
         runtimeWallet.addActivity(runtimeActivity);
-        listActivities.add(runtimeActivity);
+        listActivities.put(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_CHAT, runtimeActivity);
 
         runtimeTitleBar = new RuntimeTitleBar();
         runtimeTitleBar.setLabel("");
@@ -585,7 +664,7 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, Middleware, AppR
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_CHAT);
         runtimeActivity.addFragment(runtimeFragment);
-        listFragments.add(runtimeFragment);
+        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_CHAT,runtimeFragment);
 
         runtimeTabStrip = new RuntimeTabStrip();
 
@@ -596,6 +675,8 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, Middleware, AppR
 
         runtimeActivity.setTabStrip(runtimeTabStrip);
 
+
+
         /**
          * End of Wallet Adults tabs.
          */
@@ -603,7 +684,7 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, Middleware, AppR
         runtimeActivity= new RuntimeActivity();
         runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_SHOPS);
         runtimeSubApp.addActivity(runtimeActivity);
-        listActivities.add(runtimeActivity);
+        listActivities.put(Activities.CWP_WALLET_ADULTS_ALL_SHOPS, runtimeActivity);
 
         runtimeTitleBar = new RuntimeTitleBar();
         runtimeTitleBar.setLabel("My Shop");
@@ -648,32 +729,32 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, Middleware, AppR
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_SHOP);
         runtimeActivity.addFragment(runtimeFragment);
-        listFragments.add(runtimeFragment);
+        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_SHOP,runtimeFragment);
 
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_PRODUCTS);
         runtimeActivity.addFragment(runtimeFragment);
-        listFragments.add(runtimeFragment);
+        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_PRODUCTS,runtimeFragment);
 
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_REVIEWS);
         runtimeActivity.addFragment(runtimeFragment);
-        listFragments.add(runtimeFragment);
+        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_REVIEWS,runtimeFragment);
 
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_CHAT);
         runtimeActivity.addFragment(runtimeFragment);
-        listFragments.add(runtimeFragment);
+        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_CHAT,runtimeFragment);
 
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_HISTORY);
         runtimeActivity.addFragment(runtimeFragment);
-        listFragments.add(runtimeFragment);
+        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_HISTORY,runtimeFragment);
 
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_MAP);
         runtimeActivity.addFragment(runtimeFragment);
-        listFragments.add(runtimeFragment);
+        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_MAP,runtimeFragment);
         /**
          * End of SHOPS tabs.
          */
@@ -681,33 +762,36 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, Middleware, AppR
         runtimeActivity= new RuntimeActivity();
         runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_REFFILS);
         runtimeSubApp.addActivity(runtimeActivity);
-        listActivities.add(runtimeActivity);
+        listActivities.put(Activities.CWP_WALLET_ADULTS_ALL_REFFILS, runtimeActivity);
 //-----------------------------------------------------------------------------------
         runtimeActivity= new RuntimeActivity();
         runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED);
         runtimeSubApp.addActivity(runtimeActivity);
-        listActivities.add(runtimeActivity);
+        listActivities.put(Activities.CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED, runtimeActivity);
 
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED);
         runtimeActivity.addFragment(runtimeFragment);
-        listFragments.add(runtimeFragment);
+        listFragments.put(Fragments.CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED,runtimeFragment);
 //------------------------------------------------------------------------------------
         runtimeActivity= new RuntimeActivity();
         runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_REQUEST_SEND);
         runtimeSubApp.addActivity(runtimeActivity);
-        listActivities.add(runtimeActivity);
+        listActivities.put(Activities.CWP_WALLET_ADULTS_ALL_REQUEST_SEND, runtimeActivity);
 
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_ADULTS_ALL_REQUEST_SEND);
         runtimeActivity.addFragment(runtimeFragment);
-        listFragments.add(runtimeFragment);
+        listFragments.put(Fragments.CWP_WALLET_ADULTS_ALL_REQUEST_SEND,runtimeFragment);
 //-----------------------------------------------------------------------------------
         runtimeActivity= new RuntimeActivity();
         runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_ACCOUNTS);
         runtimeSubApp.addActivity(runtimeActivity);
-        listActivities.add(runtimeActivity);
+        listActivities.put(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_ACCOUNTS, runtimeActivity);
 
+        runtimeTitleBar = new RuntimeTitleBar();
+        runtimeTitleBar.setLabel("Account details");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeTabStrip = new RuntimeTabStrip();
         runtimeTab = new RuntimeTab();
@@ -731,22 +815,19 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, Middleware, AppR
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_DEBITS);
         runtimeActivity.addFragment(runtimeFragment);
-        listFragments.add(runtimeFragment);
+        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_DEBITS,runtimeFragment);
 
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNT_CREDITS);
         runtimeActivity.addFragment(runtimeFragment);
-        listFragments.add(runtimeFragment);
+        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNT_CREDITS,runtimeFragment);
 
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_ALL);
         runtimeActivity.addFragment(runtimeFragment);
-        listFragments.add(runtimeFragment);
-
-
-
-
-        listApps.add(runtimeApp);
+        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_ALL,runtimeFragment);
+        listApps.put(Apps.CRYPTO_WALLET_PLATFORM,runtimeApp);
+        lastApp = Apps.CRYPTO_WALLET_PLATFORM;
         /**
          * End of Wallet Accounts tabs.
          */

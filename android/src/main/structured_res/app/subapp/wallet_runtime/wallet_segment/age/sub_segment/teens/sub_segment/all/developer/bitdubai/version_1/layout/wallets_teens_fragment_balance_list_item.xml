@@ -133,7 +133,7 @@ android:paddingTop="7dip"
 
             android:clickable="true"
 
-            android:onClick="onAvailableBalanceIconClicked"
+            android:onClick="onItemSelectedClicked"
 
             />
 
