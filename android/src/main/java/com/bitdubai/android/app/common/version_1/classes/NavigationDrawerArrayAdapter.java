@@ -39,7 +39,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                 case "DesktopActivity":
                     rowView = inflater.inflate(R.layout.wallet_manager_desktop_activity_navigation_drawer_first_row, parent, false);
                     break;
-                case "FrameworkActivity":
+                case "AdultsActivity":
                     rowView = inflater.inflate(R.layout.wallet_framework_activity_framework_navigation_drawer_first_row, parent, false);
                     break;
                 case "ShopActivity":
@@ -76,7 +76,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                 case "DesktopActivity":
                     rowView = inflater.inflate(R.layout.wallet_manager_desktop_activity_framework_navigation_drawer_row_layout, parent, false);
                     break;
-                case "FrameworkActivity":
+                case "AdultsActivity":
                     rowView = inflater.inflate(R.layout.wallet_framework_activity_framework_navigation_drawer_row_layout, parent, false);
                     break;
                 case "ShopActivity":

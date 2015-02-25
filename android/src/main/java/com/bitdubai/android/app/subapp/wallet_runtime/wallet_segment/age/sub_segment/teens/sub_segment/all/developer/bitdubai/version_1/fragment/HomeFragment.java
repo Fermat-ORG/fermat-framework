@@ -1,6 +1,7 @@
 package com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -58,6 +59,8 @@ public class HomeFragment extends  Fragment {
         balances = new String[]{"$5,693.50"};
         balances_available = new String[]{"$1,970.00 available"};
 
+        MyApplication.changeColor(Color.parseColor("#F0E173"), super.getActivity().getResources());
+
     }
 
     @Override
@@ -77,20 +80,8 @@ public class HomeFragment extends  Fragment {
 
         lv.setOnItemClickListener(null);
 
-     /*  lv.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
 
-            @Override
-            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-
-                Intent intent;
-                 intent = new Intent(getActivity(), SentDetailActivity.class);
-                startActivity(intent);
-
-                return true;
-            }
-        });*/
-
-        lv.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+       /* lv.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
 
             @Override
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
@@ -107,7 +98,7 @@ public class HomeFragment extends  Fragment {
                     return false;
                 }
             }
-        });
+        });*/
 
 
 

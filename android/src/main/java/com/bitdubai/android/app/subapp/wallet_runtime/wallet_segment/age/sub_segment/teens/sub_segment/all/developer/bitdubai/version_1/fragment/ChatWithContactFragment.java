@@ -1,6 +1,7 @@
 package com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment;
 
 import android.app.ActionBar;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,27 +45,27 @@ public class ChatWithContactFragment extends android.app.Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-         countries = new String[]{};
-        states = new String[]{};
-        cities = new String[]{};
+        this.countries = new String[]{};
+        this.states = new String[]{};
+        this.cities = new String[]{};
 
         //pictures = new String[]{"luis_profile_picture", "guillermo_profile_picture", "pedro_profile_picture", "mariana_profile_picture"};
 
-        transactions = new String[][]{
+        this.transactions = new String[][]{
 
                 {},
         };
-        transactions_amounts = new String[][]{
-
-                {},
-        };
-
-        transactions_whens = new String[][]{
+        this.transactions_amounts = new String[][]{
 
                 {},
         };
 
-        String[]  contacts = new String[]{"Céline Begnis", "Kimberly Brown", "Juan Luis R. Pons", "Karina Rodríguez"
+        this.transactions_whens = new String[][]{
+
+                {},
+        };
+
+        this.contacts = new String[]{"Céline Begnis", "Kimberly Brown", "Juan Luis R. Pons", "Karina Rodríguez"
                 ,"Guillermo Villanueva","Lucia Alarcon De Zamacona", "Luis Fernando Molina", "Mariana Duyos", "Pedro Perrotta"
                 , "Simon Cushing","Stephanie Himonidis","Taylor Backus", "Ginny Kaltabanis","Piper Faust","Deniz Caglar"
                 ,"Helen Nisbet","Dea Vanagan","Tim Hunter","Madeleine Jordan","Kate Bryan","Victoria Gandit","Jennifer Johnson"
@@ -73,16 +74,18 @@ public class ChatWithContactFragment extends android.app.Fragment {
         int groupPosition = 0;
         String contact_name = MyApplication.getContact();
 
-        for (int i = 0; i < contacts.length; i++) {
+        for (int i = 0; i < this.contacts.length; i++) {
 
-            if (contacts[i] == contact_name) {
+            if (this.contacts[i].equals(contact_name)) {
                 groupPosition = i;
+                break;
             }
         }
 
         final ViewGroup actionBarLayout = (ViewGroup) super.getActivity().getLayoutInflater().inflate(
                 R.layout.wallet_framework_activity_chat_with_contact_action_bar,
                 null);
+        MyApplication.changeColor(Color.parseColor("#F0E173"), super.getActivity().getResources());
 
         super.getActivity().getActionBar().setDisplayShowHomeEnabled(false);
         super.getActivity().getActionBar().setDisplayShowTitleEnabled(false);

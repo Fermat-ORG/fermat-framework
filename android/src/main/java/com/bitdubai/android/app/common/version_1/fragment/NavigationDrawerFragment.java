@@ -19,6 +19,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import java.util.ArrayList;
+
+import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.SideMenu;
+import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.App;
+import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.AppRuntimeManager;
+import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.SubApp;
+import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.Tab;
+import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Activities;
+import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
+import com.bitdubai.fermat_core.CorePlatformContext;
+import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.android.app.common.version_1.classes.MyApplication;
 import com.bitdubai.android.app.common.version_1.classes.NavigationDrawerArrayAdapter;
@@ -27,13 +38,19 @@ import com.bitdubai.android.app.subapp.publisher.version_1.activity.ShopsActivit
 import com.bitdubai.android.app.subapp.wallet_factory.version_2.activity.FactoryActivity;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.ContactsActivity;
 
+import java.util.List;
+
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
  */
 public class NavigationDrawerFragment extends Fragment {
-
+    private AppRuntimeManager appRuntimeMiddleware;
+    private App app;
+    private SubApp subApp;
+    private com.bitdubai.fermat_api.layer._12_middleware.app_runtime.Activity activity;
+    private CorePlatformContext platformContext;
     /**
      * Remember the position of the selected item.
      */
@@ -109,20 +126,21 @@ public class NavigationDrawerFragment extends Fragment {
             }
         });
 
+        //create menu option based activity submenu definition
+        Platform platform = MyApplication.getPlatform();
 
-        if (MyApplication.getActivityId() == "DesktopActivity") {
-            mDrawerListView.setAdapter(new NavigationDrawerArrayAdapter(
-                    getActivity(),
-                    new String[]{
+        this.platformContext = platform.getCorePlatformContext();
 
-                            getString(R.string.title_section12),
-                            getString(R.string.title_section13),
-                            getString(R.string.title_section14),
-                            getString(R.string.title_section15),
-                            getString(R.string.title_section16),
-                            getString(R.string.title_section11)
+        this.appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.APP_RUNTIME_MIDDLEWARE);
 
-                    }));
+        String[] menuOption = new String[]{} ;
+
+        mDrawerListView.setAdapter(new NavigationDrawerArrayAdapter(
+                getActivity(),
+                menuOption));
+
+       /* if (MyApplication.getActivityId() == "DesktopActivity") {
+
 
 
         }
@@ -150,7 +168,7 @@ public class NavigationDrawerFragment extends Fragment {
                             getString(R.string.title_section10),
                             getString(R.string.title_section11),
                     }));
-        }
+        }*/
 
 
 
@@ -170,6 +188,38 @@ public class NavigationDrawerFragment extends Fragment {
      * @param drawerLayout The DrawerLayout containing this fragment's UI.
      */
     public void setUp(int fragmentId, DrawerLayout drawerLayout) {
+
+        //create menu option based activity submenu definition
+        Platform platform = MyApplication.getPlatform();
+
+        this.platformContext = platform.getCorePlatformContext();
+
+        this.appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.APP_RUNTIME_MIDDLEWARE);
+
+
+        List<String> menuOption = new ArrayList<String>();
+        List<com.bitdubai.fermat_api.layer._12_middleware.app_runtime.MenuItem> menuItem = new ArrayList<>();
+        if(appRuntimeMiddleware != null){
+
+            this.activity = appRuntimeMiddleware.getLasActivity();
+            SideMenu sideMenu = activity.getSideMenu();
+
+            if(sideMenu !=null)
+            {
+                 menuItem = sideMenu.getMenuItems();
+                for (int i = 0; i < menuItem.size(); i++) {
+
+                    com.bitdubai.fermat_api.layer._12_middleware.app_runtime.MenuItem menu = menuItem.get(i);
+                    menuOption.add(menu.getLabel());
+                }
+
+            }
+        }
+
+            mDrawerListView.setAdapter(new NavigationDrawerArrayAdapter(
+                    getActivity(),
+                    menuOption.toArray(new String[menuItem.size()])));
+
         mFragmentContainerView = getActivity().findViewById(fragmentId);
         mDrawerLayout = drawerLayout;
 

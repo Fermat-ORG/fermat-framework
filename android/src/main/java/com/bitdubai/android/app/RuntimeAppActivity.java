@@ -97,7 +97,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
     private TabStrip tabs;
     private  TitleBar titleBar; // Comment
     private boolean firstexecute = true;
-    
+    private Bundle savedInstanceState;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,6 +105,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
         try {
             setContentView(R.layout.runtime_app_activity_runtime);
+            this.savedInstanceState = savedInstanceState;
             //init runtime app
 
             Platform platform = MyApplication.getPlatform();
@@ -114,15 +115,12 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
             this.Os.setContext(this);
             platform.setOs(Os);
-
-            if(firstexecute)  {
-                platform.start();
+               platform.start();
 
                 this.platformContext = platform.getCorePlatformContext();
 
                 this.appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.APP_RUNTIME_MIDDLEWARE);
                 NavigateActivity();
-            }
 
 
         }
@@ -285,8 +283,6 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                 }catch(Exception ex){
                     String strError = ex.getMessage();
                 }
-
-
         }
         else
         {
@@ -302,6 +298,8 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             this.NavigationDrawerFragment.setUp(
                     R.id.navigation_drawer,
                     (DrawerLayout) findViewById(R.id.drawer_layout));
+
+
         }
 
 
@@ -465,7 +463,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
         //  Activities activityType = Activities.CWP_WALLET_MANAGER_MAIN;
         Activities activityType = Activities.getValueFromString(activityKey);
         com.bitdubai.fermat_api.layer._12_middleware.app_runtime.Activity activity;
-
+        Intent intent;
         RuntimeActivity runtimeActivity;
         switch (activityType) {
 
@@ -497,8 +495,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                      activity = this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_ADULTS_ALL_MAIN);
                     NavigateActivity();
 
-                    // intent = new Intent(this, FrameworkActivity.class);
-                    // startActivity(intent);
+
                 }
                 break;
             case CWP_WALLET_RUNTIME_STORE_MAIN:
@@ -506,6 +503,11 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             case CWP_WALLET_RUNTIME_ADULTS_ALL_MAIN:
                 break;
             case CWP_WALLET_RUNTIME_ADULTS_ALL_ACCOUNTS:
+                break;
+            case CWP_WALLET_RUNTIME_ADULTS_ALL_AVAILABLE_BALANCE:
+                 this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_AVAILABLE_BALANCE);
+                 intent = new Intent(this, com.bitdubai.android.app.FragmentActivity.class);
+                startActivity(intent);
                 break;
             case CWP_WALLET_RUNTIME_ADULTS_ALL_BANKS:
                 break;
@@ -526,7 +528,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             case CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_CHAT:
                 MyApplication.setContact(paramId);
                 activity = this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_CHAT);
-                Intent intent = new Intent(this, com.bitdubai.android.app.FragmentActivity.class);
+                 intent = new Intent(this, com.bitdubai.android.app.FragmentActivity.class);
                 startActivity(intent);
                 break;
             case CWP_WALLET_ADULTS_ALL_SHOPS:

@@ -28,6 +28,7 @@ import com.bitdubai.android.app.subapp.shop.version_1.fragment.ShopProductsFragm
 import com.bitdubai.android.app.subapp.shop.version_1.fragment.ShopReviewsFragment;
 import com.bitdubai.android.app.subapp.shop.version_1.fragment.ShopShopFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.kids.sub_segment.all.developer.bitdubai.version_1.fragment.ProfileCardFrontFragment;
+import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.AvailableBalanceFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.BalanceFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ChatWithContactFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.DiscountsFragment;
@@ -129,7 +130,12 @@ public class FragmentActivity  extends Activity {
                                     .commit();
                         }
                         break;
-                    case CWP_WALLET_MANAGER_MAIN:
+                    case CWP_WALLET_RUNTIME_ADULTS_ALL_AVAILABLE_BALANCE :
+                        if (savedInstanceState == null) {
+                            getFragmentManager().beginTransaction()
+                                    .add(R.id.container, new AvailableBalanceFragment())
+                                    .commit();
+                        }
                         break;
                     case CWP_SHOP_MANAGER_MAIN:
                         break;
@@ -187,8 +193,62 @@ public class FragmentActivity  extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.wallet_framework_activity_sent_all_menu, menu);
+        switch ( this.activity.getType()) {
+
+            case CWP_SHELL_LOGIN:
+                break;
+            case CWP_SHOP_MANAGER_MAIN:
+
+                break;
+            case CWP_WALLET_MANAGER_MAIN:
+                break;
+            case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_VERSION_1_MAIN:
+
+                break;
+
+            case CWP_WALLET_RUNTIME_STORE_MAIN:
+                break;
+            case CWP_WALLET_RUNTIME_ADULTS_ALL_AVAILABLE_BALANCE:
+                getMenuInflater().inflate(R.menu.wallet_framework_activity_available_balance_menu, menu);
+
+            case CWP_WALLET_RUNTIME_ADULTS_ALL_MAIN:
+                break;
+            case CWP_WALLET_RUNTIME_ADULTS_ALL_ACCOUNTS:
+                break;
+            case CWP_WALLET_RUNTIME_ADULTS_ALL_BANKS:
+                break;
+            case CWP_WALLET_RUNTIME_ADULTS_ALL_COUPONS:
+                break;
+            case CWP_WALLET_RUNTIME_ADULTS_ALL_DISCOUNTS:
+                break;
+            case CWP_WALLET_RUNTIME_ADULTS_ALL_VOUCHERS:
+                break;
+            case CWP_WALLET_RUNTIME_ADULTS_ALL_GIFT_CARDS:
+                break;
+            case CWP_WALLET_RUNTIME_ADULTS_ALL_CLONES:
+                break;
+            case CWP_WALLET_RUNTIME_ADULTS_ALL_CHILDS:
+                break;
+            case CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS:
+                break;
+            case CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_CHAT:
+                getMenuInflater().inflate(R.menu.wallet_framework_activity_sent_all_menu, menu);
+
+            case CWP_WALLET_ADULTS_ALL_SHOPS:
+
+                break;
+            case CWP_WALLET_ADULTS_ALL_REFFILS:
+                break;
+            case CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED:
+                break;
+            case CWP_WALLET_ADULTS_ALL_REQUEST_SEND:
+                break;
+            case CWP_WALLET_FACTORY_MAIN:
+                break;
+        }
+
         return true;
+
     }
 
     @Override
