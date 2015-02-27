@@ -13,10 +13,15 @@ import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
 import android.os.Handler;
+import android.support.v4.widget.DrawerLayout;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
+
+import com.bitdubai.android.app.common.version_1.fragment.NavigationDrawerFragment;
+import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.TitleBar;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.fermat_core.Platform;
 
@@ -119,6 +124,42 @@ public class MyApplication extends Application {
 */
     }
 
+    public static void setActivityProperties(Activity activity, Window window,Resources context,PagerSlidingTabStrip tabStrip,ActionBar actionBar,TitleBar titleBar,TextView abTitle, CharSequence Title)
+    {
+        Typeface tf = Typeface.createFromAsset(activity.getAssets(), "fonts/CaviarDreams.ttf");
+        setDefaultTypeface(tf);
+
+        if(titleBar !=null){
+
+            abTitle.setTextColor(Color.WHITE);
+            abTitle.setTypeface(MyApplication.getDefaultTypeface());
+            actionBar.setTitle(Title);
+            getActionBar().show();
+            if (tabStrip != null){
+                setActionBarProperties(activity,window,tabStrip, getActionBar(),context,abTitle, Title.toString());
+                tabStrip.setTypeface(tf,1 );
+                tabStrip.setBackgroundResource(R.drawable.background_tiled_diagonal_light);
+
+            }
+
+
+            /*if (walletId == 2 || walletId == 1){
+                getActionBar().setDisplayHomeAsUpEnabled(false);
+                DrawerLayout draw = (DrawerLayout) findViewById(R.id.drawer_layout);
+                draw.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            }else
+            {
+                actionBar.setDisplayShowTitleEnabled(true);
+            }*/
+        }
+        else
+        {
+            getActionBar().hide();
+        }
+
+
+
+    }
     public static void setActionBarProperties(Activity activity, Window window,  PagerSlidingTabStrip pTabs, ActionBar pActionBar, Resources context,  TextView abTitle, String pTitle) {
         actionBar = pActionBar;
         tabs = pTabs;

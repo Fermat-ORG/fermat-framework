@@ -18,10 +18,19 @@ public class RuntimeActivity implements Activity {
     SideMenu sideMenu;
     MainMenu mainMenu;
     TabStrip tabStrip;
+    String color;
 
     /**
      * RuntimeActivity interface implementation.
      */
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getColor()  {
+        return this.color;
+    }
 
     public void setType(Activities type) {
         this.type = type;
@@ -42,11 +51,11 @@ public class RuntimeActivity implements Activity {
     public void setMainMenu(MainMenu mainMenu) {
         this.mainMenu = mainMenu;
     }
-    
+
     public void setTabStrip(TabStrip tabStrip) {
         this.tabStrip = tabStrip;
     }
-    
+
     /**
      * SubApp interface implementation.
      */

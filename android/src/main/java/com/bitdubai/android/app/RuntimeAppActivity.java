@@ -47,6 +47,7 @@ import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.view.ViewGroup;
 
 import com.bitdubai.fermat_api.CantStartPlatformException;
 
@@ -64,6 +65,7 @@ import com.bitdubai.fermat_core.layer._12_middleware.app_runtime.developer.bitdu
 
 import com.bitdubai.fermat_core.CorePlatformContext;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Iterator;
@@ -75,6 +77,7 @@ import java.util.Vector;
 public class RuntimeAppActivity extends FragmentActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks{
 
     private NavigationDrawerFragment NavigationDrawerFragment;
+
     private PagerAdapter PagerAdapter;
     public CharSequence Title; // NATALIA TODO:porque esto es publico? LUIS lo usa la funcion Restore Action bar
     private Menu menu;
@@ -87,6 +90,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
     private AndroidOsAddonRoot Os;
     private CorePlatformContext platformContext;
     private ViewPager pager;
+    private ViewPager pagertabs;
     private MyPagerAdapter adapter;
     private  TextView abTitle;
     private Drawable oldBackground = null;
@@ -98,6 +102,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
     private  TitleBar titleBar; // Comment
     private boolean firstexecute = true;
     private Bundle savedInstanceState;
+    private ViewGroup collection;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,12 +120,12 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
             this.Os.setContext(this);
             platform.setOs(Os);
-               platform.start();
+            platform.start();
 
-                this.platformContext = platform.getCorePlatformContext();
+            this.platformContext = platform.getCorePlatformContext();
 
-                this.appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.APP_RUNTIME_MIDDLEWARE);
-                NavigateActivity();
+            this.appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.APP_RUNTIME_MIDDLEWARE);
+            NavigateActivity();
 
 
         }
@@ -144,72 +149,74 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             while (efragments.hasNext()) {
                 Map.Entry<Fragments, Fragment> fragmentEntry =  efragments.next();
 
-                    RuntimeFragment fragment = (RuntimeFragment)fragmentEntry.getValue();
-                    Fragments type = fragment.getType();
+                RuntimeFragment fragment = (RuntimeFragment)fragmentEntry.getValue();
+                Fragments type = fragment.getType();
 
-                    switch (type) {
-                        case CWP_SHELL_LOGIN:
-                            break;
-                        case CWP_WALLET_MANAGER_MAIN:
-                            fragments.add(android.support.v4.app.Fragment.instantiate(this, WalletDesktopFragment.class.getName()));
-                            break;
-                        case CWP_SHOP_MANAGER_MAIN:
-                            fragments.add(android.support.v4.app.Fragment.instantiate(this, ShopDesktopFragment.class.getName()));
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_PROFILE:
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_DESKTOP:
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_CONTACTS:
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_COMMUNITY:
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_HOME:
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_BALANCE:
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SEND:
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_RECEIVE:
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOPS:
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_REFFIL:
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_DISCOUNTS:
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_SHOP:
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_PRODUCTS:
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_REVIEWS:
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_CHAT:
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_HISTORY:
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_MAP:
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_DEBITS:
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNT_CREDITS:
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_ALL:
-                            break;
-                        case CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED:
-                            break;
-                        case CWP_WALLET_ADULTS_ALL_REQUEST_SEND:
-                            break;
-                        case CWP_WALLET_STORE_MAIN:
-                            break;
-                        case CWP_WALLET_FACTORY_MAIN:
-                            break;
-                    }
+                switch (type) {
+                    case CWP_SHELL_LOGIN:
+                        break;
+                    case CWP_WALLET_MANAGER_MAIN:
+                        fragments.add(android.support.v4.app.Fragment.instantiate(this, WalletDesktopFragment.class.getName()));
+                        break;
+                    case CWP_SHOP_MANAGER_MAIN:
+                        fragments.add(android.support.v4.app.Fragment.instantiate(this, ShopDesktopFragment.class.getName()));
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_PROFILE:
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_DESKTOP:
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_CONTACTS:
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_COMMUNITY:
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_HOME:
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_BALANCE:
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SEND:
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_RECEIVE:
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOPS:
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_REFFIL:
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_DISCOUNTS:
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_SHOP:
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_PRODUCTS:
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_REVIEWS:
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_CHAT:
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_HISTORY:
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_MAP:
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_DEBITS:
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNT_CREDITS:
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_ALL:
+                        break;
+                    case CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED:
+                        break;
+                    case CWP_WALLET_ADULTS_ALL_REQUEST_SEND:
+                        break;
+                    case CWP_WALLET_STORE_MAIN:
+                        break;
+                    case CWP_WALLET_FACTORY_MAIN:
+                        break;
+                }
 
             }
-            this.PagerAdapter  = new PagerAdapter(super.getSupportFragmentManager(), fragments);
-            //
+            this.PagerAdapter  = new PagerAdapter(getSupportFragmentManager(), fragments);
+
             ViewPager pager = (ViewPager)super.findViewById(R.id.viewpager);
+            pager.setVisibility(View.VISIBLE);
+
             pager.setAdapter(this.PagerAdapter);
 
             pager.setBackgroundResource(R.drawable.background_tiled_diagonal_light);
@@ -252,10 +259,12 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             this.tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
 
         }
+        int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
+        this.abTitle = (TextView) findViewById(titleId);
 
+        MyApplication.setActivityProperties(this, getWindow(),getResources(),tabStrip,getActionBar(), titleBar,abTitle,Title);
 
-
-        if(titleBar !=null){
+      /*  if(titleBar !=null){
             this.Title = activity.getTitleBar().getLabel();
             int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
             this.abTitle = (TextView) findViewById(titleId);
@@ -263,6 +272,11 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             abTitle.setTypeface(MyApplication.getDefaultTypeface());
             ActionBar actionBar = getActionBar();
 
+
+            actionBar.setTitle(this.Title );
+            getActionBar().show();
+            if (tabStrip != null)
+                    ((MyApplication) this.getApplication()).setActionBarProperties(this,getWindow(),tabStrip, getActionBar(), getResources(),this.abTitle, this.Title.toString());
 
             if (walletId == 2 || walletId == 1){
                 getActionBar().setDisplayHomeAsUpEnabled(false);
@@ -272,154 +286,131 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             {
                 actionBar.setDisplayShowTitleEnabled(true);
             }
-
-            actionBar.setTitle(this.Title );
-          //  actionBar.setIcon(R.drawable.store_icon);
-            getActionBar().show();
-            if (tabStrip != null)
-                try{
-                    ((MyApplication) this.getApplication()).setActionBarProperties(this,getWindow(),tabStrip, getActionBar(), getResources(),this.abTitle, this.Title.toString());
-
-                }catch(Exception ex){
-                    String strError = ex.getMessage();
-                }
         }
         else
         {
             getActionBar().hide();
         }
 
+          Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/CaviarDreams.ttf");
+        ((MyApplication) this.getApplication()).setDefaultTypeface(tf);
+
+        */
 
         if(sidemenu != null)
         {
             this.NavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
 
-               // Set up the drawer.
+            this.NavigationDrawerFragment.setMenuVisibility(true);
+            // Set up the drawer.
             this.NavigationDrawerFragment.setUp(
                     R.id.navigation_drawer,
                     (DrawerLayout) findViewById(R.id.drawer_layout));
-
-
         }
 
-
-        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/CaviarDreams.ttf");
-        ((MyApplication) this.getApplication()).setDefaultTypeface(tf);
 
         if(tabs == null && fragments.size() > 1){
             this.initialisePaging();
+
         }
         else{
-            ViewPager viewpager = (ViewPager)super.findViewById(R.id.viewpager);
-            viewpager.setVisibility(View.INVISIBLE);
-
-            pager = (ViewPager) findViewById(R.id.pager);
+            pagertabs = (ViewPager) findViewById(R.id.pager);
+            pagertabs.setVisibility(View.VISIBLE);
             adapter = new MyPagerAdapter(getSupportFragmentManager());
 
-            pager.setAdapter(adapter);
+            pagertabs.setAdapter(adapter);
 
             final int pageMargin = (int) TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
                     .getDisplayMetrics());
-            pager.setPageMargin(pageMargin);
+            pagertabs.setPageMargin(pageMargin);
 
-            tabStrip.setViewPager(pager);
+            tabStrip.setViewPager(pagertabs);
 
-            // NATALIA; TODO;.En este caso hay que ampliar el objeto tabscript en el runtime_app para que maneje los colores, etc y configurarlos en el factoryReset.
+            String color = activity.getColor();
+            if (color != null)
+                ((MyApplication) this.getApplication()).changeColor(Color.parseColor(color), getResources());
 
-            tabStrip.setTypeface(tf,1 );
-
-        /*    tabStrip.setDividerColor(tabs.getDividerColor());
-            tabStrip.setIndicatorColor(tabs.getIndicatorColor());
-            tabStrip.setIndicatorHeight(tabs.getIndicatorHeight());
-            tabStrip.setBackgroundColor(tabs.getBackgroundColor());
-            tabStrip.setTextColor(tabs.getTextColor());*/
-
-            tabs.setBackgroundResource(R.drawable.background_tiled_diagonal_light);
-            tabs.setDividerColor(0xFFBBBBBB);
         }
-
-
-
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
-       // if(this.mainMenumenu != null){
+        // if(this.mainMenumenu != null){
 
-            MenuInflater inflater = getMenuInflater();
-            switch ( this.activity.getType()) {
+        MenuInflater inflater = getMenuInflater();
+        switch ( this.activity.getType()) {
 
-                case CWP_SHELL_LOGIN:
-                    break;
-                case CWP_SHOP_MANAGER_MAIN:
+            case CWP_SHELL_LOGIN:
+                break;
+            case CWP_SHOP_MANAGER_MAIN:
 
-                    break;
-                case CWP_WALLET_MANAGER_MAIN:
-                    break;
-                case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_VERSION_1_MAIN:
+                break;
+            case CWP_WALLET_MANAGER_MAIN:
+                break;
+            case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_VERSION_1_MAIN:
 
-                    break;
-                case CWP_WALLET_STORE_MAIN:
-                    break;
-                case CWP_WALLET_ADULTS_ALL_MAIN:
-                    int walletId = ((MyApplication) this.getApplication()).getWalletId();
-                    if (walletId == 1 || walletId == 2)
-                        inflater.inflate(R.menu.wallet_framework_activity_framework_menu2, menu);
-                    else
-                        inflater.inflate(R.menu.wallet_framework_activity_framework_menu, menu);
-                    break;
-                case CWP_WALLET_RUNTIME_STORE_MAIN:
-                    break;
-                case CWP_WALLET_RUNTIME_WALLET_AGE_ADULTS_ALL_BITDUBAI_VERSION_1_MAIN:
-                    break;
-                case CWP_WALLET_RUNTIME_ADULTS_ALL_MAIN:
-                    break;
-                case CWP_WALLET_RUNTIME_ADULTS_ALL_ACCOUNTS:
-                    break;
-                case CWP_WALLET_RUNTIME_ADULTS_ALL_BANKS:
-                    break;
-                case CWP_WALLET_RUNTIME_ADULTS_ALL_COUPONS:
-                    break;
-                case CWP_WALLET_RUNTIME_ADULTS_ALL_DISCOUNTS:
-                    break;
-                case CWP_WALLET_RUNTIME_ADULTS_ALL_VOUCHERS:
-                    break;
-                case CWP_WALLET_RUNTIME_ADULTS_ALL_GIFT_CARDS:
-                    break;
-                case CWP_WALLET_RUNTIME_ADULTS_ALL_CLONES:
-                    break;
-                case CWP_WALLET_RUNTIME_ADULTS_ALL_CHILDS:
-                    break;
-                case CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS:
-                    break;
-                case CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_CHAT:
-                    getMenuInflater().inflate(R.menu.wallet_framework_activity_sent_all_menu, menu);
-                    return true;
-                case CWP_WALLET_ADULTS_ALL_SHOPS:
-                    inflater.inflate(R.menu.wallet_shop_activity_account_detail_menu, menu);
-                    break;
-                case CWP_WALLET_ADULTS_ALL_REFFILS:
-                    break;
-                case CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED:
-                    break;
-                case CWP_WALLET_ADULTS_ALL_REQUEST_SEND:
-                    break;
-                case CWP_WALLET_FACTORY_MAIN:
-                    break;
-            }
+                break;
+            case CWP_WALLET_STORE_MAIN:
+                break;
+            case CWP_WALLET_ADULTS_ALL_MAIN:
+                int walletId = ((MyApplication) this.getApplication()).getWalletId();
+                if (walletId == 1 || walletId == 2)
+                    inflater.inflate(R.menu.wallet_framework_activity_framework_menu2, menu);
+                else
+                    inflater.inflate(R.menu.wallet_framework_activity_framework_menu, menu);
+                break;
+            case CWP_WALLET_RUNTIME_STORE_MAIN:
+                break;
+            case CWP_WALLET_RUNTIME_WALLET_AGE_ADULTS_ALL_BITDUBAI_VERSION_1_MAIN:
+                break;
+            case CWP_WALLET_RUNTIME_ADULTS_ALL_MAIN:
+                break;
+            case CWP_WALLET_RUNTIME_ADULTS_ALL_ACCOUNTS:
+                break;
+            case CWP_WALLET_RUNTIME_ADULTS_ALL_BANKS:
+                break;
+            case CWP_WALLET_RUNTIME_ADULTS_ALL_COUPONS:
+                break;
+            case CWP_WALLET_RUNTIME_ADULTS_ALL_DISCOUNTS:
+                break;
+            case CWP_WALLET_RUNTIME_ADULTS_ALL_VOUCHERS:
+                break;
+            case CWP_WALLET_RUNTIME_ADULTS_ALL_GIFT_CARDS:
+                break;
+            case CWP_WALLET_RUNTIME_ADULTS_ALL_CLONES:
+                break;
+            case CWP_WALLET_RUNTIME_ADULTS_ALL_CHILDS:
+                break;
+            case CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS:
+                break;
+            case CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_CHAT:
+                getMenuInflater().inflate(R.menu.wallet_framework_activity_sent_all_menu, menu);
+                return true;
+            case CWP_WALLET_ADULTS_ALL_SHOPS:
+                inflater.inflate(R.menu.wallet_shop_activity_account_detail_menu, menu);
+                break;
+            case CWP_WALLET_ADULTS_ALL_REFFILS:
+                break;
+            case CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED:
+                break;
+            case CWP_WALLET_ADULTS_ALL_REQUEST_SEND:
+                break;
+            case CWP_WALLET_FACTORY_MAIN:
+                break;
+        }
 
 
 
-            LayoutInflater inflaterClone = getLayoutInflater().cloneInContext(getLayoutInflater().getContext());
-            LayoutInflater.Factory lif = new MyLayoutInflaterFactory();
-            inflaterClone.setFactory(lif);
+        LayoutInflater inflaterClone = getLayoutInflater().cloneInContext(getLayoutInflater().getContext());
+        LayoutInflater.Factory lif = new MyLayoutInflaterFactory();
+        inflaterClone.setFactory(lif);
 
-            return super.onCreateOptionsMenu(menu);
-       // }else
-       // {
-           // return true;
-       // }
+        return super.onCreateOptionsMenu(menu);
+        // }else
+        // {
+        // return true;
+        // }
 
     }
 
@@ -442,12 +433,10 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
     }
 
-
-
     public void onItemSelectedClicked(View v) {
 
         firstexecute = false;
-        ((MyApplication) this.getApplication()).setWalletId(0);
+
         MyApplication.setContact("");
         String tagId = v.getTag().toString();
         String activityKey="";
@@ -477,7 +466,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_VERSION_1_MAIN:
                 cleanWindows();
                 ((MyApplication) this.getApplication()).setWalletId(Integer.parseInt(paramId));
-                 activity = this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_VERSION_1_MAIN);
+                activity = this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_VERSION_1_MAIN);
                 NavigateActivity();
                 break;
             case CWP_WALLET_STORE_MAIN:
@@ -492,7 +481,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                 else
                 {
                     ((MyApplication) this.getApplication()).setWalletId(Integer.parseInt(paramId));
-                     activity = this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_ADULTS_ALL_MAIN);
+                    activity = this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_ADULTS_ALL_MAIN);
                     NavigateActivity();
 
 
@@ -505,8 +494,9 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             case CWP_WALLET_RUNTIME_ADULTS_ALL_ACCOUNTS:
                 break;
             case CWP_WALLET_RUNTIME_ADULTS_ALL_AVAILABLE_BALANCE:
-                 this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_AVAILABLE_BALANCE);
-                 intent = new Intent(this, com.bitdubai.android.app.FragmentActivity.class);
+                this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_AVAILABLE_BALANCE);
+                intent = new Intent(this, com.bitdubai.android.app.FragmentActivity.class);
+
                 startActivity(intent);
                 break;
             case CWP_WALLET_RUNTIME_ADULTS_ALL_BANKS:
@@ -528,15 +518,16 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             case CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_CHAT:
                 MyApplication.setContact(paramId);
                 activity = this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_CHAT);
-                 intent = new Intent(this, com.bitdubai.android.app.FragmentActivity.class);
+                intent = new Intent(this, com.bitdubai.android.app.FragmentActivity.class);
                 startActivity(intent);
                 break;
             case CWP_WALLET_ADULTS_ALL_SHOPS:
+                ((MyApplication) this.getApplication()).setWalletId(0);
                 cleanWindows();
                 activity = this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_ADULTS_ALL_SHOPS);
                 NavigateActivity();
 
-                    break;
+                break;
             case CWP_WALLET_ADULTS_ALL_REFFILS:
                 break;
             case CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED:
@@ -576,22 +567,64 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
     }
 
+    @Override
+    public void onBackPressed() {
+        // set Desktop current activity
+        ((MyApplication) this.getApplication()).setWalletId(0);
+        if (activity.getType() != Activities.CWP_WALLET_MANAGER_MAIN){
+            activity = this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_MANAGER_MAIN);
+            cleanWindows();
+
+            NavigateActivity();
+        }else{
+            super.onBackPressed();
+        }
+
+
+    }
+
     private void cleanWindows()
     {
+        //clean page adapter
+      /*  pagertabs = (ViewPager) findViewById(R.id.pager);
+        this.collection = pagertabs;
+         if(adapter != null) {
+                 for (int i = 0; i < fragments.size(); i++) {
+                     try {
+                         Object objectobject = adapter.instantiateItem(pagertabs,i);
+                         if (objectobject != null)
+                             adapter.destroyItem(pagertabs, 0, objectobject);
+                     } catch (Exception e) {
+
+                     }
+                 }
+         }*/
+
+
+        ViewPager viewpager = (ViewPager)super.findViewById(R.id.viewpager);
+        viewpager.setVisibility(View.INVISIBLE);
+        ViewPager pager = (ViewPager)super.findViewById(R.id.pager);
+        pager.setVisibility(View.INVISIBLE);
+        if(NavigationDrawerFragment!= null)
+            this.NavigationDrawerFragment.setMenuVisibility(false);
         NavigationDrawerFragment = null;
         this.PagerAdapter = null;
         this.abTitle = null;
         this.adapter = null;
         this.pager = null;
+        this.pagertabs = null;
         this.Title = "";
 
+        List<android.support.v4.app.Fragment> fragments = new Vector<android.support.v4.app.Fragment>();
+        this.PagerAdapter  = new PagerAdapter(getSupportFragmentManager(), fragments);
+
+
     }
+
 
     public class MyPagerAdapter extends FragmentPagerAdapter {
 
         private String[] titles;
-        //  private String[] titles_1 = {"Me" ,"Balance", "Contacts","Community"};
-        //  private String[] titles_2 = { "Home", "Balance", "Send", "Receive","Shops","Refill","Discounts"};
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
@@ -602,6 +635,22 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                 titles[i] = tab.getLabel();
             }
         }
+
+
+       /* public void destroyItem(android.view.ViewGroup container, int position, Object object) {
+
+                FragmentManager manager = ((android.support.v4.app.Fragment) object).getFragmentManager();
+            if(manager != null){
+                FragmentTransaction trans = manager.beginTransaction();
+                trans.detach((android.support.v4.app.Fragment) object);
+                trans.remove((android.support.v4.app.Fragment) object);
+                trans.commit();
+                collection.removeViewAt(position);
+            }
+
+
+
+        }*/
 
         @Override
         public CharSequence getPageTitle(int position) {
@@ -618,9 +667,9 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
         @Override
         public android.support.v4.app.Fragment getItem(int position) {
 
-            android.support.v4.app.Fragment currentFragment = HomeFragment.newInstance(position);
+            android.support.v4.app.Fragment currentFragment = null;
             Fragments fragmentType = Fragments.CWP_SHELL_LOGIN;
-             List<Tab> titleTabs = tabs.getTabs();
+            List<Tab> titleTabs = tabs.getTabs();
             for (int j = 0; j < titleTabs.size(); j++) {
                 if (j == position)
                 {
@@ -629,17 +678,18 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                     break;
                 }
 
-
             }
-
 //execute current activity fragments
 
             switch (fragmentType) {
                 case CWP_SHELL_LOGIN:
+
                     break;
                 case CWP_WALLET_MANAGER_MAIN:
+                    currentFragment =  WalletDesktopFragment.newInstance(position);
                     break;
                 case CWP_SHOP_MANAGER_MAIN:
+                    currentFragment =  ShopDesktopFragment.newInstance(position);
                     break;
                 case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_PROFILE:
                     currentFragment =  ProfileCardFrontFragment.newInstance(position);
