@@ -8,7 +8,17 @@ import java.util.Map;
 /**
  * Created by ciencias on 2/14/15.
  */
+
+import java.util.Map;
+
+/**
+ * Created by ciencias on 2/14/15.
+ */
 public interface Activity {
+
+    public void setColor(String color);
+
+    public String getColor();
 
     public Activities getType();
 

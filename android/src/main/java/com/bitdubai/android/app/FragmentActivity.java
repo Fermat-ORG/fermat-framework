@@ -31,6 +31,7 @@ import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_seg
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.AvailableBalanceFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.BalanceFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ChatWithContactFragment;
+import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ContactsFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.DiscountsFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.HomeFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ReceiveFragment;
@@ -114,7 +115,7 @@ public class FragmentActivity  extends Activity {
 
 
         if(fragments.size() == 1){
-              List<android.support.v4.app.Fragment> fragments = new Vector<android.support.v4.app.Fragment>();
+            List<android.support.v4.app.Fragment> fragments = new Vector<android.support.v4.app.Fragment>();
             Iterator<Map.Entry<Fragments, Fragment>> efragments = this.fragments.entrySet().iterator();
 
             while (efragments.hasNext()) {
@@ -123,6 +124,13 @@ public class FragmentActivity  extends Activity {
                 RuntimeFragment fragment = (RuntimeFragment) fragmentEntry.getValue();
                 Fragments type = fragment.getType();
                 switch (type) {
+                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS:
+                        if (savedInstanceState == null) {
+                            getFragmentManager().beginTransaction()
+                                    .add(R.id.container, new ContactsFragment())
+                                    .commit();
+                        }
+                        break;
                     case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_CHAT:
                         if (savedInstanceState == null) {
                             getFragmentManager().beginTransaction()
@@ -160,16 +168,20 @@ public class FragmentActivity  extends Activity {
         }
 
 
-        if(titleBar !=null){
+    /*    if(titleBar !=null){
             this.Title = activity.getTitleBar().getLabel();
             int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
             this.abTitle = (TextView) findViewById(titleId);
             abTitle.setTextColor(Color.WHITE);
             abTitle.setTypeface(MyApplication.getDefaultTypeface());
             ActionBar actionBar = getActionBar();
-
             actionBar.setTitle(this.Title );
             //  actionBar.setIcon(R.drawable.store_icon);
+            getActionBar().show();
+
+            ((MyApplication) this.getApplication()).setActionBarProperties(this,getWindow(),null, getActionBar(), getResources(),this.abTitle, this.Title.toString());
+
+            actionBar.setTitle(this.Title );
             getActionBar().show();
 
         }
@@ -180,14 +192,12 @@ public class FragmentActivity  extends Activity {
 
 
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/CaviarDreams.ttf");
-        ((MyApplication) this.getApplication()).setDefaultTypeface(tf);
+        ((MyApplication) this.getApplication()).setDefaultTypeface(tf);*/
 
-
+        MyApplication.setActivityProperties(this, getWindow(),getResources(),tabStrip,getActionBar(), titleBar,abTitle,Title);
 
 
     }
-
-
 
 
     @Override
@@ -230,6 +240,7 @@ public class FragmentActivity  extends Activity {
             case CWP_WALLET_RUNTIME_ADULTS_ALL_CHILDS:
                 break;
             case CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS:
+                getMenuInflater().inflate(R.menu.wallet_framework_activity_contacts_menu, menu);
                 break;
             case CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_CHAT:
                 getMenuInflater().inflate(R.menu.wallet_framework_activity_sent_all_menu, menu);

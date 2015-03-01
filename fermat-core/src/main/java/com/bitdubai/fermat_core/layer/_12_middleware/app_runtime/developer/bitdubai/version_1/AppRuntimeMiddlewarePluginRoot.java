@@ -48,8 +48,8 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, Middleware, AppR
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
     List<EventListener> listenersAdded = new ArrayList<>();
-     Map<Apps, App> listApps = new HashMap<Apps, App>();
-     Map<SubApps, SubApp> listSubApp = new HashMap<SubApps, SubApp>();
+    Map<Apps, App> listApps = new HashMap<Apps, App>();
+    Map<SubApps, SubApp> listSubApp = new HashMap<SubApps, SubApp>();
     Map<Activities, Activity> listActivities = new HashMap<Activities, Activity>();
     Map<Fragments, Fragment> listFragments = new HashMap<Fragments, Fragment>();
     Map<Wallets, Wallet> listWallets = new HashMap<Wallets, Wallet>();
@@ -90,7 +90,7 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, Middleware, AppR
     eventManager.raiseEvent(platformEvent);
 */
 
-    
+
 
     @Override
     public void start(){
@@ -243,10 +243,10 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, Middleware, AppR
         while (eactivity.hasNext()) {
             Map.Entry<Activities, Activity> activityEntry = eactivity.next();
             RuntimeActivity activity = (RuntimeActivity) activityEntry.getValue();
-             if(activity.getType().name().equals(app.name())){
-                 lastActivity = activity.getType();
-                 return activity;
-             }
+            if(activity.getType().name().equals(app.name())){
+                lastActivity = activity.getType();
+                return activity;
+            }
 
 
         }
@@ -323,6 +323,7 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, Middleware, AppR
         RuntimeMainMenu runtimeMainMenu;
         RuntimeMenuItem runtimeMenuItem;
         RuntimeTabStrip runtimeTabStrip;
+
         RuntimeTab runtimeTab;
         runtimeApp = new RuntimeApp();
 
@@ -433,6 +434,7 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, Middleware, AppR
         runtimeTitleBar = new RuntimeTitleBar();
         runtimeTitleBar.setLabel("Kids Wallet");
         runtimeActivity.setTitleBar(runtimeTitleBar);
+        runtimeActivity.setColor("#84DCF5");
 
         runtimeSideMenu = new RuntimeSideMenu();
 
@@ -524,8 +526,9 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, Middleware, AppR
         listActivities.put(Activities.CWP_WALLET_ADULTS_ALL_MAIN, runtimeActivity);
 
         runtimeTitleBar = new RuntimeTitleBar();
-        runtimeTitleBar.setLabel("Ladies wallet");
+        runtimeTitleBar.setLabel("Adults wallet");
         runtimeActivity.setTitleBar(runtimeTitleBar);
+        runtimeActivity.setColor("#F0E173");
 
         runtimeSideMenu = new RuntimeSideMenu();
 
@@ -610,11 +613,7 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, Middleware, AppR
         runtimeTab.setLabel("Discounts");
         runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_DISCOUNTS);
         runtimeTabStrip.addTab(runtimeTab);
-
-
         runtimeTabStrip.setDividerColor(0xFFFFFFFF);
-
-
         runtimeActivity.setTabStrip(runtimeTabStrip);
 
         runtimeFragment = new RuntimeFragment();
@@ -660,21 +659,63 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, Middleware, AppR
         runtimeTitleBar = new RuntimeTitleBar();
         runtimeTitleBar.setLabel("");
         runtimeActivity.setTitleBar(runtimeTitleBar);
+        runtimeActivity.setColor("#F0E173");
+
+        runtimeTabStrip = new RuntimeTabStrip();
+        runtimeTab = new RuntimeTab();
+        runtimeTab.setLabel("");
+        runtimeTabStrip.addTab(runtimeTab);
+        runtimeActivity.setTabStrip(runtimeTabStrip);
 
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_CHAT);
         runtimeActivity.addFragment(runtimeFragment);
         listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_CHAT,runtimeFragment);
 
+
+
+        runtimeActivity= new RuntimeActivity();
+        runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS);
+        runtimeWallet.addActivity(runtimeActivity);
+        listActivities.put(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS, runtimeActivity);
+
+        runtimeTitleBar = new RuntimeTitleBar();
+        runtimeTitleBar.setLabel("");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+        runtimeActivity.setColor("#F0E173");
+
         runtimeTabStrip = new RuntimeTabStrip();
-
         runtimeTab = new RuntimeTab();
-        runtimeTab.setLabel("");
-        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_CHAT);
+        runtimeTab.setLabel("Contacts");
         runtimeTabStrip.addTab(runtimeTab);
-
         runtimeActivity.setTabStrip(runtimeTabStrip);
 
+        runtimeFragment = new RuntimeFragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS);
+        runtimeActivity.addFragment(runtimeFragment);
+        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS,runtimeFragment);
+
+
+        runtimeActivity= new RuntimeActivity();
+        runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_AVAILABLE_BALANCE);
+        runtimeWallet.addActivity(runtimeActivity);
+        listActivities.put(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_AVAILABLE_BALANCE, runtimeActivity);
+
+        runtimeTitleBar = new RuntimeTitleBar();
+        runtimeTitleBar.setLabel("");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+        runtimeActivity.setColor("#F0E173");
+
+        runtimeTabStrip = new RuntimeTabStrip();
+        runtimeTab = new RuntimeTab();
+        runtimeTab.setLabel("Available balance");
+        runtimeTabStrip.addTab(runtimeTab);
+        runtimeActivity.setTabStrip(runtimeTabStrip);
+
+        runtimeFragment = new RuntimeFragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_ADULTS_ALL_AVAILABLE_BALANCE);
+        runtimeActivity.addFragment(runtimeFragment);
+        listFragments.put(Fragments.CWP_WALLET_RUNTIME_ADULTS_ALL_AVAILABLE_BALANCE,runtimeFragment);
 
 
         /**
@@ -683,8 +724,11 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, Middleware, AppR
 
         runtimeActivity= new RuntimeActivity();
         runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_SHOPS);
+        runtimeActivity.setColor("#76dc4a");
         runtimeSubApp.addActivity(runtimeActivity);
         listActivities.put(Activities.CWP_WALLET_ADULTS_ALL_SHOPS, runtimeActivity);
+
+
 
         runtimeTitleBar = new RuntimeTitleBar();
         runtimeTitleBar.setLabel("My Shop");
