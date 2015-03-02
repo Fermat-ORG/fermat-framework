@@ -25,10 +25,14 @@ public enum Activities {
     CWP_WALLET_RUNTIME_ADULTS_ALL_CHILDS ("ChildsActivity"),
     CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS ( "ContactsActivity"),
     CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_CHAT ( "ContactsChatActivity"),
+    CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_SEND ( "SendToContactActivity"),
     CWP_WALLET_ADULTS_ALL_SHOPS ("ShopsActivity"),
     CWP_WALLET_ADULTS_ALL_REFFILS ("ReffillsActivity"),
     CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED ("RequestReceivedActivity"),
+    CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED_CHAT ("ChatOverReceiveTrxActivity"),
     CWP_WALLET_ADULTS_ALL_REQUEST_SEND ( "RequestSendActivity"),
+    CWP_WALLET_ADULTS_ALL_SEND_HISTORY ( "SentHistoryActivity"),
+    CWP_WALLET_ADULTS_ALL_CHAT_TRX( "ChatOverTrxActivity"),
     CWP_WALLET_FACTORY_MAIN ("FactoryActivity");
 
     private String key;

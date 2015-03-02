@@ -1,5 +1,6 @@
 package com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -43,7 +44,7 @@ public  class SendToContactFragment extends android.app.Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
+        MyApplication.changeColor(Color.parseColor("#F0E173"), super.getActivity().getResources());
         contacts = new String[]{ "", "Guillermo Villanueva", "Luis Fernando Molina", "Pedro Perrotta", "Mariana Duyos"};
         amounts = new String[]{ "", "$1,400.00", "$325.00", "$0.50", "$25.00"};
         whens = new String[]{ "", "2 hours ago", "3 min ago", "today 9:24 AM", "yesterday"};

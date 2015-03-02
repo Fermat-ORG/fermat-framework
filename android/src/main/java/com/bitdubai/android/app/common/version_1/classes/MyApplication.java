@@ -16,7 +16,7 @@ import android.os.Handler;
 import android.support.v4.widget.DrawerLayout;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.view.View;
+import android.graphics.drawable.BitmapDrawable;
 import android.view.Window;
 import android.widget.TextView;
 
@@ -131,12 +131,14 @@ public class MyApplication extends Application {
 
         if(titleBar !=null){
 
+            Title = titleBar.getLabel();
+
             abTitle.setTextColor(Color.WHITE);
             abTitle.setTypeface(MyApplication.getDefaultTypeface());
             actionBar.setTitle(Title);
-            getActionBar().show();
+            actionBar.show();
             if (tabStrip != null){
-                setActionBarProperties(activity,window,tabStrip, getActionBar(),context,abTitle, Title.toString());
+                setActionBarProperties(activity,window,tabStrip, actionBar,context,abTitle, Title.toString());
                 tabStrip.setTypeface(tf,1 );
                 tabStrip.setBackgroundResource(R.drawable.background_tiled_diagonal_light);
 
@@ -154,7 +156,7 @@ public class MyApplication extends Application {
         }
         else
         {
-            getActionBar().hide();
+            actionBar.hide();
         }
 
 
@@ -167,10 +169,12 @@ public class MyApplication extends Application {
         SpannableString s = new SpannableString("");
         String color = "#F0E173";
         mTitle = pTitle;
+
         Drawable bg = context.getDrawable(R.drawable.transparent);
         bg.setVisible(false,false);
 
         Drawable wallpaper = context.getDrawable(R.drawable.transparent);
+
         switch (getWalletId() )
         {
             case 1:
@@ -193,7 +197,10 @@ public class MyApplication extends Application {
                 actionBar.setIcon(context.getDrawable(R.drawable.icono_piggy_yellow));
                 bg = context.getDrawable(R.drawable.banner_kid_yellow_blue);
                 bg.setVisible(true,false);
+                ((BitmapDrawable)context.getDrawable(R.drawable.wallet_wallpaper_yellow)).getBitmap().recycle();
+                context.getDrawable(R.drawable.wallet_wallpaper_yellow).setCallback(null);
                 wallpaper = context.getDrawable(R.drawable.wallet_wallpaper_yellow);
+
                 abTitle.setTextColor(Color.BLACK);
                 walletStyle = "Kids";
                 break;

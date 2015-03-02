@@ -1,11 +1,13 @@
 package com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment;
 
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
@@ -41,6 +43,93 @@ public class ChatOverTransactionFragment extends android.app.Fragment {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+          /* Custom Action Bar with Icon and Text */
+      /* Custom Action Bar with Icon and Text */
+        String[] contacts = new String[]{ "", "Guillermo Villanueva", "Luis Fernando Molina", "Pedro Perrotta", "Mariana Duyos"};
+        String[] amounts = new String[]{ "", "$1,400.00", "$325.00", "$0.50", "$25.00"};
+        String[] whens = new String[]{ "", "2 hours ago", "3 min ago", "today 9:24 AM", "yesterday"};
+        String[] notes = new String[]{"", "Flat rent",  "Electricity bill", "Test address", "More pictures"};
+
+        String[][] transactions = new String[][]{
+
+                {},
+                {"Flat rent","Flat rent","Flat rent","interest paid :(","Flat rent","Car repair","Invoice #2,356 that should have been paid on August"},
+                {"Electricity bill","New chair","New desk"},
+                {"Test address"},
+                {"More pictures"}
+        };
+
+        String[][] transactions_amounts = new String[][]{
+
+                {},
+                {"$1,400.00","$1,200.00","$1,400.00","$40.00","$1,900.00","$10,550.00","$1.00"},
+                {"$325.00","$55.00","$420.00"},
+                {"$0.50"},
+                {"$25.00"}
+        };
+
+        String[][] transactions_whens = new String[][]{
+
+                {},
+                {"3 min ago","15 min ago","yesterday"},
+                {"2 hours ago","1 month ago","2 months ago","3 months ago","3 months ago","5 months ago","7 months ago"},
+                {"today 9:24 AM"},
+                {"yesterday"}
+        };
+        String[] tagId = MyApplication.getChildId().split("\\|");
+
+
+        final ViewGroup actionBarLayout = (ViewGroup) getActivity().getLayoutInflater().inflate(
+                R.layout.wallet_framework_activity_chat_over_trx_action_bar,
+                null);
+
+        // Set up your ActionBar
+        final ActionBar actionBar = getActivity().getActionBar();
+        actionBar.setDisplayShowHomeEnabled(false);
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setCustomView(actionBarLayout);
+
+
+        TextView tv;
+
+        tv = (TextView) actionBarLayout.findViewById(R.id.contact_name);
+        tv.setTypeface(MyApplication.getDefaultTypeface());
+        tv.setText(contacts[Integer.parseInt(tagId[0])].toString());
+
+
+        ImageView profile_picture = (ImageView) actionBarLayout.findViewById(R.id.profile_picture);
+        switch (Integer.parseInt(tagId[0]))
+        {
+            case 1:
+                profile_picture.setImageResource(R.drawable.guillermo_profile_picture);
+
+                break;
+            case 2:
+                profile_picture.setImageResource(R.drawable.luis_profile_picture);
+
+                break;
+            case 3:
+                profile_picture.setImageResource(R.drawable.pedro_profile_picture);
+                break;
+            case 4:
+                profile_picture.setImageResource(R.drawable.mariana_profile_picture);
+
+                break;
+        }
+
+        tv = (TextView) actionBarLayout.findViewById(R.id.notes);
+        tv.setTypeface(MyApplication.getDefaultTypeface());
+        tv.setText(transactions[Integer.parseInt(tagId[0])][Integer.parseInt(tagId[1])]);
+
+        tv = (TextView) actionBarLayout.findViewById(R.id.amount);
+        tv.setTypeface(MyApplication.getDefaultTypeface());
+        tv.setText(transactions_amounts[Integer.parseInt(tagId[0])][Integer.parseInt(tagId[1])]);;
+
+        tv = (TextView) actionBarLayout.findViewById(R.id.when);
+        tv.setTypeface(MyApplication.getDefaultTypeface());
+        tv.setText(transactions_whens[Integer.parseInt(tagId[0])][Integer.parseInt(tagId[1])]);
 
         contacts = new String[]{"","","","","","","","","","","","",""};
         countries = new String[]{};

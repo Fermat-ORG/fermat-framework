@@ -262,40 +262,8 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
         int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
         this.abTitle = (TextView) findViewById(titleId);
 
+
         MyApplication.setActivityProperties(this, getWindow(),getResources(),tabStrip,getActionBar(), titleBar,abTitle,Title);
-
-      /*  if(titleBar !=null){
-            this.Title = activity.getTitleBar().getLabel();
-            int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
-            this.abTitle = (TextView) findViewById(titleId);
-            abTitle.setTextColor(Color.WHITE);
-            abTitle.setTypeface(MyApplication.getDefaultTypeface());
-            ActionBar actionBar = getActionBar();
-
-
-            actionBar.setTitle(this.Title );
-            getActionBar().show();
-            if (tabStrip != null)
-                    ((MyApplication) this.getApplication()).setActionBarProperties(this,getWindow(),tabStrip, getActionBar(), getResources(),this.abTitle, this.Title.toString());
-
-            if (walletId == 2 || walletId == 1){
-                getActionBar().setDisplayHomeAsUpEnabled(false);
-                DrawerLayout draw = (DrawerLayout) findViewById(R.id.drawer_layout);
-                draw.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-            }else
-            {
-                actionBar.setDisplayShowTitleEnabled(true);
-            }
-        }
-        else
-        {
-            getActionBar().hide();
-        }
-
-          Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/CaviarDreams.ttf");
-        ((MyApplication) this.getApplication()).setDefaultTypeface(tf);
-
-        */
 
         if(sidemenu != null)
         {
@@ -444,13 +412,17 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
         if(tagId.contains("|")){
             activityKey =  tagId.split("\\|")[0];
-            paramId =  tagId.split("\\|")[1];
+
+            if(tagId.split("\\|").length > 2)
+                paramId =  tagId.split("\\|")[1] + "|" + tagId.split("\\|")[2];
+                else
+                paramId =  tagId.split("\\|")[1];
         }
         else
             activityKey =  tagId;
 
         //  Activities activityType = Activities.CWP_WALLET_MANAGER_MAIN;
-        Activities activityType = Activities.getValueFromString(activityKey);
+        Activities activityType = Activities.getValueFromString (activityKey);
         com.bitdubai.fermat_api.layer._12_middleware.app_runtime.Activity activity;
         Intent intent;
         RuntimeActivity runtimeActivity;
@@ -521,6 +493,12 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                 intent = new Intent(this, com.bitdubai.android.app.FragmentActivity.class);
                 startActivity(intent);
                 break;
+            case CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_SEND:
+                MyApplication.setChildId(paramId);
+                activity = this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_SEND);
+                intent = new Intent(this, com.bitdubai.android.app.FragmentActivity.class);
+                startActivity(intent);
+                break;
             case CWP_WALLET_ADULTS_ALL_SHOPS:
                 ((MyApplication) this.getApplication()).setWalletId(0);
                 cleanWindows();
@@ -528,11 +506,24 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                 NavigateActivity();
 
                 break;
+            case CWP_WALLET_ADULTS_ALL_CHAT_TRX:
+                MyApplication.setChildId(paramId);
+                activity = this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_ADULTS_ALL_CHAT_TRX);
+                intent = new Intent(this, com.bitdubai.android.app.FragmentActivity.class);
+                startActivity(intent);
+                break;
             case CWP_WALLET_ADULTS_ALL_REFFILS:
                 break;
             case CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED:
                 break;
             case CWP_WALLET_ADULTS_ALL_REQUEST_SEND:
+                break;
+            case CWP_WALLET_ADULTS_ALL_SEND_HISTORY:
+                MyApplication.setTagId(Integer.parseInt(paramId));
+
+                this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_ADULTS_ALL_SEND_HISTORY);
+                intent = new Intent(this, com.bitdubai.android.app.FragmentActivity.class);
+                startActivity(intent);
                 break;
             case CWP_WALLET_FACTORY_MAIN:
                 break;
@@ -586,20 +577,28 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
     private void cleanWindows()
     {
         //clean page adapter
-      /*  pagertabs = (ViewPager) findViewById(R.id.pager);
+        pagertabs = (ViewPager) findViewById(R.id.pager);
         this.collection = pagertabs;
-         if(adapter != null) {
-                 for (int i = 0; i < fragments.size(); i++) {
-                     try {
-                         Object objectobject = adapter.instantiateItem(pagertabs,i);
-                         if (objectobject != null)
-                             adapter.destroyItem(pagertabs, 0, objectobject);
-                     } catch (Exception e) {
+        if(adapter != null) {
+            for (int i = 0; i < fragments.size(); i++) {
+                try {
+                    //Object objectobject = adapter.instantiateItem(pagertabs,i);
 
-                     }
-                 }
-         }*/
+                    try
+                    {
+                        collection.removeViewAt(i);
+                    }catch(Exception ex)
+                    {
 
+                    }
+
+                 //   if (objectobject != null)
+                     //   adapter.destroyItem(pagertabs, 0, objectobject);
+                } catch (Exception e) {
+
+                }
+            }
+        }
 
         ViewPager viewpager = (ViewPager)super.findViewById(R.id.viewpager);
         viewpager.setVisibility(View.INVISIBLE);
@@ -637,20 +636,19 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
         }
 
 
-       /* public void destroyItem(android.view.ViewGroup container, int position, Object object) {
+        public void destroyItem(android.view.ViewGroup container, int position, Object object) {
 
-                FragmentManager manager = ((android.support.v4.app.Fragment) object).getFragmentManager();
-            if(manager != null){
+            FragmentManager manager = ((android.support.v4.app.Fragment) object).getFragmentManager();
+            if(manager != null) {
                 FragmentTransaction trans = manager.beginTransaction();
                 trans.detach((android.support.v4.app.Fragment) object);
                 trans.remove((android.support.v4.app.Fragment) object);
                 trans.commit();
-                collection.removeViewAt(position);
+
+
             }
 
-
-
-        }*/
+            }
 
         @Override
         public CharSequence getPageTitle(int position) {

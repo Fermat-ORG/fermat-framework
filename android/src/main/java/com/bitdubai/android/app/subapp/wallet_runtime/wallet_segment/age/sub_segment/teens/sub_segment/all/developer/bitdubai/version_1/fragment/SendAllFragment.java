@@ -1,5 +1,7 @@
 package com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment;
 
+import android.app.ActionBar;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import android.view.LayoutInflater;
@@ -43,6 +45,48 @@ public class SendAllFragment extends android.app.Fragment {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+         /* Custom Action Bar with Icon and Text */
+        String[] contacts = new String[]{ "", "Luis Fernando Molina", "Guillermo Villanueva", "Pedro Perrotta", "Mariana Duyos"};
+
+        final ViewGroup actionBarLayout = (ViewGroup) getActivity().getLayoutInflater().inflate(
+                R.layout.wallet_framework_activity_sent_history_action_bar,
+                null);
+
+        // Set up your ActionBar
+
+
+        int tagId = MyApplication.getTagId();
+        TextView tv;
+
+        tv = (TextView) actionBarLayout.findViewById(R.id.contact_name);
+        tv.setTypeface(MyApplication.getDefaultTypeface());
+        tv.setText(contacts[tagId].toString());
+
+        tv = (TextView) actionBarLayout.findViewById(R.id.activity_name);
+        tv.setTypeface(MyApplication.getDefaultTypeface());
+
+        MyApplication.changeColor(Color.parseColor("#F0E173"), super.getActivity().getResources());
+
+        ImageView profile_picture = (ImageView) actionBarLayout.findViewById(R.id.profile_picture);
+        switch (tagId)
+        {
+            case 1:
+                profile_picture.setImageResource(R.drawable.luis_profile_picture);
+
+                break;
+            case 2:
+                profile_picture.setImageResource(R.drawable.guillermo_profile_picture);
+
+                break;
+            case 3:
+                profile_picture.setImageResource(R.drawable.pedro_profile_picture);
+                break;
+            case 4:
+                profile_picture.setImageResource(R.drawable.mariana_profile_picture);
+
+                break;
+        }
 //find de tag id,
         contacts = new String[]{ "", "Luis Fernando Molina", "Guillermo Villanueva", "Pedro Perrotta", "Mariana Duyos"};
 
@@ -163,7 +207,7 @@ public class SendAllFragment extends android.app.Fragment {
                 convertView = inf.inflate(R.layout.wallets_teens_fragment_send_all_list_header, parent, false);
 
                 ImageView  send_profile_picture = (ImageView) convertView.findViewById(R.id.icon_send_to_contact);
-                send_profile_picture.setTag(tagId + "|" + groupPosition);
+                send_profile_picture.setTag("SendToContactActivity|" + tagId + "|" + groupPosition);
 
 
 
@@ -196,10 +240,10 @@ public class SendAllFragment extends android.app.Fragment {
                     convertView = inf.inflate(R.layout.wallets_teens_fragment_send_all_list_header, parent, false);
 
                     ImageView  send_profile_picture = (ImageView) convertView.findViewById(R.id.icon_send_to_contact);
-                    send_profile_picture.setTag(tagId + "|" + groupPosition);
+                    send_profile_picture.setTag("SendToContactActivity|" +tagId + "|" + groupPosition);
 
                     ImageView  icon_chat_over_trx = (ImageView) convertView.findViewById(R.id.icon_chat_over_trx);
-                    icon_chat_over_trx.setTag(tagId + "|" + groupPosition);
+                    icon_chat_over_trx.setTag("ChatOverTrxActivity|" + tagId + "|" + groupPosition);
 
                     holder = new ViewHolder();
 

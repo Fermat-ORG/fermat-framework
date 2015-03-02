@@ -30,13 +30,16 @@ import com.bitdubai.android.app.subapp.shop.version_1.fragment.ShopShopFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.kids.sub_segment.all.developer.bitdubai.version_1.fragment.ProfileCardFrontFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.AvailableBalanceFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.BalanceFragment;
+import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ChatOverTransactionFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ChatWithContactFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ContactsFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.DiscountsFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.HomeFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ReceiveFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.RefillFragment;
+import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.SendAllFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.SendFragment;
+import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.SendToContactFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ShopFragment;
 import com.bitdubai.android.layer._3_os.android.developer.bitdubai.version_1.AndroidOsAddonRoot;
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.App;
@@ -114,6 +117,14 @@ public class FragmentActivity  extends Activity {
         this.sidemenu = activity.getSideMenu();
 
 
+      /*  if(tabs == null)
+            ((PagerSlidingTabStrip) findViewById(R.id.tabs)).setVisibility(View.INVISIBLE);
+        else{
+            ((PagerSlidingTabStrip) findViewById(R.id.tabs)).setVisibility(View.VISIBLE);
+            this.tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+
+        }*/
+
         if(fragments.size() == 1){
             List<android.support.v4.app.Fragment> fragments = new Vector<android.support.v4.app.Fragment>();
             Iterator<Map.Entry<Fragments, Fragment>> efragments = this.fragments.entrySet().iterator();
@@ -138,12 +149,17 @@ public class FragmentActivity  extends Activity {
                                     .commit();
                         }
                         break;
-                    case CWP_WALLET_RUNTIME_ADULTS_ALL_AVAILABLE_BALANCE :
+                    case CWP_WALLET_RUNTIME_ADULTS_ALL_AVAILABLE_BALANCE:
                         if (savedInstanceState == null) {
                             getFragmentManager().beginTransaction()
                                     .add(R.id.container, new AvailableBalanceFragment())
                                     .commit();
                         }
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_SEND :
+                        getFragmentManager().beginTransaction()
+                                .add(R.id.container, new SendToContactFragment())
+                                .commit();
                         break;
                     case CWP_SHOP_MANAGER_MAIN:
                         break;
@@ -157,6 +173,17 @@ public class FragmentActivity  extends Activity {
                         break;
                     case CWP_WALLET_ADULTS_ALL_REQUEST_SEND:
                         break;
+                    case CWP_WALLET_ADULTS_ALL_SEND_HISTORY:
+                        getFragmentManager().beginTransaction()
+                                .add(R.id.container, new SendAllFragment())
+                                .commit();
+
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CHAT_TRX:
+                        getFragmentManager().beginTransaction()
+                                .add(R.id.container, new ChatOverTransactionFragment())
+                                .commit();
+                        break;
                     case CWP_WALLET_STORE_MAIN:
                         break;
                     case CWP_WALLET_FACTORY_MAIN:
@@ -167,32 +194,8 @@ public class FragmentActivity  extends Activity {
 
         }
 
-
-    /*    if(titleBar !=null){
-            this.Title = activity.getTitleBar().getLabel();
-            int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
-            this.abTitle = (TextView) findViewById(titleId);
-            abTitle.setTextColor(Color.WHITE);
-            abTitle.setTypeface(MyApplication.getDefaultTypeface());
-            ActionBar actionBar = getActionBar();
-            actionBar.setTitle(this.Title );
-            //  actionBar.setIcon(R.drawable.store_icon);
-            getActionBar().show();
-
-            ((MyApplication) this.getApplication()).setActionBarProperties(this,getWindow(),null, getActionBar(), getResources(),this.abTitle, this.Title.toString());
-
-            actionBar.setTitle(this.Title );
-            getActionBar().show();
-
-        }
-        else
-        {
-            getActionBar().hide();
-        }
-
-
-        Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/CaviarDreams.ttf");
-        ((MyApplication) this.getApplication()).setDefaultTypeface(tf);*/
+        int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
+        this.abTitle = (TextView) findViewById(titleId);
 
         MyApplication.setActivityProperties(this, getWindow(),getResources(),tabStrip,getActionBar(), titleBar,abTitle,Title);
 

@@ -106,6 +106,7 @@ public  class AvailableBalanceFragment extends android.app.Fragment {
 
          tv = (TextView) actionBarLayout.findViewById(R.id.account_alias);
          tv.setTypeface(MyApplication.getDefaultTypeface());
+         MyApplication.changeColor(Color.parseColor("#F0E173"), super.getActivity().getResources());
 
     }
 

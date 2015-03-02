@@ -680,13 +680,13 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, Middleware, AppR
         listActivities.put(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS, runtimeActivity);
 
         runtimeTitleBar = new RuntimeTitleBar();
-        runtimeTitleBar.setLabel("");
+        runtimeTitleBar.setLabel("Contacts");
         runtimeActivity.setTitleBar(runtimeTitleBar);
         runtimeActivity.setColor("#F0E173");
 
         runtimeTabStrip = new RuntimeTabStrip();
         runtimeTab = new RuntimeTab();
-        runtimeTab.setLabel("Contacts");
+        runtimeTab.setLabel("");
         runtimeTabStrip.addTab(runtimeTab);
         runtimeActivity.setTabStrip(runtimeTabStrip);
 
@@ -702,13 +702,13 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, Middleware, AppR
         listActivities.put(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_AVAILABLE_BALANCE, runtimeActivity);
 
         runtimeTitleBar = new RuntimeTitleBar();
-        runtimeTitleBar.setLabel("");
+        runtimeTitleBar.setLabel("Available balance");
         runtimeActivity.setTitleBar(runtimeTitleBar);
         runtimeActivity.setColor("#F0E173");
 
         runtimeTabStrip = new RuntimeTabStrip();
         runtimeTab = new RuntimeTab();
-        runtimeTab.setLabel("Available balance");
+        runtimeTab.setLabel("");
         runtimeTabStrip.addTab(runtimeTab);
         runtimeActivity.setTabStrip(runtimeTabStrip);
 
@@ -716,6 +716,69 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, Middleware, AppR
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_ADULTS_ALL_AVAILABLE_BALANCE);
         runtimeActivity.addFragment(runtimeFragment);
         listFragments.put(Fragments.CWP_WALLET_RUNTIME_ADULTS_ALL_AVAILABLE_BALANCE,runtimeFragment);
+
+        runtimeActivity= new RuntimeActivity();
+        runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_SEND_HISTORY);
+        runtimeWallet.addActivity(runtimeActivity);
+        listActivities.put(Activities.CWP_WALLET_ADULTS_ALL_SEND_HISTORY, runtimeActivity);
+
+        runtimeTitleBar = new RuntimeTitleBar();
+        runtimeTitleBar.setLabel("Sent History");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+        runtimeActivity.setColor("#F0E173");
+
+        runtimeTabStrip = new RuntimeTabStrip();
+        runtimeTab = new RuntimeTab();
+        runtimeTab.setLabel("");
+        runtimeTabStrip.addTab(runtimeTab);
+        runtimeActivity.setTabStrip(runtimeTabStrip);
+
+        runtimeFragment = new RuntimeFragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_ADULTS_ALL_SEND_HISTORY);
+        runtimeActivity.addFragment(runtimeFragment);
+        listFragments.put(Fragments.CWP_WALLET_ADULTS_ALL_SEND_HISTORY,runtimeFragment);
+
+        runtimeActivity= new RuntimeActivity();
+        runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_SEND);
+        runtimeWallet.addActivity(runtimeActivity);
+        listActivities.put(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_SEND, runtimeActivity);
+
+        runtimeTitleBar = new RuntimeTitleBar();
+        runtimeTitleBar.setLabel("Send To Contact");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+        runtimeActivity.setColor("#F0E173");
+
+        runtimeTabStrip = new RuntimeTabStrip();
+        runtimeTab = new RuntimeTab();
+        runtimeTab.setLabel("");
+        runtimeTabStrip.addTab(runtimeTab);
+        runtimeActivity.setTabStrip(runtimeTabStrip);
+
+        runtimeFragment = new RuntimeFragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_SEND);
+        runtimeActivity.addFragment(runtimeFragment);
+        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_SEND,runtimeFragment);
+
+        runtimeActivity= new RuntimeActivity();
+        runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_CHAT_TRX);
+        runtimeWallet.addActivity(runtimeActivity);
+        listActivities.put(Activities.CWP_WALLET_ADULTS_ALL_CHAT_TRX, runtimeActivity);
+
+        runtimeTitleBar = new RuntimeTitleBar();
+        runtimeTitleBar.setLabel("");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+        runtimeActivity.setColor("#F0E173");
+
+        runtimeTabStrip = new RuntimeTabStrip();
+        runtimeTab = new RuntimeTab();
+        runtimeTab.setLabel("");
+        runtimeTabStrip.addTab(runtimeTab);
+        runtimeActivity.setTabStrip(runtimeTabStrip);
+
+        runtimeFragment = new RuntimeFragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CHAT_TRX);
+        runtimeActivity.addFragment(runtimeFragment);
+        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CHAT_TRX,runtimeFragment);
 
 
         /**
