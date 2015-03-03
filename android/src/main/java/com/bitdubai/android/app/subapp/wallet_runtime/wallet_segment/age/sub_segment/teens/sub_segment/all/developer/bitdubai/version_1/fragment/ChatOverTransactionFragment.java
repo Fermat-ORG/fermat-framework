@@ -46,12 +46,9 @@ public class ChatOverTransactionFragment extends android.app.Fragment {
 
           /* Custom Action Bar with Icon and Text */
       /* Custom Action Bar with Icon and Text */
-        String[] contacts = new String[]{ "", "Guillermo Villanueva", "Luis Fernando Molina", "Pedro Perrotta", "Mariana Duyos"};
-        String[] amounts = new String[]{ "", "$1,400.00", "$325.00", "$0.50", "$25.00"};
-        String[] whens = new String[]{ "", "2 hours ago", "3 min ago", "today 9:24 AM", "yesterday"};
-        String[] notes = new String[]{"", "Flat rent",  "Electricity bill", "Test address", "More pictures"};
+        String[] contactsheader = new String[]{ "", "Guillermo Villanueva", "Luis Fernando Molina", "Pedro Perrotta", "Mariana Duyos"};
 
-        String[][] transactions = new String[][]{
+        String[][] transactionsheader = new String[][]{
 
                 {},
                 {"Flat rent","Flat rent","Flat rent","interest paid :(","Flat rent","Car repair","Invoice #2,356 that should have been paid on August"},
@@ -60,7 +57,7 @@ public class ChatOverTransactionFragment extends android.app.Fragment {
                 {"More pictures"}
         };
 
-        String[][] transactions_amounts = new String[][]{
+        String[][] transactions_amountsheader = new String[][]{
 
                 {},
                 {"$1,400.00","$1,200.00","$1,400.00","$40.00","$1,900.00","$10,550.00","$1.00"},
@@ -69,7 +66,7 @@ public class ChatOverTransactionFragment extends android.app.Fragment {
                 {"$25.00"}
         };
 
-        String[][] transactions_whens = new String[][]{
+        String[][] transactions_whensheader = new String[][]{
 
                 {},
                 {"3 min ago","15 min ago","yesterday"},
@@ -96,7 +93,7 @@ public class ChatOverTransactionFragment extends android.app.Fragment {
 
         tv = (TextView) actionBarLayout.findViewById(R.id.contact_name);
         tv.setTypeface(MyApplication.getDefaultTypeface());
-        tv.setText(contacts[Integer.parseInt(tagId[0])].toString());
+        tv.setText(contactsheader[Integer.parseInt(tagId[0])].toString());
 
 
         ImageView profile_picture = (ImageView) actionBarLayout.findViewById(R.id.profile_picture);
@@ -121,20 +118,20 @@ public class ChatOverTransactionFragment extends android.app.Fragment {
 
         tv = (TextView) actionBarLayout.findViewById(R.id.notes);
         tv.setTypeface(MyApplication.getDefaultTypeface());
-        tv.setText(transactions[Integer.parseInt(tagId[0])][Integer.parseInt(tagId[1])]);
+        tv.setText(transactionsheader[Integer.parseInt(tagId[0])][Integer.parseInt(tagId[1])]);
 
         tv = (TextView) actionBarLayout.findViewById(R.id.amount);
         tv.setTypeface(MyApplication.getDefaultTypeface());
-        tv.setText(transactions_amounts[Integer.parseInt(tagId[0])][Integer.parseInt(tagId[1])]);;
+        tv.setText(transactions_amountsheader[Integer.parseInt(tagId[0])][Integer.parseInt(tagId[1])]);;
 
         tv = (TextView) actionBarLayout.findViewById(R.id.when);
         tv.setTypeface(MyApplication.getDefaultTypeface());
-        tv.setText(transactions_whens[Integer.parseInt(tagId[0])][Integer.parseInt(tagId[1])]);
+        tv.setText(transactions_whensheader[Integer.parseInt(tagId[0])][Integer.parseInt(tagId[1])]);
 
-        contacts = new String[]{"","","","","","","","","","","","",""};
-        countries = new String[]{};
-        states = new String[]{};
-        cities = new String[]{};
+        this.contacts = new String[]{"","","","","","","","","","","","",""};
+        this.countries = new String[]{};
+        this.states = new String[]{};
+        this.cities = new String[]{};
 
         //pictures = new String[]{"luis_profile_picture", "guillermo_profile_picture", "pedro_profile_picture", "mariana_profile_picture"};
 

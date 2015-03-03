@@ -33,13 +33,18 @@ import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_seg
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ChatOverTransactionFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ChatWithContactFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ContactsFragment;
+import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.DailyDiscountsFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.DiscountsFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.HomeFragment;
+import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ReceiveAllFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ReceiveFragment;
+import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ReceiveFromContactFragment;
+import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ReceiveFromNewContactFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.RefillFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.SendAllFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.SendFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.SendToContactFragment;
+import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.SendToNewContactFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ShopFragment;
 import com.bitdubai.android.layer._3_os.android.developer.bitdubai.version_1.AndroidOsAddonRoot;
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.App;
@@ -117,14 +122,6 @@ public class FragmentActivity  extends Activity {
         this.sidemenu = activity.getSideMenu();
 
 
-      /*  if(tabs == null)
-            ((PagerSlidingTabStrip) findViewById(R.id.tabs)).setVisibility(View.INVISIBLE);
-        else{
-            ((PagerSlidingTabStrip) findViewById(R.id.tabs)).setVisibility(View.VISIBLE);
-            this.tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
-
-        }*/
-
         if(fragments.size() == 1){
             List<android.support.v4.app.Fragment> fragments = new Vector<android.support.v4.app.Fragment>();
             Iterator<Map.Entry<Fragments, Fragment>> efragments = this.fragments.entrySet().iterator();
@@ -156,9 +153,28 @@ public class FragmentActivity  extends Activity {
                                     .commit();
                         }
                         break;
+                    case  CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_NEW_SEND:
+                        if (savedInstanceState == null) {
+                            getFragmentManager().beginTransaction()
+                                    .add(R.id.container, new SendToNewContactFragment())
+                                    .commit();
+                        }
+                        break;
+                    case  CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_NEW_RECEIVE:
+                        if (savedInstanceState == null) {
+                            getFragmentManager().beginTransaction()
+                                    .add(R.id.container, new ReceiveFromNewContactFragment())
+                                    .commit();
+                        }
+                        break;
                     case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_SEND :
                         getFragmentManager().beginTransaction()
                                 .add(R.id.container, new SendToContactFragment())
+                                .commit();
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_RECEIVE:
+                        getFragmentManager().beginTransaction()
+                                .add(R.id.container, new ReceiveFromContactFragment())
                                 .commit();
                         break;
                     case CWP_SHOP_MANAGER_MAIN:
@@ -179,9 +195,20 @@ public class FragmentActivity  extends Activity {
                                 .commit();
 
                         break;
+                    case CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED_HISTORY:
+                        getFragmentManager().beginTransaction()
+                                .add(R.id.container, new ReceiveAllFragment())
+                                .commit();
+
+                        break;
                     case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CHAT_TRX:
                         getFragmentManager().beginTransaction()
                                 .add(R.id.container, new ChatOverTransactionFragment())
+                                .commit();
+                        break;
+                    case CWP_WALLET_ADULTS_ALL_DAILY_DISCOUNT:
+                        getFragmentManager().beginTransaction()
+                                .add(R.id.container, new DailyDiscountsFragment())
                                 .commit();
                         break;
                     case CWP_WALLET_STORE_MAIN:

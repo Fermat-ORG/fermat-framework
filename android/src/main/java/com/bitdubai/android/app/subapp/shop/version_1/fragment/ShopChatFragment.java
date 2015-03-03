@@ -224,10 +224,10 @@ public  class ShopChatFragment extends Fragment {
                 when.text.setText(transactions_whens[groupPosition][childPosition].toString());
 
                 ImageView send_to_contact =  (ImageView) convertView.findViewById(R.id.icon_send_to_contact);
-                send_to_contact.setTag(groupPosition + "|" + childPosition);
+                send_to_contact.setTag("SendToContactActivity|" + groupPosition + "|" + childPosition);
 
                 ImageView  send_message = (ImageView) convertView.findViewById(R.id.icon_chat_over_trx);
-                send_message.setTag(groupPosition + "|" + childPosition);
+                send_message.setTag("ChatOverTrxActivity|" + groupPosition + "|" + childPosition);
 
 
             holder.text.setText(getChild(groupPosition, childPosition).toString());
