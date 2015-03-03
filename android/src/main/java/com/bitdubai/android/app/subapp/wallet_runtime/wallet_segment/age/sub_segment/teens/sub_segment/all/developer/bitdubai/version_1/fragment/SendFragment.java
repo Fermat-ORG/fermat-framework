@@ -234,10 +234,10 @@ public  class SendFragment extends Fragment {
                 when.text.setText(transactions_whens[groupPosition][childPosition].toString());
 
                 ImageView send_to_contact =  (ImageView) convertView.findViewById(R.id.icon_send_to_contact);
-                send_to_contact.setTag(groupPosition + "|" + childPosition);
+                send_to_contact.setTag("SendToContactActivity" + groupPosition + "|" + childPosition);
 
                 ImageView  send_message = (ImageView) convertView.findViewById(R.id.icon_chat_over_trx);
-                send_message.setTag(groupPosition + "|" + childPosition);
+                send_message.setTag("ChatOverTrxActivity" +groupPosition + "|" + childPosition);
 
 
             } else {
@@ -295,13 +295,13 @@ public  class SendFragment extends Fragment {
                     profile_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
                     //asigned tagId at icons action
                     ImageView  send_profile_picture = (ImageView) convertView.findViewById(R.id.icon_send_profile);
-                    send_profile_picture.setTag(groupPosition + "|-1");
+                    send_profile_picture.setTag("SendToContactActivity|" + groupPosition + "|-1");
 
                     ImageView  send_message = (ImageView) convertView.findViewById(R.id.icon_send_message);
-                    send_message.setTag(contacts[groupPosition].toString());
+                    send_message.setTag("ContactsChatActivity|" + contacts[groupPosition].toString());
 
                     ImageView  history_picture = (ImageView) convertView.findViewById(R.id.open_history);
-                    history_picture.setTag(groupPosition);
+                    history_picture.setTag("SentHistoryActivity|" + groupPosition);
 
                     switch (groupPosition)
                     {

@@ -65,7 +65,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_action_send_now_grey"
-                android:onClick="onSendIconClicked"
+                android:onClick="onItemSelectedClicked"
                 android:layout_weight="1"/>
 
             <ImageView
@@ -73,7 +73,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_action_email_grey"
-                android:onClick="onChatOverTrxIconClicked"
+                android:onClick="onItemSelectedClicked"
                 android:layout_weight="1"/>
         </LinearLayout>
 

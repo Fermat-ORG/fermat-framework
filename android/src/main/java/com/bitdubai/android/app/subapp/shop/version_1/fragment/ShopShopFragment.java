@@ -44,6 +44,8 @@ public class ShopShopFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        getActivity().getActionBar().setIcon(R.drawable.store_icon);
+
         String[] company_names = {"Dunkin' Donuts","The New York Times Store",
                 "NYC Fine Cigars",
                 "Fat Sal's Pizza",

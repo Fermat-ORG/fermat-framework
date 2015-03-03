@@ -87,7 +87,7 @@
 
             android:paddingBottom="7dp"
             android:paddingTop="7dp"
-            android:onClick="onChatContactIconClicked"
+            android:onClick="onItemSelectedClicked"
 
             />
 
@@ -104,7 +104,7 @@
             android:paddingRight="7dp"
             android:paddingBottom="7dp"
             android:paddingTop="7dp"
-            android:onClick="onSendIconClicked"
+            android:onClick="onItemSelectedClicked"
 
             />
 
@@ -268,7 +268,7 @@
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_action_view_as_list_grey"
                         android:id="@+id/open_history"
-                        android:onClick="onSendAllIconClicked"
+                        android:onClick="onItemSelectedClicked"
                         android:layout_weight="1"/>
             </LinearLayout>
         </FrameLayout>
