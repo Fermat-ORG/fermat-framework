@@ -18,7 +18,7 @@ import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.android.app.common.version_1.classes.MyApplication;
-import com.bitdubai.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.ReceiveFromNewContactActivity;
+
 
 
 public  class ReceiveFragment extends Fragment {

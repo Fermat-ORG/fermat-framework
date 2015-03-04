@@ -12,9 +12,14 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.AppRuntimeManager;
+import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Activities;
+import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
+import com.bitdubai.fermat_core.CorePlatformContext;
+import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.android.app.common.version_1.classes.MyApplication;
-import com.bitdubai.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.SendToNewContactActivity;
+
 
 import java.util.ArrayList;
 
@@ -179,7 +184,14 @@ public  class AccountDetailCreditsFragment extends Fragment {
 
                 if (groupPosition == 0) {
                     Intent intent;
-                    intent = new Intent(getActivity(), SendToNewContactActivity.class);
+                    Platform platform = MyApplication.getPlatform();
+                    CorePlatformContext platformContext = platform.getCorePlatformContext();
+
+                    AppRuntimeManager appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.APP_RUNTIME_MIDDLEWARE);
+                    appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.APP_RUNTIME_MIDDLEWARE);
+
+                    appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_NEW_SEND);
+                    intent = new Intent(getActivity(), com.bitdubai.android.app.FragmentActivity.class);
                     startActivity(intent);
                     return true;
                 }

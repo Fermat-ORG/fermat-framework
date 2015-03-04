@@ -16,8 +16,14 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.bitdubai.android.app.RuntimeAppActivity;
+import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.AppRuntimeManager;
+import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Activities;
+import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
+import com.bitdubai.fermat_core.CorePlatformContext;
+import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.smartwallet.R;
-import com.bitdubai.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.ShopActivity;
+
 import com.bitdubai.android.app.common.version_1.classes.MyApplication;
 
 import java.io.Serializable;
@@ -240,7 +246,19 @@ public class ShopFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
                 Intent intent;
-                intent = new Intent(getActivity(), ShopActivity.class);
+             //   intent = new Intent(getActivity(), ShopActivity.class);
+             //   startActivity(intent);
+
+                Platform platform = MyApplication.getPlatform();
+                CorePlatformContext platformContext = platform.getCorePlatformContext();
+
+                AppRuntimeManager appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.APP_RUNTIME_MIDDLEWARE);
+                appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.APP_RUNTIME_MIDDLEWARE);
+
+                appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_ADULTS_ALL_SHOPS);
+
+                intent = new Intent(getActivity(), RuntimeAppActivity.class);
+                intent.putExtra("executeStart", "0");
                 startActivity(intent);
 
                 return ;

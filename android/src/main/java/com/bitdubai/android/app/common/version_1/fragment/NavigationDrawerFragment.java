@@ -36,7 +36,7 @@ import com.bitdubai.android.app.common.version_1.classes.NavigationDrawerArrayAd
 import com.bitdubai.android.app.subapp.publisher.version_1.activity.PublisherActivity;
 import com.bitdubai.android.app.subapp.publisher.version_1.activity.ShopsActivity;
 import com.bitdubai.android.app.subapp.wallet_factory.version_2.activity.FactoryActivity;
-import com.bitdubai.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.ContactsActivity;
+
 
 import java.util.List;
 
@@ -321,8 +321,8 @@ public class NavigationDrawerFragment extends Fragment {
         }else {
             if (position == 1) {
                 Intent intent;
-                intent = new Intent(super.getActivity(), ContactsActivity.class);
-                startActivity(intent);
+              //  intent = new Intent(super.getActivity(), ContactsActivity.class);
+                //startActivity(intent);
             }
         }
 

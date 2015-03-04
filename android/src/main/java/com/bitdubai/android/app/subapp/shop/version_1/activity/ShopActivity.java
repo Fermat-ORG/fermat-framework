@@ -29,7 +29,7 @@ import com.bitdubai.smartwallet.R;
 import com.bitdubai.android.app.common.version_1.fragment.NavigationDrawerFragment;
 import com.bitdubai.android.app.subapp.shop.version_1.fragment.ShopChatFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyLayoutInflaterFactory;
-import com.bitdubai.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.RequestsSentActivity;
+
 import com.bitdubai.android.app.common.version_1.classes.MyApplication;
 import com.bitdubai.android.app.common.version_1.classes.PagerSlidingTabStrip;
 import com.bitdubai.android.app.subapp.shop.version_1.fragment.ShopHistoryFragment;
@@ -181,8 +181,8 @@ public class ShopActivity  extends FragmentActivity implements NavigationDrawerF
 */
             case R.id.action_requests_sent:
                 Intent intent;
-                intent = new Intent(this, RequestsSentActivity.class);
-                startActivity(intent);
+               // intent = new Intent(this, RequestsSentActivity.class);
+               // startActivity(intent);
                 return true;
 
 

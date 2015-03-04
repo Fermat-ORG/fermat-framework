@@ -24,11 +24,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.AppRuntimeManager;
+import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Activities;
+import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
+import com.bitdubai.fermat_core.CorePlatformContext;
+import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.android.app.common.version_1.classes.MyApplication;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyLayoutInflaterFactory;
 import com.bitdubai.android.app.common.version_1.classes.PagerSlidingTabStrip;
-import com.bitdubai.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.RequestsSentActivity;
+
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.AccountDetailFiltersFragment;
 import com.bitdubai.android.app.subapp.wallet_store.version_1.fragment.AllFragment;
 import com.bitdubai.android.app.subapp.wallet_store.version_1.fragment.FreeFragment;
@@ -162,11 +167,19 @@ public class StoreFrontActivity extends FragmentActivity
 */
             case R.id.action_requests_sent:
                 Intent intent;
-                intent = new Intent(this, RequestsSentActivity.class);
-                startActivity(intent);
+              //  intent = new Intent(this, RequestsSentActivity.class);
+              //  startActivity(intent);
+
+                Platform platform = MyApplication.getPlatform();
+                CorePlatformContext platformContext = platform.getCorePlatformContext();
+
+                AppRuntimeManager appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.APP_RUNTIME_MIDDLEWARE);
+                appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.APP_RUNTIME_MIDDLEWARE);
+
+                appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_ADULTS_ALL_CHAT_TRX);
+
+                intent = new Intent(this, FragmentActivity.class);
                 return true;
-
-
         }
 
         return super.onOptionsItemSelected(item);

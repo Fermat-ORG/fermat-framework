@@ -34,9 +34,6 @@ import com.bitdubai.android.app.subapp.shop.version_1.fragment.ShopShopFragment;
 import com.bitdubai.android.app.subapp.shop_manager.version_1.fragment.ShopDesktopFragment;
 import com.bitdubai.android.app.subapp.wallet_manager.version_1.fragment.WalletDesktopFragment;
 
-import com.bitdubai.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.RequestsReceivedActivity;
-import com.bitdubai.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.RequestsSentActivity;
-import com.bitdubai.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyLayoutInflaterFactory;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.kids.sub_segment.all.developer.bitdubai.version_1.fragment.ProfileCardFrontFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.BalanceFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.DiscountsFragment;
@@ -45,7 +42,8 @@ import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_seg
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.RefillFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.SendFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ShopFragment;
-import com.bitdubai.android.app.subapp.wallet_store.version_1.activity.StoreFrontActivity;
+import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.AccountDetailAllFragment;
+import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.AccountDetailCreditsFragment;
 import com.bitdubai.android.app.subapp.wallet_store.version_1.fragment.AllFragment;
 import com.bitdubai.android.app.subapp.wallet_store.version_1.fragment.FreeFragment;
 import com.bitdubai.android.layer._3_os.android.developer.bitdubai.version_1.AndroidOsAddonRoot;
@@ -54,6 +52,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.view.ViewGroup;
+import android.os.StrictMode;
+
 
 import com.bitdubai.fermat_api.CantStartPlatformException;
 
@@ -71,7 +71,14 @@ import com.bitdubai.fermat_core.layer._12_middleware.app_runtime.developer.bitdu
 
 import com.bitdubai.fermat_core.CorePlatformContext;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.Authenticator;
+import java.net.MalformedURLException;
+import java.net.PasswordAuthentication;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
 import java.util.Map;
 import java.util.Iterator;
@@ -126,12 +133,33 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
             this.Os.setContext(this);
             platform.setOs(Os);
-            platform.start();
+
+            Bundle bundle = getIntent().getExtras();
+            if(bundle != null){
+                if(bundle.getString("executeStart").toString() == "0")
+                    platform.start();
+            }else
+            {
+                platform.start();
+            }
+
+
 
             this.platformContext = platform.getCorePlatformContext();
 
             this.appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.APP_RUNTIME_MIDDLEWARE);
+
+
             NavigateActivity();
+           /* try{
+                connect();
+            }catch(MalformedURLException e){
+
+            }
+            catch(IOException e){
+
+            }*/
+
 
 
         }
@@ -142,6 +170,39 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
     }
 
+    public static void connect()
+            throws MalformedURLException, IOException {
+        URL url = new URL("https://github.com/bitDubai/bitDubai-system/blob/master/android/src/main/res/drawable-hdpi/drawer_shadow.9.png");
+        URLConnection con = url.openConnection();
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        Authenticator au = new Authenticator() {
+            @Override
+            protected PasswordAuthentication
+            getPasswordAuthentication() {
+                return new PasswordAuthentication
+                        ("natalia_veronica_c@hotmail.com", "nattyco2013".toCharArray());
+            }
+        };
+        Authenticator.setDefault(au);
+        try{
+
+
+            BufferedReader in = new BufferedReader(
+                    new InputStreamReader(con.getInputStream()));
+            String linea;
+            while ((linea = in.readLine()) != null) {
+                System.out.println(linea);
+            }
+        }catch(Exception e){
+                    String strError = e.getMessage();
+                }
+
+
+
+    }
     /**
      * Initialise the fragments to be paged
      */
@@ -803,10 +864,14 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                     currentFragment =  ShopMapFragment.newInstance(position);
                     break;
                 case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_DEBITS:
+                    currentFragment = AccountDetailAllFragment.newInstance(2);
+
                     break;
                 case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNT_CREDITS:
+                    currentFragment =  AccountDetailCreditsFragment.newInstance(1);
                     break;
                 case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_ALL:
+                    currentFragment =   AccountDetailAllFragment.newInstance(0);
                     break;
                 case CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED:
                     break;

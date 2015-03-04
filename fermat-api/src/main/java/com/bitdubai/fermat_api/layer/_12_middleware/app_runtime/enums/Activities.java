@@ -16,6 +16,7 @@ public enum Activities {
     CWP_WALLET_RUNTIME_ADULTS_ALL_MAIN ("AdultsRuntimeActivity"),
     CWP_WALLET_RUNTIME_ADULTS_ALL_ACCOUNTS ("AccountsActivity"),
     CWP_WALLET_RUNTIME_ADULTS_ALL_AVAILABLE_BALANCE ("AvailableBalanceActivity"),
+    CWP_WALLET_RUNTIME_ADULTS_ALL_ACCOUNT_DETAIL ("AccountDetailActivity"),
     CWP_WALLET_RUNTIME_ADULTS_ALL_BANKS ("BanksActivity"),
     CWP_WALLET_RUNTIME_ADULTS_ALL_COUPONS ("CouponsActivity"),
     CWP_WALLET_RUNTIME_ADULTS_ALL_DISCOUNTS ("DiscountsActivity"),

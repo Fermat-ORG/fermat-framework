@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.bitdubai.android.app.common.version_1.fragment.NavigationDrawerFragment;
 import com.bitdubai.android.app.subapp.shop.version_1.activity.ShopActivity;
-import com.bitdubai.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.FrameworkActivity;
+
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.android.app.common.version_1.classes.MyApplication;
 
@@ -161,7 +161,7 @@ public class DesktopActivity extends FragmentActivity
         {
             Intent intent;
 
-            intent = new Intent(this, FrameworkActivity.class);
+          //  intent = new Intent(this, FrameworkActivity.class);
 
             // Intent i=getIntent();
             // String walletId =i.getStringExtra( "Wallet Id");
@@ -170,7 +170,7 @@ public class DesktopActivity extends FragmentActivity
             ((MyApplication) this.getApplication()).setWalletId(Integer.parseInt(tagId));
 
             // intent.putExtra("Wallet Id", tag );
-            startActivity(intent);
+           // startActivity(intent);
         }
     }
 

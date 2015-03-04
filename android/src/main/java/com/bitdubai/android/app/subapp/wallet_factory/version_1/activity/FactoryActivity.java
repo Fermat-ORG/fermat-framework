@@ -32,7 +32,7 @@ import com.bitdubai.android.app.subapp.wallet_factory.version_1.fragment.Drawers
 import com.bitdubai.android.app.subapp.wallet_factory.version_1.fragment.FragmentsFragment;
 import com.bitdubai.android.app.subapp.wallet_factory.version_1.fragment.MenusFragment;
 import com.bitdubai.android.app.subapp.wallet_factory.version_1.fragment.ResourcesFragment;
-import com.bitdubai.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.RequestsSentActivity;
+
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyLayoutInflaterFactory;
 
 /**
@@ -167,8 +167,8 @@ public class FactoryActivity extends FragmentActivity
 */
             case R.id.action_requests_sent:
                 Intent intent;
-                intent = new Intent(this, RequestsSentActivity.class);
-                startActivity(intent);
+                //intent = new Intent(this, RequestsSentActivity.class);
+               // startActivity(intent);
                 return true;
 
 

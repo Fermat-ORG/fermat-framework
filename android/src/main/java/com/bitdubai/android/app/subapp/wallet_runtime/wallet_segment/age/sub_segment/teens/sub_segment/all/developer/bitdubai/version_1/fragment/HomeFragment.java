@@ -13,10 +13,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.bitdubai.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyLayoutInflaterFactory;
 import com.bitdubai.smartwallet.R;
-import com.bitdubai.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.SendToNewContactActivity;
 import com.bitdubai.android.app.common.version_1.classes.MyApplication;
 
 

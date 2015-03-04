@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bitdubai.smartwallet.R;
-import com.bitdubai.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.SentDetailActivity;
+
 import com.bitdubai.android.app.common.version_1.classes.MyApplication;
 
 /**
@@ -82,8 +82,8 @@ public class ShopReviewsFragment extends Fragment {
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
 
                 Intent intent;
-                intent = new Intent(getActivity(), SentDetailActivity.class);
-                startActivity(intent);
+               // intent = new Intent(getActivity(), SentDetailActivity.class);
+               // startActivity(intent);
 
                 return true;
             }

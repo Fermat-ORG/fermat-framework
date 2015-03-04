@@ -22,6 +22,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import com.bitdubai.android.app.RuntimeAppActivity;
+import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.AppRuntimeManager;
+import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Activities;
+import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
+import com.bitdubai.fermat_core.CorePlatformContext;
+import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.android.app.common.version_1.classes.MyApplication;
 import com.bitdubai.android.app.common.version_1.classes.PagerSlidingTabStrip;
@@ -33,7 +40,7 @@ import com.bitdubai.android.app.subapp.wallet_factory.version_2.fragment.RefillF
 import com.bitdubai.android.app.subapp.wallet_factory.version_2.fragment.ResourcesFragment;
 import com.bitdubai.android.app.subapp.wallet_factory.version_2.fragment.SendFragment;
 import com.bitdubai.android.app.subapp.wallet_factory.version_2.fragment.ShopFragment;
-import com.bitdubai.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.RequestsSentActivity;
+
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyLayoutInflaterFactory;
 public class FactoryActivity extends FragmentActivity
 {
@@ -142,7 +149,19 @@ public class FactoryActivity extends FragmentActivity
 */
             case R.id.action_requests_sent:
                 Intent intent;
-                intent = new Intent(this, RequestsSentActivity.class);
+              //  intent = new Intent(this, RequestsSentActivity.class);
+               // startActivity(intent);
+
+                Platform platform = MyApplication.getPlatform();
+                CorePlatformContext platformContext = platform.getCorePlatformContext();
+
+                AppRuntimeManager appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.APP_RUNTIME_MIDDLEWARE);
+                appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.APP_RUNTIME_MIDDLEWARE);
+
+                appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_ADULTS_ALL_CHAT_TRX);
+
+                intent = new Intent(this, com.bitdubai.android.app.FragmentActivity.class);
+
                 startActivity(intent);
                 return true;
 

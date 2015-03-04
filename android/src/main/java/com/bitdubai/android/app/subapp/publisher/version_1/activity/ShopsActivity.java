@@ -28,7 +28,7 @@ import com.bitdubai.android.app.common.version_1.classes.MyApplication;
 import com.bitdubai.android.app.common.version_1.classes.PagerSlidingTabStrip;
 import com.bitdubai.android.app.subapp.publisher.version_1.fragment.ShopsAffiliatedShopsFragment;
 import com.bitdubai.android.app.subapp.publisher.version_1.fragment.ShopsAllShopsFragment;
-import com.bitdubai.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.RequestsSentActivity;
+
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyLayoutInflaterFactory;
 
 public class ShopsActivity extends FragmentActivity
@@ -159,9 +159,9 @@ public class ShopsActivity extends FragmentActivity
                 return true;
 */
             case R.id.action_requests_sent:
-                Intent intent;
-                intent = new Intent(this, RequestsSentActivity.class);
-                startActivity(intent);
+              //  Intent intent;
+               // intent = new Intent(this, RequestsSentActivity.class);
+               // startActivity(intent);
                 return true;
 
 
