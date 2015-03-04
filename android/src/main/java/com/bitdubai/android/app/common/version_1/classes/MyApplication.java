@@ -137,8 +137,9 @@ public class MyApplication extends Application {
             abTitle.setTypeface(MyApplication.getDefaultTypeface());
             actionBar.setTitle(Title);
             actionBar.show();
+            setActionBarProperties(activity,window,tabStrip, actionBar,context,abTitle, Title.toString());
             if (tabStrip != null){
-                setActionBarProperties(activity,window,tabStrip, actionBar,context,abTitle, Title.toString());
+
                 tabStrip.setTypeface(tf,1 );
                 tabStrip.setBackgroundResource(R.drawable.background_tiled_diagonal_light);
 
@@ -163,6 +164,7 @@ public class MyApplication extends Application {
 
     }
     public static void setActionBarProperties(Activity activity, Window window,  PagerSlidingTabStrip pTabs, ActionBar pActionBar, Resources context,  TextView abTitle, String pTitle) {
+
         actionBar = pActionBar;
         tabs = pTabs;
         // Change the title of the action bar and the typeface
@@ -175,13 +177,13 @@ public class MyApplication extends Application {
 
         Drawable wallpaper = context.getDrawable(R.drawable.transparent);
 
+        s = new SpannableString(mTitle);
+
         switch (getWalletId() )
         {
             case 1:
 
-                s = new SpannableString(mTitle);
                 color = "#FFC2F1";
-
                 actionBar.setIcon(context.getDrawable(R.drawable.icono_piggy_pink));
                 bg = context.getDrawable(R.drawable.wallet_wallpaper_pink);
                 bg.setVisible(true,false);
@@ -191,23 +193,17 @@ public class MyApplication extends Application {
                 break;
 
             case 2:
-
-                s = new SpannableString(mTitle);
                 color = "#84DCF5";
                 actionBar.setIcon(context.getDrawable(R.drawable.icono_piggy_yellow));
                 bg = context.getDrawable(R.drawable.banner_kid_yellow_blue);
                 bg.setVisible(true,false);
-                ((BitmapDrawable)context.getDrawable(R.drawable.wallet_wallpaper_yellow)).getBitmap().recycle();
-                context.getDrawable(R.drawable.wallet_wallpaper_yellow).setCallback(null);
-                wallpaper = context.getDrawable(R.drawable.wallet_wallpaper_yellow);
+               wallpaper = context.getDrawable(R.drawable.wallet_wallpaper_yellow);
 
                 abTitle.setTextColor(Color.BLACK);
                 walletStyle = "Kids";
                 break;
 
             case 3:
-
-                s = new SpannableString(mTitle);
                 color = "#F0E173";
                 actionBar.setIcon(context.getDrawable(R.drawable.wallet_1));
                 wallpaper = context.getDrawable(R.drawable.background_tabs_diagonal_rotated);
@@ -216,8 +212,6 @@ public class MyApplication extends Application {
                 break;
 
             case 4:
-
-                s  = new SpannableString(mTitle);
                 color = "#1EE635";
                 actionBar.setIcon(context.getDrawable(R.drawable.wallet_3));
                 wallpaper = context.getDrawable(R.drawable.background_tiled_diagonal_light);
@@ -227,7 +221,6 @@ public class MyApplication extends Application {
 
             case 5:
 
-                s = new SpannableString(mTitle);
                 color = "#F0C64A";
                 actionBar.setIcon(context.getDrawable(R.drawable.wallet_3));
                 wallpaper = context.getDrawable(R.drawable.background_tiled_diagonal_light);
@@ -237,7 +230,6 @@ public class MyApplication extends Application {
 
             case 6:
 
-                s = new SpannableString(mTitle);
                 color = "#9B80FF";
                 actionBar.setIcon(context.getDrawable(R.drawable.wallet_3));
                 wallpaper = context.getDrawable(R.drawable.background_tiled_diagonal_light);
@@ -246,8 +238,6 @@ public class MyApplication extends Application {
                 break;
 
             case 7:
-
-                s = new SpannableString(mTitle);
                 color = "#E8E8E8";
                 actionBar.setIcon(context.getDrawable(R.drawable.icono_retailer_1));
                 wallpaper = context.getDrawable(R.drawable.background_tiled_diagonal_light);
@@ -256,8 +246,6 @@ public class MyApplication extends Application {
                 break;
 
             case 8:
-
-                s = new SpannableString(mTitle);
                 color = "#AB0A80";
                 actionBar.setIcon(context.getDrawable(R.drawable.icono_banco_1));
                 wallpaper = context.getDrawable(R.drawable.background_tiled_diagonal_light);
@@ -266,8 +254,6 @@ public class MyApplication extends Application {
                 break;
 
             case 9:
-
-                s = new SpannableString(mTitle);
                 color = "#FF0004";
                 actionBar.setIcon(context.getDrawable(R.drawable.icono_banco_2));
                 wallpaper = context.getDrawable(R.drawable.background_tiled_diagonal_light);
@@ -276,8 +262,6 @@ public class MyApplication extends Application {
                 break;
 
             case 10:
-
-                s = new SpannableString(mTitle);
                 color = "#3864F5";
                 actionBar.setIcon(context.getDrawable(R.drawable.icono_club_1));
                 wallpaper = context.getDrawable(R.drawable.background_tiled_diagonal_light);
@@ -289,7 +273,6 @@ public class MyApplication extends Application {
 
             case 11:
 
-                s = new SpannableString(mTitle);
                 color = "#DE186B";
                 actionBar.setIcon(context.getDrawable(R.drawable.icono_club_2));
                 abTitle.setTextColor(Color.WHITE);

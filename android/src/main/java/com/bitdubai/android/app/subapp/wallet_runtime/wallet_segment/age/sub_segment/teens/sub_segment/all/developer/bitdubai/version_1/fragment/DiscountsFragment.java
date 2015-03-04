@@ -19,11 +19,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bitdubai.android.layer._3_os.android.developer.bitdubai.version_1.AndroidOsAddonRoot;
+import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.AppRuntimeManager;
+import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Activities;
+import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
+import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.smartwallet.R;
-import com.bitdubai.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.DailyDiscountsActivity;
-import com.bitdubai.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.MonthlyDiscountsActivity;
 import com.bitdubai.android.app.common.version_1.classes.MyApplication;
-import com.bitdubai.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.WeeklyDiscountsActivity;
+import com.bitdubai.fermat_core.CorePlatformContext;
 
 
 public class DiscountsFragment extends ListFragment implements LoaderManager.LoaderCallbacks<List<DiscountsFragment.Model>> {
@@ -68,22 +71,34 @@ public class DiscountsFragment extends ListFragment implements LoaderManager.Loa
     public void onListItemClick(ListView l, View v, int position, long id) {
 
         Intent intent;
+        Platform platform = MyApplication.getPlatform();
+        CorePlatformContext platformContext = platform.getCorePlatformContext();
 
+        AppRuntimeManager appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.APP_RUNTIME_MIDDLEWARE);
+        appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.APP_RUNTIME_MIDDLEWARE);
         switch (position) {
 
             case 0:
-                intent = new Intent(getActivity(), DailyDiscountsActivity.class);
-                startActivity(intent);
+                //intent = new Intent(getActivity(), DailyDiscountsActivity.class);
+               // startActivity(intent);
 
+                 appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_ADULTS_ALL_DAILY_DISCOUNT);
+                intent = new Intent(getActivity(), com.bitdubai.android.app.FragmentActivity.class);
+                startActivity(intent);
                 break;
 
             case 1:
-                intent = new Intent(getActivity(), WeeklyDiscountsActivity.class);
+                //intent = new Intent(getActivity(), WeeklyDiscountsActivity.class);
+                appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_ADULTS_ALL_WEEKLY_DISCOUNT);
+                intent = new Intent(getActivity(), com.bitdubai.android.app.FragmentActivity.class);
+
                 startActivity(intent);
                 break;
 
             case 2:
-                intent = new Intent(getActivity(), MonthlyDiscountsActivity.class);
+              //  intent = new Intent(getActivity(), MonthlyDiscountsActivity.class);
+                appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_ADULTS_ALL_MONTHLY_DISCOUNT);
+                intent = new Intent(getActivity(), com.bitdubai.android.app.FragmentActivity.class);
                 startActivity(intent);
                 break;
         }

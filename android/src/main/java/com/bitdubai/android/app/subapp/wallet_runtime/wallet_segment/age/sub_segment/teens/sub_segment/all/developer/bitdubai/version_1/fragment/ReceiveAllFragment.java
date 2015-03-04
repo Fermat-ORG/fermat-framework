@@ -1,5 +1,7 @@
 package com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment;
 
+import android.app.ActionBar;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bitdubai.android.app.common.version_1.classes.PagerSlidingTabStrip;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.android.app.common.version_1.classes.MyApplication;
 
@@ -36,6 +39,58 @@ public class ReceiveAllFragment extends android.app.Fragment {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+
+        final ViewGroup actionBarLayout = (ViewGroup) getActivity().getLayoutInflater().inflate(
+                R.layout.wallet_framework_activity_received_history_action_bar,
+                null);
+
+        // Set up your ActionBar
+        String[] contacts = new String[]{"","Lucia Alarcon De Zamacona", "Juan Luis R. Pons", "Karina Rodríguez", "Simon Cushing","Céline Begnis","Taylor Backus","Stephanie Himonidis","Kimberly Brown" };
+        final ActionBar actionBar = getActivity().getActionBar();
+        actionBar.setDisplayShowHomeEnabled(false);
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setCustomView(actionBarLayout);
+        int tagId = MyApplication.getTagId();
+        TextView tv;
+
+        tv = (TextView) actionBarLayout.findViewById(R.id.contact_name);
+        tv.setTypeface(MyApplication.getDefaultTypeface());
+        tv.setText(contacts[tagId].toString());
+
+        tv = (TextView) actionBarLayout.findViewById(R.id.activity_name);
+        tv.setTypeface(MyApplication.getDefaultTypeface());
+
+        ImageView profile_picture = (ImageView) actionBarLayout.findViewById(R.id.profile_picture);
+        switch (tagId)
+        {
+            case 1:
+                profile_picture.setImageResource(R.drawable.lucia_profile_picture);
+                break;
+            case 2:
+                profile_picture.setImageResource(R.drawable.juan_profile_picture);
+                break;
+            case 3:
+                profile_picture.setImageResource(R.drawable.karina_profile_picture);
+                break;
+            case 4:
+                profile_picture.setImageResource(R.drawable.simon_profile_picture);
+                break;
+            case 5:
+                profile_picture.setImageResource(R.drawable.celine_profile_picture);
+                break;
+            case 6:
+                profile_picture.setImageResource(R.drawable.taylor_profile_picture);
+                break;
+            case 7:
+                profile_picture.setImageResource(R.drawable.stephani_profile_picture);
+                break;
+            case 8:
+                profile_picture.setImageResource(R.drawable.kimberly_profile_picture);
+                break;
+        }
 //find de tag id,
         contacts = new String[]{"","Lucia Alarcon De Zamacona", "Juan Luis R. Pons", "Karina Rodríguez", "Simon Cushing","Céline Begnis","Taylor Backus","Stephanie Himonidis","Kimberly Brown" };
         amounts = new String[]{"","$200.00", "$3,000.00", "$400.00", "$3.00","$45.00","$600.00","50.00","$80,000.00"};
@@ -170,10 +225,10 @@ public class ReceiveAllFragment extends android.app.Fragment {
 
                 ImageView  icon_receive_form_contact = (ImageView) convertView.findViewById(R.id.icon_receive_form_contact);
                 icon_receive_form_contact.setTag(groupPosition);
-                icon_receive_form_contact.setTag(tagId + "-" + groupPosition);
+                icon_receive_form_contact.setTag("ReceiveFromContactActivity|" + tagId + "-" + groupPosition);
 
                 ImageView  icon_chat_over_trx = (ImageView) convertView.findViewById(R.id.icon_chat_over_trx);
-                icon_chat_over_trx.setTag(tagId + "|" + groupPosition);
+                icon_chat_over_trx.setTag("ChatOverTrxActivity|" + tagId + "|" + groupPosition);
 
                 holder = new ViewHolder();
 

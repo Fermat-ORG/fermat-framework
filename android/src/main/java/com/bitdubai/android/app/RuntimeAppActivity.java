@@ -23,6 +23,7 @@ import com.bitdubai.android.app.common.version_1.classes.MyApplication;
 
 import com.bitdubai.android.app.common.version_1.classes.PagerSlidingTabStrip;
 import com.bitdubai.android.app.common.version_1.fragment.NavigationDrawerFragment;
+import com.bitdubai.android.app.shell.version_1.activity.FileImageActivity;
 import com.bitdubai.android.app.shell.version_1.activity.PagerAdapter;
 import com.bitdubai.android.app.subapp.shop.version_1.fragment.ShopChatFragment;
 import com.bitdubai.android.app.subapp.shop.version_1.fragment.ShopHistoryFragment;
@@ -33,6 +34,8 @@ import com.bitdubai.android.app.subapp.shop.version_1.fragment.ShopShopFragment;
 import com.bitdubai.android.app.subapp.shop_manager.version_1.fragment.ShopDesktopFragment;
 import com.bitdubai.android.app.subapp.wallet_manager.version_1.fragment.WalletDesktopFragment;
 
+import com.bitdubai.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.RequestsReceivedActivity;
+import com.bitdubai.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.RequestsSentActivity;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyLayoutInflaterFactory;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.kids.sub_segment.all.developer.bitdubai.version_1.fragment.ProfileCardFrontFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.BalanceFragment;
@@ -42,6 +45,9 @@ import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_seg
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.RefillFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.SendFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ShopFragment;
+import com.bitdubai.android.app.subapp.wallet_store.version_1.activity.StoreFrontActivity;
+import com.bitdubai.android.app.subapp.wallet_store.version_1.fragment.AllFragment;
+import com.bitdubai.android.app.subapp.wallet_store.version_1.fragment.FreeFragment;
 import com.bitdubai.android.layer._3_os.android.developer.bitdubai.version_1.AndroidOsAddonRoot;
 import android.content.Context;
 import android.view.View;
@@ -158,7 +164,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                     case CWP_WALLET_MANAGER_MAIN:
                         fragments.add(android.support.v4.app.Fragment.instantiate(this, WalletDesktopFragment.class.getName()));
                         break;
-                    case CWP_SHOP_MANAGER_MAIN:
+                    case CWP_WALLET_MANAGER_SHOP:
                         fragments.add(android.support.v4.app.Fragment.instantiate(this, ShopDesktopFragment.class.getName()));
                         break;
                     case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_PROFILE:
@@ -370,18 +376,14 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
 
 
-        LayoutInflater inflaterClone = getLayoutInflater().cloneInContext(getLayoutInflater().getContext());
+    /*    LayoutInflater inflaterClone = getLayoutInflater().cloneInContext(getLayoutInflater().getContext());
         LayoutInflater.Factory lif = new MyLayoutInflaterFactory();
-        inflaterClone.setFactory(lif);
+        inflaterClone.setFactory(lif);*/
 
         return super.onCreateOptionsMenu(menu);
-        // }else
-        // {
-        // return true;
-        // }
+
 
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -390,7 +392,46 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
 
+        if (id == R.id.action_wallet_store) {
+            ((MyApplication) this.getApplication()).setWalletId(0);
+            this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_STORE_MAIN);
+            NavigateActivity();
+
+            return true;
+        }
+
+        if (id == R.id.action_file) {
+
+                Intent intent;
+                intent = new Intent(this, FileImageActivity.class);
+                startActivity(intent);
+
+            return true;
+        }
+
+        if (id == R.id.action_requests_sent){
+            Intent intent;
+            MyApplication.setChildId("1|1");
+            activity = this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_ADULTS_ALL_CHAT_TRX);
+            intent = new Intent(this, com.bitdubai.android.app.FragmentActivity.class);
+            startActivity(intent);
+            return true;
+        }
+
+
+        if (id == R.id.action_requests_received){
+            Intent intent;
+            MyApplication.setChildId("1|1");
+            activity = this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_ADULTS_ALL_CHAT_TRX);
+            intent = new Intent(this, com.bitdubai.android.app.FragmentActivity.class);
+            startActivity(intent);
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -453,7 +494,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                 else
                 {
                     ((MyApplication) this.getApplication()).setWalletId(Integer.parseInt(paramId));
-                    activity = this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_ADULTS_ALL_MAIN);
+                    this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_ADULTS_ALL_MAIN);
                     NavigateActivity();
 
 
@@ -489,15 +530,23 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                 break;
             case CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_CHAT:
                 MyApplication.setContact(paramId);
-                activity = this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_CHAT);
+                 this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_CHAT);
                 intent = new Intent(this, com.bitdubai.android.app.FragmentActivity.class);
                 startActivity(intent);
                 break;
             case CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_SEND:
                 MyApplication.setChildId(paramId);
-                activity = this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_SEND);
+                 this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_SEND);
                 intent = new Intent(this, com.bitdubai.android.app.FragmentActivity.class);
                 startActivity(intent);
+                break;
+            case CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_RECEIVE:
+                MyApplication.setChildId(paramId);
+                this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_RECEIVE);
+                intent = new Intent(this, com.bitdubai.android.app.FragmentActivity.class);
+                startActivity(intent);
+
+
                 break;
             case CWP_WALLET_ADULTS_ALL_SHOPS:
                 ((MyApplication) this.getApplication()).setWalletId(0);
@@ -508,7 +557,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                 break;
             case CWP_WALLET_ADULTS_ALL_CHAT_TRX:
                 MyApplication.setChildId(paramId);
-                activity = this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_ADULTS_ALL_CHAT_TRX);
+                 this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_ADULTS_ALL_CHAT_TRX);
                 intent = new Intent(this, com.bitdubai.android.app.FragmentActivity.class);
                 startActivity(intent);
                 break;
@@ -522,6 +571,13 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                 MyApplication.setTagId(Integer.parseInt(paramId));
 
                 this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_ADULTS_ALL_SEND_HISTORY);
+                intent = new Intent(this, com.bitdubai.android.app.FragmentActivity.class);
+                startActivity(intent);
+                break;
+            case CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED_HISTORY:
+                MyApplication.setTagId(Integer.parseInt(paramId));
+
+                this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED_HISTORY);
                 intent = new Intent(this, com.bitdubai.android.app.FragmentActivity.class);
                 startActivity(intent);
                 break;
@@ -579,26 +635,19 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
         //clean page adapter
         pagertabs = (ViewPager) findViewById(R.id.pager);
         this.collection = pagertabs;
-        if(adapter != null) {
-            for (int i = 0; i < fragments.size(); i++) {
+       // if(adapter != null) {
+            collection.removeAllViews();
+
+           /* for (int i = 0; i < fragments.size(); i++) {
                 try {
                     //Object objectobject = adapter.instantiateItem(pagertabs,i);
-
-                    try
-                    {
-                        collection.removeViewAt(i);
-                    }catch(Exception ex)
-                    {
-
-                    }
-
                  //   if (objectobject != null)
                      //   adapter.destroyItem(pagertabs, 0, objectobject);
                 } catch (Exception e) {
 
                 }
-            }
-        }
+            }*/
+       // }
 
         ViewPager viewpager = (ViewPager)super.findViewById(R.id.viewpager);
         viewpager.setVisibility(View.INVISIBLE);
@@ -686,8 +735,21 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                 case CWP_WALLET_MANAGER_MAIN:
                     currentFragment =  WalletDesktopFragment.newInstance(position);
                     break;
-                case CWP_SHOP_MANAGER_MAIN:
+                case CWP_WALLET_MANAGER_SHOP:
                     currentFragment =  ShopDesktopFragment.newInstance(position);
+                    break;
+                case CWP_SHOP_MANAGER_MAIN:
+                    currentFragment =  AllFragment.newInstance(0);
+                    break;
+                case CWP_SHOP_MANAGER_FREE:
+                    currentFragment =  FreeFragment.newInstance(1);
+                    break;
+
+                case CWP_SHOP_MANAGER_PAID:
+                    currentFragment =  AllFragment.newInstance(2);
+                    break;
+                case CWP_SHOP_MANAGER_ACCEPTED_NEARBY:
+                    currentFragment =  AllFragment.newInstance(3);
                     break;
                 case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_PROFILE:
                     currentFragment =  ProfileCardFrontFragment.newInstance(position);
@@ -754,6 +816,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                     break;
                 case CWP_WALLET_FACTORY_MAIN:
                     break;
+
 
             }
 

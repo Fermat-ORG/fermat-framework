@@ -11,6 +11,11 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.AppRuntimeManager;
+import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Activities;
+import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
+import com.bitdubai.fermat_core.CorePlatformContext;
+import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.android.app.common.version_1.classes.MyApplication;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_framework.version_1.activity.ReceiveFromNewContactActivity;
@@ -134,8 +139,18 @@ public  class ReceiveFragment extends Fragment {
 
                 if (groupPosition == 0) {
 
-                    Intent intent;
+                   /* Intent intent;
                     intent = new Intent(getActivity(), ReceiveFromNewContactActivity.class);
+                    startActivity(intent);*/
+
+                    Platform platform = MyApplication.getPlatform();
+                    CorePlatformContext platformContext = platform.getCorePlatformContext();
+
+                    AppRuntimeManager appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.APP_RUNTIME_MIDDLEWARE);
+                    appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.APP_RUNTIME_MIDDLEWARE);
+                    Intent intent;
+                    appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_NEW_RECEIVE);
+                    intent = new Intent(getActivity(), com.bitdubai.android.app.FragmentActivity.class);
                     startActivity(intent);
                     return true;
                 }
@@ -227,10 +242,10 @@ public  class ReceiveFragment extends Fragment {
 
                 //asigned tagId at icons action
                 ImageView  icon_receive_form_contact = (ImageView) convertView.findViewById(R.id.icon_receive_form_contact);
-                icon_receive_form_contact.setTag(groupPosition + "-" + childPosition);
+                icon_receive_form_contact.setTag("ReceiveFromContactActivity|" + groupPosition + "-" + childPosition);
 
                 ImageView  send_message = (ImageView) convertView.findViewById(R.id.icon_chat_over_trx);
-                send_message.setTag(groupPosition + "|" + childPosition);
+                send_message.setTag("ChatOverTrxActivity|" + groupPosition + "|" + childPosition);
 
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -285,13 +300,13 @@ public  class ReceiveFragment extends Fragment {
                     profile_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
 //asigned tagId at icons action
                     ImageView  send_profile_picture = (ImageView) convertView.findViewById(R.id.icon_receive_profile);
-                     send_profile_picture.setTag(groupPosition + "-0");
+                     send_profile_picture.setTag("ReceiveFromContactActivity|" +groupPosition + "-0");
 
                     ImageView  history_picture = (ImageView) convertView.findViewById(R.id.open_history);
-                    history_picture.setTag(groupPosition);
+                    history_picture.setTag("ReceiveAllHistoryActivity|" +groupPosition);
 
                     ImageView  send_message = (ImageView) convertView.findViewById(R.id.icon_send_message);
-                    send_message.setTag(contacts[groupPosition].toString());
+                    send_message.setTag("ContactsChatActivity|" + contacts[groupPosition].toString());
 
                     switch (groupPosition) {
                         case 1:
