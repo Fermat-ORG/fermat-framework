@@ -1,7 +1,7 @@
 Technical Readme
 ================
 
-The system is written in Java language. The platform itself is portable to any operative system. Other modules of the system are operative system dependent. As of today the system as a whole is divided in two main parts:
+The system is written in Java. The platform itself is portable to any operative system. Other modules of the system are operative system dependent. As of today the system as a whole is divided in two main parts:
 
 #### 1. Android APK.
 #### 2. Android Independent Libraries:
@@ -12,11 +12,11 @@ The system is written in Java language. The platform itself is portable to any o
 
 ##### Fermat Plug-ins:
 	
-*	Bitcoin Crypto Network 
-*	Wallet Manager
-*	Wallet Store
-*	Wallet Publisher
-*	etc.
+* Bitcoin Crypto Network 
+* Wallet Manager
+* Wallet Store
+* Wallet Publisher
+* etc.
 
 
 # Android APK
@@ -25,12 +25,33 @@ The Android APK is the container of the platform while running on the Android op
 
 The whole APK from the users perspective is an APP that contains inside itself other sub APPs. In its initial version these sub APPs are: 
 
-* The Wallet Manager, is the sub APP that allow users to manage all the installed wallets.
-* The Wallet Runtime, dynamically hosts whatever wallet the user has installed.
-* The Wallet Store, a sub APP where the end user chooses which wallet to install.
-* The Wallet Factory, a sub APP which allows the user to re-brand any of the available wallets.
-* The Wallet Publisher, a sub APP which allows the user to manage their relationship with the user base of a published wallet. 
-* The Shop sub APP, where shop owners can define their shop and its products, and interact with customers.
+## Sub APPs
+
+### The Wallet Manager
+
+Is the sub APP that allow users to manage all the installed wallets.
+
+### The Wallet Runtime
+
+Dynamically hosts whatever wallet the user has installed.
+
+### The Wallet Store
+
+Sub APP where the end user chooses which wallet to install.
+
+### The Wallet Factory
+
+Sub APP which allows the user to re-brand any of the available wallets.
+
+### The Wallet Publisher
+
+Sub APP which allows the user to manage their relationship with the user base of a published wallet. 
+
+### The Shop sub APP
+
+It is where shop owners can define their shop and its products, and interact with customers.
+
+## Main Component
 
 Its main component is the App Runtime, a module that is responsible for dynamically interpreting the navigational structure of the application, sub applications and wallets and loading the code for the part of the application where the end user is. 
 
@@ -84,9 +105,17 @@ The pug-ins here manages information about related to the device where the platf
 
 In this layer we have 3 Addons
 
-	* Device User: Supports the multiple users per device functionality.
-	* Intra User: Manages the information of other users within the network of platform users.
-	* Entra User: Manages the information of entities which are outside the platform, like users of crypto currencies that are not using the platform but third party wallets.
+### Device User
+
+Supports the multiple users per device functionality.
+
+### Intra User
+
+Manages the information of other users within the network of platform users.
+
+### Entra User
+
+Manages the information of entities which are outside the platform, like users of crypto currencies that are not using the platform but third party wallets.
 
 ## 6- License
 
