@@ -14,6 +14,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import android.util.Base64;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -57,13 +58,15 @@ import android.os.StrictMode;
 
 import com.bitdubai.fermat_api.CantStartPlatformException;
 
+import com.bitdubai.fermat_api.layer._11_network_service.CantCheckResourcesException;
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.*;
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.AppRuntimeManager;
-
+import com.bitdubai.fermat_api.layer._11_network_service.wallet_resources.WalletResourcesManager;
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.Fragment;
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Activities;
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Fragments;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer._3_os.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_core.Platform;
 
 import com.bitdubai.smartwallet.R;
@@ -84,6 +87,19 @@ import java.util.Map;
 import java.util.Iterator;
 import java.util.Vector;
 
+import java.io.InputStream;
+
+import java.io.Reader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.net.HttpURLConnection;
+
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.BasicResponseHandler;
+import org.apache.http.impl.client.DefaultHttpClient;
 /**
  * Created by toshiba on 16/02/2015.
  */
@@ -150,59 +166,27 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             this.appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.APP_RUNTIME_MIDDLEWARE);
 
 
-            NavigateActivity();
-           /* try{
-                connect();
-            }catch(MalformedURLException e){
+             NavigateActivity();
 
-            }
-            catch(IOException e){
+           // WalletResourcesManager  walletResourceManger = (WalletResourcesManager)platformContext.getPlugin(Plugins.WALLET_RESOURCES_NETWORK_SERVICE);
 
-            }*/
-
-
+           // walletResourceManger.checkResources();
+           // StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+          //  StrictMode.setThreadPolicy(policy);
 
         }
         catch (CantStartPlatformException e) {
             System.err.println("CantStartPlatformException: " + e.getMessage());
 
         }
+        //catch (CantCheckResourcesException e) {
+          //  e.printStackTrace();
+        //}
 
     }
 
-    public static void connect()
-            throws MalformedURLException, IOException {
-        URL url = new URL("https://github.com/bitDubai/bitDubai-system/blob/master/android/src/main/res/drawable-hdpi/drawer_shadow.9.png");
-        URLConnection con = url.openConnection();
-
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-
-        Authenticator au = new Authenticator() {
-            @Override
-            protected PasswordAuthentication
-            getPasswordAuthentication() {
-                return new PasswordAuthentication
-                        ("natalia_veronica_c@hotmail.com", "nattyco2013".toCharArray());
-            }
-        };
-        Authenticator.setDefault(au);
-        try{
 
 
-            BufferedReader in = new BufferedReader(
-                    new InputStreamReader(con.getInputStream()));
-            String linea;
-            while ((linea = in.readLine()) != null) {
-                System.out.println(linea);
-            }
-        }catch(Exception e){
-                    String strError = e.getMessage();
-                }
-
-
-
-    }
     /**
      * Initialise the fragments to be paged
      */
