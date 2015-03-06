@@ -19,7 +19,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bitdubai.android.layer._3_os.android.developer.bitdubai.version_1.AndroidOsAddonRoot;
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.AppRuntimeManager;
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Activities;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;

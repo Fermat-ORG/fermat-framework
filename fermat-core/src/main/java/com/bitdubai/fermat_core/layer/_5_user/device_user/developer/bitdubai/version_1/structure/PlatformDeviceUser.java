@@ -1,16 +1,16 @@
 package com.bitdubai.fermat_core.layer._5_user.device_user.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer._1_definition.enums.DeviceDirectory;
-import com.bitdubai.fermat_api.layer._2_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer._2_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.*;
+import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.*;
 import com.bitdubai.fermat_api.layer._1_definition.event.PlatformEvent;
-import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.events.DeviceUserCreatedEvent;
-import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.events.DeviceUserLoggedInEvent;
-import com.bitdubai.fermat_api.layer._3_os.file_system.*;
-import com.bitdubai.fermat_api.layer._3_os.file_system.exceptions.CantLoadFileException;
-import com.bitdubai.fermat_api.layer._3_os.file_system.exceptions.CantPersistFileException;
-import com.bitdubai.fermat_api.layer._3_os.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.DeviceUserCreatedEvent;
+import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.DeviceUserLoggedInEvent;
+import com.bitdubai.fermat_api.layer._2_os.file_system.*;
+import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantLoadFileException;
+import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer._5_user.device_user.DeviceUser;
 import com.bitdubai.fermat_api.layer._5_user.device_user.*;
 import com.bitdubai.fermat_api.layer._5_user.device_user.exceptions.CantCreateDeviceUserException;

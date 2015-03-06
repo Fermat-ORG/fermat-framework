@@ -6,8 +6,8 @@ import com.bitdubai.fermat_api.layer._12_middleware.WalletManager;
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.CantCreateWalletException;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer._1_definition.event.PlatformEvent;
-import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventHandler;
-import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.events.WalletCreatedEvent;
+import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventHandler;
+import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.WalletCreatedEvent;
 
 import java.util.UUID;
 

@@ -3,7 +3,6 @@ package com.bitdubai.android.app;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.*;
@@ -14,9 +13,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import android.util.Base64;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -47,26 +44,22 @@ import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_seg
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.AccountDetailCreditsFragment;
 import com.bitdubai.android.app.subapp.wallet_store.version_1.fragment.AllFragment;
 import com.bitdubai.android.app.subapp.wallet_store.version_1.fragment.FreeFragment;
-import com.bitdubai.android.layer._3_os.android.developer.bitdubai.version_1.AndroidOsAddonRoot;
+import com.bitdubai.android.layer._2_os.android.developer.bitdubai.version_1.AndroidOsAddonRoot;
 import android.content.Context;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.view.ViewGroup;
-import android.os.StrictMode;
 
 
 import com.bitdubai.fermat_api.CantStartPlatformException;
 
-import com.bitdubai.fermat_api.layer._11_network_service.CantCheckResourcesException;
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.*;
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.AppRuntimeManager;
-import com.bitdubai.fermat_api.layer._11_network_service.wallet_resources.WalletResourcesManager;
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.Fragment;
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Activities;
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Fragments;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer._3_os.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_core.Platform;
 
 import com.bitdubai.smartwallet.R;
@@ -74,32 +67,11 @@ import com.bitdubai.fermat_core.layer._12_middleware.app_runtime.developer.bitdu
 
 import com.bitdubai.fermat_core.CorePlatformContext;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.Authenticator;
-import java.net.MalformedURLException;
-import java.net.PasswordAuthentication;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.List;
 import java.util.Map;
 import java.util.Iterator;
 import java.util.Vector;
 
-import java.io.InputStream;
-
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.net.HttpURLConnection;
-
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.DefaultHttpClient;
 /**
  * Created by toshiba on 16/02/2015.
  */

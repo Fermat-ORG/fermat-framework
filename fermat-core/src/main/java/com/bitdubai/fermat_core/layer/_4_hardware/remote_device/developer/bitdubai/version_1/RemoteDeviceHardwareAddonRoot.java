@@ -3,13 +3,13 @@ package com.bitdubai.fermat_core.layer._4_hardware.remote_device.developer.bitdu
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer._2_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer._2_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.DealsWithEvents;
-import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventListener;
-import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventManager;
-import com.bitdubai.fermat_api.layer._3_os.file_system.DealsWithPlatformFileSystem;
-import com.bitdubai.fermat_api.layer._3_os.file_system.PlatformFileSystem;
+import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.DealsWithEvents;
+import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventListener;
+import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_api.layer._2_os.file_system.DealsWithPlatformFileSystem;
+import com.bitdubai.fermat_api.layer._2_os.file_system.PlatformFileSystem;
 import com.bitdubai.fermat_api.layer._4_hardware.Hardware;
 import com.bitdubai.fermat_api.layer._4_hardware.remote_device.RemoteDeviceHardwareManager;
 

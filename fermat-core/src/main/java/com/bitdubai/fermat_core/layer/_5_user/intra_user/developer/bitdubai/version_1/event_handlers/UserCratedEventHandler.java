@@ -3,8 +3,8 @@ package com.bitdubai.fermat_core.layer._5_user.intra_user.developer.bitdubai.ver
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer._1_definition.event.PlatformEvent;
-import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventHandler;
-import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.events.DeviceUserCreatedEvent;
+import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventHandler;
+import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.DeviceUserCreatedEvent;
 import com.bitdubai.fermat_api.layer._5_user.intra_user.IntraUserManager;
 import com.bitdubai.fermat_api.layer._5_user.intra_user.exceptions.CantCreateIntraUserException;
 

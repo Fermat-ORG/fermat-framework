@@ -6,11 +6,11 @@ import com.bitdubai.fermat_api.layer._14_module.wallet_store.CantRecordInstalled
 import com.bitdubai.fermat_api.layer._14_module.wallet_store.CantRecordUninstalledWalletException;
 import com.bitdubai.fermat_api.layer._14_module.wallet_store.WalletStore;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer._2_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer._2_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.*;
-import com.bitdubai.fermat_api.layer._3_os.file_system.DealsWithFileSystem;
-import com.bitdubai.fermat_api.layer._3_os.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.*;
+import com.bitdubai.fermat_api.layer._2_os.file_system.DealsWithFileSystem;
+import com.bitdubai.fermat_api.layer._2_os.file_system.PluginFileSystem;
 
 import java.util.ArrayList;
 import java.util.List;

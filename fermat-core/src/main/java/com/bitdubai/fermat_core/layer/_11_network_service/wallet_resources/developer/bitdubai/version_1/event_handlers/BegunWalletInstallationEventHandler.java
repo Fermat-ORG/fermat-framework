@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer._11_network_service.CantCheckResourcesException;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer._1_definition.event.PlatformEvent;
-import com.bitdubai.fermat_api.layer._2_platform_service.event_manager.EventHandler;
+import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventHandler;
 import com.bitdubai.fermat_api.layer._11_network_service.wallet_resources.WalletResourcesManager;
 
 
