@@ -47,4 +47,29 @@ public class AndroidPluginFileSystem implements PluginFileSystem {
     public void setContext(Object context) {
         this.context = (Context) context;
     }
+
+    @Override
+    public PluginImageFile getImageFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException{
+        AndroidPluginImageFile newFile = new AndroidPluginImageFile(ownerId, directoryName, fileName, privacyLevel, lifeSpan);
+
+        try {
+            newFile.loadToMemory();
+            return newFile;
+        }
+        catch (CantLoadFileException e){
+            System.err.println("GetFailedException: " + e.getMessage());
+            e.printStackTrace();
+            throw new FileNotFoundException();
+        }
+    }
+
+    @Override
+    public PluginImageFile createImageFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
+
+        return new AndroidPluginImageFile(ownerId,directoryName,fileName, privacyLevel, lifeSpan);
+    }
+
+
+
+
 }

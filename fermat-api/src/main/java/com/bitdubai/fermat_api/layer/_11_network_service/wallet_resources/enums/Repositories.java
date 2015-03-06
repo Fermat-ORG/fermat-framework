@@ -25,7 +25,7 @@ public enum Repositories {
 
     public static String getValueFromType(Wallets type) {
         for (Repositories repo : Repositories.values()) {
-            if (repo.name().equals(type)) {
+            if (repo.name().equals(type.toString())) {
                 return repo.key;
             }
         }

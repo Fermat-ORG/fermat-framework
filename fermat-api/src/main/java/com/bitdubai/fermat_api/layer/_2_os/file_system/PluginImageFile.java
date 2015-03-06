@@ -7,19 +7,13 @@ import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantPersistFil
  * Created by Natalia on 11/02/2015.
  */
 public interface PluginImageFile {
-    public String getContent ();
+    public byte[] getContent ();
 
-    public void setContent (String content);
-
-    public Object getBitMap ();
-
-    public void setBitMap (Object bitMap);
+    public void setContent (byte[] content);
 
     public void persistToMedia() throws CantPersistFileException;
 
-    public void peristToMemory () throws CantLoadFileException;
-
-    public void loadFromMemory() throws CantLoadFileException;
+    public void loadToMemory() throws CantLoadFileException;
 
     public void loadFromMedia() throws CantPersistFileException;
 }
