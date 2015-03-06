@@ -16,6 +16,7 @@ import com.bitdubai.fermat_core.layer._2_platform_service.PlatformServiceLayer;
 
 import com.bitdubai.fermat_core.layer._1_definition.DefinitionLayer;
 import com.bitdubai.fermat_core.layer._3_os.OsLayer;
+import com.bitdubai.fermat_core.layer._4_hardware.HardwareLayer;
 import com.bitdubai.fermat_core.layer._5_user.UserLayer;
 import com.bitdubai.fermat_core.layer._6_license.LicenseLayer;
 import com.bitdubai.fermat_core.layer._7_world.WorldLayer;
@@ -40,15 +41,16 @@ public class Platform  {
     PlatformLayer mDefinitionLayer = new DefinitionLayer();
     PlatformLayer mEventLayer = new PlatformServiceLayer();
     PlatformLayer mOsLayer = new OsLayer();
+    PlatformLayer mHardwareLayer = new HardwareLayer();
     PlatformLayer mUserLayer = new UserLayer();
-    PlatformLayer mLicesnseLayer = new LicenseLayer();
+    PlatformLayer mLicenseLayer = new LicenseLayer();
     PlatformLayer mWorldLayer = new WorldLayer();
     PlatformLayer mCryptoNetworkLayer = new CryptoNetworkLayer();
-    PlatformLayer mCrypto = new CryptoLayer();
+    PlatformLayer mCryptoLayer = new CryptoLayer();
     PlatformLayer mCommunicationLayer = new CommunicationLayer();
     PlatformLayer mNetworkServiceLayer = new NetworkServiceLayer();
     PlatformLayer mTransactionLayer = new TransactionLayer();
-    PlatformLayer mMiddlewareayer = new MiddlewareLayer();
+    PlatformLayer mMiddlewareLayer = new MiddlewareLayer();
     PlatformLayer mModuleLayer = new ModuleLayer();
     PlatformLayer mAgentLayer = new AgentLayer();
 
@@ -65,13 +67,17 @@ public class Platform  {
     public PlatformLayer getOsLayer() {
         return mOsLayer;
     }
+    
+    public PlatformLayer getHardwareLayer(){
+        return mHardwareLayer;        
+    }
 
     public PlatformLayer getUserLayer() {
         return mUserLayer;
     }
 
     public PlatformLayer getLicesnseLayer() {
-        return mLicesnseLayer;
+        return mLicenseLayer;
     }
 
     public PlatformLayer getWorldLayer() {
@@ -83,7 +89,7 @@ public class Platform  {
     }
 
     public PlatformLayer getCrypto() {
-        return mCrypto;
+        return mCryptoLayer;
     }
 
     public PlatformLayer getCommunicationLayer() {
@@ -95,7 +101,7 @@ public class Platform  {
     }
 
     public PlatformLayer getMiddlewareayer() {
-        return mMiddlewareayer;
+        return mMiddlewareLayer;
     }
 
     public PlatformLayer getModuleLayer() {
@@ -188,14 +194,15 @@ public class Platform  {
             mDefinitionLayer.start();
             mEventLayer.start();
             //mOsLayer.start(); // Due to an Android bug is not possible to handle this here.
+            mHardwareLayer.start();
             mUserLayer.start();
-            mLicesnseLayer.start();
+            mLicenseLayer.start();
             mWorldLayer.start();
             mCryptoNetworkLayer.start();
-            mCrypto.start();
+            mCryptoLayer.start();
             mCommunicationLayer.start();
             mNetworkServiceLayer.start();
-            mMiddlewareayer.start();
+            mMiddlewareLayer.start();
             mModuleLayer.start();
             mAgentLayer.start();
             mTransactionLayer.start();
@@ -280,7 +287,53 @@ public class Platform  {
         }
 
 
+        /**
+         * -----------------------------
+         * Addon Remote Device Manager
+         * -----------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the Remote Device Manager access to the File System so it can load and save user information from
+         * persistent media.
+         */
+
+        Service remoteDevice = (Service) ((HardwareLayer) mHardwareLayer).getRemoteDeviceManager();
+
+        ((DealsWithPlatformFileSystem) remoteDevice).setPlatformFileSystem(os.getPlatformFileSystem());
+        ((DealsWithEvents) remoteDevice).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addAddon((Addon) remoteDevice, Addons.REMOTE_DEVICE);
+
         
+        
+        /**
+         * -----------------------------
+         * Addon Local Device Manager
+         * -----------------------------
+         * * * * 
+         */
+
+
+
+        /**
+         * I will give the Local Device Manager access to the File System so it can load and save user information from
+         * persistent media.
+         */
+
+        Service localDevice = (Service) ((HardwareLayer) mHardwareLayer).getLocalDeviceManager();
+
+        ((DealsWithPlatformFileSystem) localDevice).setPlatformFileSystem(os.getPlatformFileSystem());
+        ((DealsWithEvents) localDevice).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addAddon((Addon) localDevice, Addons.LOCAL_DEVICE);
+
+
+
+
         /**
          * -----------------------------
          * Addon User Manager
@@ -464,7 +517,7 @@ public class Platform  {
          * I will give the Cloud Communication access to the File System and to the Event Manager
          */
 
-        Plugin addressBookCrypto = ((CryptoLayer) mCrypto).getmAddressBook();
+        Plugin addressBookCrypto = ((CryptoLayer) mCryptoLayer).getmAddressBook();
 
         ((DealsWithPluginFileSystem) addressBookCrypto).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) addressBookCrypto).setEventManager((EventManager) eventManager);
@@ -723,7 +776,7 @@ public class Platform  {
 
         
         
-        Plugin appRuntimeMiddleware = ((MiddlewareLayer) mMiddlewareayer).getAppRuntimePlugin();
+        Plugin appRuntimeMiddleware = ((MiddlewareLayer) mMiddlewareLayer).getAppRuntimePlugin();
 
         ((DealsWithPluginFileSystem) appRuntimeMiddleware).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) appRuntimeMiddleware).setEventManager((EventManager) eventManager);
@@ -766,7 +819,7 @@ public class Platform  {
          * I will give the Bank Notes Middleware access to the File System and to the Event Manager
          */
 
-        Plugin bankNotesMiddleware = ((MiddlewareLayer) mMiddlewareayer).getBankNotesPlugin();
+        Plugin bankNotesMiddleware = ((MiddlewareLayer) mMiddlewareLayer).getBankNotesPlugin();
 
         ((DealsWithPluginFileSystem) bankNotesMiddleware).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) bankNotesMiddleware).setEventManager((EventManager) eventManager);
@@ -811,7 +864,7 @@ public class Platform  {
          * I will give the Wallet Middleware access to the File System and to the Event Manager
          */
 
-        Plugin walletMiddleware = ((MiddlewareLayer) mMiddlewareayer).getWalletPlugin();
+        Plugin walletMiddleware = ((MiddlewareLayer) mMiddlewareLayer).getWalletPlugin();
 
         ((DealsWithPluginFileSystem) walletMiddleware).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) walletMiddleware).setEventManager((EventManager) eventManager);
@@ -853,7 +906,7 @@ public class Platform  {
          * I will give the Wallet Contacts Middleware access to the File System and to the Event Manager
          */
 
-        Plugin walletContactsMiddleware = ((MiddlewareLayer) mMiddlewareayer).getWalletContactsPlugin();
+        Plugin walletContactsMiddleware = ((MiddlewareLayer) mMiddlewareLayer).getWalletContactsPlugin();
 
         ((DealsWithPluginFileSystem) walletContactsMiddleware).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) walletContactsMiddleware).setEventManager((EventManager) eventManager);

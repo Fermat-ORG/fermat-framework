@@ -7,6 +7,8 @@ public enum Addons {
     ERROR_MANAGER ("Error Manager"),
     EVENT_MANAGER ("Event Manager"),
     OS ("Os"),
+    LOCAL_DEVICE("Local Device"),
+    REMOTE_DEVICE("Remote Device"),
     DEVICE_USER ("Device user"),
     LICENSE_MANAGER ("License Manager"),
     INTRA_USER("Intra User"),
