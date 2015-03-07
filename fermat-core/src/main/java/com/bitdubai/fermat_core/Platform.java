@@ -655,7 +655,7 @@ public class Platform  {
         ((DealsWithPluginFileSystem) walletResourcesNetworkService).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) walletResourcesNetworkService).setEventManager((EventManager) eventManager);
 
-        corePlatformContext.addPlugin(walletResourcesNetworkService, Plugins.BANK_NOTES_NETWORK_SERVICE);
+        corePlatformContext.addPlugin(walletResourcesNetworkService, Plugins.WALLET_RESOURCES_NETWORK_SERVICE);
 
         try
         {
@@ -804,7 +804,8 @@ public class Platform  {
 
             throw new CantStartPlatformException();
         }
-       
+
+
 
         /**
          * -----------------------------

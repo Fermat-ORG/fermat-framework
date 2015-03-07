@@ -15,4 +15,10 @@ public interface PluginFileSystem {
 
     void setContext (Object context);
 
+    public PluginImageFile getImageFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException;
+
+    public PluginImageFile createImageFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan);
+
+
+
 }

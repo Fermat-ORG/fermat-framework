@@ -50,10 +50,11 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.view.ViewGroup;
+import android.os.StrictMode;
 
 
 import com.bitdubai.fermat_api.CantStartPlatformException;
-
+import com.bitdubai.fermat_api.layer._11_network_service.wallet_resources.WalletResourcesManager;
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.*;
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.AppRuntimeManager;
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.Fragment;
@@ -61,7 +62,7 @@ import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Activities
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Fragments;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.fermat_core.Platform;
-
+import com.bitdubai.fermat_api.layer._11_network_service.CantCheckResourcesException;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.fermat_core.layer._12_middleware.app_runtime.developer.bitdubai.version_1.structure.*;
 
@@ -140,20 +141,22 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
              NavigateActivity();
 
-           // WalletResourcesManager  walletResourceManger = (WalletResourcesManager)platformContext.getPlugin(Plugins.WALLET_RESOURCES_NETWORK_SERVICE);
+            /** Dounload wallet images **/
+            /*StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+            WalletResourcesManager  walletResourceManger = (WalletResourcesManager)platformContext.getPlugin(Plugins.WALLET_RESOURCES_NETWORK_SERVICE);
 
-           // walletResourceManger.checkResources();
-           // StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-          //  StrictMode.setThreadPolicy(policy);
+            walletResourceManger.checkResources();*/
+
 
         }
         catch (CantStartPlatformException e) {
             System.err.println("CantStartPlatformException: " + e.getMessage());
 
         }
-        //catch (CantCheckResourcesException e) {
-          //  e.printStackTrace();
-        //}
+      /*  catch (CantCheckResourcesException e) {
+           e.printStackTrace();
+        }*/
 
     }
 

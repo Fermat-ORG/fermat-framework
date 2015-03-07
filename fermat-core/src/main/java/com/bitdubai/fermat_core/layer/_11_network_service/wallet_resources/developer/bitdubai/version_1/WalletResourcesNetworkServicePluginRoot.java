@@ -8,6 +8,13 @@ import com.bitdubai.fermat_api.layer._11_network_service.wallet_resources.enums.
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Wallets;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer._1_definition.event.PlatformEvent;
+import com.bitdubai.fermat_api.layer._2_os.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer._2_os.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer._2_os.file_system.PlatformFileSystem;
+import com.bitdubai.fermat_api.layer._2_os.file_system.PluginDataFile;
+import com.bitdubai.fermat_api.layer._2_os.file_system.PluginImageFile;
+import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantLoadFileException;
+import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.DealsWithEvents;
@@ -23,6 +30,9 @@ import com.bitdubai.fermat_api.layer._11_network_service.NetworkService;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_core.layer._11_network_service.wallet_resources.developer.bitdubai.version_1.event_handlers.BegunWalletInstallationEventHandler;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -157,7 +167,6 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     @Override
     public void checkResources(/*WalletType, Developer, version, publisher*/) throws CantCheckResourcesException {
 
-
         PlatformEvent platformEvent = eventManager.getNewEvent(EventType.WALLET_RESOURCES_INSTALLED);
         ((WalletResourcesInstalledEvent) platformEvent).setSource(EventSource.NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN);
         eventManager.raiseEvent(platformEvent);
@@ -167,29 +176,40 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             //get repo name
             String reponame = Repositories.getValueFromType (wallettype);
             //conect to repo and get manifest file
-           String repoManifest = conectToRepository("");
+           String repoManifest = getRepositoryStringFile(reponame, "manifest.txt");
             //get list of wallet image, split
             String[] fileList = repoManifest.split(",");
+            for (int j = 0; j < fileList.length; j++) {
+                //get file image in repo
+                //save that on memory
+
+               byte[] image =  getRepositoryImageFile(reponame, fileList[j].toString());
+                PluginImageFile imageFile;
+                imageFile = pluginFileSystem.createImageFile(pluginId, reponame, fileList[j].toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+
+                imageFile.setContent(image);
+                imageFile.persistToMedia();
+
+
+            }
+
 
         }catch(MalformedURLException e){
-            String strError = e.getMessage();
+            e.printStackTrace();
         }
         catch(IOException e){
-            String strError = e.getMessage();
+            e.printStackTrace();
         }
         catch(FileNotFoundException e){
-            String strError = e.getMessage();
+            e.printStackTrace();
+        } catch (CantPersistFileException e) {
+            e.printStackTrace();
         }
 
     }
 
-    public static String conectToRepository(String repo) throws MalformedURLException, IOException, FileNotFoundException {
-        //me conecto al repositorio segun la willeterea que me llega por parametro
-        //busco primero el archivo manifiesto donde voy a tener la lista de archivos a bajar
-        //guardo los archivos en la memoria del telefono
-
-        //String link = "https://github.com/bitDubai/bitDubai-system/blob/master/fermat-wallet-resource-package-age-kids-all-bitdubai/manifest.txt";
-        String link = "https://raw.githubusercontent.com/bitDubai/"+repo +"/master/manifest.txt";
+    public static String getRepositoryStringFile(String repo,String file) throws MalformedURLException, IOException, FileNotFoundException {
+        String link = "https://raw.githubusercontent.com/bitDubai/"+repo +"/master/" + file;
 
         URL crunchifyUrl = new URL(link);
         HttpURLConnection crunchifyHttp = (HttpURLConnection) crunchifyUrl.openConnection();
@@ -213,6 +233,24 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
     }
 
+    public static byte[] getRepositoryImageFile(String repo,String file) throws MalformedURLException, IOException, FileNotFoundException {
+
+        String link = "https://raw.githubusercontent.com/bitDubai/"+repo +"/master/" + file;
+
+            URL crunchifyUrl = new URL(link);
+            HttpURLConnection crunchifyHttp = (HttpURLConnection) crunchifyUrl.openConnection();
+            BufferedInputStream in = new BufferedInputStream(crunchifyHttp.getInputStream());
+            ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
+            int c;
+            while ((c = in.read()) != -1) {
+                byteArrayOut.write(c);
+            }
+
+            in.close();
+            return byteArrayOut.toByteArray();
+
+
+    }
 
 
     // ConvertStreamToString() Utility - we name it as crunchifyGetStringFromStream()

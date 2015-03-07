@@ -16,8 +16,6 @@ public interface PlatformDataFile {
 
     public void loadToMemory () throws CantLoadFileException;
 
-
-
     public void loadFromMedia() throws CantPersistFileException;
     
 }
