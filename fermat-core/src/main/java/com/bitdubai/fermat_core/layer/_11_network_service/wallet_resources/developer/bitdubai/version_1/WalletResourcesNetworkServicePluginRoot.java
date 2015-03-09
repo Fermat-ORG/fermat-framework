@@ -3,6 +3,7 @@ package com.bitdubai.fermat_core.layer._11_network_service.wallet_resources.deve
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer._11_network_service.CantCheckResourcesException;
+import com.bitdubai.fermat_api.layer._11_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer._11_network_service.wallet_resources.WalletResourcesManager;
 import com.bitdubai.fermat_api.layer._11_network_service.wallet_resources.enums.Repositories;
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Wallets;
@@ -88,7 +89,13 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
      */
     UUID pluginId;
 
+    /**
+     * Wallet Type
+     */
 
+    Wallets walletType;
+
+    String imageName;
 
     /**
      * Service Interface implementation.
@@ -165,6 +172,17 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
      */
 
     @Override
+    public void setImageName(String name) {
+        this.imageName = name;
+    }
+
+
+    @Override
+    public void setwalletType(Wallets type) {
+        this.walletType = type;
+    }
+
+    @Override
     public void checkResources(/*WalletType, Developer, version, publisher*/) throws CantCheckResourcesException {
 
         PlatformEvent platformEvent = eventManager.getNewEvent(EventType.WALLET_RESOURCES_INSTALLED);
@@ -172,9 +190,9 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         eventManager.raiseEvent(platformEvent);
 
         try{
-            Wallets wallettype = Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI;
+
             //get repo name
-            String reponame = Repositories.getValueFromType (wallettype);
+            String reponame = Repositories.getValueFromType (walletType);
             //conect to repo and get manifest file
            String repoManifest = getRepositoryStringFile(reponame, "manifest.txt");
             //get list of wallet image, split
@@ -207,6 +225,32 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
         }
 
     }
+
+    @Override
+    public byte[] getResources(/*WalletType, Developer, version, publisher*/) throws CantGetResourcesException {
+
+        byte[] imageResource = new byte[16384];
+        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.WALLET_RESOURCES_INSTALLED);
+        ((WalletResourcesInstalledEvent) platformEvent).setSource(EventSource.NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN);
+        eventManager.raiseEvent(platformEvent);
+
+        try {
+            this.walletType = Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI;
+            //get repo name
+            String reponame = Repositories.getValueFromType(walletType);
+            //get image from disk
+            PluginImageFile imageFile;
+            imageFile = pluginFileSystem.getImageFile(pluginId, reponame, imageName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+
+            imageResource = imageFile.getContent();
+        }
+            catch(FileNotFoundException e){
+                e.printStackTrace();
+
+         }
+        return imageResource;
+    }
+
 
     public static String getRepositoryStringFile(String repo,String file) throws MalformedURLException, IOException, FileNotFoundException {
         String link = "https://raw.githubusercontent.com/bitDubai/"+repo +"/master/" + file;
