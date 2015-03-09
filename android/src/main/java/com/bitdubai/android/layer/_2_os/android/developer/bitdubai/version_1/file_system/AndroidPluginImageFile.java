@@ -1,8 +1,7 @@
 package com.bitdubai.android.layer._2_os.android.developer.bitdubai.version_1.file_system;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+
 import android.os.Environment;
 
 import com.bitdubai.fermat_api.layer._2_os.file_system.FileLifeSpan;
@@ -20,6 +19,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
+import java.io.ByteArrayOutputStream;
 
 /**
  * Created by Natalia on 29/01/2015.
@@ -33,7 +33,7 @@ public class AndroidPluginImageFile implements PluginImageFile {
     FilePrivacy privacyLevel;
     FileLifeSpan lifeSpan;
     UUID ownerId;
-    Bitmap bitmapImage;
+
     @Override
     public byte[] getContent() {
         return this.content;
@@ -59,29 +59,9 @@ public class AndroidPluginImageFile implements PluginImageFile {
 
 
 
+
     @Override
     public void persistToMedia() throws CantPersistFileException {
-
-      /* File sdCardDirectory = Environment.getExternalStorageDirectory();
-        File image = new File(sdCardDirectory, this.fileName);
-
-        // Encode the file as a PNG image.
-        FileOutputStream outputStream;
-        try {
-
-            outputStream = new FileOutputStream(image);
-            this.bitmapImage.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-
-
-            outputStream.flush();
-            outputStream.close();
-
-
-        } catch (Exception e) {
-            System.err.println("Error trying to persist file: " + e.getMessage());
-            e.printStackTrace();
-            throw new CantPersistFileException(this.fileName);
-        }*/
 
         try {
 
@@ -89,7 +69,7 @@ public class AndroidPluginImageFile implements PluginImageFile {
             String path = Environment.getExternalStorageDirectory().toString();
 
             if(this.directoryName != "")
-                path +="/"+ this.directoryName;
+                path += "/" + this.ownerId + "/" + this.directoryName;
 
 
             File storagePath = new File(path);
@@ -136,40 +116,34 @@ import javax.imageio.ImageIO;*/
 
 
     }
-/*    @Override
-    public void loadFromMemory() throws CantLoadFileException {
-
-        Bitmap bitmapA = null;
-        FileInputStream inputStream;
-        try {
-            inputStream = mContext.openFileInput(mFileName);
-            bitmapA = BitmapFactory.decodeStream(inputStream);
-            inputStream.close();
-
-            mBitmapImage = bitmapA;
-        } catch (Exception e) {
-            System.err.println("Error trying to load a file to memory: " + e.getMessage());
-            e.printStackTrace();
-            throw new CantLoadFileException(mFileName);
-        }
-    }*/
 
 
 
     @Override
-    public void loadFromMedia() throws CantPersistFileException {
+    public void loadFromMedia() throws CantLoadFileException {
 
-        File file = new File(Environment.getExternalStorageDirectory() + "/" + this.fileName);
+        File file = new File(Environment.getExternalStorageDirectory() + "/" + this.ownerId + "/" + this.directoryName + "/" + this.fileName);
         try {
 
             final FileInputStream  imageStream = new FileInputStream(file);
-            final Bitmap bImage = BitmapFactory.decodeStream(imageStream);
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
-            this.bitmapImage = bImage;
+            int nRead;
+            byte[] data = new byte[16384];
+
+            while ((nRead = imageStream.read(data, 0, data.length)) != -1) {
+                buffer.write(data, 0, nRead);
+            }
+
+            buffer.flush();
+
+            this.content =buffer.toByteArray();
+
+
         } catch (Exception e) {
             System.err.println("Error trying to persist file: " + e.getMessage());
             e.printStackTrace();
-            throw new CantPersistFileException(this.fileName);
+            throw new CantLoadFileException(this.fileName);
         }
     }
 

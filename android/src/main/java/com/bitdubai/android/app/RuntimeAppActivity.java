@@ -60,6 +60,7 @@ import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.AppRuntimeManage
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.Fragment;
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Activities;
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Fragments;
+import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Wallets;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.fermat_api.layer._11_network_service.CantCheckResourcesException;
@@ -137,16 +138,19 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             this.platformContext = platform.getCorePlatformContext();
 
             this.appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.APP_RUNTIME_MIDDLEWARE);
+            /** Download wallet images **/
+          /*StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
 
+
+            WalletResourcesManager  walletResourceManger = (WalletResourcesManager)platformContext.getPlugin(Plugins.WALLET_RESOURCES_NETWORK_SERVICE);
+            walletResourceManger.setwalletType(Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI);
+            walletResourceManger.checkResources();*/
 
              NavigateActivity();
 
-            /** Dounload wallet images **/
-            /*StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-            WalletResourcesManager  walletResourceManger = (WalletResourcesManager)platformContext.getPlugin(Plugins.WALLET_RESOURCES_NETWORK_SERVICE);
 
-            walletResourceManger.checkResources();*/
+
 
 
         }
@@ -154,7 +158,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             System.err.println("CantStartPlatformException: " + e.getMessage());
 
         }
-      /*  catch (CantCheckResourcesException e) {
+     /*   catch (CantCheckResourcesException e) {
            e.printStackTrace();
         }*/
 
@@ -235,6 +239,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                         break;
                     case CWP_WALLET_FACTORY_MAIN:
                         break;
+
                 }
 
             }

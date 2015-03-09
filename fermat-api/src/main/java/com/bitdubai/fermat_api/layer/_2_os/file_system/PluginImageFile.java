@@ -15,5 +15,5 @@ public interface PluginImageFile {
 
     public void loadToMemory() throws CantLoadFileException;
 
-    public void loadFromMedia() throws CantPersistFileException;
+    public void loadFromMedia() throws CantLoadFileException;
 }

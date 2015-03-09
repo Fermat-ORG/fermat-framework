@@ -19,6 +19,11 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.view.View.OnTouchListener;
 
+import com.bitdubai.fermat_api.layer._11_network_service.CantGetResourcesException;
+import com.bitdubai.fermat_api.layer._11_network_service.wallet_resources.WalletResourcesManager;
+import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
+import com.bitdubai.fermat_core.CorePlatformContext;
+import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.android.app.common.version_1.classes.MyApplication;
 
@@ -64,9 +69,14 @@ public class UsdBalanceFragment extends Fragment {
 
     private final int EDITED_TICKET = 1;
     private ImageView imageMoney;
+    private  static WalletResourcesManager walletResourceManger;
 
 private  boolean doubleClick = false;
     public static UsdBalanceFragment newInstance(int position) {
+        Platform platform = MyApplication.getPlatform();
+        CorePlatformContext platformContext = platform.getCorePlatformContext();
+        walletResourceManger = (WalletResourcesManager)platformContext.getPlugin(Plugins.WALLET_RESOURCES_NETWORK_SERVICE);
+
         UsdBalanceFragment f = new UsdBalanceFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
@@ -120,44 +130,63 @@ private  boolean doubleClick = false;
 
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(marginParams);
             imageTicket.setLayoutParams(layoutParams);
+            byte[] imageResource;
+            Bitmap bitmap;
 
 
+            try {
             switch (tickets[i]) {
                 case "usd_1":
                     MyApplication.setTicketId( "usd_1");
                     imageTicket.setTag(1);
-                    imageTicket.setImageResource(R.drawable.usd_1);
-
+                    walletResourceManger.setImageName("usd_1.jpg");
+                    imageResource = walletResourceManger.getResources();
+                    bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                    imageTicket.setImageBitmap(bitmap);
 
                     break;
                 case "usd_5":
                     MyApplication.setTicketId( "usd_5");
                     imageTicket.setTag(5);
-                    imageTicket.setImageResource(R.drawable.usd_5);
+                    walletResourceManger.setImageName("usd_5.jpg");
+                    imageResource = walletResourceManger.getResources();
+                    bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                    imageTicket.setImageBitmap(bitmap);
 
                     break;
                 case "usd_10":
                     MyApplication.setTicketId( "usd_10");
                     imageTicket.setTag(10);
-                    imageTicket.setImageResource(R.drawable.usd_10);
-
-
+                    walletResourceManger.setImageName("usd_10.jpg");
+                    imageResource = walletResourceManger.getResources();
+                    bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                    imageTicket.setImageBitmap(bitmap);
                     break;
                 case "usd_20":
                     MyApplication.setTicketId( "usd_20");
                     imageTicket.setTag(20);
-                    imageTicket.setImageResource(R.drawable.usd_20);
+                    walletResourceManger.setImageName("usd_20.jpg");
+                    imageResource = walletResourceManger.getResources();
+                    bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                    imageTicket.setImageBitmap(bitmap);
 
                     break;
                 case "usd_100":
                     MyApplication.setTicketId( "usd_100");
                     imageTicket.setTag(100);
-                    imageTicket.setImageResource(R.drawable.usd_100);
+                    walletResourceManger.setImageName("usd_100.jpg");
+                    imageResource = walletResourceManger.getResources();
+                    bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                    imageTicket.setImageBitmap(bitmap);
+
 
                     break;
 
             }
+            } catch (CantGetResourcesException e) {
+                System.err.println("CantGetResourcesException: " + e.getMessage());
 
+            }
             imageTicket.setOnTouchListener(new theTouchListener());
             marco.addView(imageTicket);
 
@@ -188,7 +217,9 @@ private  boolean doubleClick = false;
 
         ViewGroup.MarginLayoutParams marginParams = new ViewGroup.MarginLayoutParams( WRAP_CONTENT,
                 WRAP_CONTENT);
-
+        byte[] imageResource;
+        Bitmap bitmap;
+        try {
         switch ((Integer)v.getTag()) {
             case 1:
             case 12:
@@ -205,8 +236,10 @@ private  boolean doubleClick = false;
                 imagen1.setId(cantTickets);
 
                 imagen1.setTag(5);
-                imagen1.setImageResource(R.drawable.usd_5);
-
+                walletResourceManger.setImageName("usd_5.jpg");
+                imageResource = walletResourceManger.getResources();
+                bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                imagen1.setImageBitmap(bitmap);
 
                 marginParams.setMargins(item1.leftMargin,item1.topMargin,item1.rightMargin,item1.bottomMargin);
                 layoutParams = new RelativeLayout.LayoutParams(marginParams);
@@ -223,7 +256,8 @@ private  boolean doubleClick = false;
                 cantTickets++;
                 imagen2.setId(cantTickets);
                 imagen2.setTag(5);
-                imagen2.setImageResource(R.drawable.usd_5);
+
+                imagen2.setImageBitmap(bitmap);
 
 
                 marginParams.setMargins(item1.leftMargin + 25,item1.topMargin,item1.rightMargin + 25,item1.bottomMargin);
@@ -244,7 +278,10 @@ private  boolean doubleClick = false;
                 cantTickets++;
                 imagen1.setId(cantTickets);
                 imagen1.setTag(10);
-                imagen1.setImageResource(R.drawable.usd_10);
+                walletResourceManger.setImageName("usd_10.jpg");
+                imageResource = walletResourceManger.getResources();
+                bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                imagen1.setImageBitmap(bitmap);
 
                 imagen1.setOnTouchListener(new theTouchListener());
                 marginParams.setMargins(item1.leftMargin,item1.topMargin,item1.rightMargin,item1.bottomMargin);
@@ -259,7 +296,7 @@ private  boolean doubleClick = false;
                 cantTickets++;
                 imagen2.setId(cantTickets);
                 imagen2.setTag(10);
-                imagen2.setImageResource(R.drawable.usd_10);
+                imagen2.setImageBitmap(bitmap);
 
                 imagen2.setOnTouchListener(new theTouchListener());
                 marginParams.setMargins(item1.leftMargin + 25,item1.topMargin + 25,item1.rightMargin,item1.bottomMargin);
@@ -281,7 +318,11 @@ private  boolean doubleClick = false;
                 cantTickets++;
                 imagen1.setId(cantTickets);
                 imagen1.setTag(50);
-                imagen1.setImageResource(R.drawable.usd_50);
+                walletResourceManger.setImageName("usd_50.jpg");
+                imageResource = walletResourceManger.getResources();
+                bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                imagen1.setImageBitmap(bitmap);
+
                 imagen1.setOnTouchListener(new theTouchListener());
                 marginParams.setMargins(item1.leftMargin,item1.topMargin,item1.rightMargin,item1.bottomMargin);
                 layoutParams = new RelativeLayout.LayoutParams(marginParams);
@@ -296,7 +337,7 @@ private  boolean doubleClick = false;
                 cantTickets++;
                 imagen2.setId(cantTickets);
                 imagen2.setTag(50);
-                imagen2.setImageResource(R.drawable.usd_50);
+                imagen2.setImageBitmap(bitmap);
 
                 marginParams.setMargins(item1.leftMargin + 25,item1.topMargin + 25,item1.rightMargin,item1.bottomMargin);
                 layoutParams = new RelativeLayout.LayoutParams(marginParams);
@@ -310,7 +351,10 @@ private  boolean doubleClick = false;
                 mTicketsList.remove(item1);
                 break;
         }
+        } catch (CantGetResourcesException e) {
+            System.err.println("CantGetResourcesException: " + e.getMessage());
 
+        }
 
         return false;
     }
@@ -550,67 +594,123 @@ private  boolean doubleClick = false;
         //click event has occurred
         oneClick = true;
         //usd 1
+        byte[] imageResource;
+        Bitmap bitmap;
+        try {
         if (ticketId == 1) {
-            image.setImageResource(R.drawable.usd_1_b);
+
+            walletResourceManger.setImageName("usd_1_b.jpg");
+            imageResource = walletResourceManger.getResources();
+            bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+            image.setImageBitmap(bitmap);
             view.setTag(12);
         } else {
             if (ticketId == 12) {
-                image.setImageResource(R.drawable.usd_1);
+
+                walletResourceManger.setImageName("usd_1.jpg");
+                imageResource = walletResourceManger.getResources();
+                bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                image.setImageBitmap(bitmap);
                 view.setTag(1);
             }
         }
 //usd 5
         if (ticketId == 5) {
-            image.setImageResource(R.drawable.usd_5_b);
+
+            walletResourceManger.setImageName("usd_5_b.jpg");
+            imageResource = walletResourceManger.getResources();
+            bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+            image.setImageBitmap(bitmap);
             view.setTag(52);
         } else {
             if (ticketId == 52) {
-                image.setImageResource(R.drawable.usd_5);
+
+                walletResourceManger.setImageName("usd_5.jpg");
+                imageResource = walletResourceManger.getResources();
+                bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                image.setImageBitmap(bitmap);
                 view.setTag(5);
             }
         }
 //usd 10
         if (ticketId == 10) {
-            image.setImageResource(R.drawable.usd_10_b);
+
+            walletResourceManger.setImageName("usd_10_b.jpg");
+            imageResource = walletResourceManger.getResources();
+            bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+            image.setImageBitmap(bitmap);
             view.setTag(102);
         } else {
             if (ticketId == 102) {
-                image.setImageResource(R.drawable.usd_10);
+
+                walletResourceManger.setImageName("usd_10.jpg");
+                imageResource = walletResourceManger.getResources();
+                bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                image.setImageBitmap(bitmap);
                 view.setTag(10);
             }
         }
 
         //usd 20
         if (ticketId == 20) {
-            image.setImageResource(R.drawable.usd_20_b);
+
+            walletResourceManger.setImageName("usd_20_b.jpg");
+            imageResource = walletResourceManger.getResources();
+            bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+            image.setImageBitmap(bitmap);
             view.setTag(202);
         } else {
             if (ticketId == 202) {
-                image.setImageResource(R.drawable.usd_20);
+
+                walletResourceManger.setImageName("usd_20.jpg");
+                imageResource = walletResourceManger.getResources();
+                bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                image.setImageBitmap(bitmap);
                 view.setTag(20);
             }
         }
 
         //usd 50
         if (ticketId == 50) {
-            image.setImageResource(R.drawable.usd_50_b);
+
+            walletResourceManger.setImageName("usd_50_b.jpg");
+            imageResource = walletResourceManger.getResources();
+            bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+            image.setImageBitmap(bitmap);
             view.setTag(502);
         } else {
             if (ticketId == 502) {
-                image.setImageResource(R.drawable.usd_50);
+
+                walletResourceManger.setImageName("usd_50_.jpg");
+                imageResource = walletResourceManger.getResources();
+                bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                image.setImageBitmap(bitmap);
                 view.setTag(50);
             }
         }
 
         //usd 50
         if (ticketId == 100) {
-            image.setImageResource(R.drawable.usd_100_b);
+
+            walletResourceManger.setImageName("usd_100_b.jpg");
+            imageResource = walletResourceManger.getResources();
+            bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+            image.setImageBitmap(bitmap);
             view.setTag(1002);
         } else {
             if (ticketId == 1002) {
-                image.setImageResource(R.drawable.usd_100);
+
+                walletResourceManger.setImageName("usd_100.jpg");
+                imageResource = walletResourceManger.getResources();
+                bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                image.setImageBitmap(bitmap);
                 view.setTag(100);
             }
+        }
+
+        } catch (CantGetResourcesException e) {
+            System.err.println("CantGetResourcesException: " + e.getMessage());
+
         }
     }
 
@@ -650,6 +750,9 @@ private  boolean doubleClick = false;
                     int idTicket = item.ticketId;
                     int idTicket2 = ticketId;
                     //verify if ticket equal to another ticket value and join in a another to couble value
+                    byte[] imageResource;
+                    Bitmap bitmap;
+                    try {
                     switch (item.ticketId) {
                         case 12:
                             idTicket = 1;
@@ -710,8 +813,11 @@ private  boolean doubleClick = false;
                                 mTicketsList.remove(item);
                                 view.setVisibility(View.INVISIBLE);
                                 imagen1.setTag(20);
-                                imagen1.setImageResource(R.drawable.usd_20);
 
+                                walletResourceManger.setImageName("usd_20.jpg");
+                                imageResource = walletResourceManger.getResources();
+                                bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                                imagen1.setImageBitmap(bitmap);
                                 imagen1.setOnTouchListener(new theTouchListener());
 
                                 marginParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, -50, -50);
@@ -742,7 +848,11 @@ private  boolean doubleClick = false;
                                 view.setVisibility(View.INVISIBLE);
 
                                 imagen1.setTag(10);
-                                imagen1.setImageResource(R.drawable.usd_10);
+
+                                walletResourceManger.setImageName("usd_10.jpg");
+                                imageResource = walletResourceManger.getResources();
+                                bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                                imagen1.setImageBitmap(bitmap);
 
                                 imagen1.setOnTouchListener(new theTouchListener());
                                 marginParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, -50, -50);
@@ -780,7 +890,11 @@ private  boolean doubleClick = false;
                                     imagen2.setVisibility(View.INVISIBLE);
 
                                 imagen1.setTag(100);
-                                imagen1.setImageResource(R.drawable.usd_100);
+
+                                walletResourceManger.setImageName("usd_100.jpg");
+                                imageResource = walletResourceManger.getResources();
+                                bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                                imagen1.setImageBitmap(bitmap);
                                 imagen1.setOnTouchListener(new theTouchListener());
                                 marginParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, -50, -50);
                                 layoutParams = new RelativeLayout.LayoutParams(marginParams);
@@ -803,6 +917,10 @@ private  boolean doubleClick = false;
                                 break;
                         }
                         break;
+
+                    }
+                    } catch (CantGetResourcesException e) {
+                        System.err.println("CantGetResourcesException: " + e.getMessage());
 
                     }
                 }

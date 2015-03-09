@@ -53,7 +53,7 @@ public class AndroidPluginFileSystem implements PluginFileSystem {
         AndroidPluginImageFile newFile = new AndroidPluginImageFile(ownerId, directoryName, fileName, privacyLevel, lifeSpan);
 
         try {
-            newFile.loadToMemory();
+            newFile.loadFromMedia();
             return newFile;
         }
         catch (CantLoadFileException e){
