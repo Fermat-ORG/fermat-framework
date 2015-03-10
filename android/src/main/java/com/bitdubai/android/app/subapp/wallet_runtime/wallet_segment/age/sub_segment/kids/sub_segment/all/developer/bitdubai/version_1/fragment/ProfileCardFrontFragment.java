@@ -10,16 +10,31 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bitdubai.fermat_api.layer._11_network_service.CantGetResourcesException;
+import com.bitdubai.fermat_api.layer._11_network_service.wallet_resources.WalletResourcesManager;
+import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Wallets;
+import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
+import com.bitdubai.fermat_core.CorePlatformContext;
+import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.android.app.common.version_1.classes.MyApplication;
+import java.io.StringReader;
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
+import org.xmlpull.v1.XmlPullParserFactory;
 
 public class ProfileCardFrontFragment extends Fragment {
 
     private static final String ARG_POSITION = "position";
-
+    private  static WalletResourcesManager walletResourceManger;
     private int position;
 
     public static ProfileCardFrontFragment newInstance(int position) {
+        Platform platform = MyApplication.getPlatform();
+        CorePlatformContext platformContext = platform.getCorePlatformContext();
+        walletResourceManger = (WalletResourcesManager)platformContext.getPlugin(Plugins.WALLET_RESOURCES_NETWORK_SERVICE);
+        walletResourceManger.setwalletType(Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI);
+
         ProfileCardFrontFragment f = new ProfileCardFrontFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
@@ -38,6 +53,30 @@ public class ProfileCardFrontFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view;
         TextView name;
+        String layoutContent = "";
+        String strError = "";
+        try {
+
+            walletResourceManger.setImageName("wallets_kids_fragment_contacts_filter.txt");
+            layoutContent = walletResourceManger.getLayoutResource();
+
+            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+            factory.setNamespaceAware(true);
+            XmlPullParser xpp = factory.newPullParser();
+            xpp.setInput(new StringReader("<LinearLayout xmlns:android=\"http://schemas.android.com/apk/res/android\" android:layout_width=\"match_parent\"  android:layout_height=\"match_parent\" android:orientation=\"vertical\"></LinearLayout>"));
+            try{
+                View view2 = inflater.inflate(xpp, container, false);
+            }catch(Exception e){
+                strError = e.getMessage();
+                System.err.println(strError);
+            }
+
+        } catch (CantGetResourcesException e) {
+            System.err.println("CantGetResourcesException: " + e.getMessage());
+        } catch (XmlPullParserException e) {
+            System.err.println("CantParseXMLlayout: " + e.getMessage());
+        }
+
         view = inflater.inflate(R.layout.wallets_kids_fragment_profile_card_front, container, false); //Contains empty RelativeLayout
 
         name = (TextView) view.findViewById(R.id.user_name);

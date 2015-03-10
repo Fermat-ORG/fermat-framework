@@ -56,12 +56,12 @@ import java.util.UUID;
 /**
  * This plugin is designed to look up for the resources needed by a newly installed wallet. We are talking about the 
  * navigation structure, plus the images needed by the wallet to be able to run.
- * 
+ *
  * It will try to gather those resources from other peers or a centralized location provided by the wallet developer 
  * if it is not possible.
- * 
+ *
  * It will also serve other peers with these resources when needed.
- *  
+ *
  * * * * * * * 
  */
 
@@ -166,7 +166,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     public UUID getId() {
         return null;
     }
-    
+
     /**
      * WalletResourcesManager Implementation 
      */
@@ -194,21 +194,33 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             //get repo name
             String reponame = Repositories.getValueFromType (walletType);
             //conect to repo and get manifest file
-           String repoManifest = getRepositoryStringFile(reponame, "manifest.txt");
+            String repoManifest = getRepositoryStringFile(reponame, "manifest.txt");
             //get list of wallet image, split
             String[] fileList = repoManifest.split(",");
             for (int j = 0; j < fileList.length; j++) {
                 //get file image in repo
                 //save that on memory
 
-               byte[] image =  getRepositoryImageFile(reponame, fileList[j].toString());
+                byte[] image =  getRepositoryImageFile(reponame, fileList[j].toString());
                 PluginImageFile imageFile;
                 imageFile = pluginFileSystem.createImageFile(pluginId, reponame, fileList[j].toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
 
                 imageFile.setContent(image);
                 imageFile.persistToMedia();
 
+            }
 
+            //get list of layouts files and save in disk
+            String layoutManifest = getRepositoryStringFile(reponame, "layout_manifest.txt");
+            String[] layoutList = layoutManifest.split(",");
+            for (int j = 0; j < layoutList.length; j++) {
+
+                String file =  getRepositoryStringFile(reponame, layoutList[j].toString());
+                PluginDataFile layoutFile;
+                layoutFile = pluginFileSystem.createDataFile(pluginId, reponame, layoutList[j].toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+
+                layoutFile.setContent(file);
+                layoutFile.persistToMedia();
             }
 
 
@@ -227,15 +239,12 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     }
 
     @Override
-    public byte[] getResources(/*WalletType, Developer, version, publisher*/) throws CantGetResourcesException {
+    public byte[] getImageResource() throws CantGetResourcesException {
 
         byte[] imageResource = new byte[16384];
-        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.WALLET_RESOURCES_INSTALLED);
-        ((WalletResourcesInstalledEvent) platformEvent).setSource(EventSource.NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN);
-        eventManager.raiseEvent(platformEvent);
 
         try {
-            this.walletType = Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI;
+
             //get repo name
             String reponame = Repositories.getValueFromType(walletType);
             //get image from disk
@@ -244,82 +253,101 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
             imageResource = imageFile.getContent();
         }
-            catch(FileNotFoundException e){
-                e.printStackTrace();
+        catch(FileNotFoundException e){
+            e.printStackTrace();
 
-         }
+        }
         return imageResource;
     }
 
+    @Override
+    public String getLayoutResource() throws CantGetResourcesException {
 
-    public static String getRepositoryStringFile(String repo,String file) throws MalformedURLException, IOException, FileNotFoundException {
+        String content = "";
+        try {
+            //get repo name
+            String reponame = Repositories.getValueFromType(walletType);
+            //get image from disk
+            PluginDataFile layoutFile;
+            layoutFile = pluginFileSystem.getDataFile(pluginId, reponame, imageName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+
+            content = layoutFile.getContent();
+        }
+        catch(FileNotFoundException e){
+            e.printStackTrace();
+
+        }
+        return content;
+    }
+
+    private String getRepositoryStringFile(String repo,String file) throws MalformedURLException, IOException, FileNotFoundException {
         String link = "https://raw.githubusercontent.com/bitDubai/"+repo +"/master/" + file;
 
-        URL crunchifyUrl = new URL(link);
-        HttpURLConnection crunchifyHttp = (HttpURLConnection) crunchifyUrl.openConnection();
+        URL url = new URL(link);
+        HttpURLConnection http = (HttpURLConnection) url.openConnection();
 
-        Map<String, List<String>> crunchifyHeader = crunchifyHttp.getHeaderFields();
+        Map<String, List<String>> headerFields = http.getHeaderFields();
         // If URL is getting 301 and 302 redirection HTTP code then get new URL link.
 // This below for loop is totally optional if you are sure that your URL is not getting redirected to anywhere
-        for (String header : crunchifyHeader.get(null)) {
+        for (String header : headerFields.get(null)) {
             if (header.contains(" 302 ") || header.contains(" 301 ")) {
-                link = crunchifyHeader.get("Location").get(0);
-                crunchifyUrl = new URL(link);
-                crunchifyHttp = (HttpURLConnection) crunchifyUrl.openConnection();
-                crunchifyHeader = crunchifyHttp.getHeaderFields();
+                link = headerFields.get("Location").get(0);
+                url = new URL(link);
+                http = (HttpURLConnection) url.openConnection();
+                headerFields = http.getHeaderFields();
             }
         }
 
-        InputStream crunchifyStream = crunchifyHttp.getInputStream();
-        String crunchifyResponse = crunchifyGetStringFromStream(crunchifyStream);
+        InputStream crunchifyStream = http.getInputStream();
+        String response = getStringFromStream(crunchifyStream);
 
-        return  crunchifyResponse;
+        return  response;
 
     }
 
-    public static byte[] getRepositoryImageFile(String repo,String file) throws MalformedURLException, IOException, FileNotFoundException {
+    //conect to repository and download image file
+    private byte[] getRepositoryImageFile(String repo,String file) throws MalformedURLException, IOException, FileNotFoundException {
 
         String link = "https://raw.githubusercontent.com/bitDubai/"+repo +"/master/" + file;
 
-            URL crunchifyUrl = new URL(link);
-            HttpURLConnection crunchifyHttp = (HttpURLConnection) crunchifyUrl.openConnection();
-            BufferedInputStream in = new BufferedInputStream(crunchifyHttp.getInputStream());
-            ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
-            int c;
-            while ((c = in.read()) != -1) {
-                byteArrayOut.write(c);
-            }
+        URL url = new URL(link);
+        HttpURLConnection http = (HttpURLConnection) url.openConnection();
+        BufferedInputStream in = new BufferedInputStream(http.getInputStream());
+        ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();
+        int c;
+        while ((c = in.read()) != -1) {
+            byteArrayOut.write(c);
+        }
 
-            in.close();
-            return byteArrayOut.toByteArray();
-
+        in.close();
+        return byteArrayOut.toByteArray();
 
     }
 
 
-    // ConvertStreamToString() Utility - we name it as crunchifyGetStringFromStream()
-    private static String crunchifyGetStringFromStream(InputStream crunchifyStream) throws IOException {
-        if (crunchifyStream != null) {
-            Writer crunchifyWriter = new StringWriter();
+    //
+    private  String getStringFromStream(InputStream stream) throws IOException {
+        if (stream != null) {
+            Writer writer = new StringWriter();
 
-            char[] crunchifyBuffer = new char[2048];
+            char[] buffer = new char[2048];
             try {
-                Reader crunchifyReader = new BufferedReader(new InputStreamReader(crunchifyStream, "UTF-8"));
+                Reader reader = new BufferedReader(new InputStreamReader(stream, "UTF-8"));
                 int counter;
-                while ((counter = crunchifyReader.read(crunchifyBuffer)) != -1) {
-                    crunchifyWriter.write(crunchifyBuffer, 0, counter);
+                while ((counter = reader.read(buffer)) != -1) {
+                    writer.write(buffer, 0, counter);
                 }
             } finally {
-                crunchifyStream.close();
+                stream.close();
             }
-            return crunchifyWriter.toString();
+            return writer.toString();
         } else {
             return "No Contents";
         }
     }
 
 
-    
+
     /**
      * UsesFileSystem Interface implementation.
      */

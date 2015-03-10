@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.bitdubai.fermat_api.layer._2_os.file_system.*;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantLoadFileException;
+import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.FileNotFoundException;
 
 /**
@@ -17,10 +18,10 @@ public class AndroidPlatformFileSystem implements PlatformFileSystem {
         AndroidPlatformDataFile newFile = new AndroidPlatformDataFile( this.context, directoryName,fileName, privacyLevel, lifeSpan);
 
         try {
-            newFile.loadToMemory();
+            newFile.loadFromMedia();
             return newFile;
         }
-        catch (CantLoadFileException e){
+        catch (CantPersistFileException e){
             System.err.println("GetFailedException: " + e.getMessage());
             e.printStackTrace();
             throw new FileNotFoundException();

@@ -20,6 +20,7 @@ import java.io.IOException;
 
 import com.bitdubai.fermat_api.layer._11_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer._11_network_service.wallet_resources.WalletResourcesManager;
+import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Wallets;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.fermat_core.Platform;
@@ -72,6 +73,7 @@ public class TicketFragment  extends  DialogFragment  {
         Platform platform = MyApplication.getPlatform();
         CorePlatformContext platformContext = platform.getCorePlatformContext();
         walletResourceManger = (WalletResourcesManager)platformContext.getPlugin(Plugins.WALLET_RESOURCES_NETWORK_SERVICE);
+        walletResourceManger.setwalletType(Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI);
 
         gestureDetector = new GestureDetector(getActivity(),new GestureListener());
         position = getArguments().getInt(ARG_POSITION);
@@ -110,28 +112,28 @@ public class TicketFragment  extends  DialogFragment  {
                 imageTicket.setTag(1);
                 imageTicket.setOnClickListener(new OnClickListener() {
                     public void onClick(View v)  {
-                    try{
-                        if ((Integer) v.getTag() == 1) {
+                        try{
+                            if ((Integer) v.getTag() == 1) {
 
-                            walletResourceManger.setImageName("usd_1_b.jpg");
-                            byte[] imageResource = walletResourceManger.getResources();
-                            Bitmap bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                            imageTicket.setImageBitmap(bitmap);
-                            ticketFace = "B";
-                            v.setTag(12);
-                        } else {
+                                walletResourceManger.setImageName("usd_1_b.jpg");
+                                byte[] imageResource = walletResourceManger.getImageResource();
+                                Bitmap bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                                imageTicket.setImageBitmap(bitmap);
+                                ticketFace = "B";
+                                v.setTag(12);
+                            } else {
 
-                            walletResourceManger.setImageName("usd_1.jpg");
-                            byte[] imageResource = walletResourceManger.getResources();
-                            Bitmap bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                            imageTicket.setImageBitmap(bitmap);
-                            ticketFace = "A";
-                            v.setTag(1);
+                                walletResourceManger.setImageName("usd_1.jpg");
+                                byte[] imageResource = walletResourceManger.getImageResource();
+                                Bitmap bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                                imageTicket.setImageBitmap(bitmap);
+                                ticketFace = "A";
+                                v.setTag(1);
+                            }
+                        } catch (CantGetResourcesException e) {
+                            System.err.println("CantGetResourcesException: " + e.getMessage());
+
                         }
-                    } catch (CantGetResourcesException e) {
-                        System.err.println("CantGetResourcesException: " + e.getMessage());
-
-                    }
 
                     }
 
@@ -144,30 +146,30 @@ public class TicketFragment  extends  DialogFragment  {
                 imageTicket.setTag(5);
                 imageTicket.setOnClickListener(new OnClickListener() {
                     public void onClick(View v) {
-                    try{
+                        try{
 
 
-                        if ((Integer) v.getTag() == 5) {
+                            if ((Integer) v.getTag() == 5) {
 
-                            walletResourceManger.setImageName("usd_5_b.jpg");
-                            byte[] imageResource = walletResourceManger.getResources();
-                            Bitmap bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                            imageTicket.setImageBitmap(bitmap);
-                            ticketFace = "B";
-                            v.setTag(52);
-                        } else {
-                            imageTicket.setImageResource(R.drawable.usd_5);
-                            walletResourceManger.setImageName("usd_5.jpg");
-                            byte[] imageResource = walletResourceManger.getResources();
-                            Bitmap bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                            imageTicket.setImageBitmap(bitmap);
-                            ticketFace = "A";
-                            v.setTag(5);
+                                walletResourceManger.setImageName("usd_5_b.jpg");
+                                byte[] imageResource = walletResourceManger.getImageResource();
+                                Bitmap bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                                imageTicket.setImageBitmap(bitmap);
+                                ticketFace = "B";
+                                v.setTag(52);
+                            } else {
+                                imageTicket.setImageResource(R.drawable.usd_5);
+                                walletResourceManger.setImageName("usd_5.jpg");
+                                byte[] imageResource = walletResourceManger.getImageResource();
+                                Bitmap bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                                imageTicket.setImageBitmap(bitmap);
+                                ticketFace = "A";
+                                v.setTag(5);
+                            }
+                        } catch (CantGetResourcesException e) {
+                            System.err.println("CantGetResourcesException: " + e.getMessage());
+
                         }
-                    } catch (CantGetResourcesException e) {
-                        System.err.println("CantGetResourcesException: " + e.getMessage());
-
-                    }
                     }
 
                 });
@@ -178,28 +180,28 @@ public class TicketFragment  extends  DialogFragment  {
                 imageTicket.setTag(10);
                 imageTicket.setOnClickListener(new OnClickListener() {
                     public void onClick(View v) {
-try{
-                        if ((Integer) v.getTag() == 10) {
+                        try{
+                            if ((Integer) v.getTag() == 10) {
 
-                            walletResourceManger.setImageName("usd_10_b.jpg");
-                            byte[] imageResource = walletResourceManger.getResources();
-                            Bitmap bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                            imageTicket.setImageBitmap(bitmap);
-                            ticketFace = "B";
-                            v.setTag(102);
-                        } else {
+                                walletResourceManger.setImageName("usd_10_b.jpg");
+                                byte[] imageResource = walletResourceManger.getImageResource();
+                                Bitmap bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                                imageTicket.setImageBitmap(bitmap);
+                                ticketFace = "B";
+                                v.setTag(102);
+                            } else {
 
-                            walletResourceManger.setImageName("usd_10.jpg");
-                            byte[] imageResource = walletResourceManger.getResources();
-                            Bitmap bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                            imageTicket.setImageBitmap(bitmap);
-                            ticketFace = "A";
-                            v.setTag(10);
+                                walletResourceManger.setImageName("usd_10.jpg");
+                                byte[] imageResource = walletResourceManger.getImageResource();
+                                Bitmap bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                                imageTicket.setImageBitmap(bitmap);
+                                ticketFace = "A";
+                                v.setTag(10);
+                            }
+                        } catch (CantGetResourcesException e) {
+                            System.err.println("CantGetResourcesException: " + e.getMessage());
+
                         }
-                    } catch (CantGetResourcesException e) {
-                        System.err.println("CantGetResourcesException: " + e.getMessage());
-
-                    }
                     }
 
                 });
@@ -210,28 +212,28 @@ try{
                 imageTicket.setTag(20);
                 imageTicket.setOnClickListener(new OnClickListener() {
                     public void onClick(View v) {
-try{
-                        if ((Integer) v.getTag() == 20) {
+                        try{
+                            if ((Integer) v.getTag() == 20) {
 
-                            walletResourceManger.setImageName("usd_20_b.jpg");
-                            byte[] imageResource = walletResourceManger.getResources();
-                            Bitmap bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                            imageTicket.setImageBitmap(bitmap);
-                            ticketFace = "B";
-                            v.setTag(202);
-                        } else {
+                                walletResourceManger.setImageName("usd_20_b.jpg");
+                                byte[] imageResource = walletResourceManger.getImageResource();
+                                Bitmap bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                                imageTicket.setImageBitmap(bitmap);
+                                ticketFace = "B";
+                                v.setTag(202);
+                            } else {
 
-                            walletResourceManger.setImageName("usd_20.jpg");
-                            byte[] imageResource = walletResourceManger.getResources();
-                            Bitmap bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                            imageTicket.setImageBitmap(bitmap);
-                            ticketFace = "A";
-                            v.setTag(20);
+                                walletResourceManger.setImageName("usd_20.jpg");
+                                byte[] imageResource = walletResourceManger.getImageResource();
+                                Bitmap bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                                imageTicket.setImageBitmap(bitmap);
+                                ticketFace = "A";
+                                v.setTag(20);
+                            }
+                        } catch (CantGetResourcesException e) {
+                            System.err.println("CantGetResourcesException: " + e.getMessage());
+
                         }
-                    } catch (CantGetResourcesException e) {
-                        System.err.println("CantGetResourcesException: " + e.getMessage());
-
-                    }
 
                     }
 
@@ -244,23 +246,23 @@ try{
                 imageTicket.setOnClickListener(new OnClickListener() {
                     public void onClick(View v) {
                         try{
-                        if ((Integer) v.getTag() == 50) {
+                            if ((Integer) v.getTag() == 50) {
 
-                            walletResourceManger.setImageName("usd_50_b.jpg");
-                            byte[] imageResource = walletResourceManger.getResources();
-                            Bitmap bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                            imageTicket.setImageBitmap(bitmap);
-                            ticketFace = "B";
-                            v.setTag(502);
-                        } else {
+                                walletResourceManger.setImageName("usd_50_b.jpg");
+                                byte[] imageResource = walletResourceManger.getImageResource();
+                                Bitmap bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                                imageTicket.setImageBitmap(bitmap);
+                                ticketFace = "B";
+                                v.setTag(502);
+                            } else {
 
-                            walletResourceManger.setImageName("usd_50.jpg");
-                            byte[] imageResource = walletResourceManger.getResources();
-                            Bitmap bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                            imageTicket.setImageBitmap(bitmap);
-                            ticketFace = "A";
-                            v.setTag(50);
-                        }
+                                walletResourceManger.setImageName("usd_50.jpg");
+                                byte[] imageResource = walletResourceManger.getImageResource();
+                                Bitmap bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                                imageTicket.setImageBitmap(bitmap);
+                                ticketFace = "A";
+                                v.setTag(50);
+                            }
                         } catch (CantGetResourcesException e) {
                             System.err.println("CantGetResourcesException: " + e.getMessage());
 
@@ -275,27 +277,27 @@ try{
                 imageTicket.setTag(100);
                 imageTicket.setOnClickListener(new OnClickListener() {
                     public void onClick(View v) {
-try{
-                        if ((Integer) v.getTag() == 100) {
-                            walletResourceManger.setImageName("usd_100_b.jpg");
-                            byte[] imageResource = walletResourceManger.getResources();
-                            Bitmap bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                            imageTicket.setImageBitmap(bitmap);
-                            ticketFace = "B";
-                            v.setTag(1002);
-                        } else {
-                            walletResourceManger.setImageName("usd_100.jpg");
-                            byte[] imageResource = walletResourceManger.getResources();
-                            Bitmap bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                            imageTicket.setImageBitmap(bitmap);
+                        try{
+                            if ((Integer) v.getTag() == 100) {
+                                walletResourceManger.setImageName("usd_100_b.jpg");
+                                byte[] imageResource = walletResourceManger.getImageResource();
+                                Bitmap bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                                imageTicket.setImageBitmap(bitmap);
+                                ticketFace = "B";
+                                v.setTag(1002);
+                            } else {
+                                walletResourceManger.setImageName("usd_100.jpg");
+                                byte[] imageResource = walletResourceManger.getImageResource();
+                                Bitmap bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                                imageTicket.setImageBitmap(bitmap);
 
-                            ticketFace = "A";
-                            v.setTag(100);
+                                ticketFace = "A";
+                                v.setTag(100);
+                            }
+                        } catch (CantGetResourcesException e) {
+                            System.err.println("CantGetResourcesException: " + e.getMessage());
+
                         }
-                    } catch (CantGetResourcesException e) {
-                        System.err.println("CantGetResourcesException: " + e.getMessage());
-
-                    }
 
                     }
                 });

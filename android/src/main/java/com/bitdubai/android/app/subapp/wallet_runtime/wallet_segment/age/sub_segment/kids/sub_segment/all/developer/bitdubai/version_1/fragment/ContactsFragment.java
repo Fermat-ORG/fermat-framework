@@ -22,6 +22,7 @@ import android.graphics.Bitmap;
 
 import com.bitdubai.fermat_api.layer._11_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer._11_network_service.wallet_resources.WalletResourcesManager;
+import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Wallets;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.smartwallet.R;
@@ -39,12 +40,13 @@ public class ContactsFragment extends Fragment {
     private ArrayList<App> mlist;
 
     private int position;
-   private  static WalletResourcesManager walletResourceManger;
+    private  static WalletResourcesManager walletResourceManger;
 
     public static ContactsFragment newInstance(int position) {
         Platform platform = MyApplication.getPlatform();
         CorePlatformContext platformContext = platform.getCorePlatformContext();
         walletResourceManger = (WalletResourcesManager)platformContext.getPlugin(Plugins.WALLET_RESOURCES_NETWORK_SERVICE);
+        walletResourceManger.setwalletType(Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI);
 
         ContactsFragment f = new ContactsFragment();
         Bundle b = new Bundle();
@@ -94,6 +96,14 @@ public class ContactsFragment extends Fragment {
 
         //@SuppressWarnings("unchecked")
         //ArrayList<App> list = (ArrayList<App>) getArguments().get("list");
+        String layoutContent = "";
+        try {
+            walletResourceManger.setImageName("wallets_kids_fragment_contacts_filter.txt");
+            layoutContent = walletResourceManger.getLayoutResource();
+        } catch (CantGetResourcesException e) {
+            System.err.println("CantGetResourcesException: " + e.getMessage());
+        }
+
         gridView.setAdapter(new AppListAdapter(getActivity(), R.layout.wallets_kids_fragment_contacts_filter, mlist));
 
         //        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -158,44 +168,44 @@ public class ContactsFragment extends Fragment {
                 switch (position) {
                     case 0:
                         walletResourceManger.setImageName("kid_3.jpg");
-                       imageResource = walletResourceManger.getResources();
+                        imageResource = walletResourceManger.getImageResource();
                         bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
                         holder.Photo.setImageBitmap(bitmap);
                         break;
                     case 1:
-                       // holder.Photo.setImageResource(R.drawable.kid_1);
+                        // holder.Photo.setImageResource(R.drawable.kid_1);
                         walletResourceManger.setImageName("kid_1.jpg");
-                      imageResource = walletResourceManger.getResources();
-                       bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                        imageResource = walletResourceManger.getImageResource();
+                        bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
                         holder.Photo.setImageBitmap(bitmap);
                         break;
                     case 2:
                         walletResourceManger.setImageName("kid_4.jpg");
-                        imageResource = walletResourceManger.getResources();
+                        imageResource = walletResourceManger.getImageResource();
                         bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
                         holder.Photo.setImageBitmap(bitmap);
                         break;
                     case 3:
                         walletResourceManger.setImageName("kid_5.jpg");
-                        imageResource = walletResourceManger.getResources();
+                        imageResource = walletResourceManger.getImageResource();
                         bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
                         holder.Photo.setImageBitmap(bitmap);
                         break;
                     case 4:
                         walletResourceManger.setImageName("kid_2.jpg");
-                        imageResource = walletResourceManger.getResources();
+                        imageResource = walletResourceManger.getImageResource();
                         bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
                         holder.Photo.setImageBitmap(bitmap);
                         break;
                     case 5:
                         walletResourceManger.setImageName("kid_6.jpg");
-                        imageResource = walletResourceManger.getResources();
+                        imageResource = walletResourceManger.getImageResource();
                         bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
                         holder.Photo.setImageBitmap(bitmap);
                         break;
                     case 6:
                         walletResourceManger.setImageName("kid_7.png");
-                        imageResource = walletResourceManger.getResources();
+                        imageResource = walletResourceManger.getImageResource();
                         bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
                         holder.Photo.setImageBitmap(bitmap);
                         break;
@@ -204,7 +214,6 @@ public class ContactsFragment extends Fragment {
 
             } catch (CantGetResourcesException e) {
                 System.err.println("CantGetResourcesException: " + e.getMessage());
-
             }
 
             return convertView;

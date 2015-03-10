@@ -44,8 +44,6 @@ public class AndroidPluginImageFile implements PluginImageFile {
         this.content = content;
     }
 
-
-
     public AndroidPluginImageFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
 
         this.context = context;
@@ -56,9 +54,6 @@ public class AndroidPluginImageFile implements PluginImageFile {
         this.directoryName = directoryName;
 
     }
-
-
-
 
     @Override
     public void persistToMedia() throws CantPersistFileException {
@@ -71,9 +66,10 @@ public class AndroidPluginImageFile implements PluginImageFile {
             if(this.directoryName != "")
                 path += "/" + this.ownerId + "/" + this.directoryName;
 
-
             File storagePath = new File(path);
-            storagePath.mkdirs();
+            if (!storagePath.exists()) {
+                storagePath.mkdirs();
+            }
             File file = new File(storagePath, fileName);
 
             OutputStream outputStream;
@@ -95,17 +91,16 @@ public class AndroidPluginImageFile implements PluginImageFile {
         try {
 
             File storagePath = new File(this.context.getFilesDir() + "/" + this.ownerId + "/" +this.directoryName);
-            storagePath.mkdirs();
+
+            if (!storagePath.exists()) {
+                storagePath.mkdirs();
+            }
             File file = new File(storagePath, this.fileName);
 
             // convert byte array back to BufferedImage
             InputStream in = new ByteArrayInputStream(this.content);
-          //  BufferedImage bImageFromConvert = ImageIO.read(in);
 
-          //  ImageIO.write(bImageFromConvert, "jpg", file);
-            /*import java.awt.Image;
-import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;*/
+
         }
         catch (Exception e) {
             System.err.println("Error trying to load a file to memory: " + e.getMessage());

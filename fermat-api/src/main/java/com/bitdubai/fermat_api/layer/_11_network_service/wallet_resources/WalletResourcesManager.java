@@ -8,11 +8,13 @@ import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Wallets;
  * Created by loui on 18/02/15.
  */
 public interface WalletResourcesManager {
-    
+
 
     public void checkResources() throws CantCheckResourcesException;
 
-    public byte[] getResources() throws CantGetResourcesException;
+    public byte[] getImageResource() throws CantGetResourcesException;
+
+    public String getLayoutResource(/*WalletType, Developer, version, publisher*/) throws CantGetResourcesException;
 
     public void setImageName(String name);
 

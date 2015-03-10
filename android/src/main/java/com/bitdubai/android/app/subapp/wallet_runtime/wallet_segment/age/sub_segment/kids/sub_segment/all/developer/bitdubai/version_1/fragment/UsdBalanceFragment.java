@@ -21,6 +21,7 @@ import android.view.View.OnTouchListener;
 
 import com.bitdubai.fermat_api.layer._11_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer._11_network_service.wallet_resources.WalletResourcesManager;
+import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Wallets;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.fermat_core.Platform;
@@ -71,11 +72,12 @@ public class UsdBalanceFragment extends Fragment {
     private ImageView imageMoney;
     private  static WalletResourcesManager walletResourceManger;
 
-private  boolean doubleClick = false;
+    private  boolean doubleClick = false;
     public static UsdBalanceFragment newInstance(int position) {
         Platform platform = MyApplication.getPlatform();
         CorePlatformContext platformContext = platform.getCorePlatformContext();
         walletResourceManger = (WalletResourcesManager)platformContext.getPlugin(Plugins.WALLET_RESOURCES_NETWORK_SERVICE);
+        walletResourceManger.setwalletType(Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI);
 
         UsdBalanceFragment f = new UsdBalanceFragment();
         Bundle b = new Bundle();
@@ -135,54 +137,54 @@ private  boolean doubleClick = false;
 
 
             try {
-            switch (tickets[i]) {
-                case "usd_1":
-                    MyApplication.setTicketId( "usd_1");
-                    imageTicket.setTag(1);
-                    walletResourceManger.setImageName("usd_1.jpg");
-                    imageResource = walletResourceManger.getResources();
-                    bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                    imageTicket.setImageBitmap(bitmap);
+                switch (tickets[i]) {
+                    case "usd_1":
+                        MyApplication.setTicketId( "usd_1");
+                        imageTicket.setTag(1);
+                        walletResourceManger.setImageName("usd_1.jpg");
+                        imageResource = walletResourceManger.getImageResource();
+                        bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                        imageTicket.setImageBitmap(bitmap);
 
-                    break;
-                case "usd_5":
-                    MyApplication.setTicketId( "usd_5");
-                    imageTicket.setTag(5);
-                    walletResourceManger.setImageName("usd_5.jpg");
-                    imageResource = walletResourceManger.getResources();
-                    bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                    imageTicket.setImageBitmap(bitmap);
+                        break;
+                    case "usd_5":
+                        MyApplication.setTicketId( "usd_5");
+                        imageTicket.setTag(5);
+                        walletResourceManger.setImageName("usd_5.jpg");
+                        imageResource = walletResourceManger.getImageResource();
+                        bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                        imageTicket.setImageBitmap(bitmap);
 
-                    break;
-                case "usd_10":
-                    MyApplication.setTicketId( "usd_10");
-                    imageTicket.setTag(10);
-                    walletResourceManger.setImageName("usd_10.jpg");
-                    imageResource = walletResourceManger.getResources();
-                    bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                    imageTicket.setImageBitmap(bitmap);
-                    break;
-                case "usd_20":
-                    MyApplication.setTicketId( "usd_20");
-                    imageTicket.setTag(20);
-                    walletResourceManger.setImageName("usd_20.jpg");
-                    imageResource = walletResourceManger.getResources();
-                    bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                    imageTicket.setImageBitmap(bitmap);
+                        break;
+                    case "usd_10":
+                        MyApplication.setTicketId( "usd_10");
+                        imageTicket.setTag(10);
+                        walletResourceManger.setImageName("usd_10.jpg");
+                        imageResource = walletResourceManger.getImageResource();
+                        bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                        imageTicket.setImageBitmap(bitmap);
+                        break;
+                    case "usd_20":
+                        MyApplication.setTicketId( "usd_20");
+                        imageTicket.setTag(20);
+                        walletResourceManger.setImageName("usd_20.jpg");
+                        imageResource = walletResourceManger.getImageResource();
+                        bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                        imageTicket.setImageBitmap(bitmap);
 
-                    break;
-                case "usd_100":
-                    MyApplication.setTicketId( "usd_100");
-                    imageTicket.setTag(100);
-                    walletResourceManger.setImageName("usd_100.jpg");
-                    imageResource = walletResourceManger.getResources();
-                    bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                    imageTicket.setImageBitmap(bitmap);
+                        break;
+                    case "usd_100":
+                        MyApplication.setTicketId( "usd_100");
+                        imageTicket.setTag(100);
+                        walletResourceManger.setImageName("usd_100.jpg");
+                        imageResource = walletResourceManger.getImageResource();
+                        bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                        imageTicket.setImageBitmap(bitmap);
 
 
-                    break;
+                        break;
 
-            }
+                }
             } catch (CantGetResourcesException e) {
                 System.err.println("CantGetResourcesException: " + e.getMessage());
 
@@ -220,137 +222,137 @@ private  boolean doubleClick = false;
         byte[] imageResource;
         Bitmap bitmap;
         try {
-        switch ((Integer)v.getTag()) {
-            case 1:
-            case 12:
-                break;
-            case 5:
-            case 52:
+            switch ((Integer)v.getTag()) {
+                case 1:
+                case 12:
+                    break;
+                case 5:
+                case 52:
 
-                break;
-            case 10:
-            case 102:
+                    break;
+                case 10:
+                case 102:
 
-                imagen1= new ImageView(v.getContext());
-                cantTickets++;
-                imagen1.setId(cantTickets);
+                    imagen1= new ImageView(v.getContext());
+                    cantTickets++;
+                    imagen1.setId(cantTickets);
 
-                imagen1.setTag(5);
-                walletResourceManger.setImageName("usd_5.jpg");
-                imageResource = walletResourceManger.getResources();
-                bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                imagen1.setImageBitmap(bitmap);
+                    imagen1.setTag(5);
+                    walletResourceManger.setImageName("usd_5.jpg");
+                    imageResource = walletResourceManger.getImageResource();
+                    bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                    imagen1.setImageBitmap(bitmap);
 
-                marginParams.setMargins(item1.leftMargin,item1.topMargin,item1.rightMargin,item1.bottomMargin);
-                layoutParams = new RelativeLayout.LayoutParams(marginParams);
-                imagen1.setLayoutParams(layoutParams);
+                    marginParams.setMargins(item1.leftMargin,item1.topMargin,item1.rightMargin,item1.bottomMargin);
+                    layoutParams = new RelativeLayout.LayoutParams(marginParams);
+                    imagen1.setLayoutParams(layoutParams);
 
-                imagen1.setOnTouchListener(new theTouchListener());
-                marco.addView(imagen1);
+                    imagen1.setOnTouchListener(new theTouchListener());
+                    marco.addView(imagen1);
 
-                addTicketPosition(cantTickets,layoutParams,5,v.getX(),v.getY(), v.getWidth(),v.getHeight());
-
-
-                imagen2= new ImageView(v.getContext());
-                //Señalamos la imagen a mostrar
-                cantTickets++;
-                imagen2.setId(cantTickets);
-                imagen2.setTag(5);
-
-                imagen2.setImageBitmap(bitmap);
+                    addTicketPosition(cantTickets,layoutParams,5,v.getX(),v.getY(), v.getWidth(),v.getHeight());
 
 
-                marginParams.setMargins(item1.leftMargin + 25,item1.topMargin,item1.rightMargin + 25,item1.bottomMargin);
-                layoutParams = new RelativeLayout.LayoutParams(marginParams);
-                imagen2.setLayoutParams(layoutParams);
+                    imagen2= new ImageView(v.getContext());
+                    //Señalamos la imagen a mostrar
+                    cantTickets++;
+                    imagen2.setId(cantTickets);
+                    imagen2.setTag(5);
 
-                imagen2.setOnTouchListener(new theTouchListener());
-                marco.addView(imagen2);
+                    imagen2.setImageBitmap(bitmap);
 
-                addTicketPosition(cantTickets,layoutParams,5,v.getX(),v.getY(), v.getWidth(),v.getHeight());
 
-                v.setVisibility(View.INVISIBLE);
-                mTicketsList.remove(item1);
-                break;
-            case 20:
-            case 202:
-                imagen1= new ImageView(v.getContext());
-                cantTickets++;
-                imagen1.setId(cantTickets);
-                imagen1.setTag(10);
-                walletResourceManger.setImageName("usd_10.jpg");
-                imageResource = walletResourceManger.getResources();
-                bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                imagen1.setImageBitmap(bitmap);
+                    marginParams.setMargins(item1.leftMargin + 25,item1.topMargin,item1.rightMargin + 25,item1.bottomMargin);
+                    layoutParams = new RelativeLayout.LayoutParams(marginParams);
+                    imagen2.setLayoutParams(layoutParams);
 
-                imagen1.setOnTouchListener(new theTouchListener());
-                marginParams.setMargins(item1.leftMargin,item1.topMargin,item1.rightMargin,item1.bottomMargin);
-                layoutParams = new RelativeLayout.LayoutParams(marginParams);
-                imagen1.setLayoutParams(layoutParams);
-                marco.addView(imagen1);
+                    imagen2.setOnTouchListener(new theTouchListener());
+                    marco.addView(imagen2);
 
-                addTicketPosition(cantTickets,layoutParams,10,v.getX(),v.getY(), v.getWidth(),v.getHeight());
+                    addTicketPosition(cantTickets,layoutParams,5,v.getX(),v.getY(), v.getWidth(),v.getHeight());
 
-                imagen2= new ImageView(v.getContext());
-                //Señalamos la imagen a mostrar
-                cantTickets++;
-                imagen2.setId(cantTickets);
-                imagen2.setTag(10);
-                imagen2.setImageBitmap(bitmap);
+                    v.setVisibility(View.INVISIBLE);
+                    mTicketsList.remove(item1);
+                    break;
+                case 20:
+                case 202:
+                    imagen1= new ImageView(v.getContext());
+                    cantTickets++;
+                    imagen1.setId(cantTickets);
+                    imagen1.setTag(10);
+                    walletResourceManger.setImageName("usd_10.jpg");
+                    imageResource = walletResourceManger.getImageResource();
+                    bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                    imagen1.setImageBitmap(bitmap);
 
-                imagen2.setOnTouchListener(new theTouchListener());
-                marginParams.setMargins(item1.leftMargin + 25,item1.topMargin + 25,item1.rightMargin,item1.bottomMargin);
-                layoutParams = new RelativeLayout.LayoutParams(marginParams);
-                imagen2.setLayoutParams(layoutParams);
+                    imagen1.setOnTouchListener(new theTouchListener());
+                    marginParams.setMargins(item1.leftMargin,item1.topMargin,item1.rightMargin,item1.bottomMargin);
+                    layoutParams = new RelativeLayout.LayoutParams(marginParams);
+                    imagen1.setLayoutParams(layoutParams);
+                    marco.addView(imagen1);
 
-                addTicketPosition(cantTickets, layoutParams, 10,v.getX(),v.getY(), v.getWidth(),v.getHeight());
-                marco.addView(imagen2);
+                    addTicketPosition(cantTickets,layoutParams,10,v.getX(),v.getY(), v.getWidth(),v.getHeight());
 
-                v.setVisibility(View.INVISIBLE);
-                mTicketsList.remove(item1);
-                break;
-            case 50:
-            case 502:
-                break;
-            case 100:
-            case 1002:
-                imagen1= new ImageView(v.getContext());
-                cantTickets++;
-                imagen1.setId(cantTickets);
-                imagen1.setTag(50);
-                walletResourceManger.setImageName("usd_50.jpg");
-                imageResource = walletResourceManger.getResources();
-                bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                imagen1.setImageBitmap(bitmap);
+                    imagen2= new ImageView(v.getContext());
+                    //Señalamos la imagen a mostrar
+                    cantTickets++;
+                    imagen2.setId(cantTickets);
+                    imagen2.setTag(10);
+                    imagen2.setImageBitmap(bitmap);
 
-                imagen1.setOnTouchListener(new theTouchListener());
-                marginParams.setMargins(item1.leftMargin,item1.topMargin,item1.rightMargin,item1.bottomMargin);
-                layoutParams = new RelativeLayout.LayoutParams(marginParams);
-                imagen1.setLayoutParams(layoutParams);
+                    imagen2.setOnTouchListener(new theTouchListener());
+                    marginParams.setMargins(item1.leftMargin + 25,item1.topMargin + 25,item1.rightMargin,item1.bottomMargin);
+                    layoutParams = new RelativeLayout.LayoutParams(marginParams);
+                    imagen2.setLayoutParams(layoutParams);
 
-                marco.addView(imagen1);
+                    addTicketPosition(cantTickets, layoutParams, 10,v.getX(),v.getY(), v.getWidth(),v.getHeight());
+                    marco.addView(imagen2);
 
-                addTicketPosition(cantTickets, layoutParams, 50,v.getX(),v.getY(), v.getWidth(),v.getHeight());
+                    v.setVisibility(View.INVISIBLE);
+                    mTicketsList.remove(item1);
+                    break;
+                case 50:
+                case 502:
+                    break;
+                case 100:
+                case 1002:
+                    imagen1= new ImageView(v.getContext());
+                    cantTickets++;
+                    imagen1.setId(cantTickets);
+                    imagen1.setTag(50);
+                    walletResourceManger.setImageName("usd_50.jpg");
+                    imageResource = walletResourceManger.getImageResource();
+                    bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                    imagen1.setImageBitmap(bitmap);
 
-                imagen2= new ImageView(v.getContext());
-                //Señalamos la imagen a mostrar
-                cantTickets++;
-                imagen2.setId(cantTickets);
-                imagen2.setTag(50);
-                imagen2.setImageBitmap(bitmap);
+                    imagen1.setOnTouchListener(new theTouchListener());
+                    marginParams.setMargins(item1.leftMargin,item1.topMargin,item1.rightMargin,item1.bottomMargin);
+                    layoutParams = new RelativeLayout.LayoutParams(marginParams);
+                    imagen1.setLayoutParams(layoutParams);
 
-                marginParams.setMargins(item1.leftMargin + 25,item1.topMargin + 25,item1.rightMargin,item1.bottomMargin);
-                layoutParams = new RelativeLayout.LayoutParams(marginParams);
-                imagen2.setLayoutParams(layoutParams);
-                imagen2.setOnTouchListener(new theTouchListener());
-                marco.addView(imagen2);
+                    marco.addView(imagen1);
 
-                addTicketPosition(cantTickets, layoutParams, 50,v.getX(),v.getY(), v.getWidth(),v.getHeight());
+                    addTicketPosition(cantTickets, layoutParams, 50,v.getX(),v.getY(), v.getWidth(),v.getHeight());
 
-                v.setVisibility(View.INVISIBLE);
-                mTicketsList.remove(item1);
-                break;
-        }
+                    imagen2= new ImageView(v.getContext());
+                    //Señalamos la imagen a mostrar
+                    cantTickets++;
+                    imagen2.setId(cantTickets);
+                    imagen2.setTag(50);
+                    imagen2.setImageBitmap(bitmap);
+
+                    marginParams.setMargins(item1.leftMargin + 25,item1.topMargin + 25,item1.rightMargin,item1.bottomMargin);
+                    layoutParams = new RelativeLayout.LayoutParams(marginParams);
+                    imagen2.setLayoutParams(layoutParams);
+                    imagen2.setOnTouchListener(new theTouchListener());
+                    marco.addView(imagen2);
+
+                    addTicketPosition(cantTickets, layoutParams, 50,v.getX(),v.getY(), v.getWidth(),v.getHeight());
+
+                    v.setVisibility(View.INVISIBLE);
+                    mTicketsList.remove(item1);
+                    break;
+            }
         } catch (CantGetResourcesException e) {
             System.err.println("CantGetResourcesException: " + e.getMessage());
 
@@ -433,21 +435,21 @@ private  boolean doubleClick = false;
                     //double tap
                     if (clickDuration < MAX_DOUBLECLICK_DURATION && dx <= MAX_DOUBLECLICK_DISTANCE && dy <= MAX_DOUBLECLICK_DISTANCE) {
                         imageMoney = (ImageView) view.findViewById(Id);
-                          //if(oneClick)
-                          //  rotateTicket(ticketId,imageMoney,view);
+                        //if(oneClick)
+                        //  rotateTicket(ticketId,imageMoney,view);
 
                         oneClick = false;
 
                         if(!doubleClick)
-                         onDoubleTap(view);
+                            onDoubleTap(view);
 
                     }else
                     {
                         if (clickDuration > MAX_DOUBLECLICK_DURATION && clickDuration < MAX_LONG_CLICK_DURATION && dx < MAX_CLICK_DISTANCE && dy < MAX_CLICK_DISTANCE) {
                             //click event has occurred
 
-                                ImageView image = (ImageView) view.findViewById(Id);
-                                rotateTicket(ticketId, image, view);
+                            ImageView image = (ImageView) view.findViewById(Id);
+                            rotateTicket(ticketId, image, view);
 
                             doubleClick = false;
                             oneClick = true;
@@ -597,116 +599,116 @@ private  boolean doubleClick = false;
         byte[] imageResource;
         Bitmap bitmap;
         try {
-        if (ticketId == 1) {
+            if (ticketId == 1) {
 
-            walletResourceManger.setImageName("usd_1_b.jpg");
-            imageResource = walletResourceManger.getResources();
-            bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-            image.setImageBitmap(bitmap);
-            view.setTag(12);
-        } else {
-            if (ticketId == 12) {
-
-                walletResourceManger.setImageName("usd_1.jpg");
-                imageResource = walletResourceManger.getResources();
+                walletResourceManger.setImageName("usd_1_b.jpg");
+                imageResource = walletResourceManger.getImageResource();
                 bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
                 image.setImageBitmap(bitmap);
-                view.setTag(1);
+                view.setTag(12);
+            } else {
+                if (ticketId == 12) {
+
+                    walletResourceManger.setImageName("usd_1.jpg");
+                    imageResource = walletResourceManger.getImageResource();
+                    bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                    image.setImageBitmap(bitmap);
+                    view.setTag(1);
+                }
             }
-        }
 //usd 5
-        if (ticketId == 5) {
+            if (ticketId == 5) {
 
-            walletResourceManger.setImageName("usd_5_b.jpg");
-            imageResource = walletResourceManger.getResources();
-            bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-            image.setImageBitmap(bitmap);
-            view.setTag(52);
-        } else {
-            if (ticketId == 52) {
-
-                walletResourceManger.setImageName("usd_5.jpg");
-                imageResource = walletResourceManger.getResources();
+                walletResourceManger.setImageName("usd_5_b.jpg");
+                imageResource = walletResourceManger.getImageResource();
                 bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
                 image.setImageBitmap(bitmap);
-                view.setTag(5);
+                view.setTag(52);
+            } else {
+                if (ticketId == 52) {
+
+                    walletResourceManger.setImageName("usd_5.jpg");
+                    imageResource = walletResourceManger.getImageResource();
+                    bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                    image.setImageBitmap(bitmap);
+                    view.setTag(5);
+                }
             }
-        }
 //usd 10
-        if (ticketId == 10) {
+            if (ticketId == 10) {
 
-            walletResourceManger.setImageName("usd_10_b.jpg");
-            imageResource = walletResourceManger.getResources();
-            bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-            image.setImageBitmap(bitmap);
-            view.setTag(102);
-        } else {
-            if (ticketId == 102) {
-
-                walletResourceManger.setImageName("usd_10.jpg");
-                imageResource = walletResourceManger.getResources();
+                walletResourceManger.setImageName("usd_10_b.jpg");
+                imageResource = walletResourceManger.getImageResource();
                 bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
                 image.setImageBitmap(bitmap);
-                view.setTag(10);
+                view.setTag(102);
+            } else {
+                if (ticketId == 102) {
+
+                    walletResourceManger.setImageName("usd_10.jpg");
+                    imageResource = walletResourceManger.getImageResource();
+                    bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                    image.setImageBitmap(bitmap);
+                    view.setTag(10);
+                }
             }
-        }
 
-        //usd 20
-        if (ticketId == 20) {
+            //usd 20
+            if (ticketId == 20) {
 
-            walletResourceManger.setImageName("usd_20_b.jpg");
-            imageResource = walletResourceManger.getResources();
-            bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-            image.setImageBitmap(bitmap);
-            view.setTag(202);
-        } else {
-            if (ticketId == 202) {
-
-                walletResourceManger.setImageName("usd_20.jpg");
-                imageResource = walletResourceManger.getResources();
+                walletResourceManger.setImageName("usd_20_b.jpg");
+                imageResource = walletResourceManger.getImageResource();
                 bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
                 image.setImageBitmap(bitmap);
-                view.setTag(20);
+                view.setTag(202);
+            } else {
+                if (ticketId == 202) {
+
+                    walletResourceManger.setImageName("usd_20.jpg");
+                    imageResource = walletResourceManger.getImageResource();
+                    bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                    image.setImageBitmap(bitmap);
+                    view.setTag(20);
+                }
             }
-        }
 
-        //usd 50
-        if (ticketId == 50) {
+            //usd 50
+            if (ticketId == 50) {
 
-            walletResourceManger.setImageName("usd_50_b.jpg");
-            imageResource = walletResourceManger.getResources();
-            bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-            image.setImageBitmap(bitmap);
-            view.setTag(502);
-        } else {
-            if (ticketId == 502) {
-
-                walletResourceManger.setImageName("usd_50_.jpg");
-                imageResource = walletResourceManger.getResources();
+                walletResourceManger.setImageName("usd_50_b.jpg");
+                imageResource = walletResourceManger.getImageResource();
                 bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
                 image.setImageBitmap(bitmap);
-                view.setTag(50);
+                view.setTag(502);
+            } else {
+                if (ticketId == 502) {
+
+                    walletResourceManger.setImageName("usd_50_.jpg");
+                    imageResource = walletResourceManger.getImageResource();
+                    bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                    image.setImageBitmap(bitmap);
+                    view.setTag(50);
+                }
             }
-        }
 
-        //usd 50
-        if (ticketId == 100) {
+            //usd 50
+            if (ticketId == 100) {
 
-            walletResourceManger.setImageName("usd_100_b.jpg");
-            imageResource = walletResourceManger.getResources();
-            bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-            image.setImageBitmap(bitmap);
-            view.setTag(1002);
-        } else {
-            if (ticketId == 1002) {
-
-                walletResourceManger.setImageName("usd_100.jpg");
-                imageResource = walletResourceManger.getResources();
+                walletResourceManger.setImageName("usd_100_b.jpg");
+                imageResource = walletResourceManger.getImageResource();
                 bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
                 image.setImageBitmap(bitmap);
-                view.setTag(100);
+                view.setTag(1002);
+            } else {
+                if (ticketId == 1002) {
+
+                    walletResourceManger.setImageName("usd_100.jpg");
+                    imageResource = walletResourceManger.getImageResource();
+                    bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                    image.setImageBitmap(bitmap);
+                    view.setTag(100);
+                }
             }
-        }
 
         } catch (CantGetResourcesException e) {
             System.err.println("CantGetResourcesException: " + e.getMessage());
@@ -753,172 +755,172 @@ private  boolean doubleClick = false;
                     byte[] imageResource;
                     Bitmap bitmap;
                     try {
-                    switch (item.ticketId) {
-                        case 12:
-                            idTicket = 1;
-                            break;
-                        case 102:
-                            idTicket = 10;
-                            break;
-                        case 52:
-                            idTicket = 5;
-                            break;
-                        case 1002:
-                            idTicket = 100;
-                            break;
-                        case 202:
-                            idTicket = 20;
-                            break;
-                        case 502:
-                            idTicket = 50;
-                            break;
-                    }
-
-                    switch (ticketId) {
-                        case 12:
-                            idTicket2 = 1;
-                            break;
-                        case 102:
-                            idTicket2 = 10;
-                            break;
-                        case 52:
-                            idTicket2 = 5;
-                            break;
-                        case 1002:
-                            idTicket2 = 100;
-                            break;
-                        case 202:
-                            idTicket2 = 20;
-                            break;
-                        case 502:
-                            idTicket2 = 50;
-                            break;
-                    }
-//if the same value but diferent ticket
-                    if ((idTicket2 == idTicket) && (id != item.Id)) {
-
-                        final ImageView imagen1;
-                        TicketPosition item2;
-
-                        ViewGroup.MarginLayoutParams marginParams = new ViewGroup.MarginLayoutParams(WRAP_CONTENT,
-                                WRAP_CONTENT);
-                        switch (idTicket2) {
-                            case 1:
-
+                        switch (item.ticketId) {
+                            case 12:
+                                idTicket = 1;
                                 break;
-                            case 10:
-                                imagen1 = new ImageView(view.getContext());
-                                cantTickets++;
-                                imagen1.setId(cantTickets);
-                                mTicketsList.remove(item);
-                                view.setVisibility(View.INVISIBLE);
-                                imagen1.setTag(20);
-
-                                walletResourceManger.setImageName("usd_20.jpg");
-                                imageResource = walletResourceManger.getResources();
-                                bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                                imagen1.setImageBitmap(bitmap);
-                                imagen1.setOnTouchListener(new theTouchListener());
-
-                                marginParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, -50, -50);
-                                layoutParams = new RelativeLayout.LayoutParams(marginParams);
-                                imagen1.setLayoutParams(layoutParams);
-                                marco.addView(imagen1);
-
-                                item2 = new TicketPosition();
-                                item2.Id = cantTickets;
-                                item2.ticketId = 20;
-                                item2.leftMargin = layoutParams.leftMargin;
-                                item2.topMargin = layoutParams.topMargin;
-                                item2.rightMargin = layoutParams.rightMargin;
-                                item2.bottomMargin = layoutParams.bottomMargin;
-                                mTicketsList.add(item2);
-
-
-                                if (imagen2 != null)
-                                    marco.removeView(imagen2);
-
-                                mTicketsList.remove(item);
-                                mTicketsList.remove(itemTicket);
+                            case 102:
+                                idTicket = 10;
                                 break;
-                            case 5:
-                                imagen1 = new ImageView(view.getContext());
-                                cantTickets++;
-                                imagen1.setId(cantTickets);
-                                view.setVisibility(View.INVISIBLE);
-
-                                imagen1.setTag(10);
-
-                                walletResourceManger.setImageName("usd_10.jpg");
-                                imageResource = walletResourceManger.getResources();
-                                bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                                imagen1.setImageBitmap(bitmap);
-
-                                imagen1.setOnTouchListener(new theTouchListener());
-                                marginParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, -50, -50);
-                                layoutParams = new RelativeLayout.LayoutParams(marginParams);
-                                imagen1.setLayoutParams(layoutParams);
-
-                                item2 = new TicketPosition();
-                                item2.Id = cantTickets;
-                                item2.ticketId = 10;
-                                item2.leftMargin = layoutParams.leftMargin;
-                                item2.topMargin = layoutParams.topMargin;
-                                item2.rightMargin = layoutParams.rightMargin;
-                                item2.bottomMargin = layoutParams.bottomMargin;
-                                mTicketsList.add(item2);
-
-                                if (imagen2 != null)
-                                    marco.removeView(imagen2);
-                                marco.addView(imagen1);
-
-                                mTicketsList.remove(item);
-                                mTicketsList.remove(itemTicket);
+                            case 52:
+                                idTicket = 5;
                                 break;
-                            case 100:
+                            case 1002:
+                                idTicket = 100;
                                 break;
-                            case 20:
-
+                            case 202:
+                                idTicket = 20;
                                 break;
-                            case 50:
-                                imagen1 = new ImageView(view.getContext());
-                                cantTickets++;
-                                imagen1.setId(cantTickets);
-
-                                view.setVisibility(View.INVISIBLE);
-                                if (imagen2 != null)
-                                    imagen2.setVisibility(View.INVISIBLE);
-
-                                imagen1.setTag(100);
-
-                                walletResourceManger.setImageName("usd_100.jpg");
-                                imageResource = walletResourceManger.getResources();
-                                bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                                imagen1.setImageBitmap(bitmap);
-                                imagen1.setOnTouchListener(new theTouchListener());
-                                marginParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, -50, -50);
-                                layoutParams = new RelativeLayout.LayoutParams(marginParams);
-                                imagen1.setLayoutParams(layoutParams);
-
-                                item2 = new TicketPosition();
-                                item2.Id = cantTickets;
-                                item2.ticketId = 100;
-                                item2.leftMargin = layoutParams.leftMargin;
-                                item2.topMargin = layoutParams.topMargin;
-                                item2.rightMargin = layoutParams.rightMargin;
-                                item2.bottomMargin = layoutParams.bottomMargin;
-                                mTicketsList.add(item2);
-
-                                if (imagen2 != null)
-                                    marco.removeView(imagen2);
-                                marco.addView(imagen1);
-                                mTicketsList.remove(item);
-                                mTicketsList.remove(itemTicket);
+                            case 502:
+                                idTicket = 50;
                                 break;
                         }
-                        break;
 
-                    }
+                        switch (ticketId) {
+                            case 12:
+                                idTicket2 = 1;
+                                break;
+                            case 102:
+                                idTicket2 = 10;
+                                break;
+                            case 52:
+                                idTicket2 = 5;
+                                break;
+                            case 1002:
+                                idTicket2 = 100;
+                                break;
+                            case 202:
+                                idTicket2 = 20;
+                                break;
+                            case 502:
+                                idTicket2 = 50;
+                                break;
+                        }
+//if the same value but diferent ticket
+                        if ((idTicket2 == idTicket) && (id != item.Id)) {
+
+                            final ImageView imagen1;
+                            TicketPosition item2;
+
+                            ViewGroup.MarginLayoutParams marginParams = new ViewGroup.MarginLayoutParams(WRAP_CONTENT,
+                                    WRAP_CONTENT);
+                            switch (idTicket2) {
+                                case 1:
+
+                                    break;
+                                case 10:
+                                    imagen1 = new ImageView(view.getContext());
+                                    cantTickets++;
+                                    imagen1.setId(cantTickets);
+                                    mTicketsList.remove(item);
+                                    view.setVisibility(View.INVISIBLE);
+                                    imagen1.setTag(20);
+
+                                    walletResourceManger.setImageName("usd_20.jpg");
+                                    imageResource = walletResourceManger.getImageResource();
+                                    bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                                    imagen1.setImageBitmap(bitmap);
+                                    imagen1.setOnTouchListener(new theTouchListener());
+
+                                    marginParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, -50, -50);
+                                    layoutParams = new RelativeLayout.LayoutParams(marginParams);
+                                    imagen1.setLayoutParams(layoutParams);
+                                    marco.addView(imagen1);
+
+                                    item2 = new TicketPosition();
+                                    item2.Id = cantTickets;
+                                    item2.ticketId = 20;
+                                    item2.leftMargin = layoutParams.leftMargin;
+                                    item2.topMargin = layoutParams.topMargin;
+                                    item2.rightMargin = layoutParams.rightMargin;
+                                    item2.bottomMargin = layoutParams.bottomMargin;
+                                    mTicketsList.add(item2);
+
+
+                                    if (imagen2 != null)
+                                        marco.removeView(imagen2);
+
+                                    mTicketsList.remove(item);
+                                    mTicketsList.remove(itemTicket);
+                                    break;
+                                case 5:
+                                    imagen1 = new ImageView(view.getContext());
+                                    cantTickets++;
+                                    imagen1.setId(cantTickets);
+                                    view.setVisibility(View.INVISIBLE);
+
+                                    imagen1.setTag(10);
+
+                                    walletResourceManger.setImageName("usd_10.jpg");
+                                    imageResource = walletResourceManger.getImageResource();
+                                    bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                                    imagen1.setImageBitmap(bitmap);
+
+                                    imagen1.setOnTouchListener(new theTouchListener());
+                                    marginParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, -50, -50);
+                                    layoutParams = new RelativeLayout.LayoutParams(marginParams);
+                                    imagen1.setLayoutParams(layoutParams);
+
+                                    item2 = new TicketPosition();
+                                    item2.Id = cantTickets;
+                                    item2.ticketId = 10;
+                                    item2.leftMargin = layoutParams.leftMargin;
+                                    item2.topMargin = layoutParams.topMargin;
+                                    item2.rightMargin = layoutParams.rightMargin;
+                                    item2.bottomMargin = layoutParams.bottomMargin;
+                                    mTicketsList.add(item2);
+
+                                    if (imagen2 != null)
+                                        marco.removeView(imagen2);
+                                    marco.addView(imagen1);
+
+                                    mTicketsList.remove(item);
+                                    mTicketsList.remove(itemTicket);
+                                    break;
+                                case 100:
+                                    break;
+                                case 20:
+
+                                    break;
+                                case 50:
+                                    imagen1 = new ImageView(view.getContext());
+                                    cantTickets++;
+                                    imagen1.setId(cantTickets);
+
+                                    view.setVisibility(View.INVISIBLE);
+                                    if (imagen2 != null)
+                                        imagen2.setVisibility(View.INVISIBLE);
+
+                                    imagen1.setTag(100);
+
+                                    walletResourceManger.setImageName("usd_100.jpg");
+                                    imageResource = walletResourceManger.getImageResource();
+                                    bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                                    imagen1.setImageBitmap(bitmap);
+                                    imagen1.setOnTouchListener(new theTouchListener());
+                                    marginParams.setMargins(layoutParams.leftMargin, layoutParams.topMargin, -50, -50);
+                                    layoutParams = new RelativeLayout.LayoutParams(marginParams);
+                                    imagen1.setLayoutParams(layoutParams);
+
+                                    item2 = new TicketPosition();
+                                    item2.Id = cantTickets;
+                                    item2.ticketId = 100;
+                                    item2.leftMargin = layoutParams.leftMargin;
+                                    item2.topMargin = layoutParams.topMargin;
+                                    item2.rightMargin = layoutParams.rightMargin;
+                                    item2.bottomMargin = layoutParams.bottomMargin;
+                                    mTicketsList.add(item2);
+
+                                    if (imagen2 != null)
+                                        marco.removeView(imagen2);
+                                    marco.addView(imagen1);
+                                    mTicketsList.remove(item);
+                                    mTicketsList.remove(itemTicket);
+                                    break;
+                            }
+                            break;
+
+                        }
                     } catch (CantGetResourcesException e) {
                         System.err.println("CantGetResourcesException: " + e.getMessage());
 
@@ -1168,6 +1170,4 @@ private  boolean doubleClick = false;
     }
 
 }
-
-
 

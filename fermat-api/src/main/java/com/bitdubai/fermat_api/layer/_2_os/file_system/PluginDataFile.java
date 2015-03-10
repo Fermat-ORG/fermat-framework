@@ -9,7 +9,7 @@ import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.WrongOwnerIdEx
  */
 public interface PluginDataFile {
 
-    public String getContent () throws WrongOwnerIdException;
+    public String getContent ();
 
     public void setContent (String content);
 
