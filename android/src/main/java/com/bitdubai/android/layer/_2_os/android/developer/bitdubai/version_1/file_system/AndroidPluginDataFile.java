@@ -45,42 +45,8 @@ public class AndroidPluginDataFile implements PluginDataFile {
     UUID ownerId;
 
     @Override
-    public String getContent() throws WrongOwnerIdException {
-        try {
-            File file = new File(this.context.getFilesDir() +"/"+ this.directoryName, this.fileName);
-            InputStream inputStream;
-
-            // inputStream = this.context.openFileInput(this.fileName);
-            inputStream =  new BufferedInputStream(new FileInputStream(file));
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            StringBuilder sb = new StringBuilder();
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                sb.append(line);
-            }
-            inputStream.close();
-
-            String dencryptContent = "";
-            try {
-                dencryptContent = this.Desencriptar(sb.toString());
-                this.content = dencryptContent;
-                return this.content;
-            } catch (javax.crypto.BadPaddingException e) {
-                e.printStackTrace();
-                throw e;
-            }
-
-
-        } catch (Exception e1) {
-            System.err.println("Error trying to load a file from memory: " + e1.getMessage());
-            e1.printStackTrace();
-            throw new WrongOwnerIdException();
-
-        }
-
-
+    public String getContent()  {
+        return this.content;
     }
 
     @Override
@@ -88,30 +54,32 @@ public class AndroidPluginDataFile implements PluginDataFile {
         this.content = content;
     }
 
-    public AndroidPluginDataFile(UUID ownerId, Context context, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
+    public AndroidPluginDataFile(UUID ownerId, Context context,String directoryName,  String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
 
         this.ownerId = ownerId;
         this.context = context;
-       this.fileName = fileName;
-       this.privacyLevel = privacyLevel;
-       this.lifeSpan = lifeSpan;
+        this.fileName = fileName;
+        this.privacyLevel = privacyLevel;
+        this.lifeSpan = lifeSpan;
+        this.directoryName = directoryName;
 
     }
 
     @Override
     public void persistToMedia() throws CantPersistFileException {
         try {
-        File storagePath = new File(this.context.getFilesDir()+"/"+ this.directoryName);
-        storagePath.mkdirs();
-        File file = new File(storagePath, fileName);
+            File storagePath = new File(this.context.getFilesDir()+"/"+ this.directoryName);
+            if (!storagePath.exists()) {
+                storagePath.mkdirs();
+            }
 
-        OutputStream outputStream;
+            File file = new File(storagePath, fileName);
 
-        //encript file content with ownerId key
+            OutputStream outputStream;
+
+            //encript file content with ownerId key
             String encryptContent = this.Encriptar(this.content);
             //outputStream = this.context.openFileOutput( file.getPath(), Context.MODE_PRIVATE);
-
-
             outputStream =  new BufferedOutputStream(new FileOutputStream(file));
             outputStream.write(encryptContent.getBytes());
             outputStream.close();
@@ -124,23 +92,23 @@ public class AndroidPluginDataFile implements PluginDataFile {
     @Override
     public void loadToMemory() throws CantLoadFileException {
         try {
-        String path = this.context.getFilesDir() + "/" + this.directoryName;
-        File internalDir = new File(path);
+            String path = this.context.getFilesDir() + "/" + this.directoryName;
+            File internalDir = new File(path);
 
-        if (!internalDir.exists()) {
-            //let's try to create it
-            try {
-                internalDir.mkdir();
-            } catch (SecurityException secEx) {
-                //handle the exception
-                secEx.printStackTrace(System.out);
-                internalDir = null;
-                throw secEx;
+            if (!internalDir.exists()) {
+                //let's try to create it
+                try {
+                    internalDir.mkdir();
+                } catch (SecurityException secEx) {
+                    //handle the exception
+                    secEx.printStackTrace(System.out);
+                    internalDir = null;
+                    throw secEx;
+                }
             }
-        }
 
-        String encryptContent = this.Encriptar(this.content);
-        File file = new File(internalDir, this.fileName);
+            String encryptContent = this.Encriptar(this.content);
+            File file = new File(internalDir, this.fileName);
 
             FileWriter fw = new FileWriter(file);
             fw.write(encryptContent);
@@ -172,8 +140,8 @@ public class AndroidPluginDataFile implements PluginDataFile {
     public void loadFromMedia() throws CantPersistFileException {
 
         try {
-        File file = new File(this.context.getFilesDir() +"/"+ this.directoryName, this.fileName);
-        InputStream inputStream ;
+            File file = new File(this.context.getFilesDir() +"/"+ this.directoryName, this.fileName);
+            InputStream inputStream ;
 
 
 

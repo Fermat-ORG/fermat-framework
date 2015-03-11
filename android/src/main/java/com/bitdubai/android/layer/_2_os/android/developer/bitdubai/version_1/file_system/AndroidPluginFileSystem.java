@@ -3,6 +3,7 @@ package com.bitdubai.android.layer._2_os.android.developer.bitdubai.version_1.fi
 import android.content.Context;
 import com.bitdubai.fermat_api.layer._2_os.file_system.*;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantLoadFileException;
+import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.FileNotFoundException;
 
 import java.util.UUID;
@@ -19,18 +20,18 @@ import java.util.UUID;
 public class AndroidPluginFileSystem implements PluginFileSystem {
 
     Context context;
-    
+
 
     @Override
     public PluginDataFile getDataFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException {
 
-        AndroidPluginDataFile newFile = new AndroidPluginDataFile(ownerId, this.context, fileName, privacyLevel, lifeSpan);
+        AndroidPluginDataFile newFile = new AndroidPluginDataFile(ownerId, this.context,directoryName, fileName, privacyLevel, lifeSpan);
 
         try {
-            newFile.loadToMemory();
+            newFile.loadFromMedia();
             return newFile;
         }
-        catch (CantLoadFileException e){
+        catch (CantPersistFileException e){
             System.err.println("GetFailedException: " + e.getMessage());
             e.printStackTrace();
             throw new FileNotFoundException();
@@ -40,7 +41,7 @@ public class AndroidPluginFileSystem implements PluginFileSystem {
     @Override
     public PluginDataFile createDataFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) {
 
-        return new AndroidPluginDataFile(ownerId, this.context,fileName, privacyLevel, lifeSpan);
+        return new AndroidPluginDataFile(ownerId, this.context,directoryName,fileName, privacyLevel, lifeSpan);
     }
 
     @Override

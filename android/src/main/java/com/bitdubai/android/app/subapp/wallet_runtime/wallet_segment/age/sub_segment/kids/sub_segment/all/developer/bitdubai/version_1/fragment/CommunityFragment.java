@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.bitdubai.fermat_api.layer._11_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer._11_network_service.wallet_resources.WalletResourcesManager;
+import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Wallets;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.fermat_core.Platform;
@@ -46,6 +47,7 @@ public class CommunityFragment extends Fragment {
         Platform platform = MyApplication.getPlatform();
         CorePlatformContext platformContext = platform.getCorePlatformContext();
         walletResourceManger = (WalletResourcesManager)platformContext.getPlugin(Plugins.WALLET_RESOURCES_NETWORK_SERVICE);
+        walletResourceManger.setwalletType(Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI);
         CommunityFragment f = new CommunityFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
@@ -179,7 +181,7 @@ public class CommunityFragment extends Fragment {
 
             convertView.setTag(holder);
             holder = (ViewHolder) convertView.getTag();
-            
+
             holder.name.setText(item.Names);
             holder.country.setText(item.Countries);
             holder.state.setText(item.States);
@@ -191,100 +193,100 @@ public class CommunityFragment extends Fragment {
 
                 byte[] imageResource;
                 Bitmap bitmap;
-            switch (position)
-            {
-                case 0:
-                    walletResourceManger.setImageName("kid_8.jpg");
-                    imageResource = walletResourceManger.getResources();
-                    bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                    holder.Photo.setImageBitmap(bitmap);
-                  //  holder.Photo.setImageResource(R.drawable.kid_8) ;
-                    break;
-                case 1:
-                    walletResourceManger.setImageName("kid_9.jpg");
-                    imageResource = walletResourceManger.getResources();
-                    bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                    holder.Photo.setImageBitmap(bitmap);
+                switch (position)
+                {
+                    case 0:
+                        walletResourceManger.setImageName("kid_8.jpg");
+                        imageResource = walletResourceManger.getImageResource();
+                        bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                        holder.Photo.setImageBitmap(bitmap);
+                        //  holder.Photo.setImageResource(R.drawable.kid_8) ;
+                        break;
+                    case 1:
+                        walletResourceManger.setImageName("kid_9.jpeg");
+                        imageResource = walletResourceManger.getImageResource();
+                        bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                        holder.Photo.setImageBitmap(bitmap);
 
-                    break;
-                case 2:
-                    walletResourceManger.setImageName("kid_12.jpg");
-                    imageResource = walletResourceManger.getResources();
-                    bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                    holder.Photo.setImageBitmap(bitmap);
+                        break;
+                    case 2:
+                        walletResourceManger.setImageName("kid_12.jpg");
+                        imageResource = walletResourceManger.getImageResource();
+                        bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                        holder.Photo.setImageBitmap(bitmap);
 
-                    break;
-                case 3:
-                    walletResourceManger.setImageName("kid_11.jpg");
-                    imageResource = walletResourceManger.getResources();
-                    bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                    holder.Photo.setImageBitmap(bitmap);
+                        break;
+                    case 3:
+                        walletResourceManger.setImageName("kid_11.jpeg");
+                        imageResource = walletResourceManger.getImageResource();
+                        bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                        holder.Photo.setImageBitmap(bitmap);
 
-                    break;
-                case 4:
-                    walletResourceManger.setImageName("kid_12.jpg");
-                    imageResource = walletResourceManger.getResources();
-                    bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                    holder.Photo.setImageBitmap(bitmap);
+                        break;
+                    case 4:
+                        walletResourceManger.setImageName("kid_12.jpg");
+                        imageResource = walletResourceManger.getImageResource();
+                        bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                        holder.Photo.setImageBitmap(bitmap);
 
-                    break;
-                case 5:
-                    walletResourceManger.setImageName("kid_13.jpg");
-                    imageResource = walletResourceManger.getResources();
-                    bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                    holder.Photo.setImageBitmap(bitmap);
+                        break;
+                    case 5:
+                        walletResourceManger.setImageName("kid_13.jpg");
+                        imageResource = walletResourceManger.getImageResource();
+                        bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                        holder.Photo.setImageBitmap(bitmap);
 
-                    break;
-                case 6:
-                    walletResourceManger.setImageName("kid_14.jpg");
-                    imageResource = walletResourceManger.getResources();
-                    bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                    holder.Photo.setImageBitmap(bitmap);
+                        break;
+                    case 6:
+                        walletResourceManger.setImageName("kid_14.jpg");
+                        imageResource = walletResourceManger.getImageResource();
+                        bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                        holder.Photo.setImageBitmap(bitmap);
 
-                    break;
-                case 7:
-                    walletResourceManger.setImageName("kid_16.jpg");
-                    imageResource = walletResourceManger.getResources();
-                    bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                    holder.Photo.setImageBitmap(bitmap);
+                        break;
+                    case 7:
+                        walletResourceManger.setImageName("kid_16.jpg");
+                        imageResource = walletResourceManger.getImageResource();
+                        bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                        holder.Photo.setImageBitmap(bitmap);
 
-                    break;
-                case 8:
-                    walletResourceManger.setImageName("kid_17.jpg");
-                    imageResource = walletResourceManger.getResources();
-                    bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                    holder.Photo.setImageBitmap(bitmap);
+                        break;
+                    case 8:
+                        walletResourceManger.setImageName("kid_17.jpg");
+                        imageResource = walletResourceManger.getImageResource();
+                        bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                        holder.Photo.setImageBitmap(bitmap);
 
-                    break;
-                case 9:
-                    walletResourceManger.setImageName("kid_18.jpg");
-                    imageResource = walletResourceManger.getResources();
-                    bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                    holder.Photo.setImageBitmap(bitmap);
+                        break;
+                    case 9:
+                        walletResourceManger.setImageName("kid_18.jpg");
+                        imageResource = walletResourceManger.getImageResource();
+                        bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                        holder.Photo.setImageBitmap(bitmap);
 
-                    break;
-                case 10:
-                    walletResourceManger.setImageName("kid_19.jpg");
-                    imageResource = walletResourceManger.getResources();
-                    bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                    holder.Photo.setImageBitmap(bitmap);
+                        break;
+                    case 10:
+                        walletResourceManger.setImageName("kid_19.jpg");
+                        imageResource = walletResourceManger.getImageResource();
+                        bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                        holder.Photo.setImageBitmap(bitmap);
 
-                    break;
-                case 11:
-                    walletResourceManger.setImageName("kid_20.jpg");
-                    imageResource = walletResourceManger.getResources();
-                    bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                    holder.Photo.setImageBitmap(bitmap);
+                        break;
+                    case 11:
+                        walletResourceManger.setImageName("kid_20.jpeg");
+                        imageResource = walletResourceManger.getImageResource();
+                        bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                        holder.Photo.setImageBitmap(bitmap);
 
-                    break;
-                case 12:
-                    walletResourceManger.setImageName("kid_21.jpg");
-                    imageResource = walletResourceManger.getResources();
-                    bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
-                    holder.Photo.setImageBitmap(bitmap);
+                        break;
+                    case 12:
+                        walletResourceManger.setImageName("kid_21.jpg");
+                        imageResource = walletResourceManger.getImageResource();
+                        bitmap = BitmapFactory.decodeByteArray(imageResource, 0, imageResource.length);
+                        holder.Photo.setImageBitmap(bitmap);
 
-                    break;
-            }
+                        break;
+                }
 
             } catch (CantGetResourcesException e) {
                 System.err.println("CantGetResourcesException: " + e.getMessage());

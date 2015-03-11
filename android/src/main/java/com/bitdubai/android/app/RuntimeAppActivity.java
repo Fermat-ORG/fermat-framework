@@ -148,11 +148,6 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             walletResourceManger.checkResources();*/
 
              NavigateActivity();
-
-
-
-
-
         }
         catch (CantStartPlatformException e) {
             System.err.println("CantStartPlatformException: " + e.getMessage());
