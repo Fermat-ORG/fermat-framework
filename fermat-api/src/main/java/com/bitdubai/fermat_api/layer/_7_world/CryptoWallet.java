@@ -8,11 +8,11 @@ import com.bitdubai.fermat_api.layer._1_definition.money.CryptoAddress;
  */
 public interface CryptoWallet {
 
-    public double getWalletBalance();
+    public long getWalletBalance(CryptoCurrency cryptoCurrency);
     
-    public double getAddressBalance(CryptoAddress cryptoAddress);
+    public long getAddressBalance(CryptoAddress cryptoAddress);
     
-    public void sendCrypto (CryptoCurrency cryptoCurrency, Double amount, CryptoAddress cryptoAddress);
+    public void sendCrypto (CryptoCurrency cryptoCurrency, long amount, CryptoAddress cryptoAddress);
     
     
 }
