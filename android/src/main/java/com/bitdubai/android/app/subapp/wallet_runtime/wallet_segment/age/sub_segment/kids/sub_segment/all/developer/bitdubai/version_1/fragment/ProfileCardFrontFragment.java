@@ -19,6 +19,7 @@ import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.android.app.common.version_1.classes.MyApplication;
 import java.io.StringReader;
+import java.io.IOException;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -55,8 +56,8 @@ public class ProfileCardFrontFragment extends Fragment {
         TextView name;
         String layoutContent = "";
         String strError = "";
-        try {
-
+     /*   try {
+//inflate xml from string - error it is not currently possible to use LayoutInflater with an XmlPullParser over a plain XML file at runtime.
             walletResourceManger.setImageName("wallets_kids_fragment_contacts_filter.txt");
             layoutContent = walletResourceManger.getLayoutResource();
 
@@ -64,6 +65,8 @@ public class ProfileCardFrontFragment extends Fragment {
             factory.setNamespaceAware(true);
             XmlPullParser xpp = factory.newPullParser();
             xpp.setInput(new StringReader("<LinearLayout xmlns:android=\"http://schemas.android.com/apk/res/android\" android:layout_width=\"match_parent\"  android:layout_height=\"match_parent\" android:orientation=\"vertical\"></LinearLayout>"));
+
+
             try{
                 View view2 = inflater.inflate(xpp, container, false);
             }catch(Exception e){
@@ -75,7 +78,9 @@ public class ProfileCardFrontFragment extends Fragment {
             System.err.println("CantGetResourcesException: " + e.getMessage());
         } catch (XmlPullParserException e) {
             System.err.println("CantParseXMLlayout: " + e.getMessage());
-        }
+
+        }*/
+// *** TODO: Recupero el xml con las propiedades de cada item del layout y las aplico.
 
         view = inflater.inflate(R.layout.wallets_kids_fragment_profile_card_front, container, false); //Contains empty RelativeLayout
 
