@@ -1,12 +1,12 @@
-package com.bitdubai.android.app.common.version_1.classes.wallet;
+package com.bitdubai.fermat_core.layer._7_world.blockchain_info.developer.bitdubai.version_1.api_v_1.wallet;
 
 /**
  * Created by Natalia on 12/03/2015.
  */
 /**
-        * Used in response to the `send` and `sendMany` methods in the `Wallet` class.
-        *
-        */
+ * Used in response to the `send` and `sendMany` methods in the `Wallet` class.
+ *
+ */
 public class PaymentResponse
 {
     private String message;

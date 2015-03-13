@@ -3,10 +3,18 @@ package com.bitdubai.fermat_core;
 import com.bitdubai.fermat_api.CantInitializePluginsManagerException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.PluginNotRecognizedException;
-import com.bitdubai.fermat_api.layer._2_os.file_system.*;
+import com.bitdubai.fermat_api.layer._2_os.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer._2_os.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer._2_os.file_system.PlatformDataFile;
+import com.bitdubai.fermat_api.layer._2_os.file_system.PlatformFileSystem;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_core.layer._10_communication.cloud.developer.bitdubai.version_1.CloudCommunicationChannelPluginRoot;
+import com.bitdubai.fermat_core.layer._11_network_service.bank_notes.developer.bitdubai.version_1.BankNotesNetworkServicePluginRoot;
+import com.bitdubai.fermat_core.layer._11_network_service.wallet_community.developer.bitdubai.version_1.WalletCommunityNetworkServicePluginRoot;
+import com.bitdubai.fermat_core.layer._11_network_service.wallet_resources.developer.bitdubai.version_1.WalletResourcesNetworkServicePluginRoot;
+import com.bitdubai.fermat_core.layer._11_network_service.wallet_store.developer.bitdubai.version_1.WalletStoreNetworkServicePluginRoot;
 import com.bitdubai.fermat_core.layer._12_middleware.app_runtime.developer.bitdubai.version_1.AppRuntimeMiddlewarePluginRoot;
 import com.bitdubai.fermat_core.layer._12_middleware.bank_notes.developer.bitdubai.version_1.BankNotesMiddlewarePluginRoot;
 import com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.WalletMiddlewarePluginRoot;
@@ -23,11 +31,6 @@ import com.bitdubai.fermat_core.layer._7_world.blockchain_info.developer.bitduba
 import com.bitdubai.fermat_core.layer._7_world.crypto_index.developer.bitdubai.version_1.CryptoIndexWorldPluginRoot;
 import com.bitdubai.fermat_core.layer._7_world.shape_shift.developer.bitdubai.version_1.ShapeShiftWorldPluginRoot;
 import com.bitdubai.fermat_core.layer._9_crypto.address_book.developer.bitdubai.version_1.AddressBookCryptoPluginRoot;
-import com.bitdubai.fermat_core.layer._10_communication.cloud.developer.bitdubai.version_1.CloudCommunicationChannelPluginRoot;
-import com.bitdubai.fermat_core.layer._11_network_service.bank_notes.developer.bitdubai.version_1.BankNotesNetworkServicePluginRoot;
-import com.bitdubai.fermat_core.layer._11_network_service.wallet_community.developer.bitdubai.version_1.WalletCommunityNetworkServicePluginRoot;
-import com.bitdubai.fermat_core.layer._11_network_service.wallet_resources.developer.bitdubai.version_1.WalletResourcesNetworkServicePluginRoot;
-import com.bitdubai.fermat_core.layer._11_network_service.wallet_store.developer.bitdubai.version_1.WalletStoreNetworkServicePluginRoot;
 import com.bitdubai.fermat_plugin.layer._14_module.wallet_manager.developer.bitdubai.version_1.WalletManagerModulePluginRoot;
 import com.bitdubai.fermat_plugin.layer._14_module.wallet_runtime.developer.bitdubai.version_1.WalletRuntimeModulePluginRoot;
 import com.bitdubai.fermat_plugin.layer._8_crypto_network.bitcoin.developer.bitdubai.version_1.BitcoinCryptoNetworkPluginRoot;
@@ -42,7 +45,7 @@ import java.util.UUID;
 public class PluginsIdentityManager {
 
     private PlatformFileSystem platformFileSystem;
-    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 24;
+    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 25;
     private List<UUID> pluginIds = new ArrayList<>();
 
 
@@ -155,7 +158,7 @@ public class PluginsIdentityManager {
 
     public UUID getPluginId(Plugin plugin) throws PluginNotRecognizedException{
 
-        UUID pluginId;
+        UUID pluginId = new UUID(0,0);
         Integer pluginIndex = 0;
 
         if (pluginIndex == 0) {
@@ -536,8 +539,7 @@ public class PluginsIdentityManager {
 
         if (pluginIndex > 0) {
 
-                return pluginIds.get(pluginIndex);
-
+            return  pluginIds.get(pluginIndex);
 
         }
         else
