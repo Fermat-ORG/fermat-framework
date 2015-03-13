@@ -1,16 +1,14 @@
-package com.bitdubai.android.app.common.version_1.classes.createwallet;
+package com.bitdubai.fermat_core.layer._7_world.blockchain_info.developer.bitdubai.version_1.api_v_1.createwallet;
+
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-
-import com.bitdubai.android.app.common.version_1.classes.APIException;
-import com.bitdubai.android.app.common.version_1.classes.HttpClient;
-
+import com.bitdubai.fermat_core.layer._7_world.blockchain_info.developer.bitdubai.version_1.api_v_1.APIException;
+import com.bitdubai.fermat_core.layer._7_world.blockchain_info.developer.bitdubai.version_1.api_v_1.HttpClient;
 /**
  * This class reflects the functionality documented
  * at https://blockchain.info/api/create_walleti. It allows users to create new wallets
@@ -30,7 +28,8 @@ public class CreateWallet
      * @throws APIException If the server returns an error
      */
     public static CreateWalletResponse create(String password, String apiCode)
-            throws IOException, APIException, JSONException {
+            throws IOException, APIException
+    {
         return create(password, apiCode, null, null, null);
     }
 
@@ -47,7 +46,8 @@ public class CreateWallet
      * @throws APIException If the server returns an error
      */
     public static CreateWalletResponse create(String password, String apiCode,
-                                              String privateKey, String label, String email) throws IOException, APIException, JSONException {
+                                              String privateKey, String label, String email) throws IOException, APIException
+    {
         Map<String, String> params = new HashMap<String, String>();
 
         params.put("password", password);
@@ -60,12 +60,13 @@ public class CreateWallet
             params.put("email", email);
 
         String response = HttpClient.post("api/v2/create_wallet", params);
-        JSONObject jsonObj = new JSONObject(response);
-        //jsonObj.getJSONObject();
+        JsonObject jsonObj = new JsonParser()
+                .parse(response)
+                .getAsJsonObject();
 
         return new CreateWalletResponse(
-                jsonObj.get("guid").toString(),
-                jsonObj.get("address").toString(),
-                jsonObj.get("link").toString());
+                jsonObj.get("guid").getAsString(),
+                jsonObj.get("address").getAsString(),
+                jsonObj.get("link").getAsString());
     }
 }

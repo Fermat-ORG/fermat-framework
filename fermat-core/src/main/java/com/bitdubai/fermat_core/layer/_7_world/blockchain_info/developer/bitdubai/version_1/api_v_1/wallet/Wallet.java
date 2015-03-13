@@ -1,10 +1,13 @@
-package com.bitdubai.android.app.common.version_1.classes.wallet;
+package com.bitdubai.fermat_core.layer._7_world.blockchain_info.developer.bitdubai.version_1.api_v_1.wallet;
 
 /**
  * Created by Natalia on 12/03/2015.
  */
-import com.bitdubai.android.app.common.version_1.classes.APIException;
-import com.bitdubai.android.app.common.version_1.classes.HttpClient;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,10 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.bitdubai.fermat_core.layer._7_world.blockchain_info.developer.bitdubai.version_1.api_v_1.APIException;
+import com.bitdubai.fermat_core.layer._7_world.blockchain_info.developer.bitdubai.version_1.api_v_1.HttpClient;
 
 /**
  * This class reflects the functionality documented
@@ -27,7 +28,7 @@ import org.json.JSONObject;
  */
 public class Wallet
 {
-   // private JsonParser jsonParser;
+    private JsonParser jsonParser;
 
     private String identifier;
     private String password;
@@ -55,7 +56,7 @@ public class Wallet
         this.identifier = identifier;
         this.password = password;
         this.secondPassword = secondPassword;
-        //this.jsonParser = new JsonParser();
+        this.jsonParser = new JsonParser();
     }
 
     /**
@@ -70,7 +71,7 @@ public class Wallet
      * @throws IOException
      */
     public PaymentResponse send(String toAddress, long amount, String fromAddress,
-                                Long fee, String note) throws APIException, IOException,JSONException
+                                Long fee, String note) throws APIException, IOException
     {
         Map<String, Long> recipient = new HashMap<String, Long>();
         recipient.put(toAddress, amount);
@@ -89,7 +90,7 @@ public class Wallet
      * @throws IOException
      */
     public PaymentResponse sendMany(Map<String, Long> recipients, String fromAddress,
-                                    Long fee, String note) throws APIException, IOException,JSONException
+                                    Long fee, String note) throws APIException, IOException
     {
         Map<String, String> params = buildBasicRequest();
         String method = null;
@@ -104,7 +105,7 @@ public class Wallet
         else
         {
             method = "sendmany";
-            params.put("recipients", new JSONObject(recipients).toString());
+            params.put("recipients", new Gson().toJson(recipients));
         }
 
         if (fromAddress != null)
@@ -116,12 +117,12 @@ public class Wallet
 
         String response = HttpClient.post(String.format("merchant/%s/%s",
                 identifier, method), params);
-        JSONObject topElem = parseResponse(response);
+        JsonObject topElem = parseResponse(response);
 
         return new PaymentResponse(
-                topElem.get("message").toString(),
-                topElem.get("tx_hash").toString(),
-                topElem.has("notice") ? topElem.get("notice").toString() : null);
+                topElem.get("message").getAsString(),
+                topElem.get("tx_hash").getAsString(),
+                topElem.has("notice") ? topElem.get("notice").getAsString() : null);
     }
 
     /**
@@ -131,13 +132,13 @@ public class Wallet
      * @throws IOException
      * @throws APIException If the server returns an error
      */
-    public long getBalance() throws APIException, IOException,JSONException
+    public long getBalance() throws APIException, IOException
     {
         String response = HttpClient.get(String.format("merchant/%s/balance",
                 identifier), buildBasicRequest());
-        JSONObject topElem = parseResponse(response);
+        JsonObject topElem = parseResponse(response);
 
-        return Long.valueOf(topElem.get("balance").toString());
+        return topElem.get("balance").getAsLong();
     }
 
     /**
@@ -149,27 +150,25 @@ public class Wallet
      * @throws IOException
      */
     public List<Address> listAddresses(int confirmations)
-            throws APIException, IOException, JSONException
+            throws APIException, IOException
     {
         Map<String, String> params = buildBasicRequest();
         params.put("confirmations", String.valueOf(confirmations));
 
         String response = HttpClient.get(
                 String.format("merchant/%s/list",identifier), params);
-        JSONObject topElem = parseResponse(response);
+        JsonObject topElem = parseResponse(response);
 
         List<Address> addresses = new ArrayList<Address>();
-
-        JSONArray addressesArr = topElem.getJSONArray("addresses");
-          for (int i=0; i< addressesArr.length(); i++){
-                JSONObject a = addressesArr.getJSONObject(i);
-
+        for (JsonElement jAddr : topElem.get("addresses").getAsJsonArray())
+        {
+            JsonObject a = jAddr.getAsJsonObject();
             Address address = new Address(
-                   Long.parseLong(a.get("balance").toString()) ,
-                    a.get("address").toString(),
-                    a.has("label") && a.get("label") != null ?
-                            a.get("label").toString() : null,
-                    Long.parseLong(a.get("total_received").toString()));
+                    a.get("balance").getAsLong(),
+                    a.get("address").getAsString(),
+                    a.has("label") && !a.get("label").isJsonNull() ?
+                            a.get("label").getAsString() : null,
+                    a.get("total_received").getAsLong());
 
             addresses.add(address);
         }
@@ -187,7 +186,7 @@ public class Wallet
      * @throws IOException
      */
     public Address getAddress(String address, int confirmations)
-            throws APIException, IOException,JSONException
+            throws APIException, IOException
     {
         Map<String, String> params = buildBasicRequest();
         params.put("address", address);
@@ -195,14 +194,14 @@ public class Wallet
 
         String response = HttpClient.get(
                 String.format("merchant/%s/address_balance",identifier), params);
-        JSONObject topElem = parseResponse(response);
+        JsonObject topElem = parseResponse(response);
 
         return new Address(
-                Long.parseLong(topElem.get("balance").toString()),
-                topElem.get("address").toString(),
-                topElem.has("label") && topElem.get("label") != null ?
-                        topElem.get("label").toString() : null,
-                Long.parseLong(topElem.get("total_received").toString()));
+                topElem.get("balance").getAsLong(),
+                topElem.get("address").getAsString(),
+                topElem.has("label") && !topElem.get("label").isJsonNull() ?
+                        topElem.get("label").getAsString() : null,
+                topElem.get("total_received").getAsLong());
     }
 
     /**
@@ -212,7 +211,7 @@ public class Wallet
      * @throws APIException If the server returns an error
      * @throws IOException
      */
-    public Address newAddress(String label) throws APIException, IOException,JSONException
+    public Address newAddress(String label) throws APIException, IOException
     {
         Map<String, String> params = buildBasicRequest();
         if (label != null)
@@ -220,13 +219,13 @@ public class Wallet
 
         String response = HttpClient.post(
                 String.format("merchant/%s/new_address",identifier), params);
-        JSONObject topElem = parseResponse(response);
+        JsonObject topElem = parseResponse(response);
 
         return new Address(
                 0L,
-                topElem.get("address").toString(),
-                topElem.has("label") && topElem.get("label") != null ?
-                        topElem.get("label").toString() : null,
+                topElem.get("address").getAsString(),
+                topElem.has("label") && !topElem.get("label").isJsonNull() ?
+                        topElem.get("label").getAsString() : null,
                 0L);
     }
 
@@ -237,16 +236,16 @@ public class Wallet
      * @throws APIException If the server returns an error
      * @throws IOException
      */
-    public String archiveAddress(String address) throws APIException, IOException,JSONException
+    public String archiveAddress(String address) throws APIException, IOException
     {
         Map<String, String> params = buildBasicRequest();
         params.put("address", address);
 
         String response = HttpClient.post(
                 String.format("merchant/%s/archive_address",identifier), params);
-        JSONObject topElem = parseResponse(response);
+        JsonObject topElem = parseResponse(response);
 
-        return topElem.get("archived").toString();
+        return topElem.get("archived").getAsString();
     }
 
     /**
@@ -256,16 +255,16 @@ public class Wallet
      * @throws APIException If the server returns an error
      * @throws IOException
      */
-    public String unarchiveAddress(String address) throws APIException, IOException,JSONException
+    public String unarchiveAddress(String address) throws APIException, IOException
     {
         Map<String, String> params = buildBasicRequest();
         params.put("address", address);
 
         String response = HttpClient.post(
                 String.format("merchant/%s/unarchive_address",identifier), params);
-        JSONObject topElem = parseResponse(response);
+        JsonObject topElem = parseResponse(response);
 
-        return topElem.get("active").toString();
+        return topElem.get("active").getAsString();
     }
 
     /**
@@ -276,20 +275,19 @@ public class Wallet
      * @throws APIException If the server returns an error
      * @throws IOException
      */
-    public List<String> consolidate(int days) throws APIException, IOException,JSONException
+    public List<String> consolidate(int days) throws APIException, IOException
     {
         Map<String, String> params = buildBasicRequest();
         params.put("days", String.valueOf(days));
 
         String response = HttpClient.post(
                 String.format("merchant/%s/auto_consolidate", identifier), params);
-        JSONObject topElem = parseResponse(response);
+        JsonObject topElem = parseResponse(response);
 
         List<String> addresses = new ArrayList<String>();
-        JSONArray addressesArr = topElem.getJSONArray("consolidated");
-        for (int i=0; i< addressesArr.length(); i++){
-            JSONObject a = addressesArr.getJSONObject(i);
-            addresses.add(a.toString());
+        for (JsonElement jAddr : topElem.get("consolidated").getAsJsonArray())
+        {
+            addresses.add(jAddr.getAsString());
         }
 
         return addresses;
@@ -308,11 +306,11 @@ public class Wallet
         return params;
     }
 
-    private JSONObject parseResponse(String response) throws APIException, JSONException
+    private JsonObject parseResponse(String response) throws APIException
     {
-        JSONObject topElem = new JSONObject(response);
+        JsonObject topElem = jsonParser.parse(response).getAsJsonObject();
         if (topElem.has("error"))
-            throw new APIException(topElem.get("error").toString());
+            throw new APIException(topElem.get("error").getAsString());
 
         return topElem;
     }

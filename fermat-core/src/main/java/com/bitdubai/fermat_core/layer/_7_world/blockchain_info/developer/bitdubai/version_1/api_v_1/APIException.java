@@ -1,4 +1,4 @@
-package com.bitdubai.android.app.common.version_1.classes;
+package com.bitdubai.fermat_core.layer._7_world.blockchain_info.developer.bitdubai.version_1.api_v_1;
 
 /**
  * Created by Natalia on 12/03/2015.
