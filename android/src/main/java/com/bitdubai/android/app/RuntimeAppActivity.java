@@ -17,9 +17,12 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+
+import com.bitdubai.android.app.common.version_1.classes.APIException;
 import com.bitdubai.android.app.common.version_1.classes.MyApplication;
 
 import com.bitdubai.android.app.common.version_1.classes.PagerSlidingTabStrip;
+import com.bitdubai.android.app.common.version_1.classes.createwallet.CreateWallet;
 import com.bitdubai.android.app.common.version_1.fragment.NavigationDrawerFragment;
 import com.bitdubai.android.app.shell.version_1.activity.FileImageActivity;
 import com.bitdubai.android.app.shell.version_1.activity.PagerAdapter;
@@ -69,6 +72,9 @@ import com.bitdubai.fermat_core.layer._12_middleware.app_runtime.developer.bitdu
 
 import com.bitdubai.fermat_core.CorePlatformContext;
 
+import org.json.JSONException;
+
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Iterator;
@@ -138,22 +144,31 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             this.platformContext = platform.getCorePlatformContext();
 
             this.appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.APP_RUNTIME_MIDDLEWARE);
+
             /** Download wallet images **/
-          /*StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
-
-
+          /*
             WalletResourcesManager  walletResourceManger = (WalletResourcesManager)platformContext.getPlugin(Plugins.WALLET_RESOURCES_NETWORK_SERVICE);
             walletResourceManger.setwalletType(Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI);
             walletResourceManger.checkResources();*/
 
-             NavigateActivity();
+            //test blockchain.api
+            //TesNet wallet 2MyHVQT1KybvVBT5wzWzgAW6if1VMc1Trqw
+            //  CreateWallet.create("25c34cee-1129-4e53-bf49-726530b0cc58","nattyco2013");
+            NavigateActivity();
         }
         catch (CantStartPlatformException e) {
             System.err.println("CantStartPlatformException: " + e.getMessage());
 
         }
-     /*   catch (CantCheckResourcesException e) {
+      /*  catch (JSONException e) {
+            e.printStackTrace();}
+        catch (APIException e) {
+            e.printStackTrace();}
+    catch (IOException e) {
+        e.printStackTrace();}
+       catch (CantCheckResourcesException e) {
            e.printStackTrace();
         }*/
 
@@ -427,9 +442,9 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
         if (id == R.id.action_file) {
 
-                Intent intent;
-                intent = new Intent(this, FileImageActivity.class);
-                startActivity(intent);
+            Intent intent;
+            intent = new Intent(this, FileImageActivity.class);
+            startActivity(intent);
 
             return true;
         }
@@ -476,7 +491,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
             if(tagId.split("\\|").length > 2)
                 paramId =  tagId.split("\\|")[1] + "|" + tagId.split("\\|")[2];
-                else
+            else
                 paramId =  tagId.split("\\|")[1];
         }
         else
@@ -550,13 +565,13 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                 break;
             case CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_CHAT:
                 MyApplication.setContact(paramId);
-                 this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_CHAT);
+                this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_CHAT);
                 intent = new Intent(this, com.bitdubai.android.app.FragmentActivity.class);
                 startActivity(intent);
                 break;
             case CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_SEND:
                 MyApplication.setChildId(paramId);
-                 this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_SEND);
+                this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_SEND);
                 intent = new Intent(this, com.bitdubai.android.app.FragmentActivity.class);
                 startActivity(intent);
                 break;
@@ -577,7 +592,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                 break;
             case CWP_WALLET_ADULTS_ALL_CHAT_TRX:
                 MyApplication.setChildId(paramId);
-                 this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_ADULTS_ALL_CHAT_TRX);
+                this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_ADULTS_ALL_CHAT_TRX);
                 intent = new Intent(this, com.bitdubai.android.app.FragmentActivity.class);
                 startActivity(intent);
                 break;
@@ -655,8 +670,8 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
         //clean page adapter
         pagertabs = (ViewPager) findViewById(R.id.pager);
         this.collection = pagertabs;
-       // if(adapter != null) {
-            collection.removeAllViews();
+        // if(adapter != null) {
+        collection.removeAllViews();
 
            /* for (int i = 0; i < fragments.size(); i++) {
                 try {
@@ -667,7 +682,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
                 }
             }*/
-       // }
+        // }
 
         ViewPager viewpager = (ViewPager)super.findViewById(R.id.viewpager);
         viewpager.setVisibility(View.INVISIBLE);
@@ -717,7 +732,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
             }
 
-            }
+        }
 
         @Override
         public CharSequence getPageTitle(int position) {
