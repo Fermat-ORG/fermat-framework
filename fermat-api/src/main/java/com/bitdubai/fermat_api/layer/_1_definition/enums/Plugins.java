@@ -5,6 +5,9 @@ package com.bitdubai.fermat_api.layer._1_definition.enums;
  */
 public enum Plugins {
     LICENSE_MANAGER ("license Manager"),
+    BLOCKCHAIN_INFO_WORLD("Blockchain Info"),
+    SHAPE_SHIFT_WORLD("Shape Shift"),
+    COINAPULT_WORLD("Coinapult"),
     CRYPTO_INDEX ("Crypto Index"),
     BITCOIN_CRYPTO_NETWORK ("Bitcoin Crypto Network"),
     CLOUD_CHANNEL ("Cloud Channel"),

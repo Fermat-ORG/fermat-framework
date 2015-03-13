@@ -413,15 +413,137 @@ public class Platform  {
         }
 
 
-        
-        
-        
-        
-        
-        
-        
-        
-        
+
+
+
+
+
+
+        /**
+         * -----------------------------
+         * Plugin Blockchain Info World
+         * -----------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the Blockchain Info plugin access to the File System so it can load and save information from persistent
+         * media.
+         */
+
+        Plugin blockchainInfoWorld = ((WorldLayer)  mWorldLayer).getBlockchainInfo();
+
+        ((DealsWithPluginFileSystem) blockchainInfoWorld).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) blockchainInfoWorld).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(blockchainInfoWorld, Plugins.BLOCKCHAIN_INFO_WORLD);
+
+        try
+        {
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(blockchainInfoWorld);
+            (blockchainInfoWorld).setId(pluginID);
+
+            ((Service) blockchainInfoWorld).start();
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+        }
+
+        /**
+         * -----------------------------
+         * Plugin Shape Shift World
+         * -----------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the Shape Shift World plugin access to the File System so it can load and save information from persistent
+         * media.
+         */
+
+        Plugin ShapeShiftWorld = ((WorldLayer)  mWorldLayer).getShapeShift();
+
+        ((DealsWithPluginFileSystem) ShapeShiftWorld).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) ShapeShiftWorld).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(ShapeShiftWorld, Plugins.SHAPE_SHIFT_WORLD);
+
+        try
+        {
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(ShapeShiftWorld);
+            (ShapeShiftWorld).setId(pluginID);
+
+            ((Service) ShapeShiftWorld).start();
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+        }
+
+        /**
+         * -----------------------------
+         * Plugin Coinapult World
+         * -----------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the Coinapult plugin access to the File System so it can load and save information from persistent
+         * media.
+         */
+
+        Plugin CoinapultWorld = ((WorldLayer)  mWorldLayer).getCoinapult();
+
+        ((DealsWithPluginFileSystem) CoinapultWorld).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) CoinapultWorld).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(CoinapultWorld, Plugins.COINAPULT_WORLD);
+
+        try
+        {
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(CoinapultWorld);
+            (CoinapultWorld).setId(pluginID);
+
+            ((Service) CoinapultWorld).start();
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+        }
+
+
+
+
+
+
         /**
          * -----------------------------
          * Plugin Crypto Index World
@@ -436,12 +558,12 @@ public class Platform  {
          * media.
          */
 
-        Plugin WorldService = ((WorldLayer)  mWorldLayer).getmCryptoIndex();
+        Plugin cryptoIndexWorld = ((WorldLayer)  mWorldLayer).getCryptoIndex();
 
-        ((DealsWithPluginFileSystem) WorldService).setPluginFileSystem(os.getPlugInFileSystem());
-        ((DealsWithEvents) WorldService).setEventManager((EventManager) eventManager);
+        ((DealsWithPluginFileSystem) cryptoIndexWorld).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) cryptoIndexWorld).setEventManager((EventManager) eventManager);
 
-        corePlatformContext.addPlugin(WorldService, Plugins.CRYPTO_INDEX);
+        corePlatformContext.addPlugin(cryptoIndexWorld, Plugins.CRYPTO_INDEX);
         
         try
         {
@@ -449,10 +571,10 @@ public class Platform  {
              * As any other plugin, this one will need its identity in order to access the data it persisted before.
              */
         
-            UUID pluginID = pluginsIdentityManager.getPluginId(WorldService);
-            (WorldService).setId(pluginID);
+            UUID pluginID = pluginsIdentityManager.getPluginId(cryptoIndexWorld);
+            (cryptoIndexWorld).setId(pluginID);
 
-            ((Service) WorldService).start();
+            ((Service) cryptoIndexWorld).start();
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -477,12 +599,12 @@ public class Platform  {
          * I will give the plugin access to the File System so it can load and save and load information from persistent 
          * media.
          */
-        Plugin cryptoNetworkService = ((CryptoNetworkLayer) mCryptoNetworkLayer).getCryptoNetwork(CryptoNetworks.BITCOIN);
+        Plugin cryptoNetwork = ((CryptoNetworkLayer) mCryptoNetworkLayer).getCryptoNetwork(CryptoNetworks.BITCOIN);
 
-        ((DealsWithPluginFileSystem) cryptoNetworkService).setPluginFileSystem(os.getPlugInFileSystem());
-        ((DealsWithEvents) cryptoNetworkService).setEventManager((EventManager) eventManager);
+        ((DealsWithPluginFileSystem) cryptoNetwork).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) cryptoNetwork).setEventManager((EventManager) eventManager);
 
-        corePlatformContext.addPlugin(cryptoNetworkService, Plugins.BITCOIN_CRYPTO_NETWORK);
+        corePlatformContext.addPlugin(cryptoNetwork, Plugins.BITCOIN_CRYPTO_NETWORK);
 
         try
         {
@@ -490,10 +612,10 @@ public class Platform  {
              * As any other plugin, this one will need its identity in order to access the data it persisted before.
              */
 
-            UUID pluginID = pluginsIdentityManager.getPluginId(cryptoNetworkService);
-            (cryptoNetworkService).setId(pluginID);
+            UUID pluginID = pluginsIdentityManager.getPluginId(cryptoNetwork);
+            (cryptoNetwork).setId(pluginID);
 
-            ((Service)cryptoNetworkService).start();
+            ((Service)cryptoNetwork).start();
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -504,7 +626,7 @@ public class Platform  {
             System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
             pluginNotRecognizedException.printStackTrace();
 
-            ((Service)cryptoNetworkService).stop();
+            ((Service)cryptoNetwork).stop();
         }
 
         /**

@@ -1,29 +1,29 @@
-package com.bitdubai.fermat_core.layer._7_world.crypto_index;
+package com.bitdubai.fermat_core.layer._7_world.blockchain_info;
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer._14_module.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer._7_world.WorldSubsystem;
-import com.bitdubai.fermat_core.layer._7_world.crypto_index.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_core.layer._7_world.blockchain_info.developer.bitdubai.DeveloperBitDubai;
 
 /**
- * Created by loui on 12/02/15.
+ * Created by loui on 12/03/15.
  */
-public class CryptoIndexSubsystem implements WorldSubsystem {
-    
+public class BlockchainInfoWorldSubsystem implements WorldSubsystem {
+
     Plugin plugin;
-    
+
     @Override
     public Plugin getPlugin(){
         return plugin;
     }
-    
+
     @Override
-    public void start() throws CantStartSubsystemException{
+    public void start() throws CantStartSubsystemException {
         /**
          * I will choose from the different Developers available which implementation to use. Right now there is only
          * one, so it is not difficult to choose.
          */
-        
+
         try {
             DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
             plugin = developerBitDubai.getPlugin();
