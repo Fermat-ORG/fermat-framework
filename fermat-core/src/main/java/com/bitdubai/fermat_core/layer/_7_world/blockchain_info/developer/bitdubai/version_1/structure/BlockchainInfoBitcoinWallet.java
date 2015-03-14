@@ -5,10 +5,10 @@ import com.bitdubai.fermat_api.layer._1_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer._7_world.CantCreateCryptoWalletException;
 import com.bitdubai.fermat_api.layer._7_world.CryptoWallet;
 import com.bitdubai.fermat_api.layer._7_world.CryptoWalletManager;
-import com.bitdubai.fermat_core.layer._7_world.blockchain_info.developer.bitdubai.version_1.api_v_1.createwallet.CreateWallet;
-import com.bitdubai.fermat_core.layer._7_world.blockchain_info.developer.bitdubai.version_1.api_v_1.createwallet.CreateWalletResponse;
-import com.bitdubai.fermat_core.layer._7_world.blockchain_info.developer.bitdubai.version_1.api_v_1.*;
-import com.bitdubai.fermat_core.layer._7_world.blockchain_info.developer.bitdubai.version_1.api_v_1.wallet.*;
+import com.bitdubai.fermat_core.layer._7_world.blockchain_info.developer.bitdubai.version_1.structure.api_v_1.createwallet.CreateWallet;
+import com.bitdubai.fermat_core.layer._7_world.blockchain_info.developer.bitdubai.version_1.structure.api_v_1.createwallet.CreateWalletResponse;
+import com.bitdubai.fermat_core.layer._7_world.blockchain_info.developer.bitdubai.version_1.structure.api_v_1.*;
+import com.bitdubai.fermat_core.layer._7_world.blockchain_info.developer.bitdubai.version_1.structure.api_v_1.wallet.*;
 import java.io.IOException;
 /**
  * Created by toshiba on 13/03/2015.
@@ -66,6 +66,8 @@ public class BlockchainInfoBitcoinWallet implements CryptoWallet, CryptoWalletMa
 
     }
 
+    //TODO : NATALIA: Este metodo no va aca, y no es esta la clase que implementa esta interface, sino el plugin Root. sino, como desde el Fragmento accederias a una referencia a esta clase?
+    // TODO: NATALIA: Lo que actaulmente tenes implementado aca deberia ir en el constructor de esta clase.
     public void createWallet (CryptoCurrency cryptoCurrency ) throws CantCreateCryptoWalletException{
         //save wallet guid, address and link in a binary file on disk
         try{

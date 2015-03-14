@@ -4,7 +4,7 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
 import com.bitdubai.fermat_api.layer._14_module.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer._7_world.WorldSubsystem;
-import com.bitdubai.fermat_core.layer._7_world.Coinapult.CoinapultWorldSubsystem;
+import com.bitdubai.fermat_core.layer._7_world.coinapult.CoinapultWorldSubsystem;
 import com.bitdubai.fermat_core.layer._7_world.blockchain_info.BlockchainInfoWorldSubsystem;
 import com.bitdubai.fermat_core.layer._7_world.crypto_index.CryptoIndexWorldSubsystem;
 import com.bitdubai.fermat_core.layer._7_world.shape_shift.ShapeShiftWorldSubsystem;

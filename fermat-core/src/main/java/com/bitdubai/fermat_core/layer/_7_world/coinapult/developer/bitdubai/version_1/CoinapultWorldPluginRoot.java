@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_core.layer._7_world.Coinapult.developer.bitdubai.version_1;
+package com.bitdubai.fermat_core.layer._7_world.coinapult.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;

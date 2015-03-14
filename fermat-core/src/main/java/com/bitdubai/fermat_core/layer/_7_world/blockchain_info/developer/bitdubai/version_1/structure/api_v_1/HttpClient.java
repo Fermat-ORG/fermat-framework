@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_core.layer._7_world.blockchain_info.developer.bitdubai.version_1.api_v_1;
+package com.bitdubai.fermat_core.layer._7_world.blockchain_info.developer.bitdubai.version_1.structure.api_v_1;
 
 /**
  * Created by Natalia on 13/03/2015.
