@@ -184,11 +184,8 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
     @Override
     public void checkResources(/*WalletType, Developer, version, publisher*/) throws CantCheckResourcesException {
-
-        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.WALLET_RESOURCES_INSTALLED);
-        ((WalletResourcesInstalledEvent) platformEvent).setSource(EventSource.NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN);
-        eventManager.raiseEvent(platformEvent);
-
+ 
+        
         try{
 
             //get repo name
@@ -203,8 +200,8 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
                 byte[] image =  getRepositoryImageFile(reponame, fileList[j].toString());
                 PluginImageFile imageFile;
+                
                 imageFile = pluginFileSystem.createImageFile(pluginId, reponame, fileList[j].toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-
                 imageFile.setContent(image);
                 imageFile.persistToMedia();
 
@@ -236,6 +233,11 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             e.printStackTrace();
         }
 
+
+        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.WALLET_RESOURCES_INSTALLED);
+        ((WalletResourcesInstalledEvent) platformEvent).setSource(EventSource.NETWORK_SERVICE_WALLET_RESOURCES_PLUGIN);
+        eventManager.raiseEvent(platformEvent);
+
     }
 
     @Override
@@ -250,7 +252,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             //get image from disk
             PluginImageFile imageFile;
             imageFile = pluginFileSystem.getImageFile(pluginId, reponame, imageName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-
+// TODO: NATALIA las imagenes deberian estar grabadas en la memoria externa del telefono, osea que FilePrivacy no puede ser PRIVATE
             imageResource = imageFile.getContent();
         }
         catch(FileNotFoundException e){
