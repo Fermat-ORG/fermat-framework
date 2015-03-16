@@ -657,6 +657,9 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                 startActivity(intent);
                 break;
             case CWP_WALLET_FACTORY_MAIN:
+                cleanWindows();
+                this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_FACTORY_MAIN);
+                NavigateActivity();
                 break;
         }
 
@@ -692,6 +695,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
     @Override
     public void onBackPressed() {
         // set Desktop current activity
+        MyApplication.setActivityId("DesktopActivity");
         ((MyApplication) this.getApplication()).setWalletId(0);
         if (activity.getType() != Activities.CWP_WALLET_MANAGER_MAIN){
             activity = this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_MANAGER_MAIN);

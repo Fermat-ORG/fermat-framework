@@ -319,11 +319,22 @@ public class NavigationDrawerFragment extends Fragment {
                 startActivity(intent);
             }
         }else {
-            if (position == 1) {
-                Intent intent;
-              //  intent = new Intent(super.getActivity(), ContactsActivity.class);
-                //startActivity(intent);
+            if(MyApplication.getActivityId()=="FactoryActivity") {
+
+                if (position == 3) {
+                    Intent intent;
+                    intent = new Intent(super.getActivity(), FactoryActivity.class);
+                    startActivity(intent);
+                }
+            }else
+            {
+                if (position == 1) {
+                    Intent intent;
+                    //  intent = new Intent(super.getActivity(), ContactsActivity.class);
+                    //startActivity(intent);
+                }
             }
+
         }
 
     }

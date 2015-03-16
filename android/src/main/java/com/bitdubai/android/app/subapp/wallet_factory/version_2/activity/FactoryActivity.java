@@ -2,14 +2,19 @@ package com.bitdubai.android.app.subapp.wallet_factory.version_2.activity;
 
 import android.app.ActionBar;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.TransitionDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -21,9 +26,12 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
-import com.bitdubai.android.app.RuntimeAppActivity;
+
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.AppRuntimeManager;
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Activities;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
@@ -42,9 +50,18 @@ import com.bitdubai.android.app.subapp.wallet_factory.version_2.fragment.SendFra
 import com.bitdubai.android.app.subapp.wallet_factory.version_2.fragment.ShopFragment;
 
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyLayoutInflaterFactory;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import android.view.View;
+import android.view.View.OnClickListener;
 public class FactoryActivity extends FragmentActivity
 {
-
+    private final int EDITED_TICKET = 1;
     private final Handler handler = new Handler();
 
     private PagerSlidingTabStrip tabs;
@@ -55,7 +72,8 @@ public class FactoryActivity extends FragmentActivity
     private String walletStyle = "";
     private CharSequence mTitle = "Wallet Factory";
     private Menu menu;
-
+    private ImageView imageBackGround;
+    private  LinearLayout actiobarLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,13 +117,99 @@ public class FactoryActivity extends FragmentActivity
         MyApplication.setDefaultTypeface(MyApplication.getDefaultTypeface());
         ((MyApplication) this.getApplication()).changeColor(Color.parseColor(color), getResources());
 
+        final ViewGroup actionBarLayout = (ViewGroup) getLayoutInflater().inflate(
+                R.layout.wallet_factory_editbackground_actionbar,
+                null);
 
         ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
-        actionBar.setIcon(R.drawable.ic_action_factory);
+       // actionBar.setTitle(mTitle);
+       // actionBar.setIcon(R.drawable.ic_action_factory);
+
+        actionBar.setDisplayShowHomeEnabled(false);
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayShowCustomEnabled(true);
+        actionBar.setCustomView(actionBarLayout);
         abTitle.setTypeface(MyApplication.getDefaultTypeface());
+
+        actiobarLayout = (LinearLayout) actionBarLayout.findViewById(R.id.layout1);
+        imageBackGround= (ImageView) actionBarLayout.findViewById(R.id.edit);
+        imageBackGround.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                 clickImage();
+            }
+        });
+
+
+    }
+
+
+
+    private void clickImage(){
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.usd_1);
+
+        File mFile1 = Environment.getExternalStorageDirectory();
+
+        String fileName ="banner_kid_yellow_blue.pmg";
+        bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.banner_kid_yellow_blue);
+        File mFile2 = new File(mFile1,fileName);
+        try {
+            FileOutputStream outStream;
+
+            outStream = new FileOutputStream(mFile2);
+
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
+
+            outStream.flush();
+
+            outStream.close();
+
+        } catch (FileNotFoundException e2) {
+            // TODO Auto-generated catch block
+            e2.printStackTrace();
+        } catch (IOException e1) {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+
+        String imagePath = mFile1.getAbsolutePath().toString()+"/"+fileName;
+        File temp=new File(imagePath);
+
+        if(temp.exists()){
+            //  "Double Click open external Editor";
+            //  String imagePath = "android.resource://" + getResources().getResourcePackageName(R.drawable.usd_1) + "/drawable-xxhdpi/usd_1.jpg";
+            // String imagePath ="file://" +  getResources().getResourcePackageName(R.drawable.usd_1) + "/structured_res/drawable-xxhdpi/usd_1.jpg";
+            Intent editIntent = new Intent(Intent.ACTION_EDIT);
+            //getResources().getIdentifier("ic_launcher", "drawable", getPackageName());
+            editIntent.setDataAndType(Uri.parse("file://" + imagePath), "image/*");
+            editIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            editIntent.putExtra("finishActivityOnSaveCompleted", true);
+            //startActivity(Intent.createChooser(editIntent, null));
+          startActivityForResult(editIntent, EDITED_TICKET);
+        }
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+
+        switch(requestCode) {
+            case EDITED_TICKET:
+                if(imageReturnedIntent != null){
+                    try {
+                        final Uri imageUri = imageReturnedIntent.getData();
+                        final InputStream imageStream = getContentResolver().openInputStream(imageUri);
+                        final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                        Drawable d = new BitmapDrawable(getResources(),selectedImage);
+
+                        actiobarLayout.setBackground(d);
+                    } catch (Exception e) {
+                        String strError = e.getMessage();
+                    }
+
+                }
+        }
 
     }
 
