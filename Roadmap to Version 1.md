@@ -20,6 +20,15 @@ Vamos a crear una billetera en los sistemas de Blockchain.info que sera la que l
 * Tambien el Id de la billetera en nuestro sistema Fermat DMP, probablemente como nombre del archivo.
 * Si la billetera tiene un usuario y clave aqui es donde se deberia guardar.
 
+##### Clave Privada
+
+* Revisar la billetera open source de Andreas llamada Bitcoin Wallet como hace para crear la clave privada.
+* Revisar la billetera de Blockchain.info para android como hace ellos para crearla.
+
+##### Pagos entrantes
+
+* Revisar en la billetera de Blockchain.info como hacen para detectar los pagos entrantes.
+
 
 #### b. Monitoreo de pagos entrantes
 
