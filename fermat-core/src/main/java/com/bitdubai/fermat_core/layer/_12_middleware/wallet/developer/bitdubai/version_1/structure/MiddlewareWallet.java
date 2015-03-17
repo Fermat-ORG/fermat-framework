@@ -2,7 +2,7 @@ package com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.
 
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.CryptoAccount;
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.FiatAccount;
-import com.bitdubai.fermat_api.layer._12_middleware.wallet.WalletManager;
+import com.bitdubai.fermat_api.layer._12_middleware.wallet.Wallet;
 import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer._1_definition.enums.FiatCurrency;
 
@@ -28,7 +28,7 @@ import java.util.List;
  * * * 
  */
 
-public class MiddlewareWallet implements WalletManager {
+public class MiddlewareWallet implements Wallet {
     
     List<FiatAccount> fiatAccounts;
     List<CryptoAccount> cryptoAccounts;

@@ -27,7 +27,7 @@ import java.util.UUID;
 /**
  * Created by ciencias on 20.01.15.
  */
-public class WalletMiddlewarePluginRoot implements Service, Middleware, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin, WalletManager {
+public class WalletMiddlewarePluginRoot implements Service, WalletManager , Middleware, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
 
     UUID walletId;
     
@@ -118,6 +118,8 @@ public class WalletMiddlewarePluginRoot implements Service, Middleware, DealsWit
     @Override
     public void createWallet(UUID walletId) throws CantCreateWalletException {
 
+
+        
         PlatformEvent platformEvent = eventManager.getNewEvent(EventType.WALLET_CREATED);
         ((WalletCreatedEvent) platformEvent).setWalletId(this.walletId);
         platformEvent.setSource(EventSource.MIDDLEWARE_WALLET_PLUGIN);

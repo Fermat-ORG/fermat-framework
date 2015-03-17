@@ -4,7 +4,7 @@
     <entry_points version="2.0" />
   </component>
   <component name="FrameworkDetectionExcludesConfiguration">
-    <file type="web" url="file://$PROJECT_DIR$" />
+    <file type="web" url="file://$PROJECT_DIR$/.." />
   </component>
   <component name="IdProvider" IDEtalkID="E3D24F7F93F7A379AAF190CAC5048F8F" />
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_7" assert-keyword="true" jdk-15="true" project-jdk-name="1.7" project-jdk-type="JavaSDK">
@@ -14,4 +14,3 @@
     <option name="id" value="Android" />
   </component>
 </project>
-
