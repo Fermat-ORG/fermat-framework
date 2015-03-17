@@ -61,7 +61,10 @@ import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.AppRuntimeManage
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.Fragment;
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Activities;
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Fragments;
+import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer._7_world.CantCreateCryptoWalletException;
+import com.bitdubai.fermat_api.layer._7_world.CryptoWalletManager;
 import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.fermat_core.layer._12_middleware.app_runtime.developer.bitdubai.version_1.structure.*;
@@ -74,6 +77,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Iterator;
+import java.util.UUID;
 import java.util.Vector;
 
 /**
@@ -148,53 +152,17 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             WalletResourcesManager  walletResourceManger = (WalletResourcesManager)platformContext.getPlugin(Plugins.WALLET_RESOURCES_NETWORK_SERVICE);
             walletResourceManger.setwalletType(Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI);
             walletResourceManger.checkResources();*/
+
             /****-*/
-            //test blockchain.api
-            //TesNet wallet 2MyHVQT1KybvVBT5wzWzgAW6if1VMc1Trqw
-            //blockchain id 25c34cee-1129-4e53-bf49-726530b0cc58
-            // clave monedero recibir pagos "1CF84EfsGLNmRVJcdW3vPyjcAT9ApeYBHn"
+            //test blockchain.api*/.
+            String id = "";
+            UUID walletId = UUID.randomUUID();
+            CryptoWalletManager walletManager = (CryptoWalletManager) platformContext.getPlugin(Plugins.BLOCKCHAIN_INFO_WORLD);
+            walletManager.createWallet(CryptoCurrency.BITCOIN,walletId);
 
-          /*  CreateWalletResponse response =  CreateWallet.create("2MyHVQT1KybvVBT5wzWzgAW6if1VMc1Trqw", "nattyco2013");
-            String  walletAddress = response.getAddress();
-            String  walletGuid = response.getIdentifier();
-            String walletLink = response.getLink();*/
+            //get wallet property files, address and guid, and get actual balance and send bitcoin
 
-            /** TEST blockchain Wallet */
-         /*   Wallet wallet = new Wallet("25c34cee-1129-4e53-bf49-726530b0cc58", "nattyco2013");
-            wallet.setApiCode("");
-            // get an address from your wallet and include only transactions with up to 3
-            // confirmations in the balance
-            Address addr = wallet.getAddress("1JzSZFs2DQke2B3S4pBxaNaMzzVZaG4Cqh", 3);
-            long balance = addr.getBalance();
 
-            // send 0.2 bitcoins with a custom fee of 0.01 BTC and a note
-            // public notes require a minimum transaction size of 0.005 BTC
-            PaymentResponse payment = wallet.send("1dice6YgEVBf88erBFra9BHf6ZMoyvG88", 20000000L, null, 1000000L, "Amazon payment");
-            System.out.println(String.format("The payment TX hash is %s", payment.getTxHash()));
-
-            long totalBalance = wallet.getBalance();
-
-            // list all addresses and their balances (with 0 confirmations)
-            List<Address> addresses = wallet.listAddresses(0);
-            for (Address a : addresses)
-            {
-                System.out.println(String.format("The address %s has a balance of % satoshi",
-                        a.getAddress(), a.getBalance()));
-            }
-
-            // archive an old address
-            wallet.archiveAddress("1JzSZFs2DQke2B3S4pBxaNaMzzVZaG4Cqh");
-
-            // consolidate addresses that have been inactive more than 25 days
-            List<String> consolidated = wallet.consolidate(25);
-            for (String c : consolidated)
-            {
-                System.out.println(String.format("Address %s has been consolidated", c));
-            }
-
-            // create a new address and attach a label to it
-            Address newAddr = wallet.newAddress("test label 123");
-            System.out.println(String.format("The new address is %s", newAddr.getAddress()));*/
 
             /**************/
 
@@ -204,6 +172,8 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             System.err.println("CantStartPlatformException: " + e.getMessage());
 
         }
+        catch (CantCreateCryptoWalletException e) {
+            e.printStackTrace();}
        /* catch (JSONException e) {
             e.printStackTrace();}
         catch (APIException e) {

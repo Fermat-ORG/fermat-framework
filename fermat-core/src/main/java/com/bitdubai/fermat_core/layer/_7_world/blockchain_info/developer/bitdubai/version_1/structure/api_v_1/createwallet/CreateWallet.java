@@ -49,7 +49,7 @@ public class CreateWallet
                                               String privateKey, String label, String email) throws IOException, APIException
     {
         Map<String, String> params = new HashMap<String, String>();
-
+        params.put("test", "true");
         params.put("password", password);
         params.put("api_code", apiCode);
         if (privateKey != null)

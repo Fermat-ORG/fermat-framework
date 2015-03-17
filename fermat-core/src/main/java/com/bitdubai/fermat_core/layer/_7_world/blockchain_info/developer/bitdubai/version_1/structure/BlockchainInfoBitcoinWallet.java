@@ -2,24 +2,36 @@ package com.bitdubai.fermat_core.layer._7_world.blockchain_info.developer.bitdub
 
 import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer._1_definition.money.CryptoAddress;
+
 import com.bitdubai.fermat_api.layer._7_world.CantCreateCryptoWalletException;
 import com.bitdubai.fermat_api.layer._7_world.CryptoWallet;
-import com.bitdubai.fermat_api.layer._7_world.CryptoWalletManager;
+
 import com.bitdubai.fermat_core.layer._7_world.blockchain_info.developer.bitdubai.version_1.structure.api_v_1.createwallet.CreateWallet;
 import com.bitdubai.fermat_core.layer._7_world.blockchain_info.developer.bitdubai.version_1.structure.api_v_1.createwallet.CreateWalletResponse;
 import com.bitdubai.fermat_core.layer._7_world.blockchain_info.developer.bitdubai.version_1.structure.api_v_1.*;
 import com.bitdubai.fermat_core.layer._7_world.blockchain_info.developer.bitdubai.version_1.structure.api_v_1.wallet.*;
 import java.io.IOException;
+import java.util.UUID;
+
 /**
  * Created by toshiba on 13/03/2015.
  */
-public class BlockchainInfoBitcoinWallet implements CryptoWallet, CryptoWalletManager {
+public class BlockchainInfoBitcoinWallet implements CryptoWallet {
 
     private String password = "nattyco2013";
-    private String apiCode = "2MyHVQT1KybvVBT5wzWzgAW6if1VMc1Trqw";
+    private String apiCode = "91c646ef-c3fd-4dd0-9dc9-eba5c5600549";
     private String walletAddress ="";
     private String walletGuid ="25c34cee-1129-4e53-bf49-726530b0cc58";
 
+    public BlockchainInfoBitcoinWallet(String apiCode, String password , String walletAddress , String walletGuid){
+
+        this.apiCode = apiCode;
+        this.password = password;
+        this.walletAddress = walletAddress;
+        this.walletGuid = walletGuid;
+
+
+    }
     public long getWalletBalance(CryptoCurrency cryptoCurrency){
         long balance = 0;
         try{
@@ -65,13 +77,13 @@ public class BlockchainInfoBitcoinWallet implements CryptoWallet, CryptoWalletMa
         e.printStackTrace();}
 
     }
-
     //TODO : NATALIA: Este metodo no va aca, y no es esta la clase que implementa esta interface, sino el plugin Root. sino, como desde el Fragmento accederias a una referencia a esta clase?
     // TODO: NATALIA: Lo que actaulmente tenes implementado aca deberia ir en el constructor de esta clase.
-    public void createWallet (CryptoCurrency cryptoCurrency ) throws CantCreateCryptoWalletException{
+
+    public void createWallet() {
         //save wallet guid, address and link in a binary file on disk
         try{
-            CreateWalletResponse response =  CreateWallet.create(apiCode, password);
+             CreateWalletResponse response =  CreateWallet.create(apiCode, password);
             String  walletAddress = response.getAddress();
             String  walletGuid = response.getIdentifier();
             String walletLink = response.getLink();
@@ -81,4 +93,6 @@ public class BlockchainInfoBitcoinWallet implements CryptoWallet, CryptoWalletMa
             e.printStackTrace();}
 
     }
+
+
 }
