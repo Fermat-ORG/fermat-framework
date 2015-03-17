@@ -156,9 +156,9 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             /****-*/
             //test blockchain.api*/.
             String id = "";
-            UUID walletId = UUID.randomUUID();
+          /*  UUID walletId = UUID.randomUUID();
             CryptoWalletManager walletManager = (CryptoWalletManager) platformContext.getPlugin(Plugins.BLOCKCHAIN_INFO_WORLD);
-            walletManager.createWallet(CryptoCurrency.BITCOIN,walletId);
+            walletManager.createWallet(CryptoCurrency.BITCOIN,walletId);*/
 
             //get wallet property files, address and guid, and get actual balance and send bitcoin
 
@@ -172,9 +172,9 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             System.err.println("CantStartPlatformException: " + e.getMessage());
 
         }
-        catch (CantCreateCryptoWalletException e) {
+       /* catch (CantCreateCryptoWalletException e) {
             e.printStackTrace();}
-       /* catch (JSONException e) {
+        catch (JSONException e) {
             e.printStackTrace();}
         catch (APIException e) {
             e.printStackTrace();}
