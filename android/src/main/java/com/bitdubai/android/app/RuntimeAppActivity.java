@@ -63,7 +63,9 @@ import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Activities
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Fragments;
 import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer._1_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer._7_world.CantCreateCryptoWalletException;
+import com.bitdubai.fermat_api.layer._7_world.CryptoWallet;
 import com.bitdubai.fermat_api.layer._7_world.CryptoWalletManager;
 import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.smartwallet.R;
@@ -156,13 +158,20 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             /****-*/
             //test blockchain.api*/.
             String id = "";
-          /*  UUID walletId = UUID.randomUUID();
-            CryptoWalletManager walletManager = (CryptoWalletManager) platformContext.getPlugin(Plugins.BLOCKCHAIN_INFO_WORLD);
-            walletManager.createWallet(CryptoCurrency.BITCOIN,walletId);*/
+//wallet address = 1KCnxYFTS5bGmxRdWJCG9n8GkXVz6Lz3tw
+            UUID walletId = UUID.fromString("a652039b-674e-485e-ad3d-aea758d12b26");
+           // CryptoWalletManager walletManager = (CryptoWalletManager) platformContext.getPlugin(Plugins.BLOCKCHAIN_INFO_WORLD);
+           // walletManager.createWallet(CryptoCurrency.BITCOIN,walletId);
 
             //get wallet property files, address and guid, and get actual balance and send bitcoin
+            CryptoWallet wallet = (CryptoWallet) platformContext.getPlugin(Plugins.BLOCKCHAIN_INFO_WORLD);
+            long balance = wallet.getWalletBalance(CryptoCurrency.BITCOIN,walletId);
 
 
+            CryptoAddress cryptoAddress = new CryptoAddress();
+
+            cryptoAddress.setAddress("1KCnxYFTS5bGmxRdWJCG9n8GkXVz6Lz3tw");
+            long walletBalance = wallet.getAddressBalance(cryptoAddress);
 
             /**************/
 

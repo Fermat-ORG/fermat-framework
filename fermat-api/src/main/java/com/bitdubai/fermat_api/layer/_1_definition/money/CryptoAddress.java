@@ -18,5 +18,15 @@ public class CryptoAddress {
         this.address = address;
         //TODO: validate the format according to each cryptocurrency.
     }
+
+    public String getAddress (){
+        return  this.address;
+
+    }
+
+    public CryptoCurrency getCryptoCurrency (){
+        return  this.cryptoCurrency;
+
+    }
     
 }
