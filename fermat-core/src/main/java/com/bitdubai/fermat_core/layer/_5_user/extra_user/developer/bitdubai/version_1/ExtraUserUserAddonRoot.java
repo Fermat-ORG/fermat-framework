@@ -15,6 +15,11 @@ import com.bitdubai.fermat_api.layer._5_user.extra_user.ExtraUserManager;
 /**
  * Created by loui on 22/02/15.
  */
+
+/**
+ * This plug-in manages a registry of known extra users..
+ */
+
 public class ExtraUserUserAddonRoot implements Service, User, ExtraUserManager, DealsWithPlatformFileSystem, DealsWithEvents, DealsWithErrors, Addon {
 
 
