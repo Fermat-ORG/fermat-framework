@@ -38,7 +38,7 @@ import java.util.UUID;
  * * * * * *
  */
 
-public class IntraUserUserAddonRoot implements Service, User, IntraUserManager, DealsWithEvents, DealsWithPlatformFileSystem, DealsWithErrors, DealsWithDeviceUsers,  Addon {
+public class IntraUserUserAddonRoot implements Service,  IntraUserManager, DealsWithEvents, DealsWithPlatformFileSystem, DealsWithErrors, DealsWithDeviceUsers,  Addon {
 
     /**
      * Service Interface member variables.

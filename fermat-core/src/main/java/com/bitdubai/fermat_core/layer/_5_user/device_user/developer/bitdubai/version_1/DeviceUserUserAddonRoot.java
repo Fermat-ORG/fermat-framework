@@ -38,7 +38,7 @@ import java.util.UUID;
  * It is responsible for login in users to the current device.
  */
 
-public class DeviceUserUserAddonRoot implements Service, User, DeviceUserManager, DealsWithPlatformFileSystem, DealsWithEvents, DealsWithErrors, Addon {
+public class DeviceUserUserAddonRoot implements Service,  DeviceUserManager, DealsWithPlatformFileSystem, DealsWithEvents, DealsWithErrors, Addon {
 
     /**
      * PlatformService Interface member variables.
