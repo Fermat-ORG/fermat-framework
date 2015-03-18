@@ -57,7 +57,9 @@ public class PluginsIdentityManager {
 
         try
         {
-
+            /**
+             * First I get the file where all ids are stored. 
+             */
 
             platformDataFile =  platformFileSystem.getFile("Platform", "PluginsIds", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
 
@@ -75,7 +77,11 @@ public class PluginsIdentityManager {
                 cantLoadFileException.printStackTrace();
                 throw new CantInitializePluginsManagerException();
             }
-
+            
+            /**
+             * Then I put the content of the file on an Array String.
+             */
+            
             String[] stringPluginIds = platformDataFile.getContent().split(";" , -1);
 
             Integer arrayPosition = 0;
@@ -84,14 +90,24 @@ public class PluginsIdentityManager {
 
                     if(stringPluginId != "")
                     {
-                        pluginIds.add(arrayPosition, UUID.fromString(stringPluginId));
-
-                        arrayPosition++;
+                        try {
+                            pluginIds.add(arrayPosition, UUID.fromString(stringPluginId));
+                            arrayPosition++;
+                        }
+                        catch (IllegalArgumentException e )
+                        {
+                            /**
+                             * This exception occurs when we reach the end of the file. So there is nothing to do here.
+                             */
+                        }
+                        
                     }
 
                 }
 
-
+            /**
+             * Now I check if the amount of plugins on file is the same that the amount of plugin implemented
+             */
 
             if (arrayPosition < AMOUNT_OF_KNOWN_PLUGINS)
             {
