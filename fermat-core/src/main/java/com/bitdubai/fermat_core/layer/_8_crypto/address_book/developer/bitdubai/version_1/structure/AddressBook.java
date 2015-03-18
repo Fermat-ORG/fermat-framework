@@ -3,7 +3,7 @@ package com.bitdubai.fermat_core.layer._8_crypto.address_book.developer.bitdubai
 import com.bitdubai.fermat_api.layer._1_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer._2_os.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer._5_user.User;
+import com.bitdubai.fermat_api.layer._5_user.extra_user.User;
 import com.bitdubai.fermat_api.layer._5_user.UserTypes;
 import com.bitdubai.fermat_api.layer._8_crypto.address_book.CryptoAddressBook;
 
