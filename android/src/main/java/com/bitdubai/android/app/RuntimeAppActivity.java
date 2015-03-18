@@ -64,18 +64,13 @@ import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Fragments;
 import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer._1_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer._7_world.CantCreateCryptoWalletException;
-import com.bitdubai.fermat_api.layer._7_world.CryptoWallet;
-import com.bitdubai.fermat_api.layer._7_world.CryptoWalletManager;
+import com.bitdubai.fermat_api.layer._11_world.CryptoWallet;
 import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.fermat_core.layer._12_middleware.app_runtime.developer.bitdubai.version_1.structure.*;
 
 import com.bitdubai.fermat_core.CorePlatformContext;
 
-import org.json.JSONException;
-
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Iterator;

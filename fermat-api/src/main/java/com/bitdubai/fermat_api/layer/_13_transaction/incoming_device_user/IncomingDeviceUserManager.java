@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_api.layer._13_transaction.incoming_device_user;
 
-import com.bitdubai.fermat_api.layer._9_crypto.address_book.exceptions.ExampleException;
+import com.bitdubai.fermat_api.layer._8_crypto.address_book.exceptions.ExampleException;
 
 /**
  * Created by loui on 22/02/15.

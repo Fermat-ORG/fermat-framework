@@ -10,19 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bitdubai.fermat_api.layer._11_network_service.CantGetResourcesException;
-import com.bitdubai.fermat_api.layer._11_network_service.wallet_resources.WalletResourcesManager;
+import com.bitdubai.fermat_api.layer._10_network_service.wallet_resources.WalletResourcesManager;
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Wallets;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.android.app.common.version_1.classes.MyApplication;
-import java.io.StringReader;
-import java.io.IOException;
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-import org.xmlpull.v1.XmlPullParserFactory;
 
 public class ProfileCardFrontFragment extends Fragment {
 

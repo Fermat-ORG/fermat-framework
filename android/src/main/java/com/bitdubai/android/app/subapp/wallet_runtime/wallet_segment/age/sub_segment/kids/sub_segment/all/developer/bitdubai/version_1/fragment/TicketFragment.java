@@ -18,8 +18,8 @@ import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import com.bitdubai.fermat_api.layer._11_network_service.CantGetResourcesException;
-import com.bitdubai.fermat_api.layer._11_network_service.wallet_resources.WalletResourcesManager;
+import com.bitdubai.fermat_api.layer._10_network_service.CantGetResourcesException;
+import com.bitdubai.fermat_api.layer._10_network_service.wallet_resources.WalletResourcesManager;
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Wallets;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.fermat_core.CorePlatformContext;

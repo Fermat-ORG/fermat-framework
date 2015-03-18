@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer._12_middleware.money_request.MoneyRequestMa
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer._1_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventHandler;
-import com.bitdubai.fermat_api.layer._9_crypto.address_book.exceptions.ExampleException;
+import com.bitdubai.fermat_api.layer._8_crypto.address_book.exceptions.ExampleException;
 
 /**
  * Created by loui on 23/02/15.

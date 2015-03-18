@@ -18,7 +18,7 @@ import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventMana
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventType;
 import com.bitdubai.fermat_api.layer._2_os.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer._2_os.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer._9_crypto.address_book.exceptions.ExampleException;
+import com.bitdubai.fermat_api.layer._8_crypto.address_book.exceptions.ExampleException;
 import com.bitdubai.fermat_core.layer._13_transaction.incoming_intra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoIdentifiedFromIntraUserEventHandler;
 import com.bitdubai.fermat_core.layer._13_transaction.incoming_intra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoReceivedFromIntraUserEventHandler;
 import com.bitdubai.fermat_core.layer._13_transaction.incoming_intra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoReceptionConfirmedFromIntraUserEventHandler;
