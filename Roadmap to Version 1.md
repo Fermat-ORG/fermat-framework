@@ -10,24 +10,42 @@ Functionality for Version 1
 Vamos a utilizar Blockchain.info como motor bitcoin. 
 
 * Key para acceder a la API de blockchain info debe ser una constante a nivel del Plugin.
+* El plugin maneja un archivo con una lista de ids de las billeteras creadas.
+* Cada vez que crea una billetera, genera un nuevo Id y lo guarda en el archivo.
+* Cuando el Plugin arranca en el metodo start, debe leer el mismo archivo e instanciar la clase BlockchainInfoWallet por cada id que tenga ahi y ponerla a correr.
+* Cuando el Plugin se detiene o pone en pausa debe ejecutar el stop de las billeteras que mantiene instanciadas.
+
 
 #### a. Creacion de la billetera
 
 Vamos a crear una billetera en los sistemas de Blockchain.info que sera la que luego utilizaremos para el resto de las operaciones.
 
-* El plugin va a guardar un archivo que contiene la informacion no transaccional de la billetera.
-* Entre esa inforamcion deberia estar la clave privada de la misma.
+##### clase BlockchainInfoWallet
+
+* Cada billetera guarda un archivo binario con la siguiente informacion:
+* La clave privada de la misma.
 * Tambien el Id de la billetera en nuestro sistema Fermat DMP, probablemente como nombre del archivo.
-* Si la billetera tiene un usuario y clave aqui es donde se deberia guardar.
+* Si existiera alguna informacion a nivel de la billetera aqui es donde debiera guardarse.
+
+* Esta clse en el metodo start de su interface intenta abrir una conexion con la base de datos y leer cada una de las tablas que esta base de datos debe contener para su correcto funcionamiento.
+* Si la base de datos no existe entonces la crea.
+* Si alguna de las tablas necesarias no existe, entonces la crea, verificando una a la vez.
+* Luego poner a correr los distintos procesos que se explican mas abajo.
+
+* Las tablas necesarias son: INCOMING_CRYPTO, OUTGOING_CRYPTO, CRYPTO_ADDRESSES
+* INCOMING_CRYPTO guarda las transacciones que llegan a la billetera, en cualquiera de sus direcciones.
+* OUTGOING_CRYPTO guarda las transaccones que salen de la billetera desde cualquiera de sus direcciones.
+* ADDRESSES guarda las direcciones generadas para esta billetera.
 
 ##### Clave Privada
 
-* Revisar la billetera open source de Andreas llamada Bitcoin Wallet como hace para crear la clave privada.
-* Revisar la billetera de Blockchain.info para android como hace ellos para crearla.
+* Por ahora vamos a usar una llave privada fija inventada y luego vamos a investigar cual es el metodo ideal para crear una nueva por billetera.
+* Ahora mismo la llave privada sera un UUID generado al momento en que la billetera se crea.
 
 ##### Pagos entrantes
 
-* Revisar en la billetera de Blockchain.info como hacen para detectar los pagos entrantes.
+* Para resolver la funcionalidad de pagos entrantes vamos a tener los siguientes procesos que seran ejecutados al momento en que cada billetera reciba la orden de arrancar en su metodo start.
+* Osea que este conjunto de procesos correra por cada billetera blockchain que exista.
 
 
 #### b. Monitoreo de pagos entrantes
@@ -37,13 +55,70 @@ Vamos a implementar un mecanismo para monitorear los pagos entrantes a la billet
 * Cuando el servicio del Plugin se inicia, este debe localizar en un archivo los ids de las billeteras creadas por el plugin, todas, sin importar quien este logeado.
 * Por cada billetera que encuentre en ese archivo, debe instanciar una clase BlockchainInfoBitcoinWallet.
 * La interfaz de esa clase debe proveer los metodos startMonitoringPayments y stopMonitoringPayments . Le debe ejecutar el de start.
-* Internamente la clase pone a correr un thread que cada x segundos (10 por ej), consulta el balance y los pagos entrantes en la direccion de la billetera.(inicialmente solo en la direccion de la billetera)
-* Como la billetera lleva un archivo propio con todos los pagos entrantes, sabe cual fue el ultimo pago detectado desde la ultima vez que corrio este proceso.
-* El archivo tambien lleva el status de dicho pago, en el sentido de si se llego a disparar el evento que lo anunciaba o no.
-* Entonces, si detecta llamando a la API de blockchain info nuevos pagos, los escribe en el archivo si son nuevos, sino los ignora. De va leyendo las transacciones de la API hasta que encuentra que ya esta leyendo transacciones que ya tiene grabadas (lee de la mas reciente a la mas vieja)
-* Cuando termina con lo anterior, arranca con la segunda parte de su procedimiento que es recorrer las transacciones del archivo que no estan anunciadas y disparar un evento por cada una. (Loui: este evento debe ser el mismo que disparaba el bitcoin crypto network. asegurate que ya exista y que este diponible para que Natalia lo dispare)
-* Cada evento que dispara sin errores, marca la transaccion como ya anunciada y graba el archivo en disco por cada marca que hace.
-* Luego verifica si el proceso no esta marcado para terminar, si lo esta termina la ejecucion de ese thread. Si no, se duerme por el tiempo configurado para luego despertar de nuevo y volver a repetir el proceso.
+
+##### clase IncomingCryptoMonitorAgent
+
+* La clase pone a correr un thread que se conecta a la api de blockchain explicada aca:
+* https://blockchain.info/api/api_websocket
+* y va a ejecutar el metodo para recibir transacciones sin confirmar :
+* Subscribing to an Address  {"op":"addr_sub", "addr":"$bitcoin_address"}
+* Cada vez que reciba una transaccion la va a guardar en la tabla de transacciones en la base de datos.
+* Dicha tabla tiene que tener un campo IdWallet para ser multiwallet, CryptoAddress, Amount como longinteger , Timestamp con la fecha en formato unix, estado que va a describir el estado de procesamiento de la transaccion, "confirmaciones" la cantidad de confirmaciones en la red bitcoin y quizas algo mas
+* Se debe guardar en un estado JUST_RECEIVED
+* Este proceso verifica un flag de vez en cuando para ver si debe terminar su tarea.
+
+##### clase IncomingCryptoCatchUpAgent
+
+* Internamente la clase pone ademas pone a correr otro thread que hace lo siguiente:
+* Cuando arranca por primera vez consulta en su propia base de datos la ultima transaccion registrada y procesada (estado ANNOUNCED) y la recuerda en memoria.
+* Usando la API de blockchain info consulta el listado de transacciones para esta billetera.
+* Esto esta explicado en https://blockchain.info/api/blockchain_api   
+* La funcion que se usa es https://blockchain.info/rawaddr/$bitcoin_address
+* Se va pidiendo la informacion por paginas, pidiendo tantas paginas como sea necesario hasta tener todas las transacciones que se produjeron mientras el dispositivo estaba apagado o la plataforma no estaba corriendo.
+* Una vez que se tienen todas las transacciones en memoria se pasa al siguiente paso:
+* Una por una se las agrega en la tabla de transacciones en el estado JUST_RECEIVED
+* Se debe tener cuidado de que la transaccion no exista realmente en la tabla de transacciones al momento de ser insertada.
+
+##### clase IncomingCryptoAnnouncerAgent
+
+* Por ultimo la clase crea un tercer thread que es el que se encarga de procesar las transacciones en estado JUST_RECEIVED, una por una
+* Este thread se despierta cada cierto tiempo (1 seg) y lee la transaccion mas vieja en estado JUST_RECEIVED
+* Actualiza primero el estado de la transaccion como TO_BE_ANNOUNCED
+* Luego dispara el evento apropiado anunciando al resto de los plugins de la plataforma que la transaccion fue recibida. 
+* Si el disparo del evento fue exitoso, actualiza el estado a ANNOUNCED.
+* Si el disparo del evento fallo, el estado debe actualizarse como ANNOUNCING_FAILED
+* Verifica si el flag de terminar el proceso esta encendido y si lo esta termina, y si no se duerme para leugo arrancar de nuevo.
+
+* Mas adelante, veremos si hace falta crear otro proceso que recupere las tranasacciones que quedaron en estado intermedio.
+
+ el tiempo configurado para luego despertar de nuevo y volver a repetir el proceso.
+ 
+##### clase TransactionAgeingMonitorAgent
+
+* Esta clase se encarga de monitorear la evolucion en el tiempo de las transacciones de la billetera.
+* Se despierta cada 7 minutos que es el tiempo promedio que le lleva a la red bitcoin procesar otro bloque de transacciones.
+* Tiene definido una constante con valor 6 que es el maximo de confirmaciones que le interesa a la clase monitorear.
+* Se conecta al api y solicita de manera paginada todas las transacciones de una cierta direccion
+* La intencion es ver cuales de todas las transacciones en la base de datos que tienen menos de 7 confirmaciones, cambio su cantidad actual por otra.
+* Las que ya pasaron mas de 6 confirmaciones en la base de datos las ignora.
+* Para eso usa el mismo metoro https://blockchain.info/rawaddr/$bitcoin_address para obtener la informacion de las mismas.
+* Con la lista de las transacciones en base de datos va buscando en el array recibido de la API
+* Si la cantidad de confirmaciones cambio hace lo siguiente:
+* Graba en el campo PREVIOUS_CONFIRMATIONS el valor que actualmente esta en CURRENT_CONFIRMATIONS y en este ultimo lo que recibe de la API
+* Hace lo mismo con cada una de las transacciones que tenian menos de 7 confirmaciones y se vuelve a dormir 10 minutos luego de ver si debe parar.
+ 
+ 
+##### clase TransactionAgeingAnnouncerAgent
+
+* Esta clase se despierta cada un tiempo configurado en una constante de 1 minutos.
+* Lee la tabla de transacciones filtrandola de la siguietne manera:
+* Los registros deben tener PREVIOUS_CONFIRMATIONS < 7 OR CURRENT_CONFIRMATIONS < 7
+* Si los dos campos anteriores son iguales, ignora esos registro porque no hubieron cambios.
+* Si CURRENT_CONFIRMATIONS > PREVIOUS_CONFIRMATIONS entonces se debe disparar un evento de transaction ageing que ya voy a definir.
+* Si  CURRENT_CONFIRMATIONS < PREVIOUS_CONFIRMATIONS entonces se debe disparar un evento de transaction rolled back ya voy a definir.
+* Verifica si hay que terminar de correr, y si no, se duerme para luego empezar de nuevo.
+
+
 
 #### c. Entraga de Balance
 
@@ -51,15 +126,8 @@ Hasta ahora no tenemos previsto de que este modulo entregue el balance de la bil
 
 #### d. Envio de Pagos
 
-El plugin debe poder enviar una determinada cantidad de crypto a una direccion y disparar los eventos que determinan los distintos niveles de progreso del pago.
 
-* El plugin dispone de un proceso corriendo en un thread separado que monitorea una tabla de transacciones pendientes de enviar que es arrancado cuando el plugin recibe el start en la inicializacionde la plataforma.
-* Esa tabla funciona como una cola esperando a ser procesada.
-* Cada vez que se despierta, este proceso lee los registros de la tablay los procesa uno a uno.
-* Cuando lo somete a la red bitcoin a traves de la API de blockchain info lo agrega a una tabla con el historico de transacciones enviadas y lo elimina de la tabla de pendientes.
-* Ademas de someter los pagos salientes su segunda funcion es monitorearlos hasta que alcancen una cierta cantidad de confirmaciones.
-* A medida que el pago va pasando por distintos estados, este proceso va disparando diferentes eventos y cambiando el estado de la transaccion en la base de datos.
-
+*** Falta definir esto ***
 
 
 ### 2. IncomingExtraUserTransactionPluginRoot

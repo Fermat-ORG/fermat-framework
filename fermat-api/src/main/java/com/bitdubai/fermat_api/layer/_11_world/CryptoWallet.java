@@ -10,6 +10,11 @@ import java.util.UUID;
  */
 public interface CryptoWallet {
 
+    
+    public void start();
+    
+    public void stop();
+    
     public long getWalletBalance(CryptoCurrency cryptoCurrency,UUID walletId);
     
     public long getAddressBalance(CryptoAddress cryptoAddress);

@@ -5,6 +5,8 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer._1_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer._2_os.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer._2_os.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer._2_os.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer._2_os.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer._2_os.file_system.FilePrivacy;
@@ -42,7 +44,7 @@ import java.util.UUID;
  * Blockchain Plugin. 
  */
 
-public class BlockchainInfoWorldPluginRoot implements CryptoWallet, CryptoWalletManager,Service, World,DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin{
+public class BlockchainInfoWorldPluginRoot implements CryptoWallet, CryptoWalletManager,Service, World,DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, Plugin{
 
     private String password = "bitdubait456";
     private String apiCode = "91c646ef-c3fd-4dd0-9dc9-eba5c5600549";
@@ -127,6 +129,14 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWallet, CryptoWallet
         this.pluginFileSystem = pluginFileSystem;        
     }
 
+    /**
+     * DealsWithPluginDatabaseSystem Interface implementation.
+     */
+    @Override
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+
+    }
+    
     /**
      * DealWithEvents Interface implementation.
      */
@@ -250,4 +260,6 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWallet, CryptoWallet
 
 
     }
+
+
 }
