@@ -53,7 +53,7 @@ public class IncomingExtraUserTransactionPluginRoot implements Service, Transact
 
 
     /**
-     * PlatformService Interface member variables.
+     * Service Interface member variables.
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
     List<EventListener> listenersAdded = new ArrayList<>();
@@ -74,7 +74,7 @@ public class IncomingExtraUserTransactionPluginRoot implements Service, Transact
     UUID pluginId;
 
     /**
-     * PlatformService Interface implementation.
+     * Service Interface implementation.
      */
 
 

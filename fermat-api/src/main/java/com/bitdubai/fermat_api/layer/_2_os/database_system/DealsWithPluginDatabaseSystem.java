@@ -5,6 +5,6 @@ package com.bitdubai.fermat_api.layer._2_os.database_system;
  */
 public interface DealsWithPluginDatabaseSystem {
 
-    public void setPluginFileSystem(PluginDatabaseSystem pluginDatabaseSystem);
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem);
     
 }

@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
 import com.bitdubai.fermat_api.layer._13_transaction.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer._13_transaction.TransactionSubsystem;
+import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.IncomingCryptoSubsysten;
 import com.bitdubai.fermat_core.layer._13_transaction.incoming_device_user.IncomingdeviceUserSubsystem;
 import com.bitdubai.fermat_core.layer._13_transaction.incoming_extra_user.IncomingExtraUserSubsystem;
 import com.bitdubai.fermat_core.layer._13_transaction.incoming_intra_user.IncomingIntraUserSubsystem;
@@ -31,6 +32,8 @@ public class TransactionLayer implements PlatformLayer {
     private Plugin mOutgoingIntraUser;
     
     private Plugin mInterWallet;
+
+    private Plugin mIncomingCrypto;
     
     public  Plugin getIncomingExtraUserPlugin() {
         return mIncomingExtraUser;
@@ -60,7 +63,9 @@ public class TransactionLayer implements PlatformLayer {
         return mOutgoingDeviceUser;
     }
     
-
+    public  Plugin getIncomingCrypto(){
+        return mIncomingCrypto;
+    }
 
 
 
@@ -167,6 +172,19 @@ public class TransactionLayer implements PlatformLayer {
         }catch (CantStartSubsystemException e){
             System.err.println("CantStartSubsystemException: " + e.getMessage());
 
+        }
+
+        /**
+         * Let's try to start the Incoming Crypto Subsystem.
+         */
+
+        TransactionSubsystem incomingCryptoSubsystem = new IncomingCryptoSubsysten();
+
+        try {
+            incomingCryptoSubsystem.start();
+            mIncomingCrypto = incomingCryptoSubsystem.getPlugin();
+        } catch (CantStartSubsystemException e){
+            System.err.println("CantStartSubsystemException: " + e.getMessage());
         }
     }
 }

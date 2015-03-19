@@ -1060,6 +1060,52 @@ public class Platform  {
 
         /**
          * ----------------------------------
+         * Plugin Incoming Crypto Transaction
+         * ----------------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the Incoming Crypto Transaction access to the File System and to the Event Manager
+         */
+
+        Plugin incomingCryptoTransaction = ((TransactionLayer) mTransactionLayer).getIncomingCrypto();
+
+        ((DealsWithPluginFileSystem) incomingCryptoTransaction).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) incomingCryptoTransaction).setEventManager((EventManager) eventManager);
+        corePlatformContext.addPlugin(incomingCryptoTransaction, Plugins.INCOMING_EXTRA_USER_TRANSACTION);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(incomingCryptoTransaction);
+            (incomingCryptoTransaction).setId(pluginID);
+
+            ((Service) incomingCryptoTransaction).start();
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
+
+
+
+
+
+        /**
+         * ----------------------------------
          * Plugin Incoming Extra User Transaction
          * ----------------------------------
          * * * * 

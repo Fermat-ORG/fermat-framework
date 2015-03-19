@@ -18,6 +18,14 @@ import java.util.UUID;
  */
 
 public class AddressBook implements CryptoAddressBook , DealsWithPluginDatabaseSystem {
+
+
+    /**
+     * UsesDatabaseSystem Interface member variables.
+     */
+    PluginDatabaseSystem pluginDatabaseSystem;
+
+
     @Override
     public User getUserByCryptoAddress(CryptoAddress cryptoAddress) {
         return null;
@@ -35,7 +43,8 @@ public class AddressBook implements CryptoAddressBook , DealsWithPluginDatabaseS
      * DealsWithPluginDatabaseSystem interface implementation.
      */
     @Override
-    public void setPluginFileSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
+
 }

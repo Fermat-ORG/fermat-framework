@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer._2_os.file_system.PlatformFileSystem;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.IncomingCryptoTransactionPluginRoot;
 import com.bitdubai.fermat_core.layer._9_communication.cloud.developer.bitdubai.version_1.CloudCommunicationChannelPluginRoot;
 import com.bitdubai.fermat_core.layer._10_network_service.bank_notes.developer.bitdubai.version_1.BankNotesNetworkServicePluginRoot;
 import com.bitdubai.fermat_core.layer._10_network_service.wallet_community.developer.bitdubai.version_1.WalletCommunityNetworkServicePluginRoot;
@@ -45,7 +46,7 @@ import java.util.UUID;
 public class PluginsIdentityManager {
 
     private PlatformFileSystem platformFileSystem;
-    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 25;
+    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 26;
     private List<UUID> pluginIds = new ArrayList<>();
 
 
@@ -549,6 +550,18 @@ public class PluginsIdentityManager {
                 /**
                  * If this fails, is because this is not the index for this plug in.
                  */
+            }
+
+            if (pluginIndex == 0) {
+                try {
+                    IncomingCryptoTransactionPluginRoot tryType;
+                    tryType = (IncomingCryptoTransactionPluginRoot) plugin;
+                    pluginIndex = 25;
+                } catch (Exception e) {
+                    /**
+                     * If this fails, is because this is not the index for this plug in.
+                     */
+                }
             }
         }
 

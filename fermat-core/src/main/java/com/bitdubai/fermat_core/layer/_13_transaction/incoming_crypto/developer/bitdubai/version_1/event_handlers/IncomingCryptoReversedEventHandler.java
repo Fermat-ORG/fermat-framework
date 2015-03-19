@@ -1,6 +1,8 @@
-package com.bitdubai.fermat_core.layer._8_crypto.address_book.developer.bitdubai.version_1.event_handlers;
+package com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.event_handlers;
 
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer._13_transaction.TransactionNotStartedException;
+import com.bitdubai.fermat_api.layer._13_transaction.incoming_crypto.IncomingCryptoManager;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer._1_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventHandler;
@@ -11,21 +13,21 @@ import com.bitdubai.fermat_api.layer._8_crypto.address_book.exceptions.ExampleEx
 /**
  * Created by loui on 22/02/15.
  */
-public class IncomingCryptoReceptionConfimedEventHandler implements EventHandler {
-    AddressBookManager addressBookManager;
+public class IncomingCryptoReversedEventHandler implements EventHandler {
+    IncomingCryptoManager incomingCryptoManager;
 
-    public void setAddressBookManager(AddressBookManager addressBookManager){
-        this.addressBookManager = addressBookManager;
+    public void setIncomingCryptoManager(IncomingCryptoManager incomingCryptoManager){
+        this.incomingCryptoManager = incomingCryptoManager;
     }
 
     @Override
     public void handleEvent(PlatformEvent platformEvent) throws Exception {
 
-        if (((Service) this.addressBookManager).getStatus() == ServiceStatus.STARTED){
+        if (((Service) this.incomingCryptoManager).getStatus() == ServiceStatus.STARTED){
 
             try
             {
-                this.addressBookManager.exampleMethod();
+                this.incomingCryptoManager.exampleMethod();
             }
             catch (ExampleException exampleException)
             {
@@ -40,8 +42,7 @@ public class IncomingCryptoReceptionConfimedEventHandler implements EventHandler
         }
         else
         {
-            throw new CryptoNotStartedException();
+            throw new TransactionNotStartedException();
         }
     }
 }
-

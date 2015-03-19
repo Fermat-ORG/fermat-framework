@@ -35,10 +35,10 @@ import com.bitdubai.fermat_api.layer._5_user.device_user.DeviceUser;
 import com.bitdubai.fermat_api.layer._8_crypto.Crypto;
 import com.bitdubai.fermat_api.layer._8_crypto.address_book.AddressBookManager;
 import com.bitdubai.fermat_api.layer._8_crypto.address_book.exceptions.ExampleException;
-import com.bitdubai.fermat_core.layer._8_crypto.address_book.developer.bitdubai.version_1.event_handlers.IncomingCryptoIdentifiedEventHandler;
-import com.bitdubai.fermat_core.layer._8_crypto.address_book.developer.bitdubai.version_1.event_handlers.IncomingCryptoReceivedEventHandler;
-import com.bitdubai.fermat_core.layer._8_crypto.address_book.developer.bitdubai.version_1.event_handlers.IncomingCryptoReceptionConfimedEventHandler;
-import com.bitdubai.fermat_core.layer._8_crypto.address_book.developer.bitdubai.version_1.event_handlers.IncomingCryptoReversedEventHandler;
+import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoIdentifiedEventHandler;
+import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoReceivedEventHandler;
+import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoReceptionConfimedEventHandler;
+import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoReversedEventHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,23 +56,6 @@ import java.util.UUID;
 
 public class AddressBookCryptoPluginRoot implements Service, Crypto, AddressBookManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, Plugin {
 
-    /**
-     * AddressBookPluginCryptoRoot Interface implementation.
-     */
-
-    public void getCryptoAddress(IntraUser intraUser) {}
-    public void getCryptoAddress(/*ExtraUser extraUser*/){}
-    public void getCryptoAddress(DeviceUser deviceUser){}
-
-    public void getNewAddressForUser(CryptoCurrency cryptoCurrency /*, IntraUser intraUser*/){
-
-
-    }
-
-    public void saveAddress (/*IntraUser intraUser,*/ CryptoAddress cryptoAddress){
-
-
-    }
 
     /**
      * Service Interface member variables.
@@ -84,6 +67,12 @@ public class AddressBookCryptoPluginRoot implements Service, Crypto, AddressBook
      * DealWithEvents Interface member variables.
      */
     EventManager eventManager;
+
+    /**
+     * UsesDatabaseSystem Interface member variables.
+     */
+    PluginDatabaseSystem pluginDatabaseSystem;
+
 
     /**
      * UsesFileSystem Interface member variables.
@@ -109,36 +98,6 @@ public class AddressBookCryptoPluginRoot implements Service, Crypto, AddressBook
         EventListener eventListener;
         EventHandler eventHandler;
 
-        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_IDENTIFIED);
-        eventHandler = new IncomingCryptoIdentifiedEventHandler();
-        ((IncomingCryptoIdentifiedEventHandler) eventHandler).setAddressBookManager(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
-        
-        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_RECEIVED);
-        eventHandler = new IncomingCryptoReceivedEventHandler();
-        ((IncomingCryptoReceivedEventHandler) eventHandler).setAddressBookManager(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
-
-        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_RECEPTION_CONFIRMED);
-        eventHandler = new IncomingCryptoReceptionConfimedEventHandler();
-        ((IncomingCryptoReceptionConfimedEventHandler) eventHandler).setAddressBookManager(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
-
-
-        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_REVERSED);
-        eventHandler = new IncomingCryptoReversedEventHandler();
-        ((IncomingCryptoReversedEventHandler) eventHandler).setAddressBookManager(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
-        
-        
         this.serviceStatus = ServiceStatus.STARTED;
 
     }
@@ -196,14 +155,16 @@ public class AddressBookCryptoPluginRoot implements Service, Crypto, AddressBook
         this.pluginFileSystem = pluginFileSystem;
     }
 
-    
+
+
     /**
      * DealsWithPluginDatabaseSystem interface implementation.
      */
     @Override
-    public void setPluginFileSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
+
     
 
     /**
@@ -237,61 +198,5 @@ public class AddressBookCryptoPluginRoot implements Service, Crypto, AddressBook
 
 
 
-
-
-    private void eventsToRaise(){
-
-        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_IDENTIFIED_FROM_EXTRA_USER);
-        ((IncomingCryptoIdentifiedFromExtraUserEvent)platformEvent).setSource(EventSource.CRYPTO_ADDRESS_BOOK);
-        eventManager.raiseEvent(platformEvent);
-
-        PlatformEvent platformEvent_1 = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_IDENTIFIED_FROM_INTRA_USER);
-        ((IncomingCryptoIdentifiedFromIntraUserEvent)platformEvent).setSource(EventSource.CRYPTO_ADDRESS_BOOK);
-        eventManager.raiseEvent(platformEvent);
-
-        PlatformEvent platformEvent_2 = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_IDENTIFIED_FROM_DEVICE_USER);
-        ((IncomingCryptoIdentifiedFromDeviceUserEvent)platformEvent).setSource(EventSource.CRYPTO_ADDRESS_BOOK);
-        eventManager.raiseEvent(platformEvent);
-
-        PlatformEvent platformEvent_3 = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_RECEIVED_FROM_EXTRA_USER);
-        ((IncomingCryptoReceivedFromExtraUserEvent)platformEvent).setSource(EventSource.CRYPTO_ADDRESS_BOOK);
-        eventManager.raiseEvent(platformEvent);
-
-        PlatformEvent platformEvent_4 = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_RECEIVED_FROM_INTRA_USER);
-        ((IncomingCryptoReceivedFromIntraUserEvent)platformEvent).setSource(EventSource.CRYPTO_ADDRESS_BOOK);
-        eventManager.raiseEvent(platformEvent);
-
-        PlatformEvent platformEvent_5 = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_RECEIVED_FROM_DEVICE_USER);
-        ((IncomingCryptoReceivedFromDeviceUserEvent)platformEvent).setSource(EventSource.CRYPTO_ADDRESS_BOOK);
-        eventManager.raiseEvent(platformEvent);
-
-        PlatformEvent platformEvent_6 = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_DEVICE_USER);
-        ((IncomingCryptoReceptionConfirmedFromDeviceUserEvent)platformEvent).setSource(EventSource.CRYPTO_ADDRESS_BOOK);
-        eventManager.raiseEvent(platformEvent);
-
-        PlatformEvent platformEvent_7 = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_INTRA_USER);
-        ((IncomingCryptoReceptionConfirmedFromIntraUserEvent)platformEvent).setSource(EventSource.CRYPTO_ADDRESS_BOOK);
-        eventManager.raiseEvent(platformEvent);
-        eventManager.raiseEvent(platformEvent);
-
-        PlatformEvent platformEvent_8 = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_EXTRA_USER);
-        ((IncomingCryptoReceptionConfirmedFromExtraUserEvent)platformEvent).setSource(EventSource.CRYPTO_ADDRESS_BOOK);
-        eventManager.raiseEvent(platformEvent);
-        eventManager.raiseEvent(platformEvent);
-
-        PlatformEvent platformEvent_9 = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_REVERSED_FROM_INTRA_USER);
-        ((IncomingCryptoReversedFromIntraUserEvent)platformEvent).setSource(EventSource.CRYPTO_ADDRESS_BOOK);
-        eventManager.raiseEvent(platformEvent);
-
-        PlatformEvent platformEvent_10 = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_REVERSED_FROM_EXTRA_USER);
-        ((IncomingCryptoReversedFromExtraUserEvent)platformEvent).setSource(EventSource.CRYPTO_ADDRESS_BOOK);
-        eventManager.raiseEvent(platformEvent);
-
-        PlatformEvent platformEvent_11 = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_REVERSED_FROM_DEVICE_USER);
-        ((IncomingCryptoReversedFromDeviceUserEvent)platformEvent).setSource(EventSource.CRYPTO_ADDRESS_BOOK);
-        eventManager.raiseEvent(platformEvent);
-
-    }
-    
 
 }

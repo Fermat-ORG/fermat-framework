@@ -29,7 +29,8 @@ public enum Plugins {
     WALLET_COMMUNITY_NETWORK_SERVICE("Wallet Community Network Service"), 
     ADDRESS_BOOK_CRYPTO("Address Book Crypto"),
     OUTGOING_EXTRA_USER_TRANSACTION("Outgoing Extra User Transaction"),
-    INCOMING_EXTRA_USER_TRANSACTION("Incoming Extra User Transaction");
+    INCOMING_EXTRA_USER_TRANSACTION("Incoming Extra User Transaction"),
+    INCOMING_CRYPTO_TRANSACTION("Incoming Crypto Transaction");
 
     private final String key;
 

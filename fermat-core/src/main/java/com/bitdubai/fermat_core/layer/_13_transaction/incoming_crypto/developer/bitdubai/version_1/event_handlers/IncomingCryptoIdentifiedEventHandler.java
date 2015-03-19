@@ -1,31 +1,31 @@
-package com.bitdubai.fermat_core.layer._8_crypto.address_book.developer.bitdubai.version_1.event_handlers;
+package com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.event_handlers;
 
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer._13_transaction.TransactionNotStartedException;
+import com.bitdubai.fermat_api.layer._13_transaction.incoming_crypto.IncomingCryptoManager;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer._1_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventHandler;
-import com.bitdubai.fermat_api.layer._8_crypto.CryptoNotStartedException;
-import com.bitdubai.fermat_api.layer._8_crypto.address_book.AddressBookManager;
 import com.bitdubai.fermat_api.layer._8_crypto.address_book.exceptions.ExampleException;
 
 /**
  * Created by loui on 22/02/15.
  */
-public class IncomingCryptoReversedEventHandler implements EventHandler {
-    AddressBookManager addressBookManager;
-
-    public void setAddressBookManager(AddressBookManager addressBookManager){
-        this.addressBookManager = addressBookManager;
+public class IncomingCryptoIdentifiedEventHandler implements EventHandler {
+    IncomingCryptoManager incomingCryptoManager;
+    
+    public void setIncomingCryptoManager(IncomingCryptoManager incomingCryptoManager){
+        this.incomingCryptoManager = incomingCryptoManager;
     }
-
+    
     @Override
     public void handleEvent(PlatformEvent platformEvent) throws Exception {
 
-        if (((Service) this.addressBookManager).getStatus() == ServiceStatus.STARTED){
+        if (((Service) this.incomingCryptoManager).getStatus() == ServiceStatus.STARTED){
 
             try
             {
-                this.addressBookManager.exampleMethod();
+                this.incomingCryptoManager.exampleMethod();
             }
             catch (ExampleException exampleException)
             {
@@ -40,7 +40,7 @@ public class IncomingCryptoReversedEventHandler implements EventHandler {
         }
         else
         {
-            throw new CryptoNotStartedException();
+            throw new TransactionNotStartedException();
         }
     }
 }
