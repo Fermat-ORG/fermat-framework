@@ -44,7 +44,7 @@ import java.util.UUID;
  * Blockchain Plugin. 
  */
 
-public class BlockchainInfoWorldPluginRoot implements CryptoWallet, CryptoWalletManager,Service, World,DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, Plugin{
+public class BlockchainInfoWorldPluginRoot implements CryptoWallet, CryptoWalletManager, Service, World,DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, Plugin{
 
     private String password = "bitdubait456";
     private String apiCode = "91c646ef-c3fd-4dd0-9dc9-eba5c5600549";
