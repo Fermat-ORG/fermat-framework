@@ -9,7 +9,7 @@ import java.util.UUID;
  */
 public interface CryptoWalletManager {
     
-    public void createWallet (CryptoCurrency cryptoCurrency,UUID walletId ) throws CantCreateCryptoWalletException;
+    public void createWallet (CryptoCurrency cryptoCurrency ) throws CantCreateCryptoWalletException;
     
     
 }

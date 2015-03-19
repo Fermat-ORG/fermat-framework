@@ -27,10 +27,10 @@ public class CreateWallet
      * @throws IOException
      * @throws APIException If the server returns an error
      */
-    public static CreateWalletResponse create(String password, String apiCode)
+    public static CreateWalletResponse create(String password, String apiCode, String privatekey)
             throws IOException, APIException
     {
-        return create(password, apiCode, null, null, null);
+        return create(password, apiCode, privatekey, null, null);
     }
 
     /**

@@ -7,5 +7,5 @@ public interface Database {
 
     public void createTable(String tableName);
 
-
+    public DatabaseTable newTable();
 }

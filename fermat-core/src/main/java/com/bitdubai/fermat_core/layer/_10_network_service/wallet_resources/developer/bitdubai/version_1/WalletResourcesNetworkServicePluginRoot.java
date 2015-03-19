@@ -187,7 +187,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
             //get repo name
             String reponame = Repositories.getValueFromType (walletType);
-            //conect to repo and get manifest file
+            //connect to repo and get manifest file
             String repoManifest = getRepositoryStringFile(reponame, "manifest.txt");
             //get list of wallet image, split
             String[] fileList = repoManifest.split(",");
@@ -248,7 +248,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             String reponame = Repositories.getValueFromType(walletType);
             //get image from disk
             PluginImageFile imageFile;
-            imageFile = pluginFileSystem.getImageFile(pluginId, reponame, imageName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            imageFile = pluginFileSystem.getImageFile(pluginId, reponame, imageName, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
 // TODO: NATALIA las imagenes deberian estar grabadas en la memoria externa del telefono, osea que FilePrivacy no puede ser PRIVATE
             imageResource = imageFile.getContent();
         }
@@ -287,7 +287,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
         Map<String, List<String>> headerFields = http.getHeaderFields();
         // If URL is getting 301 and 302 redirection HTTP code then get new URL link.
-// This below for loop is totally optional if you are sure that your URL is not getting redirected to anywhere
+        // This below for loop is totally optional if you are sure that your URL is not getting redirected to anywhere
         for (String header : headerFields.get(null)) {
             if (header.contains(" 302 ") || header.contains(" 301 ")) {
                 link = headerFields.get("Location").get(0);
@@ -304,7 +304,11 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
     }
 
-    //conect to repository and download image file
+    /**
+     * connect to repository and download image file
+     */
+
+
     private byte[] getRepositoryImageFile(String repo,String file) throws MalformedURLException, IOException, FileNotFoundException {
 
         String link = "https://raw.githubusercontent.com/bitDubai/"+repo +"/master/" + file;
@@ -324,7 +328,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
     }
 
 
-    //
+
     private  String getStringFromStream(InputStream stream) throws IOException {
         if (stream != null) {
             Writer writer = new StringWriter();

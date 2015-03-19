@@ -7,8 +7,10 @@ import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableColumn;
  * Created by toshiba on 10/02/2015.
  */
 public class AndroidDatabaseTableColumn implements DatabaseTableColumn {
-String mName ="";
+
+    String mName ="";
     DatabaseDataType mType;
+
     public String getName ()
     {
         return mName;

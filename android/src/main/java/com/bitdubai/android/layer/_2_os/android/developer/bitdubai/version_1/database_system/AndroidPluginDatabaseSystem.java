@@ -14,62 +14,44 @@ import java.util.UUID;
 /**
  * Created by ciencias on 20.01.15.
  */
-public class AndroidPluginDatabaseSystem extends SQLiteOpenHelper implements PluginDatabaseSystem{
+public class AndroidPluginDatabaseSystem  implements PluginDatabaseSystem{
 
-    Context mContext;
-    private static String mDatabaseName = "";
-    String mDatabaseSchema;
-    String mTableName;
-    String mTableSchema;
-    SQLiteDatabase mDatabase;
+    private Context Context;
+    private SQLiteDatabase Database;
     private static final int DATABASE_VERSION = 1;
 
     public AndroidPluginDatabaseSystem(Context context) {
-        super(context, mDatabaseName, null, DATABASE_VERSION);
-        mContext = context;
-    }
 
+        this.Context = context;
+    }
 
 
     @Override
     public Database openDatabase(UUID ownerId, String databaseName) throws CantOpenDatabaseException {
-        mDatabase = SQLiteDatabase.openDatabase(mContext.getFilesDir() +"/" + databaseName,null,SQLiteDatabase.OPEN_READWRITE);
-        return new AndroidDatabase();
+        this.Database = SQLiteDatabase.openDatabase(this.Context.getFilesDir() +"/" + databaseName,null,SQLiteDatabase.OPEN_READWRITE);
+        return new AndroidDatabase(this.Context);
 
     }
 
     @Override
     public Database createDatabase(UUID ownerId, String databaseName) {
 
-        mDatabase = SQLiteDatabase.openOrCreateDatabase(mContext.getFilesDir() +"/" + databaseName, null, null);
-        return new AndroidDatabase();
+        this.Database = SQLiteDatabase.openOrCreateDatabase(this.Context.getFilesDir() +"/" + databaseName, null, null);
+        return new AndroidDatabase(this.Context);
     }
 
 
     public SQLiteDatabase getDatabase() {
-        return mDatabase;
+        return this.Database;
 
     }
 
     @Override
     public void setContext(Object context) {
-        mContext = (Context) context;
+        this.Context = (Context) context;
     }
 
 
 
-    @Override
-    public void onCreate(SQLiteDatabase db) {
 
-        db.execSQL(mTableSchema);
-    }
-
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // Drop older table if existed
-        db.execSQL("DROP TABLE IF EXISTS " + mTableName);
-
-        // Create tables again
-        onCreate(db);
-    }
 }
