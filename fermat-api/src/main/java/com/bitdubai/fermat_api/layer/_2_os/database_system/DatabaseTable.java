@@ -7,7 +7,9 @@ import java.util.List;
  */
 public interface DatabaseTable {
     
-    //public List<TableColumn> getColumns();
+   // public List<DatabaseTableColumn> getColumns();
+
+    public DatabaseTableColumn newColumn();
 
     public List<String> getColumns();
 

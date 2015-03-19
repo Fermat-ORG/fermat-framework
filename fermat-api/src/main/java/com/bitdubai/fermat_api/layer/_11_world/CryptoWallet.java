@@ -15,11 +15,11 @@ public interface CryptoWallet {
     
     public void stop();
     
-    public long getWalletBalance(CryptoCurrency cryptoCurrency,UUID walletId);
+    public long getWalletBalance(CryptoCurrency cryptoCurrency);
     
     public long getAddressBalance(CryptoAddress cryptoAddress);
     
-    public void sendCrypto (UUID walletId,CryptoCurrency cryptoCurrency, long amount, CryptoAddress cryptoAddress);
+    public void sendCrypto (CryptoCurrency cryptoCurrency, long amount, CryptoAddress cryptoAddress);
     
     
 }

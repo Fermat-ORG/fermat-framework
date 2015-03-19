@@ -26,35 +26,10 @@ public class AndroidDatabaseTable implements  DatabaseTable {
     SQLiteDatabase mDatabase;
     AndroidDatabaseTableFilter mTableFilter;
 
-    public void setContext(Object context) {
-        mContext = (Context) context;
-    }
-
-    public void setTableName(String tablename) {
-        mTableName = tablename;
-    }
-
-
-    public void insertRecord(DatabaseTableRecord record) {
-
-        AndroidPluginDatabaseSystem dbPlugIn = new AndroidPluginDatabaseSystem(mContext);
-        mDatabase = dbPlugIn.getDatabase();
-
-        List<String> records =  record.getValues();
-        List<String> columns = this.getColumns();
-
-        ContentValues initialValues = new ContentValues();
-
-        for (int i = 0; i < columns.size(); ++i) {
-            initialValues.put(columns.get(i), records.get(i));
+    @Override
+    public DatabaseTableColumn newColumn(){
+        return new AndroidDatabaseTableColumn();
         }
-
-
-        mDatabase.insert(mTableName,null,initialValues);
-
-        mDatabase.close();
-
-    }
 
     @Override
     public List<String> getColumns()
@@ -169,7 +144,35 @@ public class AndroidDatabaseTable implements  DatabaseTable {
     }
 
 
+    public void setContext(Object context) {
+        mContext = (Context) context;
+    }
 
+    public void setTableName(String tablename) {
+        mTableName = tablename;
+    }
+
+
+    public void insertRecord(DatabaseTableRecord record) {
+
+        AndroidPluginDatabaseSystem dbPlugIn = new AndroidPluginDatabaseSystem(mContext);
+        mDatabase = dbPlugIn.getDatabase();
+
+        List<String> records =  record.getValues();
+        List<String> columns = this.getColumns();
+
+        ContentValues initialValues = new ContentValues();
+
+        for (int i = 0; i < columns.size(); ++i) {
+            initialValues.put(columns.get(i), records.get(i));
+        }
+
+
+        mDatabase.insert(mTableName,null,initialValues);
+
+        mDatabase.close();
+
+    }
 
  /*   public  ArrayList<Row> getAllRows(String databaseName, String tableName) {
         mDatabase = SQLiteDatabase.openDatabase(mContext.getFilesDir() + "/" + databaseName, null, SQLiteDatabase.OPEN_READWRITE);
@@ -281,7 +284,3 @@ public String getFilter()
     }
 }
 
-
-//ownerId id del plugind: cada pugin tiene su juego de archivos
-// a la libreria le llega el id, ver de agregar al nombre de la base de datos el id del plug in
-// para el caso de los archivos 
