@@ -3,6 +3,8 @@ package com.bitdubai.android.layer._2_os.android.developer.bitdubai.version_1.fi
 import android.content.Context;
 
 import com.bitdubai.fermat_api.layer._2_os.file_system.*;
+import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantDecryptException;
+import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantEncryptException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantPersistFileException;
 
@@ -35,6 +37,10 @@ import android.util.Base64;
 
 public class AndroidPluginTextFile implements PluginTextFile {
 
+    /**
+     * PluginTextFile interface member variables.
+     */
+    
     Context context;
     String content;
     String fileName;
@@ -43,15 +49,6 @@ public class AndroidPluginTextFile implements PluginTextFile {
     String directoryName;
     UUID ownerId;
 
-    @Override
-    public String getContent()  {
-        return this.content;
-    }
-
-    @Override
-    public void setContent(String content) {
-        this.content = content;
-    }
 
     public AndroidPluginTextFile(UUID ownerId, Context context, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
 
@@ -63,34 +60,72 @@ public class AndroidPluginTextFile implements PluginTextFile {
         this.directoryName = directoryName;
 
     }
+    
+    /**
+     * PluginTextFile interface implementation.
+     */
+    
+    @Override
+    public String getContent()  {
+        return this.content;
+    }
 
     @Override
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    /**
+     * This method encrypts the content and the writes it into the media.
+     */
+    @Override
     public void persistToMedia() throws CantPersistFileException {
-        try {
+        
+        try 
+        {
+            /**
+             * If the directory does not exist, we create it here.
+             */
+            
             File storagePath = new File(this.context.getFilesDir()+"/"+ this.directoryName);
             if (!storagePath.exists()) {
                 storagePath.mkdirs();
             }
 
+            /**
+             * Then we create the file.
+             */
             File file = new File(storagePath, fileName);
 
             OutputStream outputStream;
 
-            //encript file content with ownerId key
-            String encryptContent = this.Encriptar(this.content);
-            //outputStream = this.context.openFileOutput( file.getPath(), Context.MODE_PRIVATE);
+            /**
+             * We encrypt the content.
+             */
+            String encryptedContent = this.encrypt(this.content,this.ownerId.toString());
+
+            /**
+             * We write the encrypted content into the file.
+             */
             outputStream =  new BufferedOutputStream(new FileOutputStream(file));
-            outputStream.write(encryptContent.getBytes());
+            outputStream.write(encryptedContent.getBytes());
             outputStream.close();
+            
         } catch (Exception e) {
             System.err.println("Error trying to persist file: " + e.getMessage());
             e.printStackTrace();
             throw new CantPersistFileException(this.fileName);
         }
     }
+    
+    
+    
+    // TODO: NATALIA, Este metodo para que sirve??? No replica lo que ya tenemos en loadFromMedia???
     @Override
     public void loadToMemory() throws CantLoadFileException {
-        try {
+        
+        try 
+        {
             String path = this.context.getFilesDir() + "/" + this.directoryName;
             File internalDir = new File(path);
 
@@ -106,7 +141,7 @@ public class AndroidPluginTextFile implements PluginTextFile {
                 }
             }
 
-            String encryptContent = this.Encriptar(this.content);
+            String encryptContent = this.encrypt(this.content, this.ownerId.toString());
             File file = new File(internalDir, this.fileName);
 
             FileWriter fw = new FileWriter(file);
@@ -119,65 +154,69 @@ public class AndroidPluginTextFile implements PluginTextFile {
             throw new CantLoadFileException(this.fileName);
         }
 
-
-      /*  FileInputStream inputStream;
-
-        try {
-            inputStream = this.context.openFileInput(this.fileName);
-            inputStream.read(this.content.getBytes());
-            inputStream.close();
-        } catch (Exception e) {
-            System.err.println("Error trying to load a file to memory: " + e.getMessage());
-            e.printStackTrace();
-            throw new CantLoadFileException(this.fileName);
-        }*/
     }
 
 
-
+    /**
+     * This method reads the file, decrypts its content and then it load it into memory.
+     */
     @Override
-    public void loadFromMedia() throws CantPersistFileException {
+    public void loadFromMedia() throws CantLoadFileException {
 
-        try {
+        try 
+        {
+            /**
+             * We open the file and read its encrypted content.
+             */
             File file = new File(this.context.getFilesDir() +"/"+ this.directoryName, this.fileName);
+
             InputStream inputStream ;
-
-
-
-            //inputStream = this.context.openFileInput(this.fileName);
             inputStream =  new BufferedInputStream(new FileInputStream(file));
+
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
 
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            StringBuilder sb = new StringBuilder();
+            StringBuilder stringBuilder = new StringBuilder();
             String line;
+
             while ((line = bufferedReader.readLine()) != null) {
-                sb.append(line);
+                stringBuilder.append(line);
             }
             inputStream.close();
-
-            String dencryptContent = "";
+            
+            /**
+             * Now we decrypt it.
+             */
+            String decryptedContent = "";
+            
             try {
-                dencryptContent = this.Desencriptar(sb.toString());
+                decryptedContent = this.decrypt(stringBuilder.toString());
 
-            } catch (javax.crypto.BadPaddingException e) {
+            } catch (CantDecryptException e) {
+                System.err.println("Error trying to decrypt file: " + e.getMessage());
                 e.printStackTrace();
-                throw e;
+                throw new CantLoadFileException(this.fileName);
             }
 
-            this.content = dencryptContent;
-
-            inputStream.close();
+            /**
+             * Finally, I load it into memory.
+             */
+            this.content = decryptedContent;
+            
         } catch (Exception e) {
-            System.err.println("Error trying to persist file: " + e.getMessage());
+            System.err.println("Error trying to load file from media: " + e.getMessage());
             e.printStackTrace();
-            throw new CantPersistFileException(this.fileName);
+            throw new CantLoadFileException(this.fileName);
         }
     }
 
-    private  String Encriptar(String texto) {
+    
+    /**
+     * Encrypting Method.
+     */
+    
+    private  String encrypt(String text, String secretKey) throws CantEncryptException {
 
-        String secretKey = this.ownerId.toString(); //llave para encriptar datos
         String base64EncryptedString = "";
 
         try {
@@ -190,23 +229,31 @@ public class AndroidPluginTextFile implements PluginTextFile {
             Cipher cipher = Cipher.getInstance("DESede");
             cipher.init(Cipher.ENCRYPT_MODE, key);
 
-            byte[] plainTextBytes = texto.getBytes("utf-8");
+            byte[] plainTextBytes = text.getBytes("utf-8");
             byte[] buf = cipher.doFinal(plainTextBytes);
             byte[] base64Bytes = Base64.encode(buf, 1);
             base64EncryptedString = new String(base64Bytes);
 
-        } catch (Exception ex) {
+        } catch (Exception e) {
+            System.err.println("Error trying to encrypt: " + e.getMessage());
+            e.printStackTrace();
+            throw  new CantEncryptException();
         }
         return base64EncryptedString;
     }
 
-    private  String Desencriptar(String textoEncriptado) throws javax.crypto.BadPaddingException {
 
-        String secretKey = this.ownerId.toString(); //llave para encriptar datos
+    /**
+     * Decrypting Method.
+     */
+    
+    private  String decrypt(String encryptedText) throws CantDecryptException {
+
+        String secretKey = this.ownerId.toString();
         String base64EncryptedString = "";
 
         try {
-            byte[] message = Base64.decode(textoEncriptado.getBytes("utf-8"), 1);
+            byte[] message = Base64.decode(encryptedText.getBytes("utf-8"), 1);
             MessageDigest md = MessageDigest.getInstance("MD5");
             byte[] digestOfPassword = md.digest(secretKey.getBytes("utf-8"));
             byte[] keyBytes = Arrays.copyOf(digestOfPassword, 24);
@@ -220,8 +267,10 @@ public class AndroidPluginTextFile implements PluginTextFile {
             base64EncryptedString = new String(plainText, "UTF-8");
             return base64EncryptedString;
 
-        } catch (Exception ex) {
-            throw  new javax.crypto.BadPaddingException("invalid owner id");
+        } catch (Exception e) {
+            System.err.println("Error trying to decrypt: " + e.getMessage());
+            e.printStackTrace();
+            throw  new CantDecryptException();
 
         }
 

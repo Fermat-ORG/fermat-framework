@@ -39,8 +39,8 @@ public class AndroidPluginFileSystem implements PluginFileSystem {
             newFile.loadFromMedia();
             return newFile;
         }
-        catch (CantPersistFileException e){
-            System.err.println("CantPersistFileException: " + e.getMessage());
+        catch (CantLoadFileException e){
+            System.err.println("CantLoadFileException: " + e.getMessage());
             e.printStackTrace();
             throw new FileNotFoundException();
         }

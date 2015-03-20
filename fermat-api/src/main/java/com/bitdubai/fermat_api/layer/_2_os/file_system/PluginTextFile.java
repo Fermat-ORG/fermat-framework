@@ -17,7 +17,7 @@ public interface PluginTextFile {
 
     public void loadToMemory () throws CantLoadFileException;
 
-    public void loadFromMedia() throws CantPersistFileException;
+    public void loadFromMedia() throws CantLoadFileException;
 
 
 
