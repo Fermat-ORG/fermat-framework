@@ -575,8 +575,9 @@ public class UsdBalanceFragment extends Fragment {
 
                             // Create and show the dialog.
                             //Fragment currentFragment = TicketFragment.newInstance(1);
-                           // DialogFragment newFragment = TicketFragment.newInstance(1);
-                           // newFragment.show(ft, "dialog");
+                            // DialogFragment newFragment = TicketFragment.newInstance(1);
+                            // newFragment.show(ft, "dialog");
+                            imageMoney = (ImageView) view.findViewById(Id);
                             onDoubleTap(view);
 
                         }

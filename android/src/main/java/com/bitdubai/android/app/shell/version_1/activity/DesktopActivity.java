@@ -53,7 +53,7 @@ public class DesktopActivity extends FragmentActivity
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
+                (DrawerLayout) findViewById(R.id.drawer_layout), null);
 
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/CaviarDreams.ttf");
         ((MyApplication) this.getApplication()).setDefaultTypeface(tf);
