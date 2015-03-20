@@ -221,7 +221,7 @@ public class PlatformDeviceUser implements DeviceUser,DealsWithPlatformFileSyste
                     FileLifeSpan.PERMANENT
             );
 
-            file.loadToMemory();
+            file.persistToMedia();
 
             String[] values = file.getContent().split(";", -1);
 
@@ -229,7 +229,7 @@ public class PlatformDeviceUser implements DeviceUser,DealsWithPlatformFileSyste
             this.password = values[1];
 
         }
-        catch (FileNotFoundException |CantLoadFileException ex)
+        catch (FileNotFoundException |CantPersistFileException ex)
         {
             /**
              * This is bad, but lets handle it...

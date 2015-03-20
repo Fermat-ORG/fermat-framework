@@ -242,9 +242,9 @@ public class DeviceUserUserAddonRoot implements Service,  DeviceUserManager, Dea
             );
 
             try {
-                platformStateFile.loadToMemory();
+                platformStateFile.persistToMedia();
             }
-            catch (CantLoadFileException cantLoadFileException) {
+            catch (CantPersistFileException cantLoadFileException) {
                 /**
                  * This really should never happen. But if it does...
                  */

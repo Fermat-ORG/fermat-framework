@@ -147,7 +147,7 @@ public class FileImageActivity extends FragmentActivity {
           //  PlatformDataFile file = filemanager.createFile("", "example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
             PluginTextFile file = filemanager.createTextFile(moduleId, "PlugIn", "example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
             file.setContent("Text Content Test File Binary");
-            file.loadToMemory();
+           // file.loadToMemory();
 
             TextView  result = (TextView)findViewById(R.id.result_text);
             result.setText("Binary loaded to Memory");

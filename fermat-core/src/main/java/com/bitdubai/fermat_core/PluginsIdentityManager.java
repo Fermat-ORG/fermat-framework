@@ -66,9 +66,9 @@ public class PluginsIdentityManager {
 
             try
             {
-                platformTextFile.loadToMemory();
+                platformTextFile.persistToMedia();
             }
-            catch (CantLoadFileException cantLoadFileException)
+            catch (CantPersistFileException cantLoadFileException)
             {
                 /**
                  * Until we implement some kind of backup of this critical file, there is no possible recovery from this 
