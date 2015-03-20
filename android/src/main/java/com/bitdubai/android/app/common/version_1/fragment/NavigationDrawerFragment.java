@@ -187,22 +187,13 @@ public class NavigationDrawerFragment extends Fragment {
      * @param fragmentId   The android:id of this fragment in its activity's layout.
      * @param drawerLayout The DrawerLayout containing this fragment's UI.
      */
-    public void setUp(int fragmentId, DrawerLayout drawerLayout) {
+    public void setUp(int fragmentId, DrawerLayout drawerLayout,SideMenu sideMenu) {
 
         //create menu option based activity submenu definition
-        Platform platform = MyApplication.getPlatform();
-
-        this.platformContext = platform.getCorePlatformContext();
-
-        this.appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.APP_RUNTIME_MIDDLEWARE);
 
 
         List<String> menuOption = new ArrayList<String>();
         List<com.bitdubai.fermat_api.layer._12_middleware.app_runtime.MenuItem> menuItem = new ArrayList<>();
-        if(appRuntimeMiddleware != null){
-
-            this.activity = appRuntimeMiddleware.getLasActivity();
-            SideMenu sideMenu = activity.getSideMenu();
 
             if(sideMenu !=null)
             {
@@ -213,8 +204,7 @@ public class NavigationDrawerFragment extends Fragment {
                     menuOption.add(menu.getLabel());
                 }
 
-            }
-        }
+             }
 
             mDrawerListView.setAdapter(new NavigationDrawerArrayAdapter(
                     getActivity(),

@@ -84,7 +84,7 @@ public class ShopActivity  extends FragmentActivity implements NavigationDrawerF
         // Set up the drawer.
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
+                (DrawerLayout) findViewById(R.id.drawer_layout),null);
         Intent i=getIntent();
 
         tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
