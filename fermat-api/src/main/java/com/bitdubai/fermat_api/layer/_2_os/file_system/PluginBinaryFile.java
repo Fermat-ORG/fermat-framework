@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantPersistFil
 /**
  * Created by Natalia on 11/02/2015.
  */
-public interface PluginImageFile {
+public interface PluginBinaryFile {
     public byte[] getContent ();
 
     public void setContent (byte[] content);

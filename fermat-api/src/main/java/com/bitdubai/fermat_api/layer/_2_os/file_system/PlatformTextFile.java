@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantPersistFil
 /**
  * Created by ciencias on 01.02.15.
  */
-public interface PlatformDataFile {
+public interface PlatformTextFile {
 
     public String getContent ();
 

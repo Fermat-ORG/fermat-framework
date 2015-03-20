@@ -187,7 +187,7 @@ public class PlatformDeviceUser implements DeviceUser,DealsWithPlatformFileSyste
 
     private void persist() throws CantPersistDeviceUserException {
 
-        PlatformDataFile file = this.platformFileSystem.createFile(
+        PlatformTextFile file = this.platformFileSystem.createFile(
                 DeviceDirectory.LOCAL_USERS.getName(),
                 this.userId.toString(),
                 FilePrivacy.PRIVATE,
@@ -214,7 +214,7 @@ public class PlatformDeviceUser implements DeviceUser,DealsWithPlatformFileSyste
 
         try {
             
-            PlatformDataFile file = this.platformFileSystem.getFile(
+            PlatformTextFile file = this.platformFileSystem.getFile(
                     DeviceDirectory.LOCAL_USERS.getName(),
                     this.userId.toString(),
                     FilePrivacy.PRIVATE,

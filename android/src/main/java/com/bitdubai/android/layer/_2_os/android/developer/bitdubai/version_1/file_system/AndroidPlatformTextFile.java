@@ -21,7 +21,7 @@ import java.io.InputStreamReader;
 import java.io.BufferedOutputStream;
 
 
-public class AndroidPlatformDataFile implements PlatformDataFile {
+public class AndroidPlatformTextFile implements PlatformTextFile {
     Context context;
     String content = "";
     String fileName;
@@ -31,7 +31,7 @@ public class AndroidPlatformDataFile implements PlatformDataFile {
 
 
 
-    public AndroidPlatformDataFile( Context context,String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
+    public AndroidPlatformTextFile(Context context, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
 
         this.context = context;
         this.fileName = fileName;

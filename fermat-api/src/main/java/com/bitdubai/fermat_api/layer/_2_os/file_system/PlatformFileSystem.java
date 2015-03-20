@@ -7,9 +7,9 @@ import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.FileNotFoundEx
  */
 public interface PlatformFileSystem {
 
-    public PlatformDataFile getFile (String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException;
+    public PlatformTextFile getFile (String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException;
 
-    public PlatformDataFile createFile (String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan );
+    public PlatformTextFile createFile (String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan );
 
     void setContext (Object context);
 

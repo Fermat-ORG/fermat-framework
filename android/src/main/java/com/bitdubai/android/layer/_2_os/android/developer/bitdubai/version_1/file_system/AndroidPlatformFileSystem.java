@@ -3,7 +3,6 @@ package com.bitdubai.android.layer._2_os.android.developer.bitdubai.version_1.fi
 import android.content.Context;
 
 import com.bitdubai.fermat_api.layer._2_os.file_system.*;
-import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.FileNotFoundException;
 
@@ -13,9 +12,9 @@ import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.FileNotFoundEx
 public class AndroidPlatformFileSystem implements PlatformFileSystem {
     Context context;
     @Override
-    public PlatformDataFile getFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException {
+    public PlatformTextFile getFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException {
 
-        AndroidPlatformDataFile newFile = new AndroidPlatformDataFile( this.context, directoryName,fileName, privacyLevel, lifeSpan);
+        AndroidPlatformTextFile newFile = new AndroidPlatformTextFile( this.context, directoryName,fileName, privacyLevel, lifeSpan);
 
         try {
             newFile.loadFromMedia();
@@ -30,8 +29,8 @@ public class AndroidPlatformFileSystem implements PlatformFileSystem {
     }
 
     @Override
-    public PlatformDataFile createFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) {
-        return new AndroidPlatformDataFile( this.context,directoryName,fileName, privacyLevel, lifeSpan);
+    public PlatformTextFile createFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) {
+        return new AndroidPlatformTextFile( this.context,directoryName,fileName, privacyLevel, lifeSpan);
     }
 
     @Override

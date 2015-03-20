@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.PluginNotRecognizedException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer._2_os.file_system.FilePrivacy;
-import com.bitdubai.fermat_api.layer._2_os.file_system.PlatformDataFile;
+import com.bitdubai.fermat_api.layer._2_os.file_system.PlatformTextFile;
 import com.bitdubai.fermat_api.layer._2_os.file_system.PlatformFileSystem;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantPersistFileException;
@@ -54,7 +54,7 @@ public class PluginsIdentityManager {
 
         this.platformFileSystem = platformFileSystem;
 
-        PlatformDataFile platformDataFile;
+        PlatformTextFile platformTextFile;
 
         try
         {
@@ -62,11 +62,11 @@ public class PluginsIdentityManager {
              * First I get the file where all ids are stored. 
              */
 
-            platformDataFile =  platformFileSystem.getFile("Platform", "PluginsIds", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            platformTextFile =  platformFileSystem.getFile("Platform", "PluginsIds", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
 
             try
             {
-                platformDataFile.loadToMemory();
+                platformTextFile.loadToMemory();
             }
             catch (CantLoadFileException cantLoadFileException)
             {
@@ -83,7 +83,7 @@ public class PluginsIdentityManager {
              * Then I put the content of the file on an Array String.
              */
             
-            String[] stringPluginIds = platformDataFile.getContent().split(";" , -1);
+            String[] stringPluginIds = platformTextFile.getContent().split(";" , -1);
 
             Integer arrayPosition = 0;
 
@@ -126,7 +126,7 @@ public class PluginsIdentityManager {
 
                 try
                 {
-                    savePluginIds(platformDataFile);
+                    savePluginIds(platformTextFile);
                 }
                 catch (CantPersistFileException cantPersistFileException )
                 {
@@ -144,7 +144,7 @@ public class PluginsIdentityManager {
         }
         catch (FileNotFoundException fileNotFoundException)
         {
-            platformDataFile =  platformFileSystem.createFile("Platform", "PluginsIds", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            platformTextFile =  platformFileSystem.createFile("Platform", "PluginsIds", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
 
 
             for (int arrayPosition = 0; arrayPosition < AMOUNT_OF_KNOWN_PLUGINS; arrayPosition++) {
@@ -156,7 +156,7 @@ public class PluginsIdentityManager {
 
             try
             {
-                savePluginIds(platformDataFile);
+                savePluginIds(platformTextFile);
             }
             catch (CantPersistFileException cantPersistFileException )
             {
@@ -580,7 +580,7 @@ public class PluginsIdentityManager {
 
 
 
-    private void savePluginIds(PlatformDataFile platformDataFile) throws CantPersistFileException{
+    private void savePluginIds(PlatformTextFile platformTextFile) throws CantPersistFileException{
 
         String fileContent = "";
 
@@ -590,11 +590,11 @@ public class PluginsIdentityManager {
 
         }
 
-        platformDataFile.setContent(fileContent);
+        platformTextFile.setContent(fileContent);
 
         try
         {
-            platformDataFile.persistToMedia();
+            platformTextFile.persistToMedia();
         }
         catch (CantPersistFileException cantPersistFileException )
         {

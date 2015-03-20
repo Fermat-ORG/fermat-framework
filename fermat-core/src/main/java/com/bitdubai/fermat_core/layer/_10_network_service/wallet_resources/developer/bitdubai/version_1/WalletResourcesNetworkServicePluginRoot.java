@@ -11,8 +11,8 @@ import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer._1_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer._2_os.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer._2_os.file_system.FilePrivacy;
-import com.bitdubai.fermat_api.layer._2_os.file_system.PluginDataFile;
-import com.bitdubai.fermat_api.layer._2_os.file_system.PluginImageFile;
+import com.bitdubai.fermat_api.layer._2_os.file_system.PluginTextFile;
+import com.bitdubai.fermat_api.layer._2_os.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
@@ -196,9 +196,9 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
                 //save that on memory
 
                 byte[] image =  getRepositoryImageFile(reponame, fileList[j].toString());
-                PluginImageFile imageFile;
+                PluginBinaryFile imageFile;
                 
-                imageFile = pluginFileSystem.createImageFile(pluginId, reponame, fileList[j].toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                imageFile = pluginFileSystem.createBinaryFile(pluginId, reponame, fileList[j].toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
                 imageFile.setContent(image);
                 imageFile.persistToMedia();
 
@@ -210,8 +210,8 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             for (int j = 0; j < layoutList.length; j++) {
 
                 String file =  getRepositoryStringFile(reponame, layoutList[j].toString());
-                PluginDataFile layoutFile;
-                layoutFile = pluginFileSystem.createDataFile(pluginId, reponame, layoutList[j].toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                PluginTextFile layoutFile;
+                layoutFile = pluginFileSystem.createTextFile(pluginId, reponame, layoutList[j].toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
 
                 layoutFile.setContent(file);
                 layoutFile.persistToMedia();
@@ -247,8 +247,8 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             //get repo name
             String reponame = Repositories.getValueFromType(walletType);
             //get image from disk
-            PluginImageFile imageFile;
-            imageFile = pluginFileSystem.getImageFile(pluginId, reponame, imageName, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+            PluginBinaryFile imageFile;
+            imageFile = pluginFileSystem.getBinaryFile(pluginId, reponame, imageName, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
 // TODO: NATALIA las imagenes deberian estar grabadas en la memoria externa del telefono, osea que FilePrivacy no puede ser PRIVATE
             imageResource = imageFile.getContent();
         }
@@ -267,8 +267,8 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             //get repo name
             String reponame = Repositories.getValueFromType(walletType);
             //get image from disk
-            PluginDataFile layoutFile;
-            layoutFile = pluginFileSystem.getDataFile(pluginId, reponame, imageName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            PluginTextFile layoutFile;
+            layoutFile = pluginFileSystem.getTextFile(pluginId, reponame, imageName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
 
             content = layoutFile.getContent();
         }

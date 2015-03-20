@@ -6,7 +6,7 @@ import android.os.Environment;
 
 import com.bitdubai.fermat_api.layer._2_os.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer._2_os.file_system.FilePrivacy;
-import com.bitdubai.fermat_api.layer._2_os.file_system.PluginImageFile;
+import com.bitdubai.fermat_api.layer._2_os.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantPersistFileException;
 
@@ -24,7 +24,7 @@ import java.io.ByteArrayOutputStream;
 /**
  * Created by Natalia on 29/01/2015.
  */
-public class AndroidPluginImageFile implements PluginImageFile {
+public class AndroidPluginBinaryFile implements PluginBinaryFile {
 
     Context context;
     byte[] content;
@@ -44,7 +44,7 @@ public class AndroidPluginImageFile implements PluginImageFile {
         this.content = content;
     }
 
-    public AndroidPluginImageFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
+    public AndroidPluginBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
 
         this.context = context;
         this.fileName = fileName;

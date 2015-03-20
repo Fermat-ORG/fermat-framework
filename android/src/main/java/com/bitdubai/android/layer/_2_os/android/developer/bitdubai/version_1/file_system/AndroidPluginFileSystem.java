@@ -19,57 +19,64 @@ import java.util.UUID;
 
 public class AndroidPluginFileSystem implements PluginFileSystem {
 
+
+    /**
+     * PluginFileSystem interface member variables.
+     */
+    
     Context context;
 
-
+    /**
+     * PluginFileSystem interface implementation.
+     */
+    
     @Override
-    public PluginDataFile getDataFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException {
+    public PluginTextFile getTextFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException {
 
-        AndroidPluginDataFile newFile = new AndroidPluginDataFile(ownerId, this.context,directoryName, fileName, privacyLevel, lifeSpan);
+        AndroidPluginTextFile newFile = new AndroidPluginTextFile(ownerId, this.context,directoryName, fileName, privacyLevel, lifeSpan);
 
         try {
             newFile.loadFromMedia();
             return newFile;
         }
         catch (CantPersistFileException e){
-            System.err.println("GetFailedException: " + e.getMessage());
+            System.err.println("CantPersistFileException: " + e.getMessage());
             e.printStackTrace();
             throw new FileNotFoundException();
         }
     }
 
     @Override
-    public PluginDataFile createDataFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) {
+    public PluginTextFile createTextFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) {
 
-        return new AndroidPluginDataFile(ownerId, this.context,directoryName,fileName, privacyLevel, lifeSpan);
+        return new AndroidPluginTextFile(ownerId, this.context,directoryName,fileName, privacyLevel, lifeSpan);
     }
 
     @Override
-    public void setContext(Object context) {
-        this.context = (Context) context;
-    }
-
-    @Override
-    public PluginImageFile getImageFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException{
-        AndroidPluginImageFile newFile = new AndroidPluginImageFile(ownerId, directoryName, fileName, privacyLevel, lifeSpan);
+    public PluginBinaryFile getBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException{
+        AndroidPluginBinaryFile newFile = new AndroidPluginBinaryFile(ownerId, directoryName, fileName, privacyLevel, lifeSpan);
 
         try {
             newFile.loadFromMedia();
             return newFile;
         }
         catch (CantLoadFileException e){
-            System.err.println("GetFailedException: " + e.getMessage());
+            System.err.println("CantLoadFileException: " + e.getMessage());
             e.printStackTrace();
             throw new FileNotFoundException();
         }
     }
 
     @Override
-    public PluginImageFile createImageFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
+    public PluginBinaryFile createBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
 
-        return new AndroidPluginImageFile(ownerId,directoryName,fileName, privacyLevel, lifeSpan);
+        return new AndroidPluginBinaryFile(ownerId,directoryName,fileName, privacyLevel, lifeSpan);
     }
 
+    @Override
+    public void setContext(Object context) {
+        this.context = (Context) context;
+    }
 
 
 

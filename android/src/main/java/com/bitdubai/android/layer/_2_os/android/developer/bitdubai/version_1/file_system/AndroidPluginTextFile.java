@@ -5,7 +5,6 @@ import android.content.Context;
 import com.bitdubai.fermat_api.layer._2_os.file_system.*;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantPersistFileException;
-import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.WrongOwnerIdException;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -34,7 +33,7 @@ import android.util.Base64;
  * PERMANENT.
  */
 
-public class AndroidPluginDataFile implements PluginDataFile {
+public class AndroidPluginTextFile implements PluginTextFile {
 
     Context context;
     String content;
@@ -54,7 +53,7 @@ public class AndroidPluginDataFile implements PluginDataFile {
         this.content = content;
     }
 
-    public AndroidPluginDataFile(UUID ownerId, Context context,String directoryName,  String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
+    public AndroidPluginTextFile(UUID ownerId, Context context, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
 
         this.ownerId = ownerId;
         this.context = context;

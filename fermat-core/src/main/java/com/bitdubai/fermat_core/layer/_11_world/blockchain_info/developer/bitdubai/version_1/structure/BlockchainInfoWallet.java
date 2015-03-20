@@ -9,7 +9,7 @@ import com.bitdubai.fermat_api.layer._2_os.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer._2_os.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer._2_os.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer._2_os.file_system.FilePrivacy;
-import com.bitdubai.fermat_api.layer._2_os.file_system.PluginDataFile;
+import com.bitdubai.fermat_api.layer._2_os.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer._2_os.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.FileNotFoundException;
@@ -102,8 +102,8 @@ public class BlockchainInfoWallet implements CryptoWallet ,DealsWithPluginFileSy
         long balance = 0;
         try{
             //get wallet property files, address and guid, and get actual balance
-            PluginDataFile layoutFile;
-            layoutFile = pluginFileSystem.getDataFile(pluginId, "wallets_data", this.walletId + ".txt", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            PluginTextFile layoutFile;
+            layoutFile = pluginFileSystem.getTextFile(pluginId, "wallets_data", this.walletId + ".txt", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
 
             String[] walletData = layoutFile.getContent().split(";");
 
@@ -130,8 +130,8 @@ public class BlockchainInfoWallet implements CryptoWallet ,DealsWithPluginFileSy
         try{
 
             this.walletAddress = cryptoAddress.getAddress();
-            PluginDataFile layoutFile;
-            layoutFile = pluginFileSystem.getDataFile(pluginId, "wallets_data", this.walletId + ".txt", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            PluginTextFile layoutFile;
+            layoutFile = pluginFileSystem.getTextFile(pluginId, "wallets_data", this.walletId + ".txt", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             String[] walletData = layoutFile.getContent().split(";");
 
             this.password = walletData[4].toString();
@@ -157,8 +157,8 @@ public class BlockchainInfoWallet implements CryptoWallet ,DealsWithPluginFileSy
         // send 0.2 bitcoins with a custom fee of 0.01 BTC and a note
         // public notes require a minimum transaction size of 0.005 BTC
         try{
-            PluginDataFile layoutFile;
-            layoutFile = pluginFileSystem.getDataFile(pluginId, "wallets_data", walletId + ".txt", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            PluginTextFile layoutFile;
+            layoutFile = pluginFileSystem.getTextFile(pluginId, "wallets_data", walletId + ".txt", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
 
             String[] walletData = layoutFile.getContent().split(";");
             walletAddress = walletData[0].toString();

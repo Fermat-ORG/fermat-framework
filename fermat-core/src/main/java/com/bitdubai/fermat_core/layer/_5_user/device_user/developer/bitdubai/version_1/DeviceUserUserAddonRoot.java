@@ -16,7 +16,6 @@ import com.bitdubai.fermat_api.layer._2_os.file_system.*;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_api.layer._5_user.extra_user.User;
 import com.bitdubai.fermat_api.layer._5_user.device_user.exceptions.CantCreateDeviceUserException;
 import com.bitdubai.fermat_api.layer._5_user.device_user.exceptions.CantLoadDeviceUserException;
 import com.bitdubai.fermat_api.layer._5_user.device_user.DeviceUser;
@@ -236,7 +235,7 @@ public class DeviceUserUserAddonRoot implements Service,  DeviceUserManager, Dea
 
         try {
 
-            PlatformDataFile platformStateFile =  this.platformFileSystem.getFile(
+            PlatformTextFile platformStateFile =  this.platformFileSystem.getFile(
                     DeviceDirectory.PLATFORM.getName(),
                     PlatformFileName.LAST_STATE.getFileName(),
                     FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT
@@ -302,7 +301,7 @@ public class DeviceUserUserAddonRoot implements Service,  DeviceUserManager, Dea
                 // throw new CantStartPlatformException();  TODO: Luis checkear esto
             }
 
-            PlatformDataFile platformStateFile =  this.platformFileSystem.createFile(
+            PlatformTextFile platformStateFile =  this.platformFileSystem.createFile(
                     DeviceDirectory.PLATFORM.getName(),
                     PlatformFileName.LAST_STATE.getFileName(),
                     FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT

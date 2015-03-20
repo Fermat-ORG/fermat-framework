@@ -27,8 +27,8 @@ import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantPersistFil
 import android.content.Context;
 import android.widget.TextView;
 import com.bitdubai.android.layer._2_os.android.developer.bitdubai.version_1.database_system.AndroidPluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer._2_os.file_system.PlatformDataFile;
-import com.bitdubai.fermat_api.layer._2_os.file_system.PluginDataFile;
+import com.bitdubai.fermat_api.layer._2_os.file_system.PlatformTextFile;
+import com.bitdubai.fermat_api.layer._2_os.file_system.PluginTextFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -145,7 +145,7 @@ public class FileImageActivity extends FragmentActivity {
             filemanager.setContext(mContext);
 
           //  PlatformDataFile file = filemanager.createFile("", "example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
-            PluginDataFile file = filemanager.createDataFile(moduleId,"PlugIn", "example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
+            PluginTextFile file = filemanager.createTextFile(moduleId, "PlugIn", "example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
             file.setContent("Text Content Test File Binary");
             file.loadToMemory();
 
@@ -171,9 +171,9 @@ public class FileImageActivity extends FragmentActivity {
             AndroidPlatformFileSystem filemanager = new AndroidPlatformFileSystem();
             filemanager.setContext(mContext);
 
-            PlatformDataFile file = filemanager.createFile("PlatForm1", "example1.txt", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            PlatformTextFile file = filemanager.createFile("PlatForm1", "example1.txt", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
 
-          //  PluginDataFile file = filemanager.createDataFile(moduleId, "", "example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
+          //  PluginDataFile file = filemanager.createTextFile(moduleId, "", "example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
 
             file.setContent("Text Content to Test File Binary in Media");
             file.persistToMedia();
@@ -197,7 +197,7 @@ public class FileImageActivity extends FragmentActivity {
             filemanager.setContext(mContext);
             moduleId = UUID.randomUUID();
             //PlatformDataFile file = filemanager.createFile("PlatForm", "example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
-            PluginDataFile file = filemanager.createDataFile(moduleId, "PlugIn", "example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
+            PluginTextFile file = filemanager.createTextFile(moduleId, "PlugIn", "example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
 
 
 
@@ -224,9 +224,9 @@ public class FileImageActivity extends FragmentActivity {
 
             filemanager.setContext(mContext);
 
-            PlatformDataFile file = filemanager.createFile("PlatForm1", "example1.txt", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            PlatformTextFile file = filemanager.createFile("PlatForm1", "example1.txt", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
 
-           // PluginDataFile file = filemanager.createDataFile(moduleId, "", "example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
+           // PluginDataFile file = filemanager.createTextFile(moduleId, "", "example.txt", FilePrivacy.PRIVATE, FileLifeSpan.TEMPORARY);
 
             file.loadFromMedia();
 
@@ -246,10 +246,10 @@ public class FileImageActivity extends FragmentActivity {
         {
             //create DB
 
-            AndroidPluginDatabaseSystem dbmanager = new AndroidPluginDatabaseSystem(mContext);
+            //AndroidPluginDatabaseSystem dbmanager = new AndroidPluginDatabaseSystem(mContext);
 
 
-            dbmanager.createDatabase( moduleId, "dbExample");
+            //dbmanager.createDatabase( moduleId, "dbExample");
 
             TextView  result = (TextView)findViewById(R.id.result_text);
             result.setText("DB Created");
@@ -267,7 +267,7 @@ public class FileImageActivity extends FragmentActivity {
         {
             //create DB
 
-            AndroidPluginDatabaseSystem dbmanager = new AndroidPluginDatabaseSystem(mContext);
+            AndroidPluginDatabaseSystem dbmanager = new AndroidPluginDatabaseSystem();
             String tableSchema =   "CREATE TABLE Table1 (Id INTEGER PRIMARY KEY, name TEXT, type TEXT)";
            // dbmanager.createTable("dbExample",tableSchema);
 
@@ -286,7 +286,7 @@ public class FileImageActivity extends FragmentActivity {
         try
         {
             //insert record
-            AndroidPluginDatabaseSystem dbPlugIn = new AndroidPluginDatabaseSystem(mContext);
+            AndroidPluginDatabaseSystem dbPlugIn = new AndroidPluginDatabaseSystem();
 
             dbPlugIn.openDatabase(moduleId,"dbExample");
 
@@ -317,7 +317,7 @@ public class FileImageActivity extends FragmentActivity {
     public void onDeleteRecordClicked(View v)   {
         try
         {
-            AndroidPluginDatabaseSystem dbPlugIn = new AndroidPluginDatabaseSystem(mContext);
+            AndroidPluginDatabaseSystem dbPlugIn = new AndroidPluginDatabaseSystem();
 
             dbPlugIn.openDatabase(moduleId,"dbExample");
 
@@ -340,7 +340,7 @@ public class FileImageActivity extends FragmentActivity {
     public void onUpdateRecordClicked(View v)   {
         try
         {
-            AndroidPluginDatabaseSystem dbPlugIn = new AndroidPluginDatabaseSystem(mContext);
+            AndroidPluginDatabaseSystem dbPlugIn = new AndroidPluginDatabaseSystem();
 
             dbPlugIn.openDatabase(moduleId,"dbExample");
 
@@ -381,7 +381,7 @@ public class FileImageActivity extends FragmentActivity {
     public void onSelectRecordClicked(View v)   {
         try
         {
-            AndroidPluginDatabaseSystem dbPlugIn = new AndroidPluginDatabaseSystem(mContext);
+            AndroidPluginDatabaseSystem dbPlugIn = new AndroidPluginDatabaseSystem();
 
             dbPlugIn.openDatabase(moduleId,"dbExample");
 

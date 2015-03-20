@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.layer._2_os.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer._2_os.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer._2_os.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer._2_os.file_system.FilePrivacy;
-import com.bitdubai.fermat_api.layer._2_os.file_system.PluginDataFile;
+import com.bitdubai.fermat_api.layer._2_os.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer._2_os.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantPersistFileException;
 
@@ -89,7 +89,7 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Servic
                 // TODO;NATALIA  en general vamos a usar archivos binarios para guardar este tipo de datos,y sin ninguna extension. Solo cuando la situacion requiera que el usuario final tenga acceso a un arvhico lo grabariamos en formato de texto. Arregla los otros sitios donde este criterio no se cumpla.
                 // TODO: El nombre del arcvhico debe estar en una constante a nivel de la clase.
                 // TODO: El folder no puede ser wallets_data, debe ser un hash del UUID del plugin. En general cada plugin guarda archivos en un folder propio. Busca como se calcula en java un hash 256 de manera standard y eso usamos para el nombre del folder. El que debe hashear el nombre es el PluginFileSystem, no cada plugin individualmente.
-                PluginDataFile layoutFile = pluginFileSystem.getDataFile(pluginId, "wallets_data", "wallets_id.txt", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                PluginTextFile layoutFile = pluginFileSystem.getTextFile(pluginId, "wallets_data", "wallets_id.txt", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
                 String[] walletsIds = layoutFile.getContent().split(";");
 
                 for (int j = 0; j < walletsIds.length; j++) {
@@ -169,9 +169,9 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Servic
             try{
                 //save wallet id in a file
                 UUID walletId = UUID.randomUUID();
-                PluginDataFile layoutFile;
+                PluginTextFile layoutFile;
 
-                layoutFile = pluginFileSystem.createDataFile(pluginId, "wallets_data", "wallets_id.txt", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                layoutFile = pluginFileSystem.createTextFile(pluginId, "wallets_data", "wallets_id.txt", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
                 layoutFile.setContent(";" + walletId.toString());
                 layoutFile.persistToMedia();
 
@@ -186,7 +186,7 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Servic
                 String walletLink = response.getLink();
                 //save wallet guid, address and link in a binary file on disk
 
-                layoutFile = pluginFileSystem.createDataFile(pluginId, "wallets_data", walletId.toString() + ".txt", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                layoutFile = pluginFileSystem.createTextFile(pluginId, "wallets_data", walletId.toString() + ".txt", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
 
                 layoutFile.setContent(walletAddress + ";" + walletGuid + ";" + walletLink + ";" + this.privateKey + ";" + this.password);
                 layoutFile.persistToMedia();

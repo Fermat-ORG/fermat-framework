@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.WrongOwnerIdEx
 /**
  * Created by ciencias on 22.01.15.
  */
-public interface PluginDataFile {
+public interface PluginTextFile {
 
     public String getContent ();
 
@@ -16,8 +16,6 @@ public interface PluginDataFile {
     public void persistToMedia() throws CantPersistFileException;
 
     public void loadToMemory () throws CantLoadFileException;
-
-
 
     public void loadFromMedia() throws CantPersistFileException;
 

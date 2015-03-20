@@ -34,7 +34,8 @@ public class AndroidDatabaseTable implements  DatabaseTable {
     @Override
     public List<String> getColumns()
     {
-        AndroidPluginDatabaseSystem dbPlugIn = new AndroidPluginDatabaseSystem(mContext);
+        AndroidPluginDatabaseSystem dbPlugIn = new AndroidPluginDatabaseSystem();
+        dbPlugIn.setContext(mContext);
         mDatabase = dbPlugIn.getDatabase();
 
         List<String> columns = new ArrayList<String>();
@@ -54,7 +55,8 @@ public class AndroidDatabaseTable implements  DatabaseTable {
         List<String> values = new ArrayList<String>();
 
         List<DatabaseTableRecord> records = new ArrayList<DatabaseTableRecord>() ;
-        AndroidPluginDatabaseSystem dbPlugIn = new AndroidPluginDatabaseSystem(mContext);
+        AndroidPluginDatabaseSystem dbPlugIn = new AndroidPluginDatabaseSystem();
+        dbPlugIn.setContext(mContext);
         mDatabase = dbPlugIn.getDatabase();
 
         //filter
@@ -116,7 +118,8 @@ public class AndroidDatabaseTable implements  DatabaseTable {
         {
 
 
-        AndroidPluginDatabaseSystem dbPlugIn = new AndroidPluginDatabaseSystem(mContext);
+        AndroidPluginDatabaseSystem dbPlugIn = new AndroidPluginDatabaseSystem();
+        dbPlugIn.setContext(mContext);
         mDatabase = dbPlugIn.getDatabase();
 
         List<String> records =  record.getValues();
@@ -155,7 +158,8 @@ public class AndroidDatabaseTable implements  DatabaseTable {
 
     public void insertRecord(DatabaseTableRecord record) {
 
-        AndroidPluginDatabaseSystem dbPlugIn = new AndroidPluginDatabaseSystem(mContext);
+        AndroidPluginDatabaseSystem dbPlugIn = new AndroidPluginDatabaseSystem();
+        dbPlugIn.setContext(mContext);
         mDatabase = dbPlugIn.getDatabase();
 
         List<String> records =  record.getValues();
