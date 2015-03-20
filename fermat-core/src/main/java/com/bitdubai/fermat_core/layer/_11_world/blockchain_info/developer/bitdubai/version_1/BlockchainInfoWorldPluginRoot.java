@@ -86,6 +86,9 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Servic
              * instance class BlockchainInfoBitcoinWallet, one for each wallet id
              */
             try{
+                // TODO;NATALIA  en general vamos a usar archivos binarios para guardar este tipo de datos,y sin ninguna extension. Solo cuando la situacion requiera que el usuario final tenga acceso a un arvhico lo grabariamos en formato de texto. Arregla los otros sitios donde este criterio no se cumpla.
+                // TODO: El nombre del arcvhico debe estar en una constante a nivel de la clase.
+                // TODO: El folder no puede ser wallets_data, debe ser un hash del UUID del plugin. En general cada plugin guarda archivos en un folder propio. Busca como se calcula en java un hash 256 de manera standard y eso usamos para el nombre del folder. El que debe hashear el nombre es el PluginFileSystem, no cada plugin individualmente.
                 PluginDataFile layoutFile = pluginFileSystem.getDataFile(pluginId, "wallets_data", "wallets_id.txt", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
                 String[] walletsIds = layoutFile.getContent().split(";");
 
@@ -104,7 +107,7 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Servic
             catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-
+// TODO:NATALIA tenemos que estandarizar lo que se hace en el catch para logear los errores , mientras no este claro, fijate lo que se hace en la clase Platform y hace lo mismo. En este caso si el archivo no existe deberia crearlo.
 
 
 
@@ -147,6 +150,8 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Servic
             return this.serviceStatus;
         }
 
+    // TODO: NATALIA los member variables van arriba de todo, ante de la implementacion de la primera interfaz.
+    
         /**
          * CryptoWalletManager Interface member variables.
          */
