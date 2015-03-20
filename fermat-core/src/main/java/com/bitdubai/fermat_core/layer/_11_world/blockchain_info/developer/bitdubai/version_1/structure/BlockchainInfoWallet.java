@@ -57,7 +57,7 @@ public class BlockchainInfoWallet implements CryptoWallet ,DealsWithPluginFileSy
          * if not exist create it
          */
         try{
-            // NATALIA TODO: como nombre de la base de datos vamos a usar un hash del id del plugin, asi nadie puede saber cual es el id, aunque tenga acceso a listar las bases de datos existentes. Esto es valido para cualquier base de datos que creemos
+            // NATALIA TODO: como nombre de la base de datos vamos a usar un hash del id del plugin, asi nadie puede saber cual es el id, aunque tenga acceso a listar las bases de datos existentes. Esto es valido para cualquier base de datos que creemos y el hasheo lo maneja internamente el DatabaseSystem
             Database walletDatabase = pluginDatabaseSystem.openDatabase(this.pluginId,this.walletId.toString());
             //NATALIA TODO: En general cuando un metodo no puede hacer lo que se supone que tiene que hacer, debe disparar una excepcion. En el caso de openDatabase si no la puede abrir debe disparar DatabaseNotFoundException . No vamos a usar la tecnica de devolver null nunca en este sistema.
             if(walletDatabase == null){

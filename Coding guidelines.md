@@ -26,7 +26,7 @@
 
 # File types
 
-* We always use binary files to store information unless the information should be read by the end user, in that case we use a text file.
+* xx
 
 
 # Plug-ins files
