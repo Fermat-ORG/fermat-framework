@@ -103,32 +103,6 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
         }
     }
 
-    
-    //TODO NATALIA Podemos borrar este metodo?
-    @Override
-    public void loadToMemory() throws CantLoadFileException {
-        try {
-
-            File storagePath = new File(this.context.getFilesDir() + "/" + this.ownerId + "/" +this.directoryName);
-
-            if (!storagePath.exists()) {
-                storagePath.mkdirs();
-            }
-            File file = new File(storagePath, this.fileName);
-
-            // convert byte array back to BufferedImage
-            InputStream in = new ByteArrayInputStream(this.content);
-
-        }
-        catch (Exception e) {
-            System.err.println("Error trying to load a file to memory: " + e.getMessage());
-            e.printStackTrace();
-            throw new CantLoadFileException(this.fileName);
-        }
-
-
-
-    }
 
     @Override
     public void loadFromMedia() throws CantLoadFileException {

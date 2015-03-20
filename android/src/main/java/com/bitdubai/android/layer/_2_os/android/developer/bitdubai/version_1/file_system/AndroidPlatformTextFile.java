@@ -80,46 +80,6 @@ public class AndroidPlatformTextFile implements PlatformTextFile {
         }
     }
 
-    @Override
-    public void loadToMemory() throws CantLoadFileException {
-
-        try {
-// Create directory into internal memory;
-
-            String path = this.context.getFilesDir() + "/" + this.directoryName;
-            File internalDir = new File(path);
-
-            if (!internalDir.exists()) {
-                //let's try to create it
-                try {
-                    internalDir.mkdir();
-                } catch (SecurityException secEx) {
-                    //handle the exception
-                    secEx.printStackTrace(System.out);
-                    internalDir = null;
-                    throw secEx;
-                }
-            }
-
-
-            File file = new File(internalDir, this.fileName);
-
-
-            FileWriter fw = new FileWriter(file);
-            fw.write(this.content);
-            fw.close();
-        }
-        catch (Exception e) {
-            System.err.println("Error trying to load a file to memory: " + e.getMessage());
-            e.printStackTrace();
-            throw new CantLoadFileException(this.fileName);
-        }
-
-
-
-    }
-
-
 
     @Override
     public void loadFromMedia() throws CantPersistFileException {

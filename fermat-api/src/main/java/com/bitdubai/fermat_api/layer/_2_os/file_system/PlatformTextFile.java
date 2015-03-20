@@ -14,8 +14,6 @@ public interface PlatformTextFile {
 
     public void persistToMedia() throws CantPersistFileException;
 
-    public void loadToMemory () throws CantLoadFileException;
-
     public void loadFromMedia() throws CantPersistFileException;
     
 }

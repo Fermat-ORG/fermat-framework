@@ -118,44 +118,6 @@ public class AndroidPluginTextFile implements PluginTextFile {
         }
     }
     
-    
-    
-    // TODO: NATALIA, Este metodo para que sirve??? No replica lo que ya tenemos en loadFromMedia???
-    @Override
-    public void loadToMemory() throws CantLoadFileException {
-        
-        try 
-        {
-            String path = this.context.getFilesDir() + "/" + this.directoryName;
-            File internalDir = new File(path);
-
-            if (!internalDir.exists()) {
-                //let's try to create it
-                try {
-                    internalDir.mkdir();
-                } catch (SecurityException secEx) {
-                    //handle the exception
-                    secEx.printStackTrace(System.out);
-                    internalDir = null;
-                    throw secEx;
-                }
-            }
-
-            String encryptContent = this.encrypt(this.content, this.ownerId.toString());
-            File file = new File(internalDir, this.fileName);
-
-            FileWriter fw = new FileWriter(file);
-            fw.write(encryptContent);
-            fw.close();
-        }
-        catch (Exception e) {
-            System.err.println("Error trying to load a file to memory: " + e.getMessage());
-            e.printStackTrace();
-            throw new CantLoadFileException(this.fileName);
-        }
-
-    }
-
 
     /**
      * This method reads the file, decrypts its content and then it load it into memory.
