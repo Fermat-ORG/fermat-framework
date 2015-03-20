@@ -25,6 +25,8 @@ import java.util.UUID;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+
+import android.os.Environment;
 import android.util.Base64;
 /**
  * Created by ciencias on 22.01.15.
@@ -83,11 +85,22 @@ public class AndroidPluginTextFile implements PluginTextFile {
         
         try 
         {
+
+            /**
+             *  Evaluate privacyLevel to determine the location of directory - external or internal
+             */
+            String path = "";
+            if(privacyLevel == FilePrivacy.PUBLIC)
+                path = Environment.getExternalStorageDirectory().toString();
+            else
+                path = this.context.getFilesDir().toString();
+
+
             /**
              * If the directory does not exist, we create it here.
              */
             
-            File storagePath = new File(this.context.getFilesDir()+"/"+ this.directoryName);
+            File storagePath = new File(path +"/"+ this.directoryName);
             if (!storagePath.exists()) {
                 storagePath.mkdirs();
             }
@@ -97,6 +110,10 @@ public class AndroidPluginTextFile implements PluginTextFile {
              */
             File file = new File(storagePath, fileName);
 
+            /**
+             * If the file does not exist, we create it here.
+             */
+        if(!file.exists()){
             OutputStream outputStream;
 
             /**
@@ -110,6 +127,8 @@ public class AndroidPluginTextFile implements PluginTextFile {
             outputStream =  new BufferedOutputStream(new FileOutputStream(file));
             outputStream.write(encryptedContent.getBytes());
             outputStream.close();
+        }
+
             
         } catch (Exception e) {
             System.err.println("Error trying to persist file: " + e.getMessage());
@@ -128,9 +147,20 @@ public class AndroidPluginTextFile implements PluginTextFile {
         try 
         {
             /**
+             *  Evaluate privacyLevel to determine the location of directory - external or internal
+             */
+            String path = "";
+            if(privacyLevel == FilePrivacy.PUBLIC)
+                path = Environment.getExternalStorageDirectory().toString();
+            else
+                path = this.context.getFilesDir().toString();
+
+
+
+            /**
              * We open the file and read its encrypted content.
              */
-            File file = new File(this.context.getFilesDir() +"/"+ this.directoryName, this.fileName);
+            File file = new File(path +"/"+ this.directoryName, this.fileName);
 
             InputStream inputStream ;
             inputStream =  new BufferedInputStream(new FileInputStream(file));

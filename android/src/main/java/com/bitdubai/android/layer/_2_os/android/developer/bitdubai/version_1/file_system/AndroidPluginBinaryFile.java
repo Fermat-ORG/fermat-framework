@@ -64,12 +64,19 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
     public void persistToMedia() throws CantPersistFileException {
 
         try {
-// TODO: NATALIA: Esto no lo puede hacer de pecho en el external Storage. Lo tiene que decidir el Plugin setiando el FilePrivacy level.
+           /**
+             *  Evaluate privacyLevel to determine the location of directory - external or internal
+             */
+            String path = "";
+        if(privacyLevel == FilePrivacy.PUBLIC)
+             path = Environment.getExternalStorageDirectory().toString();
+        else
+             path = this.context.getFilesDir().toString();
 
             /**
              * I set the path where the file is going to be located.
              */
-            String path = Environment.getExternalStorageDirectory().toString();
+
 
             if(this.directoryName != "")
                 path += "/" + this.ownerId + "/" + this.directoryName;
@@ -84,17 +91,21 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
 
             /**
              * Then I create the file.
+             * if not exist
              */
             File file = new File(storagePath, fileName);
 
-            /**
-             * Finally I write the content.
-             */
-            OutputStream outputStream;
-            
-            outputStream =  new BufferedOutputStream(new FileOutputStream(file));
-            outputStream.write(this.content);
-            outputStream.close();
+            if (!file.exists()) {
+                /**
+                 * Finally I write the content.
+                 */
+                OutputStream outputStream;
+
+                outputStream =  new BufferedOutputStream(new FileOutputStream(file));
+                outputStream.write(this.content);
+                outputStream.close();
+            }
+
             
         } catch (Exception e) {
             System.err.println("Error trying to persist file: " + e.getMessage());
@@ -107,12 +118,20 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
     @Override
     public void loadFromMedia() throws CantLoadFileException {
 
-        // NATALIA TODO: De nuevo no se puede asumir que esta en el storage externo.
-        
+
+        /**
+         *  Evaluate privacyLevel to determine the location of directory - external or internal
+         */
+        String path = "";
+        if(privacyLevel == FilePrivacy.PUBLIC)
+            path = Environment.getExternalStorageDirectory().toString();
+        else
+            path = this.context.getFilesDir() + "/" + this.directoryName;
+
         /**
          * Get the file handle.
          */
-        File file = new File(Environment.getExternalStorageDirectory() + "/" + this.ownerId + "/" + this.directoryName + "/" + this.fileName);
+        File file = new File(path + "/" + this.ownerId + "/" + this.directoryName + "/" + this.fileName);
         try {
 
             /**

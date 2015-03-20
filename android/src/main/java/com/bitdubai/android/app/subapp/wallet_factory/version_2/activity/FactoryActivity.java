@@ -166,10 +166,10 @@ public class FactoryActivity extends FragmentActivity
             outStream.close();
 
         } catch (FileNotFoundException e2) {
-            // TODO Auto-generated catch block
+            //
             e2.printStackTrace();
         } catch (IOException e1) {
-            // TODO Auto-generated catch block
+
             e1.printStackTrace();
         }
 

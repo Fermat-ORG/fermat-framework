@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_core.layer._10_network_service.wallet_resources.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartPlatformException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer._10_network_service.CantCheckResourcesException;
@@ -99,7 +100,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
      */
 
     @Override
-    public void start() {
+    public void start(){
         /**
          * I will initialize the handling of com.bitdubai.platform events.
          */
@@ -198,7 +199,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
                 byte[] image =  getRepositoryImageFile(reponame, fileList[j].toString());
                 PluginBinaryFile imageFile;
                 
-                imageFile = pluginFileSystem.createBinaryFile(pluginId, reponame, fileList[j].toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                imageFile = pluginFileSystem.createBinaryFile(pluginId, reponame, fileList[j].toString(), FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
                 imageFile.setContent(image);
                 imageFile.persistToMedia();
 
@@ -211,7 +212,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
                 String file =  getRepositoryStringFile(reponame, layoutList[j].toString());
                 PluginTextFile layoutFile;
-                layoutFile = pluginFileSystem.createTextFile(pluginId, reponame, layoutList[j].toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                layoutFile = pluginFileSystem.createTextFile(pluginId, reponame, layoutList[j].toString(), FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
 
                 layoutFile.setContent(file);
                 layoutFile.persistToMedia();
@@ -219,15 +220,21 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
 
         }catch(MalformedURLException e){
+            System.err.println("MalformedURLException: " + e.getMessage());
             e.printStackTrace();
+
         }
         catch(IOException e){
+            System.err.println("IOException: " + e.getMessage());
             e.printStackTrace();
         }
         catch(FileNotFoundException e){
+            System.err.println("FileNotFoundException: " + e.getMessage());
             e.printStackTrace();
         } catch (CantPersistFileException e) {
+            System.err.println("CantPersistFileException: " + e.getMessage());
             e.printStackTrace();
+
         }
 
 
@@ -249,10 +256,11 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             //get image from disk
             PluginBinaryFile imageFile;
             imageFile = pluginFileSystem.getBinaryFile(pluginId, reponame, imageName, FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
-// TODO: NATALIA las imagenes deberian estar grabadas en la memoria externa del telefono, osea que FilePrivacy no puede ser PRIVATE
+
             imageResource = imageFile.getContent();
         }
         catch(FileNotFoundException e){
+            System.err.println("FileNotFoundException: " + e.getMessage());
             e.printStackTrace();
 
         }
