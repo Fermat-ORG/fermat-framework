@@ -575,8 +575,9 @@ public class UsdBalanceFragment extends Fragment {
 
                             // Create and show the dialog.
                             //Fragment currentFragment = TicketFragment.newInstance(1);
-                            DialogFragment newFragment = TicketFragment.newInstance(1);
-                            newFragment.show(ft, "dialog");
+                           // DialogFragment newFragment = TicketFragment.newInstance(1);
+                           // newFragment.show(ft, "dialog");
+                            onDoubleTap(view);
 
                         }
                     }
@@ -591,6 +592,8 @@ public class UsdBalanceFragment extends Fragment {
             return true;
         }
     }
+
+
 
     private void rotateTicket(int ticketId, ImageView image, View view ) {
         //click event has occurred
@@ -1101,10 +1104,10 @@ public class UsdBalanceFragment extends Fragment {
             outStream.close();
 
         } catch (FileNotFoundException e2) {
-            // TODO Auto-generated catch block
+
             e2.printStackTrace();
         } catch (IOException e1) {
-            // TODO Auto-generated catch block
+
             e1.printStackTrace();
         }
 
