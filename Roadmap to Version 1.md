@@ -27,13 +27,29 @@ Vamos a crear una billetera en los sistemas de Blockchain.info que sera la que l
 * Tambien el Id de la billetera en nuestro sistema Fermat DMP, probablemente como nombre del archivo.
 * Si existiera alguna informacion a nivel de la billetera aqui es donde debiera guardarse.
 
+
 * Esta clse en el metodo start de su interface intenta abrir una conexion con la base de datos y leer cada una de las tablas que esta base de datos debe contener para su correcto funcionamiento.
 * Si la base de datos no existe entonces la crea.
 * Si alguna de las tablas necesarias no existe, entonces la crea, verificando una a la vez.
 * Luego poner a correr los distintos procesos que se explican mas abajo.
 
+
 * Las tablas necesarias son: INCOMING_CRYPTO, OUTGOING_CRYPTO, CRYPTO_ADDRESSES
+
+
 * INCOMING_CRYPTO guarda las transacciones que llegan a la billetera, en cualquiera de sus direcciones.
+
+
+* Campos para la tabla INCOMING_CRYPTO: 
+* String TRX_HASH: Es el equivalente al Id de la Transaccion y se obtiene de la API.
+* LongInt AMOUNT : Cantidad de crypto recibida en Satoshis (es la unidad de medcion de bitcoin sin decimales)
+* String CRYPTO_ADDRESS_TO : La crypto address donde se reciben los fondos.
+* String CRYPTO_ADDRESS_FROM : La crypto address desde donde provienen los fondos.
+* Int STATUS :  Se corresponde con el valor entero del enum IncomingCryptoStatus que declara los diferentes status (falta ponerle los valores al enum)
+* Int CURRENT_CONFIRMATIONS: Guarda la cantidad de confirmaciones obtenidas desde la API
+* Int PREVIOUS_CONFIRMATIONS: Es la lectura anterior. 
+
+
 * OUTGOING_CRYPTO guarda las transaccones que salen de la billetera desde cualquiera de sus direcciones.
 * ADDRESSES guarda las direcciones generadas para esta billetera.
 
