@@ -26,6 +26,9 @@ import java.io.ByteArrayOutputStream;
  */
 public class AndroidPluginBinaryFile implements PluginBinaryFile {
 
+    /**
+     * PluginBinaryFile Interface member variables.
+     */
     Context context;
     byte[] content;
     String fileName;
@@ -34,6 +37,19 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
     FileLifeSpan lifeSpan;
     UUID ownerId;
 
+    public AndroidPluginBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
+
+        this.ownerId = ownerId;
+        this.directoryName = directoryName;
+        this.fileName = fileName;
+        this.privacyLevel = privacyLevel;
+        this.lifeSpan = lifeSpan;
+
+    }
+    
+    /**
+     * PluginBinaryFile Interface implementation.
+     */
     @Override
     public byte[] getContent() {
         return this.content;
@@ -44,40 +60,42 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
         this.content = content;
     }
 
-    public AndroidPluginBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
-
-        this.context = context;
-        this.fileName = fileName;
-        this.privacyLevel = privacyLevel;
-        this.lifeSpan = lifeSpan;
-        this.ownerId = ownerId;
-        this.directoryName = directoryName;
-
-    }
-
     @Override
     public void persistToMedia() throws CantPersistFileException {
 
         try {
+// TODO: NATALIA: Esto no lo puede hacer de pecho en el external Storage. Lo tiene que decidir el Plugin setiando el FilePrivacy level.
 
-
+            /**
+             * I set the path where the file is going to be located.
+             */
             String path = Environment.getExternalStorageDirectory().toString();
 
             if(this.directoryName != "")
                 path += "/" + this.ownerId + "/" + this.directoryName;
 
+            /**
+             * If the directory does not exist the I create it.
+             */
             File storagePath = new File(path);
             if (!storagePath.exists()) {
                 storagePath.mkdirs();
             }
+
+            /**
+             * Then I create the file.
+             */
             File file = new File(storagePath, fileName);
 
+            /**
+             * Finally I write the content.
+             */
             OutputStream outputStream;
-
-            //outputStream = this.context.openFileOutput( file.getPath(), Context.MODE_PRIVATE);
+            
             outputStream =  new BufferedOutputStream(new FileOutputStream(file));
             outputStream.write(this.content);
             outputStream.close();
+            
         } catch (Exception e) {
             System.err.println("Error trying to persist file: " + e.getMessage());
             e.printStackTrace();
@@ -85,7 +103,8 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
         }
     }
 
-
+    
+    //TODO NATALIA Podemos borrar este metodo?
     @Override
     public void loadToMemory() throws CantLoadFileException {
         try {
@@ -100,7 +119,6 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
             // convert byte array back to BufferedImage
             InputStream in = new ByteArrayInputStream(this.content);
 
-
         }
         catch (Exception e) {
             System.err.println("Error trying to load a file to memory: " + e.getMessage());
@@ -112,28 +130,36 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
 
     }
 
-
-
     @Override
     public void loadFromMedia() throws CantLoadFileException {
 
+        // NATALIA TODO: De nuevo no se puede asumir que esta en el storage externo.
+        
+        /**
+         * Get the file handle.
+         */
         File file = new File(Environment.getExternalStorageDirectory() + "/" + this.ownerId + "/" + this.directoryName + "/" + this.fileName);
         try {
 
-            final FileInputStream  imageStream = new FileInputStream(file);
+            /**
+             * Read the content.
+             */
+            final FileInputStream  binaryStream = new FileInputStream(file);
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
 
             int nRead;
             byte[] data = new byte[16384];
 
-            while ((nRead = imageStream.read(data, 0, data.length)) != -1) {
+            while ((nRead = binaryStream.read(data, 0, data.length)) != -1) {
                 buffer.write(data, 0, nRead);
             }
 
             buffer.flush();
 
+            /**
+             * Store it in memory.
+             */
             this.content =buffer.toByteArray();
-
 
         } catch (Exception e) {
             System.err.println("Error trying to persist file: " + e.getMessage());
