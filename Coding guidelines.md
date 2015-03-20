@@ -19,6 +19,7 @@
 # Class code structure
 
 * All class variables must be declared at the top, separated in groups by a comment corresponding to each interface.
+* Next the class constructor.
 * Next section are the interface implementations also separated by a comment. Each method of an interface implementation must be in the order declared at the interface.
 * Next section have private methods.
 

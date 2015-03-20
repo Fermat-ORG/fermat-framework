@@ -20,11 +20,6 @@ public class AndroidPluginDatabaseSystem  implements PluginDatabaseSystem{
     private SQLiteDatabase Database;
     private static final int DATABASE_VERSION = 1;
 
-    public AndroidPluginDatabaseSystem(Context context) {
-
-        this.Context = context;
-    }
-
 
     @Override
     public Database openDatabase(UUID ownerId, String databaseName) throws CantOpenDatabaseException {

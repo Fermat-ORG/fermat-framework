@@ -14,14 +14,38 @@ import com.bitdubai.fermat_api.layer._2_os.location_system.LocationSystem;
 /**
  * Created by ciencias on 20.01.15.
  */
+
+/**
+ * This Addon provides access to Android dependent functionality, like the File System and Database System.
+ */
+
 public class AndroidOsAddonRoot implements Os {
 
+    /**
+     * Os interface member variables.
+     */
+    
     PluginDatabaseSystem pluginDatabaseSystem;
     PluginFileSystem pluginFileSystem;
     PlatformFileSystem platformFileSystem;
-    Context mContext;
     LocationSystem pluginLocationSystem;
+    
+    Context context;
 
+    public AndroidOsAddonRoot() {
+        
+        this.pluginDatabaseSystem = new AndroidPluginDatabaseSystem();
+        this.pluginFileSystem = new AndroidPluginFileSystem();
+        this.platformFileSystem = new AndroidPlatformFileSystem();
+        
+    }
+
+
+    @Override
+    public PluginFileSystem getPlugInFileSystem() {
+        return this.pluginFileSystem;
+    }
+    
     @Override
     public PluginDatabaseSystem getPluginDatabaseSystem() {
         return this.pluginDatabaseSystem;
@@ -33,26 +57,20 @@ public class AndroidOsAddonRoot implements Os {
     }
 
     @Override
+    public LocationSystem getLocationSystem(){
+        return this.pluginLocationSystem;
+    }
+
+    @Override
     public void setContext(Object context) {
-        mContext = (Context) context;
+        
+        this.context = (Context) context;
+        
         this.pluginFileSystem.setContext(context);
         this.pluginDatabaseSystem.setContext(context);
         this.platformFileSystem.setContext(context);
     }
 
-    @Override
-    public PluginFileSystem getPlugInFileSystem() {
-        return this.pluginFileSystem;
-   }
-    @Override
-    public LocationSystem getLocationSystem(){
-        return this.pluginLocationSystem;
-    }
 
-    public AndroidOsAddonRoot() {
-        this.pluginDatabaseSystem = new AndroidPluginDatabaseSystem(mContext);
-        this.pluginFileSystem = new AndroidPluginFileSystem();
-        this.platformFileSystem = new AndroidPlatformFileSystem();
-    }
 
 }
