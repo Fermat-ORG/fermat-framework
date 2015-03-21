@@ -139,8 +139,6 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                 platform.start();
             }
 
-
-
             this.platformContext = platform.getCorePlatformContext();
 
             this.appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.APP_RUNTIME_MIDDLEWARE);
@@ -149,13 +147,14 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
 
-          /*  try{
+          /* try{
                 WalletResourcesManager  walletResourceManger = (WalletResourcesManager)platformContext.getPlugin(Plugins.WALLET_RESOURCES_NETWORK_SERVICE);
                 walletResourceManger.setwalletType(Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI);
                 walletResourceManger.checkResources();
             }
             catch (CantCheckResourcesException e) {
                 e.printStackTrace();}
+*/
 
 
             /****-*/

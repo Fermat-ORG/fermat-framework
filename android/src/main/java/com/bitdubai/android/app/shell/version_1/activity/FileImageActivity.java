@@ -40,8 +40,7 @@ import java.util.ArrayList;
 public class FileImageActivity extends FragmentActivity {
     View rootView;
     private static Context mContext;
-    private UUID moduleId = UUID.randomUUID(); // *** TODO: Esto hay que cambiarlo porque el id se lo tiene que entregar la plataforma
-
+    private UUID moduleId = UUID.randomUUID(); //
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
