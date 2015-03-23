@@ -449,7 +449,23 @@ public class Platform  {
             UUID pluginID = pluginsIdentityManager.getPluginId(blockchainInfoWorld);
             (blockchainInfoWorld).setId(pluginID);
 
-            ((Service) blockchainInfoWorld).start();
+            try {
+                ((Service) blockchainInfoWorld).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+                
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * * 
+                 */
+            
+                throw new CantStartPlatformException();
+            }
+            
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -489,7 +505,22 @@ public class Platform  {
             UUID pluginID = pluginsIdentityManager.getPluginId(ShapeShiftWorld);
             (ShapeShiftWorld).setId(pluginID);
 
-            ((Service) ShapeShiftWorld).start();
+            try {
+                ((Service) ShapeShiftWorld).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * * 
+                 */
+
+                throw new CantStartPlatformException();
+            }
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -529,7 +560,23 @@ public class Platform  {
             UUID pluginID = pluginsIdentityManager.getPluginId(CoinapultWorld);
             (CoinapultWorld).setId(pluginID);
 
-            ((Service) CoinapultWorld).start();
+            try {
+                ((Service) CoinapultWorld).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * * 
+                 */
+
+                throw new CantStartPlatformException();
+            }
+            
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -574,7 +621,23 @@ public class Platform  {
             UUID pluginID = pluginsIdentityManager.getPluginId(cryptoIndexWorld);
             (cryptoIndexWorld).setId(pluginID);
 
-            ((Service) cryptoIndexWorld).start();
+            try {
+                ((Service) cryptoIndexWorld).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * * 
+                 */
+
+                throw new CantStartPlatformException();
+            }
+            
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -615,7 +678,22 @@ public class Platform  {
             UUID pluginID = pluginsIdentityManager.getPluginId(cryptoNetwork);
             (cryptoNetwork).setId(pluginID);
 
-            ((Service)cryptoNetwork).start();
+            try {
+                ((Service)cryptoNetwork).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * * 
+                 */
+
+                throw new CantStartPlatformException();
+            }
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -703,8 +781,24 @@ public class Platform  {
 
             UUID pluginID = pluginsIdentityManager.getPluginId(cloudCommunication);
             (cloudCommunication).setId(pluginID);
+            
+            try {
+                ((Service) cloudCommunication).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
 
-            ((Service) cloudCommunication).start();
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * * 
+                 */
+
+                throw new CantStartPlatformException();
+            }
+            
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -746,7 +840,22 @@ public class Platform  {
             UUID pluginID = pluginsIdentityManager.getPluginId(bankNotesNetworkService);
             (bankNotesNetworkService).setId(pluginID);
 
-            ((Service) bankNotesNetworkService).start();
+            try {
+                ((Service) bankNotesNetworkService).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * * 
+                 */
+
+                throw new CantStartPlatformException();
+            }
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -788,8 +897,23 @@ public class Platform  {
 
             UUID pluginID = pluginsIdentityManager.getPluginId(walletResourcesNetworkService);
             (walletResourcesNetworkService).setId(pluginID);
+            
+            try {
+                ((Service) walletResourcesNetworkService).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
 
-            ((Service) walletResourcesNetworkService).start();
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * * 
+                 */
+
+                throw new CantStartPlatformException();
+            }
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -830,8 +954,23 @@ public class Platform  {
 
             UUID pluginID = pluginsIdentityManager.getPluginId(walletCommunityNetworkService);
             (walletCommunityNetworkService).setId(pluginID);
+            
+            try {
+                ((Service) walletCommunityNetworkService).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
 
-            ((Service) walletCommunityNetworkService).start();
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * * 
+                 */
+
+                throw new CantStartPlatformException();
+            }
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -875,7 +1014,22 @@ public class Platform  {
             UUID pluginID = pluginsIdentityManager.getPluginId(walletStoreNetworkService);
             (walletStoreNetworkService).setId(pluginID);
 
-            ((Service) walletStoreNetworkService).start();
+            try {
+                ((Service) walletStoreNetworkService).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * * 
+                 */
+
+                throw new CantStartPlatformException();
+            }
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -914,8 +1068,23 @@ public class Platform  {
 
             UUID pluginID = pluginsIdentityManager.getPluginId(appRuntimeMiddleware);
             (appRuntimeMiddleware).setId(pluginID);
+            
+            try {
+                ((Service) appRuntimeMiddleware).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
 
-            ((Service) appRuntimeMiddleware).start();
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * * 
+                 */
+
+                throw new CantStartPlatformException();
+            }
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -959,7 +1128,23 @@ public class Platform  {
             UUID pluginID = pluginsIdentityManager.getPluginId(bankNotesMiddleware);
             (bankNotesMiddleware).setId(pluginID);
 
-            ((Service) bankNotesMiddleware).start();
+            try {
+                ((Service) bankNotesMiddleware).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * * 
+                 */
+
+                throw new CantStartPlatformException();
+            }
+
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -1003,8 +1188,23 @@ public class Platform  {
 
             UUID pluginID = pluginsIdentityManager.getPluginId(walletMiddleware);
             (walletMiddleware).setId(pluginID);
+            
+            try {
+                ((Service) walletMiddleware).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
 
-            ((Service) walletMiddleware).start();
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * * 
+                 */
+
+                throw new CantStartPlatformException();
+            }
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -1045,7 +1245,22 @@ public class Platform  {
             UUID pluginID = pluginsIdentityManager.getPluginId(walletContactsMiddleware);
             (walletContactsMiddleware).setId(pluginID);
 
-            ((Service) walletContactsMiddleware).start();
+            try {
+                ((Service) walletContactsMiddleware).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * * 
+                 */
+
+                throw new CantStartPlatformException();
+            }
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -1086,8 +1301,23 @@ public class Platform  {
 
             UUID pluginID = pluginsIdentityManager.getPluginId(incomingCryptoTransaction);
             (incomingCryptoTransaction).setId(pluginID);
+            
+            try {
+                ((Service) incomingCryptoTransaction).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
 
-            ((Service) incomingCryptoTransaction).start();
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * * 
+                 */
+
+                throw new CantStartPlatformException();
+            }
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -1132,8 +1362,23 @@ public class Platform  {
 
             UUID pluginID = pluginsIdentityManager.getPluginId(incomingExtraUserTransaction);
             (incomingExtraUserTransaction).setId(pluginID);
+            
+            try {
+                ((Service) incomingExtraUserTransaction).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
 
-            ((Service) incomingExtraUserTransaction).start();
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * * 
+                 */
+
+                throw new CantStartPlatformException();
+            }
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -1177,7 +1422,22 @@ public class Platform  {
             UUID pluginID = pluginsIdentityManager.getPluginId(incomingIntraUserTransaction);
             (incomingIntraUserTransaction).setId(pluginID);
 
-            ((Service) incomingIntraUserTransaction).start();
+            try {
+                ((Service) incomingIntraUserTransaction).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * * 
+                 */
+
+                throw new CantStartPlatformException();
+            }
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -1220,8 +1480,23 @@ public class Platform  {
 
             UUID pluginID = pluginsIdentityManager.getPluginId(interWalletTransaction);
             (interWalletTransaction).setId(pluginID);
+            
+            try {
+                ((Service) interWalletTransaction).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
 
-            ((Service) interWalletTransaction).start();
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * * 
+                 */
+
+                throw new CantStartPlatformException();
+            }
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -1262,8 +1537,23 @@ public class Platform  {
 
             UUID pluginID = pluginsIdentityManager.getPluginId(outgoingExtraUserTransaction);
             (outgoingExtraUserTransaction).setId(pluginID);
+            
+            try {
+                ((Service) outgoingExtraUserTransaction).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
 
-            ((Service) outgoingExtraUserTransaction).start();
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * * 
+                 */
+
+                throw new CantStartPlatformException();
+            }
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -1307,7 +1597,22 @@ public class Platform  {
             UUID pluginID = pluginsIdentityManager.getPluginId(outgoingDeviceUserTransaction);
             (outgoingDeviceUserTransaction).setId(pluginID);
 
-            ((Service) outgoingDeviceUserTransaction).start();
+            try {
+                ((Service) outgoingDeviceUserTransaction).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * * 
+                 */
+
+                throw new CantStartPlatformException();
+            }
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -1350,8 +1655,23 @@ public class Platform  {
 
             UUID pluginID = pluginsIdentityManager.getPluginId(outgoingIntraUserTransaction);
             (outgoingIntraUserTransaction).setId(pluginID);
+            
+            try {
+                ((Service) outgoingIntraUserTransaction).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
 
-            ((Service) outgoingIntraUserTransaction).start();
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * * 
+                 */
+
+                throw new CantStartPlatformException();
+            }
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -1398,7 +1718,22 @@ public class Platform  {
             UUID pluginID = pluginsIdentityManager.getPluginId(incomingDeviceUserTransaction);
             (incomingDeviceUserTransaction).setId(pluginID);
 
-            ((Service) incomingDeviceUserTransaction).start();
+            try {
+                ((Service) incomingDeviceUserTransaction).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * * 
+                 */
+
+                throw new CantStartPlatformException();
+            }
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -1441,8 +1776,23 @@ public class Platform  {
 
             UUID pluginID = pluginsIdentityManager.getPluginId(walletManager);
             (walletManager).setId(pluginID);
+            
+            try {
+                ((Service) walletManager).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
 
-            ((Service) walletManager).start();
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * * 
+                 */
+
+                throw new CantStartPlatformException();
+            }
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -1489,7 +1839,22 @@ public class Platform  {
             UUID pluginID = pluginsIdentityManager.getPluginId(walletRuntime);
             (walletRuntime).setId(pluginID);
 
-            ((Service) walletRuntime).start();
+            try {
+                ((Service) walletRuntime).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * *
+                 */
+
+                throw new CantStartPlatformException();
+            }
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {

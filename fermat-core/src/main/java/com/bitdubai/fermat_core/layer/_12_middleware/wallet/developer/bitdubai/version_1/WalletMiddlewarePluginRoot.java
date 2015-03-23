@@ -1,12 +1,18 @@
 package com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer._12_middleware.Middleware;
 import com.bitdubai.fermat_api.layer._12_middleware.WalletManager;
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.CantCreateWalletException;
+import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer._1_definition.event.PlatformEvent;
+import com.bitdubai.fermat_api.layer._2_os.file_system.*;
+import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantLoadFileException;
+import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.DealsWithEvents;
@@ -16,32 +22,41 @@ import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventMana
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventSource;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventType;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.WalletCreatedEvent;
-import com.bitdubai.fermat_api.layer._2_os.file_system.DealsWithPluginFileSystem;
-import com.bitdubai.fermat_api.layer._2_os.file_system.PluginFileSystem;
 import com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.event_handlers.WalletCreatedEventHandler;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Created by ciencias on 20.01.15.
  */
+
+/**
+ * This plug-in handles the relationship between fiat currency an crypto currency. In this way the en user can be using 
+ * fiat over crypto.
+ */
+
 public class WalletMiddlewarePluginRoot implements Service, WalletManager , Middleware, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
 
-    UUID walletId;
     
     /**
      * Service Interface member variables.
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
     List<EventListener> listenersAdded = new ArrayList<>();
+    
+    /**
+     * WalletManager Interface member variables.
+     */
+    final String walletIdsFileName = "walletsIds";
+
+    UUID walletId;
+    private Map<UUID, UUID> walletIds =  new HashMap();
 
     /**
      * UsesFileSystem Interface member variables.
      */
     PluginFileSystem pluginFileSystem;
-
+    
     /**
      * DealWithEvents Interface member variables.
      */
@@ -57,9 +72,85 @@ public class WalletMiddlewarePluginRoot implements Service, WalletManager , Midd
      */
 
     @Override
-    public void start() {
+    public void start() throws CantStartPluginException {
+
         /**
-         * I will initialize the handling of com.bitdubai.platform events.
+         * Check if this is the first time this plugin starts. To do so I check if the file containing all the wallets
+         * ids managed by this plug-in already exists or not.
+         * * * 
+         */
+        PluginTextFile walletIdsFile;
+        
+        try {
+            walletIdsFile = pluginFileSystem.getTextFile(pluginId, "", walletIdsFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            
+            try {
+                walletIdsFile.loadFromMedia();
+                
+                /**
+                 * Now I read the content of the file and place it in memory.
+                 */
+                String[] stringWalletIds = walletIdsFile.getContent().split(";" , -1);
+                
+                for (String stringWalletId : stringWalletIds ) {
+
+                    if(stringWalletId != "")
+                    {
+                        /**
+                         * Each record in the file has to values: the first is the external id of the wallet, and the
+                         * second is the internal id of the wallet.
+                         * * *
+                         */
+                        String[] idPair = stringWalletId.split(",", -1);
+
+                        walletIds.put( UUID.fromString(idPair[0]),  UUID.fromString(idPair[1]));
+                        
+                        /**
+                         * Great, now the wallet list is in memory.
+                         */
+                    }
+                }
+            }
+            catch (CantLoadFileException CantLoadFileException) {
+                
+                /**
+                 * In this situation we might have a corrupted file we can not read. For now the only thing I can do is
+                 * to prevent the plug-in from running.
+                 * 
+                 * In the future there should be implemented a method to deal with this situation.
+                 * * * * 
+                 */
+                System.err.println("CantLoadFileException: " + CantLoadFileException.getMessage());
+                CantLoadFileException.printStackTrace();
+                throw new CantStartPluginException(Plugins.WALLET_MIDDLEWARE);
+            }
+        }
+        catch (FileNotFoundException e) {
+            /**
+             * If the file did not exist it is not a problem. It only means this is the first time this plugin is running.
+             * 
+             * I will create the file now, with an empty content so that when a new wallet is added we wont have to deal
+             * with this file not existing again.
+             * * * * * 
+             */
+            walletIdsFile = pluginFileSystem.createTextFile(pluginId, "", walletIdsFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            
+            try {
+                walletIdsFile.persistToMedia();
+            }
+            catch (CantPersistFileException cantPersistFileException ) {
+                
+                /**
+                 * If I can not save this file, then this plugin shouldn't be running at all.
+                 */
+                System.err.println("CantPersistFileException: " + cantPersistFileException.getMessage());
+                cantPersistFileException.printStackTrace();
+                throw new CantStartPluginException(Plugins.WALLET_MIDDLEWARE);
+            }
+        }
+        
+        /**
+         * I will initialize the handling of the platform events.
          */
 
         EventListener eventListener;
@@ -112,13 +203,15 @@ public class WalletMiddlewarePluginRoot implements Service, WalletManager , Midd
     }
 
     /**
-     * WalletManager methods implmentation.
+     * WalletManager methods implementation.
      */
 
     @Override
     public void createWallet(UUID walletId) throws CantCreateWalletException {
 
-
+        /**
+         * 
+         */
         
         PlatformEvent platformEvent = eventManager.getNewEvent(EventType.WALLET_CREATED);
         ((WalletCreatedEvent) platformEvent).setWalletId(this.walletId);

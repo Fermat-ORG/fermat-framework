@@ -44,7 +44,7 @@ public class AndroidPluginTextFile implements PluginTextFile {
      */
     
     Context context;
-    String content;
+    String content = "";
     String fileName;
     FilePrivacy privacyLevel;
     FileLifeSpan lifeSpan;

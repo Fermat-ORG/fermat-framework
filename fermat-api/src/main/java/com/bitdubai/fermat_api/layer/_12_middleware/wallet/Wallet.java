@@ -12,9 +12,9 @@ public interface Wallet {
 
     public CryptoAccount createCryptoAccount (CryptoCurrency cryptoCurrency);
 
-    public void removeFiatAccount (int index);
+    public void deleteFiatAccount(int index);
 
-    public void removeCryptoAccount (int index);
+    public void deleteCryptoAccount(int index);
 
     public FiatAccount getFiatAccount (int index);
 

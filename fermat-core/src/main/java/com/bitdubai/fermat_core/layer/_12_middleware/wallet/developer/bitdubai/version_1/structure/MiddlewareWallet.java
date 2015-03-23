@@ -53,11 +53,11 @@ public class MiddlewareWallet implements Wallet {
         return cryptoAccount;
     }
 
-    public void removeFiatAccount (int index){
+    public void deleteFiatAccount(int index){
         this.fiatAccounts.remove(index);
     }
 
-    public void removeCryptoAccount (int index){
+    public void deleteCryptoAccount(int index){
         this.cryptoAccounts.remove(index);
     }
     
