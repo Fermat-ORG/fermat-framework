@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_api.layer._2_os.database_system.exceptions;
+package com.bitdubai.fermat_api.layer._2_os.database_system;
 
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseDataType;
 

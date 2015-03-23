@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_api.layer._2_os.database_system;
 
-import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.DatabaseTableFactory;
+import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.CantCreateTableException;
 import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.InvalidOwnerId;
 
 import java.util.UUID;
@@ -10,7 +10,7 @@ import java.util.UUID;
  */
 public interface DatabaseFactory {
 
-    public void createTable(UUID ownerId, DatabaseTableFactory tableFactory) throws InvalidOwnerId;
+    public void createTable(UUID ownerId, DatabaseTableFactory tableFactory) throws InvalidOwnerId, CantCreateTableException;
 
     public DatabaseTableFactory newTableFactory(UUID ownerId, String tableName) throws InvalidOwnerId;
     

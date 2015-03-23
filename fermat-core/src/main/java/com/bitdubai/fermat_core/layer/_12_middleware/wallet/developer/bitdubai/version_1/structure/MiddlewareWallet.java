@@ -7,8 +7,9 @@ import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.CantInitia
 import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer._1_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer._2_os.database_system.*;
+import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.CantCreateTableException;
 import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.DatabaseTableFactory;
+import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableFactory;
 import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.InvalidOwnerId;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantOpenDatabaseException;
 
@@ -123,7 +124,15 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
                 table.addColumn(FIAT_ACCOUNTS_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36);
                 table.addColumn(FIAT_ACCOUNTS_TABLE_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 100);
                 table.addColumn(FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
-                ((DatabaseFactory) this.database).createTable(this.ownerId, table);
+                
+                try {
+                    ((DatabaseFactory) this.database).createTable(this.ownerId, table);
+                }
+                catch (CantCreateTableException cantCreateTableException) {
+                    System.err.println("CantCreateTableException: " + cantCreateTableException.getMessage());
+                    cantCreateTableException.printStackTrace();
+                    throw new CantInitializeWalletException();
+                }
 
                 /**
                  * Then the crypto accounts table.
@@ -132,7 +141,15 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
                 table.addColumn(CRYPTO_ACCOUNTS_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36);
                 table.addColumn(CRYPTO_ACCOUNTS_TABLE_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 100);
                 table.addColumn(CRYPTO_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
-                ((DatabaseFactory) this.database).createTable(this.ownerId, table);
+              
+                try {
+                    ((DatabaseFactory) this.database).createTable(this.ownerId, table);
+                }
+                catch (CantCreateTableException cantCreateTableException) {
+                    System.err.println("CantCreateTableException: " + cantCreateTableException.getMessage());
+                    cantCreateTableException.printStackTrace();
+                    throw new CantInitializeWalletException();
+                }
                 
             }
             catch (InvalidOwnerId invalidOwnerId) {

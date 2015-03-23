@@ -6,8 +6,9 @@ import android.database.sqlite.SQLiteDatabase;
 import com.bitdubai.fermat_api.layer._2_os.database_system.Database;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseFactory;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.CantCreateTableException;
 import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.DatabaseTableFactory;
+import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableFactory;
 import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.InvalidOwnerId;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantOpenDatabaseException;
 
@@ -77,7 +78,7 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
      * This method creates a new table into the database based on the definition received.
      */
     @Override
-    public void createTable(UUID ownerId, DatabaseTableFactory table) throws InvalidOwnerId{
+    public void createTable(UUID ownerId, DatabaseTableFactory table) throws InvalidOwnerId, CantCreateTableException {
 
         /**
          * I check that the owner id is the same I currently have..
@@ -85,6 +86,8 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
         if (this.ownerId != ownerId) {
             throw new InvalidOwnerId();
         }
+        
+        // TODO: NATALIA: Leer los campos de la nueva tabla (quizas falta un metodo que los devuelva) y efectevitamente crear la tabla con esos campos en la base de datos. Si por algo no se puede, hay que disparar CantCreateTableException
         
         
     }
@@ -104,6 +107,12 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
 
         return new AndroidDatabaseTableFactory(tableName);
     }
+    
+    
+    
+    
+    
+    
     
     
     

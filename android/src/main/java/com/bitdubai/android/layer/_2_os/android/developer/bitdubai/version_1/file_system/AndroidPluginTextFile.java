@@ -32,11 +32,6 @@ import android.util.Base64;
  * Created by ciencias on 22.01.15.
  */
 
-/**
- * The current implementation is ignoring the privacy level and lifespan. All the files al considered PRIVATE and
- * PERMANENT.
- */
-
 public class AndroidPluginTextFile implements PluginTextFile {
 
     /**
