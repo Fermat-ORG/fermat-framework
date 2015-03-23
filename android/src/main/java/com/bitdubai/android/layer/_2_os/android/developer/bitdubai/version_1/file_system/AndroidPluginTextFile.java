@@ -124,6 +124,7 @@ public class AndroidPluginTextFile implements PluginTextFile {
             outputStream.close();
         }
 
+
             
         } catch (Exception e) {
             System.err.println("Error trying to persist file: " + e.getMessage());

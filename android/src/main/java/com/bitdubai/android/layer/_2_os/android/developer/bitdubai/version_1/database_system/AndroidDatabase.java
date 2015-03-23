@@ -4,8 +4,11 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.bitdubai.fermat_api.layer._2_os.database_system.Database;
+import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseFactory;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableColumn;
+import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.CantCreateTableException;
 import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableFactory;
@@ -15,7 +18,8 @@ import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantOpenDataba
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
+import android.os.Environment;
+import java.io.File;
 /**
  * Created by ciencias on 23.12.14.
  */
@@ -24,7 +28,7 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
     private Context Context;
     private String databaseName;
     private UUID ownerId;
-    
+    private String query;
     private SQLiteDatabase Database;
     private int DATABASE_VERSION = 1;
 
@@ -43,8 +47,12 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
          * First I try to open the database.
          */
         try {
-            this.Database = SQLiteDatabase.openDatabase(this.Context.getFilesDir() +"/" + ownerId + databaseName,null,SQLiteDatabase.OPEN_READWRITE);
-        }
+            String databasePath =  this.Context.getFilesDir().getPath() +  "/" +  ownerId.toString();
+
+            databasePath += "/" + databaseName.replace("-","") + ".db";
+            File databaseFile = new File(databasePath);
+            this.Database = SQLiteDatabase.openOrCreateDatabase(databaseFile,null);
+          }
         catch (Exception exception) {
         
             /**
@@ -61,12 +69,45 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
     }
 
 
+    public void createDatabase(String databaseName) throws CantCreateDatabaseException {
+
+        /**
+         * First I try to open the database.
+         */
+        try {
+            String databasePath =  this.Context.getFilesDir().getPath() +  "/" +  ownerId.toString();
+
+            File storagePath = new File(databasePath);
+            if (!storagePath.exists()) {
+                storagePath.mkdirs();
+            }
+
+            databasePath += "/" + databaseName.replace("-","") + ".db";
+            File databaseFile = new File(databasePath);
+            this.Database = SQLiteDatabase.openOrCreateDatabase(databaseFile,null);
+
+
+           }
+        catch (Exception exception) {
+
+
+            /**
+             * Probably there is no distinctions between a database that it can not be opened and a one that doesn't not exist.
+             * We will assume that if it didn't open it was because it didn't exist.
+             * * *
+             */
+            System.err.println("Exception: " + exception.getMessage());
+            exception.printStackTrace();
+            throw new CantCreateDatabaseException();
+        }
+
+    }
     /**
      * Database interface implementation.
      */
     @Override
     public void executeQuery() {
-
+        Database.execSQL(query);
     }
 
 
@@ -88,8 +129,36 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
         }
         
         // TODO: NATALIA: Leer los campos de la nueva tabla (quizas falta un metodo que los devuelva) y efectevitamente crear la tabla con esos campos en la base de datos. Si por algo no se puede, hay que disparar CantCreateTableException
-        
-        
+
+        /**
+         * Get the columns of the table and write the query to create it
+         */
+        try
+        {
+            this.query ="CREATE TABLE IF NOT EXISTS " + table.getTableName() + "(";
+            ArrayList<DatabaseTableColumn> tableColumns = table.getColumns();
+
+            for (int i = 0; i < tableColumns.size(); i++) {
+
+                this.query += tableColumns.get(i).getName() +" " +  tableColumns.get(i).getType().name();
+                if(tableColumns.get(i).getType() == DatabaseDataType.STRING)
+                    this.query +="("+ String.valueOf(tableColumns.get(i).getDataTypeSize()) + ")";
+
+                if(i < tableColumns.size()-1)
+                    this.query +=",";
+            }
+
+            this.query += ")";
+
+            executeQuery();
+        }catch (Exception e)
+        {
+            System.err.println("CantCreateTableException: " + e.getMessage());
+            e.printStackTrace();
+            throw new CantCreateTableException();
+        }
+
+
     }
 
     /**
@@ -129,11 +198,6 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
     
     
 
-    public Database createDatabase(UUID ownerId, String databaseName) {
-
-        this.Database = SQLiteDatabase.openOrCreateDatabase(this.Context.getFilesDir() +"/" + databaseName, null, null);
-        return new AndroidDatabase(this.Context, ownerId, databaseName);
-    }
 
 
 

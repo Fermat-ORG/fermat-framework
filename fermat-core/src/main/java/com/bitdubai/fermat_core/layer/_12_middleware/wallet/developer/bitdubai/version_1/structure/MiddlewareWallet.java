@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer._11_world.blockchain_info.exceptions.CantStartBlockchainInfoWallet;
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.CryptoAccount;
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.FiatAccount;
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.Wallet;
@@ -7,6 +8,7 @@ import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.CantInitia
 import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer._1_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer._2_os.database_system.*;
+import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.CantCreateTableException;
 import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableFactory;
@@ -108,6 +110,8 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
             /**
              * I will create the database where I am going to store the information of this wallet.
              */
+           try{
+
             this.database = this.pluginDatabaseSystem.createDatabase(this.ownerId, this.walletId.toString());
             
             /**
@@ -162,6 +166,17 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
                 invalidOwnerId.printStackTrace();
                 throw new CantInitializeWalletException();
             }
+
+        }
+        catch (CantCreateDatabaseException cantCreateDatabaseException){
+
+            /**
+             * The database exists but cannot be open. I can not handle this situation.
+             */
+            System.err.println("CantCreateDatabaseException: " + cantCreateDatabaseException.getMessage());
+            cantCreateDatabaseException.printStackTrace();
+            throw new CantInitializeWalletException();
+        }
         }
         catch (CantOpenDatabaseException cantOpenDatabaseException){
 

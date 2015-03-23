@@ -1,8 +1,11 @@
 package com.bitdubai.fermat_core.layer._11_world.blockchain_info.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer._11_world.blockchain_info.exceptions.CantStartBlockchainInfoWallet;
 import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
 
 import com.bitdubai.fermat_api.layer._2_os.database_system.DealsWithPluginDatabaseSystem;
@@ -12,6 +15,7 @@ import com.bitdubai.fermat_api.layer._2_os.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer._2_os.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer._2_os.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer._2_os.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantPersistFileException;
 
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.FileNotFoundException;
@@ -33,7 +37,9 @@ import  com.bitdubai.fermat_core.layer._11_world.blockchain_info.developer.bitdu
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -56,6 +62,12 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Servic
         List<EventListener> listenersAdded = new ArrayList<>();
 
         /**
+         * CryptoWalletManager Interface member variables.
+         */
+        final String WALLET_IDS_FILE_NAME = "walletsIds";
+
+
+        /**
          * UsesFileSystem Interface member variable
          */
         PluginFileSystem pluginFileSystem;
@@ -71,7 +83,90 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Servic
         UUID pluginId;
 
         @Override
-        public void start() {
+        public void start() throws CantStartPluginException {
+
+            /**
+             * Check if this is the first time this plugin starts. To do so I check if the file containing all the wallets
+             * ids managed by this plug-in already exists or not.
+             * * *
+             */
+          PluginTextFile walletIdsFile;
+            try{
+
+                // TODO: El folder no puede ser wallets_data, debe ser un hash del UUID del plugin. En general cada plugin guarda archivos en un folder propio. Busca como se calcula en java un hash 256 de manera standard y eso usamos para el nombre del folder. El que debe hashear el nombre es el PluginFileSystem, no cada plugin individualmente.
+
+                 walletIdsFile = pluginFileSystem.getTextFile(pluginId, pluginId.toString(), WALLET_IDS_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+
+                try {
+                    walletIdsFile.loadFromMedia();
+                    String[] stringWalletIds = walletIdsFile.getContent().split(";");
+
+                    /**
+                     * Read file with wallets ids
+                     * instance class BlockchainInfoBitcoinWallet, one for each wallet id
+                     */
+                    for (int j = 0; j < stringWalletIds.length -1; j++) {
+
+                        BlockchainInfoWallet blockchainInfoWallet = new BlockchainInfoWallet(this.pluginId, UUID.fromString(stringWalletIds[j].toString()));
+
+                        blockchainInfoWallet.setPluginFileSystem(this.pluginFileSystem);
+                        blockchainInfoWallet.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+
+                        blockchainInfoWallet.setApiKey(this.apiCode);
+
+                        try{
+                            blockchainInfoWallet.start();
+                        }
+                        catch (CantStartBlockchainInfoWallet e) {
+                            System.err.println("CantStartBlockchainInfoWallet: " + e.getMessage());
+                            e.printStackTrace();
+                            throw new CantStartPluginException(Plugins.BLOCKCHAIN_INFO_WORLD);
+                        }
+
+
+                    }
+                }
+                catch (CantLoadFileException CantLoadFileException) {
+
+                    /**
+                     * In this situation we might have a corrupted file we can not read. For now the only thing I can do is
+                     * to prevent the plug-in from running.
+                     *
+                     * In the future there should be implemented a method to deal with this situation.
+                     * * * *
+                     */
+                    System.err.println("CantLoadFileException: " + CantLoadFileException.getMessage());
+                    CantLoadFileException.printStackTrace();
+                    throw new CantStartPluginException(Plugins.BLOCKCHAIN_INFO_WORLD);
+                }
+
+
+
+            }
+            catch (FileNotFoundException e) {
+                /**
+                 * If the file did not exist it is not a problem. It only means this is the first time this plugin is running.
+                 *
+                 * I will create the file now, with an empty content so that when a new wallet is added we wont have to deal
+                 * with this file not existing again.
+                 * * * * *
+                 */
+                walletIdsFile = pluginFileSystem.createTextFile(pluginId, pluginId.toString(), WALLET_IDS_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+
+                try {
+                    walletIdsFile.persistToMedia();
+                }
+                catch (CantPersistFileException cantPersistFileException ) {
+
+                    /**
+                     * If I can not save this file, then this plugin shouldn't be running at all.
+                     */
+                    System.err.println("CantPersistFileException: " + cantPersistFileException.getMessage());
+                    cantPersistFileException.printStackTrace();
+                    throw new CantStartPluginException(Plugins.WALLET_MIDDLEWARE);
+                }
+            }
+
             /**
              * I will initialize the handling od platform events.
              */
@@ -80,37 +175,6 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Servic
             EventHandler eventHandler;
 
             this.serviceStatus = ServiceStatus.STARTED;
-
-            /**
-             * Read file with wallets ids
-             * instance class BlockchainInfoBitcoinWallet, one for each wallet id
-             */
-            try{
-                // TODO;NATALIA  en general vamos a usar archivos binarios para guardar este tipo de datos,y sin ninguna extension. Solo cuando la situacion requiera que el usuario final tenga acceso a un arvhico lo grabariamos en formato de texto. Arregla los otros sitios donde este criterio no se cumpla.
-                // TODO: El nombre del arcvhico debe estar en una constante a nivel de la clase.
-                // TODO: El folder no puede ser wallets_data, debe ser un hash del UUID del plugin. En general cada plugin guarda archivos en un folder propio. Busca como se calcula en java un hash 256 de manera standard y eso usamos para el nombre del folder. El que debe hashear el nombre es el PluginFileSystem, no cada plugin individualmente.
-                PluginTextFile layoutFile = pluginFileSystem.getTextFile(pluginId, "wallets_data", "wallets_id.txt", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-                String[] walletsIds = layoutFile.getContent().split(";");
-
-                for (int j = 0; j < walletsIds.length; j++) {
-/*
-                    BlockchainInfoWallet blockchainInfoWallet = new BlockchainInfoWallet(this.pluginId, UUID.fromString(walletsIds[j].toString()));
-
-                    blockchainInfoWallet.setPluginFileSystem(this.pluginFileSystem);
-                    blockchainInfoWallet.setPluginDatabaseSystem(this.pluginDatabaseSystem);
-
-                    blockchainInfoWallet.setApiKey(this.apiCode);
-                    blockchainInfoWallet.start();
-                    */
-                }
-
-            }
-            catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-// TODO:NATALIA tenemos que estandarizar lo que se hace en el catch para logear los errores , mientras no este claro, fijate lo que se hace en la clase Platform y hace lo mismo. En este caso si el archivo no existe deberia crearlo.
-
-
 
 
 
@@ -250,9 +314,6 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Servic
         public void setId(UUID pluginId) {
             this.pluginId = pluginId;
         }
-
-
-
 
 
 

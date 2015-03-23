@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer._11_world;
 
+import com.bitdubai.fermat_api.layer._11_world.blockchain_info.exceptions.CantStartBlockchainInfoWallet;
 import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer._1_definition.money.CryptoAddress;
 
@@ -11,7 +12,7 @@ import java.util.UUID;
 public interface CryptoWallet {
 
     
-    public void start();
+    public void start() throws CantStartBlockchainInfoWallet;
     
     public void stop();
     

@@ -6,7 +6,8 @@ import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.DatabaseNo
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer._2_os.database_system.Database;
 import com.bitdubai.fermat_api.layer._2_os.database_system.PluginDatabaseSystem;
-import android.database.sqlite.SQLiteDatabase;
+
+import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.CantCreateDatabaseException;
 
 import java.util.UUID;
 
@@ -38,8 +39,14 @@ public class AndroidPluginDatabaseSystem  implements PluginDatabaseSystem{
     }
 
     @Override
-    public Database createDatabase(UUID ownerId, String databaseName) {
-        return new AndroidDatabase(this.Context, ownerId, databaseName);
+    public Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException{
+
+        AndroidDatabase database;
+        database = new AndroidDatabase(this.Context, ownerId, databaseName);
+
+        database.createDatabase(databaseName);
+
+        return database;
     }
 
 

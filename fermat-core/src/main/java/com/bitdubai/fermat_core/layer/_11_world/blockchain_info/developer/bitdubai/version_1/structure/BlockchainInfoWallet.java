@@ -2,10 +2,16 @@ package com.bitdubai.fermat_core.layer._11_world.blockchain_info.developer.bitdu
 
 import com.bitdubai.fermat_api.layer._11_world.CryptoWallet;
 import com.bitdubai.fermat_api.layer._11_world.blockchain_info.DealsWithBlockchainInfoApi;
+import com.bitdubai.fermat_api.layer._11_world.blockchain_info.exceptions.CantStartBlockchainInfoWallet;
+import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.CantInitializeWalletException;
 import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer._1_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer._2_os.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.CantCreateTableException;
+import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.InvalidOwnerId;
 import com.bitdubai.fermat_api.layer._2_os.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer._2_os.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer._2_os.file_system.FilePrivacy;
@@ -27,8 +33,35 @@ import com.bitdubai.fermat_api.layer._2_os.database_system.*;
  */
 public class BlockchainInfoWallet implements CryptoWallet ,DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, DealsWithBlockchainInfoApi {
 
+    /**
+     * UsesFileSystem Interface member variable
+     */
+    PluginFileSystem pluginFileSystem;
 
+    /**
+     * CryptoWallet Interface member variables.
+     */
+    private String password = "";
+    private String apiKey = "";
+    private String walletAddress ="";
+    private String walletGuid ="";
+    private UUID walletId;
     private UUID pluginId;
+    Database database;
+
+    final String INCOMING_CRYPTO_TABLE_NAME = "incoming_crypto";
+    final String INCOMING_CRYPTO_TABLE_ID_COLUMN_NAME = "id";
+    final String INCOMING_CRYPTO_TABLE_TRX_HASH_COLUMN_NAME = "trx_hash";
+    final String INCOMING_CRYPTO_TABLE_AMOUNT_COLUMN_NAME = "amount";
+    final String INCOMING_CRYPTO_TABLE_CRYPTO_ADDRESS_TO_COLUMN_NAME = "crypto_address_to";
+    final String INCOMING_CRYPTO_TABLE_STATUS_COLUMN_NAME = "status";
+    final String INCOMING_CRYPTO_TABLE_CURRENT_CONFIRMATIONS_COLUMN_NAME = "current_confirmations";
+    final String INCOMING_CRYPTO_TABLE_PREVIOUS_CONFIRMATIONS_COLUMN_NAME = "previous_confirmations";
+
+    final String CRYPTO_ACCOUNTS_TABLE_NAME = "crypto accounts";
+    final String CRYPTO_ACCOUNTS_TABLE_ID_COLUMN_NAME = "id";
+    final String CRYPTO_ACCOUNTS_TABLE_ALIAS_COLUMN_NAME = "alias";
+    final String CRYPTO_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME = "balance";
 
     public BlockchainInfoWallet( UUID pluginId,UUID walletId){
 
@@ -37,10 +70,6 @@ public class BlockchainInfoWallet implements CryptoWallet ,DealsWithPluginFileSy
 
     }
 
-    /**
-     * UsesFileSystem Interface member variable
-     */
-    PluginFileSystem pluginFileSystem;
 
     /**
      * UsesFileSystem Interface implementation.
@@ -51,26 +80,99 @@ public class BlockchainInfoWallet implements CryptoWallet ,DealsWithPluginFileSy
     }
 
     @Override
-    public void start() {
+    public void start() throws  CantStartBlockchainInfoWallet{
         /**
-         * open database connection,read transaction tables
-         * if not exist create it
+         * I will try to open the wallets' database..
          */
-        Database walletDatabase;
-       // try{
-            // NATALIA TODO: como nombre de la base de datos vamos a usar un hash del id del plugin, asi nadie puede saber cual es el id, aunque tenga acceso a listar las bases de datos existentes. Esto es valido para cualquier base de datos que creemos y el hasheo lo maneja internamente el DatabaseSystem
-          //   walletDatabase = pluginDatabaseSystem.openDatabase(this.pluginId,this.walletId.toString());
+        try {
 
-       // }
-     //   catch (CantOpenDatabaseException e)
-      //  {
-         //   walletDatabase = pluginDatabaseSystem.createDatabase(this.pluginId,this.walletId.toString());
-       // }
-      //  DatabaseTable walletTable = walletDatabase.newTable();
-       // DatabaseTableColumn walletTableColum = walletTable.newColumn(); //Id, hash,tx_index, time,relayed_by, address_input, value_input
-        //walletDatabase.createTable("INCOMING_CRYPTO");
+            this.database = this.pluginDatabaseSystem.openDatabase(this.pluginId, "36e5c6d4-4faa-4f47-aad7-7769b393773a");
+        }
+        catch (DatabaseNotFoundException databaseNotFoundException) {
 
+            /**
+             * I will create the database where I am going to store the information of this wallet.
+             */
+        try{
+            this.database = this.pluginDatabaseSystem.createDatabase(this.pluginId, this.walletId.toString());
 
+            /**
+             * Next, I will add a few tables.
+             */
+            try {
+
+                DatabaseTableFactory table;
+
+                /**
+                 * First the INCOMING_CRYPTO table.
+                 */
+                table = ((DatabaseFactory) this.database).newTableFactory(this.pluginId, INCOMING_CRYPTO_TABLE_NAME);
+
+                table.addColumn(INCOMING_CRYPTO_TABLE_TRX_HASH_COLUMN_NAME, DatabaseDataType.STRING, 100);
+                table.addColumn(INCOMING_CRYPTO_TABLE_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
+                table.addColumn(INCOMING_CRYPTO_TABLE_CRYPTO_ADDRESS_TO_COLUMN_NAME, DatabaseDataType.STRING, 100);
+                table.addColumn(INCOMING_CRYPTO_TABLE_STATUS_COLUMN_NAME, DatabaseDataType.INTEGER, 0);
+                table.addColumn(INCOMING_CRYPTO_TABLE_CURRENT_CONFIRMATIONS_COLUMN_NAME, DatabaseDataType.INTEGER, 0);
+                table.addColumn(INCOMING_CRYPTO_TABLE_PREVIOUS_CONFIRMATIONS_COLUMN_NAME, DatabaseDataType.INTEGER, 0);
+
+                try {
+                    ((DatabaseFactory) this.database).createTable(this.pluginId, table);
+                }
+                catch (CantCreateTableException cantCreateTableException) {
+                    System.err.println("CantCreateTableException: " + cantCreateTableException.getMessage());
+                    cantCreateTableException.printStackTrace();
+                    throw new CantStartBlockchainInfoWallet();
+                }
+
+                /**
+                 * Then the OUTGOING_CRYPTO accounts table.
+                 */
+              /*  table = ((DatabaseFactory) this.database).newTableFactory(this.pluginId, CRYPTO_ACCOUNTS_TABLE_NAME);
+                table.addColumn(CRYPTO_ACCOUNTS_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36);
+                table.addColumn(CRYPTO_ACCOUNTS_TABLE_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 100);
+                table.addColumn(CRYPTO_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
+
+                try {
+                    ((DatabaseFactory) this.database).createTable(this.pluginId, table);
+                }
+                catch (CantCreateTableException cantCreateTableException) {
+                    System.err.println("CantCreateTableException: " + cantCreateTableException.getMessage());
+                    cantCreateTableException.printStackTrace();
+                    throw new CantStartBlockchainInfoWallet();
+                }*/
+
+            }
+            catch (InvalidOwnerId invalidOwnerId) {
+                /**
+                 * This shouldn't happen here because I was the one who gave the owner id to the database file system,
+                 * but anyway, if this happens, I can not continue.
+                 * * *
+                 */
+                System.err.println("InvalidOwnerId: " + invalidOwnerId.getMessage());
+                invalidOwnerId.printStackTrace();
+                throw new CantStartBlockchainInfoWallet();
+            }
+        }
+        catch (CantCreateDatabaseException cantCreateDatabaseException){
+
+            /**
+             * The database exists but cannot be open. I can not handle this situation.
+             */
+            System.err.println("CantCreateDatabaseException: " + cantCreateDatabaseException.getMessage());
+            cantCreateDatabaseException.printStackTrace();
+            throw new CantStartBlockchainInfoWallet();
+        }
+
+        }
+        catch (CantOpenDatabaseException cantOpenDatabaseException){
+
+            /**
+             * The database exists but cannot be open. I can not handle this situation.
+             */
+            System.err.println("CantOpenDatabaseException: " + cantOpenDatabaseException.getMessage());
+            cantOpenDatabaseException.printStackTrace();
+            throw new CantStartBlockchainInfoWallet();
+        }
 
     }
 
@@ -79,15 +181,7 @@ public class BlockchainInfoWallet implements CryptoWallet ,DealsWithPluginFileSy
 
     }
 
-    /**
-     * CryptoWallet Interface member variable
-     */
 
-    private String password = "";
-    private String apiKey = "";
-    private String walletAddress ="";
-    private String walletGuid ="";
-    private UUID walletId;
 
     /**
      * CryptoWallet Interface implementation.
