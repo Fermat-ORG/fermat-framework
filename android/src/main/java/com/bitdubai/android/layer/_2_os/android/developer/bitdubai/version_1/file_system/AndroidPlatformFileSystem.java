@@ -9,8 +9,22 @@ import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.FileNotFoundEx
 /**
  * Created by ciencias on 02.02.15.
  */
+
+/**
+ * The Platform File System is the implementation of the file system that is handled to external plugins not requires the plug in to identify itself.
+ */
+
 public class AndroidPlatformFileSystem implements PlatformFileSystem {
+    /**
+     * PlatformFileSystem interface member variables.
+     */
+
     Context context;
+
+    /**
+     * PlatformFileSystem interface implementation.
+     */
+
     @Override
     public PlatformTextFile getFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException {
 
