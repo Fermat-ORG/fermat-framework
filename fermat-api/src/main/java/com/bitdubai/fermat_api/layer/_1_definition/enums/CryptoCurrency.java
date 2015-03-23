@@ -15,4 +15,17 @@ public enum CryptoCurrency {
 
     public String Code()   { return mCode; }
 
+    public static CryptoCurrency getByCode(String code) {
+
+        switch (code) {
+            case "BTC": return CryptoCurrency.BITCOIN;
+            case "LTC": return CryptoCurrency.LITECOIN;
+
+        }
+
+        /**
+         * Return by default.
+         */
+        return CryptoCurrency.BITCOIN;
+    }
 }

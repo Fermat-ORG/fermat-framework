@@ -5,8 +5,11 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer._12_middleware.Middleware;
 import com.bitdubai.fermat_api.layer._12_middleware.WalletManager;
+import com.bitdubai.fermat_api.layer._12_middleware.wallet.Wallet;
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.CantCreateWalletException;
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.CantInitializeWalletException;
+import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.CantLoadWalletException;
+import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.CantStartWalletException;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer._1_definition.event.PlatformEvent;
@@ -53,7 +56,7 @@ public class WalletMiddlewarePluginRoot implements Service, WalletManager , Midd
      */
     final String WALLET_IDS_FILE_NAME = "walletsIds";
 
-    UUID walletId;
+    Wallet currentWallet;
     private Map<UUID, UUID> walletIds =  new HashMap();
 
     /**
@@ -277,19 +280,37 @@ public class WalletMiddlewarePluginRoot implements Service, WalletManager , Midd
          * Finally I fire the event announcing the new wallet was created.
          */
         PlatformEvent platformEvent = eventManager.getNewEvent(EventType.WALLET_CREATED);
-        ((WalletCreatedEvent) platformEvent).setWalletId(this.walletId);
+        ((WalletCreatedEvent) platformEvent).setWalletId(walletId);
         platformEvent.setSource(EventSource.MIDDLEWARE_WALLET_PLUGIN);
         eventManager.raiseEvent(platformEvent);
     }
 
-    
     @Override
-    public void loadWallet(UUID walletId) {
+    public void loadWallet(UUID walletId) throws CantLoadWalletException{
 
+        /**
+         * Finally I fire the event announcing the new wallet was created.
+         */
+        this.currentWallet = new MiddlewareWallet(walletId);
+     
+        try {
+            ((MiddlewareWallet) this.currentWallet).start();
+        }
+        catch (CantStartWalletException cantStartWalletException){
+            /**
+             * If I can not start the wallet, then this method fails.
+             */
+            System.err.println("CantStartWalletException: " + cantStartWalletException.getMessage());
+            cantStartWalletException.printStackTrace();
+            throw new CantLoadWalletException();
+        }
     }
 
-
-
+    @Override
+    public Wallet getCurrentWallet() {
+        return this.currentWallet;
+    }
+    
     /**
      * UsesFileSystem Interface implementation.
      */

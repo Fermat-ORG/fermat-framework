@@ -2,23 +2,65 @@ package com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.
 
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.FiatAccount;
 import com.bitdubai.fermat_api.layer._1_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer._2_os.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer._2_os.database_system.PluginDatabaseSystem;
+
+import java.util.UUID;
 
 /**
  * Created by ciencias on 2/15/15.
  */
 
-public class MiddlewareFiatAccount implements FiatAccount  {
-    
-    Double balance;
+public class MiddlewareFiatAccount implements DealsWithPluginDatabaseSystem, FiatAccount  {
+
+    /**
+     * DealsWithPluginDatabaseSystem Interface member variables.
+     */
+    PluginDatabaseSystem pluginDatabaseSystem;
+
+    /**
+     * FiatAccount Interface member variables.
+     */
+    UUID id;
+    String label = "";
+    String name = "";
+    long balance = 0;
     FiatCurrency fiatCurrency;
-    String label;
-    String name;
     
-    public MiddlewareFiatAccount (FiatCurrency fiatCurrency){
-        this.fiatCurrency = fiatCurrency;
+    public MiddlewareFiatAccount (UUID id){
+        this.id = id;
     }
 
-    public Double getBalance() {
+    /**
+     * MiddlewareFiatAccount interface implementation.
+     */
+    public void setBalance(Long balance){
+        this.balance = balance;
+    }
+
+    public void setFiatCurrency(FiatCurrency fiatCurrency) {
+        this.fiatCurrency = fiatCurrency;
+    }
+    
+    public void persistToMedia() {
+        
+
+    }
+
+    /**
+     * DealsWithPluginDatabaseSystem Interface implementation.
+     */
+    @Override
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+    }
+    
+    
+    /**
+     * FiatAccount interface implementation.
+     */
+    public long getBalance() {
         return balance;
     }
 
@@ -43,8 +85,6 @@ public class MiddlewareFiatAccount implements FiatAccount  {
     }
     
     public double availableBalance (){
-        
-        // Luis: TODO: Calculate the available balance for this account.
         
         return 0;
     }

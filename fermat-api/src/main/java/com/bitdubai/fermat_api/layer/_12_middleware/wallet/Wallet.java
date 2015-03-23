@@ -14,23 +14,21 @@ public interface Wallet {
     
     public UUID getWalletId();
 
-    public void initialize() throws CantInitializeWalletException;
+    public FiatAccount[] getFiatAccounts();
+
+    public CryptoAccount[] getCryptoAccounts();
     
     public FiatAccount createFiatAccount (FiatCurrency fiatCurrency);
 
     public CryptoAccount createCryptoAccount (CryptoCurrency cryptoCurrency);
 
+    
+    
+    
+    
     public void deleteFiatAccount(int index);
 
     public void deleteCryptoAccount(int index);
-
-    public FiatAccount getFiatAccount (int index);
-
-    public CryptoAccount getCryptoAccount (int index);
-
-    public void sizeOfFiatAccounts ();
-
-    public void sizeOfCryptoAccounts ();
 
     public void transferFromFiatToFiat (FiatAccount fiatAccountFrom, FiatAccount fiatAccountTo, Double amountFrom, Double amountTo);
 

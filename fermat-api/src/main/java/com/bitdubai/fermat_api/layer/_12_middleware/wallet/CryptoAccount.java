@@ -6,7 +6,8 @@ import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
  * Created by ciencias on 2/15/15.
  */
 public interface CryptoAccount {
-    public Double getBalance();
+    
+    public long getBalance();
 
     public CryptoCurrency getCryptoCurrency() ;
 

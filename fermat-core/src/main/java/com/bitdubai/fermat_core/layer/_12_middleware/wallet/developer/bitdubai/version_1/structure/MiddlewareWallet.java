@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer._12_middleware.wallet.CryptoAccount;
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.FiatAccount;
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.Wallet;
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.CantInitializeWalletException;
+import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.CantStartWalletException;
 import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer._1_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer._2_os.database_system.*;
@@ -15,7 +16,9 @@ import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableFactory;
 import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.InvalidOwnerId;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantOpenDatabaseException;
 
-import java.util.List;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -55,17 +58,22 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
     
     final String FIAT_ACCOUNTS_TABLE_NAME = "fiat accounts";
     final String FIAT_ACCOUNTS_TABLE_ID_COLUMN_NAME = "id";
-    final String FIAT_ACCOUNTS_TABLE_ALIAS_COLUMN_NAME = "alias";
+    final String FIAT_ACCOUNTS_TABLE_LABEL_COLUMN_NAME = "label";
+    final String FIAT_ACCOUNTS_TABLE_NAME_COLUMN_NAME = "name";
     final String FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME = "balance";
+    final String FIAT_ACCOUNTS_TABLE_FIAT_CURRENCY_COLUMN_NAME = "fiat currency";
+    
 
     final String CRYPTO_ACCOUNTS_TABLE_NAME = "crypto accounts";
     final String CRYPTO_ACCOUNTS_TABLE_ID_COLUMN_NAME = "id";
-    final String CRYPTO_ACCOUNTS_TABLE_ALIAS_COLUMN_NAME = "alias";
+    final String CRYPTO_ACCOUNTS_TABLE_LABEL_COLUMN_NAME = "alias";
+    final String CRYPTO_ACCOUNTS_TABLE_NAME_COLUMN_NAME = "name";
     final String CRYPTO_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME = "balance";
+    final String CRYPTO_ACCOUNTS_TABLE_CRYPTO_CURRENCY_COLUMN_NAME = "crypto currency";
     
     
-    List<FiatAccount> fiatAccounts;
-    List<CryptoAccount> cryptoAccounts;
+    Map<UUID, FiatAccount> fiatAccounts = new HashMap<>();
+    Map<UUID,CryptoAccount> cryptoAccounts = new HashMap<>();
     
     public MiddlewareWallet (UUID ownerId){
 
@@ -79,24 +87,12 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
          */
         this.walletId = UUID.randomUUID();
     }
-    
-    /**
-     * DealsWithPluginDatabaseSystem Interface implementation.
-     */
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-    
-    /**
-     * Wallet Interface implementation.
-     */
-    @Override
-    public UUID getWalletId() {
-        return this.walletId;
-    }
 
-    @Override
+    
+    /**
+     * MiddlewareWallet Interface implementation.
+     */
+    
     public void initialize() throws CantInitializeWalletException {
 
         /**
@@ -106,29 +102,31 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
             this.database = this.pluginDatabaseSystem.openDatabase(this.ownerId, this.walletId.toString());
         }
         catch (DatabaseNotFoundException databaseNotFoundException) {
-            
+
             /**
              * I will create the database where I am going to store the information of this wallet.
              */
            try{
 
             this.database = this.pluginDatabaseSystem.createDatabase(this.ownerId, this.walletId.toString());
-            
+
             /**
              * Next, I will add a few tables.
              */
             try {
-                
+
                 DatabaseTableFactory table;
-                
+
                 /**
                  * First the fiat accounts table.
                  */
                 table = ((DatabaseFactory) this.database).newTableFactory(this.ownerId, FIAT_ACCOUNTS_TABLE_NAME);
                 table.addColumn(FIAT_ACCOUNTS_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36);
-                table.addColumn(FIAT_ACCOUNTS_TABLE_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 100);
+                table.addColumn(FIAT_ACCOUNTS_TABLE_LABEL_COLUMN_NAME, DatabaseDataType.STRING, 100);
+                table.addColumn(FIAT_ACCOUNTS_TABLE_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100);
                 table.addColumn(FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
-                
+                table.addColumn(FIAT_ACCOUNTS_TABLE_FIAT_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 3);
+
                 try {
                     ((DatabaseFactory) this.database).createTable(this.ownerId, table);
                 }
@@ -143,9 +141,10 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
                  */
                 table = ((DatabaseFactory) this.database).newTableFactory(this.ownerId, CRYPTO_ACCOUNTS_TABLE_NAME);
                 table.addColumn(CRYPTO_ACCOUNTS_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36);
-                table.addColumn(CRYPTO_ACCOUNTS_TABLE_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 100);
+                table.addColumn(CRYPTO_ACCOUNTS_TABLE_LABEL_COLUMN_NAME, DatabaseDataType.STRING, 100);
+                table.addColumn(CRYPTO_ACCOUNTS_TABLE_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100);
                 table.addColumn(CRYPTO_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
-              
+
                 try {
                     ((DatabaseFactory) this.database).createTable(this.ownerId, table);
                 }
@@ -154,7 +153,7 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
                     cantCreateTableException.printStackTrace();
                     throw new CantInitializeWalletException();
                 }
-                
+
             }
             catch (InvalidOwnerId invalidOwnerId) {
                 /**
@@ -185,60 +184,170 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
              */
             System.err.println("CantOpenDatabaseException: " + cantOpenDatabaseException.getMessage());
             cantOpenDatabaseException.printStackTrace();
-            throw new CantInitializeWalletException(); 
+            throw new CantInitializeWalletException();
         }
-              
+
+    }
+    
+    /**
+     * The Start method.
+     */
+    public void start() throws CantStartWalletException {
+        
+        /**
+         * I will load the information of the wallet from the Database, and create an in memory structure.
+         */
+
+        /**
+         * I will try to open the wallets' database.
+         */
+        try {
+            this.database = this.pluginDatabaseSystem.openDatabase(this.ownerId, this.walletId.toString());
+        }
+        catch (DatabaseNotFoundException  | CantOpenDatabaseException exception ) {
+            /**
+             * I can not solve this situation.
+             */
+            System.err.println("DatabaseNotFoundException or CantOpenDatabaseException: " + exception.getMessage());
+            exception.printStackTrace();
+            throw new CantStartWalletException();
+        }
+
+        DatabaseTable table;
+        
+        /**
+         * Now I will load the information into a memory structure. Firstly the fiat accounts.
+         */
+        table = this.database.getTable(FIAT_ACCOUNTS_TABLE_NAME);
+        table.loadToMemory();
+
+        /**
+         * Will go through the records getting each fiat account.
+         */
+        for (DatabaseTableRecord record : table.getRecords()) {
+            
+            UUID accountId;
+            accountId = record.getValue(FIAT_ACCOUNTS_TABLE_ID_COLUMN_NAME);
+            
+            FiatAccount fiatAccount;
+            fiatAccount = new MiddlewareFiatAccount(accountId);
+
+            fiatAccount.setLabel(record.getValue(FIAT_ACCOUNTS_TABLE_LABEL_COLUMN_NAME));
+            fiatAccount.setName(record.getValue(FIAT_ACCOUNTS_TABLE_NAME_COLUMN_NAME));
+            
+            ((MiddlewareFiatAccount) fiatAccount).setFiatCurrency(FiatCurrency.getByCode(record.getValue(FIAT_ACCOUNTS_TABLE_FIAT_CURRENCY_COLUMN_NAME)));
+            ((MiddlewareFiatAccount) fiatAccount).setBalance(record.getValue(FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME));
+
+            fiatAccounts.put(accountId, fiatAccount);
+        }
+
+        /**
+         * Secondly the crypto accounts.
+         */
+        table = this.database.getTable(CRYPTO_ACCOUNTS_TABLE_NAME);
+        table.loadToMemory();
+
+        /**
+         * Will go through the records getting each crypto account.
+         */
+        for (DatabaseTableRecord record : table.getRecords()) {
+
+            UUID accountId;
+            accountId = record.getValue(CRYPTO_ACCOUNTS_TABLE_ID_COLUMN_NAME);
+
+            CryptoAccount cryptoAccount;
+            cryptoAccount = new MiddlewareCryptoAccount(accountId);
+
+            cryptoAccount.setLabel(record.getValue(CRYPTO_ACCOUNTS_TABLE_LABEL_COLUMN_NAME));
+            cryptoAccount.setName(record.getValue(CRYPTO_ACCOUNTS_TABLE_NAME_COLUMN_NAME));
+
+            ((MiddlewareCryptoAccount) cryptoAccount).setCryptoCurrency(CryptoCurrency.getByCode(record.getValue(CRYPTO_ACCOUNTS_TABLE_CRYPTO_CURRENCY_COLUMN_NAME)));
+            ((MiddlewareCryptoAccount) cryptoAccount).setBalance(record.getValue(CRYPTO_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME));
+
+            cryptoAccounts.put(accountId, cryptoAccount);
+        }
+        
     }
 
+    /**
+     * DealsWithPluginDatabaseSystem Interface implementation.
+     */
+    @Override
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+    }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    /**
+     * Wallet Interface implementation.
+     */
+    @Override
+    public UUID getWalletId() {
+        return this.walletId;
+    }
+
+    @Override
+    public FiatAccount[] getFiatAccounts() {
+        
+        FiatAccount[] fiatAccountsArray = {};
+
+        Iterator iterator = fiatAccounts.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry pair = (Map.Entry)iterator.next();
+            fiatAccountsArray[fiatAccountsArray.length] = (FiatAccount) pair.getValue();
+            iterator.remove();
+        }
+        
+        return fiatAccountsArray;
+    }
+
+    @Override
+    public CryptoAccount[] getCryptoAccounts() {
+
+        CryptoAccount[] cryptoAccountsArray = {};
+
+        Iterator iterator = fiatAccounts.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry pair = (Map.Entry)iterator.next();
+            cryptoAccountsArray[cryptoAccountsArray.length] = (CryptoAccount) pair.getValue();
+            iterator.remove();
+        }
+
+        return cryptoAccountsArray;
+    }
     
     public FiatAccount createFiatAccount (FiatCurrency fiatCurrency){
         
-        FiatAccount fiatAccount = new MiddlewareFiatAccount(fiatCurrency);
+        UUID id = UUID.randomUUID();
         
-        this.fiatAccounts.add (fiatAccount);
+        FiatAccount fiatAccount = new MiddlewareFiatAccount(id);
+        ((MiddlewareFiatAccount) fiatAccount).setFiatCurrency(fiatCurrency);
+
+        ((MiddlewareFiatAccount) fiatAccount).persistToMedia();
+        this.fiatAccounts.put (id, fiatAccount);
         
         return fiatAccount;
     }
 
     public CryptoAccount createCryptoAccount (CryptoCurrency cryptoCurrency){
-        
-        CryptoAccount cryptoAccount = new MiddlewareCryptoAccount(cryptoCurrency);
-        
-        this.cryptoAccounts.add (cryptoAccount);
+
+        UUID id = UUID.randomUUID();
+
+        CryptoAccount cryptoAccount = new MiddlewareCryptoAccount(id);
+        ((MiddlewareCryptoAccount) cryptoAccount).setCryptoCurrency(cryptoCurrency);
+
+        ((MiddlewareCryptoAccount) cryptoAccount).persistToMedia();
+        this.cryptoAccounts.put (id, cryptoAccount);
         
         return cryptoAccount;
     }
 
+    
+    
+    
+    
+    
+    
+    
     public void deleteFiatAccount(int index){
         this.fiatAccounts.remove(index);
     }
@@ -247,21 +356,6 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
         this.cryptoAccounts.remove(index);
     }
     
-    public FiatAccount getFiatAccount (int index){
-        return fiatAccounts.get(index);
-    }
-
-    public CryptoAccount getCryptoAccount (int index){
-        return cryptoAccounts.get(index);
-    }
-
-    public void sizeOfFiatAccounts (){
-        fiatAccounts.size();
-    }
-
-    public void sizeOfCryptoAccounts (){
-        cryptoAccounts.size();
-    }
     
     public void transferFromFiatToFiat (FiatAccount fiatAccountFrom, FiatAccount fiatAccountTo, Double amountFrom, Double amountTo){
                 

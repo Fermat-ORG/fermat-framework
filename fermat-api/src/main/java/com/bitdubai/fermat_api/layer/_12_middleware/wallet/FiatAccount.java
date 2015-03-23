@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.layer._1_definition.enums.FiatCurrency;
  */
 public interface FiatAccount {
 
-    public Double getBalance() ;
+    public long getBalance() ;
 
     public FiatCurrency getFiatCurrency() ;
 

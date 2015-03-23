@@ -2,22 +2,46 @@ package com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.
 
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.CryptoAccount;
 import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer._1_definition.enums.FiatCurrency;
+
+import java.util.UUID;
 
 /**
  * Created by ciencias on 2/15/15.
  */
 public class MiddlewareCryptoAccount implements CryptoAccount{
 
-    Double balance;
+    UUID id;
+    String label ="";
+    String name ="";
+    long balance = 0;
     CryptoCurrency cryptoCurrency;
-    String label;
-    String name;
+    
 
-    public MiddlewareCryptoAccount (CryptoCurrency cryptoCurrency){
+    public MiddlewareCryptoAccount (UUID id){
+        this.id = id;
+    }
+
+    /**
+     * MiddlewareFiatAccount interface implementation.
+     */
+    public void setBalance(Long balance){
+        this.balance = balance;
+    }
+
+    public void setCryptoCurrency(CryptoCurrency cryptoCurrency) {
         this.cryptoCurrency = cryptoCurrency;
     }
 
-    public Double getBalance() {
+
+    public void persistToMedia() {
+
+    }
+    
+    /**
+     * FiatAccount interface implementation.
+     */
+    public long getBalance() {
         return balance;
     }
 
