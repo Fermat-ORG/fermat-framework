@@ -51,7 +51,7 @@ public class WalletMiddlewarePluginRoot implements Service, WalletManager , Midd
     /**
      * WalletManager Interface member variables.
      */
-    final String walletIdsFileName = "walletsIds";
+    final String WALLET_IDS_FILE_NAME = "walletsIds";
 
     UUID walletId;
     private Map<UUID, UUID> walletIds =  new HashMap();
@@ -91,7 +91,7 @@ public class WalletMiddlewarePluginRoot implements Service, WalletManager , Midd
         PluginTextFile walletIdsFile;
         
         try {
-            walletIdsFile = pluginFileSystem.getTextFile(pluginId, "", walletIdsFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            walletIdsFile = pluginFileSystem.getTextFile(pluginId, "", WALLET_IDS_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             
             try {
                 walletIdsFile.loadFromMedia();
@@ -142,7 +142,7 @@ public class WalletMiddlewarePluginRoot implements Service, WalletManager , Midd
              * with this file not existing again.
              * * * * * 
              */
-            walletIdsFile = pluginFileSystem.createTextFile(pluginId, "", walletIdsFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            walletIdsFile = pluginFileSystem.createTextFile(pluginId, "", WALLET_IDS_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             
             try {
                 walletIdsFile.persistToMedia();
@@ -236,14 +236,45 @@ public class WalletMiddlewarePluginRoot implements Service, WalletManager , Midd
             throw new CantCreateWalletException();
         }
         
-        
         /**
          * Now I will add this wallet to the list of wallets managed by the plugin.
          */
+        walletIds.put(walletId,newWallet.getWalletId());
 
+        PluginTextFile walletIdsFile;
+        walletIdsFile = pluginFileSystem.createTextFile(pluginId, "", WALLET_IDS_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+        
+        /**
+         * I will generate the file content.
+         */
+        StringBuilder stringBuilder = new StringBuilder(walletIds.size() * 72);
+
+        Iterator iterator = walletIds.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry pair = (Map.Entry)iterator.next();
+            stringBuilder.append(pair.getKey().toString() + "," + pair.getValue().toString() + ";");
+            iterator.remove();
+        }
 
         /**
-         * Finally I fire the event announcing the new wallet was created..
+         * Now I set the content.
+         */
+        walletIdsFile.setContent(stringBuilder.toString());
+        
+        try{
+            walletIdsFile.persistToMedia();
+        }
+        catch (CantPersistFileException cantPersistFileException) {
+            /**
+             * If I can not save the id of the new wallet created, then this method fails.
+             */
+            System.err.println("CantPersistFileException: " + cantPersistFileException.getMessage());
+            cantPersistFileException.printStackTrace();
+            throw new CantCreateWalletException();
+        }
+
+        /**
+         * Finally I fire the event announcing the new wallet was created.
          */
         PlatformEvent platformEvent = eventManager.getNewEvent(EventType.WALLET_CREATED);
         ((WalletCreatedEvent) platformEvent).setWalletId(this.walletId);
