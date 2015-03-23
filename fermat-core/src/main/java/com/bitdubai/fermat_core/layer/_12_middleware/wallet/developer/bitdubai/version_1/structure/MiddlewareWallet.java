@@ -3,10 +3,15 @@ package com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.CryptoAccount;
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.FiatAccount;
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.Wallet;
+import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.CantInitializeWalletException;
 import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer._1_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer._2_os.database_system.*;
+import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantOpenDatabaseException;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by ciencias on 2/15/15.
@@ -28,13 +33,121 @@ import java.util.List;
  * * * 
  */
 
-public class MiddlewareWallet implements Wallet {
+public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  {
+
+
+    /**
+     * DealsWithPluginDatabaseSystem Interface member variables.
+     */
+    PluginDatabaseSystem pluginDatabaseSystem;
+    
+    /**
+     * Wallet Interface member variables.
+     */
+    UUID walletId;
+    UUID ownerId;
+    Database database;
+    
+    
     
     List<FiatAccount> fiatAccounts;
     List<CryptoAccount> cryptoAccounts;
     
+    public MiddlewareWallet (UUID ownerId){
 
-   
+        /**
+         * The only one who can set the ownerId is the Plugin Root.
+         */
+        this.ownerId = ownerId;
+        
+        /**
+         * I will get a wallet id.
+         */
+        this.walletId = UUID.randomUUID();
+    }
+    
+    /**
+     * DealsWithPluginDatabaseSystem Interface implementation.
+     */
+    @Override
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+    }
+    
+    /**
+     * Wallet Interface implementation.
+     */
+    @Override
+    public UUID getWalletId() {
+        return this.walletId;
+    }
+
+    @Override
+    public void initialize() throws CantInitializeWalletException {
+
+        /**
+         * I will try to open the wallets' database..
+         */
+        try {
+            this.database = this.pluginDatabaseSystem.openDatabase(this.ownerId, this.walletId.toString());
+        }
+        catch (DatabaseNotFoundException databaseNotFoundException) {
+            
+            /**
+             * I will create the database where I am going to store the information of this wallet.
+             */
+            this.database = this.pluginDatabaseSystem.createDatabase(this.ownerId, this.walletId.toString());
+            
+            /**
+             * Next, I will add a few tables.
+             */
+           // DatabaseTable table = this.database.newTable("accounts");
+           // DatabaseTableColumn column= table.newColumn();
+
+        }
+        catch (CantOpenDatabaseException cantOpenDatabaseException){
+
+            /**
+             * The database exists but cannot be open. I can not handle this situation.
+             */
+            System.err.println("CantOpenDatabaseException: " + cantOpenDatabaseException.getMessage());
+            cantOpenDatabaseException.printStackTrace();
+            throw new CantInitializeWalletException(); 
+        }
+              
+    }
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     public FiatAccount createFiatAccount (FiatCurrency fiatCurrency){
         
         FiatAccount fiatAccount = new MiddlewareFiatAccount(fiatCurrency);
@@ -108,4 +221,7 @@ public class MiddlewareWallet implements Wallet {
     public void creditCryptoAccount (CryptoAccount cryptoAccount,Double amount){
 
     }
+
+
+
 }

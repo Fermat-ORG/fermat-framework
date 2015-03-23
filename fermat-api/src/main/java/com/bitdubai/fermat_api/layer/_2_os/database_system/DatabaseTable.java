@@ -9,7 +9,7 @@ public interface DatabaseTable {
     
    // public List<DatabaseTableColumn> getColumns();
 
-    public DatabaseTableColumn newColumn();
+    public DatabaseTableColumn newColumn(String name);
 
     public List<String> getColumns();
 

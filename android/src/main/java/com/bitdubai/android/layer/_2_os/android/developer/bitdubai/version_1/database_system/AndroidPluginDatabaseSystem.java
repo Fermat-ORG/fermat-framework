@@ -2,10 +2,10 @@ package com.bitdubai.android.layer._2_os.android.developer.bitdubai.version_1.da
 
 import android.content.Context;
 
+import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer._2_os.database_system.Database;
 import com.bitdubai.fermat_api.layer._2_os.database_system.PluginDatabaseSystem;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.UUID;
@@ -16,30 +16,32 @@ import java.util.UUID;
  */
 public class AndroidPluginDatabaseSystem  implements PluginDatabaseSystem{
 
+    /**
+     * PluginDatabaseSystem Interface member variables.
+     */
     private Context Context;
-    private SQLiteDatabase Database;
-    private static final int DATABASE_VERSION = 1;
 
 
+    /**
+     * PluginDatabaseSystem Interface implementation.
+     */
+    
     @Override
-    public Database openDatabase(UUID ownerId, String databaseName) throws CantOpenDatabaseException {
-        this.Database = SQLiteDatabase.openDatabase(this.Context.getFilesDir() +"/" + databaseName,null,SQLiteDatabase.OPEN_READWRITE);
-        return new AndroidDatabase(this.Context);
+    public Database openDatabase(UUID ownerId, String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException {
+        
+        AndroidDatabase database;
+        database = new AndroidDatabase(this.Context, ownerId, databaseName);
 
+        database.openDatabase(databaseName);
+        
+        return database;
     }
 
     @Override
     public Database createDatabase(UUID ownerId, String databaseName) {
-
-        this.Database = SQLiteDatabase.openOrCreateDatabase(this.Context.getFilesDir() +"/" + databaseName, null, null);
-        return new AndroidDatabase(this.Context);
+        return new AndroidDatabase(this.Context, ownerId, databaseName);
     }
 
-
-    public SQLiteDatabase getDatabase() {
-        return this.Database;
-
-    }
 
     @Override
     public void setContext(Object context) {

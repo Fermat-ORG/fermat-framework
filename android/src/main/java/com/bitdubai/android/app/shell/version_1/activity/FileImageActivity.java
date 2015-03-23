@@ -289,8 +289,8 @@ public class FileImageActivity extends FragmentActivity {
 
             dbPlugIn.openDatabase(moduleId,"dbExample");
 
-            AndroidDatabaseTable dbmanager = new AndroidDatabaseTable();
-            dbmanager.setTableName("Table1");
+          //  AndroidDatabaseTable dbmanager = new AndroidDatabaseTable();
+           // dbmanager.setTableName("Table1");
 
             List<String> values = new ArrayList<String>();
             values.add("1");
@@ -300,7 +300,7 @@ public class FileImageActivity extends FragmentActivity {
 
             AndroidDatabaseRecord records  = new AndroidDatabaseRecord();
             records.setValues(values);
-            dbmanager.insertRecord(records);
+           // dbmanager.insertRecord(records);
 
             TextView  result = (TextView)findViewById(R.id.result_text);
             result.setText("Record Inserted");
@@ -320,10 +320,10 @@ public class FileImageActivity extends FragmentActivity {
 
             dbPlugIn.openDatabase(moduleId,"dbExample");
 
-            AndroidDatabaseTable dbmanager = new AndroidDatabaseTable();
-            dbmanager.setTableName("Table1");
+        //    AndroidDatabaseTable dbmanager = new AndroidDatabaseTable();
+          //  dbmanager.setTableName("Table1");
 
-            dbmanager.deleteRow("dbExample","Table1","Id=",1);
+            //dbmanager.deleteRow("dbExample","Table1","Id=",1);
 
             TextView  result = (TextView)findViewById(R.id.result_text);
             result.setText("Record deleted");
@@ -343,9 +343,9 @@ public class FileImageActivity extends FragmentActivity {
 
             dbPlugIn.openDatabase(moduleId,"dbExample");
 
-            AndroidDatabaseTable dbmanager = new AndroidDatabaseTable();
+       //     AndroidDatabaseTable dbmanager = new AndroidDatabaseTable();
 
-            dbmanager.setTableName("Table1");
+//            dbmanager.setTableName("Table1");
 
             List<String> values = new ArrayList<String>();
             values.add("1");
@@ -364,7 +364,7 @@ public class FileImageActivity extends FragmentActivity {
             filter.setColumn(filterColum);
             AndroidDatabaseRecord records  = new AndroidDatabaseRecord();
             records.setValues(values);
-            dbmanager.updateRecord(records);
+   //         dbmanager.updateRecord(records);
 
             TextView  result = (TextView)findViewById(R.id.result_text);
             result.setText("Record Updated");
@@ -384,9 +384,9 @@ public class FileImageActivity extends FragmentActivity {
 
             dbPlugIn.openDatabase(moduleId,"dbExample");
 
-            AndroidDatabaseTable dbmanager = new AndroidDatabaseTable();
+       //     AndroidDatabaseTable dbmanager = new AndroidDatabaseTable();
 
-            dbmanager.setTableName("Table1");
+       //     dbmanager.setTableName("Table1");
 
 
             //filter
@@ -399,7 +399,7 @@ public class FileImageActivity extends FragmentActivity {
             filterColum.setType(DatabaseDataType.INTEGER);
             filter.setColumn(filterColum);
 
-            List<DatabaseTableRecord> records = dbmanager.getRecords();
+       //     List<DatabaseTableRecord> records = dbmanager.getRecords();
 
             TextView  result = (TextView)findViewById(R.id.result_text);
             result.setText("Record Updated");

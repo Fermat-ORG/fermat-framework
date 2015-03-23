@@ -6,9 +6,12 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer._12_middleware.Middleware;
 import com.bitdubai.fermat_api.layer._12_middleware.WalletManager;
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.CantCreateWalletException;
+import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.CantInitializeWalletException;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer._1_definition.event.PlatformEvent;
+import com.bitdubai.fermat_api.layer._2_os.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer._2_os.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer._2_os.file_system.*;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantPersistFileException;
@@ -23,6 +26,7 @@ import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventSour
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventType;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.WalletCreatedEvent;
 import com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.event_handlers.WalletCreatedEventHandler;
+import com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.structure.MiddlewareWallet;
 
 import java.util.*;
 
@@ -35,7 +39,7 @@ import java.util.*;
  * fiat over crypto.
  */
 
-public class WalletMiddlewarePluginRoot implements Service, WalletManager , Middleware, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
+public class WalletMiddlewarePluginRoot implements Service, WalletManager , Middleware, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, Plugin {
 
     
     /**
@@ -56,6 +60,11 @@ public class WalletMiddlewarePluginRoot implements Service, WalletManager , Midd
      * UsesFileSystem Interface member variables.
      */
     PluginFileSystem pluginFileSystem;
+
+    /**
+     * DealsWithPluginDatabaseSystem Interface member variables.
+     */
+    PluginDatabaseSystem pluginDatabaseSystem;
     
     /**
      * DealWithEvents Interface member variables.
@@ -210,9 +219,32 @@ public class WalletMiddlewarePluginRoot implements Service, WalletManager , Midd
     public void createWallet(UUID walletId) throws CantCreateWalletException {
 
         /**
-         * 
+         * The first step is to create a new wallet within the plugin.
          */
+        MiddlewareWallet newWallet = new MiddlewareWallet(this.pluginId);
+        newWallet.setPluginDatabaseSystem(this.pluginDatabaseSystem);
         
+        try {
+            newWallet.initialize();
+        }
+        catch (CantInitializeWalletException cantInitializeWalletException) {
+            /**
+             * If I can not initialize the new wallet, that means I can not create it at all.
+             */
+            System.err.println("CantInitializeWalletException: " + cantInitializeWalletException.getMessage());
+            cantInitializeWalletException.printStackTrace();
+            throw new CantCreateWalletException();
+        }
+        
+        
+        /**
+         * Now I will add this wallet to the list of wallets managed by the plugin.
+         */
+
+
+        /**
+         * Finally I fire the event announcing the new wallet was created..
+         */
         PlatformEvent platformEvent = eventManager.getNewEvent(EventType.WALLET_CREATED);
         ((WalletCreatedEvent) platformEvent).setWalletId(this.walletId);
         platformEvent.setSource(EventSource.MIDDLEWARE_WALLET_PLUGIN);
@@ -236,6 +268,14 @@ public class WalletMiddlewarePluginRoot implements Service, WalletManager , Midd
         this.pluginFileSystem = pluginFileSystem;
     }
 
+    /**
+     * DealsWithPluginDatabaseSystem Interface implementation.
+     */
+    @Override
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+    }
+    
     /**
      * DealWithEvents Interface implementation.
      */

@@ -57,17 +57,17 @@ public class BlockchainInfoWallet implements CryptoWallet ,DealsWithPluginFileSy
          * if not exist create it
          */
         Database walletDatabase;
-        try{
+       // try{
             // NATALIA TODO: como nombre de la base de datos vamos a usar un hash del id del plugin, asi nadie puede saber cual es el id, aunque tenga acceso a listar las bases de datos existentes. Esto es valido para cualquier base de datos que creemos y el hasheo lo maneja internamente el DatabaseSystem
-             walletDatabase = pluginDatabaseSystem.openDatabase(this.pluginId,this.walletId.toString());
+          //   walletDatabase = pluginDatabaseSystem.openDatabase(this.pluginId,this.walletId.toString());
 
-        }
-        catch (CantOpenDatabaseException e)
-        {
-            walletDatabase = pluginDatabaseSystem.createDatabase(this.pluginId,this.walletId.toString());
-        }
-        DatabaseTable walletTable = walletDatabase.newTable();
-        DatabaseTableColumn walletTableColum = walletTable.newColumn(); //Id, hash,tx_index, time,relayed_by, address_input, value_input
+       // }
+     //   catch (CantOpenDatabaseException e)
+      //  {
+         //   walletDatabase = pluginDatabaseSystem.createDatabase(this.pluginId,this.walletId.toString());
+       // }
+      //  DatabaseTable walletTable = walletDatabase.newTable();
+       // DatabaseTableColumn walletTableColum = walletTable.newColumn(); //Id, hash,tx_index, time,relayed_by, address_input, value_input
         //walletDatabase.createTable("INCOMING_CRYPTO");
 
 

@@ -22,12 +22,18 @@ import java.util.List;
 public class AndroidDatabaseTable implements  DatabaseTable {
     Context mContext;
 
-    String mTableName;
+    String tableName;
     SQLiteDatabase mDatabase;
     AndroidDatabaseTableFilter mTableFilter;
 
+
+    public AndroidDatabaseTable (String tableName){
+        this.tableName = tableName;
+    }
+    
+    
     @Override
-    public DatabaseTableColumn newColumn(){
+    public DatabaseTableColumn newColumn(String name){
         return new AndroidDatabaseTableColumn();
         }
 
@@ -36,10 +42,10 @@ public class AndroidDatabaseTable implements  DatabaseTable {
     {
         AndroidPluginDatabaseSystem dbPlugIn = new AndroidPluginDatabaseSystem();
         dbPlugIn.setContext(mContext);
-        mDatabase = dbPlugIn.getDatabase();
+      //  mDatabase = dbPlugIn.getDatabase();
 
         List<String> columns = new ArrayList<String>();
-        Cursor c = mDatabase.rawQuery("SELECT * FROM "+ mTableName, null);
+        Cursor c = mDatabase.rawQuery("SELECT * FROM "+ tableName, null);
         String[] columnNames = c.getColumnNames();
 
         for (int i = 0; i < columnNames.length; ++i) {
@@ -57,7 +63,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
         List<DatabaseTableRecord> records = new ArrayList<DatabaseTableRecord>() ;
         AndroidPluginDatabaseSystem dbPlugIn = new AndroidPluginDatabaseSystem();
         dbPlugIn.setContext(mContext);
-        mDatabase = dbPlugIn.getDatabase();
+     //   mDatabase = dbPlugIn.getDatabase();
 
         //filter
         String  strFilter = getFilter();
@@ -65,7 +71,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
         if(strFilter.length() > 0 ) strFilter = " WHERE " + strFilter;
 
         try {
-            Cursor c = mDatabase.rawQuery("SELECT * FROM "+ mTableName + strFilter, null);
+            Cursor c = mDatabase.rawQuery("SELECT * FROM "+ tableName + strFilter, null);
             int numRows = c.getCount();
             c.moveToFirst();
             for (int i = 0; i < numRows; ++i) {
@@ -120,7 +126,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
 
         AndroidPluginDatabaseSystem dbPlugIn = new AndroidPluginDatabaseSystem();
         dbPlugIn.setContext(mContext);
-        mDatabase = dbPlugIn.getDatabase();
+       // mDatabase = dbPlugIn.getDatabase();
 
         List<String> records =  record.getValues();
         List<String> columns = this.getColumns();
@@ -137,7 +143,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
         }
 
 
-        mDatabase.update(mTableName, recordUpdateList, strFilter, null);
+        mDatabase.update(tableName, recordUpdateList, strFilter, null);
         mDatabase.close();
 
        }catch (Exception e)
@@ -151,16 +157,13 @@ public class AndroidDatabaseTable implements  DatabaseTable {
         mContext = (Context) context;
     }
 
-    public void setTableName(String tablename) {
-        mTableName = tablename;
-    }
 
 
     public void insertRecord(DatabaseTableRecord record) {
 
         AndroidPluginDatabaseSystem dbPlugIn = new AndroidPluginDatabaseSystem();
         dbPlugIn.setContext(mContext);
-        mDatabase = dbPlugIn.getDatabase();
+      //  mDatabase = dbPlugIn.getDatabase();
 
         List<String> records =  record.getValues();
         List<String> columns = this.getColumns();
@@ -172,7 +175,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
         }
 
 
-        mDatabase.insert(mTableName,null,initialValues);
+        mDatabase.insert(tableName,null,initialValues);
 
         mDatabase.close();
 
@@ -234,10 +237,10 @@ public class AndroidDatabaseTable implements  DatabaseTable {
         return rec;
     }*/
 
-    public void deleteRow(String databaseName, String tableName, String keyId, long keyValue) {
+    public void deleteRow(String databaseName, String keyId, long keyValue) {
         mDatabase = SQLiteDatabase.openDatabase(mContext.getFilesDir() +"/" + databaseName,null,SQLiteDatabase.OPEN_READWRITE);
 
-        mDatabase.delete(tableName, keyId + keyValue, null);
+        mDatabase.delete(this.tableName, keyId + keyValue, null);
         mDatabase.close();
     }
 

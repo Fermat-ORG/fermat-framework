@@ -5,7 +5,5 @@ package com.bitdubai.fermat_api.layer._2_os.database_system;
  */
 public interface Database {
 
-    public void createTable(String tableName);
-
-    public DatabaseTable newTable();
+    public void executeQuery();
 }
