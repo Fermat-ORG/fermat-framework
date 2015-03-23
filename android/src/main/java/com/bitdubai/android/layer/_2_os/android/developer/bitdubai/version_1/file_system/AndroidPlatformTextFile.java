@@ -4,6 +4,7 @@ package com.bitdubai.android.layer._2_os.android.developer.bitdubai.version_1.fi
  * Created by Natalia on 12/02/2015.
  */
 import android.content.Context;
+import android.os.Environment;
 
 import com.bitdubai.fermat_api.layer._2_os.file_system.*;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantLoadFileException;
@@ -22,6 +23,11 @@ import java.io.BufferedOutputStream;
 
 
 public class AndroidPlatformTextFile implements PlatformTextFile {
+
+    /**
+     * PlatformTextFile Interface member variables.
+     */
+
     Context context;
     String content = "";
     String fileName;
@@ -40,11 +46,17 @@ public class AndroidPlatformTextFile implements PlatformTextFile {
         this.directoryName = directoryName;
 
     }
+
+    /**
+     * PlatformTextFile Interface implementation.
+     */
+    @Override
     public String getContent()
     {
         return this.content;
     }
 
+    @Override
     public void setContent (String content)
     {
         this.content = content;
@@ -55,10 +67,22 @@ public class AndroidPlatformTextFile implements PlatformTextFile {
         try {
 
 
-            String path = this.context.getFilesDir().toString();
+            /**
+             *  Evaluate privacyLevel to determine the location of directory - external or internal
+             */
+            String path = "";
+            if(privacyLevel == FilePrivacy.PUBLIC)
+                path = Environment.getExternalStorageDirectory().toString();
+            else
+                path = this.context.getFilesDir().toString();
+
 
             if(this.directoryName != "")
                 path +="/"+ this.directoryName;
+
+            /**
+             * If the directory does not exist, we create it here.
+             */
 
             File storagePath = new File(path);
             if (!storagePath.exists()) {
@@ -67,12 +91,20 @@ public class AndroidPlatformTextFile implements PlatformTextFile {
 
             File file = new File(storagePath, fileName);
 
-            OutputStream  outputStream;
+            /**
+             * Then I create the file.
+             * if not exist
+             */
+            if (!file.exists()) {
+                /**
+                 * Finally I write the content.
+                 */
+                OutputStream outputStream;
 
-            //outputStream = this.context.openFileOutput( file.getPath(), Context.MODE_PRIVATE);
-            outputStream =  new BufferedOutputStream(new FileOutputStream(file));
-            outputStream.write(this.content.getBytes());
-            outputStream.close();
+                outputStream = new BufferedOutputStream(new FileOutputStream(file));
+                outputStream.write(this.content.getBytes());
+                outputStream.close();
+            }
         } catch (Exception e) {
             System.err.println("Error trying to persist file: " + e.getMessage());
             e.printStackTrace();
@@ -85,11 +117,27 @@ public class AndroidPlatformTextFile implements PlatformTextFile {
     public void loadFromMedia() throws CantPersistFileException {
 
         try {
-            File file = new File(this.context.getFilesDir() +"/"+ this.directoryName, this.fileName);
+            /**
+             *  Evaluate privacyLevel to determine the location of directory - external or internal
+             */
+            String path = "";
+            if(privacyLevel == FilePrivacy.PUBLIC)
+                path = Environment.getExternalStorageDirectory().toString();
+            else
+                path = this.context.getFilesDir() + "/" + this.directoryName;
+
+            /**
+             * Get the file handle.
+             */
+
+            File file = new File(path +"/"+ this.directoryName, this.fileName);
             InputStream inputStream ;
-            //inputStream = this.context.openFileInput(this.fileName);
             inputStream =  new BufferedInputStream(new FileInputStream(file));
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+
+            /**
+             * Read the content.
+             */
 
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             StringBuilder sb = new StringBuilder();
@@ -101,6 +149,7 @@ public class AndroidPlatformTextFile implements PlatformTextFile {
 
             this.content = sb.toString();
             inputStream.close();
+
         } catch (Exception e) {
             System.err.println("Error trying to persist file: " + e.getMessage());
             e.printStackTrace();

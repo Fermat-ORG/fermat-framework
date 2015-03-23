@@ -12,11 +12,9 @@ import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantPersistFil
 
 
 import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.UUID;
 import java.io.ByteArrayOutputStream;
@@ -150,7 +148,7 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
             buffer.flush();
 
             /**
-             * Store it in memory.
+             * return content.
              */
             this.content =buffer.toByteArray();
 
