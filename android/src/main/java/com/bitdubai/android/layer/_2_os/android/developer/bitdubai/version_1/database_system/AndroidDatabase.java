@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer._2_os.database_system.Database;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseFactory;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.DatabaseTableFactory;
 import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.InvalidOwnerId;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantOpenDatabaseException;
 
@@ -71,19 +72,42 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
     /**
      * DatabaseFactory interface implementation.
      */
-    @Override
-    public void createTable(UUID ownerId) throws InvalidOwnerId{
 
+    /**
+     * This method creates a new table into the database based on the definition received.
+     */
+    @Override
+    public void createTable(UUID ownerId, DatabaseTableFactory table) throws InvalidOwnerId{
+
+        /**
+         * I check that the owner id is the same I currently have..
+         */
+        if (this.ownerId != ownerId) {
+            throw new InvalidOwnerId();
+        }
+        
+        
     }
 
+    /**
+     * This method provides the caller with a Table Structure object.
+     */
     @Override
-    public DatabaseTable newTable(UUID ownerId, String tableName) throws InvalidOwnerId {
+    public DatabaseTableFactory newTableFactory(UUID ownerId, String tableName) throws InvalidOwnerId {
 
+        /**
+         * I check that the owner id is the same I currently have..
+         */
+        if (this.ownerId != ownerId) {
+            throw new InvalidOwnerId();
+        }
 
-
-
-        return null;
+        return new AndroidDatabaseTableFactory(tableName);
     }
+    
+    
+    
+    
     
     
     

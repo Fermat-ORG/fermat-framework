@@ -8,6 +8,8 @@ import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer._1_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer._2_os.database_system.*;
 import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.DatabaseTableFactory;
+import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.InvalidOwnerId;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantOpenDatabaseException;
 
 import java.util.List;
@@ -48,6 +50,15 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
     UUID ownerId;
     Database database;
     
+    final String FIAT_ACCOUNTS_TABLE_NAME = "fiat accounts";
+    final String FIAT_ACCOUNTS_TABLE_ID_COLUMN_NAME = "id";
+    final String FIAT_ACCOUNTS_TABLE_ALIAS_COLUMN_NAME = "alias";
+    final String FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME = "balance";
+
+    final String CRYPTO_ACCOUNTS_TABLE_NAME = "crypto accounts";
+    final String CRYPTO_ACCOUNTS_TABLE_ID_COLUMN_NAME = "id";
+    final String CRYPTO_ACCOUNTS_TABLE_ALIAS_COLUMN_NAME = "alias";
+    final String CRYPTO_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME = "balance";
     
     
     List<FiatAccount> fiatAccounts;
@@ -101,9 +112,39 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
             /**
              * Next, I will add a few tables.
              */
-           // DatabaseTable table = this.database.newTable("accounts");
-           // DatabaseTableColumn column= table.newColumn();
+            try {
+                
+                DatabaseTableFactory table;
+                
+                /**
+                 * First the fiat accounts table.
+                 */
+                table = ((DatabaseFactory) this.database).newTableFactory(this.ownerId, FIAT_ACCOUNTS_TABLE_NAME);
+                table.addColumn(FIAT_ACCOUNTS_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36);
+                table.addColumn(FIAT_ACCOUNTS_TABLE_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 100);
+                table.addColumn(FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
+                ((DatabaseFactory) this.database).createTable(this.ownerId, table);
 
+                /**
+                 * Then the crypto accounts table.
+                 */
+                table = ((DatabaseFactory) this.database).newTableFactory(this.ownerId, CRYPTO_ACCOUNTS_TABLE_NAME);
+                table.addColumn(CRYPTO_ACCOUNTS_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36);
+                table.addColumn(CRYPTO_ACCOUNTS_TABLE_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 100);
+                table.addColumn(CRYPTO_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
+                ((DatabaseFactory) this.database).createTable(this.ownerId, table);
+                
+            }
+            catch (InvalidOwnerId invalidOwnerId) {
+                /**
+                 * This shouldn't happen here because I was the one who gave the owner id to the database file system, 
+                 * but anyway, if this happens, I can not continue.
+                 * * * 
+                 */
+                System.err.println("InvalidOwnerId: " + invalidOwnerId.getMessage());
+                invalidOwnerId.printStackTrace();
+                throw new CantInitializeWalletException();
+            }
         }
         catch (CantOpenDatabaseException cantOpenDatabaseException){
 
