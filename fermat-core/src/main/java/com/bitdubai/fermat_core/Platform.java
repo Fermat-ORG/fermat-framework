@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.PlatformLayer;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer._1_definition.event.DealWithEventMonitor;
+import com.bitdubai.fermat_api.layer._2_os.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_api.layer._2_os.*;
@@ -436,6 +437,7 @@ public class Platform  {
         Plugin blockchainInfoWorld = ((WorldLayer)  mWorldLayer).getBlockchainInfo();
 
         ((DealsWithPluginFileSystem) blockchainInfoWorld).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithPluginDatabaseSystem) blockchainInfoWorld).setPluginDatabaseSystem(os.getPluginDatabaseSystem());
         ((DealsWithEvents) blockchainInfoWorld).setEventManager((EventManager) eventManager);
 
         corePlatformContext.addPlugin(blockchainInfoWorld, Plugins.BLOCKCHAIN_INFO_WORLD);

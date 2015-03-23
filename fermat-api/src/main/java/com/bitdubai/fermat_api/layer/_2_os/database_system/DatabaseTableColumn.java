@@ -12,5 +12,10 @@ public interface DatabaseTableColumn {
     public DatabaseDataType getType ();
     
     public void setType(DatabaseDataType type);
+
+    public void setDataTypeSize (int dataTypeSize);
+
+    public int getDataTypeSize ();
+
     
 }
