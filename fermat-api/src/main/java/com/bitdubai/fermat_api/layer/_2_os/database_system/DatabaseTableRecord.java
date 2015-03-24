@@ -19,4 +19,8 @@ public interface DatabaseTableRecord {
     public void setUUIDValue (String columnName, UUID value);
 
     public void setlongValue (String columnName, long value);
+
+    public List<String> getValues();
+
+    public void setValues(List<String> values );
 }

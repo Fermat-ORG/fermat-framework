@@ -17,14 +17,15 @@ import java.util.List;
 
 
 /**
- * Created by toshiba on 09/02/2015.
+ * Created by Natalia on 09/02/2015.
  */
 public class AndroidDatabaseTable implements  DatabaseTable {
-    Context mContext;
+    Context context;
 
     String tableName;
-    SQLiteDatabase mDatabase;
-    AndroidDatabaseTableFilter mTableFilter;
+    SQLiteDatabase database;
+    AndroidDatabaseTableFilter tableFilter;
+    private  List<DatabaseTableRecord> records;
 
 
     public AndroidDatabaseTable (String tableName){
@@ -41,11 +42,10 @@ public class AndroidDatabaseTable implements  DatabaseTable {
     public List<String> getColumns()
     {
         AndroidPluginDatabaseSystem dbPlugIn = new AndroidPluginDatabaseSystem();
-        dbPlugIn.setContext(mContext);
-      //  mDatabase = dbPlugIn.getDatabase();
+        dbPlugIn.setContext(this.context);
 
         List<String> columns = new ArrayList<String>();
-        Cursor c = mDatabase.rawQuery("SELECT * FROM "+ tableName, null);
+        Cursor c = this.database.rawQuery("SELECT * FROM "+ tableName, null);
         String[] columnNames = c.getColumnNames();
 
         for (int i = 0; i < columnNames.length; ++i) {
@@ -62,8 +62,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
 
         List<DatabaseTableRecord> records = new ArrayList<DatabaseTableRecord>() ;
         AndroidPluginDatabaseSystem dbPlugIn = new AndroidPluginDatabaseSystem();
-        dbPlugIn.setContext(mContext);
-     //   mDatabase = dbPlugIn.getDatabase();
+        dbPlugIn.setContext(this.context);
 
         //filter
         String  strFilter = getFilter();
@@ -71,7 +70,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
         if(strFilter.length() > 0 ) strFilter = " WHERE " + strFilter;
 
         try {
-            Cursor c = mDatabase.rawQuery("SELECT * FROM "+ tableName + strFilter, null);
+            Cursor c = this.database.rawQuery("SELECT * FROM "+ tableName + strFilter, null);
             int numRows = c.getCount();
             c.moveToFirst();
             for (int i = 0; i < numRows; ++i) {
@@ -82,7 +81,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
             throw  e;
         }
 
-        mDatabase.close();
+        this.database.close();
         record.setValues(values);
         records.add(record);
         return null;
@@ -96,23 +95,23 @@ public class AndroidDatabaseTable implements  DatabaseTable {
 
     public void addFilter (DatabaseTableFilter filter)
     {
-        mTableFilter = new AndroidDatabaseTableFilter();
+        this.tableFilter = new AndroidDatabaseTableFilter();
         AndroidDatabaseTableColumn column = new AndroidDatabaseTableColumn();
 
-        mTableFilter.setColumn(filter.getColumn());
-        mTableFilter.setType(filter.getType());
-        mTableFilter.setValue(filter.getValue());
+        this.tableFilter.setColumn(filter.getColumn());
+        this.tableFilter.setType(filter.getType());
+        this.tableFilter.setValue(filter.getValue());
     }
 
     public void clearAllFilters()
     {
-        mTableFilter = null;
+        this.tableFilter = null;
     }
 
     public List<DatabaseTableFilter> getFilters()
     {
         List<DatabaseTableFilter> filter = new ArrayList<DatabaseTableFilter>();
-        filter.add(mTableFilter);
+        filter.add(this.tableFilter);
 
         return null;
     }
@@ -128,8 +127,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
 
 
         AndroidPluginDatabaseSystem dbPlugIn = new AndroidPluginDatabaseSystem();
-        dbPlugIn.setContext(mContext);
-       // mDatabase = dbPlugIn.getDatabase();
+        dbPlugIn.setContext(this.context);
 
         List<String> records =  record.getValues();
         List<String> columns = this.getColumns();
@@ -146,8 +144,8 @@ public class AndroidDatabaseTable implements  DatabaseTable {
         }
 
 
-        mDatabase.update(tableName, recordUpdateList, strFilter, null);
-        mDatabase.close();
+        this.database.update(tableName, recordUpdateList, strFilter, null);
+            this.database.close();
 
        }catch (Exception e)
         {
@@ -157,7 +155,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
 
 
     public void setContext(Object context) {
-        mContext = (Context) context;
+        this.context = (Context) context;
     }
 
 
@@ -165,7 +163,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
     public void insertRecord(DatabaseTableRecord record) {
 
         AndroidPluginDatabaseSystem dbPlugIn = new AndroidPluginDatabaseSystem();
-        dbPlugIn.setContext(mContext);
+        dbPlugIn.setContext(this.context);
       //  mDatabase = dbPlugIn.getDatabase();
 
         List<String> records =  record.getValues();
@@ -178,74 +176,16 @@ public class AndroidDatabaseTable implements  DatabaseTable {
         }
 
 
-        mDatabase.insert(tableName,null,initialValues);
+        this.database.insert(tableName,null,initialValues);
 
-        mDatabase.close();
+       this.database.close();
 
     }
 
- /*   public  ArrayList<Row> getAllRows(String databaseName, String tableName) {
-        mDatabase = SQLiteDatabase.openDatabase(mContext.getFilesDir() + "/" + databaseName, null, SQLiteDatabase.OPEN_READWRITE);
-
-        ArrayList<Row>  rec = new  ArrayList<Row>();
-        try {
-            Cursor c = mDatabase.rawQuery("SELECT * FROM "+ tableName, null);
-            int numRows = c.getCount();
-            c.moveToFirst();
-            for (int i = 0; i < numRows; ++i) {
-                Row row = new Row();
-                c.getColumnCount();
-                for (int j = 0; j < numRows; ++j) {
-                    row.name = c.getColumnName(j);
-                    row.value = c.getString(j);
-                    //row.value_type = c.getType(j);
-                    rec.add(row);
-                }
-
-                c.moveToNext();
-            }
-        } catch (Exception e) {
-            throw  e;
-        }
-
-        mDatabase.close();
-        return rec;
+    public void loadToMemory(){
+        this.records = getRecords();
     }
 
-    public  ArrayList<Row> getRows(String databaseName, String tableName, String conditions) {
-        mDatabase = SQLiteDatabase.openDatabase(mContext.getFilesDir() +"/" + databaseName,null,SQLiteDatabase.OPEN_READWRITE);
-
-        ArrayList<Row>  rec = new  ArrayList<Row>();
-        try {
-            Cursor c = mDatabase.rawQuery("SELECT * FROM "+ tableName + " WHERE " + conditions, null);
-            int numRows = c.getCount();
-            c.moveToFirst();
-            for (int i = 0; i < numRows; ++i) {
-                Row row = new Row();
-                c.getColumnCount();
-                for (int j = 0; j < numRows; ++j) {
-                    row.name = c.getColumnName(j);
-                    row.value = c.getString(j);
-                    //row.value_type = c.getType(j);
-                    rec.add(row);
-                }
-
-                c.moveToNext();
-            }
-        } catch (Exception e) {
-            throw  e;
-        }
-
-        mDatabase.close();
-        return rec;
-    }*/
-
-    public void deleteRow(String databaseName, String keyId, long keyValue) {
-        mDatabase = SQLiteDatabase.openDatabase(mContext.getFilesDir() +"/" + databaseName,null,SQLiteDatabase.OPEN_READWRITE);
-
-        mDatabase.delete(this.tableName, keyId + keyValue, null);
-        mDatabase.close();
-    }
 
 
 public String getFilter()
@@ -285,12 +225,6 @@ public String getFilter()
     }
     return strFilter;
 }
-    public class Row implements Serializable {
 
-        private static final long serialVersionUID = -8730067026050196758L;
-        public String name;
-        public String value;
-        public String value_type;
-    }
 }
 

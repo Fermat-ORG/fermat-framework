@@ -8,10 +8,12 @@ import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseFactory;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableColumn;
+import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.CantCreateTableException;
 import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableFactory;
+import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.InvalidOwnerId;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantOpenDatabaseException;
 
@@ -31,6 +33,8 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
     private String query;
     private SQLiteDatabase Database;
     private int DATABASE_VERSION = 1;
+    private DatabaseTransaction databaseTransaction;
+    private DatabaseTable databaseTable;
 
     public AndroidDatabase(Context context, UUID ownerId, String databaseName) {
         this.Context = context;
@@ -111,9 +115,28 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
     }
 
 
+    @Override
+    public DatabaseTransaction newTransaction(){
+
+        return databaseTransaction;
+    }
+
+    @Override
+    public DatabaseTable getTable(String tableName){
+
+        databaseTable = new AndroidDatabaseTable(tableName);
+        return databaseTable;
+    }
+
+    @Override
+    public void executeTransaction(DatabaseTransaction transaction) throws DatabaseTransactionFailedException{
+
+    }
+
     /**
      * DatabaseFactory interface implementation.
      */
+
 
     /**
      * This method creates a new table into the database based on the definition received.
@@ -128,9 +151,7 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
             throw new InvalidOwnerId();
         }
         
-        // TODO: NATALIA: Leer los campos de la nueva tabla (quizas falta un metodo que los devuelva) y efectevitamente crear la tabla con esos campos en la base de datos. Si por algo no se puede, hay que disparar CantCreateTableException
-
-        /**
+         /**
          * Get the columns of the table and write the query to create it
          */
         try
@@ -176,67 +197,4 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
 
         return new AndroidDatabaseTableFactory(tableName);
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-
-
-
-
-    public DatabaseTable newTable(String tableName){
-        return new AndroidDatabaseTable(tableName);
-    }
-
-    public  List<String> getLocalPersonalUsersIds() {
-
-        List<String> LocalPersonalUsersIds = new ArrayList<String>();
-        LocalPersonalUsersIds.add ("1");
-
-        return LocalPersonalUsersIds;
-    }
-
-
-    public void createTable() {
-
-      //  mTableSchema = tableSchema;
-       // this.Database = SQLiteDatabase.openDatabase(this.Context.getFilesDir() + "/" + databaseName, null, SQLiteDatabase.OPEN_READWRITE);
-       // onCreate(this.Database);
-
-
-    }
-
-    // Creating Tables
-
-    public void onCreate(SQLiteDatabase db) {
-        // Category table create query
-        //String CREATE_TABLE = "CREATE TABLE " + this.TableName + "("
-         //       +KEY_1 + " INTEGER PRIMARY KEY)";
-       // db.execSQL(CREATE_TABLE);
-    }
-
-
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
-    }
-
-
 }
