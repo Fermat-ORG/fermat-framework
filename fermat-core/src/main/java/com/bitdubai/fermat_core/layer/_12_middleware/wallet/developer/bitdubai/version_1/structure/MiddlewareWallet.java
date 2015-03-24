@@ -30,7 +30,7 @@ import java.util.UUID;
  * relationship with the price it was bought.
  * 
  * The wallet also manages inter account transactions.
- * 
+ *
  * * * * * *
  * * * 
  */
@@ -608,12 +608,16 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
 
     @Override
     public void debit(FiatAccount fiatAccount, long fiatAmount, CryptoAccount cryptoAccount, long cryptoAmount) {
-
+        /**
+         * Not implemented yet
+         */
     }
 
     @Override
     public void credit(FiatAccount fiatAccount, long fiatAmount, CryptoAccount cryptoAccount, long cryptoAmount) {
-
+        /**
+         * Not implemented yet
+         */
     }
     
 
