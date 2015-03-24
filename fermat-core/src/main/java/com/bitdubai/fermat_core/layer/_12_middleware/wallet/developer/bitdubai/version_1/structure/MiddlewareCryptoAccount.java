@@ -48,6 +48,10 @@ public class MiddlewareCryptoAccount implements CryptoAccount{
      * Note that the following methods are package-private.
      * * * * 
      */
+    UUID getId(){
+        return this.id;
+    }
+    
     void setBalance(long balance){
         this.balance = balance;
     }
@@ -64,8 +68,16 @@ public class MiddlewareCryptoAccount implements CryptoAccount{
         this.table = table;
     }
 
+    DatabaseTable getTable(){
+        return this.table;
+    }
+
     void setRecord (DatabaseTableRecord record){
         this.record = record;
+    }
+
+    DatabaseTableRecord getRecord(){
+        return this.record;
     }
 
     void setLabelColumName (String labelColumName){
@@ -111,6 +123,10 @@ public class MiddlewareCryptoAccount implements CryptoAccount{
         this.table.updateRecord(this.record);
     }
 
+    public AccountStatus getStatus() {
+        return this.status;
+    }
+    
     @Override
     public void openAccount() {
         this.status = AccountStatus.OPEN;

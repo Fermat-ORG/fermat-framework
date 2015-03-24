@@ -19,6 +19,8 @@ public interface CryptoAccount {
 
     public void setName(String name) ;
 
+    public AccountStatus getStatus();
+
     public void openAccount();
 
     public void closeAccount();

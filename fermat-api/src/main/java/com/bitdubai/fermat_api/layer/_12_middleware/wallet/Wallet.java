@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer._12_middleware.wallet;
 
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.CantInitializeWalletException;
+import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.TransferFailedException;
 import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer._1_definition.enums.FiatCurrency;
 
@@ -11,6 +12,9 @@ import java.util.UUID;
  */
 public interface Wallet {
 
+    /**
+     * Accounts functionality.
+     */
     
     public UUID getWalletId();
 
@@ -21,27 +25,15 @@ public interface Wallet {
     public FiatAccount createFiatAccount (FiatCurrency fiatCurrency);
 
     public CryptoAccount createCryptoAccount (CryptoCurrency cryptoCurrency);
-
     
+    /**
+     * Transactional functionality.
+     */
+
+    public void transfer (FiatAccount fiatAccountFrom, FiatAccount fiatAccountTo, long amountFrom, long amountTo) throws TransferFailedException;
     
-    
-    
+    public void debit (FiatAccount fiatAccount,long fiatAmount, CryptoAccount cryptoAccount,long cryptoAmount);
 
+    public void credit (FiatAccount fiatAccount,long fiatAmount, CryptoAccount cryptoAccount,long cryptoAmount);
 
-    public void transferFromFiatToFiat (FiatAccount fiatAccountFrom, FiatAccount fiatAccountTo, Double amountFrom, Double amountTo);
-
-    public void transferFromCryptoToCrypto (CryptoAccount cryptoAccountFrom, CryptoAccount cryptoAccountTo, Double amountFrom, Double amountTo);
-    
-    public void transferFromFiatToCrypto (FiatAccount fiatAccountFrom, CryptoAccount cryptoAccountTo, Double amountFrom, Double amountTo);
-
-    public void transferFromCryptoToFiat (  CryptoAccount cryptoAccountFrom, FiatAccount fiatAccountTo, Double amountFrom, Double amountTo);
-
-    public void debitFiatAccount (FiatAccount fiatAccount,Double amount);
-
-    public void creditFiatAccount (FiatAccount fiatAccount,Double amount);
-
-    public void debitCryptoAccount (CryptoAccount cryptoAccount,Double amount);
-
-    public void creditCryptoAccount (CryptoAccount cryptoAccount,Double amount);
-    
 }

@@ -8,7 +8,8 @@ public enum AccountStatus  {
     CREATED ("CRE"),
     OPEN ("OPN"),
     CLOSED   ("CLO"),
-    DELETED ("DEL");
+    DELETED ("DEL"),
+    LOCKED ("LCK");
 
     private final String code;
 
@@ -25,6 +26,7 @@ public enum AccountStatus  {
             case "OPN": return AccountStatus.OPEN;
             case "CLO": return AccountStatus.CLOSED;
             case "DEL": return AccountStatus.DELETED;
+            case "LCK": return AccountStatus.LOCKED;
         }
 
         /**

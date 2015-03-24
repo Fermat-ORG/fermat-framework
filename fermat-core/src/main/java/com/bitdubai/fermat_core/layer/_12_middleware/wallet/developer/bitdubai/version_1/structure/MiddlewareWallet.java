@@ -1,20 +1,13 @@
 package com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer._11_world.blockchain_info.exceptions.CantStartBlockchainInfoWallet;
-import com.bitdubai.fermat_api.layer._12_middleware.wallet.AccountStatus;
-import com.bitdubai.fermat_api.layer._12_middleware.wallet.CryptoAccount;
-import com.bitdubai.fermat_api.layer._12_middleware.wallet.FiatAccount;
-import com.bitdubai.fermat_api.layer._12_middleware.wallet.Wallet;
-import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.CantInitializeWalletException;
-import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.CantStartWalletException;
+import com.bitdubai.fermat_api.layer._12_middleware.wallet.*;
+import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.*;
 import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer._1_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer._2_os.database_system.*;
-import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.CantCreateDatabaseException;
-import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.CantCreateTableException;
-import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.*;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableFactory;
-import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.InvalidOwnerId;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantOpenDatabaseException;
 
 import java.util.HashMap;
@@ -436,60 +429,135 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
 
         return cryptoAccount;
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 
 
+    /**
+     * Following there comes the transactional functionality of the wallet.
+     */
     
-    
-    
+    @Override
+    public void transfer(FiatAccount fiatAccountFrom, FiatAccount fiatAccountTo, long amountFrom, long amountTo) throws TransferFailedException {
 
-    
-    
+        /**
+         * First I will check the accounts received belongs to this wallet.
+         */
+        FiatAccount inMemoryAccountFrom;
+        inMemoryAccountFrom = fiatAccounts.get(((MiddlewareFiatAccount) fiatAccountFrom).getId());
 
-    
-    
-    public void transferFromFiatToFiat (FiatAccount fiatAccountFrom, FiatAccount fiatAccountTo, Double amountFrom, Double amountTo){
-                
-    }
-    
-    public void transferFromCryptoToCrypto (CryptoAccount cryptoAccountFrom, CryptoAccount cryptoAccountTo, Double amountFrom, Double amountTo){
+        if ( inMemoryAccountFrom == null ) {
+            throw new TransferFailedException(TransferFailedReasons.ACCOUNT_FROM_DOES_NOT_BELONG_TO_THIS_WALLET);
+        }
 
-    }
+        FiatAccount inMemoryAccountTo;
+        inMemoryAccountTo = fiatAccounts.get(((MiddlewareFiatAccount) fiatAccountTo).getId());
 
-    public void transferFromFiatToCrypto (FiatAccount fiatAccountFrom, CryptoAccount cryptoAccountTo, Double amountFrom, Double amountTo){
-
-    }
-
-    public void transferFromCryptoToFiat (CryptoAccount cryptoAccountFrom, FiatAccount fiatAccountTo, Double amountFrom, Double amountTo){
-
-    }
-    
-    public void debitFiatAccount (FiatAccount fiatAccount,Double amount){
+        if ( inMemoryAccountTo == null ) {
+            throw new TransferFailedException(TransferFailedReasons.ACCOUNT_TO_DOES_NOT_BELONG_TO_THIS_WALLET);
+        }
         
+        /**
+         * Then I will check if the accounts are not already locked.
+         */
+        if (inMemoryAccountFrom.getStatus() == AccountStatus.LOCKED) {
+            throw new TransferFailedException(TransferFailedReasons.ACCOUNT_FROM_ALREADY_LOCKED);
+        }
+
+        if (inMemoryAccountTo.getStatus() == AccountStatus.LOCKED) {
+            throw new TransferFailedException(TransferFailedReasons.ACCOUNT_TO_ALREADY_LOCKED);
+        }
+
+        /**
+         * Then I will check if the accounts are not open.
+         */
+        if (inMemoryAccountFrom.getStatus() != AccountStatus.OPEN) {
+            throw new TransferFailedException(TransferFailedReasons.ACCOUNT_FROM_NOT_OPEN);
+        }
+
+        if (inMemoryAccountTo.getStatus() != AccountStatus.OPEN) {
+            throw new TransferFailedException(TransferFailedReasons.ACCOUNT_TO_NOT_OPEN);
+        }
+
+               /**
+         * Then I will lock the accounts involved in the transaction.
+         */
+
+        AccountStatus currentAccountFromStatus = inMemoryAccountFrom.getStatus();
+        AccountStatus currentAccountToStatus = inMemoryAccountTo.getStatus();
+
+        ((MiddlewareFiatAccount) inMemoryAccountFrom).setStatus(AccountStatus.LOCKED);
+        ((MiddlewareFiatAccount) inMemoryAccountTo).setStatus(AccountStatus.LOCKED);
+
+        /**
+         * Then I validate that there are enough funds on the account to be debited.
+         */
+
+        if ( inMemoryAccountFrom.getBalance() < amountFrom) {
+
+            ((MiddlewareFiatAccount) inMemoryAccountFrom).setStatus(currentAccountFromStatus);
+            ((MiddlewareFiatAccount) inMemoryAccountTo).setStatus(currentAccountToStatus);
+            
+            throw new TransferFailedException(TransferFailedReasons.NOT_ENOUGH_FUNDS);
+        }
+        
+        /**
+         * Then I execute the database transaction.
+         */
+        long accountFromNewBalance = inMemoryAccountFrom.getBalance() - amountFrom;
+        long accountToNewBalance = inMemoryAccountTo.getBalance() + amountTo;
+          
+        DatabaseTable accountFromTable = ((MiddlewareFiatAccount) inMemoryAccountFrom).getTable();
+        DatabaseTable accountToTable = ((MiddlewareFiatAccount) inMemoryAccountTo).getTable();
+        
+        DatabaseTableRecord accountFromRecord = ((MiddlewareFiatAccount) inMemoryAccountFrom).getRecord();
+        DatabaseTableRecord accountToRecord = ((MiddlewareFiatAccount) inMemoryAccountTo).getRecord();
+
+        accountFromRecord.setlongValue(FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME,accountFromNewBalance);
+        accountToRecord.setlongValue(FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME,accountToNewBalance);
+        
+        DatabaseTransaction databaseTransaction = database.newTransaction();
+        
+        databaseTransaction.addRecordToUpdate(accountFromTable, accountFromRecord);
+        databaseTransaction.addRecordToUpdate(accountToTable, accountToRecord);
+        databaseTransaction.addRecordToInsert(transfersTable, transferRecord);
+        
+        try {
+            database.executeTransaction(databaseTransaction);
+        }
+        catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
+
+            ((MiddlewareFiatAccount) inMemoryAccountFrom).setStatus(currentAccountFromStatus);
+            ((MiddlewareFiatAccount) inMemoryAccountTo).setStatus(currentAccountToStatus);
+            
+            /**
+             * I can not solve this situation.
+             */
+            System.err.println("DatabaseTransactionFailedException: " + databaseTransactionFailedException.getMessage());
+            databaseTransactionFailedException.printStackTrace();
+            throw new TransferFailedException(TransferFailedReasons.CANT_SAVE_TRANSACTION);
+        }
+        
+        /**
+         * Then I update the accounts in memory.
+         */
+        ((MiddlewareFiatAccount) inMemoryAccountFrom).setBalance(accountFromNewBalance);
+        ((MiddlewareFiatAccount) inMemoryAccountTo).setBalance(accountToNewBalance);
+
+        /**
+         * Finally I release the lock.
+         */
+        ((MiddlewareFiatAccount) inMemoryAccountFrom).setStatus(currentAccountFromStatus);
+        ((MiddlewareFiatAccount) inMemoryAccountTo).setStatus(currentAccountToStatus);
     }
 
-    public void creditFiatAccount (FiatAccount fiatAccount,Double amount){
+    @Override
+    public void debit(FiatAccount fiatAccount, long fiatAmount, CryptoAccount cryptoAccount, long cryptoAmount) {
 
     }
 
-    public void debitCryptoAccount (CryptoAccount cryptoAccount,Double amount){
+    @Override
+    public void credit(FiatAccount fiatAccount, long fiatAmount, CryptoAccount cryptoAccount, long cryptoAmount) {
 
     }
-
-    public void creditCryptoAccount (CryptoAccount cryptoAccount,Double amount){
-
-    }
-
-
+    
 
 }
