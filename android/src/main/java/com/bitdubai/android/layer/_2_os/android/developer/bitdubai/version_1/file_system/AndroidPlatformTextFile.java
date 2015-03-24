@@ -7,7 +7,7 @@ import android.content.Context;
 import android.os.Environment;
 
 import com.bitdubai.fermat_api.layer._2_os.file_system.*;
-import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantLoadFileException;
+
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantPersistFileException;
 
 import java.io.BufferedInputStream;
@@ -16,7 +16,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.InputStream;
-import java.io.FileWriter;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.BufferedOutputStream;

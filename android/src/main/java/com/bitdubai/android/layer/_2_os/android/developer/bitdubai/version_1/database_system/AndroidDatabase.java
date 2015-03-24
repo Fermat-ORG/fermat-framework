@@ -18,26 +18,24 @@ import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.InvalidOwn
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantOpenDatabaseException;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
-import android.os.Environment;
+
 import java.io.File;
 /**
  * Created by ciencias on 23.12.14.
  */
 public class AndroidDatabase  implements Database, DatabaseFactory {
 
-    private Context Context;
+    private Context context;
     private String databaseName;
     private UUID ownerId;
     private String query;
     private SQLiteDatabase Database;
-    private int DATABASE_VERSION = 1;
     private DatabaseTransaction databaseTransaction;
     private DatabaseTable databaseTable;
 
     public AndroidDatabase(Context context, UUID ownerId, String databaseName) {
-        this.Context = context;
+        this.context = context;
         this.ownerId = ownerId;
         this.databaseName = databaseName;
     }
@@ -51,11 +49,11 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
          * First I try to open the database.
          */
         try {
-            String databasePath =  this.Context.getFilesDir().getPath() +  "/" +  ownerId.toString();
+            String databasePath =  this.context.getFilesDir().getPath() +  "/" +  ownerId.toString();
 
             databasePath += "/" + databaseName.replace("-","") + ".db";
             File databaseFile = new File(databasePath);
-            this.Database = SQLiteDatabase.openOrCreateDatabase(databaseFile,null);
+            this.Database = SQLiteDatabase.openDatabase(databasePath,null,0,null);
           }
         catch (Exception exception) {
         
@@ -79,7 +77,7 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
          * First I try to open the database.
          */
         try {
-            String databasePath =  this.Context.getFilesDir().getPath() +  "/" +  ownerId.toString();
+            String databasePath =  this.context.getFilesDir().getPath() +  "/" +  ownerId.toString();
 
             File storagePath = new File(databasePath);
             if (!storagePath.exists()) {
@@ -124,7 +122,8 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
     @Override
     public DatabaseTable getTable(String tableName){
 
-        databaseTable = new AndroidDatabaseTable(tableName);
+        databaseTable = new AndroidDatabaseTable(this.context,this.Database, tableName);
+
         return databaseTable;
     }
 
