@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer._12_middleware.wallet.AccountStatus;
 /**
  * Created by ciencias on 3/24/15.
  */
-class DatabaseConstants {
+class MiddlewareDatabaseConstants {
     /**
      * Fiat Accounts database table definition.
      */

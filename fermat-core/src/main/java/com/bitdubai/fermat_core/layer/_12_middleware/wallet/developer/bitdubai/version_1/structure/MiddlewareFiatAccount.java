@@ -5,8 +5,6 @@ import com.bitdubai.fermat_api.layer._12_middleware.wallet.FiatAccount;
 import com.bitdubai.fermat_api.layer._1_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer._2_os.database_system.DealsWithPluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer._2_os.database_system.PluginDatabaseSystem;
 
 import java.util.UUID;
 
@@ -99,13 +97,13 @@ public class MiddlewareFiatAccount implements  FiatAccount  {
 
     public void setLabel(String label) {
         this.label = label;
-        this.record.setStringValue(DatabaseConstants.FIAT_ACCOUNTS_TABLE_LABEL_COLUMN_NAME, this.label);
+        this.record.setStringValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_LABEL_COLUMN_NAME, this.label);
         this.table.updateRecord(this.record);
     }
 
     public void setName(String name) {
         this.name = name;
-        this.record.setStringValue(DatabaseConstants.FIAT_ACCOUNTS_TABLE_NAME_COLUMN_NAME, this.name);
+        this.record.setStringValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_NAME_COLUMN_NAME, this.name);
         this.table.updateRecord(this.record);
     }
     
@@ -121,21 +119,21 @@ public class MiddlewareFiatAccount implements  FiatAccount  {
     @Override
     public void openAccount() {
         this.status = AccountStatus.OPEN;
-        this.record.setStringValue(DatabaseConstants.FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_NAME, this.status.getCode());
+        this.record.setStringValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_NAME, this.status.getCode());
         this.table.updateRecord(this.record);
     }
 
     @Override
     public void closeAccount() {
         this.status = AccountStatus.CLOSED;
-        this.record.setStringValue(DatabaseConstants.FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_NAME, this.status.getCode());
+        this.record.setStringValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_NAME, this.status.getCode());
         this.table.updateRecord(this.record);
     }
 
     @Override
     public void deleteAccount() {
         this.status = AccountStatus.DELETED;
-        this.record.setStringValue(DatabaseConstants.FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_NAME, this.status.getCode());
+        this.record.setStringValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_NAME, this.status.getCode());
         this.table.updateRecord(this.record);
     }
 

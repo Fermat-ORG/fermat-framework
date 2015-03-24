@@ -3,7 +3,6 @@ package com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.AccountStatus;
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.CryptoAccount;
 import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer._1_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableRecord;
 
@@ -98,13 +97,13 @@ public class MiddlewareCryptoAccount implements CryptoAccount{
 
     public void setLabel(String label) {
         this.label = label;
-        this.record.setStringValue(DatabaseConstants.CRYPTO_ACCOUNTS_TABLE_LABEL_COLUMN_NAME, this.label);
+        this.record.setStringValue(MiddlewareDatabaseConstants.CRYPTO_ACCOUNTS_TABLE_LABEL_COLUMN_NAME, this.label);
         this.table.updateRecord(this.record);
     }
 
     public void setName(String name) {
         this.name = name;
-        this.record.setStringValue(DatabaseConstants.CRYPTO_ACCOUNTS_TABLE_NAME_COLUMN_NAME, this.name);
+        this.record.setStringValue(MiddlewareDatabaseConstants.CRYPTO_ACCOUNTS_TABLE_NAME_COLUMN_NAME, this.name);
         this.table.updateRecord(this.record);
     }
 
@@ -115,21 +114,21 @@ public class MiddlewareCryptoAccount implements CryptoAccount{
     @Override
     public void openAccount() {
         this.status = AccountStatus.OPEN;
-        this.record.setStringValue(DatabaseConstants.CRYPTO_ACCOUNTS_TABLE_STATUS_COLUMN_NAME, this.status.getCode());
+        this.record.setStringValue(MiddlewareDatabaseConstants.CRYPTO_ACCOUNTS_TABLE_STATUS_COLUMN_NAME, this.status.getCode());
         this.table.updateRecord(this.record);
     }
 
     @Override
     public void closeAccount() {
         this.status = AccountStatus.CLOSED;
-        this.record.setStringValue(DatabaseConstants.CRYPTO_ACCOUNTS_TABLE_STATUS_COLUMN_NAME, this.status.getCode());
+        this.record.setStringValue(MiddlewareDatabaseConstants.CRYPTO_ACCOUNTS_TABLE_STATUS_COLUMN_NAME, this.status.getCode());
         this.table.updateRecord(this.record);
     }
 
     @Override
     public void deleteAccount() {
         this.status = AccountStatus.DELETED;
-        this.record.setStringValue(DatabaseConstants.CRYPTO_ACCOUNTS_TABLE_STATUS_COLUMN_NAME, this.status.getCode());
+        this.record.setStringValue(MiddlewareDatabaseConstants.CRYPTO_ACCOUNTS_TABLE_STATUS_COLUMN_NAME, this.status.getCode());
         this.table.updateRecord(this.record);
     }
 }
