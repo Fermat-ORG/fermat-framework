@@ -50,6 +50,12 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
     private UUID ownerId;
     private Database database;
 
+    private Map<UUID, FiatAccount> fiatAccounts = new HashMap<>();
+    private Map<UUID,CryptoAccount> cryptoAccounts = new HashMap<>();
+
+    /**
+     * Fiat Accounts database table definition.
+     */
     private final String FIAT_ACCOUNTS_TABLE_NAME = "fiat accounts";
     private final String FIAT_ACCOUNTS_TABLE_ID_COLUMN_NAME = "id";
     private final String FIAT_ACCOUNTS_TABLE_LABEL_COLUMN_NAME = "label";
@@ -63,6 +69,9 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
     private final long FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_DEFAULT_VALUE = 0;
     private final String FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_DEFAULT_VALUE = AccountStatus.CREATED.getCode();
 
+    /**
+     * Crypto Accounts database table definition.
+     */
     private final String CRYPTO_ACCOUNTS_TABLE_NAME = "crypto accounts";
     private final String CRYPTO_ACCOUNTS_TABLE_ID_COLUMN_NAME = "id";
     private final String CRYPTO_ACCOUNTS_TABLE_LABEL_COLUMN_NAME = "alias";
@@ -76,10 +85,21 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
     private final long CRYPTO_ACCOUNTS_TABLE_BALANCE_COLUMN_DEFAULT_VALUE = 0;
     private final String CRYPTO_ACCOUNTS_TABLE_STATUS_COLUMN_DEFAULT_VALUE = AccountStatus.CREATED.getCode();
 
+    /**
+     * Transfers database table definition.
+     */
+    private final String TRANSFERS_TABLE_NAME = "transfers";
+    private final String TRANSFERS_TABLE_ID_COLUMN_NAME = "id";
+    private final String TRANSFERS_TABLE_MEMO_COLUMN_NAME = "memo";
+    private final String TRANSFERS_TABLE_ID_ACCOUNT_FROM_COLUMN_NAME = "id account from";
+    private final String TRANSFERS_TABLE_AMOUNT_FROM_COLUMN_NAME = "amount from";
+    private final String TRANSFERS_TABLE_ID_ACCOUNT_TO_COLUMN_NAME = "id account to";
+    private final String TRANSFERS_TABLE_AMOUNT_TO_COLUMN_NAME = "amount to";
+    private final String TRANSFERS_TABLE_TIME_STAMP_COLUMN_NAME = "time stamp";
 
-    private Map<UUID, FiatAccount> fiatAccounts = new HashMap<>();
-    private Map<UUID,CryptoAccount> cryptoAccounts = new HashMap<>();
-    
+    /**
+     * Constructor.
+     */
     public MiddlewareWallet (UUID ownerId){
 
         /**
@@ -116,7 +136,7 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
             this.database = this.pluginDatabaseSystem.createDatabase(this.ownerId, this.walletId.toString());
 
             /**
-             * Next, I will add a few tables.
+             * Next, I will add the needed tables.
              */
             try {
 
@@ -162,6 +182,27 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
                     throw new CantInitializeWalletException();
                 }
 
+                /**
+                 * Then the transfers table.
+                 */
+                table = ((DatabaseFactory) this.database).newTableFactory(this.ownerId, TRANSFERS_TABLE_NAME);
+                table.addColumn(TRANSFERS_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36);
+                table.addColumn(TRANSFERS_TABLE_MEMO_COLUMN_NAME, DatabaseDataType.STRING, 100);
+                table.addColumn(TRANSFERS_TABLE_ID_ACCOUNT_FROM_COLUMN_NAME, DatabaseDataType.STRING, 36);
+                table.addColumn(TRANSFERS_TABLE_AMOUNT_FROM_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
+                table.addColumn(TRANSFERS_TABLE_ID_ACCOUNT_TO_COLUMN_NAME, DatabaseDataType.STRING, 36);
+                table.addColumn(TRANSFERS_TABLE_AMOUNT_TO_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
+                table.addColumn(TRANSFERS_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
+
+                try {
+                    ((DatabaseFactory) this.database).createTable(this.ownerId, table);
+                }
+                catch (CantCreateTableException cantCreateTableException) {
+                    System.err.println("CantCreateTableException: " + cantCreateTableException.getMessage());
+                    cantCreateTableException.printStackTrace();
+                    throw new CantInitializeWalletException();
+                }
+                
             }
             catch (InvalidOwnerId invalidOwnerId) {
                 /**
@@ -436,7 +477,7 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
      */
     
     @Override
-    public void transfer(FiatAccount fiatAccountFrom, FiatAccount fiatAccountTo, long amountFrom, long amountTo) throws TransferFailedException {
+    public void transfer(FiatAccount fiatAccountFrom, FiatAccount fiatAccountTo, long amountFrom, long amountTo, String memo) throws TransferFailedException {
 
         /**
          * First I will check the accounts received belongs to this wallet.
@@ -500,7 +541,7 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
         }
         
         /**
-         * Then I execute the database transaction.
+         * Prepare everything for the execution of the database transaction.
          */
         long accountFromNewBalance = inMemoryAccountFrom.getBalance() - amountFrom;
         long accountToNewBalance = inMemoryAccountTo.getBalance() + amountTo;
@@ -513,7 +554,23 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
 
         accountFromRecord.setlongValue(FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME,accountFromNewBalance);
         accountToRecord.setlongValue(FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME,accountToNewBalance);
+
+        /**
+         * Here I create the transfer record for historical purposes.
+         */
+        DatabaseTable transfersTable = database.getTable(TRANSFERS_TABLE_NAME);
+        DatabaseTableRecord transferRecord = transfersTable.getEmptyRecord();
         
+        transferRecord.setUUIDValue(TRANSFERS_TABLE_ID_COLUMN_NAME , UUID.randomUUID());
+        transferRecord.setStringValue(TRANSFERS_TABLE_MEMO_COLUMN_NAME, memo);
+        transferRecord.setUUIDValue(TRANSFERS_TABLE_ID_ACCOUNT_FROM_COLUMN_NAME, ((MiddlewareFiatAccount) inMemoryAccountFrom).getId());
+        transferRecord.setlongValue(TRANSFERS_TABLE_AMOUNT_FROM_COLUMN_NAME, amountFrom);
+        transferRecord.setUUIDValue(TRANSFERS_TABLE_ID_ACCOUNT_TO_COLUMN_NAME, ((MiddlewareFiatAccount) inMemoryAccountTo).getId());
+        transferRecord.setlongValue(TRANSFERS_TABLE_AMOUNT_TO_COLUMN_NAME, amountTo);
+        
+        /**
+         * Then I execute the database transaction.
+         */
         DatabaseTransaction databaseTransaction = database.newTransaction();
         
         databaseTransaction.addRecordToUpdate(accountFromTable, accountFromRecord);
