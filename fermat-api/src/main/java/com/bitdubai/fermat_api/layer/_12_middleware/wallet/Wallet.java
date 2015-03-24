@@ -26,9 +26,7 @@ public interface Wallet {
     
     
     
-    public void deleteFiatAccount(int index);
 
-    public void deleteCryptoAccount(int index);
 
     public void transferFromFiatToFiat (FiatAccount fiatAccountFrom, FiatAccount fiatAccountTo, Double amountFrom, Double amountTo);
 

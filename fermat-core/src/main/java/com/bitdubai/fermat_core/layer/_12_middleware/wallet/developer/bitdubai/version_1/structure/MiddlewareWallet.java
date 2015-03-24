@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer._11_world.blockchain_info.exceptions.CantStartBlockchainInfoWallet;
+import com.bitdubai.fermat_api.layer._12_middleware.wallet.AccountStatus;
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.CryptoAccount;
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.FiatAccount;
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.Wallet;
@@ -62,10 +63,12 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
     private final String FIAT_ACCOUNTS_TABLE_NAME_COLUMN_NAME = "name";
     private final String FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME = "balance";
     private final String FIAT_ACCOUNTS_TABLE_FIAT_CURRENCY_COLUMN_NAME = "fiat currency";
+    private final String FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_NAME = "status";
 
     private final String FIAT_ACCOUNTS_TABLE_LABEL_COLUMN_DEFAULT_VALUE = "label";
     private final String FIAT_ACCOUNTS_TABLE_NAME_COLUMN_DEFAULT_VALUE = "name";
     private final long FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_DEFAULT_VALUE = 0;
+    private final String FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_DEFAULT_VALUE = AccountStatus.CREATED.getCode();
 
     private final String CRYPTO_ACCOUNTS_TABLE_NAME = "crypto accounts";
     private final String CRYPTO_ACCOUNTS_TABLE_ID_COLUMN_NAME = "id";
@@ -73,10 +76,12 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
     private final String CRYPTO_ACCOUNTS_TABLE_NAME_COLUMN_NAME = "name";
     private final String CRYPTO_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME = "balance";
     private final String CRYPTO_ACCOUNTS_TABLE_CRYPTO_CURRENCY_COLUMN_NAME = "crypto currency";
+    private final String CRYPTO_ACCOUNTS_TABLE_STATUS_COLUMN_NAME = "status";
 
     private final String CRYPTO_ACCOUNTS_TABLE_LABEL_COLUMN_DEFAULT_VALUE = "label";
     private final String CRYPTO_ACCOUNTS_TABLE_NAME_COLUMN_DEFAULT_VALUE = "name";
     private final long CRYPTO_ACCOUNTS_TABLE_BALANCE_COLUMN_DEFAULT_VALUE = 0;
+    private final String CRYPTO_ACCOUNTS_TABLE_STATUS_COLUMN_DEFAULT_VALUE = AccountStatus.CREATED.getCode();
 
 
     private Map<UUID, FiatAccount> fiatAccounts = new HashMap<>();
@@ -133,6 +138,7 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
                 table.addColumn(FIAT_ACCOUNTS_TABLE_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100);
                 table.addColumn(FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
                 table.addColumn(FIAT_ACCOUNTS_TABLE_FIAT_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 3);
+                table.addColumn(FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 3);
 
                 try {
                     ((DatabaseFactory) this.database).createTable(this.ownerId, table);
@@ -151,6 +157,8 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
                 table.addColumn(CRYPTO_ACCOUNTS_TABLE_LABEL_COLUMN_NAME, DatabaseDataType.STRING, 100);
                 table.addColumn(CRYPTO_ACCOUNTS_TABLE_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100);
                 table.addColumn(CRYPTO_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
+                table.addColumn(CRYPTO_ACCOUNTS_TABLE_CRYPTO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 3);
+                table.addColumn(CRYPTO_ACCOUNTS_TABLE_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 3);                
 
                 try {
                     ((DatabaseFactory) this.database).createTable(this.ownerId, table);
@@ -244,10 +252,13 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
             
             ((MiddlewareFiatAccount) fiatAccount).setFiatCurrency(FiatCurrency.getByCode(record.getStringValue(FIAT_ACCOUNTS_TABLE_FIAT_CURRENCY_COLUMN_NAME)));
             ((MiddlewareFiatAccount) fiatAccount).setBalance(record.getlongValue(FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME));
-
+            ((MiddlewareFiatAccount) fiatAccount).setStatus(AccountStatus.getByCode(record.getStringValue(FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_NAME)));
+            
             ((MiddlewareFiatAccount) fiatAccount).setTable(table);
             ((MiddlewareFiatAccount) fiatAccount).setRecord(record);
             ((MiddlewareFiatAccount) fiatAccount).setLabelColumName(FIAT_ACCOUNTS_TABLE_LABEL_COLUMN_NAME);
+            ((MiddlewareFiatAccount) fiatAccount).setNameColumName(FIAT_ACCOUNTS_TABLE_NAME_COLUMN_NAME);
+            ((MiddlewareFiatAccount) fiatAccount).setStatusColumName(FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_NAME);
             
             fiatAccounts.put(accountId, fiatAccount);
         }
@@ -274,10 +285,13 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
 
             ((MiddlewareCryptoAccount) cryptoAccount).setCryptoCurrency(CryptoCurrency.getByCode(record.getStringValue(CRYPTO_ACCOUNTS_TABLE_CRYPTO_CURRENCY_COLUMN_NAME)));
             ((MiddlewareCryptoAccount) cryptoAccount).setBalance(record.getlongValue(CRYPTO_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME));
+            ((MiddlewareCryptoAccount) cryptoAccount).setStatus(AccountStatus.getByCode(record.getStringValue(CRYPTO_ACCOUNTS_TABLE_STATUS_COLUMN_NAME)));
 
             ((MiddlewareCryptoAccount) cryptoAccount).setTable(table);
             ((MiddlewareCryptoAccount) cryptoAccount).setRecord(record);
             ((MiddlewareCryptoAccount) cryptoAccount).setLabelColumName(CRYPTO_ACCOUNTS_TABLE_LABEL_COLUMN_NAME);
+            ((MiddlewareCryptoAccount) cryptoAccount).setNameColumName(CRYPTO_ACCOUNTS_TABLE_NAME_COLUMN_NAME);
+            ((MiddlewareCryptoAccount) cryptoAccount).setStatusColumName(CRYPTO_ACCOUNTS_TABLE_STATUS_COLUMN_NAME);
 
             cryptoAccounts.put(accountId, cryptoAccount);
         }
@@ -351,6 +365,7 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
         newRecord.setStringValue(FIAT_ACCOUNTS_TABLE_NAME_COLUMN_NAME, FIAT_ACCOUNTS_TABLE_NAME_COLUMN_DEFAULT_VALUE);
         newRecord.setlongValue(FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME, FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_DEFAULT_VALUE);
         newRecord.setStringValue(FIAT_ACCOUNTS_TABLE_FIAT_CURRENCY_COLUMN_NAME, fiatCurrency.getCode());
+        newRecord.setStringValue(FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_NAME, FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_DEFAULT_VALUE);
 
         table.insertRecord(newRecord);
         
@@ -361,18 +376,18 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
         
         ((MiddlewareFiatAccount) fiatAccount).setFiatCurrency(fiatCurrency);
         ((MiddlewareFiatAccount) fiatAccount).setBalance(FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_DEFAULT_VALUE);
+        ((MiddlewareFiatAccount) fiatAccount).setStatus(AccountStatus.getByCode(FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_DEFAULT_VALUE));
 
         fiatAccount.setLabel(FIAT_ACCOUNTS_TABLE_LABEL_COLUMN_DEFAULT_VALUE);
         fiatAccount.setName(FIAT_ACCOUNTS_TABLE_NAME_COLUMN_DEFAULT_VALUE);
+
 
         ((MiddlewareFiatAccount) fiatAccount).setTable(table);
         ((MiddlewareFiatAccount) fiatAccount).setRecord(newRecord);
         ((MiddlewareFiatAccount) fiatAccount).setLabelColumName(FIAT_ACCOUNTS_TABLE_LABEL_COLUMN_NAME);
         
         this.fiatAccounts.put (id, fiatAccount);
-        
-        ((MiddlewareFiatAccount) fiatAccount).
-        
+
         return fiatAccount;
     }
 
@@ -397,6 +412,7 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
         newRecord.setStringValue(CRYPTO_ACCOUNTS_TABLE_NAME_COLUMN_NAME, CRYPTO_ACCOUNTS_TABLE_NAME_COLUMN_DEFAULT_VALUE);
         newRecord.setlongValue(CRYPTO_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME, CRYPTO_ACCOUNTS_TABLE_BALANCE_COLUMN_DEFAULT_VALUE);
         newRecord.setStringValue(CRYPTO_ACCOUNTS_TABLE_CRYPTO_CURRENCY_COLUMN_NAME, cryptoCurrency.getCode());
+        newRecord.setStringValue(CRYPTO_ACCOUNTS_TABLE_STATUS_COLUMN_NAME, CRYPTO_ACCOUNTS_TABLE_STATUS_COLUMN_DEFAULT_VALUE);
 
         table.insertRecord(newRecord);
 
@@ -407,6 +423,7 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
         
         ((MiddlewareCryptoAccount) cryptoAccount).setCryptoCurrency(cryptoCurrency);
         ((MiddlewareCryptoAccount) cryptoAccount).setBalance(CRYPTO_ACCOUNTS_TABLE_BALANCE_COLUMN_DEFAULT_VALUE);
+        ((MiddlewareCryptoAccount) cryptoAccount).setStatus(AccountStatus.getByCode(FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_DEFAULT_VALUE));
 
         cryptoAccount.setLabel(CRYPTO_ACCOUNTS_TABLE_LABEL_COLUMN_DEFAULT_VALUE);
         cryptoAccount.setName(CRYPTO_ACCOUNTS_TABLE_NAME_COLUMN_DEFAULT_VALUE);
@@ -435,16 +452,10 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
     
     
     
-    
-    
-    
-    public void deleteFiatAccount(int index){
-        this.fiatAccounts.remove(index);
-    }
 
-    public void deleteCryptoAccount(int index){
-        this.cryptoAccounts.remove(index);
-    }
+    
+    
+
     
     
     public void transferFromFiatToFiat (FiatAccount fiatAccountFrom, FiatAccount fiatAccountTo, Double amountFrom, Double amountTo){

@@ -20,4 +20,10 @@ public interface FiatAccount {
     public void setName(String name) ;
 
     public double availableBalance ();
+
+    public void openAccount();
+    
+    public void closeAccount();
+    
+    public void deleteAccount();
 }

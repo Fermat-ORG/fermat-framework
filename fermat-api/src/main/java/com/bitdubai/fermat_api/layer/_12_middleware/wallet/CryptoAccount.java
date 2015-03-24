@@ -18,4 +18,10 @@ public interface CryptoAccount {
     public void setLabel(String label) ;
 
     public void setName(String name) ;
+
+    public void openAccount();
+
+    public void closeAccount();
+
+    public void deleteAccount();
 }

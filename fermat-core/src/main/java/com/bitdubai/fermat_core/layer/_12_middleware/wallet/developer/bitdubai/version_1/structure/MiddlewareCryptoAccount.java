@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer._12_middleware.wallet.AccountStatus;
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.CryptoAccount;
 import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer._1_definition.enums.FiatCurrency;
@@ -22,15 +23,17 @@ public class MiddlewareCryptoAccount implements CryptoAccount{
     private DatabaseTableRecord record;
     private String labelColumName;
     private String nameColumName;
+    private String statusColumName;
 
     /**
      * FiatAccount Interface member variables.
      */
     private UUID id;
-    private String label ="";
-    private String name ="";
+    private String label = "";
+    private String name = "";
     private long balance = 0;
     private CryptoCurrency cryptoCurrency;
+    private AccountStatus status;
     
     /**
      * Class constructor.
@@ -53,6 +56,10 @@ public class MiddlewareCryptoAccount implements CryptoAccount{
         this.cryptoCurrency = cryptoCurrency;
     }
 
+    void setStatus(AccountStatus status) {
+        this.status = status;
+    }
+    
     void setTable (DatabaseTable table) {
         this.table = table;
     }
@@ -68,9 +75,13 @@ public class MiddlewareCryptoAccount implements CryptoAccount{
     void setNameColumName (String nameColumName){
         this.nameColumName = nameColumName;
     }
+
+    void setStatusColumName (String statusColumName){
+        this.statusColumName = statusColumName;
+    }
     
     /**
-     * FiatAccount interface implementation.
+     * CryptoAccount interface implementation.
      */
     public long getBalance() {
         return balance;
@@ -97,6 +108,27 @@ public class MiddlewareCryptoAccount implements CryptoAccount{
     public void setName(String name) {
         this.name = name;
         this.record.setStringValue(this.nameColumName, this.name);
+        this.table.updateRecord(this.record);
+    }
+
+    @Override
+    public void openAccount() {
+        this.status = AccountStatus.OPEN;
+        this.record.setStringValue(this.statusColumName, this.status.getCode());
+        this.table.updateRecord(this.record);
+    }
+
+    @Override
+    public void closeAccount() {
+        this.status = AccountStatus.CLOSED;
+        this.record.setStringValue(this.statusColumName, this.status.getCode());
+        this.table.updateRecord(this.record);
+    }
+
+    @Override
+    public void deleteAccount() {
+        this.status = AccountStatus.DELETED;
+        this.record.setStringValue(this.statusColumName, this.status.getCode());
         this.table.updateRecord(this.record);
     }
 }
