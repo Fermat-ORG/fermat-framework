@@ -7,20 +7,19 @@ public enum CryptoCurrency {
     BITCOIN ("BTC"),
     LITECOIN   ("LTC");
 
-    private final String mCode;
+    private final String code;
 
     CryptoCurrency(String Code) {
-        this.mCode = Code;
+        this.code = Code;
     }
 
-    public String Code()   { return mCode; }
+    public String getCode()   { return this.code ; }
 
     public static CryptoCurrency getByCode(String code) {
 
         switch (code) {
             case "BTC": return CryptoCurrency.BITCOIN;
             case "LTC": return CryptoCurrency.LITECOIN;
-
         }
 
         /**

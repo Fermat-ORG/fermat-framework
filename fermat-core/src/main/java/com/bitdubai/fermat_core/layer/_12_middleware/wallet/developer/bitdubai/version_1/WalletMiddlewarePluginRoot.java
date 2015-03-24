@@ -48,36 +48,36 @@ public class WalletMiddlewarePluginRoot implements Service, WalletManager , Midd
     /**
      * Service Interface member variables.
      */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
-    List<EventListener> listenersAdded = new ArrayList<>();
+    private ServiceStatus serviceStatus = ServiceStatus.CREATED;
+    private List<EventListener> listenersAdded = new ArrayList<>();
     
     /**
      * WalletManager Interface member variables.
      */
-    final String WALLET_IDS_FILE_NAME = "walletsIds";
+    private final String WALLET_IDS_FILE_NAME = "walletsIds";
 
-    Wallet currentWallet;
+    private Wallet currentWallet;
     private Map<UUID, UUID> walletIds =  new HashMap();
 
     /**
      * UsesFileSystem Interface member variables.
      */
-    PluginFileSystem pluginFileSystem;
+    private PluginFileSystem pluginFileSystem;
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
-    PluginDatabaseSystem pluginDatabaseSystem;
+    private PluginDatabaseSystem pluginDatabaseSystem;
     
     /**
      * DealWithEvents Interface member variables.
      */
-    EventManager eventManager;
+    private EventManager eventManager;
 
     /**
      * Plugin Interface member variables.
      */
-    UUID pluginId;
+    private UUID pluginId;
 
     /**
      * Service Interface implementation.
@@ -259,11 +259,12 @@ public class WalletMiddlewarePluginRoot implements Service, WalletManager , Midd
             iterator.remove();
         }
 
+
         /**
          * Now I set the content.
          */
         walletIdsFile.setContent(stringBuilder.toString());
-        
+
         try{
             walletIdsFile.persistToMedia();
         }

@@ -120,6 +120,9 @@ public class AndroidDatabaseTable implements  DatabaseTable {
     @Override
     public void updateRecord (DatabaseTableRecord record)
     {
+        
+        // IMPORTANTE SOLO ACTUALIZAR LOS CAMPOS MARCADOS COMO QUE CAMBIARON; NO TODOS.
+        
         try
         {
 

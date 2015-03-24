@@ -47,33 +47,40 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
-    PluginDatabaseSystem pluginDatabaseSystem;
+    private PluginDatabaseSystem pluginDatabaseSystem;
     
     /**
      * Wallet Interface member variables.
      */
-    UUID walletId;
-    UUID ownerId;
-    Database database;
-    
-    final String FIAT_ACCOUNTS_TABLE_NAME = "fiat accounts";
-    final String FIAT_ACCOUNTS_TABLE_ID_COLUMN_NAME = "id";
-    final String FIAT_ACCOUNTS_TABLE_LABEL_COLUMN_NAME = "label";
-    final String FIAT_ACCOUNTS_TABLE_NAME_COLUMN_NAME = "name";
-    final String FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME = "balance";
-    final String FIAT_ACCOUNTS_TABLE_FIAT_CURRENCY_COLUMN_NAME = "fiat currency";
-    
+    private UUID walletId;
+    private UUID ownerId;
+    private Database database;
 
-    final String CRYPTO_ACCOUNTS_TABLE_NAME = "crypto accounts";
-    final String CRYPTO_ACCOUNTS_TABLE_ID_COLUMN_NAME = "id";
-    final String CRYPTO_ACCOUNTS_TABLE_LABEL_COLUMN_NAME = "alias";
-    final String CRYPTO_ACCOUNTS_TABLE_NAME_COLUMN_NAME = "name";
-    final String CRYPTO_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME = "balance";
-    final String CRYPTO_ACCOUNTS_TABLE_CRYPTO_CURRENCY_COLUMN_NAME = "crypto currency";
-    
-    
-    Map<UUID, FiatAccount> fiatAccounts = new HashMap<>();
-    Map<UUID,CryptoAccount> cryptoAccounts = new HashMap<>();
+    private final String FIAT_ACCOUNTS_TABLE_NAME = "fiat accounts";
+    private final String FIAT_ACCOUNTS_TABLE_ID_COLUMN_NAME = "id";
+    private final String FIAT_ACCOUNTS_TABLE_LABEL_COLUMN_NAME = "label";
+    private final String FIAT_ACCOUNTS_TABLE_NAME_COLUMN_NAME = "name";
+    private final String FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME = "balance";
+    private final String FIAT_ACCOUNTS_TABLE_FIAT_CURRENCY_COLUMN_NAME = "fiat currency";
+
+    private final String FIAT_ACCOUNTS_TABLE_LABEL_COLUMN_DEFAULT_VALUE = "label";
+    private final String FIAT_ACCOUNTS_TABLE_NAME_COLUMN_DEFAULT_VALUE = "name";
+    private final long FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_DEFAULT_VALUE = 0;
+
+    private final String CRYPTO_ACCOUNTS_TABLE_NAME = "crypto accounts";
+    private final String CRYPTO_ACCOUNTS_TABLE_ID_COLUMN_NAME = "id";
+    private final String CRYPTO_ACCOUNTS_TABLE_LABEL_COLUMN_NAME = "alias";
+    private final String CRYPTO_ACCOUNTS_TABLE_NAME_COLUMN_NAME = "name";
+    private final String CRYPTO_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME = "balance";
+    private final String CRYPTO_ACCOUNTS_TABLE_CRYPTO_CURRENCY_COLUMN_NAME = "crypto currency";
+
+    private final String CRYPTO_ACCOUNTS_TABLE_LABEL_COLUMN_DEFAULT_VALUE = "label";
+    private final String CRYPTO_ACCOUNTS_TABLE_NAME_COLUMN_DEFAULT_VALUE = "name";
+    private final long CRYPTO_ACCOUNTS_TABLE_BALANCE_COLUMN_DEFAULT_VALUE = 0;
+
+
+    private Map<UUID, FiatAccount> fiatAccounts = new HashMap<>();
+    private Map<UUID,CryptoAccount> cryptoAccounts = new HashMap<>();
     
     public MiddlewareWallet (UUID ownerId){
 
@@ -227,17 +234,21 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
         for (DatabaseTableRecord record : table.getRecords()) {
             
             UUID accountId;
-            accountId = record.getValue(FIAT_ACCOUNTS_TABLE_ID_COLUMN_NAME);
+            accountId = record.getUUIDValue(FIAT_ACCOUNTS_TABLE_ID_COLUMN_NAME);
             
             FiatAccount fiatAccount;
             fiatAccount = new MiddlewareFiatAccount(accountId);
 
-            fiatAccount.setLabel(record.getValue(FIAT_ACCOUNTS_TABLE_LABEL_COLUMN_NAME));
-            fiatAccount.setName(record.getValue(FIAT_ACCOUNTS_TABLE_NAME_COLUMN_NAME));
+            fiatAccount.setLabel(record.getStringValue(FIAT_ACCOUNTS_TABLE_LABEL_COLUMN_NAME));
+            fiatAccount.setName(record.getStringValue(FIAT_ACCOUNTS_TABLE_NAME_COLUMN_NAME));
             
-            ((MiddlewareFiatAccount) fiatAccount).setFiatCurrency(FiatCurrency.getByCode(record.getValue(FIAT_ACCOUNTS_TABLE_FIAT_CURRENCY_COLUMN_NAME)));
-            ((MiddlewareFiatAccount) fiatAccount).setBalance(record.getValue(FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME));
+            ((MiddlewareFiatAccount) fiatAccount).setFiatCurrency(FiatCurrency.getByCode(record.getStringValue(FIAT_ACCOUNTS_TABLE_FIAT_CURRENCY_COLUMN_NAME)));
+            ((MiddlewareFiatAccount) fiatAccount).setBalance(record.getlongValue(FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME));
 
+            ((MiddlewareFiatAccount) fiatAccount).setTable(table);
+            ((MiddlewareFiatAccount) fiatAccount).setRecord(record);
+            ((MiddlewareFiatAccount) fiatAccount).setLabelColumName(FIAT_ACCOUNTS_TABLE_LABEL_COLUMN_NAME);
+            
             fiatAccounts.put(accountId, fiatAccount);
         }
 
@@ -253,16 +264,20 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
         for (DatabaseTableRecord record : table.getRecords()) {
 
             UUID accountId;
-            accountId = record.getValue(CRYPTO_ACCOUNTS_TABLE_ID_COLUMN_NAME);
+            accountId = record.getUUIDValue(CRYPTO_ACCOUNTS_TABLE_ID_COLUMN_NAME);
 
             CryptoAccount cryptoAccount;
             cryptoAccount = new MiddlewareCryptoAccount(accountId);
 
-            cryptoAccount.setLabel(record.getValue(CRYPTO_ACCOUNTS_TABLE_LABEL_COLUMN_NAME));
-            cryptoAccount.setName(record.getValue(CRYPTO_ACCOUNTS_TABLE_NAME_COLUMN_NAME));
+            cryptoAccount.setLabel(record.getStringValue(CRYPTO_ACCOUNTS_TABLE_LABEL_COLUMN_NAME));
+            cryptoAccount.setName(record.getStringValue(CRYPTO_ACCOUNTS_TABLE_NAME_COLUMN_NAME));
 
-            ((MiddlewareCryptoAccount) cryptoAccount).setCryptoCurrency(CryptoCurrency.getByCode(record.getValue(CRYPTO_ACCOUNTS_TABLE_CRYPTO_CURRENCY_COLUMN_NAME)));
-            ((MiddlewareCryptoAccount) cryptoAccount).setBalance(record.getValue(CRYPTO_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME));
+            ((MiddlewareCryptoAccount) cryptoAccount).setCryptoCurrency(CryptoCurrency.getByCode(record.getStringValue(CRYPTO_ACCOUNTS_TABLE_CRYPTO_CURRENCY_COLUMN_NAME)));
+            ((MiddlewareCryptoAccount) cryptoAccount).setBalance(record.getlongValue(CRYPTO_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME));
+
+            ((MiddlewareCryptoAccount) cryptoAccount).setTable(table);
+            ((MiddlewareCryptoAccount) cryptoAccount).setRecord(record);
+            ((MiddlewareCryptoAccount) cryptoAccount).setLabelColumName(CRYPTO_ACCOUNTS_TABLE_LABEL_COLUMN_NAME);
 
             cryptoAccounts.put(accountId, cryptoAccount);
         }
@@ -316,32 +331,107 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
     }
     
     public FiatAccount createFiatAccount (FiatCurrency fiatCurrency){
-        
-        UUID id = UUID.randomUUID();
-        
-        FiatAccount fiatAccount = new MiddlewareFiatAccount(id);
-        ((MiddlewareFiatAccount) fiatAccount).setFiatCurrency(fiatCurrency);
 
-        ((MiddlewareFiatAccount) fiatAccount).persistToMedia();
+        /**
+         * First I get a new id for the new account.
+         */
+        UUID id = UUID.randomUUID();
+
+        /**
+         * Then I add the new record to the database.
+         */
+        DatabaseTable table;
+        table = this.database.getTable(FIAT_ACCOUNTS_TABLE_NAME);
+
+        DatabaseTableRecord newRecord;
+        newRecord = table.getEmptyRecord();
+        
+        newRecord.setUUIDValue(FIAT_ACCOUNTS_TABLE_ID_COLUMN_NAME, id);
+        newRecord.setStringValue(FIAT_ACCOUNTS_TABLE_LABEL_COLUMN_NAME, FIAT_ACCOUNTS_TABLE_LABEL_COLUMN_DEFAULT_VALUE);
+        newRecord.setStringValue(FIAT_ACCOUNTS_TABLE_NAME_COLUMN_NAME, FIAT_ACCOUNTS_TABLE_NAME_COLUMN_DEFAULT_VALUE);
+        newRecord.setlongValue(FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME, FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_DEFAULT_VALUE);
+        newRecord.setStringValue(FIAT_ACCOUNTS_TABLE_FIAT_CURRENCY_COLUMN_NAME, fiatCurrency.getCode());
+
+        table.insertRecord(newRecord);
+        
+        /**
+         * Finally I update the information in memory.
+         */
+        FiatAccount fiatAccount = new MiddlewareFiatAccount(id);
+        
+        ((MiddlewareFiatAccount) fiatAccount).setFiatCurrency(fiatCurrency);
+        ((MiddlewareFiatAccount) fiatAccount).setBalance(FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_DEFAULT_VALUE);
+
+        fiatAccount.setLabel(FIAT_ACCOUNTS_TABLE_LABEL_COLUMN_DEFAULT_VALUE);
+        fiatAccount.setName(FIAT_ACCOUNTS_TABLE_NAME_COLUMN_DEFAULT_VALUE);
+
+        ((MiddlewareFiatAccount) fiatAccount).setTable(table);
+        ((MiddlewareFiatAccount) fiatAccount).setRecord(newRecord);
+        ((MiddlewareFiatAccount) fiatAccount).setLabelColumName(FIAT_ACCOUNTS_TABLE_LABEL_COLUMN_NAME);
+        
         this.fiatAccounts.put (id, fiatAccount);
+        
+        ((MiddlewareFiatAccount) fiatAccount).
         
         return fiatAccount;
     }
 
     public CryptoAccount createCryptoAccount (CryptoCurrency cryptoCurrency){
-
+  
+        /**
+         * First I get a new id for the new account.
+         */
         UUID id = UUID.randomUUID();
 
-        CryptoAccount cryptoAccount = new MiddlewareCryptoAccount(id);
-        ((MiddlewareCryptoAccount) cryptoAccount).setCryptoCurrency(cryptoCurrency);
+        /**
+         * Then I add the new record to the database.
+         */
+        DatabaseTable table;
+        table = this.database.getTable(CRYPTO_ACCOUNTS_TABLE_NAME);
 
-        ((MiddlewareCryptoAccount) cryptoAccount).persistToMedia();
-        this.cryptoAccounts.put (id, cryptoAccount);
+        DatabaseTableRecord newRecord;
+        newRecord = table.getEmptyRecord();
+
+        newRecord.setUUIDValue(CRYPTO_ACCOUNTS_TABLE_ID_COLUMN_NAME, id);
+        newRecord.setStringValue(CRYPTO_ACCOUNTS_TABLE_LABEL_COLUMN_NAME, CRYPTO_ACCOUNTS_TABLE_LABEL_COLUMN_DEFAULT_VALUE);
+        newRecord.setStringValue(CRYPTO_ACCOUNTS_TABLE_NAME_COLUMN_NAME, CRYPTO_ACCOUNTS_TABLE_NAME_COLUMN_DEFAULT_VALUE);
+        newRecord.setlongValue(CRYPTO_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME, CRYPTO_ACCOUNTS_TABLE_BALANCE_COLUMN_DEFAULT_VALUE);
+        newRecord.setStringValue(CRYPTO_ACCOUNTS_TABLE_CRYPTO_CURRENCY_COLUMN_NAME, cryptoCurrency.getCode());
+
+        table.insertRecord(newRecord);
+
+        /**
+         * Finally I update the information in memory.
+         */
+        CryptoAccount cryptoAccount = new MiddlewareCryptoAccount(id);
         
+        ((MiddlewareCryptoAccount) cryptoAccount).setCryptoCurrency(cryptoCurrency);
+        ((MiddlewareCryptoAccount) cryptoAccount).setBalance(CRYPTO_ACCOUNTS_TABLE_BALANCE_COLUMN_DEFAULT_VALUE);
+
+        cryptoAccount.setLabel(CRYPTO_ACCOUNTS_TABLE_LABEL_COLUMN_DEFAULT_VALUE);
+        cryptoAccount.setName(CRYPTO_ACCOUNTS_TABLE_NAME_COLUMN_DEFAULT_VALUE);
+
+        ((MiddlewareCryptoAccount) cryptoAccount).setTable(table);
+        ((MiddlewareCryptoAccount) cryptoAccount).setRecord(newRecord);
+        ((MiddlewareCryptoAccount) cryptoAccount).setLabelColumName(CRYPTO_ACCOUNTS_TABLE_LABEL_COLUMN_NAME);
+
+        this.cryptoAccounts.put (id, cryptoAccount);
+
         return cryptoAccount;
     }
-
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+
     
     
     
