@@ -50,12 +50,12 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
     private UUID ownerId;
     private Database database;
 
-    private final String FIAT_ACCOUNTS_TABLE_NAME = "fiat accounts";
+    private final String FIAT_ACCOUNTS_TABLE_NAME = "fiat_accounts";
     private final String FIAT_ACCOUNTS_TABLE_ID_COLUMN_NAME = "id";
     private final String FIAT_ACCOUNTS_TABLE_LABEL_COLUMN_NAME = "label";
     private final String FIAT_ACCOUNTS_TABLE_NAME_COLUMN_NAME = "name";
     private final String FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME = "balance";
-    private final String FIAT_ACCOUNTS_TABLE_FIAT_CURRENCY_COLUMN_NAME = "fiat currency";
+    private final String FIAT_ACCOUNTS_TABLE_FIAT_CURRENCY_COLUMN_NAME = "fiat_currency";
     private final String FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_NAME = "status";
 
     private final String FIAT_ACCOUNTS_TABLE_LABEL_COLUMN_DEFAULT_VALUE = "label";
@@ -63,12 +63,12 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
     private final long FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_DEFAULT_VALUE = 0;
     private final String FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_DEFAULT_VALUE = AccountStatus.CREATED.getCode();
 
-    private final String CRYPTO_ACCOUNTS_TABLE_NAME = "crypto accounts";
+    private final String CRYPTO_ACCOUNTS_TABLE_NAME = "crypto_accounts";
     private final String CRYPTO_ACCOUNTS_TABLE_ID_COLUMN_NAME = "id";
     private final String CRYPTO_ACCOUNTS_TABLE_LABEL_COLUMN_NAME = "alias";
     private final String CRYPTO_ACCOUNTS_TABLE_NAME_COLUMN_NAME = "name";
     private final String CRYPTO_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME = "balance";
-    private final String CRYPTO_ACCOUNTS_TABLE_CRYPTO_CURRENCY_COLUMN_NAME = "crypto currency";
+    private final String CRYPTO_ACCOUNTS_TABLE_CRYPTO_CURRENCY_COLUMN_NAME = "crypto_currency";
     private final String CRYPTO_ACCOUNTS_TABLE_STATUS_COLUMN_NAME = "status";
 
     private final String CRYPTO_ACCOUNTS_TABLE_LABEL_COLUMN_DEFAULT_VALUE = "label";

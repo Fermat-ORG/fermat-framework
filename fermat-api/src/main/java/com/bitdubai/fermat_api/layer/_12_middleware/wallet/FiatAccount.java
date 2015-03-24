@@ -19,7 +19,7 @@ public interface FiatAccount {
 
     public void setName(String name) ;
 
-    public AccountStatus getStatus()
+    public AccountStatus getStatus();
 
     public double availableBalance ();
 
