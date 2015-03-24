@@ -5,12 +5,13 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Created by toshiba on 09/02/2015.
+ * Created by Natalia on 09/02/2015.
  */
 public class AndroidDatabaseRecord implements DatabaseTableRecord {
 
 // TODO NATALIA: 24 MAR 2015
-  
+
+    private List<String> values;
     @Override
     public String getStringValue(String columnName) {
         return null;
@@ -47,5 +48,14 @@ public class AndroidDatabaseRecord implements DatabaseTableRecord {
 
     }
 
+    @Override
+    public List<String> getValues(){
+        return this.values;
+    }
+
+    @Override
+    public void setValues(List<String> values ){
+        this.values = values;
+    }
 
 }
