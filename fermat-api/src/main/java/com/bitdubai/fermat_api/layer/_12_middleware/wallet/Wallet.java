@@ -33,7 +33,7 @@ public interface Wallet {
 
     public void transfer (FiatAccount fiatAccountFrom, FiatAccount fiatAccountTo, long amountFrom, long amountTo, String memo) throws TransferFailedException;
     
-    public void debit (FiatAccount fiatAccount,long fiatAmount, CryptoAccount cryptoAccount,long cryptoAmount);
+    public void debit (FiatAccount fiatAccount,long fiatAmount, CryptoAccount cryptoAccount,long cryptoAmount) throws CreditFailedException;
 
     public void credit (FiatAccount fiatAccount,long fiatAmount, CryptoAccount cryptoAccount,long cryptoAmount) throws CreditFailedException;
 

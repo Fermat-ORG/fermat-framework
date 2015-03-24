@@ -22,10 +22,7 @@ public class MiddlewareFiatAccount implements  FiatAccount  {
      */
     private DatabaseTable table;
     private DatabaseTableRecord record;
-    private String labelColumName;
-    private String nameColumName;
-    private String statusColumName;
-    
+
     /**
      * FiatAccount Interface member variables.
      */
@@ -80,19 +77,7 @@ public class MiddlewareFiatAccount implements  FiatAccount  {
     DatabaseTableRecord getRecord(){
         return this.record;
     }
-    
-    void setLabelColumName (String labelColumName){
-        this.labelColumName = labelColumName;
-    }
 
-    void setNameColumName (String nameColumName){
-        this.nameColumName = nameColumName;
-    }
-
-    void setStatusColumName (String statusColumName){
-        this.statusColumName = statusColumName;
-    }
-    
     /**
      * FiatAccount interface implementation.
      */
@@ -114,13 +99,13 @@ public class MiddlewareFiatAccount implements  FiatAccount  {
 
     public void setLabel(String label) {
         this.label = label;
-        this.record.setStringValue(this.labelColumName, this.label);
+        this.record.setStringValue(DatabaseConstants.FIAT_ACCOUNTS_TABLE_LABEL_COLUMN_NAME, this.label);
         this.table.updateRecord(this.record);
     }
 
     public void setName(String name) {
         this.name = name;
-        this.record.setStringValue(this.nameColumName, this.name);
+        this.record.setStringValue(DatabaseConstants.FIAT_ACCOUNTS_TABLE_NAME_COLUMN_NAME, this.name);
         this.table.updateRecord(this.record);
     }
     
@@ -136,21 +121,21 @@ public class MiddlewareFiatAccount implements  FiatAccount  {
     @Override
     public void openAccount() {
         this.status = AccountStatus.OPEN;
-        this.record.setStringValue(this.statusColumName, this.status.getCode());
+        this.record.setStringValue(DatabaseConstants.FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_NAME, this.status.getCode());
         this.table.updateRecord(this.record);
     }
 
     @Override
     public void closeAccount() {
         this.status = AccountStatus.CLOSED;
-        this.record.setStringValue(this.statusColumName, this.status.getCode());
+        this.record.setStringValue(DatabaseConstants.FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_NAME, this.status.getCode());
         this.table.updateRecord(this.record);
     }
 
     @Override
     public void deleteAccount() {
         this.status = AccountStatus.DELETED;
-        this.record.setStringValue(this.statusColumName, this.status.getCode());
+        this.record.setStringValue(DatabaseConstants.FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_NAME, this.status.getCode());
         this.table.updateRecord(this.record);
     }
 
