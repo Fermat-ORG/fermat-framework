@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer._12_middleware.wallet;
 
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.CantInitializeWalletException;
+import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.CreditFailedException;
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.TransferFailedException;
 import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer._1_definition.enums.FiatCurrency;
@@ -34,6 +35,6 @@ public interface Wallet {
     
     public void debit (FiatAccount fiatAccount,long fiatAmount, CryptoAccount cryptoAccount,long cryptoAmount);
 
-    public void credit (FiatAccount fiatAccount,long fiatAmount, CryptoAccount cryptoAccount,long cryptoAmount);
+    public void credit (FiatAccount fiatAccount,long fiatAmount, CryptoAccount cryptoAccount,long cryptoAmount) throws CreditFailedException;
 
 }

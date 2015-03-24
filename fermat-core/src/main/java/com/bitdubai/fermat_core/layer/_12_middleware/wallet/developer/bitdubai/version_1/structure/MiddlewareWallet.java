@@ -56,13 +56,13 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
     /**
      * Fiat Accounts database table definition.
      */
-    private final String FIAT_ACCOUNTS_TABLE_NAME = "fiat accounts";
-    private final String FIAT_ACCOUNTS_TABLE_ID_COLUMN_NAME = "id";
-    private final String FIAT_ACCOUNTS_TABLE_LABEL_COLUMN_NAME = "label";
-    private final String FIAT_ACCOUNTS_TABLE_NAME_COLUMN_NAME = "name";
-    private final String FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME = "balance";
-    private final String FIAT_ACCOUNTS_TABLE_FIAT_CURRENCY_COLUMN_NAME = "fiat currency";
-    private final String FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_NAME = "status";
+    private final String FIAT_ACCOUNTS_TABLE_NAME = "FiatAccounts";
+    private final String FIAT_ACCOUNTS_TABLE_ID_COLUMN_NAME = "Id";
+    private final String FIAT_ACCOUNTS_TABLE_LABEL_COLUMN_NAME = "Label";
+    private final String FIAT_ACCOUNTS_TABLE_NAME_COLUMN_NAME = "Name";
+    private final String FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME = "Balance";
+    private final String FIAT_ACCOUNTS_TABLE_FIAT_CURRENCY_COLUMN_NAME = "FiatCurrency";
+    private final String FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_NAME = "Status";
 
     private final String FIAT_ACCOUNTS_TABLE_LABEL_COLUMN_DEFAULT_VALUE = "label";
     private final String FIAT_ACCOUNTS_TABLE_NAME_COLUMN_DEFAULT_VALUE = "name";
@@ -72,13 +72,13 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
     /**
      * Crypto Accounts database table definition.
      */
-    private final String CRYPTO_ACCOUNTS_TABLE_NAME = "crypto accounts";
-    private final String CRYPTO_ACCOUNTS_TABLE_ID_COLUMN_NAME = "id";
-    private final String CRYPTO_ACCOUNTS_TABLE_LABEL_COLUMN_NAME = "alias";
-    private final String CRYPTO_ACCOUNTS_TABLE_NAME_COLUMN_NAME = "name";
-    private final String CRYPTO_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME = "balance";
-    private final String CRYPTO_ACCOUNTS_TABLE_CRYPTO_CURRENCY_COLUMN_NAME = "crypto currency";
-    private final String CRYPTO_ACCOUNTS_TABLE_STATUS_COLUMN_NAME = "status";
+    private final String CRYPTO_ACCOUNTS_TABLE_NAME = "CryptoAccounts";
+    private final String CRYPTO_ACCOUNTS_TABLE_ID_COLUMN_NAME = "Id";
+    private final String CRYPTO_ACCOUNTS_TABLE_LABEL_COLUMN_NAME = "Alias";
+    private final String CRYPTO_ACCOUNTS_TABLE_NAME_COLUMN_NAME = "Name";
+    private final String CRYPTO_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME = "Balance";
+    private final String CRYPTO_ACCOUNTS_TABLE_CRYPTO_CURRENCY_COLUMN_NAME = "CryptoCurrency";
+    private final String CRYPTO_ACCOUNTS_TABLE_STATUS_COLUMN_NAME = "Status";
 
     private final String CRYPTO_ACCOUNTS_TABLE_LABEL_COLUMN_DEFAULT_VALUE = "label";
     private final String CRYPTO_ACCOUNTS_TABLE_NAME_COLUMN_DEFAULT_VALUE = "name";
@@ -88,15 +88,49 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
     /**
      * Transfers database table definition.
      */
-    private final String TRANSFERS_TABLE_NAME = "transfers";
-    private final String TRANSFERS_TABLE_ID_COLUMN_NAME = "id";
-    private final String TRANSFERS_TABLE_MEMO_COLUMN_NAME = "memo";
-    private final String TRANSFERS_TABLE_ID_ACCOUNT_FROM_COLUMN_NAME = "id account from";
-    private final String TRANSFERS_TABLE_AMOUNT_FROM_COLUMN_NAME = "amount from";
-    private final String TRANSFERS_TABLE_ID_ACCOUNT_TO_COLUMN_NAME = "id account to";
-    private final String TRANSFERS_TABLE_AMOUNT_TO_COLUMN_NAME = "amount to";
-    private final String TRANSFERS_TABLE_TIME_STAMP_COLUMN_NAME = "time stamp";
+    private final String TRANSFERS_TABLE_NAME = "Transfers";
+    private final String TRANSFERS_TABLE_ID_COLUMN_NAME = "Id";
+    private final String TRANSFERS_TABLE_MEMO_COLUMN_NAME = "Memo";
+    private final String TRANSFERS_TABLE_ID_ACCOUNT_FROM_COLUMN_NAME = "IdAccountFrom";
+    private final String TRANSFERS_TABLE_AMOUNT_FROM_COLUMN_NAME = "AmountFrom";
+    private final String TRANSFERS_TABLE_ID_ACCOUNT_TO_COLUMN_NAME = "IdAccountTo";
+    private final String TRANSFERS_TABLE_AMOUNT_TO_COLUMN_NAME = "AmountTo";
+    private final String TRANSFERS_TABLE_TIME_STAMP_COLUMN_NAME = "TimeStamp";
 
+    /**
+     * Value Chunks database table definition.
+     */
+    private final String VALUE_CHUNKS_TABLE_NAME = "ValueChunks";
+    private final String VALUE_CHUNKS_TABLE_ID_COLUMN_NAME = "Id";
+    private final String VALUE_CHUNKS_TABLE_FIAT_CURRENCY_COLUMN_NAME = "FiatCurrency";
+    private final String VALUE_CHUNKS_TABLE_FIAT_AMOUNT_COLUMN_NAME = "FiatAmount";
+    private final String VALUE_CHUNKS_TABLE_CRYPTO_CURRENCY_COLUMN_NAME = "CryptoCurrency";
+    private final String VALUE_CHUNKS_TABLE_CRYPTO_AMOUNT_COLUMN_NAME = "CryptoAmount";
+    
+    /**
+     * Debits database table definition.
+     */
+    private final String DEBITS_TABLE_NAME = "Debits";
+    private final String DEBITS_TABLE_ID_COLUMN_NAME = "Id";
+    private final String DEBITS_TABLE_ID_FIAT_ACCOUNT_COLUMN_NAME = "IdFiatAccount";
+    private final String DEBITS_TABLE_FIAT_AMOUNT_COLUMN_NAME = "FiatAmount";
+    private final String DEBITS_TABLE_ID_CRYPTO_ACCOUNT_COLUMN_NAME = "IdCryptoAccount";
+    private final String DEBITS_TABLE_CRYPTO_AMOUNT_COLUMN_NAME = "CryptoAmount";
+    private final String DEBITS_TABLE_TIME_STAMP_COLUMN_NAME = "TimeStamp";
+
+    /**
+     * Credits database table definition.
+     */
+    private final String CREDITS_TABLE_NAME = "Credits";
+    private final String CREDITS_TABLE_ID_COLUMN_NAME = "Id";
+    private final String CREDITS_TABLE_ID_FIAT_ACCOUNT_COLUMN_NAME = "IdFiatAccoun";
+    private final String CREDITS_TABLE_FIAT_AMOUNT_COLUMN_NAME = "FiatAmount";
+    private final String CREDITS_TABLE_ID_CRYPTO_ACCOUNT_COLUMN_NAME = "IdCryptoAccount";
+    private final String CREDITS_TABLE_CRYPTO_AMOUNT_COLUMN_NAME = "CryptoAmount";
+    private final String CREDITS_TABLE_ID_VALUE_CHUNK_COLUMN_NAME = "IdValueChunk";
+    private final String CREDITS_TABLE_TIME_STAMP_COLUMN_NAME = "TimeStamp";
+    
+    
     /**
      * Constructor.
      */
@@ -193,6 +227,66 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
                 table.addColumn(TRANSFERS_TABLE_ID_ACCOUNT_TO_COLUMN_NAME, DatabaseDataType.STRING, 36);
                 table.addColumn(TRANSFERS_TABLE_AMOUNT_TO_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
                 table.addColumn(TRANSFERS_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
+
+                try {
+                    ((DatabaseFactory) this.database).createTable(this.ownerId, table);
+                }
+                catch (CantCreateTableException cantCreateTableException) {
+                    System.err.println("CantCreateTableException: " + cantCreateTableException.getMessage());
+                    cantCreateTableException.printStackTrace();
+                    throw new CantInitializeWalletException();
+                }
+
+                /**
+                 * Then the value chunks table.
+                 */
+                table = ((DatabaseFactory) this.database).newTableFactory(this.ownerId, VALUE_CHUNKS_TABLE_NAME);
+                table.addColumn(VALUE_CHUNKS_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36);
+                table.addColumn(VALUE_CHUNKS_TABLE_FIAT_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 3);
+                table.addColumn(VALUE_CHUNKS_TABLE_FIAT_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
+                table.addColumn(VALUE_CHUNKS_TABLE_CRYPTO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 3);
+                table.addColumn(VALUE_CHUNKS_TABLE_CRYPTO_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
+
+                try {
+                    ((DatabaseFactory) this.database).createTable(this.ownerId, table);
+                }
+                catch (CantCreateTableException cantCreateTableException) {
+                    System.err.println("CantCreateTableException: " + cantCreateTableException.getMessage());
+                    cantCreateTableException.printStackTrace();
+                    throw new CantInitializeWalletException();
+                }
+                
+                /**
+                 * Then the debits table.
+                 */
+                table = ((DatabaseFactory) this.database).newTableFactory(this.ownerId, DEBITS_TABLE_NAME);
+                table.addColumn(DEBITS_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36);
+                table.addColumn(DEBITS_TABLE_ID_FIAT_ACCOUNT_COLUMN_NAME, DatabaseDataType.STRING, 36);
+                table.addColumn(DEBITS_TABLE_FIAT_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
+                table.addColumn(DEBITS_TABLE_ID_CRYPTO_ACCOUNT_COLUMN_NAME, DatabaseDataType.STRING, 36);
+                table.addColumn(DEBITS_TABLE_CRYPTO_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
+                table.addColumn(DEBITS_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
+
+                try {
+                    ((DatabaseFactory) this.database).createTable(this.ownerId, table);
+                }
+                catch (CantCreateTableException cantCreateTableException) {
+                    System.err.println("CantCreateTableException: " + cantCreateTableException.getMessage());
+                    cantCreateTableException.printStackTrace();
+                    throw new CantInitializeWalletException();
+                }
+                
+                /**
+                 * Then the credits table.
+                 */
+                table = ((DatabaseFactory) this.database).newTableFactory(this.ownerId, CREDITS_TABLE_NAME);
+                table.addColumn(CREDITS_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36);
+                table.addColumn(CREDITS_TABLE_ID_FIAT_ACCOUNT_COLUMN_NAME, DatabaseDataType.STRING, 36);
+                table.addColumn(CREDITS_TABLE_FIAT_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
+                table.addColumn(CREDITS_TABLE_ID_CRYPTO_ACCOUNT_COLUMN_NAME, DatabaseDataType.STRING, 36);
+                table.addColumn(CREDITS_TABLE_CRYPTO_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
+                table.addColumn(CREDITS_TABLE_ID_VALUE_CHUNK_COLUMN_NAME, DatabaseDataType.STRING, 36);
+                table.addColumn(CREDITS_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
 
                 try {
                     ((DatabaseFactory) this.database).createTable(this.ownerId, table);
@@ -518,7 +612,7 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
             throw new TransferFailedException(TransferFailedReasons.ACCOUNT_TO_NOT_OPEN);
         }
 
-               /**
+        /**
          * Then I will lock the accounts involved in the transaction.
          */
 
@@ -567,6 +661,7 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
         transferRecord.setlongValue(TRANSFERS_TABLE_AMOUNT_FROM_COLUMN_NAME, amountFrom);
         transferRecord.setUUIDValue(TRANSFERS_TABLE_ID_ACCOUNT_TO_COLUMN_NAME, ((MiddlewareFiatAccount) inMemoryAccountTo).getId());
         transferRecord.setlongValue(TRANSFERS_TABLE_AMOUNT_TO_COLUMN_NAME, amountTo);
+        transferRecord.setlongValue(TRANSFERS_TABLE_TIME_STAMP_COLUMN_NAME, System.currentTimeMillis() / 1000L);
         
         /**
          * Then I execute the database transaction.
@@ -612,12 +707,145 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
          * Not implemented yet
          */
     }
-
+    
+    /**
+     * A credit transaction represents an amount of crypto currency received. What we actually register is the crypto 
+     * currency together with the fiat currency that represents at the moment of reception.
+     * * *
+     */
     @Override
-    public void credit(FiatAccount fiatAccount, long fiatAmount, CryptoAccount cryptoAccount, long cryptoAmount) {
+    public void credit(FiatAccount fiatAccount, long fiatAmount, CryptoAccount cryptoAccount, long cryptoAmount) throws CreditFailedException {
+
         /**
-         * Not implemented yet
+         * First I will check the accounts received belongs to this wallet.
          */
+        FiatAccount inMemoryFiatAccount;
+        inMemoryFiatAccount = fiatAccounts.get(((MiddlewareFiatAccount) fiatAccount).getId());
+
+        if ( inMemoryFiatAccount == null ) {
+            throw new CreditFailedException(CreditFailedReasons.FIAT_ACCOUNT_DOES_NOT_BELONG_TO_THIS_WALLET);
+        }
+
+        FiatAccount inMemoryCryptoAccount;
+        inMemoryCryptoAccount = fiatAccounts.get(((MiddlewareFiatAccount) cryptoAccount).getId());
+
+        if ( inMemoryCryptoAccount == null ) {
+            throw new CreditFailedException(CreditFailedReasons.CRYPTO_ACCOUNT_DOES_NOT_BELONG_TO_THIS_WALLET);
+        }
+
+        /**
+         * Then I will check if the accounts are not already locked.
+         */
+        if (inMemoryFiatAccount.getStatus() == AccountStatus.LOCKED) {
+            throw new CreditFailedException(CreditFailedReasons.FIAT_ACCOUNT_ALREADY_LOCKED);
+        }
+
+        if (inMemoryCryptoAccount.getStatus() == AccountStatus.LOCKED) {
+            throw new CreditFailedException(CreditFailedReasons.CRYPTO_ACCOUNT_ALREADY_LOCKED);
+        }
+
+        /**
+         * Then I will check if the accounts are not open.
+         */
+        if (inMemoryFiatAccount.getStatus() != AccountStatus.OPEN) {
+            throw new CreditFailedException(CreditFailedReasons.FIAT_ACCOUNT_NOT_OPEN);
+        }
+
+        if (inMemoryCryptoAccount.getStatus() != AccountStatus.OPEN) {
+            throw new CreditFailedException(CreditFailedReasons.CRYPTO_ACCOUNT_NOT_OPEN);
+        }
+
+        /**
+         * Then I will lock the accounts involved in the transaction.
+         */
+
+        AccountStatus currentFiatAccountStatus = inMemoryFiatAccount.getStatus();
+        AccountStatus currentCryptoAccountStatus = inMemoryCryptoAccount.getStatus();
+
+        ((MiddlewareFiatAccount) inMemoryFiatAccount).setStatus(AccountStatus.LOCKED);
+        ((MiddlewareCryptoAccount) inMemoryCryptoAccount).setStatus(AccountStatus.LOCKED);
+        
+        /**
+         * Prepare everything for the execution of the database transaction.
+         */
+        long fiatAccountNewBalance = inMemoryFiatAccount.getBalance() + fiatAmount;
+        long cryptoAccountNewBalance = inMemoryCryptoAccount.getBalance() + cryptoAmount;
+
+        DatabaseTable fiatAccountTable = ((MiddlewareFiatAccount) inMemoryFiatAccount).getTable();
+        DatabaseTable cryptoAccountTable = ((MiddlewareFiatAccount) inMemoryCryptoAccount).getTable();
+
+        DatabaseTableRecord fiatAccountRecord = ((MiddlewareFiatAccount) inMemoryFiatAccount).getRecord();
+        DatabaseTableRecord cryptoAccountRecord = ((MiddlewareFiatAccount) inMemoryCryptoAccount).getRecord();
+
+        fiatAccountRecord.setlongValue(FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME,fiatAccountNewBalance);
+        cryptoAccountRecord.setlongValue(FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME,cryptoAccountNewBalance);
+
+        /**
+         * I create the value chunk record.
+         */
+        DatabaseTable valueChunksTable = database.getTable(VALUE_CHUNKS_TABLE_NAME);
+        DatabaseTableRecord valueChunkRecord = valueChunksTable.getEmptyRecord();
+
+        UUID valueChunkRecordId = UUID.randomUUID();
+
+        valueChunkRecord.setUUIDValue(VALUE_CHUNKS_TABLE_NAME , valueChunkRecordId);
+        valueChunkRecord.setStringValue(VALUE_CHUNKS_TABLE_FIAT_CURRENCY_COLUMN_NAME, fiatAccount.getFiatCurrency().getCode());
+        valueChunkRecord.setlongValue(VALUE_CHUNKS_TABLE_FIAT_AMOUNT_COLUMN_NAME, fiatAmount);
+        valueChunkRecord.setStringValue(VALUE_CHUNKS_TABLE_CRYPTO_CURRENCY_COLUMN_NAME, cryptoAccount.getCryptoCurrency().getCode());
+        valueChunkRecord.setlongValue(VALUE_CHUNKS_TABLE_CRYPTO_AMOUNT_COLUMN_NAME, cryptoAmount);
+
+        /**
+         * Here I create the credit record for historical purposes.
+         */
+        DatabaseTable creditsTable = database.getTable(DEBITS_TABLE_NAME);
+        DatabaseTableRecord creditRecord = creditsTable.getEmptyRecord();
+
+        creditRecord.setUUIDValue(CREDITS_TABLE_ID_COLUMN_NAME , UUID.randomUUID());
+        creditRecord.setUUIDValue(CREDITS_TABLE_ID_FIAT_ACCOUNT_COLUMN_NAME, ((MiddlewareFiatAccount) inMemoryFiatAccount).getId());
+        creditRecord.setlongValue(CREDITS_TABLE_FIAT_AMOUNT_COLUMN_NAME, fiatAmount);
+        creditRecord.setUUIDValue(CREDITS_TABLE_ID_CRYPTO_ACCOUNT_COLUMN_NAME, ((MiddlewareFiatAccount) inMemoryCryptoAccount).getId());
+        creditRecord.setlongValue(CREDITS_TABLE_ID_CRYPTO_ACCOUNT_COLUMN_NAME, cryptoAmount);
+        creditRecord.setUUIDValue(CREDITS_TABLE_ID_VALUE_CHUNK_COLUMN_NAME, valueChunkRecordId);
+        creditRecord.setlongValue(CREDITS_TABLE_TIME_STAMP_COLUMN_NAME,  System.currentTimeMillis() / 1000L);
+        
+        /**
+         * Then I execute the database transaction.
+         */
+        DatabaseTransaction databaseTransaction = database.newTransaction();
+
+        databaseTransaction.addRecordToUpdate(fiatAccountTable, fiatAccountRecord);
+        databaseTransaction.addRecordToUpdate(cryptoAccountTable, cryptoAccountRecord);
+        databaseTransaction.addRecordToInsert(valueChunksTable, valueChunkRecord);
+        databaseTransaction.addRecordToInsert(creditsTable, creditRecord);
+
+        try {
+            database.executeTransaction(databaseTransaction);
+        }
+        catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
+
+            ((MiddlewareFiatAccount) inMemoryFiatAccount).setStatus(currentFiatAccountStatus);
+            ((MiddlewareFiatAccount) inMemoryCryptoAccount).setStatus(currentCryptoAccountStatus);
+
+            /**
+             * I can not solve this situation.
+             */
+            System.err.println("DatabaseTransactionFailedException: " + databaseTransactionFailedException.getMessage());
+            databaseTransactionFailedException.printStackTrace();
+            throw new CreditFailedException(CreditFailedReasons.CANT_SAVE_TRANSACTION);
+        }
+
+        /**
+         * Then I update the accounts in memory.
+         */
+        ((MiddlewareFiatAccount) inMemoryFiatAccount).setBalance(fiatAccountNewBalance);
+        ((MiddlewareFiatAccount) inMemoryCryptoAccount).setBalance(cryptoAccountNewBalance);
+
+        /**
+         * Finally I release the lock.
+         */
+        ((MiddlewareFiatAccount) inMemoryFiatAccount).setStatus(currentFiatAccountStatus);
+        ((MiddlewareFiatAccount) inMemoryCryptoAccount).setStatus(currentCryptoAccountStatus);
+
     }
     
 
