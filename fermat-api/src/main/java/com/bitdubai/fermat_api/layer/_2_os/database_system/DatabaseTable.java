@@ -1,13 +1,12 @@
 package com.bitdubai.fermat_api.layer._2_os.database_system;
 
 import java.util.List;
-
+import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.*;
 /**
  * Created by ciencias on 01.02.15.
  */
 public interface DatabaseTable {
     
-   // public List<DatabaseTableColumn> getColumns();
 
     public DatabaseTableColumn newColumn(String name);
 
@@ -23,11 +22,11 @@ public interface DatabaseTable {
     
     public List<DatabaseTableFilter> getFilters();
     
-    public void updateRecord (DatabaseTableRecord record);
+    public void updateRecord (DatabaseTableRecord record) throws CantNotUpdateRecord;
 
-    public void insertRecord (DatabaseTableRecord record);
+    public void insertRecord (DatabaseTableRecord record) throws CantNotInsertRecord;
 
-    public void loadToMemory();
+    public void loadToMemory() throws CantNotLoadTableToMemory;
 
 
 

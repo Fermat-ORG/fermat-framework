@@ -299,7 +299,7 @@ public class FileImageActivity extends FragmentActivity {
 
 
             AndroidDatabaseRecord records  = new AndroidDatabaseRecord();
-            records.setValues(values);
+          //  records.setValues(values);
            // dbmanager.insertRecord(records);
 
             TextView  result = (TextView)findViewById(R.id.result_text);
@@ -363,7 +363,7 @@ public class FileImageActivity extends FragmentActivity {
             filterColum.setType(DatabaseDataType.INTEGER);
             filter.setColumn(filterColum);
             AndroidDatabaseRecord records  = new AndroidDatabaseRecord();
-            records.setValues(values);
+            //records.setValues(values);
    //         dbmanager.updateRecord(records);
 
             TextView  result = (TextView)findViewById(R.id.result_text);
