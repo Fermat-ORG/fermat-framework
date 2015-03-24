@@ -27,4 +27,6 @@ public interface DatabaseTable {
 
     public void insertRecord (DatabaseTableRecord record);
 
+    public void loadToMemory();
+
 }
