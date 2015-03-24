@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by ciencias on 2/15/15.
  */
-public class MiddlewareCryptoValue implements CryptoValue{
+class MiddlewareCryptoValue implements CryptoValue{
 
     Double balance;
     CryptoCurrency cryptoCurrency;

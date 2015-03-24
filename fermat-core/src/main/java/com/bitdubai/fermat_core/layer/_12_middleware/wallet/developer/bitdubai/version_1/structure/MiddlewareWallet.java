@@ -119,16 +119,12 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
     }
     
     /**
-     * The Start method.
+     * The Start method loads the information of the wallet from the Database, and create an in memory structure.
      */
-    public void start() throws CantStartWalletException {
-        
-        /**
-         * I will load the information of the wallet from the Database, and create an in memory structure.
-         */
+    public void loadToMemory() throws CantStartWalletException {
 
         /**
-         * I will try to open the wallets' database.
+         * Will try to open the wallets' database.
          */
         try {
             this.database = this.pluginDatabaseSystem.openDatabase(this.ownerId, this.walletId.toString());
@@ -351,132 +347,12 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
     @Override
     public void transfer(FiatAccount fiatAccountFrom, FiatAccount fiatAccountTo, long amountFrom, long amountTo, String memo) throws TransferFailedException {
 
-        /**
-         * First I will check the accounts received belongs to this wallet.
-         */
-        FiatAccount inMemoryAccountFrom;
-        inMemoryAccountFrom = fiatAccounts.get(((MiddlewareFiatAccount) fiatAccountFrom).getId());
+        MiddlewareTransferTransaction transferTransaction = new MiddlewareTransferTransaction();
 
-        if ( inMemoryAccountFrom == null ) {
-            throw new TransferFailedException(TransferFailedReasons.ACCOUNT_FROM_DOES_NOT_BELONG_TO_THIS_WALLET);
-        }
+        transferTransaction.setDatabase(this.database);
+        transferTransaction.setFiatAccounts(this.fiatAccounts);
 
-        FiatAccount inMemoryAccountTo;
-        inMemoryAccountTo = fiatAccounts.get(((MiddlewareFiatAccount) fiatAccountTo).getId());
-
-        if ( inMemoryAccountTo == null ) {
-            throw new TransferFailedException(TransferFailedReasons.ACCOUNT_TO_DOES_NOT_BELONG_TO_THIS_WALLET);
-        }
-        
-        /**
-         * Then I will check if the accounts are not already locked.
-         */
-        if (inMemoryAccountFrom.getStatus() == AccountStatus.LOCKED) {
-            throw new TransferFailedException(TransferFailedReasons.ACCOUNT_FROM_ALREADY_LOCKED);
-        }
-
-        if (inMemoryAccountTo.getStatus() == AccountStatus.LOCKED) {
-            throw new TransferFailedException(TransferFailedReasons.ACCOUNT_TO_ALREADY_LOCKED);
-        }
-
-        /**
-         * Then I will check if the accounts are not open.
-         */
-        if (inMemoryAccountFrom.getStatus() != AccountStatus.OPEN) {
-            throw new TransferFailedException(TransferFailedReasons.ACCOUNT_FROM_NOT_OPEN);
-        }
-
-        if (inMemoryAccountTo.getStatus() != AccountStatus.OPEN) {
-            throw new TransferFailedException(TransferFailedReasons.ACCOUNT_TO_NOT_OPEN);
-        }
-
-        /**
-         * Then I will lock the accounts involved in the transaction.
-         */
-
-        AccountStatus currentAccountFromStatus = inMemoryAccountFrom.getStatus();
-        AccountStatus currentAccountToStatus = inMemoryAccountTo.getStatus();
-
-        ((MiddlewareFiatAccount) inMemoryAccountFrom).setStatus(AccountStatus.LOCKED);
-        ((MiddlewareFiatAccount) inMemoryAccountTo).setStatus(AccountStatus.LOCKED);
-
-        /**
-         * Then I validate that there are enough funds on the account to be debited.
-         */
-
-        if ( inMemoryAccountFrom.getBalance() < amountFrom) {
-
-            ((MiddlewareFiatAccount) inMemoryAccountFrom).setStatus(currentAccountFromStatus);
-            ((MiddlewareFiatAccount) inMemoryAccountTo).setStatus(currentAccountToStatus);
-            
-            throw new TransferFailedException(TransferFailedReasons.NOT_ENOUGH_FUNDS);
-        }
-        
-        /**
-         * Prepare everything for the execution of the database transaction.
-         */
-        long accountFromNewBalance = inMemoryAccountFrom.getBalance() - amountFrom;
-        long accountToNewBalance = inMemoryAccountTo.getBalance() + amountTo;
-          
-        DatabaseTable accountFromTable = ((MiddlewareFiatAccount) inMemoryAccountFrom).getTable();
-        DatabaseTable accountToTable = ((MiddlewareFiatAccount) inMemoryAccountTo).getTable();
-        
-        DatabaseTableRecord accountFromRecord = ((MiddlewareFiatAccount) inMemoryAccountFrom).getRecord();
-        DatabaseTableRecord accountToRecord = ((MiddlewareFiatAccount) inMemoryAccountTo).getRecord();
-
-        accountFromRecord.setlongValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME,accountFromNewBalance);
-        accountToRecord.setlongValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME,accountToNewBalance);
-
-        /**
-         * Here I create the transfer record for historical purposes.
-         */
-        DatabaseTable transfersTable = database.getTable(MiddlewareDatabaseConstants.TRANSFERS_TABLE_NAME);
-        DatabaseTableRecord transferRecord = transfersTable.getEmptyRecord();
-        
-        transferRecord.setUUIDValue(MiddlewareDatabaseConstants.TRANSFERS_TABLE_ID_COLUMN_NAME , UUID.randomUUID());
-        transferRecord.setStringValue(MiddlewareDatabaseConstants.TRANSFERS_TABLE_MEMO_COLUMN_NAME, memo);
-        transferRecord.setUUIDValue(MiddlewareDatabaseConstants.TRANSFERS_TABLE_ID_ACCOUNT_FROM_COLUMN_NAME, ((MiddlewareFiatAccount) inMemoryAccountFrom).getId());
-        transferRecord.setlongValue(MiddlewareDatabaseConstants.TRANSFERS_TABLE_AMOUNT_FROM_COLUMN_NAME, amountFrom);
-        transferRecord.setUUIDValue(MiddlewareDatabaseConstants.TRANSFERS_TABLE_ID_ACCOUNT_TO_COLUMN_NAME, ((MiddlewareFiatAccount) inMemoryAccountTo).getId());
-        transferRecord.setlongValue(MiddlewareDatabaseConstants.TRANSFERS_TABLE_AMOUNT_TO_COLUMN_NAME, amountTo);
-        transferRecord.setlongValue(MiddlewareDatabaseConstants.TRANSFERS_TABLE_TIME_STAMP_COLUMN_NAME, System.currentTimeMillis() / 1000L);
-        
-        /**
-         * Then I execute the database transaction.
-         */
-        DatabaseTransaction databaseTransaction = database.newTransaction();
-        
-        databaseTransaction.addRecordToUpdate(accountFromTable, accountFromRecord);
-        databaseTransaction.addRecordToUpdate(accountToTable, accountToRecord);
-        databaseTransaction.addRecordToInsert(transfersTable, transferRecord);
-        
-        try {
-            database.executeTransaction(databaseTransaction);
-        }
-        catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
-
-            ((MiddlewareFiatAccount) inMemoryAccountFrom).setStatus(currentAccountFromStatus);
-            ((MiddlewareFiatAccount) inMemoryAccountTo).setStatus(currentAccountToStatus);
-            
-            /**
-             * I can not solve this situation.
-             */
-            System.err.println("DatabaseTransactionFailedException: " + databaseTransactionFailedException.getMessage());
-            databaseTransactionFailedException.printStackTrace();
-            throw new TransferFailedException(TransferFailedReasons.CANT_SAVE_TRANSACTION);
-        }
-        
-        /**
-         * Then I update the accounts in memory.
-         */
-        ((MiddlewareFiatAccount) inMemoryAccountFrom).setBalance(accountFromNewBalance);
-        ((MiddlewareFiatAccount) inMemoryAccountTo).setBalance(accountToNewBalance);
-
-        /**
-         * Finally I release the lock.
-         */
-        ((MiddlewareFiatAccount) inMemoryAccountFrom).setStatus(currentAccountFromStatus);
-        ((MiddlewareFiatAccount) inMemoryAccountTo).setStatus(currentAccountToStatus);
+        transferTransaction.transfer(fiatAccountFrom, fiatAccountTo, amountFrom, amountTo, memo);
     }
 
     @Override
@@ -492,135 +368,13 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
     @Override
     public void credit(FiatAccount fiatAccount, long fiatAmount, CryptoAccount cryptoAccount, long cryptoAmount) throws CreditFailedException {
 
-        /**
-         * First I will check the accounts received belongs to this wallet.
-         */
-        FiatAccount inMemoryFiatAccount;
-        inMemoryFiatAccount = fiatAccounts.get(((MiddlewareFiatAccount) fiatAccount).getId());
+        MiddlewareCreditTransaction creditTransaction = new MiddlewareCreditTransaction();
 
-        if ( inMemoryFiatAccount == null ) {
-            throw new CreditFailedException(CreditFailedReasons.FIAT_ACCOUNT_DOES_NOT_BELONG_TO_THIS_WALLET);
-        }
+        creditTransaction.setDatabase(this.database);
+        creditTransaction.setFiatAccounts(this.fiatAccounts);
+        creditTransaction.setCryptoAccounts(this.cryptoAccounts);
 
-        FiatAccount inMemoryCryptoAccount;
-        inMemoryCryptoAccount = fiatAccounts.get(((MiddlewareFiatAccount) cryptoAccount).getId());
-
-        if ( inMemoryCryptoAccount == null ) {
-            throw new CreditFailedException(CreditFailedReasons.CRYPTO_ACCOUNT_DOES_NOT_BELONG_TO_THIS_WALLET);
-        }
-
-        /**
-         * Then I will check if the accounts are not already locked.
-         */
-        if (inMemoryFiatAccount.getStatus() == AccountStatus.LOCKED) {
-            throw new CreditFailedException(CreditFailedReasons.FIAT_ACCOUNT_ALREADY_LOCKED);
-        }
-
-        if (inMemoryCryptoAccount.getStatus() == AccountStatus.LOCKED) {
-            throw new CreditFailedException(CreditFailedReasons.CRYPTO_ACCOUNT_ALREADY_LOCKED);
-        }
-
-        /**
-         * Then I will check if the accounts are not open.
-         */
-        if (inMemoryFiatAccount.getStatus() != AccountStatus.OPEN) {
-            throw new CreditFailedException(CreditFailedReasons.FIAT_ACCOUNT_NOT_OPEN);
-        }
-
-        if (inMemoryCryptoAccount.getStatus() != AccountStatus.OPEN) {
-            throw new CreditFailedException(CreditFailedReasons.CRYPTO_ACCOUNT_NOT_OPEN);
-        }
-
-        /**
-         * Then I will lock the accounts involved in the transaction.
-         */
-
-        AccountStatus currentFiatAccountStatus = inMemoryFiatAccount.getStatus();
-        AccountStatus currentCryptoAccountStatus = inMemoryCryptoAccount.getStatus();
-
-        ((MiddlewareFiatAccount) inMemoryFiatAccount).setStatus(AccountStatus.LOCKED);
-        ((MiddlewareCryptoAccount) inMemoryCryptoAccount).setStatus(AccountStatus.LOCKED);
-        
-        /**
-         * Prepare everything for the execution of the database transaction.
-         */
-        long fiatAccountNewBalance = inMemoryFiatAccount.getBalance() + fiatAmount;
-        long cryptoAccountNewBalance = inMemoryCryptoAccount.getBalance() + cryptoAmount;
-
-        DatabaseTable fiatAccountTable = ((MiddlewareFiatAccount) inMemoryFiatAccount).getTable();
-        DatabaseTable cryptoAccountTable = ((MiddlewareFiatAccount) inMemoryCryptoAccount).getTable();
-
-        DatabaseTableRecord fiatAccountRecord = ((MiddlewareFiatAccount) inMemoryFiatAccount).getRecord();
-        DatabaseTableRecord cryptoAccountRecord = ((MiddlewareFiatAccount) inMemoryCryptoAccount).getRecord();
-
-        fiatAccountRecord.setlongValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME,fiatAccountNewBalance);
-        cryptoAccountRecord.setlongValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME,cryptoAccountNewBalance);
-
-        /**
-         * I create the value chunk record.
-         */
-        DatabaseTable valueChunksTable = database.getTable(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_NAME);
-        DatabaseTableRecord valueChunkRecord = valueChunksTable.getEmptyRecord();
-
-        UUID valueChunkRecordId = UUID.randomUUID();
-
-        valueChunkRecord.setUUIDValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_NAME , valueChunkRecordId);
-        valueChunkRecord.setStringValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_FIAT_CURRENCY_COLUMN_NAME, fiatAccount.getFiatCurrency().getCode());
-        valueChunkRecord.setlongValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_FIAT_AMOUNT_COLUMN_NAME, fiatAmount);
-        valueChunkRecord.setStringValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_CRYPTO_CURRENCY_COLUMN_NAME, cryptoAccount.getCryptoCurrency().getCode());
-        valueChunkRecord.setlongValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_CRYPTO_AMOUNT_COLUMN_NAME, cryptoAmount);
-
-        /**
-         * Here I create the credit record for historical purposes.
-         */
-        DatabaseTable creditsTable = database.getTable(MiddlewareDatabaseConstants.DEBITS_TABLE_NAME);
-        DatabaseTableRecord creditRecord = creditsTable.getEmptyRecord();
-
-        creditRecord.setUUIDValue(MiddlewareDatabaseConstants.CREDITS_TABLE_ID_COLUMN_NAME , UUID.randomUUID());
-        creditRecord.setUUIDValue(MiddlewareDatabaseConstants.CREDITS_TABLE_ID_FIAT_ACCOUNT_COLUMN_NAME, ((MiddlewareFiatAccount) inMemoryFiatAccount).getId());
-        creditRecord.setlongValue(MiddlewareDatabaseConstants.CREDITS_TABLE_FIAT_AMOUNT_COLUMN_NAME, fiatAmount);
-        creditRecord.setUUIDValue(MiddlewareDatabaseConstants.CREDITS_TABLE_ID_CRYPTO_ACCOUNT_COLUMN_NAME, ((MiddlewareFiatAccount) inMemoryCryptoAccount).getId());
-        creditRecord.setlongValue(MiddlewareDatabaseConstants.CREDITS_TABLE_ID_CRYPTO_ACCOUNT_COLUMN_NAME, cryptoAmount);
-        creditRecord.setUUIDValue(MiddlewareDatabaseConstants.CREDITS_TABLE_ID_VALUE_CHUNK_COLUMN_NAME, valueChunkRecordId);
-        creditRecord.setlongValue(MiddlewareDatabaseConstants.CREDITS_TABLE_TIME_STAMP_COLUMN_NAME,  System.currentTimeMillis() / 1000L);
-        
-        /**
-         * Then I execute the database transaction.
-         */
-        DatabaseTransaction databaseTransaction = database.newTransaction();
-
-        databaseTransaction.addRecordToUpdate(fiatAccountTable, fiatAccountRecord);
-        databaseTransaction.addRecordToUpdate(cryptoAccountTable, cryptoAccountRecord);
-        databaseTransaction.addRecordToInsert(valueChunksTable, valueChunkRecord);
-        databaseTransaction.addRecordToInsert(creditsTable, creditRecord);
-
-        try {
-            database.executeTransaction(databaseTransaction);
-        }
-        catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
-
-            ((MiddlewareFiatAccount) inMemoryFiatAccount).setStatus(currentFiatAccountStatus);
-            ((MiddlewareFiatAccount) inMemoryCryptoAccount).setStatus(currentCryptoAccountStatus);
-
-            /**
-             * I can not solve this situation.
-             */
-            System.err.println("DatabaseTransactionFailedException: " + databaseTransactionFailedException.getMessage());
-            databaseTransactionFailedException.printStackTrace();
-            throw new CreditFailedException(CreditFailedReasons.CANT_SAVE_TRANSACTION);
-        }
-
-        /**
-         * Then I update the accounts in memory.
-         */
-        ((MiddlewareFiatAccount) inMemoryFiatAccount).setBalance(fiatAccountNewBalance);
-        ((MiddlewareFiatAccount) inMemoryCryptoAccount).setBalance(cryptoAccountNewBalance);
-
-        /**
-         * Finally I release the lock.
-         */
-        ((MiddlewareFiatAccount) inMemoryFiatAccount).setStatus(currentFiatAccountStatus);
-        ((MiddlewareFiatAccount) inMemoryCryptoAccount).setStatus(currentCryptoAccountStatus);
+        creditTransaction.credit(fiatAccount, fiatAmount, cryptoAccount, cryptoAmount);
 
     }
     

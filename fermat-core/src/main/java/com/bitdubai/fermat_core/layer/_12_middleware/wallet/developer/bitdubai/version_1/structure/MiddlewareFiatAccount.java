@@ -12,7 +12,7 @@ import java.util.UUID;
  * Created by ciencias on 2/15/15.
  */
 
-public class MiddlewareFiatAccount implements  FiatAccount  {
+class MiddlewareFiatAccount implements  FiatAccount  {
 
 
     /**

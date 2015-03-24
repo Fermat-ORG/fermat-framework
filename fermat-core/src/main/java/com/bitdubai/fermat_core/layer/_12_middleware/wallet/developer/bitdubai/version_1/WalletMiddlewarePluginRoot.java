@@ -295,7 +295,7 @@ public class WalletMiddlewarePluginRoot implements Service, WalletManager , Midd
         this.currentWallet = new MiddlewareWallet(walletId);
      
         try {
-            ((MiddlewareWallet) this.currentWallet).start();
+            ((MiddlewareWallet) this.currentWallet).loadToMemory();
         }
         catch (CantStartWalletException cantStartWalletException){
             /**

@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.layer._1_definition.enums.FiatCurrency;
 /**
  * Created by ciencias on 2/15/15.
  */
-public class MiddlewareCryptoValueChunk implements CryptoValueChunk {
+class MiddlewareCryptoValueChunk implements CryptoValueChunk {
 
     Double cryptoAmount;
     Double fiatAmount;
