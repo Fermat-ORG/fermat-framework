@@ -2,9 +2,14 @@ package com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.
 
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.AccountStatus;
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.FiatAccount;
+import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.CantLoadWalletException;
+import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.OperationFailed;
 import com.bitdubai.fermat_api.layer._1_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.CantNotUpdateRecord;
+import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantOpenDatabaseException;
 
 import java.util.UUID;
 
@@ -69,7 +74,15 @@ class MiddlewareFiatAccount implements  FiatAccount  {
     }
     
     void setRecord (DatabaseTableRecord record){
+        
         this.record = record;
+
+        this.label= record.getStringValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_LABEL_COLUMN_NAME);
+        this.name = record.getStringValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_NAME_COLUMN_NAME);
+        this.fiatCurrency = FiatCurrency.getByCode(record.getStringValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_FIAT_CURRENCY_COLUMN_NAME));
+        this.balance = record.getlongValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME);
+        this.status = AccountStatus.getByCode(record.getStringValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_NAME));
+    
     }
     
     DatabaseTableRecord getRecord(){
@@ -95,16 +108,38 @@ class MiddlewareFiatAccount implements  FiatAccount  {
         return name;
     }
 
-    public void setLabel(String label) {
-        this.label = label;
-        this.record.setStringValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_LABEL_COLUMN_NAME, this.label);
-        this.table.updateRecord(this.record);
+    public void setLabel(String label) throws OperationFailed {
+
+        try {
+            this.record.setStringValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_LABEL_COLUMN_NAME, label);
+            this.table.updateRecord(this.record);
+            this.label = label;
+        }
+        catch (CantNotUpdateRecord cantUpdateRecord) {
+            /**
+             * I can not solve this situation.
+             */
+            System.err.println("CantUpdateRecord: " + cantUpdateRecord.getMessage());
+            cantUpdateRecord.printStackTrace();
+            throw new OperationFailed();
+        }
     }
 
-    public void setName(String name) {
-        this.name = name;
-        this.record.setStringValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_NAME_COLUMN_NAME, this.name);
-        this.table.updateRecord(this.record);
+    public void setName(String name) throws OperationFailed {
+
+        try {
+            this.record.setStringValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_NAME_COLUMN_NAME, name);
+            this.table.updateRecord(this.record);
+            this.name = name;
+        }
+        catch (CantNotUpdateRecord cantUpdateRecord) {
+            /**
+             * I can not solve this situation.
+             */
+            System.err.println("CantUpdateRecord: " + cantUpdateRecord.getMessage());
+            cantUpdateRecord.printStackTrace();
+            throw new OperationFailed();
+        }
     }
     
     public AccountStatus getStatus() {
@@ -117,24 +152,56 @@ class MiddlewareFiatAccount implements  FiatAccount  {
     }
 
     @Override
-    public void openAccount() {
-        this.status = AccountStatus.OPEN;
-        this.record.setStringValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_NAME, this.status.getCode());
-        this.table.updateRecord(this.record);
+    public void openAccount() throws OperationFailed {
+
+        try {
+            this.record.setStringValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_NAME, AccountStatus.OPEN.getCode());
+            this.table.updateRecord(this.record);
+            this.status = AccountStatus.OPEN;
+        }
+        catch (CantNotUpdateRecord cantUpdateRecord) {
+            /**
+             * I can not solve this situation.
+             */
+            System.err.println("CantUpdateRecord: " + cantUpdateRecord.getMessage());
+            cantUpdateRecord.printStackTrace();
+            throw new OperationFailed();
+        }
     }
 
     @Override
-    public void closeAccount() {
-        this.status = AccountStatus.CLOSED;
-        this.record.setStringValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_NAME, this.status.getCode());
-        this.table.updateRecord(this.record);
+    public void closeAccount() throws OperationFailed {
+
+        try {
+            this.record.setStringValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_NAME, AccountStatus.CLOSED.getCode());
+            this.table.updateRecord(this.record);
+            this.status = AccountStatus.CLOSED;
+        }
+        catch (CantNotUpdateRecord cantUpdateRecord) {
+            /**
+             * I can not solve this situation.
+             */
+            System.err.println("CantUpdateRecord: " + cantUpdateRecord.getMessage());
+            cantUpdateRecord.printStackTrace();
+            throw new OperationFailed();
+        }
     }
 
     @Override
-    public void deleteAccount() {
-        this.status = AccountStatus.DELETED;
-        this.record.setStringValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_NAME, this.status.getCode());
-        this.table.updateRecord(this.record);
+    public void deleteAccount() throws OperationFailed {
+        try {
+            this.record.setStringValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_NAME, AccountStatus.DELETED.getCode());
+            this.table.updateRecord(this.record);
+            this.status = AccountStatus.DELETED;
+        }
+        catch (CantNotUpdateRecord cantUpdateRecord) {
+            /**
+             * I can not solve this situation.
+             */
+            System.err.println("CantUpdateRecord: " + cantUpdateRecord.getMessage());
+            cantUpdateRecord.printStackTrace();
+            throw new OperationFailed();
+        }
     }
 
 }

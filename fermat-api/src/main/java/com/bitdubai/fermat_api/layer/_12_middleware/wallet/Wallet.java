@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer._12_middleware.wallet;
 
+import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.CantCreateAccountException;
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.CantInitializeWalletException;
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.CreditFailedException;
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.TransferFailedException;
@@ -23,9 +24,9 @@ public interface Wallet {
 
     public CryptoAccount[] getCryptoAccounts();
     
-    public FiatAccount createFiatAccount (FiatCurrency fiatCurrency);
+    public FiatAccount createFiatAccount (FiatCurrency fiatCurrency) throws CantCreateAccountException;
 
-    public CryptoAccount createCryptoAccount (CryptoCurrency cryptoCurrency);
+    public CryptoAccount createCryptoAccount (CryptoCurrency cryptoCurrency)  throws CantCreateAccountException;
     
     /**
      * Transactional functionality.

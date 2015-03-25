@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer._12_middleware.wallet;
 
+import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.OperationFailed;
 import com.bitdubai.fermat_api.layer._1_definition.enums.FiatCurrency;
 
 /**
@@ -15,17 +16,17 @@ public interface FiatAccount {
 
     public String getName() ;
 
-    public void setLabel(String label) ;
+    public void setLabel(String label) throws OperationFailed;
 
-    public void setName(String name) ;
+    public void setName(String name) throws OperationFailed;
 
     public AccountStatus getStatus();
 
     public double availableBalance ();
 
-    public void openAccount();
+    public void openAccount() throws OperationFailed;
     
-    public void closeAccount();
+    public void closeAccount() throws OperationFailed;
     
-    public void deleteAccount();
+    public void deleteAccount() throws OperationFailed;
 }

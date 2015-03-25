@@ -9,7 +9,6 @@ import com.bitdubai.fermat_api.layer._12_middleware.wallet.Wallet;
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.CantCreateWalletException;
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.CantInitializeWalletException;
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.CantLoadWalletException;
-import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.CantStartWalletException;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer._1_definition.event.PlatformEvent;
@@ -297,7 +296,7 @@ public class WalletMiddlewarePluginRoot implements Service, WalletManager , Midd
         try {
             ((MiddlewareWallet) this.currentWallet).loadToMemory();
         }
-        catch (CantStartWalletException cantStartWalletException){
+        catch (CantLoadWalletException cantStartWalletException){
             /**
              * If I can not start the wallet, then this method fails.
              */

@@ -121,7 +121,7 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
     /**
      * The Start method loads the information of the wallet from the Database, and create an in memory structure.
      */
-    public void loadToMemory() throws CantStartWalletException {
+    public void loadToMemory() throws CantLoadWalletException {
 
         /**
          * Will try to open the wallets' database.
@@ -135,7 +135,7 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
              */
             System.err.println("DatabaseNotFoundException or CantOpenDatabaseException: " + exception.getMessage());
             exception.printStackTrace();
-            throw new CantStartWalletException();
+            throw new CantLoadWalletException();
         }
 
         DatabaseTable table;
@@ -144,7 +144,19 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
          * Now I will load the information into a memory structure. Firstly the fiat accounts.
          */
         table = this.database.getTable(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_NAME);
-        table.loadToMemory();
+
+        try {
+            table.loadToMemory();
+        }
+        catch (CantNotLoadTableToMemory cantLoadTableToMemory) {
+            /**
+             * I can not solve this situation.
+             */
+            System.err.println("CantInsertRecord: " + cantLoadTableToMemory.getMessage());
+            cantLoadTableToMemory.printStackTrace();
+            throw new CantLoadWalletException();
+        }
+        
 
         /**
          * Will go through the records getting each fiat account.
@@ -157,13 +169,6 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
             FiatAccount fiatAccount;
             fiatAccount = new MiddlewareFiatAccount(accountId);
 
-            fiatAccount.setLabel(record.getStringValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_LABEL_COLUMN_NAME));
-            fiatAccount.setName(record.getStringValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_NAME_COLUMN_NAME));
-            
-            ((MiddlewareFiatAccount) fiatAccount).setFiatCurrency(FiatCurrency.getByCode(record.getStringValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_FIAT_CURRENCY_COLUMN_NAME)));
-            ((MiddlewareFiatAccount) fiatAccount).setBalance(record.getlongValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME));
-            ((MiddlewareFiatAccount) fiatAccount).setStatus(AccountStatus.getByCode(record.getStringValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_NAME)));
-            
             ((MiddlewareFiatAccount) fiatAccount).setTable(table);
             ((MiddlewareFiatAccount) fiatAccount).setRecord(record);
             
@@ -174,7 +179,18 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
          * Secondly the crypto accounts.
          */
         table = this.database.getTable(MiddlewareDatabaseConstants.CRYPTO_ACCOUNTS_TABLE_NAME);
-        table.loadToMemory();
+
+        try {
+            table.loadToMemory();
+        }
+        catch (CantNotLoadTableToMemory cantLoadTableToMemory) {
+            /**
+             * I can not solve this situation.
+             */
+            System.err.println("CantInsertRecord: " + cantLoadTableToMemory.getMessage());
+            cantLoadTableToMemory.printStackTrace();
+            throw new CantLoadWalletException();
+        }
 
         /**
          * Will go through the records getting each crypto account.
@@ -186,13 +202,6 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
 
             CryptoAccount cryptoAccount;
             cryptoAccount = new MiddlewareCryptoAccount(accountId);
-
-            cryptoAccount.setLabel(record.getStringValue(MiddlewareDatabaseConstants.CRYPTO_ACCOUNTS_TABLE_LABEL_COLUMN_NAME));
-            cryptoAccount.setName(record.getStringValue(MiddlewareDatabaseConstants.CRYPTO_ACCOUNTS_TABLE_NAME_COLUMN_NAME));
-
-            ((MiddlewareCryptoAccount) cryptoAccount).setCryptoCurrency(CryptoCurrency.getByCode(record.getStringValue(MiddlewareDatabaseConstants.CRYPTO_ACCOUNTS_TABLE_CRYPTO_CURRENCY_COLUMN_NAME)));
-            ((MiddlewareCryptoAccount) cryptoAccount).setBalance(record.getlongValue(MiddlewareDatabaseConstants.CRYPTO_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME));
-            ((MiddlewareCryptoAccount) cryptoAccount).setStatus(AccountStatus.getByCode(record.getStringValue(MiddlewareDatabaseConstants.CRYPTO_ACCOUNTS_TABLE_STATUS_COLUMN_NAME)));
 
             ((MiddlewareCryptoAccount) cryptoAccount).setTable(table);
             ((MiddlewareCryptoAccount) cryptoAccount).setRecord(record);
@@ -248,7 +257,7 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
         return cryptoAccountsArray;
     }
     
-    public FiatAccount createFiatAccount (FiatCurrency fiatCurrency){
+    public FiatAccount createFiatAccount (FiatCurrency fiatCurrency) throws CantCreateAccountException {
 
         /**
          * First I get a new id for the new account.
@@ -271,20 +280,22 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
         newRecord.setStringValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_FIAT_CURRENCY_COLUMN_NAME, fiatCurrency.getCode());
         newRecord.setStringValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_NAME, MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_DEFAULT_VALUE);
 
-        table.insertRecord(newRecord);
+        try {
+            table.insertRecord(newRecord);
+        }
+        catch (CantNotInsertRecord cantInsertRecord) {
+            /**
+             * I can not solve this situation.
+             */
+            System.err.println("CantInsertRecord: " + cantInsertRecord.getMessage());
+            cantInsertRecord.printStackTrace();
+            throw new CantCreateAccountException();
+        }
         
         /**
          * Finally I update the information in memory.
          */
         FiatAccount fiatAccount = new MiddlewareFiatAccount(id);
-        
-        ((MiddlewareFiatAccount) fiatAccount).setFiatCurrency(fiatCurrency);
-        ((MiddlewareFiatAccount) fiatAccount).setBalance(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_DEFAULT_VALUE);
-        ((MiddlewareFiatAccount) fiatAccount).setStatus(AccountStatus.getByCode(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_DEFAULT_VALUE));
-
-        fiatAccount.setLabel(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_LABEL_COLUMN_DEFAULT_VALUE);
-        fiatAccount.setName(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_NAME_COLUMN_DEFAULT_VALUE);
-
 
         ((MiddlewareFiatAccount) fiatAccount).setTable(table);
         ((MiddlewareFiatAccount) fiatAccount).setRecord(newRecord);
@@ -294,7 +305,7 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
         return fiatAccount;
     }
 
-    public CryptoAccount createCryptoAccount (CryptoCurrency cryptoCurrency){
+    public CryptoAccount createCryptoAccount (CryptoCurrency cryptoCurrency) throws CantCreateAccountException{
   
         /**
          * First I get a new id for the new account.
@@ -317,19 +328,22 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
         newRecord.setStringValue(MiddlewareDatabaseConstants.CRYPTO_ACCOUNTS_TABLE_CRYPTO_CURRENCY_COLUMN_NAME, cryptoCurrency.getCode());
         newRecord.setStringValue(MiddlewareDatabaseConstants.CRYPTO_ACCOUNTS_TABLE_STATUS_COLUMN_NAME, MiddlewareDatabaseConstants.CRYPTO_ACCOUNTS_TABLE_STATUS_COLUMN_DEFAULT_VALUE);
 
-        table.insertRecord(newRecord);
+        try {
+            table.insertRecord(newRecord);
+        }
+        catch (CantNotInsertRecord cantInsertRecord) {
+            /**
+             * I can not solve this situation.
+             */
+            System.err.println("CantInsertRecord: " + cantInsertRecord.getMessage());
+            cantInsertRecord.printStackTrace();
+            throw new CantCreateAccountException();
+        }
 
         /**
          * Finally I update the information in memory.
          */
         CryptoAccount cryptoAccount = new MiddlewareCryptoAccount(id);
-        
-        ((MiddlewareCryptoAccount) cryptoAccount).setCryptoCurrency(cryptoCurrency);
-        ((MiddlewareCryptoAccount) cryptoAccount).setBalance(MiddlewareDatabaseConstants.CRYPTO_ACCOUNTS_TABLE_BALANCE_COLUMN_DEFAULT_VALUE);
-        ((MiddlewareCryptoAccount) cryptoAccount).setStatus(AccountStatus.getByCode(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_DEFAULT_VALUE));
-
-        cryptoAccount.setLabel(MiddlewareDatabaseConstants.CRYPTO_ACCOUNTS_TABLE_LABEL_COLUMN_DEFAULT_VALUE);
-        cryptoAccount.setName(MiddlewareDatabaseConstants.CRYPTO_ACCOUNTS_TABLE_NAME_COLUMN_DEFAULT_VALUE);
 
         ((MiddlewareCryptoAccount) cryptoAccount).setTable(table);
         ((MiddlewareCryptoAccount) cryptoAccount).setRecord(newRecord);
