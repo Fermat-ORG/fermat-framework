@@ -34,3 +34,8 @@
 * Each plug-in must store their files in a folder with a name resulting of the hashing of the plug-in id.
 * If the plug-in must create files for certain objects, it should use a hash of their id as the file name. 
 * What is mentioned above is done automatically by the PluginFileSystem.
+
+
+# Exception Handling
+
+* We are not going to re-throw exceptions coming from a called plug-in to callers outside the current plug-in. In other words a plug-in cannot be bridged by an exception.

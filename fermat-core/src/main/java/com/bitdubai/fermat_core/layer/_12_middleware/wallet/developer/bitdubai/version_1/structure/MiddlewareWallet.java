@@ -369,14 +369,28 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
         transferTransaction.transfer(fiatAccountFrom, fiatAccountTo, amountFrom, amountTo, memo);
     }
 
-    @Override
-    public void debit(FiatAccount fiatAccount, long fiatAmount, CryptoAccount cryptoAccount, long cryptoAmount) throws CreditFailedException {
 
+    /**
+     * A debit transaction represents an amount of crypto currency going out of the wallet. What we actually register is the crypto 
+     * currency together with the fiat currency that represents at the moment the transaction was done.
+     * * *
+     */
+    @Override
+    public void debit(FiatAccount fiatAccount, long fiatAmount, CryptoAccount cryptoAccount, long cryptoAmount) throws DebitFailedException {
+
+        MiddlewareDebitTransaction debitTransaction = new MiddlewareDebitTransaction();
+
+        debitTransaction.setDatabase(this.database);
+        debitTransaction.setFiatAccounts(this.fiatAccounts);
+        debitTransaction.setCryptoAccounts(this.cryptoAccounts);
+
+        debitTransaction.debit(fiatAccount, fiatAmount, cryptoAccount, cryptoAmount);
+        
     }
 
     /**
      * A credit transaction represents an amount of crypto currency received. What we actually register is the crypto 
-     * currency together with the fiat currency that represents at the moment of reception.
+     * currency together with the fiat currency that represents at the moment the transaction was done.
      * * *
      */
     @Override
