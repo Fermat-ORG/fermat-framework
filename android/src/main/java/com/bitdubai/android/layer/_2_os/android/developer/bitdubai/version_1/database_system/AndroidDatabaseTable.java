@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 
+import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableColumn;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableFilter;
@@ -88,14 +89,11 @@ public class AndroidDatabaseTable implements  DatabaseTable {
     @Override
     public void updateRecord (DatabaseTableRecord record) throws CantNotUpdateRecord
     {
-        
-        // IMPORTANTE SOLO ACTUALIZAR LOS CAMPOS MARCADOS COMO QUE CAMBIARON; NO TODOS.
-        
+
         try
         {
 
-         Map<String,String> records =  record.getValues();
-        List<String> columns = this.getColumns();
+            List<DatabaseRecord> records =  record.getValues();
 
         //filter
         String  strFilter = "";
@@ -130,8 +128,15 @@ public class AndroidDatabaseTable implements  DatabaseTable {
 
         ContentValues recordUpdateList = new ContentValues();
 
-        for (int i = 0; i < columns.size(); ++i) {
-            recordUpdateList.put(columns.get(i), records.get(i));
+            /**
+             * I update only the fields marked as modified
+             *
+             */
+
+        for (int i = 0; i < records.size(); ++i) {
+
+            if(records.get(i).getChange())
+                recordUpdateList.put(records.get(i).getName(), records.get(i).getValue());
         }
 
 
@@ -160,16 +165,12 @@ public class AndroidDatabaseTable implements  DatabaseTable {
          * and construct de ContentValues array for SqlLite
          */
         try{
-            Map<String,String> recordsValues =  record.getValues();
+            List<DatabaseRecord> records =  record.getValues();
 
             ContentValues initialValues = new ContentValues();
 
-            Iterator<Map.Entry<String, String>> evalue = recordsValues.entrySet().iterator();
-
-            while (evalue.hasNext()) {
-                Map.Entry<String, String> valueEntry = evalue.next();
-                initialValues.put(valueEntry.getKey(),valueEntry.getValue());
-
+            for (int i = 0; i < records.size(); ++i) {
+                initialValues.put(records.get(i).getName(),records.get(i).getValue());
             }
 
             this.database.insert(tableName, null, initialValues);
@@ -184,12 +185,12 @@ public class AndroidDatabaseTable implements  DatabaseTable {
 
     }
 
-    public void loadToMemory(){
+    public void loadToMemory() throws CantNotLoadTableToMemory{
 
         String strFilter = "";
         this.tableRecord  = new AndroidDatabaseRecord();
-        Map<String,String> values = new HashMap<String, String>();
 
+        List<DatabaseRecord>  recordValues = new ArrayList<DatabaseRecord>();
         this.records = new ArrayList<DatabaseTableRecord>() ;
 
         //filter
@@ -222,19 +223,37 @@ public class AndroidDatabaseTable implements  DatabaseTable {
         if(strFilter.length() > 0 ) strFilter = " WHERE " + strFilter;
 
         try {
+            List<String> columns = getColumns();
             Cursor c = this.database.rawQuery("SELECT * FROM " + tableName + strFilter, null);
-            int numRows = c.getCount();
-            c.moveToFirst();
-            for (int i = 0; i < numRows; ++i) {
-                values.put(c.getColumnName(i), c.getString(i));
-                c.moveToNext();
+
+            if (c.moveToFirst()) {
+                do {
+                    /**
+                     * Get columns name to read values of files
+                     *
+                     */
+
+                    for (int i = 0; i < columns.size(); ++i) {
+                        DatabaseRecord recordValue = new AndroidRecord();
+                        recordValue = new AndroidRecord();
+                        recordValue.setName(columns.get(i).toString());
+                        recordValue.setValue(c.getString(c.getColumnIndex(columns.get(i).toString())));
+                        recordValue.setChange(false);
+                        recordValues.add(recordValue);
+                    }
+
+                } while (c.moveToNext());
             }
+
+
         } catch (Exception e) {
-            throw  e;
+            System.err.println("CantNotLoadTableToMemory: " + e.getMessage());
+            e.printStackTrace();
+            throw new CantNotLoadTableToMemory();
         }
 
 
-        tableRecord.setValues(values);
+        tableRecord.setValues(recordValues);
         this.records.add(tableRecord);
 
     }

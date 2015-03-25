@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer._2_os.database_system;
 
 
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -21,7 +22,7 @@ public interface DatabaseTableRecord {
 
     public void setlongValue (String columnName, long value);
 
-    public Map<String,String> getValues();
+    public List<DatabaseRecord> getValues();
 
-    public void setValues( Map<String,String> values );
+    public void setValues( List<DatabaseRecord> values );
 }
