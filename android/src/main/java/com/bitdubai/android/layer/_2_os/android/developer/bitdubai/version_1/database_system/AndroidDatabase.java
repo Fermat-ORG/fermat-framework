@@ -53,7 +53,9 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
 
             databasePath += "/" + databaseName.replace("-","") + ".db";
             File databaseFile = new File(databasePath);
+
             this.Database = SQLiteDatabase.openDatabase(databasePath,null,0,null);
+
           }
         catch (Exception exception) {
         
