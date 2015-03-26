@@ -55,10 +55,15 @@ class MiddlewareDatabaseConstants {
      */
     static final String VALUE_CHUNKS_TABLE_NAME = "ValueChunks";
     static final String VALUE_CHUNKS_TABLE_ID_COLUMN_NAME = "Id";
+    static final String VALUE_CHUNKS_TABLE_STATUS_COLUMN_NAME = "Status";
+    static final String VALUE_CHUNKS_TABLE_ID_PARENT_COLUMN_NAME = "IdParent";
     static final String VALUE_CHUNKS_TABLE_FIAT_CURRENCY_COLUMN_NAME = "FiatCurrency";
     static final String VALUE_CHUNKS_TABLE_FIAT_AMOUNT_COLUMN_NAME = "FiatAmount";
     static final String VALUE_CHUNKS_TABLE_CRYPTO_CURRENCY_COLUMN_NAME = "CryptoCurrency";
     static final String VALUE_CHUNKS_TABLE_CRYPTO_AMOUNT_COLUMN_NAME = "CryptoAmount";
+    static final String VALUE_CHUNKS_TABLE_ID_FIAT_ACCOUNT_COLUMN_NAME = "IdFiatAccount";
+    static final String VALUE_CHUNKS_TABLE_ID_CRYPTO_ACCOUNT_COLUMN_NAME = "IdCryptoAccount";
+    static final String VALUE_CHUNKS_TABLE_TIME_STAMP_COLUMN_NAME = "TimeStamp";
 
     /**
      * Debits database table definition.

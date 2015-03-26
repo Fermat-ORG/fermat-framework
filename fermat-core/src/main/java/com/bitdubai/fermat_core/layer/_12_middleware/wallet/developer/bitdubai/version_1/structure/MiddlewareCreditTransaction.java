@@ -1,9 +1,6 @@
 package com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer._12_middleware.wallet.AccountStatus;
-import com.bitdubai.fermat_api.layer._12_middleware.wallet.CreditFailedReasons;
-import com.bitdubai.fermat_api.layer._12_middleware.wallet.CryptoAccount;
-import com.bitdubai.fermat_api.layer._12_middleware.wallet.FiatAccount;
+import com.bitdubai.fermat_api.layer._12_middleware.wallet.*;
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.CreditFailedException;
 import com.bitdubai.fermat_api.layer._2_os.database_system.Database;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTable;
@@ -38,6 +35,9 @@ class MiddlewareCreditTransaction {
 
     void credit(FiatAccount fiatAccount, long fiatAmount, CryptoAccount cryptoAccount, long cryptoAmount) throws CreditFailedException {
 
+        long unixTime = System.currentTimeMillis() / 1000L;
+        
+        
         /**
          * First I will check the accounts received belongs to this wallet.
          */
@@ -110,12 +110,17 @@ class MiddlewareCreditTransaction {
 
         UUID valueChunkRecordId = UUID.randomUUID();
 
-        valueChunkRecord.setUUIDValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_NAME , valueChunkRecordId);
+        valueChunkRecord.setUUIDValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_ID_COLUMN_NAME , valueChunkRecordId);
+        valueChunkRecord.setStringValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_STATUS_COLUMN_NAME, CryptoValueChunkStatus.UNSPENT.getCode());
+        valueChunkRecord.setUUIDValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_ID_PARENT_COLUMN_NAME, UUID.fromString(""));
         valueChunkRecord.setStringValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_FIAT_CURRENCY_COLUMN_NAME, fiatAccount.getFiatCurrency().getCode());
         valueChunkRecord.setlongValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_FIAT_AMOUNT_COLUMN_NAME, fiatAmount);
         valueChunkRecord.setStringValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_CRYPTO_CURRENCY_COLUMN_NAME, cryptoAccount.getCryptoCurrency().getCode());
         valueChunkRecord.setlongValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_CRYPTO_AMOUNT_COLUMN_NAME, cryptoAmount);
-
+        valueChunkRecord.setUUIDValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_ID_FIAT_ACCOUNT_COLUMN_NAME , ((MiddlewareFiatAccount) inMemoryFiatAccount).getId());
+        valueChunkRecord.setUUIDValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_ID_CRYPTO_ACCOUNT_COLUMN_NAME , ((MiddlewareCryptoAccount) inMemoryCryptoAccount).getId());
+        valueChunkRecord.setlongValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_TIME_STAMP_COLUMN_NAME, unixTime);
+        
         /**
          * Here I create the credit record for historical purposes.
          */
@@ -128,7 +133,7 @@ class MiddlewareCreditTransaction {
         creditRecord.setUUIDValue(MiddlewareDatabaseConstants.CREDITS_TABLE_ID_CRYPTO_ACCOUNT_COLUMN_NAME, ((MiddlewareFiatAccount) inMemoryCryptoAccount).getId());
         creditRecord.setlongValue(MiddlewareDatabaseConstants.CREDITS_TABLE_ID_CRYPTO_ACCOUNT_COLUMN_NAME, cryptoAmount);
         creditRecord.setUUIDValue(MiddlewareDatabaseConstants.CREDITS_TABLE_ID_VALUE_CHUNK_COLUMN_NAME, valueChunkRecordId);
-        creditRecord.setlongValue(MiddlewareDatabaseConstants.CREDITS_TABLE_TIME_STAMP_COLUMN_NAME,  System.currentTimeMillis() / 1000L);
+        creditRecord.setlongValue(MiddlewareDatabaseConstants.CREDITS_TABLE_TIME_STAMP_COLUMN_NAME,  unixTime);
 
         /**
          * Then I execute the database transaction.
