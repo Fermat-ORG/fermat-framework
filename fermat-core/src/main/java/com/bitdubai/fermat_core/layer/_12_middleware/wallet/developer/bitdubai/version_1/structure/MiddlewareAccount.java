@@ -454,5 +454,6 @@ class MiddlewareAccount implements  AccountService, DealsWithCryptoIndex,  Deals
         }
 
         this.previousAvailableBalance = this.availableBalance;
+        
     }
 }

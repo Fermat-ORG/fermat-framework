@@ -182,16 +182,16 @@ public class MiddlewareWallet implements DealsWithCryptoIndex, DealsWithEvents, 
          * Then I add the new record to the database.
          */
         DatabaseTable table;
-        table = this.database.getTable(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_NAME);
+        table = this.database.getTable(MiddlewareDatabaseConstants.ACCOUNTS_TABLE_NAME);
 
         DatabaseTableRecord newRecord;
         newRecord = table.getEmptyRecord();
         
-        newRecord.setUUIDValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_ID_COLUMN_NAME, id);
-        newRecord.setStringValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_LABEL_COLUMN_NAME, MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_LABEL_COLUMN_DEFAULT_VALUE);
-        newRecord.setStringValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_NAME_COLUMN_NAME, MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_NAME_COLUMN_DEFAULT_VALUE);
-        newRecord.setStringValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_FIAT_CURRENCY_COLUMN_NAME, fiatCurrency.getCode());
-        newRecord.setStringValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_NAME, MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_DEFAULT_VALUE);
+        newRecord.setUUIDValue(MiddlewareDatabaseConstants.ACCOUNTS_TABLE_ID_COLUMN_NAME, id);
+        newRecord.setStringValue(MiddlewareDatabaseConstants.ACCOUNTS_TABLE_LABEL_COLUMN_NAME, MiddlewareDatabaseConstants.ACCOUNTS_TABLE_LABEL_COLUMN_DEFAULT_VALUE);
+        newRecord.setStringValue(MiddlewareDatabaseConstants.ACCOUNTS_TABLE_NAME_COLUMN_NAME, MiddlewareDatabaseConstants.ACCOUNTS_TABLE_NAME_COLUMN_DEFAULT_VALUE);
+        newRecord.setStringValue(MiddlewareDatabaseConstants.ACCOUNTS_TABLE_FIAT_CURRENCY_COLUMN_NAME, fiatCurrency.getCode());
+        newRecord.setStringValue(MiddlewareDatabaseConstants.ACCOUNTS_TABLE_STATUS_COLUMN_NAME, MiddlewareDatabaseConstants.ACCOUNTS_TABLE_STATUS_COLUMN_DEFAULT_VALUE);
 
         try {
             table.insertRecord(newRecord);
@@ -293,7 +293,7 @@ public class MiddlewareWallet implements DealsWithCryptoIndex, DealsWithEvents, 
         /**
          * Now I will load the information into a memory structure. Firstly the fiat accounts.
          */
-        table = this.database.getTable(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_NAME);
+        table = this.database.getTable(MiddlewareDatabaseConstants.ACCOUNTS_TABLE_NAME);
 
         try {
             table.loadToMemory();
@@ -314,7 +314,7 @@ public class MiddlewareWallet implements DealsWithCryptoIndex, DealsWithEvents, 
         for (DatabaseTableRecord record : table.getRecords()) {
 
             UUID accountId;
-            accountId = record.getUUIDValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_ID_COLUMN_NAME);
+            accountId = record.getUUIDValue(MiddlewareDatabaseConstants.ACCOUNTS_TABLE_ID_COLUMN_NAME);
 
             Account account;
             account = new MiddlewareAccount(accountId);
