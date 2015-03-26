@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseFactory;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableColumn;
+import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.CantCreateTableException;
@@ -18,6 +19,7 @@ import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.InvalidOwn
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantOpenDatabaseException;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import java.io.File;
@@ -118,7 +120,7 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
     @Override
     public DatabaseTransaction newTransaction(){
 
-        return databaseTransaction;
+        return databaseTransaction = new AndroidDatabaseTransaction();
     }
 
     @Override
@@ -132,6 +134,39 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
     @Override
     public void executeTransaction(DatabaseTransaction transaction) throws DatabaseTransactionFailedException{
 
+        /**
+         * I get tablets and records to insert or update
+         * then make sql sentences
+         */
+
+        List<DatabaseTable> insertTables = transaction.getTablesToInsert();
+        List<DatabaseTable> updateTables = transaction.getTablesToUpdate();
+        List<DatabaseTableRecord> updateRecords = transaction.getRecordsToUpdate();
+        List<DatabaseTableRecord> insertRecords = transaction.getRecordsToInsert();
+        try{
+            this.Database.beginTransaction(); // EXCLUSIVE
+
+            //update
+           for (int i = 0; i < updateTables.size(); ++i){
+               updateTables.get(i).updateRecord(updateRecords.get(i));
+           }
+
+            //insert
+            for (int i = 0; i < insertTables.size(); ++i){
+                insertTables.get(i).insertRecord(insertRecords.get(i));
+            }
+
+            this.Database.setTransactionSuccessful();
+            this.Database.endTransaction();
+        }catch(Exception e)
+        {
+            /**
+             * for error not complete transaction
+             */
+            System.err.println("DatabaseTransactionFailedException: " + e.getMessage());
+            e.printStackTrace();
+            throw new DatabaseTransactionFailedException();
+        } 
     }
 
     /**
