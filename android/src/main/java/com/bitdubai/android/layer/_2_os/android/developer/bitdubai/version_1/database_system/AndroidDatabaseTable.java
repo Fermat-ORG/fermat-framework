@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 
+import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableColumn;
@@ -15,6 +16,7 @@ import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 
 /**
@@ -68,11 +70,13 @@ public class AndroidDatabaseTable implements  DatabaseTable {
         return record;
     }
 
+    @Override
     public void addFilter (DatabaseTableFilter filter)
     {
         tableFilter.add(filter);
     }
 
+    @Override
     public void clearAllFilters()
     {
         this.tableFilter = null;
@@ -182,6 +186,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
 
     }
 
+    @Override
     public void loadToMemory() throws CantLoadTableToMemory {
 
         String strFilter = "";
@@ -255,7 +260,14 @@ public class AndroidDatabaseTable implements  DatabaseTable {
 
     }
 
+    @Override
+    public void setStringFilter(String columName, String value,DatabaseFilterType type){
 
+    }
 
+    @Override
+    public void setUUIDFilter(String columName, UUID value,DatabaseFilterType type){
+
+    }
 }
 
