@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.OperationF
 import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.CantNotUpdateRecord;
+import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.CantUpdateRecord;
 
 import java.util.UUID;
 
@@ -112,7 +112,7 @@ class MiddlewareCryptoAccount implements CryptoAccount{
             this.table.updateRecord(this.record);
             this.label = label;
         }
-        catch (CantNotUpdateRecord cantUpdateRecord) {
+        catch (CantUpdateRecord cantUpdateRecord) {
             /**
              * I can not solve this situation.
              */
@@ -129,7 +129,7 @@ class MiddlewareCryptoAccount implements CryptoAccount{
             this.table.updateRecord(this.record);
             this.name = name;
         }
-        catch (CantNotUpdateRecord cantUpdateRecord) {
+        catch (CantUpdateRecord cantUpdateRecord) {
             /**
              * I can not solve this situation.
              */
@@ -151,7 +151,7 @@ class MiddlewareCryptoAccount implements CryptoAccount{
             this.table.updateRecord(this.record);
             this.status = AccountStatus.OPEN;
         }
-        catch (CantNotUpdateRecord cantUpdateRecord) {
+        catch (CantUpdateRecord cantUpdateRecord) {
             /**
              * I can not solve this situation.
              */
@@ -169,7 +169,7 @@ class MiddlewareCryptoAccount implements CryptoAccount{
             this.table.updateRecord(this.record);
             this.status = AccountStatus.CLOSED;
         }
-        catch (CantNotUpdateRecord cantUpdateRecord) {
+        catch (CantUpdateRecord cantUpdateRecord) {
             /**
              * I can not solve this situation.
              */
@@ -186,7 +186,7 @@ class MiddlewareCryptoAccount implements CryptoAccount{
             this.table.updateRecord(this.record);
             this.status = AccountStatus.DELETED;
         }
-        catch (CantNotUpdateRecord cantUpdateRecord) {
+        catch (CantUpdateRecord cantUpdateRecord) {
             /**
              * I can not solve this situation.
              */

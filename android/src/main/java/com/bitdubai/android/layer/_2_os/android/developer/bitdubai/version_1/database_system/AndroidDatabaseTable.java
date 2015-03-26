@@ -14,10 +14,7 @@ import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -87,7 +84,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
     }
 
     @Override
-    public void updateRecord (DatabaseTableRecord record) throws CantNotUpdateRecord
+    public void updateRecord (DatabaseTableRecord record) throws CantUpdateRecord
     {
 
         try
@@ -147,7 +144,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
 
             System.err.println("CantNotUpdateRecord: " + exception.getMessage());
             exception.printStackTrace();
-            throw new CantNotUpdateRecord();
+            throw new CantUpdateRecord();
         }
     }
 
@@ -158,7 +155,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
 
 
 
-    public void insertRecord(DatabaseTableRecord record) throws CantNotInsertRecord  {
+    public void insertRecord(DatabaseTableRecord record) throws CantInsertRecord {
 
         /**
          * First I get the table records with values.
@@ -179,13 +176,13 @@ public class AndroidDatabaseTable implements  DatabaseTable {
 
             System.err.println("CantNotInsertRecord: " + exception.getMessage());
             exception.printStackTrace();
-            throw new CantNotInsertRecord();
+            throw new CantInsertRecord();
           }
 
 
     }
 
-    public void loadToMemory() throws CantNotLoadTableToMemory{
+    public void loadToMemory() throws CantLoadTableToMemory {
 
         String strFilter = "";
         this.tableRecord  = new AndroidDatabaseRecord();
@@ -249,7 +246,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
         } catch (Exception e) {
             System.err.println("CantNotLoadTableToMemory: " + e.getMessage());
             e.printStackTrace();
-            throw new CantNotLoadTableToMemory();
+            throw new CantLoadTableToMemory();
         }
 
 

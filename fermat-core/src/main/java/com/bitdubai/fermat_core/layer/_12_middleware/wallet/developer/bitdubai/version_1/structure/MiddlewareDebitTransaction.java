@@ -18,7 +18,7 @@ import java.util.UUID;
 /**
  * Created by ciencias on 3/25/15.
  */
-public class MiddlewareDebitTransaction  {
+class MiddlewareDebitTransaction  {
 
     private Database database;
     private Map<UUID, FiatAccount> fiatAccounts;
@@ -78,6 +78,12 @@ public class MiddlewareDebitTransaction  {
             throw new DebitFailedException(DebitFailedReasons.CRYPTO_ACCOUNT_NOT_OPEN);
         }
 
+        
+        
+        
+        
+        
+        
         /**
          * Then I will lock the accounts involved in the transaction.
          */

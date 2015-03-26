@@ -6,8 +6,13 @@ import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer._1_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer._2_os.database_system.*;
 import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.*;
-import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableFactory;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.DealsWithEvents;
+import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.exceptions.CantStartAccountException;
+import com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.exceptions.CantStartWalletException;
+import com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.interfaces.AccountService;
+import com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.interfaces.WalletService;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -34,9 +39,13 @@ import java.util.UUID;
  * * * 
  */
 
-public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  {
+public class MiddlewareWallet implements DealsWithEvents, DealsWithPluginDatabaseSystem, Wallet, WalletService {
 
-
+    /**
+     * DealWithEvents Interface member variables.
+     */
+    private EventManager eventManager;
+    
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
@@ -70,7 +79,15 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
         this.walletId = UUID.randomUUID();
     }
 
-    
+    /**
+     * DealWithEvents Interface implementation.
+     */
+
+    @Override
+    public void setEventManager(EventManager eventManager) {
+        this.eventManager = eventManager;
+    }
+
     /**
      * MiddlewareWallet Interface implementation.
      */
@@ -118,98 +135,8 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
 
     }
     
-    /**
-     * The Start method loads the information of the wallet from the Database, and create an in memory structure.
-     */
-    public void loadToMemory() throws CantLoadWalletException {
 
-        /**
-         * Will try to open the wallets' database.
-         */
-        try {
-            this.database = this.pluginDatabaseSystem.openDatabase(this.ownerId, this.walletId.toString());
-        }
-        catch (DatabaseNotFoundException  | CantOpenDatabaseException exception ) {
-            /**
-             * I can not solve this situation.
-             */
-            System.err.println("DatabaseNotFoundException or CantOpenDatabaseException: " + exception.getMessage());
-            exception.printStackTrace();
-            throw new CantLoadWalletException();
-        }
 
-        DatabaseTable table;
-        
-        /**
-         * Now I will load the information into a memory structure. Firstly the fiat accounts.
-         */
-        table = this.database.getTable(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_NAME);
-
-        try {
-            table.loadToMemory();
-        }
-        catch (CantNotLoadTableToMemory cantLoadTableToMemory) {
-            /**
-             * I can not solve this situation.
-             */
-            System.err.println("CantInsertRecord: " + cantLoadTableToMemory.getMessage());
-            cantLoadTableToMemory.printStackTrace();
-            throw new CantLoadWalletException();
-        }
-        
-
-        /**
-         * Will go through the records getting each fiat account.
-         */
-        for (DatabaseTableRecord record : table.getRecords()) {
-            
-            UUID accountId;
-            accountId = record.getUUIDValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_ID_COLUMN_NAME);
-            
-            FiatAccount fiatAccount;
-            fiatAccount = new MiddlewareFiatAccount(accountId);
-
-            ((MiddlewareFiatAccount) fiatAccount).setTable(table);
-            ((MiddlewareFiatAccount) fiatAccount).setRecord(record);
-            
-            fiatAccounts.put(accountId, fiatAccount);
-        }
-
-        /**
-         * Secondly the crypto accounts.
-         */
-        table = this.database.getTable(MiddlewareDatabaseConstants.CRYPTO_ACCOUNTS_TABLE_NAME);
-
-        try {
-            table.loadToMemory();
-        }
-        catch (CantNotLoadTableToMemory cantLoadTableToMemory) {
-            /**
-             * I can not solve this situation.
-             */
-            System.err.println("CantInsertRecord: " + cantLoadTableToMemory.getMessage());
-            cantLoadTableToMemory.printStackTrace();
-            throw new CantLoadWalletException();
-        }
-
-        /**
-         * Will go through the records getting each crypto account.
-         */
-        for (DatabaseTableRecord record : table.getRecords()) {
-
-            UUID accountId;
-            accountId = record.getUUIDValue(MiddlewareDatabaseConstants.CRYPTO_ACCOUNTS_TABLE_ID_COLUMN_NAME);
-
-            CryptoAccount cryptoAccount;
-            cryptoAccount = new MiddlewareCryptoAccount(accountId);
-
-            ((MiddlewareCryptoAccount) cryptoAccount).setTable(table);
-            ((MiddlewareCryptoAccount) cryptoAccount).setRecord(record);
-
-            cryptoAccounts.put(accountId, cryptoAccount);
-        }
-        
-    }
 
     /**
      * DealsWithPluginDatabaseSystem Interface implementation.
@@ -283,7 +210,7 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
         try {
             table.insertRecord(newRecord);
         }
-        catch (CantNotInsertRecord cantInsertRecord) {
+        catch (CantInsertRecord cantInsertRecord) {
             /**
              * I can not solve this situation.
              */
@@ -331,7 +258,7 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
         try {
             table.insertRecord(newRecord);
         }
-        catch (CantNotInsertRecord cantInsertRecord) {
+        catch (CantInsertRecord cantInsertRecord) {
             /**
              * I can not solve this situation.
              */
@@ -405,6 +332,121 @@ public class MiddlewareWallet implements DealsWithPluginDatabaseSystem, Wallet  
         creditTransaction.credit(fiatAccount, fiatAmount, cryptoAccount, cryptoAmount);
 
     }
-    
 
+
+    /**
+     * Wallet Service Interface implementation.
+     */
+    
+    /**
+     * The Start method loads the information of the wallet from the Database, and create an in memory structure.
+     */
+    @Override
+    public void start() throws CantStartWalletException {
+        /**
+         * Will try to open the wallets' database.
+         */
+        try {
+            this.database = this.pluginDatabaseSystem.openDatabase(this.ownerId, this.walletId.toString());
+        }
+        catch (DatabaseNotFoundException  | CantOpenDatabaseException exception ) {
+            /**
+             * I can not solve this situation.
+             */
+            System.err.println("DatabaseNotFoundException or CantOpenDatabaseException: " + exception.getMessage());
+            exception.printStackTrace();
+            throw new CantStartWalletException();
+        }
+
+        DatabaseTable table;
+
+        /**
+         * Now I will load the information into a memory structure. Firstly the fiat accounts.
+         */
+        table = this.database.getTable(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_NAME);
+
+        try {
+            table.loadToMemory();
+        }
+        catch (CantLoadTableToMemory cantLoadTableToMemory) {
+            /**
+             * I can not solve this situation.
+             */
+            System.err.println("CantInsertRecord: " + cantLoadTableToMemory.getMessage());
+            cantLoadTableToMemory.printStackTrace();
+            throw new CantStartWalletException();
+        }
+
+
+        /**
+         * Will go through the records getting each fiat account.
+         */
+        for (DatabaseTableRecord record : table.getRecords()) {
+
+            UUID accountId;
+            accountId = record.getUUIDValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_ID_COLUMN_NAME);
+
+            FiatAccount fiatAccount;
+            fiatAccount = new MiddlewareFiatAccount(accountId);
+
+            ((MiddlewareFiatAccount) fiatAccount).setTable(table);
+            ((MiddlewareFiatAccount) fiatAccount).setRecord(record);
+
+            ((DealsWithEvents) fiatAccount).setEventManager(this.eventManager);
+
+            try {
+                ((AccountService) fiatAccount).start();
+            }
+            catch (CantStartAccountException cantStartAccountException){
+                /**
+                 * If an Account can not be started is not critical for not starting the wallet. Although something should
+                 * be done, I will leave it like this for the moment.
+                 * * * 
+                 */
+                System.err.println("CantStartAccountException: " + cantStartAccountException.getMessage());
+                cantStartAccountException.printStackTrace();
+            }
+
+            fiatAccounts.put(accountId, fiatAccount);
+        }
+
+        /**
+         * Secondly the crypto accounts.
+         */
+        table = this.database.getTable(MiddlewareDatabaseConstants.CRYPTO_ACCOUNTS_TABLE_NAME);
+
+        try {
+            table.loadToMemory();
+        }
+        catch (CantLoadTableToMemory cantLoadTableToMemory) {
+            /**
+             * I can not solve this situation.
+             */
+            System.err.println("CantInsertRecord: " + cantLoadTableToMemory.getMessage());
+            cantLoadTableToMemory.printStackTrace();
+            throw new CantStartWalletException();
+        }
+
+        /**
+         * Will go through the records getting each crypto account.
+         */
+        for (DatabaseTableRecord record : table.getRecords()) {
+
+            UUID accountId;
+            accountId = record.getUUIDValue(MiddlewareDatabaseConstants.CRYPTO_ACCOUNTS_TABLE_ID_COLUMN_NAME);
+
+            CryptoAccount cryptoAccount;
+            cryptoAccount = new MiddlewareCryptoAccount(accountId);
+
+            ((MiddlewareCryptoAccount) cryptoAccount).setTable(table);
+            ((MiddlewareCryptoAccount) cryptoAccount).setRecord(record);
+
+            cryptoAccounts.put(accountId, cryptoAccount);
+        }
+    }
+
+    @Override
+    public void stop() {
+
+    }
 }

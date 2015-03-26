@@ -28,6 +28,8 @@ import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventSour
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventType;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.WalletCreatedEvent;
 import com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.event_handlers.WalletCreatedEventHandler;
+import com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.exceptions.CantStartWalletException;
+import com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.interfaces.WalletService;
 import com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.structure.MiddlewareWallet;
 
 import java.util.*;
@@ -225,6 +227,7 @@ public class WalletMiddlewarePluginRoot implements Service, WalletManager , Midd
          */
         MiddlewareWallet newWallet = new MiddlewareWallet(this.pluginId);
         newWallet.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+        newWallet.setEventManager(this.eventManager);
         
         try {
             newWallet.initialize();
@@ -292,11 +295,13 @@ public class WalletMiddlewarePluginRoot implements Service, WalletManager , Midd
          * Finally I fire the event announcing the new wallet was created.
          */
         this.currentWallet = new MiddlewareWallet(walletId);
+        ((DealsWithPluginDatabaseSystem) this.currentWallet).setPluginDatabaseSystem(this.pluginDatabaseSystem);
+        ((DealsWithEvents) this.currentWallet).setEventManager(this.eventManager);
      
         try {
-            ((MiddlewareWallet) this.currentWallet).loadToMemory();
+            ((WalletService) this.currentWallet).start();
         }
-        catch (CantLoadWalletException cantStartWalletException){
+        catch (CantStartWalletException cantStartWalletException){
             /**
              * If I can not start the wallet, then this method fails.
              */
@@ -323,6 +328,7 @@ public class WalletMiddlewarePluginRoot implements Service, WalletManager , Midd
     /**
      * DealsWithPluginDatabaseSystem Interface implementation.
      */
+    
     @Override
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
@@ -331,7 +337,7 @@ public class WalletMiddlewarePluginRoot implements Service, WalletManager , Midd
     /**
      * DealWithEvents Interface implementation.
      */
-
+    
     @Override
     public void setEventManager(EventManager eventManager) {
         this.eventManager = eventManager;

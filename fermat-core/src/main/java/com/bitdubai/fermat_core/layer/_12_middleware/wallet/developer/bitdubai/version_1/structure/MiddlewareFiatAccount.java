@@ -2,14 +2,16 @@ package com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.
 
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.AccountStatus;
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.FiatAccount;
-import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.OperationFailed;
 import com.bitdubai.fermat_api.layer._1_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.CantNotUpdateRecord;
-import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer._2_os.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.CantUpdateRecord;
+import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.DealsWithEvents;
+import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.exceptions.CantStartAccountException;
+import com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.interfaces.AccountService;
 
 import java.util.UUID;
 
@@ -17,7 +19,7 @@ import java.util.UUID;
  * Created by ciencias on 2/15/15.
  */
 
-class MiddlewareFiatAccount implements  FiatAccount  {
+class MiddlewareFiatAccount implements  AccountService, DealsWithEvents,FiatAccount  {
 
 
     /**
@@ -25,6 +27,11 @@ class MiddlewareFiatAccount implements  FiatAccount  {
      */
     private DatabaseTable table;
     private DatabaseTableRecord record;
+
+    /**
+     * DealWithEvents Interface member variables.
+     */
+    private EventManager eventManager;
 
     /**
      * FiatAccount Interface member variables.
@@ -43,6 +50,9 @@ class MiddlewareFiatAccount implements  FiatAccount  {
         this.id = id;
     }
 
+
+
+    
     /**
      * MiddlewareFiatAccount interface implementation.
      * 
@@ -90,6 +100,29 @@ class MiddlewareFiatAccount implements  FiatAccount  {
     }
 
     /**
+     * AccountService interface implementation.
+     */
+    @Override
+    public void start() throws CantStartAccountException {
+
+    }
+
+    @Override
+    public void stop() {
+
+    }
+
+    /**
+     * DealWithEvents Interface implementation.
+     */
+
+    @Override
+    public void setEventManager(EventManager eventManager) {
+        this.eventManager = eventManager;
+    }
+    
+    
+    /**
      * FiatAccount interface implementation.
      */
     public long getBalance() {
@@ -115,7 +148,7 @@ class MiddlewareFiatAccount implements  FiatAccount  {
             this.table.updateRecord(this.record);
             this.label = label;
         }
-        catch (CantNotUpdateRecord cantUpdateRecord) {
+        catch (CantUpdateRecord cantUpdateRecord) {
             /**
              * I can not solve this situation.
              */
@@ -132,7 +165,7 @@ class MiddlewareFiatAccount implements  FiatAccount  {
             this.table.updateRecord(this.record);
             this.name = name;
         }
-        catch (CantNotUpdateRecord cantUpdateRecord) {
+        catch (CantUpdateRecord cantUpdateRecord) {
             /**
              * I can not solve this situation.
              */
@@ -159,7 +192,7 @@ class MiddlewareFiatAccount implements  FiatAccount  {
             this.table.updateRecord(this.record);
             this.status = AccountStatus.OPEN;
         }
-        catch (CantNotUpdateRecord cantUpdateRecord) {
+        catch (CantUpdateRecord cantUpdateRecord) {
             /**
              * I can not solve this situation.
              */
@@ -177,7 +210,7 @@ class MiddlewareFiatAccount implements  FiatAccount  {
             this.table.updateRecord(this.record);
             this.status = AccountStatus.CLOSED;
         }
-        catch (CantNotUpdateRecord cantUpdateRecord) {
+        catch (CantUpdateRecord cantUpdateRecord) {
             /**
              * I can not solve this situation.
              */
@@ -194,7 +227,7 @@ class MiddlewareFiatAccount implements  FiatAccount  {
             this.table.updateRecord(this.record);
             this.status = AccountStatus.DELETED;
         }
-        catch (CantNotUpdateRecord cantUpdateRecord) {
+        catch (CantUpdateRecord cantUpdateRecord) {
             /**
              * I can not solve this situation.
              */
@@ -203,5 +236,6 @@ class MiddlewareFiatAccount implements  FiatAccount  {
             throw new OperationFailed();
         }
     }
+
 
 }

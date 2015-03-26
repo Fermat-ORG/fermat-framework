@@ -22,11 +22,11 @@ public interface DatabaseTable {
     
     public List<DatabaseTableFilter> getFilters();
     
-    public void updateRecord (DatabaseTableRecord record) throws CantNotUpdateRecord;
+    public void updateRecord (DatabaseTableRecord record) throws CantUpdateRecord;
 
-    public void insertRecord (DatabaseTableRecord record) throws CantNotInsertRecord;
+    public void insertRecord (DatabaseTableRecord record) throws CantInsertRecord;
 
-    public void loadToMemory() throws CantNotLoadTableToMemory;
+    public void loadToMemory() throws CantLoadTableToMemory;
 
 
 
