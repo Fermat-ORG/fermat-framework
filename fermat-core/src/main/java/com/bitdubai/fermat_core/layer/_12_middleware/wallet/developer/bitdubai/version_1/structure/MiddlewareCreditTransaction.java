@@ -2,6 +2,8 @@ package com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.
 
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.*;
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.CreditFailedException;
+import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.TransferFailedException;
+import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer._2_os.database_system.Database;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableRecord;
@@ -17,23 +19,17 @@ import java.util.UUID;
 class MiddlewareCreditTransaction {
 
     private Database database;
-    private Map<UUID, FiatAccount> fiatAccounts;
-    private Map<UUID,CryptoAccount> cryptoAccounts;
+    private Map<UUID, Account> fiatAccounts;
 
     void setDatabase(Database database) {
         this.database = database;
     }
 
-    void setFiatAccounts(Map<UUID, FiatAccount> fiatAccounts) {
+    void setFiatAccounts(Map<UUID, Account> fiatAccounts) {
         this.fiatAccounts = fiatAccounts;
     }
 
-    public void setCryptoAccounts(Map<UUID, CryptoAccount> cryptoAccounts) {
-        this.cryptoAccounts = cryptoAccounts;
-    }
-
-
-    void credit(FiatAccount fiatAccount, long fiatAmount, CryptoAccount cryptoAccount, long cryptoAmount) throws CreditFailedException {
+    void credit(Account account, long fiatAmount, CryptoCurrency cryptoCurrency, long cryptoAmount) throws CreditFailedException {
 
         long unixTime = System.currentTimeMillis() / 1000L;
 
@@ -43,7 +39,7 @@ class MiddlewareCreditTransaction {
          */
         
         if (fiatAmount <= 0) {
-            throw new CreditFailedException(CreditFailedReasons.FIAT_AMOUNT_MUST_BE_OVER_ZERO);
+            throw new CreditFailedException(CreditFailedReasons.AMOUNT_MUST_BE_OVER_ZERO);
         }
 
         if (cryptoAmount <= 0) {
@@ -51,70 +47,30 @@ class MiddlewareCreditTransaction {
         }
 
         /**
-         * I will check the accounts received belongs to this wallet.
+         * I will check the account received belongs to this wallet.
          */
-        FiatAccount inMemoryFiatAccount;
-        inMemoryFiatAccount = fiatAccounts.get(((MiddlewareFiatAccount) fiatAccount).getId());
+        Account inMemoryAccount;
+        inMemoryAccount = fiatAccounts.get(((MiddlewareAccount) account).getId());
 
-        if ( inMemoryFiatAccount == null ) {
-            throw new CreditFailedException(CreditFailedReasons.FIAT_ACCOUNT_DOES_NOT_BELONG_TO_THIS_WALLET);
-        }
-
-        CryptoAccount inMemoryCryptoAccount;
-        inMemoryCryptoAccount = cryptoAccounts.get(((MiddlewareCryptoAccount) cryptoAccount).getId());
-
-        if ( inMemoryCryptoAccount == null ) {
-            throw new CreditFailedException(CreditFailedReasons.CRYPTO_ACCOUNT_DOES_NOT_BELONG_TO_THIS_WALLET);
+        if ( inMemoryAccount == null ) {
+            throw new CreditFailedException(CreditFailedReasons.ACCOUNT_DOES_NOT_BELONG_TO_THIS_WALLET);
         }
 
         /**
-         * Then I will check if the accounts are not already locked.
+         * Then I will check if the account is not locked.
          */
-        if (inMemoryFiatAccount.getStatus() == AccountStatus.LOCKED) {
-            throw new CreditFailedException(CreditFailedReasons.FIAT_ACCOUNT_ALREADY_LOCKED);
-        }
-
-        if (inMemoryCryptoAccount.getStatus() == AccountStatus.LOCKED) {
-            throw new CreditFailedException(CreditFailedReasons.CRYPTO_ACCOUNT_ALREADY_LOCKED);
+        if (((MiddlewareAccount) inMemoryAccount).getLockStatus() == AccountLockStatus.LOCKED) {
+            throw new CreditFailedException(CreditFailedReasons.ACCOUNT_ALREADY_LOCKED);
         }
 
         /**
-         * Then I will check if the accounts are not open.
+         * Then I will check if the account is not open.
          */
-        if (inMemoryFiatAccount.getStatus() != AccountStatus.OPEN) {
-            throw new CreditFailedException(CreditFailedReasons.FIAT_ACCOUNT_NOT_OPEN);
+        if (inMemoryAccount.getStatus() != AccountStatus.OPEN) {
+            throw new CreditFailedException(CreditFailedReasons.ACCOUNT_NOT_OPEN);
         }
 
-        if (inMemoryCryptoAccount.getStatus() != AccountStatus.OPEN) {
-            throw new CreditFailedException(CreditFailedReasons.CRYPTO_ACCOUNT_NOT_OPEN);
-        }
-
-        /**
-         * Then I will lock the accounts involved in the transaction.
-         */
-
-        AccountStatus currentFiatAccountStatus = inMemoryFiatAccount.getStatus();
-        AccountStatus currentCryptoAccountStatus = inMemoryCryptoAccount.getStatus();
-
-        ((MiddlewareFiatAccount) inMemoryFiatAccount).setStatus(AccountStatus.LOCKED);
-        ((MiddlewareCryptoAccount) inMemoryCryptoAccount).setStatus(AccountStatus.LOCKED);
-
-        /**
-         * Prepare everything for the execution of the database transaction.
-         */
-        long fiatAccountNewBalance = inMemoryFiatAccount.getBalance() + fiatAmount;
-        long cryptoAccountNewBalance = inMemoryCryptoAccount.getBalance() + cryptoAmount;
-
-        DatabaseTable fiatAccountTable = ((MiddlewareFiatAccount) inMemoryFiatAccount).getTable();
-        DatabaseTable cryptoAccountTable = ((MiddlewareFiatAccount) inMemoryCryptoAccount).getTable();
-
-        DatabaseTableRecord fiatAccountRecord = ((MiddlewareFiatAccount) inMemoryFiatAccount).getRecord();
-        DatabaseTableRecord cryptoAccountRecord = ((MiddlewareCryptoAccount) inMemoryCryptoAccount).getRecord();
-
-        fiatAccountRecord.setlongValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME,fiatAccountNewBalance);
-        cryptoAccountRecord.setlongValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME,cryptoAccountNewBalance);
-
-        /**
+         /**
          * I create the value chunk record.
          */
         DatabaseTable valueChunksTable = database.getTable(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_NAME);
@@ -122,15 +78,14 @@ class MiddlewareCreditTransaction {
 
         UUID valueChunkRecordId = UUID.randomUUID();
 
-        valueChunkRecord.setUUIDValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_ID_COLUMN_NAME , valueChunkRecordId);
+        valueChunkRecord.setUUIDValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_ID_COLUMN_NAME, valueChunkRecordId);
         valueChunkRecord.setStringValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_STATUS_COLUMN_NAME, CryptoValueChunkStatus.UNSPENT.getCode());
         valueChunkRecord.setUUIDValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_ID_PARENT_COLUMN_NAME, UUID.fromString(""));
-        valueChunkRecord.setStringValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_FIAT_CURRENCY_COLUMN_NAME, fiatAccount.getFiatCurrency().getCode());
+        valueChunkRecord.setStringValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_FIAT_CURRENCY_COLUMN_NAME, account.getFiatCurrency().getCode());
         valueChunkRecord.setlongValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_FIAT_AMOUNT_COLUMN_NAME, fiatAmount);
-        valueChunkRecord.setStringValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_CRYPTO_CURRENCY_COLUMN_NAME, cryptoAccount.getCryptoCurrency().getCode());
+        valueChunkRecord.setStringValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_CRYPTO_CURRENCY_COLUMN_NAME, cryptoCurrency.getCode());
         valueChunkRecord.setlongValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_CRYPTO_AMOUNT_COLUMN_NAME, cryptoAmount);
-        valueChunkRecord.setUUIDValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_ID_FIAT_ACCOUNT_COLUMN_NAME , ((MiddlewareFiatAccount) inMemoryFiatAccount).getId());
-        valueChunkRecord.setUUIDValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_ID_CRYPTO_ACCOUNT_COLUMN_NAME , ((MiddlewareCryptoAccount) inMemoryCryptoAccount).getId());
+        valueChunkRecord.setUUIDValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_ID_ACCOUNT_COLUMN_NAME , ((MiddlewareAccount) inMemoryAccount).getId());
         valueChunkRecord.setlongValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_TIME_STAMP_COLUMN_NAME, unixTime);
         
         /**
@@ -140,10 +95,9 @@ class MiddlewareCreditTransaction {
         DatabaseTableRecord creditRecord = creditsTable.getEmptyRecord();
 
         creditRecord.setUUIDValue(MiddlewareDatabaseConstants.CREDITS_TABLE_ID_COLUMN_NAME , UUID.randomUUID());
-        creditRecord.setUUIDValue(MiddlewareDatabaseConstants.CREDITS_TABLE_ID_FIAT_ACCOUNT_COLUMN_NAME, ((MiddlewareFiatAccount) inMemoryFiatAccount).getId());
+        creditRecord.setUUIDValue(MiddlewareDatabaseConstants.CREDITS_TABLE_ID_ACCOUNT_COLUMN_NAME, ((MiddlewareAccount) inMemoryAccount).getId());
         creditRecord.setlongValue(MiddlewareDatabaseConstants.CREDITS_TABLE_FIAT_AMOUNT_COLUMN_NAME, fiatAmount);
-        creditRecord.setUUIDValue(MiddlewareDatabaseConstants.CREDITS_TABLE_ID_CRYPTO_ACCOUNT_COLUMN_NAME, ((MiddlewareFiatAccount) inMemoryCryptoAccount).getId());
-        creditRecord.setlongValue(MiddlewareDatabaseConstants.CREDITS_TABLE_ID_CRYPTO_ACCOUNT_COLUMN_NAME, cryptoAmount);
+        creditRecord.setlongValue(MiddlewareDatabaseConstants.CREDITS_TABLE_CRYPTO_AMOUNT_COLUMN_NAME, cryptoAmount);
         creditRecord.setUUIDValue(MiddlewareDatabaseConstants.CREDITS_TABLE_ID_VALUE_CHUNK_COLUMN_NAME, valueChunkRecordId);
         creditRecord.setlongValue(MiddlewareDatabaseConstants.CREDITS_TABLE_TIME_STAMP_COLUMN_NAME,  unixTime);
 
@@ -151,9 +105,7 @@ class MiddlewareCreditTransaction {
          * Then I execute the database transaction.
          */
         DatabaseTransaction databaseTransaction = database.newTransaction();
-
-        databaseTransaction.addRecordToUpdate(fiatAccountTable, fiatAccountRecord);
-        databaseTransaction.addRecordToUpdate(cryptoAccountTable, cryptoAccountRecord);
+        
         databaseTransaction.addRecordToInsert(valueChunksTable, valueChunkRecord);
         databaseTransaction.addRecordToInsert(creditsTable, creditRecord);
 
@@ -161,9 +113,6 @@ class MiddlewareCreditTransaction {
             database.executeTransaction(databaseTransaction);
         }
         catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
-
-            ((MiddlewareFiatAccount) inMemoryFiatAccount).setStatus(currentFiatAccountStatus);
-            ((MiddlewareCryptoAccount) inMemoryCryptoAccount).setStatus(currentCryptoAccountStatus);
 
             /**
              * I can not solve this situation.
@@ -176,14 +125,8 @@ class MiddlewareCreditTransaction {
         /**
          * Then I update the accounts in memory.
          */
-        ((MiddlewareFiatAccount) inMemoryFiatAccount).setBalance(fiatAccountNewBalance);
-        ((MiddlewareCryptoAccount) inMemoryCryptoAccount).setBalance(cryptoAccountNewBalance);
 
-        /**
-         * Finally I release the lock.
-         */
-        ((MiddlewareFiatAccount) inMemoryFiatAccount).setStatus(currentFiatAccountStatus);
-        ((MiddlewareCryptoAccount) inMemoryCryptoAccount).setStatus(currentCryptoAccountStatus);
+        ((MiddlewareAccount) inMemoryAccount).updateBalance();
 
     }
     

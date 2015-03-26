@@ -1,16 +1,18 @@
 package com.bitdubai.fermat_api.layer._12_middleware.wallet;
 
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.OperationFailed;
-import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer._1_definition.enums.FiatCurrency;
 
 /**
  * Created by ciencias on 2/15/15.
  */
-public interface CryptoAccount {
-    
-    public long getBalance();
+public interface Account {
 
-    public CryptoCurrency getCryptoCurrency() ;
+    public long getBalance() ;
+
+    public double getAvailableBalance ();
+
+    public FiatCurrency getFiatCurrency() ;
 
     public String getLabel() ;
 
@@ -23,8 +25,8 @@ public interface CryptoAccount {
     public AccountStatus getStatus();
 
     public void openAccount() throws OperationFailed;
-
+    
     public void closeAccount() throws OperationFailed;
-
+    
     public void deleteAccount() throws OperationFailed;
 }

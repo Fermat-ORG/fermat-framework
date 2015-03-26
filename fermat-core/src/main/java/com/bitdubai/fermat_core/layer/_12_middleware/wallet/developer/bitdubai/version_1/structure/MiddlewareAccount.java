@@ -4,9 +4,10 @@ import com.bitdubai.fermat_api.layer._11_world.crypto_index.CryptoIndexManager;
 import com.bitdubai.fermat_api.layer._11_world.crypto_index.DealsWithCryptoIndex;
 import com.bitdubai.fermat_api.layer._11_world.crypto_index.exceptions.CryptoCurrencyNotSupportedException;
 import com.bitdubai.fermat_api.layer._11_world.crypto_index.exceptions.FiatCurrencyNotSupportedException;
+import com.bitdubai.fermat_api.layer._12_middleware.wallet.AccountLockStatus;
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.AccountStatus;
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.CryptoValueChunkStatus;
-import com.bitdubai.fermat_api.layer._12_middleware.wallet.FiatAccount;
+import com.bitdubai.fermat_api.layer._12_middleware.wallet.Account;
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.OperationFailed;
 import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer._1_definition.enums.FiatCurrency;
@@ -15,12 +16,10 @@ import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.CantLoadTa
 import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.CantUpdateRecord;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventManager;
-import com.bitdubai.fermat_api.layer._8_crypto.Crypto;
 import com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.exceptions.CantStartAccountException;
 import com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.interfaces.AccountService;
 
-import javax.xml.crypto.Data;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -29,7 +28,7 @@ import java.util.UUID;
  * Created by ciencias on 2/15/15.
  */
 
-class MiddlewareFiatAccount implements  AccountService, DealsWithCryptoIndex,  DealsWithEvents, FiatAccount  {
+class MiddlewareAccount implements  AccountService, DealsWithCryptoIndex,  DealsWithEvents, Account {
     
     /**
      * MiddlewareFiatAccount Interface member variables.
@@ -58,13 +57,17 @@ class MiddlewareFiatAccount implements  AccountService, DealsWithCryptoIndex,  D
     private String name = "";
     private long balance = 0;
     private long availableBalance = 0;
+    private long previousAvailableBalance = 0;
     private FiatCurrency fiatCurrency;
     private AccountStatus status;
+    private AccountLockStatus lockStatus = AccountLockStatus.UNLOCKED;
+
+
 
     /**
      * Class constructor.
      */
-    MiddlewareFiatAccount (UUID id){
+    MiddlewareAccount(UUID id){
         this.id = id;
     }
 
@@ -79,6 +82,10 @@ class MiddlewareFiatAccount implements  AccountService, DealsWithCryptoIndex,  D
      */
     UUID getId(){
         return this.id;
+    }
+
+    public AccountLockStatus getLockStatus() {
+        return lockStatus;
     }
     
     void setBalance(long balance){
@@ -109,11 +116,10 @@ class MiddlewareFiatAccount implements  AccountService, DealsWithCryptoIndex,  D
         
         this.record = record;
 
-        this.label= record.getStringValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_LABEL_COLUMN_NAME);
-        this.name = record.getStringValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_NAME_COLUMN_NAME);
-        this.fiatCurrency = FiatCurrency.getByCode(record.getStringValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_FIAT_CURRENCY_COLUMN_NAME));
-        this.balance = record.getlongValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME);
-        this.status = AccountStatus.getByCode(record.getStringValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_NAME));
+        this.label= record.getStringValue(MiddlewareDatabaseConstants.ACCOUNTS_TABLE_LABEL_COLUMN_NAME);
+        this.name = record.getStringValue(MiddlewareDatabaseConstants.ACCOUNTS_TABLE_NAME_COLUMN_NAME);
+        this.fiatCurrency = FiatCurrency.getByCode(record.getStringValue(MiddlewareDatabaseConstants.ACCOUNTS_TABLE_FIAT_CURRENCY_COLUMN_NAME));
+        this.status = AccountStatus.getByCode(record.getStringValue(MiddlewareDatabaseConstants.ACCOUNTS_TABLE_STATUS_COLUMN_NAME));
     
     }
     
@@ -127,15 +133,37 @@ class MiddlewareFiatAccount implements  AccountService, DealsWithCryptoIndex,  D
 
         try {
             calculateBalances();
+            
+            this.lockStatus = AccountLockStatus.UNLOCKED;
         }
         catch (CantCalculateBalanceException cantCalculateBalanceException){
             /**
              * There is no point to throw another exception from here since this call only comes from an Event Handler 
-             * that is going to do nothing with it.
+             * that is going to do nothing with it. I lock the account in order to not let more transactions come in.
              * * * 
              */
             System.err.println("CantCalculateBalanceException: " + cantCalculateBalanceException.getMessage());
             cantCalculateBalanceException.printStackTrace();
+
+            this.lockStatus = AccountLockStatus.LOCKED;
+        }
+    }
+
+
+    void updateBalance() {
+
+        try {
+            calculateBalances();
+        }
+        catch (CantCalculateBalanceException cantCalculateBalanceException){
+            /**
+             * I lock the account in order to not let more transactions come in.
+             * * * 
+             */
+            System.err.println("CantCalculateBalanceException: " + cantCalculateBalanceException.getMessage());
+            cantCalculateBalanceException.printStackTrace();
+            
+            this.lockStatus = AccountLockStatus.LOCKED;
         }
     }
     
@@ -149,7 +177,7 @@ class MiddlewareFiatAccount implements  AccountService, DealsWithCryptoIndex,  D
         /**
          * Check if the Account state is Open.
          */
-        if (AccountStatus.getByCode(record.getStringValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_NAME)) != AccountStatus.OPEN) {
+        if (AccountStatus.getByCode(record.getStringValue(MiddlewareDatabaseConstants.ACCOUNTS_TABLE_STATUS_COLUMN_NAME)) != AccountStatus.OPEN) {
             /**
              * An account that is not open can not be started.
              */
@@ -206,6 +234,11 @@ class MiddlewareFiatAccount implements  AccountService, DealsWithCryptoIndex,  D
         return balance;
     }
 
+    public double getAvailableBalance (){
+
+        return this.availableBalance;
+    }
+    
     public FiatCurrency getFiatCurrency() {
         return fiatCurrency;
     }
@@ -221,7 +254,7 @@ class MiddlewareFiatAccount implements  AccountService, DealsWithCryptoIndex,  D
     public void setLabel(String label) throws OperationFailed {
 
         try {
-            this.record.setStringValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_LABEL_COLUMN_NAME, label);
+            this.record.setStringValue(MiddlewareDatabaseConstants.ACCOUNTS_TABLE_LABEL_COLUMN_NAME, label);
             this.table.updateRecord(this.record);
             this.label = label;
         }
@@ -238,7 +271,7 @@ class MiddlewareFiatAccount implements  AccountService, DealsWithCryptoIndex,  D
     public void setName(String name) throws OperationFailed {
 
         try {
-            this.record.setStringValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_NAME_COLUMN_NAME, name);
+            this.record.setStringValue(MiddlewareDatabaseConstants.ACCOUNTS_TABLE_NAME_COLUMN_NAME, name);
             this.table.updateRecord(this.record);
             this.name = name;
         }
@@ -256,16 +289,13 @@ class MiddlewareFiatAccount implements  AccountService, DealsWithCryptoIndex,  D
         return this.status;
     }
     
-    public double availableBalance (){
-        
-        return 0;
-    }
+
 
     @Override
     public void openAccount() throws OperationFailed {
 
         try {
-            this.record.setStringValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_NAME, AccountStatus.OPEN.getCode());
+            this.record.setStringValue(MiddlewareDatabaseConstants.ACCOUNTS_TABLE_STATUS_COLUMN_NAME, AccountStatus.OPEN.getCode());
             this.table.updateRecord(this.record);
             this.status = AccountStatus.OPEN;
         }
@@ -283,7 +313,7 @@ class MiddlewareFiatAccount implements  AccountService, DealsWithCryptoIndex,  D
     public void closeAccount() throws OperationFailed {
 
         try {
-            this.record.setStringValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_NAME, AccountStatus.CLOSED.getCode());
+            this.record.setStringValue(MiddlewareDatabaseConstants.ACCOUNTS_TABLE_STATUS_COLUMN_NAME, AccountStatus.CLOSED.getCode());
             this.table.updateRecord(this.record);
             this.status = AccountStatus.CLOSED;
         }
@@ -300,7 +330,7 @@ class MiddlewareFiatAccount implements  AccountService, DealsWithCryptoIndex,  D
     @Override
     public void deleteAccount() throws OperationFailed {
         try {
-            this.record.setStringValue(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_NAME, AccountStatus.DELETED.getCode());
+            this.record.setStringValue(MiddlewareDatabaseConstants.ACCOUNTS_TABLE_STATUS_COLUMN_NAME, AccountStatus.DELETED.getCode());
             this.table.updateRecord(this.record);
             this.status = AccountStatus.DELETED;
         }
@@ -331,7 +361,7 @@ class MiddlewareFiatAccount implements  AccountService, DealsWithCryptoIndex,  D
         table = this.database.getTable(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_NAME);
 
         table.setStringFilter(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_STATUS_COLUMN_NAME, CryptoValueChunkStatus.UNSPENT.getCode(), DatabaseFilterType.EQUAL);
-        table.setUUIDFilter(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_ID_FIAT_ACCOUNT_COLUMN_NAME, this.id, DatabaseFilterType.EQUAL);
+        table.setUUIDFilter(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_ID_ACCOUNT_COLUMN_NAME, this.id, DatabaseFilterType.EQUAL);
 
         try {
             table.loadToMemory();
@@ -409,7 +439,7 @@ class MiddlewareFiatAccount implements  AccountService, DealsWithCryptoIndex,  D
 
             cryptoCurrency = CryptoCurrency.getByCode(record.getStringValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_CRYPTO_CURRENCY_COLUMN_NAME));
             cryptoAmount = record.getlongValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_CRYPTO_AMOUNT_COLUMN_NAME);
-            fiatAmount = record.getlongValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_ID_FIAT_ACCOUNT_COLUMN_NAME);
+            fiatAmount = record.getlongValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_ID_ACCOUNT_COLUMN_NAME);
 
             pricePaid = fiatAmount / cryptoAmount;
             marketPrice = cryptoMarketPrice.get(cryptoCurrency).doubleValue();
@@ -418,5 +448,11 @@ class MiddlewareFiatAccount implements  AccountService, DealsWithCryptoIndex,  D
                 this.availableBalance =+ record.getlongValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_FIAT_AMOUNT_COLUMN_NAME);
             }
         }
+        
+        if ( this.previousAvailableBalance != this.availableBalance) {
+            // TODO: LOUI ; Aca se debe disparar un evento llamado ACCOUNT_AVAILABLE_BALANCE_CHANGED .
+        }
+
+        this.previousAvailableBalance = this.availableBalance;
     }
 }

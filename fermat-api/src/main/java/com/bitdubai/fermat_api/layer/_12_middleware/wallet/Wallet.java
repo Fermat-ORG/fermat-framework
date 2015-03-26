@@ -17,22 +17,19 @@ public interface Wallet {
     
     public UUID getWalletId();
 
-    public FiatAccount[] getFiatAccounts();
+    public Account[] getFiatAccounts();
 
-    public CryptoAccount[] getCryptoAccounts();
-    
-    public FiatAccount createFiatAccount (FiatCurrency fiatCurrency) throws CantCreateAccountException;
+    public Account createAccount(FiatCurrency fiatCurrency) throws CantCreateAccountException;
 
-    public CryptoAccount createCryptoAccount (CryptoCurrency cryptoCurrency)  throws CantCreateAccountException;
-    
+
     /**
      * Transactional functionality.
      */
 
-    public void transfer (FiatAccount fiatAccountFrom, FiatAccount fiatAccountTo, long amountFrom, long amountTo, String memo) throws TransferFailedException;
+    public void transfer (Account accountFrom, Account accountTo, long amountFrom, long amountTo, String memo) throws TransferFailedException;
     
-    public void debit (FiatAccount fiatAccount,long fiatAmount, CryptoAccount cryptoAccount,long cryptoAmount) throws DebitFailedException;
+    public void debit (Account account,long fiatAmount, CryptoCurrency cryptoCurrency,long cryptoAmount) throws DebitFailedException;
 
-    public void credit (FiatAccount fiatAccount,long fiatAmount, CryptoAccount cryptoAccount,long cryptoAmount) throws CreditFailedException;
+    public void credit (Account account,long fiatAmount, CryptoCurrency cryptoCurrency,long cryptoAmount) throws CreditFailedException;
 
 }

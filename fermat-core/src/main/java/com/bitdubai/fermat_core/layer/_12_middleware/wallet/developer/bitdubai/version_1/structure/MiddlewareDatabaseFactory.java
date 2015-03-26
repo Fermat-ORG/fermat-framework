@@ -59,33 +59,12 @@ class MiddlewareDatabaseFactory implements DealsWithPluginDatabaseSystem{
             /**
              * First the fiat accounts table.
              */
-            table = ((DatabaseFactory) database).newTableFactory(ownerId, MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_NAME);
-            table.addColumn(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36);
-            table.addColumn(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_LABEL_COLUMN_NAME, DatabaseDataType.STRING, 100);
-            table.addColumn(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100);
-            table.addColumn(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
-            table.addColumn(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_FIAT_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 3);
-            table.addColumn(MiddlewareDatabaseConstants.FIAT_ACCOUNTS_TABLE_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 3);
-
-            try {
-                ((DatabaseFactory) database).createTable(ownerId, table);
-            }
-            catch (CantCreateTableException cantCreateTableException) {
-                System.err.println("CantCreateTableException: " + cantCreateTableException.getMessage());
-                cantCreateTableException.printStackTrace();
-                throw new CantCreateDatabaseException();
-            }
-
-            /**
-             * Then the crypto accounts table.
-             */
-            table = ((DatabaseFactory) database).newTableFactory(ownerId, MiddlewareDatabaseConstants.CRYPTO_ACCOUNTS_TABLE_NAME);
-            table.addColumn(MiddlewareDatabaseConstants.CRYPTO_ACCOUNTS_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36);
-            table.addColumn(MiddlewareDatabaseConstants.CRYPTO_ACCOUNTS_TABLE_LABEL_COLUMN_NAME, DatabaseDataType.STRING, 100);
-            table.addColumn(MiddlewareDatabaseConstants.CRYPTO_ACCOUNTS_TABLE_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100);
-            table.addColumn(MiddlewareDatabaseConstants.CRYPTO_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
-            table.addColumn(MiddlewareDatabaseConstants.CRYPTO_ACCOUNTS_TABLE_CRYPTO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 3);
-            table.addColumn(MiddlewareDatabaseConstants.CRYPTO_ACCOUNTS_TABLE_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 3);
+            table = ((DatabaseFactory) database).newTableFactory(ownerId, MiddlewareDatabaseConstants.ACCOUNTS_TABLE_NAME);
+            table.addColumn(MiddlewareDatabaseConstants.ACCOUNTS_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36);
+            table.addColumn(MiddlewareDatabaseConstants.ACCOUNTS_TABLE_LABEL_COLUMN_NAME, DatabaseDataType.STRING, 100);
+            table.addColumn(MiddlewareDatabaseConstants.ACCOUNTS_TABLE_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100);
+            table.addColumn(MiddlewareDatabaseConstants.ACCOUNTS_TABLE_FIAT_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 3);
+            table.addColumn(MiddlewareDatabaseConstants.ACCOUNTS_TABLE_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 3);
 
             try {
                 ((DatabaseFactory) database).createTable(ownerId, table);
@@ -128,8 +107,7 @@ class MiddlewareDatabaseFactory implements DealsWithPluginDatabaseSystem{
             table.addColumn(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_FIAT_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
             table.addColumn(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_CRYPTO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 3);
             table.addColumn(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_CRYPTO_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
-            table.addColumn(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_ID_FIAT_ACCOUNT_COLUMN_NAME, DatabaseDataType.STRING, 36);
-            table.addColumn(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_ID_CRYPTO_ACCOUNT_COLUMN_NAME, DatabaseDataType.STRING, 36);
+            table.addColumn(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_ID_ACCOUNT_COLUMN_NAME, DatabaseDataType.STRING, 36);
             table.addColumn(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
             
             try {
@@ -148,7 +126,6 @@ class MiddlewareDatabaseFactory implements DealsWithPluginDatabaseSystem{
             table.addColumn(MiddlewareDatabaseConstants.DEBITS_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36);
             table.addColumn(MiddlewareDatabaseConstants.DEBITS_TABLE_ID_FIAT_ACCOUNT_COLUMN_NAME, DatabaseDataType.STRING, 36);
             table.addColumn(MiddlewareDatabaseConstants.DEBITS_TABLE_FIAT_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
-            table.addColumn(MiddlewareDatabaseConstants.DEBITS_TABLE_ID_CRYPTO_ACCOUNT_COLUMN_NAME, DatabaseDataType.STRING, 36);
             table.addColumn(MiddlewareDatabaseConstants.DEBITS_TABLE_CRYPTO_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
             table.addColumn(MiddlewareDatabaseConstants.DEBITS_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
 
@@ -166,9 +143,8 @@ class MiddlewareDatabaseFactory implements DealsWithPluginDatabaseSystem{
              */
             table = ((DatabaseFactory) database).newTableFactory(ownerId, MiddlewareDatabaseConstants.CREDITS_TABLE_NAME);
             table.addColumn(MiddlewareDatabaseConstants.CREDITS_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36);
-            table.addColumn(MiddlewareDatabaseConstants.CREDITS_TABLE_ID_FIAT_ACCOUNT_COLUMN_NAME, DatabaseDataType.STRING, 36);
+            table.addColumn(MiddlewareDatabaseConstants.CREDITS_TABLE_ID_ACCOUNT_COLUMN_NAME, DatabaseDataType.STRING, 36);
             table.addColumn(MiddlewareDatabaseConstants.CREDITS_TABLE_FIAT_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
-            table.addColumn(MiddlewareDatabaseConstants.CREDITS_TABLE_ID_CRYPTO_ACCOUNT_COLUMN_NAME, DatabaseDataType.STRING, 36);
             table.addColumn(MiddlewareDatabaseConstants.CREDITS_TABLE_CRYPTO_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
             table.addColumn(MiddlewareDatabaseConstants.CREDITS_TABLE_ID_VALUE_CHUNK_COLUMN_NAME, DatabaseDataType.STRING, 36);
             table.addColumn(MiddlewareDatabaseConstants.CREDITS_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
