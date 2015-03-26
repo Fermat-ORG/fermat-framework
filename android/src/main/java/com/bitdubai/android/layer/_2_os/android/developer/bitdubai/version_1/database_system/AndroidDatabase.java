@@ -147,14 +147,16 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
             this.Database.beginTransaction(); // EXCLUSIVE
 
             //update
-           for (int i = 0; i < updateTables.size(); ++i){
-               updateTables.get(i).updateRecord(updateRecords.get(i));
-           }
+            if(updateTables != null)
+               for (int i = 0; i < updateTables.size(); ++i){
+                   updateTables.get(i).updateRecord(updateRecords.get(i));
+               }
 
             //insert
-            for (int i = 0; i < insertTables.size(); ++i){
-                insertTables.get(i).insertRecord(insertRecords.get(i));
-            }
+            if(insertTables != null)
+                for (int i = 0; i < insertTables.size(); ++i){
+                    insertTables.get(i).insertRecord(insertRecords.get(i));
+                }
 
             this.Database.setTransactionSuccessful();
             this.Database.endTransaction();

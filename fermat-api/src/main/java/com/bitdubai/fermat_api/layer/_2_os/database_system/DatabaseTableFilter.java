@@ -6,11 +6,16 @@ package com.bitdubai.fermat_api.layer._2_os.database_system;
 public interface DatabaseTableFilter {
     
     
-    public void setColumn (DatabaseTableColumn column);
+    public void setColumn (String column);
+
     public void setType (DatabaseFilterType type);
+
     public void setValue (String value);
-    public DatabaseTableColumn  getColumn ();
+
+    public String  getColumn ();
+
     public String getValue ();
+
     public DatabaseFilterType getType ();
     
 }

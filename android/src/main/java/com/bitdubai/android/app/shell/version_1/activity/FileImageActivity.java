@@ -361,7 +361,7 @@ public class FileImageActivity extends FragmentActivity {
             AndroidDatabaseTableColumn filterColum = new AndroidDatabaseTableColumn();
             filterColum.setName("Id");
             filterColum.setType(DatabaseDataType.INTEGER);
-            filter.setColumn(filterColum);
+           // filter.setColumn(filterColum);
             AndroidDatabaseRecord records  = new AndroidDatabaseRecord();
             //records.setValues(values);
    //         dbmanager.updateRecord(records);
@@ -397,7 +397,7 @@ public class FileImageActivity extends FragmentActivity {
             AndroidDatabaseTableColumn filterColum = new AndroidDatabaseTableColumn();
             filterColum.setName("Id");
             filterColum.setType(DatabaseDataType.INTEGER);
-            filter.setColumn(filterColum);
+           // filter.setColumn(filterColum);
 
        //     List<DatabaseTableRecord> records = dbmanager.getRecords();
 
