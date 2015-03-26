@@ -5,40 +5,40 @@ import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableColumn;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableFilter;
 
 /**
- * Created by toshiba on 09/02/2015.
+ * Created by Natalia on 09/02/2015.
  */
 public class AndroidDatabaseTableFilter implements DatabaseTableFilter {
-    DatabaseTableColumn mColumn;
-    DatabaseFilterType mType;
-    String mValue;
+    String column;
+    DatabaseFilterType type;
+    String value;
 
-    public void setColumn (DatabaseTableColumn column)
+    public void setColumn (String column)
     {
-        mColumn = column;
+        this.column = column;
     }
 
     public void setType (DatabaseFilterType type)
     {
-        mType = type;
+        this.type = type;
     }
 
     public DatabaseFilterType getType()
     {
-        return mType;
+        return this.type;
     }
 
     public void setValue (String value)
     {
-        mValue = value;
+        this.value = value;
     }
 
     public String getValue ()
     {
-        return mValue;
+        return this.value;
     }
     
-    public DatabaseTableColumn  getColumn ()
+    public String  getColumn ()
     {
-        return mColumn;
+        return this.column;
     }
 }

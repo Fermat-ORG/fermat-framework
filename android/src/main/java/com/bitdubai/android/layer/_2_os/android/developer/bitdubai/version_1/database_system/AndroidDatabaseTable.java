@@ -70,11 +70,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
         return record;
     }
 
-    @Override
-    public void addFilter (DatabaseTableFilter filter)
-    {
-        tableFilter.add(filter);
-    }
+
 
     @Override
     public void clearAllFilters()
@@ -212,7 +208,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
                         strFilter += " < " + tableFilter.get(i).getValue();
                         break;
                     case LIKE:
-                        strFilter += " Like " + tableFilter.get(i).getValue();
+                        strFilter += " Like '" + tableFilter.get(i).getValue() + "'";
                         break;
                 }
 
@@ -263,10 +259,31 @@ public class AndroidDatabaseTable implements  DatabaseTable {
     @Override
     public void setStringFilter(String columName, String value,DatabaseFilterType type){
 
+        if(tableFilter == null)
+            tableFilter = new ArrayList<DatabaseTableFilter>();
+
+        DatabaseTableFilter filter = new AndroidDatabaseTableFilter();
+
+        filter.setColumn(columName);
+        filter.setValue(value);
+        filter.setType(type);
+
+        tableFilter.add(filter);
     }
 
     @Override
     public void setUUIDFilter(String columName, UUID value,DatabaseFilterType type){
+
+        if(tableFilter == null)
+            tableFilter = new ArrayList<DatabaseTableFilter>();
+
+        DatabaseTableFilter filter = new AndroidDatabaseTableFilter();
+
+        filter.setColumn(columName);
+        filter.setValue(value.toString());
+        filter.setType(type);
+
+        tableFilter.add(filter);
 
     }
 }

@@ -17,9 +17,7 @@ public interface DatabaseTable {
     public List<DatabaseTableRecord> getRecords();
 
     public DatabaseTableRecord getEmptyRecord();
-    
-    public void addFilter (DatabaseTableFilter filter);
-    
+
     public void clearAllFilters();
     
     public List<DatabaseTableFilter> getFilters();
