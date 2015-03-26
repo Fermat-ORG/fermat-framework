@@ -28,7 +28,7 @@ import java.util.UUID;
  * Created by ciencias on 2/15/15.
  */
 
-class MiddlewareAccount implements  AccountService, DealsWithCryptoIndex,  DealsWithEvents, Account {
+class MiddlewareAccount implements  Account, AccountService, DealsWithCryptoIndex,  DealsWithEvents {
     
     /**
      * MiddlewareFiatAccount Interface member variables.
@@ -38,6 +38,19 @@ class MiddlewareAccount implements  AccountService, DealsWithCryptoIndex,  Deals
     private DatabaseTable table;
     private DatabaseTableRecord record;
 
+    /**
+     * Account Interface member variables.
+     */
+    private UUID id;
+    private String label = "";
+    private String name = "";
+    private long balance = 0;
+    private long availableBalance = 0;
+    private long previousAvailableBalance = 0;
+    private FiatCurrency fiatCurrency;
+    private AccountStatus status;
+    private AccountLockStatus lockStatus = AccountLockStatus.UNLOCKED;
+    
     /**
      * DealsWithCryptoIndex Interface member variables.
      */
@@ -49,30 +62,19 @@ class MiddlewareAccount implements  AccountService, DealsWithCryptoIndex,  Deals
     private EventManager eventManager;
 
 
-    /**
-     * FiatAccount Interface member variables.
-     */
-    private UUID id;
-    private String label = "";
-    private String name = "";
-    private long balance = 0;
-    private long availableBalance = 0;
-    private long previousAvailableBalance = 0;
-    private FiatCurrency fiatCurrency;
-    private AccountStatus status;
-    private AccountLockStatus lockStatus = AccountLockStatus.UNLOCKED;
-
-
-
+    
+    
+    
     /**
      * Class constructor.
      */
     MiddlewareAccount(UUID id){
         this.id = id;
     }
-
-
-
+    
+    
+    
+    
     
     /**
      * MiddlewareFiatAccount interface implementation.
@@ -149,7 +151,6 @@ class MiddlewareAccount implements  AccountService, DealsWithCryptoIndex,  Deals
         }
     }
 
-
     void updateBalance() {
 
         try {
@@ -166,69 +167,11 @@ class MiddlewareAccount implements  AccountService, DealsWithCryptoIndex,  Deals
             this.lockStatus = AccountLockStatus.LOCKED;
         }
     }
-    
-    
-    /**
-     * AccountService interface implementation.
-     */
-    @Override
-    public void start() throws CantStartAccountException {
 
-        /**
-         * Check if the Account state is Open.
-         */
-        if (AccountStatus.getByCode(record.getStringValue(MiddlewareDatabaseConstants.ACCOUNTS_TABLE_STATUS_COLUMN_NAME)) != AccountStatus.OPEN) {
-            /**
-             * An account that is not open can not be started.
-             */
-            throw new CantStartAccountException();
-        }
-
-        try {
-            calculateBalances();
-        }
-        catch (CantCalculateBalanceException cantCalculateBalanceException){
-            /**
-             * If I cant calculate the balance then the account cannot start.
-             * * * 
-             */
-            System.err.println("CantCalculateBalanceException: " + cantCalculateBalanceException.getMessage());
-            cantCalculateBalanceException.printStackTrace();
-            throw new CantStartAccountException();
-        }
-        
-        // LOUI: TODO: Aca tiene que escuchar un evento disparado por CryptoIndex plugIn llamado: CryptoMarketPricesChanged  
-        
-    }
-
-    @Override
-    public void stop() {
-
-        // LOUI: TODO: Aca se tiene que desuscribir del evento disparado por CryptoIndex plugIn llamado: CryptoMarketPricesChanged  
-        
-    }
 
 
     /**
-     * DealsWithCryptoIndex Interface member variables.
-     */
-    @Override
-    public void setCryptoIndexManager(CryptoIndexManager cryptoIndexManager) {
-        this.cryptoIndexManager = cryptoIndexManager;
-    }
-
-    /**
-     * DealWithEvents Interface implementation.
-     */
-
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-    
-    
-    /**
-     * FiatAccount interface implementation.
+     * Account interface implementation.
      */
     public long getBalance() {
         return balance;
@@ -238,7 +181,7 @@ class MiddlewareAccount implements  AccountService, DealsWithCryptoIndex,  Deals
 
         return this.availableBalance;
     }
-    
+
     public FiatCurrency getFiatCurrency() {
         return fiatCurrency;
     }
@@ -284,12 +227,10 @@ class MiddlewareAccount implements  AccountService, DealsWithCryptoIndex,  Deals
             throw new OperationFailed();
         }
     }
-    
+
     public AccountStatus getStatus() {
         return this.status;
     }
-    
-
 
     @Override
     public void openAccount() throws OperationFailed {
@@ -346,6 +287,75 @@ class MiddlewareAccount implements  AccountService, DealsWithCryptoIndex,  Deals
 
     
     
+    /**
+     * AccountService interface implementation.
+     */
+    @Override
+    public void start() throws CantStartAccountException {
+
+        /**
+         * Check if the Account state is Open.
+         */
+        if (AccountStatus.getByCode(record.getStringValue(MiddlewareDatabaseConstants.ACCOUNTS_TABLE_STATUS_COLUMN_NAME)) != AccountStatus.OPEN) {
+            /**
+             * An account that is not open can not be started.
+             */
+            throw new CantStartAccountException();
+        }
+
+        try {
+            calculateBalances();
+        }
+        catch (CantCalculateBalanceException cantCalculateBalanceException){
+            /**
+             * If I cant calculate the balance then the account cannot start.
+             * * * 
+             */
+            System.err.println("CantCalculateBalanceException: " + cantCalculateBalanceException.getMessage());
+            cantCalculateBalanceException.printStackTrace();
+            throw new CantStartAccountException();
+        }
+        
+        // LOUI: TODO: Aca tiene que escuchar un evento disparado por CryptoIndex plugIn llamado: CryptoMarketPricesChanged  
+        
+    }
+
+    @Override
+    public void stop() {
+
+        // LOUI: TODO: Aca se tiene que desuscribir del evento disparado por CryptoIndex plugIn llamado: CryptoMarketPricesChanged  
+        
+    }
+
+
+    
+    /**
+     * DealsWithCryptoIndex Interface member variables.
+     */
+    @Override
+    public void setCryptoIndexManager(CryptoIndexManager cryptoIndexManager) {
+        this.cryptoIndexManager = cryptoIndexManager;
+    }
+
+    
+    
+    /**
+     * DealWithEvents Interface implementation.
+     */
+
+    @Override
+    public void setEventManager(EventManager eventManager) {
+        this.eventManager = eventManager;
+    }
+    
+    
+    
+    
+    
+    
+    /**
+     * Private Methods.
+     */
     private void calculateBalances() throws CantCalculateBalanceException {
 
         /**
