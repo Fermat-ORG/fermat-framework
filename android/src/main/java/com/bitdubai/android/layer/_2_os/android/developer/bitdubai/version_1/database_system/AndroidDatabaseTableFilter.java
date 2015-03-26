@@ -36,6 +36,7 @@ public class AndroidDatabaseTableFilter implements DatabaseTableFilter {
     {
         return mValue;
     }
+    
     public DatabaseTableColumn  getColumn ()
     {
         return mColumn;

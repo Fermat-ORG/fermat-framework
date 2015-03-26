@@ -108,8 +108,8 @@ public class CryptoIndexWorldPluginRoot implements Service, CryptoIndexManager, 
      */
     
     @Override
-    public double getCurrentMarketPrice(FiatCurrency fiatCurrency, CryptoCurrency cryptoCurrency) throws FiatCurrencyNotSupportedException, CryptoCurrencyNotSupportedException {
-        return 0;
+    public double getMarketPrice(FiatCurrency fiatCurrency, CryptoCurrency cryptoCurrency) throws FiatCurrencyNotSupportedException, CryptoCurrencyNotSupportedException {
+        return 300;
     }
     
     /**

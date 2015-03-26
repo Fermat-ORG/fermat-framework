@@ -3,6 +3,8 @@ package com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer._11_world.crypto_index.CryptoIndexManager;
+import com.bitdubai.fermat_api.layer._11_world.crypto_index.DealsWithCryptoIndex;
 import com.bitdubai.fermat_api.layer._12_middleware.Middleware;
 import com.bitdubai.fermat_api.layer._12_middleware.WalletManager;
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.Wallet;
@@ -43,7 +45,7 @@ import java.util.*;
  * fiat over crypto.
  */
 
-public class WalletMiddlewarePluginRoot implements Service, WalletManager , Middleware, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, Plugin {
+public class WalletMiddlewarePluginRoot implements Service, WalletManager , Middleware, DealsWithCryptoIndex, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, Plugin {
 
     
     /**
@@ -61,10 +63,15 @@ public class WalletMiddlewarePluginRoot implements Service, WalletManager , Midd
     private Map<UUID, UUID> walletIds =  new HashMap();
 
     /**
-     * UsesFileSystem Interface member variables.
+     * DealsWithCryptoIndex Interface member variables.
+     */
+    private CryptoIndexManager cryptoIndexManager;
+    
+    /**
+     * DealsWithPluginFileSystem Interface member variables.
      */
     private PluginFileSystem pluginFileSystem;
-
+    
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
@@ -297,6 +304,7 @@ public class WalletMiddlewarePluginRoot implements Service, WalletManager , Midd
         this.currentWallet = new MiddlewareWallet(walletId);
         ((DealsWithPluginDatabaseSystem) this.currentWallet).setPluginDatabaseSystem(this.pluginDatabaseSystem);
         ((DealsWithEvents) this.currentWallet).setEventManager(this.eventManager);
+        ((DealsWithCryptoIndex) this.currentWallet).setCryptoIndexManager(this.cryptoIndexManager);
      
         try {
             ((WalletService) this.currentWallet).start();
@@ -315,11 +323,19 @@ public class WalletMiddlewarePluginRoot implements Service, WalletManager , Midd
     public Wallet getCurrentWallet() {
         return this.currentWallet;
     }
+
+    /**
+     * DealsWithCryptoIndex Interface member variables.
+     */
+    @Override
+    public void setCryptoIndexManager(CryptoIndexManager cryptoIndexManager) {
+        this.cryptoIndexManager = cryptoIndexManager;
+    }
     
     /**
-     * UsesFileSystem Interface implementation.
+     * DealsWithPluginFileSystem Interface implementation.
      */
-
+    
     @Override
     public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
         this.pluginFileSystem = pluginFileSystem;
@@ -360,5 +376,6 @@ public class WalletMiddlewarePluginRoot implements Service, WalletManager , Midd
     public void setId(UUID pluginId) {
         this.pluginId = pluginId;
     }
+
 
 }

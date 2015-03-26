@@ -36,10 +36,22 @@ class MiddlewareCreditTransaction {
     void credit(FiatAccount fiatAccount, long fiatAmount, CryptoAccount cryptoAccount, long cryptoAmount) throws CreditFailedException {
 
         long unixTime = System.currentTimeMillis() / 1000L;
-        
-        
+
+
         /**
-         * First I will check the accounts received belongs to this wallet.
+         * Both amounts must be grater than zero.
+         */
+        
+        if (fiatAmount <= 0) {
+            throw new CreditFailedException(CreditFailedReasons.FIAT_AMOUNT_MUST_BE_OVER_ZERO);
+        }
+
+        if (cryptoAmount <= 0) {
+            throw new CreditFailedException(CreditFailedReasons.CRYPTO_AMOUNT_MUST_BE_OVER_ZERO);
+        }
+
+        /**
+         * I will check the accounts received belongs to this wallet.
          */
         FiatAccount inMemoryFiatAccount;
         inMemoryFiatAccount = fiatAccounts.get(((MiddlewareFiatAccount) fiatAccount).getId());

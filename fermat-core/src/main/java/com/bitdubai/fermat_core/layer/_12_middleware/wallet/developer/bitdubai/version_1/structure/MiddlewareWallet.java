@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer._11_world.crypto_index.CryptoIndexManager;
+import com.bitdubai.fermat_api.layer._11_world.crypto_index.DealsWithCryptoIndex;
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.*;
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.*;
 import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
@@ -39,8 +41,13 @@ import java.util.UUID;
  * * * 
  */
 
-public class MiddlewareWallet implements DealsWithEvents, DealsWithPluginDatabaseSystem, Wallet, WalletService {
+public class MiddlewareWallet implements DealsWithCryptoIndex, DealsWithEvents, DealsWithPluginDatabaseSystem, Wallet, WalletService {
 
+    /**
+     * DealsWithCryptoIndex Interface member variables.
+     */
+    private CryptoIndexManager cryptoIndexManager;
+    
     /**
      * DealWithEvents Interface member variables.
      */
@@ -79,14 +86,6 @@ public class MiddlewareWallet implements DealsWithEvents, DealsWithPluginDatabas
         this.walletId = UUID.randomUUID();
     }
 
-    /**
-     * DealWithEvents Interface implementation.
-     */
-
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
 
     /**
      * MiddlewareWallet Interface implementation.
@@ -134,9 +133,23 @@ public class MiddlewareWallet implements DealsWithEvents, DealsWithPluginDatabas
         }
 
     }
-    
 
+    /**
+     * DealsWithCryptoIndex Interface member variables.
+     */
+    @Override
+    public void setCryptoIndexManager(CryptoIndexManager cryptoIndexManager) {
+        this.cryptoIndexManager = cryptoIndexManager;
+    }
 
+    /**
+     * DealWithEvents Interface implementation.
+     */
+
+    @Override
+    public void setEventManager(EventManager eventManager) {
+        this.eventManager = eventManager;
+    }
 
     /**
      * DealsWithPluginDatabaseSystem Interface implementation.
@@ -372,7 +385,7 @@ public class MiddlewareWallet implements DealsWithEvents, DealsWithPluginDatabas
             /**
              * I can not solve this situation.
              */
-            System.err.println("CantInsertRecord: " + cantLoadTableToMemory.getMessage());
+            System.err.println("CantLoadTableToMemory: " + cantLoadTableToMemory.getMessage());
             cantLoadTableToMemory.printStackTrace();
             throw new CantStartWalletException();
         }
@@ -389,10 +402,12 @@ public class MiddlewareWallet implements DealsWithEvents, DealsWithPluginDatabas
             FiatAccount fiatAccount;
             fiatAccount = new MiddlewareFiatAccount(accountId);
 
+            ((MiddlewareFiatAccount) fiatAccount).setDatabase(this.database);
             ((MiddlewareFiatAccount) fiatAccount).setTable(table);
             ((MiddlewareFiatAccount) fiatAccount).setRecord(record);
 
             ((DealsWithEvents) fiatAccount).setEventManager(this.eventManager);
+            ((DealsWithCryptoIndex) fiatAccount).setCryptoIndexManager(this.cryptoIndexManager);
 
             try {
                 ((AccountService) fiatAccount).start();
