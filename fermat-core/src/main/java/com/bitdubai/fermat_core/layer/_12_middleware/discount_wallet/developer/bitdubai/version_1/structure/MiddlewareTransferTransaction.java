@@ -126,7 +126,7 @@ class MiddlewareTransferTransaction {
 
         table.setStringFilter(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_STATUS_COLUMN_NAME, CryptoValueChunkStatus.UNSPENT.getCode(), DatabaseFilterType.EQUAL);
         table.setUUIDFilter(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_ID_ACCOUNT_COLUMN_NAME, ((MiddlewareAccount) inMemoryAccountFrom).getId(), DatabaseFilterType.EQUAL);
-        table.setOrder(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_FIAT_AMOUNT_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
+        table.setFilterOrder(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_FIAT_AMOUNT_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
         
         try {
             table.loadToMemory();
