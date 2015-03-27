@@ -1,6 +1,5 @@
-package com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_core.layer._12_middleware.discount_wallet.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.CantInitializeWalletException;
 import com.bitdubai.fermat_api.layer._2_os.database_system.*;
 import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.CantCreateTableException;
@@ -109,7 +108,10 @@ class MiddlewareDatabaseFactory implements DealsWithPluginDatabaseSystem{
             table.addColumn(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_CRYPTO_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
             table.addColumn(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_ID_ACCOUNT_COLUMN_NAME, DatabaseDataType.STRING, 36);
             table.addColumn(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
-            
+            table.addColumn(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_ID_CREDIT_COLUMN_NAME, DatabaseDataType.STRING, 36);
+            table.addColumn(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_ID_DEBIT_COLUMN_NAME, DatabaseDataType.STRING, 36);
+            table.addColumn(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_ID_TRANSFER_COLUMN_NAME, DatabaseDataType.STRING, 36);
+
             try {
                 ((DatabaseFactory) database).createTable(ownerId, table);
             }
@@ -146,7 +148,6 @@ class MiddlewareDatabaseFactory implements DealsWithPluginDatabaseSystem{
             table.addColumn(MiddlewareDatabaseConstants.CREDITS_TABLE_ID_ACCOUNT_COLUMN_NAME, DatabaseDataType.STRING, 36);
             table.addColumn(MiddlewareDatabaseConstants.CREDITS_TABLE_FIAT_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
             table.addColumn(MiddlewareDatabaseConstants.CREDITS_TABLE_CRYPTO_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
-            table.addColumn(MiddlewareDatabaseConstants.CREDITS_TABLE_ID_VALUE_CHUNK_COLUMN_NAME, DatabaseDataType.STRING, 36);
             table.addColumn(MiddlewareDatabaseConstants.CREDITS_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
 
             try {

@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_core.layer._12_middleware.discount_wallet.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer._11_world.crypto_index.CryptoIndexManager;
 import com.bitdubai.fermat_api.layer._11_world.crypto_index.DealsWithCryptoIndex;
@@ -11,10 +11,10 @@ import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.*;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventManager;
-import com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.exceptions.CantStartAccountException;
-import com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.exceptions.CantStartWalletException;
-import com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.interfaces.AccountService;
-import com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.interfaces.WalletService;
+import com.bitdubai.fermat_core.layer._12_middleware.discount_wallet.developer.bitdubai.version_1.exceptions.CantStartAccountException;
+import com.bitdubai.fermat_core.layer._12_middleware.discount_wallet.developer.bitdubai.version_1.exceptions.CantStartWalletException;
+import com.bitdubai.fermat_core.layer._12_middleware.discount_wallet.developer.bitdubai.version_1.interfaces.AccountService;
+import com.bitdubai.fermat_core.layer._12_middleware.discount_wallet.developer.bitdubai.version_1.interfaces.WalletService;
 
 import java.util.HashMap;
 import java.util.Iterator;

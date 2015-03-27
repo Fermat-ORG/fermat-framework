@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_core.layer._12_middleware.discount_wallet.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer._11_world.crypto_index.CryptoIndexManager;
 import com.bitdubai.fermat_api.layer._11_world.crypto_index.DealsWithCryptoIndex;
@@ -16,9 +16,9 @@ import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.CantLoadTa
 import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.CantUpdateRecord;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventManager;
-import com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.exceptions.CantCalculateBalanceException;
-import com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.exceptions.CantStartAccountException;
-import com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.interfaces.AccountService;
+import com.bitdubai.fermat_core.layer._12_middleware.discount_wallet.developer.bitdubai.version_1.exceptions.CantCalculateBalanceException;
+import com.bitdubai.fermat_core.layer._12_middleware.discount_wallet.developer.bitdubai.version_1.exceptions.CantStartAccountException;
+import com.bitdubai.fermat_core.layer._12_middleware.discount_wallet.developer.bitdubai.version_1.interfaces.AccountService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -88,18 +88,6 @@ class MiddlewareAccount implements  Account, AccountService, DealsWithCryptoInde
 
     public AccountLockStatus getLockStatus() {
         return lockStatus;
-    }
-    
-    void setBalance(long balance){
-        this.balance = balance;
-    }
-
-    void setFiatCurrency(FiatCurrency fiatCurrency) {
-        this.fiatCurrency = fiatCurrency;
-    }
-
-    void setStatus(AccountStatus status) {
-        this.status = status;
     }
 
     public void setDatabase(Database database) {

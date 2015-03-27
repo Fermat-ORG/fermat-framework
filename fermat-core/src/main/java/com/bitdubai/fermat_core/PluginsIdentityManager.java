@@ -7,7 +7,6 @@ import com.bitdubai.fermat_api.layer._2_os.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer._2_os.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer._2_os.file_system.PlatformTextFile;
 import com.bitdubai.fermat_api.layer._2_os.file_system.PlatformFileSystem;
-import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.IncomingCryptoTransactionPluginRoot;
@@ -18,7 +17,7 @@ import com.bitdubai.fermat_core.layer._10_network_service.wallet_resources.devel
 import com.bitdubai.fermat_core.layer._10_network_service.wallet_store.developer.bitdubai.version_1.WalletStoreNetworkServicePluginRoot;
 import com.bitdubai.fermat_core.layer._12_middleware.app_runtime.developer.bitdubai.version_1.AppRuntimeMiddlewarePluginRoot;
 import com.bitdubai.fermat_core.layer._12_middleware.bank_notes.developer.bitdubai.version_1.BankNotesMiddlewarePluginRoot;
-import com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.WalletMiddlewarePluginRoot;
+import com.bitdubai.fermat_core.layer._12_middleware.discount_wallet.developer.bitdubai.version_1.WalletMiddlewarePluginRoot;
 import com.bitdubai.fermat_core.layer._12_middleware.wallet_contacts.developer.bitdubai.version_1.WalletContactsMiddlewarePluginRoot;
 import com.bitdubai.fermat_core.layer._13_transaction.incoming_device_user.developer.bitdubai.version_1.IncomingDeviceUserTransactionPluginRoot;
 import com.bitdubai.fermat_core.layer._13_transaction.incoming_extra_user.developer.bitdubai.version_1.IncomingExtraUserTransactionPluginRoot;

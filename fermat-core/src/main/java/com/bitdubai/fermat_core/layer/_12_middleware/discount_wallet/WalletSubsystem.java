@@ -1,10 +1,10 @@
-package com.bitdubai.fermat_core.layer._12_middleware.wallet;
+package com.bitdubai.fermat_core.layer._12_middleware.discount_wallet;
 
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer._12_middleware.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer._12_middleware.MiddlewareSubsystem;
-import com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_core.layer._12_middleware.discount_wallet.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by ciencias on 20.01.15.

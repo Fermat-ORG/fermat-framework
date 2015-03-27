@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1;
+package com.bitdubai.fermat_core.layer._12_middleware.discount_wallet.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
@@ -29,10 +29,10 @@ import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventMana
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventSource;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventType;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.WalletCreatedEvent;
-import com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.event_handlers.WalletCreatedEventHandler;
-import com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.exceptions.CantStartWalletException;
-import com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.interfaces.WalletService;
-import com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.structure.MiddlewareWallet;
+import com.bitdubai.fermat_core.layer._12_middleware.discount_wallet.developer.bitdubai.version_1.event_handlers.WalletCreatedEventHandler;
+import com.bitdubai.fermat_core.layer._12_middleware.discount_wallet.developer.bitdubai.version_1.exceptions.CantStartWalletException;
+import com.bitdubai.fermat_core.layer._12_middleware.discount_wallet.developer.bitdubai.version_1.interfaces.WalletService;
+import com.bitdubai.fermat_core.layer._12_middleware.discount_wallet.developer.bitdubai.version_1.structure.MiddlewareWallet;
 
 import java.util.*;
 

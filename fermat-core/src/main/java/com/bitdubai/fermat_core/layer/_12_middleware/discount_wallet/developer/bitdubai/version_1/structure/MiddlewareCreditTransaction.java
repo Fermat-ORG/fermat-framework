@@ -1,13 +1,9 @@
-package com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_core.layer._12_middleware.discount_wallet.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.*;
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.CreditFailedException;
-import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.TransferFailedException;
 import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer._2_os.database_system.Database;
-import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTable;
-import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTransaction;
+import com.bitdubai.fermat_api.layer._2_os.database_system.*;
 import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.DatabaseTransactionFailedException;
 
 import java.util.Map;
@@ -32,7 +28,11 @@ class MiddlewareCreditTransaction {
     void credit(Account account, long fiatAmount, CryptoCurrency cryptoCurrency, long cryptoAmount) throws CreditFailedException {
 
         long unixTime = System.currentTimeMillis() / 1000L;
+        /**
+         * Some needed constant.
+         */
 
+        final UUID emptyUUID = new UUID(0L, 0L);
 
         /**
          * Both amounts must be grater than zero.
@@ -69,8 +69,22 @@ class MiddlewareCreditTransaction {
         if (inMemoryAccount.getStatus() != AccountStatus.OPEN) {
             throw new CreditFailedException(CreditFailedReasons.ACCOUNT_NOT_OPEN);
         }
+        
+        /**
+         * Here I create the credit record for historical purposes.
+         */
+        DatabaseTable creditsTable = database.getTable(MiddlewareDatabaseConstants.DEBITS_TABLE_NAME);
+        DatabaseTableRecord creditRecord = creditsTable.getEmptyRecord();
 
-         /**
+        UUID creditRecordId = UUID.randomUUID();
+        
+        creditRecord.setUUIDValue(MiddlewareDatabaseConstants.CREDITS_TABLE_ID_COLUMN_NAME , creditRecordId);
+        creditRecord.setUUIDValue(MiddlewareDatabaseConstants.CREDITS_TABLE_ID_ACCOUNT_COLUMN_NAME, ((MiddlewareAccount) inMemoryAccount).getId());
+        creditRecord.setlongValue(MiddlewareDatabaseConstants.CREDITS_TABLE_FIAT_AMOUNT_COLUMN_NAME, fiatAmount);
+        creditRecord.setlongValue(MiddlewareDatabaseConstants.CREDITS_TABLE_CRYPTO_AMOUNT_COLUMN_NAME, cryptoAmount);
+        creditRecord.setlongValue(MiddlewareDatabaseConstants.CREDITS_TABLE_TIME_STAMP_COLUMN_NAME,  unixTime);
+
+        /**
          * I create the value chunk record.
          */
         DatabaseTable valueChunksTable = database.getTable(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_NAME);
@@ -80,7 +94,7 @@ class MiddlewareCreditTransaction {
 
         valueChunkRecord.setUUIDValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_ID_COLUMN_NAME, valueChunkRecordId);
         valueChunkRecord.setStringValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_STATUS_COLUMN_NAME, CryptoValueChunkStatus.UNSPENT.getCode());
-        valueChunkRecord.setUUIDValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_ID_PARENT_COLUMN_NAME, new UUID(0L, 0L));
+        valueChunkRecord.setUUIDValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_ID_PARENT_COLUMN_NAME, emptyUUID);
         valueChunkRecord.setStringValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_FIAT_CURRENCY_COLUMN_NAME, account.getFiatCurrency().getCode());
         valueChunkRecord.setlongValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_FIAT_AMOUNT_COLUMN_NAME, fiatAmount);
         valueChunkRecord.setStringValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_CRYPTO_CURRENCY_COLUMN_NAME, cryptoCurrency.getCode());
@@ -88,19 +102,10 @@ class MiddlewareCreditTransaction {
         valueChunkRecord.setUUIDValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_ID_ACCOUNT_COLUMN_NAME , ((MiddlewareAccount) inMemoryAccount).getId());
         valueChunkRecord.setlongValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_TIME_STAMP_COLUMN_NAME, unixTime);
         
-        /**
-         * Here I create the credit record for historical purposes.
-         */
-        DatabaseTable creditsTable = database.getTable(MiddlewareDatabaseConstants.DEBITS_TABLE_NAME);
-        DatabaseTableRecord creditRecord = creditsTable.getEmptyRecord();
-
-        creditRecord.setUUIDValue(MiddlewareDatabaseConstants.CREDITS_TABLE_ID_COLUMN_NAME , UUID.randomUUID());
-        creditRecord.setUUIDValue(MiddlewareDatabaseConstants.CREDITS_TABLE_ID_ACCOUNT_COLUMN_NAME, ((MiddlewareAccount) inMemoryAccount).getId());
-        creditRecord.setlongValue(MiddlewareDatabaseConstants.CREDITS_TABLE_FIAT_AMOUNT_COLUMN_NAME, fiatAmount);
-        creditRecord.setlongValue(MiddlewareDatabaseConstants.CREDITS_TABLE_CRYPTO_AMOUNT_COLUMN_NAME, cryptoAmount);
-        creditRecord.setUUIDValue(MiddlewareDatabaseConstants.CREDITS_TABLE_ID_VALUE_CHUNK_COLUMN_NAME, valueChunkRecordId);
-        creditRecord.setlongValue(MiddlewareDatabaseConstants.CREDITS_TABLE_TIME_STAMP_COLUMN_NAME,  unixTime);
-
+        valueChunkRecord.setUUIDValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_ID_CREDIT_COLUMN_NAME, creditRecordId);
+        valueChunkRecord.setUUIDValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_ID_DEBIT_COLUMN_NAME, emptyUUID);
+        valueChunkRecord.setUUIDValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_ID_TRANSFER_COLUMN_NAME, emptyUUID);
+        
         /**
          * Then I execute the database transaction.
          */

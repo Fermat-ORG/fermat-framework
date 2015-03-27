@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.event_handlers;
+package com.bitdubai.fermat_core.layer._12_middleware.discount_wallet.developer.bitdubai.version_1.event_handlers;
 
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer._12_middleware.MiddlewareNotStartedException;

@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_core.layer._12_middleware.wallet.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_core.layer._12_middleware.discount_wallet.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer._12_middleware.wallet.AccountStatus;
 
@@ -43,15 +43,18 @@ class MiddlewareDatabaseConstants {
     static final String VALUE_CHUNKS_TABLE_FIAT_AMOUNT_COLUMN_NAME = "FiatAmount";
     static final String VALUE_CHUNKS_TABLE_CRYPTO_CURRENCY_COLUMN_NAME = "CryptoCurrency";
     static final String VALUE_CHUNKS_TABLE_CRYPTO_AMOUNT_COLUMN_NAME = "CryptoAmount";
-    static final String VALUE_CHUNKS_TABLE_ID_ACCOUNT_COLUMN_NAME = "IdFiatAccount";
+    static final String VALUE_CHUNKS_TABLE_ID_ACCOUNT_COLUMN_NAME = "IdAccount";
     static final String VALUE_CHUNKS_TABLE_TIME_STAMP_COLUMN_NAME = "TimeStamp";
+    static final String VALUE_CHUNKS_TABLE_ID_CREDIT_COLUMN_NAME = "IdCredit";
+    static final String VALUE_CHUNKS_TABLE_ID_DEBIT_COLUMN_NAME = "IdDebit";
+    static final String VALUE_CHUNKS_TABLE_ID_TRANSFER_COLUMN_NAME = "IdTransfer";
 
     /**
      * Debits database table definition.
      */
     static final String DEBITS_TABLE_NAME = "Debits";
     static final String DEBITS_TABLE_ID_COLUMN_NAME = "Id";
-    static final String DEBITS_TABLE_ID_FIAT_ACCOUNT_COLUMN_NAME = "IdFiatAccount";
+    static final String DEBITS_TABLE_ID_FIAT_ACCOUNT_COLUMN_NAME = "IdAccount";
     static final String DEBITS_TABLE_FIAT_AMOUNT_COLUMN_NAME = "FiatAmount";
     static final String DEBITS_TABLE_CRYPTO_AMOUNT_COLUMN_NAME = "CryptoAmount";
     static final String DEBITS_TABLE_TIME_STAMP_COLUMN_NAME = "TimeStamp";
@@ -61,10 +64,9 @@ class MiddlewareDatabaseConstants {
      */
     static final String CREDITS_TABLE_NAME = "Credits";
     static final String CREDITS_TABLE_ID_COLUMN_NAME = "Id";
-    static final String CREDITS_TABLE_ID_ACCOUNT_COLUMN_NAME = "IdFiatAccoun";
+    static final String CREDITS_TABLE_ID_ACCOUNT_COLUMN_NAME = "IdAccount";
     static final String CREDITS_TABLE_FIAT_AMOUNT_COLUMN_NAME = "FiatAmount";
     static final String CREDITS_TABLE_CRYPTO_AMOUNT_COLUMN_NAME = "CryptoAmount";
-    static final String CREDITS_TABLE_ID_VALUE_CHUNK_COLUMN_NAME = "IdValueChunk";
     static final String CREDITS_TABLE_TIME_STAMP_COLUMN_NAME = "TimeStamp";
     
 }

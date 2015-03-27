@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer._12_middleware.MiddlewareSubsystem;
 // import com.bitdubai.wallet_platform_core.layer._10_middleware.shell.ShellSubsystem;
 import com.bitdubai.fermat_core.layer._12_middleware.app_runtime.AppRuntimeSubsystem;
 import com.bitdubai.fermat_core.layer._12_middleware.bank_notes.BankNotesSubsystem;
-import com.bitdubai.fermat_core.layer._12_middleware.wallet.WalletSubsystem;
+import com.bitdubai.fermat_core.layer._12_middleware.discount_wallet.WalletSubsystem;
 import com.bitdubai.fermat_core.layer._12_middleware.wallet_contacts.WalletContactsSubsystem;
 
 /**

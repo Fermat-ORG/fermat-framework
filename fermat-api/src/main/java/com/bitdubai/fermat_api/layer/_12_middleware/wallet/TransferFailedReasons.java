@@ -12,7 +12,9 @@ public enum TransferFailedReasons {
     ACCOUNT_FROM_NOT_OPEN ("Account from not open"),
     ACCOUNT_TO_NOT_OPEN ("Account to not open"),
     NOT_ENOUGH_FUNDS ("Not enough funds"),
-    CANT_SAVE_TRANSACTION("Cant save transaction");
+    CANT_SAVE_TRANSACTION("Cant save transaction"),
+    DATABASE_UNAVAILABLE("Database Unavailable"),
+    FIAT_CURRENCY_FROM_AND_FIAT_CURRENCY_TO_DONT_MATCH("Fiat currency from and fiat currency to do not match");
 
     private String reasonText;
     
