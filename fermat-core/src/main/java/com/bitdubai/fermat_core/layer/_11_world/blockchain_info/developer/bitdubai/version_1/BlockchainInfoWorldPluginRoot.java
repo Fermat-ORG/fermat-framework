@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer._11_world.blockchain_info.exceptions.CantStartBlockchainInfoWallet;
 import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
+
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
 
@@ -28,18 +29,18 @@ import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventMana
 import com.bitdubai.fermat_api.layer._11_world.CantCreateCryptoWalletException;
 
 import com.bitdubai.fermat_api.layer._11_world.World;
+import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventType;
+import com.bitdubai.fermat_core.layer._11_world.blockchain_info.developer.bitdubai.version_1.event_handlers.BlockchainInfoEventHandler;
 import com.bitdubai.fermat_core.layer._11_world.blockchain_info.developer.bitdubai.version_1.structure.api_v_1.APIException;
 import com.bitdubai.fermat_core.layer._11_world.blockchain_info.developer.bitdubai.version_1.structure.api_v_1.createwallet.CreateWallet;
 import com.bitdubai.fermat_core.layer._11_world.blockchain_info.developer.bitdubai.version_1.structure.api_v_1.createwallet.CreateWalletResponse;
 import com.bitdubai.fermat_api.layer._11_world.CryptoWalletManager;
 import  com.bitdubai.fermat_core.layer._11_world.blockchain_info.developer.bitdubai.version_1.structure.BlockchainInfoWallet;
-
-
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+
 import java.util.List;
-import java.util.Map;
+
 import java.util.UUID;
 
 /**
@@ -65,7 +66,9 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Servic
          * CryptoWalletManager Interface member variables.
          */
         final String WALLET_IDS_FILE_NAME = "walletsIds";
-
+        private String password = "";
+        private String apiCode = "91c646ef-c3fd-4dd0-9dc9-eba5c5600549";
+        private String privateKey ="";
 
         /**
          * UsesFileSystem Interface member variable
@@ -82,7 +85,8 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Servic
          */
         UUID pluginId;
 
-        @Override
+
+    @Override
         public void start() throws CantStartPluginException {
 
             /**
@@ -90,6 +94,8 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Servic
              * ids managed by this plug-in already exists or not.
              * * *
              */
+
+
           PluginTextFile walletIdsFile;
             try{
 
@@ -174,7 +180,14 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Servic
             EventListener eventListener;
             EventHandler eventHandler;
 
-            this.serviceStatus = ServiceStatus.STARTED;
+            eventListener = eventManager.getNewListener(EventType.WALLET_CREATED);
+            eventHandler = new BlockchainInfoEventHandler();
+            ((BlockchainInfoEventHandler) eventHandler).setCryptowalletManager(this);
+            eventListener.setEventHandler(eventHandler);
+            eventManager.addListener(eventListener);
+            listenersAdded.add(eventListener);
+
+        this.serviceStatus = ServiceStatus.STARTED;
 
 
 
@@ -215,14 +228,6 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Servic
             return this.serviceStatus;
         }
 
-    // TODO: NATALIA los member variables van arriba de todo, ante de la implementacion de la primera interfaz.
-    
-        /**
-         * CryptoWalletManager Interface member variables.
-         */
-        private String password = "";
-        private String apiCode = "91c646ef-c3fd-4dd0-9dc9-eba5c5600549";
-        private String privateKey ="";
 
         /**
          * CryptoWalletManager methods implementation.
@@ -236,7 +241,7 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Servic
                 UUID walletId = UUID.randomUUID();
                 PluginTextFile layoutFile;
 
-                layoutFile = pluginFileSystem.createTextFile(pluginId, "wallets_data", "wallets_id.txt", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                layoutFile = pluginFileSystem.createTextFile(pluginId, pluginId.toString(), WALLET_IDS_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
                 layoutFile.setContent(";" + walletId.toString());
                 layoutFile.persistToMedia();
 
@@ -251,17 +256,29 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Servic
                 String walletLink = response.getLink();
                 //save wallet guid, address and link in a binary file on disk
 
-                layoutFile = pluginFileSystem.createTextFile(pluginId, "wallets_data", walletId.toString() + ".txt", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                layoutFile = pluginFileSystem.createTextFile(pluginId, pluginId.toString(), walletId.toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
 
                 layoutFile.setContent(walletAddress + ";" + walletGuid + ";" + walletLink + ";" + this.privateKey + ";" + this.password);
                 layoutFile.persistToMedia();
 
-            } catch (APIException e) {
-                e.printStackTrace();}
-            catch (IOException e) {
-                e.printStackTrace();}
+            } catch (IOException|APIException e) {
+                /**
+                 * If I can not create the  the new wallet in BlockChain Api , then this method fails.
+                 */
+                System.err.println("CantCreateBlockChainWalletException: " + e.getMessage());
+                e.printStackTrace();
+                throw new CantCreateCryptoWalletException();
+            }
             catch (CantPersistFileException e) {
-                e.printStackTrace();}
+
+                    /**
+                     * If I can not save the id of the new wallet created, then this method fails.
+                     */
+                    System.err.println("CantPersistFileException: " + e.getMessage());
+                    e.printStackTrace();
+                    throw new CantCreateCryptoWalletException();
+
+            }
 
         }
 

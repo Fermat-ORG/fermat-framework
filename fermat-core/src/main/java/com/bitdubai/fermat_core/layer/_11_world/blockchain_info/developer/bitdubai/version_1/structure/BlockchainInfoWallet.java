@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer._2_os.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer._2_os.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer._2_os.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer._2_os.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_core.layer._11_world.blockchain_info.developer.bitdubai.version_1.structure.api_v_1.APIException;
@@ -27,6 +28,7 @@ import com.bitdubai.fermat_core.layer._11_world.blockchain_info.developer.bitdub
 import java.io.IOException;
 import java.util.UUID;
 import com.bitdubai.fermat_api.layer._2_os.database_system.*;
+import com.bitdubai.fermat_core.layer._12_middleware.discount_wallet.developer.bitdubai.version_1.exceptions.CantStartWalletException;
 
 /**
  * Created by ciencias on 3/19/15.
@@ -127,7 +129,7 @@ public class BlockchainInfoWallet implements CryptoWallet ,DealsWithPluginFileSy
                 /**
                  * Then the OUTGOING_CRYPTO accounts table.
                  */
-              /*  table = ((DatabaseFactory) this.database).newTableFactory(this.pluginId, CRYPTO_ACCOUNTS_TABLE_NAME);
+                table = ((DatabaseFactory) this.database).newTableFactory(this.pluginId, CRYPTO_ACCOUNTS_TABLE_NAME);
                 table.addColumn(CRYPTO_ACCOUNTS_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36);
                 table.addColumn(CRYPTO_ACCOUNTS_TABLE_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 100);
                 table.addColumn(CRYPTO_ACCOUNTS_TABLE_BALANCE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
@@ -139,7 +141,7 @@ public class BlockchainInfoWallet implements CryptoWallet ,DealsWithPluginFileSy
                     System.err.println("CantCreateTableException: " + cantCreateTableException.getMessage());
                     cantCreateTableException.printStackTrace();
                     throw new CantStartBlockchainInfoWallet();
-                }*/
+                }
 
             }
             catch (InvalidOwnerId invalidOwnerId) {
@@ -193,7 +195,7 @@ public class BlockchainInfoWallet implements CryptoWallet ,DealsWithPluginFileSy
         try{
             //get wallet property files, address and guid, and get actual balance
             PluginTextFile layoutFile;
-            layoutFile = pluginFileSystem.getTextFile(pluginId, "wallets_data", this.walletId + ".txt", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            layoutFile = pluginFileSystem.getTextFile(pluginId, pluginId.toString(), this.walletId.toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
 
             String[] walletData = layoutFile.getContent().split(";");
 
@@ -205,12 +207,19 @@ public class BlockchainInfoWallet implements CryptoWallet ,DealsWithPluginFileSy
             balance = wallet.getBalance();
 
 
-        } catch (APIException e) {
-            e.printStackTrace();}
-        catch (IOException e) {
-            e.printStackTrace();}
+        } catch (IOException|APIException e) {
+            System.err.println("CantConnectToApi: " + e.getMessage());
+            e.printStackTrace();
+           // throw new CantStartWalletException();
+           }
         catch (FileNotFoundException e) {
-            e.printStackTrace();}
+            /**
+             * The database exists but cannot be open. I can not handle this situation.
+             */
+            System.err.println("CantNotGetWalletBalance: " + e.getMessage());
+            e.printStackTrace();
+           // throw new CantLoadFileException("wallet file");
+            }
         return balance;
     }
 
@@ -221,7 +230,7 @@ public class BlockchainInfoWallet implements CryptoWallet ,DealsWithPluginFileSy
 
             this.walletAddress = cryptoAddress.getAddress();
             PluginTextFile layoutFile;
-            layoutFile = pluginFileSystem.getTextFile(pluginId, "wallets_data", this.walletId + ".txt", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            layoutFile = pluginFileSystem.getTextFile(pluginId, pluginId.toString(), this.walletId.toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             String[] walletData = layoutFile.getContent().split(";");
 
             this.password = walletData[4].toString();
@@ -232,9 +241,7 @@ public class BlockchainInfoWallet implements CryptoWallet ,DealsWithPluginFileSy
             Address addr = wallet.getAddress(this.walletAddress, 3);
             addressBalance =  addr.getBalance();
 
-        } catch (APIException e) {
-            e.printStackTrace();}
-        catch (IOException e) {
+        } catch (IOException|APIException e) {
             e.printStackTrace();}
         catch (FileNotFoundException e) {
             e.printStackTrace();}
@@ -248,7 +255,7 @@ public class BlockchainInfoWallet implements CryptoWallet ,DealsWithPluginFileSy
         // public notes require a minimum transaction size of 0.005 BTC
         try{
             PluginTextFile layoutFile;
-            layoutFile = pluginFileSystem.getTextFile(pluginId, "wallets_data", walletId + ".txt", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            layoutFile = pluginFileSystem.getTextFile(pluginId, pluginId.toString(), walletId.toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
 
             String[] walletData = layoutFile.getContent().split(";");
             walletAddress = walletData[0].toString();
@@ -257,9 +264,7 @@ public class BlockchainInfoWallet implements CryptoWallet ,DealsWithPluginFileSy
             Wallet wallet = new Wallet(walletGuid, password);
             PaymentResponse payment = wallet.send(cryptoAddress.getAddress(), amount, null,null, "");
 
-        } catch (APIException e) {
-            e.printStackTrace();}
-        catch (IOException e) {
+        } catch (IOException|APIException e) {
             e.printStackTrace();}
         catch (FileNotFoundException e) {
             e.printStackTrace();}
