@@ -286,7 +286,7 @@ class MiddlewareTransferTransaction {
         /**
          * Finally I force an update on both account on memory balances.
          */
-        
+        ((MiddlewareAccount) accountFrom).setDatabase(this.database);
         ((MiddlewareAccount) accountFrom).updateBalance();
         ((MiddlewareAccount) accountTo).updateBalance();
         

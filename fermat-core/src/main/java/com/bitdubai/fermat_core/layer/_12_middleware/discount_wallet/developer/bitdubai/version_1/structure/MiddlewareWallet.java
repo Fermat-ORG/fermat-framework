@@ -327,6 +327,7 @@ public class MiddlewareWallet implements DealsWithCryptoIndex, DealsWithEvents, 
             ((DealsWithCryptoIndex) account).setCryptoIndexManager(this.cryptoIndexManager);
 
             try {
+
                 ((AccountService) account).start();
             }
             catch (CantStartAccountException cantStartAccountException){

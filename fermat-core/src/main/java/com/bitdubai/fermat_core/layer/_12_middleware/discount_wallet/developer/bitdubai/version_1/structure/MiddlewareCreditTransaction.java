@@ -130,7 +130,7 @@ class MiddlewareCreditTransaction {
         /**
          * Then I update the accounts in memory.
          */
-
+        ((MiddlewareAccount) inMemoryAccount).setDatabase(this.database);
         ((MiddlewareAccount) inMemoryAccount).updateBalance();
 
     }
