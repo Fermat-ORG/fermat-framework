@@ -284,12 +284,12 @@ class MiddlewareAccount implements  Account, AccountService, DealsWithCryptoInde
         /**
          * Check if the Account state is Open.
          */
-        if (AccountStatus.getByCode(record.getStringValue(MiddlewareDatabaseConstants.ACCOUNTS_TABLE_STATUS_COLUMN_NAME)) != AccountStatus.OPEN) {
+     //   if (AccountStatus.getByCode(record.getStringValue(MiddlewareDatabaseConstants.ACCOUNTS_TABLE_STATUS_COLUMN_NAME)) != AccountStatus.OPEN) {
             /**
              * An account that is not open can not be started.
              */
-            throw new CantStartAccountException();
-        }
+          //  throw new CantStartAccountException();
+       // }
 
         try {
             calculateBalances();
@@ -439,6 +439,9 @@ class MiddlewareAccount implements  Account, AccountService, DealsWithCryptoInde
             cryptoAmount = record.getlongValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_CRYPTO_AMOUNT_COLUMN_NAME);
             fiatAmount = record.getlongValue(MiddlewareDatabaseConstants.VALUE_CHUNKS_TABLE_ID_ACCOUNT_COLUMN_NAME);
 
+            pricePaid = 0;
+
+            if(cryptoAmount > 0)
             pricePaid = fiatAmount / cryptoAmount;
             marketPrice = cryptoMarketPrice.get(cryptoCurrency).doubleValue();
 
