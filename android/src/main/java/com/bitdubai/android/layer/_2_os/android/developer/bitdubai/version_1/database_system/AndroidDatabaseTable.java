@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 
+import com.bitdubai.fermat_api.layer._2_os.database_system.DataBaseTableOrder;
+import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseFilterOrder;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTable;
@@ -28,9 +30,10 @@ public class AndroidDatabaseTable implements  DatabaseTable {
     String tableName;
     SQLiteDatabase database;
 
-    List<DatabaseTableFilter> tableFilter;
+    private List<DatabaseTableFilter> tableFilter;
     private  List<DatabaseTableRecord> records;
     private  DatabaseTableRecord tableRecord;
+    private List<DataBaseTableOrder> tableOrder;
 
     public AndroidDatabaseTable (Context context,SQLiteDatabase database, String tableName){
         this.tableName = tableName;
@@ -92,38 +95,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
 
             List<DatabaseRecord> records =  record.getValues();
 
-        //filter
-        String  strFilter = "";
-
-            //filter
-            if(tableFilter != null)
-            {
-                for (int i = 0; i < tableFilter.size(); ++i) {
-
-                    strFilter += tableFilter.get(i).getColumn();
-                    switch (tableFilter.get(i).getType()) {
-                        case EQUAL:
-                            strFilter += " =" + tableFilter.get(i).getValue();
-                            break;
-                        case GRATER_THAN:
-                            strFilter += " > " + tableFilter.get(i).getValue();
-                            break;
-                        case LESS_THAN:
-                            strFilter += " < " + tableFilter.get(i).getValue();
-                            break;
-                        case LIKE:
-                            strFilter += " Like " + tableFilter.get(i).getValue();
-                            break;
-                    }
-
-                    if(i < tableFilter.size()-1)
-                        strFilter +=  " AND ";
-
-                }
-            }
-            if(strFilter.length() > 0 ) strFilter = " WHERE " + strFilter;
-
-        ContentValues recordUpdateList = new ContentValues();
+            ContentValues recordUpdateList = new ContentValues();
 
             /**
              * I update only the fields marked as modified
@@ -137,7 +109,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
         }
 
 
-        this.database.update(tableName, recordUpdateList, strFilter, null);
+        this.database.update(tableName, recordUpdateList, makeFilter() + makeOrder(), null);
 
        }
         catch (Exception exception) {
@@ -185,44 +157,16 @@ public class AndroidDatabaseTable implements  DatabaseTable {
     @Override
     public void loadToMemory() throws CantLoadTableToMemory {
 
-        String strFilter = "";
+
         this.tableRecord  = new AndroidDatabaseRecord();
 
         List<DatabaseRecord>  recordValues = new ArrayList<DatabaseRecord>();
         this.records = new ArrayList<DatabaseTableRecord>() ;
 
-        //filter
-        if(tableFilter != null)
-        {
-            for (int i = 0; i < tableFilter.size(); ++i) {
-
-                strFilter += tableFilter.get(i).getColumn();
-                switch (tableFilter.get(i).getType()) {
-                    case EQUAL:
-                        strFilter += " =" + tableFilter.get(i).getValue();
-                        break;
-                    case GRATER_THAN:
-                        strFilter += " > " + tableFilter.get(i).getValue();
-                        break;
-                    case LESS_THAN:
-                        strFilter += " < " + tableFilter.get(i).getValue();
-                        break;
-                    case LIKE:
-                        strFilter += " Like '" + tableFilter.get(i).getValue() + "'";
-                        break;
-                }
-
-                if(i < tableFilter.size()-1)
-                    strFilter +=  " AND ";
-
-            }
-        }
-
-        if(strFilter.length() > 0 ) strFilter = " WHERE " + strFilter;
 
         try {
             List<String> columns = getColumns();
-            Cursor c = this.database.rawQuery("SELECT * FROM " + tableName + strFilter, null);
+            Cursor c = this.database.rawQuery("SELECT * FROM " + tableName + makeFilter() + makeOrder(), null);
 
             if (c.moveToFirst()) {
                 do {
@@ -251,16 +195,16 @@ public class AndroidDatabaseTable implements  DatabaseTable {
         }
 
 
-        tableRecord.setValues(recordValues);
-        this.records.add(tableRecord);
+        this.tableRecord.setValues(recordValues);
+        this.records.add(this.tableRecord);
 
     }
 
     @Override
     public void setStringFilter(String columName, String value,DatabaseFilterType type){
 
-        if(tableFilter == null)
-            tableFilter = new ArrayList<DatabaseTableFilter>();
+        if(this.tableFilter == null)
+            this.tableFilter = new ArrayList<DatabaseTableFilter>();
 
         DatabaseTableFilter filter = new AndroidDatabaseTableFilter();
 
@@ -268,14 +212,14 @@ public class AndroidDatabaseTable implements  DatabaseTable {
         filter.setValue(value);
         filter.setType(type);
 
-        tableFilter.add(filter);
+        this.tableFilter.add(filter);
     }
 
     @Override
     public void setUUIDFilter(String columName, UUID value,DatabaseFilterType type){
 
-        if(tableFilter == null)
-            tableFilter = new ArrayList<DatabaseTableFilter>();
+        if(this.tableFilter == null)
+            this.tableFilter = new ArrayList<DatabaseTableFilter>();
 
         DatabaseTableFilter filter = new AndroidDatabaseTableFilter();
 
@@ -283,8 +227,87 @@ public class AndroidDatabaseTable implements  DatabaseTable {
         filter.setValue(value.toString());
         filter.setType(type);
 
-        tableFilter.add(filter);
+        this.tableFilter.add(filter);
 
+    }
+
+    @Override
+    public void setFilterOrder(String columnName, DatabaseFilterOrder direction){
+
+        if(this.tableOrder == null)
+            this.tableOrder = new ArrayList<DataBaseTableOrder>();
+
+        DataBaseTableOrder order = new AndroidDatabaseTableOrder();
+
+        order.setColumName(columnName);
+        order.setDirection(direction);
+
+
+        this.tableOrder.add(order);
+    }
+
+    private String makeFilter(){
+
+        String  strFilter = "";
+
+
+        if(this.tableFilter != null)
+        {
+            for (int i = 0; i < tableFilter.size(); ++i) {
+
+                strFilter += tableFilter.get(i).getColumn();
+                switch (tableFilter.get(i).getType()) {
+                    case EQUAL:
+                        strFilter += " ='" + tableFilter.get(i).getValue() + "'";
+                        break;
+                    case GRATER_THAN:
+                        strFilter += " > " + tableFilter.get(i).getValue();
+                        break;
+                    case LESS_THAN:
+                        strFilter += " < " + tableFilter.get(i).getValue();
+                        break;
+                    case LIKE:
+                        strFilter += " Like '%" + tableFilter.get(i).getValue() + "%'";
+                        break;
+                }
+
+                if(i < tableFilter.size()-1)
+                    strFilter +=  " AND ";
+
+            }
+        }
+        if(strFilter.length() > 0 ) strFilter = " WHERE " + strFilter;
+
+        return strFilter;
+    }
+
+
+    private String makeOrder(){
+
+        String  strOrder = "";
+
+        if(this.tableOrder != null)
+        {
+            for (int i = 0; i < tableOrder.size(); ++i) {
+
+                strOrder += tableOrder.get(i).getColumName();
+                switch (tableOrder.get(i).getDirection()) {
+                    case DESCENDING:
+                        strOrder +=  tableOrder.get(i).getColumName() + " DESC ";
+                        break;
+                    case ASCENDING:
+                        strOrder += tableOrder.get(i).getColumName();
+                        break;
+
+                }
+                    if(i < tableOrder.size()-1)
+                        strOrder +=  " , ";
+
+            }
+        }
+        if(strOrder.length() > 0 ) strOrder = " ORDER BY " + strOrder;
+
+        return strOrder;
     }
 }
 

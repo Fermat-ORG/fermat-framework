@@ -8,9 +8,9 @@ import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableFilter;
  * Created by Natalia on 09/02/2015.
  */
 public class AndroidDatabaseTableFilter implements DatabaseTableFilter {
-    String column;
-    DatabaseFilterType type;
-    String value;
+    private String column;
+    private DatabaseFilterType type;
+    private String value;
 
     public void setColumn (String column)
     {
