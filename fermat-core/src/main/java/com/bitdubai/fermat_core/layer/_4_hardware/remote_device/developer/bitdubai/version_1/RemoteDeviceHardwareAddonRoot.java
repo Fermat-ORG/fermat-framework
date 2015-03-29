@@ -19,24 +19,58 @@ import java.util.List;
 /**
  * Created by loui on 05/03/15.
  */
-public class RemoteDeviceHardwareAddonRoot implements Service, RemoteDeviceHardwareManager, Hardware, DealsWithPlatformFileSystem, DealsWithEvents, DealsWithErrors, Addon {
+public class RemoteDeviceHardwareAddonRoot implements Addon, Hardware, DealsWithErrors, DealsWithEvents, DealsWithPlatformFileSystem, RemoteDeviceHardwareManager, Service  {
+
 
     /**
-     * PlatformService Interface member variables.
+     * DealWithEvents Interface member variables.
      */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
-    List<EventListener> listenersAdded = new ArrayList<>();
+    EventManager eventManager;
 
     /**
      * DealsWithPlatformFileSystem Interface member variables.
      */
     PlatformFileSystem platformFileSystem;
-    
+
     /**
-     * DealWithEvents Interface member variables.
+     * Service Interface member variables.
      */
-    EventManager eventManager;
+    ServiceStatus serviceStatus = ServiceStatus.CREATED;
+    List<EventListener> listenersAdded = new ArrayList<>();
+
+
+
+
+
+    /**
+     * Error manager Interface Implementation.
+     */
     
+    @Override
+    public void setErrorManager(ErrorManager errorManager) {
+        
+    }
+
+
+    /**
+     * Event Manager Interface Implementation.
+     */
+
+    @Override
+    public void setEventManager(EventManager eventManager) {
+        this.eventManager = eventManager;
+    }
+
+    /**
+     * DealsWithPlatformFileSystem Interface Implementation.
+     */
+
+    @Override
+    public void setPlatformFileSystem(PlatformFileSystem platformFileSystem) {
+        this.platformFileSystem = platformFileSystem;
+
+    }
+
     /**
      * Service Interface implementation.
      */
@@ -68,43 +102,11 @@ public class RemoteDeviceHardwareAddonRoot implements Service, RemoteDeviceHardw
 
     }
 
-    
-    
+
+
     @Override
     public ServiceStatus getStatus() {
         return serviceStatus;
     }
-
-
-    /**
-     * DealsWithFileSystem Interface Implementation.
-     */
-    
-    @Override
-    public void setPlatformFileSystem(PlatformFileSystem platformFileSystem) {
-        this.platformFileSystem = platformFileSystem;
-
-    }    
-    
-    /**
-     * Error manager Interface Implementation.
-     */
-    
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        
-    }
-
-
-    /**
-     * Event Manager Interface Implementation.
-     */
-
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-    
     
 }

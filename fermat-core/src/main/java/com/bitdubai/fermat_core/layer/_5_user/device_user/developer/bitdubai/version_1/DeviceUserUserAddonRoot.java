@@ -37,23 +37,7 @@ import java.util.UUID;
  * It is responsible for login in users to the current device.
  */
 
-public class DeviceUserUserAddonRoot implements Service,  DeviceUserManager, DealsWithPlatformFileSystem, DealsWithEvents, DealsWithErrors, Addon {
-
-    /**
-     * PlatformService Interface member variables.
-     */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
-    List<EventListener> listenersAdded = new ArrayList<>();
-        
-    /**
-     * UserManager Interface member variables.
-     */
-    DeviceUser mLoggedInDeviceUser;
-
-    /**
-     * DealsWithPlatformFileSystem Interface member variables.
-     */
-    PlatformFileSystem platformFileSystem;
+public class DeviceUserUserAddonRoot implements Addon, DealsWithErrors, DealsWithEvents, DealsWithPlatformFileSystem, DeviceUserManager, Service {
 
     /**
      * DealWithEvents Interface member variables.
@@ -61,86 +45,54 @@ public class DeviceUserUserAddonRoot implements Service,  DeviceUserManager, Dea
     EventManager eventManager;
 
     /**
-     * PlatformService Interface implementation.
+     * DealsWithPlatformFileSystem Interface member variables.
+     */
+    PlatformFileSystem platformFileSystem;
+
+    /**
+     * DeviceUserManager Interface member variables.
+     */
+    DeviceUser mLoggedInDeviceUser;
+
+    /**
+     * Service Interface member variables.
+     */
+    ServiceStatus serviceStatus = ServiceStatus.CREATED;
+    List<EventListener> listenersAdded = new ArrayList<>();
+
+
+
+
+
+
+    /**
+     *DealWithErrors Interface implementation.
+     */
+    @Override
+    public void setErrorManager(ErrorManager errorManager) {
+
+    }
+
+    /**
+     * DealWithEvents Interface implementation.
      */
 
     @Override
-    public void start() {
-
-
-        /**
-         * Now I will recover the last state, If there was a user logged in before closing the APP the last time, I will
-         * re-loggin it,  
-         */
-
-
-        /**
-         * If there is no last state file, I assume this is the first time the platform is running on this device.
-         * Under this situation I will do the following;
-         *
-         * 1) Create a new User with no password.
-         * 2) Auto login that user.
-         * 3) Save the last state for future use.
-         */
-        
-        
-        
-        /**
-         * I will initialize the handling of platform events.
-         */
-
-        EventListener eventListener;
-        EventHandler eventHandler;
-
-       // eventListener = eventManager.getNewListener(EventType.DEVICE_USER_CREATED);
-       // eventHandler = new UserCreatedEventHandler();
-       // ((UserCreatedEventHandler) eventHandler).setWalletManager(this);
-       // eventListener.setEventHandler(eventHandler);
-       // eventManager.addListener(eventListener);
-       // listenersAdded.add(eventListener);
-
-        this.serviceStatus = ServiceStatus.STARTED;
+    public void setEventManager(EventManager eventManager) {
+        this.eventManager = eventManager;
     }
 
-    @Override
-    public void pause() {
-
-        this.serviceStatus = ServiceStatus.PAUSED;
-
-    }
-
-    @Override
-    public void resume() {
-
-        this.serviceStatus = ServiceStatus.STARTED;
-
-    }
-
-    @Override
-    public void stop() {
-
-        /**
-         * I will remove all the event listeners registered with the event manager.
-         */
-
-        for (EventListener eventListener : listenersAdded) {
-            eventManager.removeListener(eventListener);
-        }
-
-        listenersAdded.clear();
-
-        this.serviceStatus = ServiceStatus.STOPPED;
-
-    }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return this.serviceStatus;
-    }
-
-    
     /**
-     * UserManager Interface implementation.
+     * DealsWithPlatformFileSystem Interface implementation.
+     */
+
+    @Override
+    public void setPlatformFileSystem(PlatformFileSystem platformFileSystem) {
+        this.platformFileSystem = platformFileSystem;
+    }
+
+    /**
+     * DeviceUserManager Interface implementation.
      */
 
     @Override
@@ -194,43 +146,89 @@ public class DeviceUserUserAddonRoot implements Service,  DeviceUserManager, Dea
 
     }
 
-
-
-
-
-
-
-
-
     /**
-     * DealsWithPlatformFileSystem Interface implementation.
+     * Service Interface implementation.
      */
 
     @Override
-    public void setPlatformFileSystem(PlatformFileSystem platformFileSystem) {
-        this.platformFileSystem = platformFileSystem;
-    }
+    public void start() {
 
-    /**
-     * DealWithEvents Interface implementation.
-     */
+
+        /**
+         * Now I will recover the last state, If there was a user logged in before closing the APP the last time, I will
+         * re-loggin it,
+         */
+
+
+        /**
+         * If there is no last state file, I assume this is the first time the platform is running on this device.
+         * Under this situation I will do the following;
+         *
+         * 1) Create a new User with no password.
+         * 2) Auto login that user.
+         * 3) Save the last state for future use.
+         */
+
+
+
+        /**
+         * I will initialize the handling of platform events.
+         */
+
+        EventListener eventListener;
+        EventHandler eventHandler;
+
+        // eventListener = eventManager.getNewListener(EventType.DEVICE_USER_CREATED);
+        // eventHandler = new UserCreatedEventHandler();
+        // ((UserCreatedEventHandler) eventHandler).setWalletManager(this);
+        // eventListener.setEventHandler(eventHandler);
+        // eventManager.addListener(eventListener);
+        // listenersAdded.add(eventListener);
+
+        this.serviceStatus = ServiceStatus.STARTED;
+    }
 
     @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
+    public void pause() {
+
+        this.serviceStatus = ServiceStatus.PAUSED;
+
     }
 
-    /**
-     *DealWithErrors Interface implementation.
-     */
     @Override
-    public void setErrorManager(ErrorManager errorManager) {
+    public void resume() {
+
+        this.serviceStatus = ServiceStatus.STARTED;
 
     }
 
-    
-    
-    
+    @Override
+    public void stop() {
+
+        /**
+         * I will remove all the event listeners registered with the event manager.
+         */
+
+        for (EventListener eventListener : listenersAdded) {
+            eventManager.removeListener(eventListener);
+        }
+
+        listenersAdded.clear();
+
+        this.serviceStatus = ServiceStatus.STOPPED;
+
+    }
+
+    @Override
+    public ServiceStatus getStatus() {
+        return this.serviceStatus;
+    }
+
+
+
+
+
+
     private void recoverLastState () throws CantCreateDeviceUserException {
 
         try {

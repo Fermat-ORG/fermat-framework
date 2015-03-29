@@ -8,13 +8,17 @@ import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorMana
 /**
  * Created by ciencias on 05.02.15.
  */
-public class ErrorManagerPlatformServiceAddonRoot implements Service, ErrorManager, Addon {
+public class ErrorManagerPlatformServiceAddonRoot implements Addon, ErrorManager, Service {
 
 
     /**
      * Service Interface member variables.
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
+
+
+
+
 
 
     /**

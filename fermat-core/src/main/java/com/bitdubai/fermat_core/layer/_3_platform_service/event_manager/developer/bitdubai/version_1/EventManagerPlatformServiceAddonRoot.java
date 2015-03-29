@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * Created by ciencias on 23.01.15.
  */
-public class EventManagerPlatformServiceAddonRoot implements Service, EventManager, DealWithEventMonitor, Addon {
+public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager, DealWithEventMonitor, Service  {
     
     /**
      * Service Interface member variables.
@@ -65,43 +65,6 @@ public class EventManagerPlatformServiceAddonRoot implements Service, EventManag
     
     EventMonitor eventMonitor;
 
-
-    /**
-     * PlatformService Interface implementation.
-     */
-    
-    @Override
-    public void start() {
-
-        this.serviceStatus = ServiceStatus.STARTED;
-
-    }
-
-    @Override
-    public void pause() {
-
-        this.serviceStatus = ServiceStatus.PAUSED;
-
-    }
-
-    @Override
-    public void resume() {
-
-        this.serviceStatus = ServiceStatus.STARTED;
-
-    }
-
-    @Override
-    public void stop() {
-
-        this.serviceStatus = ServiceStatus.STOPPED;
-
-    }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return serviceStatus;
-    }
 
     /**
      * EventManager Interface implementation.
@@ -857,6 +820,43 @@ public class EventManagerPlatformServiceAddonRoot implements Service, EventManag
         this.eventMonitor = eventMonitor;
     }
 
+
+    /**
+     * Service Interface implementation.
+     */
+
+    @Override
+    public void start() {
+
+        this.serviceStatus = ServiceStatus.STARTED;
+
+    }
+
+    @Override
+    public void pause() {
+
+        this.serviceStatus = ServiceStatus.PAUSED;
+
+    }
+
+    @Override
+    public void resume() {
+
+        this.serviceStatus = ServiceStatus.STARTED;
+
+    }
+
+    @Override
+    public void stop() {
+
+        this.serviceStatus = ServiceStatus.STOPPED;
+
+    }
+
+    @Override
+    public ServiceStatus getStatus() {
+        return serviceStatus;
+    }
 
 
 }

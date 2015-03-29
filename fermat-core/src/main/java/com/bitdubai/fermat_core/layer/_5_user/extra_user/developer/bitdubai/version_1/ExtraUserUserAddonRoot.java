@@ -22,7 +22,7 @@ import com.bitdubai.fermat_api.layer._5_user.extra_user.ExtraUserManager;
  * This plug-in manages a registry of known extra users..
  */
 
-public class ExtraUserUserAddonRoot implements Service,  ExtraUserManager, DealsWithPlatformFileSystem, DealsWithPlatformDatabaseSystem, DealsWithEvents, DealsWithErrors, Addon {
+public class ExtraUserUserAddonRoot implements Addon, DealsWithErrors, DealsWithEvents, DealsWithPlatformDatabaseSystem, DealsWithPlatformFileSystem, ExtraUserManager, Service  {
 
 
     /**
@@ -35,6 +35,48 @@ public class ExtraUserUserAddonRoot implements Service,  ExtraUserManager, Deals
      * Service Interface member variables.
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
+
+    /**
+     *DealWithErrors Interface implementation.
+     */
+
+
+
+
+
+
+    @Override
+    public void setErrorManager(ErrorManager errorManager) {
+
+    }
+    /**
+     * DealWithEvents Interface implementation.
+     */
+
+    @Override
+    public void setEventManager(EventManager eventManager) {
+        this.eventManager = eventManager;
+    }
+
+    /**
+     * Platform Database System implementation.
+     */
+
+    @Override
+    public void setPlatformDatabaseSystem(PlatformDatabaseSystem platformDatabaseSystem) {
+
+    }
+
+    /**
+     * Platform File System implementation.
+     */
+    
+    @Override
+    public void setPlatformFileSystem(PlatformFileSystem platformFileSystem) {
+
+    }
+
+
 
     /**
      * Service Interface implementation.
@@ -70,44 +112,6 @@ public class ExtraUserUserAddonRoot implements Service,  ExtraUserManager, Deals
     @Override
     public ServiceStatus getStatus() {
         return serviceStatus;
-    }
-
-
-    /**
-     * Platform File System implementation.
-     */
-    
-    @Override
-    public void setPlatformFileSystem(PlatformFileSystem platformFileSystem) {
-
-    }
-
-    /**
-     * Platform Database System implementation.
-     */
-    
-    @Override
-    public void setPlatformDatabaseSystem(PlatformDatabaseSystem platformDatabaseSystem) {
-
-    }
-    
-    
-    /**
-     * DealWithEvents Interface implementation.
-     */
-
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-    /**
-     *DealWithErrors Interface implementation.
-     */
-
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-
     }
 
 

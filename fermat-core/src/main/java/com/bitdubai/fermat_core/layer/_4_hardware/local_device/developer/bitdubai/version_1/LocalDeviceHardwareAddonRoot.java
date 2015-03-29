@@ -19,13 +19,12 @@ import java.util.List;
 /**
  * Created by loui on 05/03/15.
  */
-public class LocalDeviceHardwareAddonRoot implements Service, LocalDeviceHardwareManager, Hardware, DealsWithPlatformFileSystem, DealsWithEvents, DealsWithErrors, Addon {
+public class LocalDeviceHardwareAddonRoot implements  Addon, DealsWithErrors,DealsWithEvents , DealsWithPlatformFileSystem, Hardware,LocalDeviceHardwareManager ,Service {
 
     /**
-     * PlatformService Interface member variables.
+     * DealWithEvents Interface member variables.
      */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
-    List<EventListener> listenersAdded = new ArrayList<>();
+    EventManager eventManager;
 
     /**
      * DealsWithPlatformFileSystem Interface member variables.
@@ -33,9 +32,43 @@ public class LocalDeviceHardwareAddonRoot implements Service, LocalDeviceHardwar
     PlatformFileSystem platformFileSystem;
 
     /**
-     * DealWithEvents Interface member variables.
+     * Service Interface member variables.
      */
-    EventManager eventManager;
+    ServiceStatus serviceStatus = ServiceStatus.CREATED;
+    List<EventListener> listenersAdded = new ArrayList<>();
+
+
+
+
+
+    /**
+     * DealsWithFileSystem Interface Implementation.
+     */
+
+    @Override
+    public void setPlatformFileSystem(PlatformFileSystem platformFileSystem) {
+        this.platformFileSystem = platformFileSystem;
+
+    }
+
+    /**
+     * Error manager Interface Implementation.
+     */
+
+    @Override
+    public void setErrorManager(ErrorManager errorManager) {
+
+    }
+
+
+    /**
+     * Event Manager Interface Implementation.
+     */
+
+    @Override
+    public void setEventManager(EventManager eventManager) {
+        this.eventManager = eventManager;
+    }
 
     /**
      * Service Interface implementation.
@@ -74,37 +107,6 @@ public class LocalDeviceHardwareAddonRoot implements Service, LocalDeviceHardwar
     public ServiceStatus getStatus() {
         return serviceStatus;
     }
-
-
-    /**
-     * DealsWithFileSystem Interface Implementation.
-     */
-
-    @Override
-    public void setPlatformFileSystem(PlatformFileSystem platformFileSystem) {
-        this.platformFileSystem = platformFileSystem;
-
-    }
-
-    /**
-     * Error manager Interface Implementation.
-     */
-
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-
-    }
-
-
-    /**
-     * Event Manager Interface Implementation.
-     */
-
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
 
 
 }
