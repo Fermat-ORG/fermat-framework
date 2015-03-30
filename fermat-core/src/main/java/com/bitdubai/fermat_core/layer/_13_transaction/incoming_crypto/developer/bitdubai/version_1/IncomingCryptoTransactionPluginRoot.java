@@ -178,8 +178,6 @@ public class IncomingCryptoTransactionPluginRoot implements Service, IncomingCry
     @Override
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-
-        //TODO asi esta bien?
     }
 
 
