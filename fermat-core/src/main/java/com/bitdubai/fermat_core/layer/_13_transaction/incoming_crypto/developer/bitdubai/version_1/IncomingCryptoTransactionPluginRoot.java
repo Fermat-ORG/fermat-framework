@@ -47,7 +47,7 @@ public class IncomingCryptoTransactionPluginRoot implements Service, IncomingCry
     Registry registry;
 
     /**
-     * UsesDatabaseSystem Interface member variables.
+     * DealsWithPluginDatabaseSystem Interface member variables.
      */
     PluginDatabaseSystem pluginDatabaseSystem;
 
@@ -137,6 +137,7 @@ public class IncomingCryptoTransactionPluginRoot implements Service, IncomingCry
 
         try {
             this.monitor.start();
+            ((DealsWithPluginDatabaseSystem) this.monitor).setPluginDatabaseSystem(this.pluginDatabaseSystem);
         }
         catch (CantStartAgentException cantStartAgentException) {
             /**
@@ -194,14 +195,13 @@ public class IncomingCryptoTransactionPluginRoot implements Service, IncomingCry
      */
     @Override
     public Registry getRegistry() {
-        return null;
+        return this.registry;
     }
     
 
     /**
      * DealsWithPluginFileSystem Interface implementation.
      */
-
     @Override
     public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
         this.pluginFileSystem = pluginFileSystem;
