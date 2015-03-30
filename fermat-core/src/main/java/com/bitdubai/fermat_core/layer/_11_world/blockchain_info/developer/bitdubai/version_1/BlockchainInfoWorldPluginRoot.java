@@ -93,8 +93,8 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Servic
              * * *
              */
 
-
-          PluginTextFile walletIdsFile;
+            PluginTextFile walletIdsFile;
+            
             try{
 
 
@@ -143,8 +143,6 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Servic
                     throw new CantStartPluginException(Plugins.BLOCKCHAIN_INFO_WORLD);
                 }
 
-
-
             }
             catch (FileNotFoundException e) {
                 /**
@@ -176,13 +174,8 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Servic
 
             EventListener eventListener;
             EventHandler eventHandler;
-
-
         
             this.serviceStatus = ServiceStatus.STARTED;
-
-
-
         }
 
         @Override

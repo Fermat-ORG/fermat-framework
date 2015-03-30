@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.layer._2_os.database_system.PluginDatabaseSystem;
 /**
  * Created by ciencias on 3/19/15.
  */
-public class IncomingCryptoAnnouncerAgent implements Agent, DealsWithPluginDatabaseSystem {
+public class BlockchainInfoIncomingCryptoCatchUpAgent implements Agent, DealsWithPluginDatabaseSystem {
 
 
     /**
