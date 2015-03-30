@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer._2_os.file_system.*;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_api.layer._5_user.UserTypes;
 import com.bitdubai.fermat_api.layer._5_user.device_user.DeviceUser;
 import com.bitdubai.fermat_api.layer._5_user.device_user.*;
 import com.bitdubai.fermat_api.layer._5_user.device_user.exceptions.CantCreateDeviceUserException;
@@ -111,8 +112,23 @@ public class PlatformDeviceUser implements DeviceUser,DealsWithPlatformFileSyste
 
 
     @Override
+    public void setName(String name) {
+
+    }
+
+    @Override
+    public String getName(String name) {
+        return null;
+    }
+
+    @Override
     public UUID getId() {
         return this.userId ;
+    }
+
+    @Override
+    public UserTypes getType() {
+        return null;
     }
 
     @Override

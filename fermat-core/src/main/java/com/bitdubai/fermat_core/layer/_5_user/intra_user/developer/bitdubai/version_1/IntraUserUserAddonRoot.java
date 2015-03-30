@@ -14,7 +14,6 @@ import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventSour
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventType;
 import com.bitdubai.fermat_api.layer._2_os.file_system.DealsWithPlatformFileSystem;
 import com.bitdubai.fermat_api.layer._2_os.file_system.PlatformFileSystem;
-import com.bitdubai.fermat_api.layer._5_user.extra_user.User;
 import com.bitdubai.fermat_api.layer._5_user.device_user.DealsWithDeviceUsers;
 import com.bitdubai.fermat_api.layer._5_user.device_user.DeviceUserManager;
 import com.bitdubai.fermat_api.layer._5_user.intra_user.IntraUserManager;

@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer._5_user.device_user;
 
+import com.bitdubai.fermat_api.layer._5_user.User;
 import com.bitdubai.fermat_api.layer._5_user.device_user.exceptions.CantCreateDeviceUserException;
 import com.bitdubai.fermat_api.layer._5_user.device_user.exceptions.CantLoadDeviceUserException;
 import com.bitdubai.fermat_api.layer._5_user.device_user.exceptions.LoginFailedException;
@@ -9,7 +10,7 @@ import java.util.UUID;
 /**
  * Created by ciencias on 22.01.15.
  */
-public interface DeviceUser {
+public interface DeviceUser extends User {
 
     public void createUser()  throws CantCreateDeviceUserException;
 

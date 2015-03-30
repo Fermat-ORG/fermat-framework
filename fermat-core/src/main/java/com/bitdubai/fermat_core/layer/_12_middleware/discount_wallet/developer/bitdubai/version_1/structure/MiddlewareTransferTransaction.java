@@ -31,6 +31,7 @@ class MiddlewareTransferTransaction {
     public void transfer(Account accountFrom, Account accountTo, long amountFrom, long amountTo, String memo) throws TransferFailedException {
 
         long unixTime = System.currentTimeMillis() / 1000L;
+        
         /**
          * Some needed constant.
          */

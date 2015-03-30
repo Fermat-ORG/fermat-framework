@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_api.layer._5_user.extra_user;
 
+import com.bitdubai.fermat_api.layer._5_user.User;
+
 import java.util.UUID;
 
 /**

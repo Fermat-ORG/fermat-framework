@@ -186,7 +186,11 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Servic
             eventListener.setEventHandler(eventHandler);
             eventManager.addListener(eventListener);
             listenersAdded.add(eventListener);
+        
+        // TODO NATALIA: La nomenclatura de los Event Handlers no es correcta aca. Debe ser el nombre del evento seguido de EventHandler. BlockchainInfo no es un evento. Cada evento tiene su event handler.
 
+        // TODO NATALIA: Fijate que pasa con el indentado que no esta bien.
+        
         this.serviceStatus = ServiceStatus.STARTED;
 
 

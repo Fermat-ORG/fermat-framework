@@ -11,7 +11,6 @@ import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.DealsWith
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_api.layer._2_os.file_system.DealsWithPlatformFileSystem;
 import com.bitdubai.fermat_api.layer._2_os.file_system.PlatformFileSystem;
-import com.bitdubai.fermat_api.layer._5_user.extra_user.User;
 import com.bitdubai.fermat_api.layer._5_user.extra_user.ExtraUserManager;
 
 /**

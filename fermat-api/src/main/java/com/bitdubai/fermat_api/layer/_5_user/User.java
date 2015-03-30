@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_api.layer._5_user.extra_user;
+package com.bitdubai.fermat_api.layer._5_user;
 
 import java.util.UUID;
 
@@ -13,4 +13,5 @@ public interface User {
     
     public UUID getId();
     
+    public UserTypes getType();
 }

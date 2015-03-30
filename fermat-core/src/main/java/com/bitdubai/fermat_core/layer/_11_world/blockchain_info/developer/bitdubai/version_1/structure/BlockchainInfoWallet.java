@@ -50,6 +50,9 @@ public class BlockchainInfoWallet implements CryptoWallet ,DealsWithPluginFileSy
     private UUID walletId;
     private UUID pluginId;
     Database database;
+    
+    
+    // TODO NATALIA : Fijate que en  DISCOUNT WALLET hay una clase con las constantes de base de datos y otra clase que es la DatabaseFactory. Segui ese patron de diseño.
 
     final String INCOMING_CRYPTO_TABLE_NAME = "incoming_crypto";
     final String INCOMING_CRYPTO_TABLE_ID_COLUMN_NAME = "id";
