@@ -6,29 +6,33 @@ import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventMana
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventSource;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventType;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.*;
+import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.interfaces.TransactionAgent;
 
 /**
  * Created by ciencias on 3/30/15.
  */
-public class IncomingCryptoRelayAgent implements DealsWithEvents, TransactionAgent {
 
-    /**
-     * Este es un proceso que toma las transacciones registradas en el registry en un estado pendiente de anunciar, 
-     * las lee una por una y dispara el evento que corresponda en cada caso.
-     * 
-     * Para cada transaccion, consulta el Address Book enviandole la direccion en la que se recibio la crypto.
-     * El Address book devolvera el User al cual esa direccion fue entregada. De esta manera esta clase podra determinar
-     * contra que tipo de usuario se esta ejecutando esta transaccion y a partir de ahi podra disparar el evento que 
-     * corresponda para cada tipo de usuario.
-     * 
-     * Al ser un Agent, la ejecucion de esta clase es en su propio Thread. Seguir el patron de diseño establecido para esto.
-     * *
-     * * * * * * * 
-     * 
-     * * * * * * 
-     */
+
+/**
+ * Este es un proceso que toma las transacciones registradas en el registry en un estado pendiente de anunciar, 
+ * las lee una por una y dispara el evento que corresponda en cada caso.
+ *
+ * Para cada transaccion, consulta el Address Book enviandole la direccion en la que se recibio la crypto.
+ * El Address book devolvera el User al cual esa direccion fue entregada. De esta manera esta clase podra determinar
+ * contra que tipo de usuario se esta ejecutando esta transaccion y a partir de ahi podra disparar el evento que 
+ * corresponda para cada tipo de usuario.
+ *
+ * Al ser un Agent, la ejecucion de esta clase es en su propio Thread. Seguir el patron de diseño establecido para esto.
+ * *
+ * * * * * * * 
+ *
+ * * * * * * 
+ */
+
+
+public class IncomingCryptoRelayAgent implements DealsWithEvents, TransactionAgent {
 
 
     /**
@@ -51,7 +55,7 @@ public class IncomingCryptoRelayAgent implements DealsWithEvents, TransactionAge
      * TransactionAgent Interface implementation.
      */
     @Override
-    public void start() throws CantStartServiceException {
+    public void start() throws CantStartAgentException {
 
     }
 

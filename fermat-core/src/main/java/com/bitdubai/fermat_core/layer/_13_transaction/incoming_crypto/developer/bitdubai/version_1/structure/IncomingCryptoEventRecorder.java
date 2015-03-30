@@ -8,6 +8,7 @@ import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.
 import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoReversedEventHandler;
 import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.exceptions.CantSaveEvent;
 import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.exceptions.CantStartAgentException;
+import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.interfaces.TransactionService;
 
 import java.util.ArrayList;
@@ -16,21 +17,20 @@ import java.util.List;
 /**
  * Created by ciencias on 3/30/15.
  */
+
+/**
+ * Esta es la clase que escucha los eventos relacionados a Incoming Crypto disparados por cualquier plugin que reciba
+ * crypto currencies. 
+ *
+ * Cuando detecta un evento lo escribe en su tabla de base de datos.
+ *
+ *
+ *
+ * * * * * * * *
+ */
+
 public class IncomingCryptoEventRecorder implements DealsWithEvents, TransactionService {
-
-
-    /**
-     * Esta es la clase que escucha los eventos relacionados a Incoming Crypto disparados por cualquier plugin que reciba
-     * crypto currencies. 
-     * 
-     * Cuando detecta un evento lo escribe en su tabla de base de datos.
-     * 
-     * 
-     * 
-     * * * * * * * *
-     */
-
-
+    
     /**
      * DealsWithEvents Interface member variables.
      */
@@ -76,7 +76,7 @@ public class IncomingCryptoEventRecorder implements DealsWithEvents, Transaction
      * TransactionService interface implementation.
      */
     @Override
-    public void start() throws CantStartAgentException {
+    public void start() throws CantStartServiceException {
 
         /**
          * I will initialize the handling of com.bitdubai.platform events.

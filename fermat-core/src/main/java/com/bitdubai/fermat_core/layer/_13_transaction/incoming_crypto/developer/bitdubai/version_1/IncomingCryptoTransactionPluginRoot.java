@@ -1,9 +1,11 @@
 package com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer._13_transaction.incoming_crypto.IncomingCryptoManager;
 import com.bitdubai.fermat_api.layer._13_transaction.incoming_crypto.Registry;
+import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer._2_os.database_system.PluginDatabaseSystem;
@@ -14,6 +16,15 @@ import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorMana
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.exceptions.CantInitializeException;
+import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.exceptions.CantStartAgentException;
+import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.exceptions.CantStartServiceException;
+import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.interfaces.TransactionAgent;
+import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.interfaces.TransactionService;
+import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.structure.IncomingCryptoEventRecorder;
+import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.structure.IncomingCryptoMonitorAgent;
+import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.structure.IncomingCryptoRegistry;
+import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.structure.IncomingCryptoRelayAgent;
 
 import java.util.UUID;
 
@@ -26,6 +37,14 @@ public class IncomingCryptoTransactionPluginRoot implements Service, IncomingCry
      * Service Interface member variables.
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
+    TransactionAgent monitor;
+    TransactionAgent relay;
+    TransactionService eventRecorder;
+    
+    /**
+     * IncomingCryptoManager Interface member variables.
+     */
+    Registry registry;
 
     /**
      * UsesDatabaseSystem Interface member variables.
@@ -50,14 +69,93 @@ public class IncomingCryptoTransactionPluginRoot implements Service, IncomingCry
     /**
      * Service Interface implementation.
      */
-
     @Override
-    public void start() {
+    public void start()  throws CantStartPluginException {
 
+        /**
+         * I will initialize the Registry, which in turn will create the database if necessary.
+         */
+        this.registry = new IncomingCryptoRegistry();
 
+        try {
+            ((IncomingCryptoRegistry) this.registry).Initialize();
+        }
+        catch (CantInitializeException cantInitializeException) {
+            /**
+             * If I can not initialize the Registry then I can not start the service.
+             * * * * 
+             */
+            System.err.println("CantInitializeException: " + cantInitializeException.getMessage());
+            cantInitializeException.printStackTrace();
+            throw new CantStartPluginException(Plugins.INCOMING_CRYPTO_TRANSACTION );
+        }
 
+        /**
+         * I will start the Event Recorder.
+         */
+        this.eventRecorder = new IncomingCryptoEventRecorder();
+        
+        try {
+            this.eventRecorder.start();
+        }
+        catch (CantStartServiceException cantStartServiceException) {
+            /**
+             * I cant continue if this happens.
+             */
+            System.err.println("CantStartServiceException: " + cantStartServiceException.getMessage());
+            cantStartServiceException.printStackTrace();
+            throw new CantStartPluginException(Plugins.INCOMING_CRYPTO_TRANSACTION );
+        }
+
+        /**
+         * I will start the Relay Agent.
+         */
+        this.relay = new IncomingCryptoRelayAgent();
+
+        try {
+            this.relay.start();
+        }
+        catch (CantStartAgentException cantStartAgentException) {
+            /**
+             * I cant continue if this happens.
+             */
+            System.err.println("CantStartAgentException: " + cantStartAgentException.getMessage());
+            cantStartAgentException.printStackTrace();
+
+            /**
+             * Note that I stop previously started services and agents.
+             */
+            this.eventRecorder.stop();
+            
+            throw new CantStartPluginException(Plugins.INCOMING_CRYPTO_TRANSACTION );
+        }
+
+        /**
+         * I will start the Monitor Agent.
+         */
+        this.monitor = new IncomingCryptoMonitorAgent();
+
+        try {
+            this.monitor.start();
+        }
+        catch (CantStartAgentException cantStartAgentException) {
+            /**
+             * I cant continue if this happens.
+             */
+            System.err.println("CantStartAgentException: " + cantStartAgentException.getMessage());
+            cantStartAgentException.printStackTrace();
+
+            /**
+             * Note that I stop previously started services and agents.
+             */
+            this.eventRecorder.stop();
+            this.relay.stop();
+
+            throw new CantStartPluginException(Plugins.INCOMING_CRYPTO_TRANSACTION );
+        }
+        
         this.serviceStatus = ServiceStatus.STARTED;
-
+        
     }
 
 
@@ -78,6 +176,10 @@ public class IncomingCryptoTransactionPluginRoot implements Service, IncomingCry
     @Override
     public void stop() {
 
+        this.eventRecorder.stop();
+        this.relay.stop();
+        this.monitor.stop();
+        
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
@@ -87,7 +189,14 @@ public class IncomingCryptoTransactionPluginRoot implements Service, IncomingCry
     }
 
 
-
+    /**
+     * IncomingCryptoManager interface implementation.
+     */
+    @Override
+    public Registry getRegistry() {
+        return null;
+    }
+    
 
     /**
      * DealsWithPluginFileSystem Interface implementation.
@@ -138,11 +247,4 @@ public class IncomingCryptoTransactionPluginRoot implements Service, IncomingCry
 
 
 
-    /**
-     * IncomingCryptoManager interface implementation.
-     */
-    @Override
-    public Registry getRegistry() {
-        return null;
-    }
 }

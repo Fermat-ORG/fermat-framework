@@ -131,7 +131,7 @@ public class DiscountWalletMiddlewarePluginRoot implements Service, DiscountWall
                     }
                 }
             }
-            catch (CantLoadFileException CantLoadFileException) {
+            catch (CantLoadFileException cantLoadFileException) {
                 
                 /**
                  * In this situation we might have a corrupted file we can not read. For now the only thing I can do is
@@ -140,12 +140,12 @@ public class DiscountWalletMiddlewarePluginRoot implements Service, DiscountWall
                  * In the future there should be implemented a method to deal with this situation.
                  * * * * 
                  */
-                System.err.println("CantLoadFileException: " + CantLoadFileException.getMessage());
-                CantLoadFileException.printStackTrace();
+                System.err.println("CantLoadFileException: " + cantLoadFileException.getMessage());
+                cantLoadFileException.printStackTrace();
                 throw new CantStartPluginException(Plugins.WALLET_MIDDLEWARE);
             }
         }
-        catch (FileNotFoundException e) {
+        catch (FileNotFoundException fileNotFoundException) {
             /**
              * If the file did not exist it is not a problem. It only means this is the first time this plugin is running.
              * 
