@@ -44,7 +44,7 @@ import java.util.UUID;
  * It can send the funds to a default wallet if some is defined or stored itself until the user manually release them.
  */
 
-public class IncomingDeviceUserTransactionPluginRoot implements Service, Transaction, IncomingDeviceUserManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
+public class IncomingDeviceUserTransactionPluginRoot implements Service, IncomingDeviceUserManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
 
 
     /**

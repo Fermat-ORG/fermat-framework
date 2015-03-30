@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_core.layer._13_transaction.incoming_device_user.developer.bitdubai.version_1.Event_handlers;
 
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer._13_transaction.TransactionNotStartedException;
+import com.bitdubai.fermat_api.layer._13_transaction.TransactionServiceNotStartedException;
 import com.bitdubai.fermat_api.layer._13_transaction.incoming_device_user.IncomingDeviceUserManager;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer._1_definition.event.PlatformEvent;
@@ -42,7 +42,7 @@ public class IncomingCryptoReceivedFromDeviceUserEventHandler implements EventHa
         }
         else
         {
-            throw new TransactionNotStartedException();
+            throw new TransactionServiceNotStartedException();
         }
     }
 }

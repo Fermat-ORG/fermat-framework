@@ -43,7 +43,7 @@ import java.util.UUID;
  * * * * * 
  */
 
-public class IncomingIntraUserTransactionPluginRoot implements Service, Transaction, IncomingIntraUserManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
+public class IncomingIntraUserTransactionPluginRoot implements Service, IncomingIntraUserManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
 
 
     /**

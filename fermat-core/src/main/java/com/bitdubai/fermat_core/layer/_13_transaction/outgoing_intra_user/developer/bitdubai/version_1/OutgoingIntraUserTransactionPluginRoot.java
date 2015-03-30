@@ -21,7 +21,7 @@ import java.util.UUID;
 /**
  * Created by loui on 20/02/15.
  */
-public class OutgoingIntraUserTransactionPluginRoot implements Service,Transaction,OutgoingIntraUserManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
+public class OutgoingIntraUserTransactionPluginRoot implements Service,OutgoingIntraUserManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
 
     /**
      * PlatformService Interface member variables.

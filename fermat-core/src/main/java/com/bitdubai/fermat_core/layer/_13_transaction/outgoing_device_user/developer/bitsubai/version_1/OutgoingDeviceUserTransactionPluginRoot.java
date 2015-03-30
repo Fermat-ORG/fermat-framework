@@ -26,7 +26,7 @@ import java.util.UUID;
  * Every Device User transaction sent outside of the system is a handled and recorded by this plugin.
  */
 
-public class OutgoingDeviceUserTransactionPluginRoot implements Service,Transaction, OutgoingDeviceUserManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
+public class OutgoingDeviceUserTransactionPluginRoot implements Service, OutgoingDeviceUserManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
 
 
     /**

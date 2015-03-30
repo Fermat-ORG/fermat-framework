@@ -2,11 +2,7 @@ package com.bitdubai.fermat_core.layer._8_crypto.address_book.developer.bitdubai
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer._10_network_service.intra_user.IntraUser;
-import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer._1_definition.event.PlatformEvent;
-import com.bitdubai.fermat_api.layer._1_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer._2_os.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors;
@@ -15,30 +11,11 @@ import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.DealsWith
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventHandler;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventManager;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventSource;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventType;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.IncomingCryptoIdentifiedFromDeviceUserEvent;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.IncomingCryptoIdentifiedFromExtraUserEvent;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.IncomingCryptoIdentifiedFromIntraUserEvent;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.IncomingCryptoReceivedFromDeviceUserEvent;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.IncomingCryptoReceivedFromExtraUserEvent;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.IncomingCryptoReceivedFromIntraUserEvent;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.IncomingCryptoReceptionConfirmedFromDeviceUserEvent;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.IncomingCryptoReceptionConfirmedFromExtraUserEvent;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.IncomingCryptoReceptionConfirmedFromIntraUserEvent;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.IncomingCryptoReversedFromDeviceUserEvent;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.IncomingCryptoReversedFromExtraUserEvent;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.IncomingCryptoReversedFromIntraUserEvent;
 import com.bitdubai.fermat_api.layer._2_os.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer._2_os.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer._5_user.device_user.DeviceUser;
 import com.bitdubai.fermat_api.layer._8_crypto.Crypto;
 import com.bitdubai.fermat_api.layer._8_crypto.address_book.AddressBookManager;
 import com.bitdubai.fermat_api.layer._8_crypto.address_book.exceptions.ExampleException;
-import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoIdentifiedEventHandler;
-import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoReceivedEventHandler;
-import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoReceptionConfimedEventHandler;
-import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoReversedEventHandler;
 
 import java.util.ArrayList;
 import java.util.List;

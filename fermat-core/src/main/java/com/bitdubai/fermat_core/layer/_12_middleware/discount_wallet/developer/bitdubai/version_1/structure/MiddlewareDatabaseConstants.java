@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_core.layer._12_middleware.discount_wallet.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer._12_middleware.wallet.AccountStatus;
+import com.bitdubai.fermat_api.layer._12_middleware.discount_wallet.enums.AccountStatus;
 
 /**
  * Created by ciencias on 3/24/15.

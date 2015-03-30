@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer._8_crypto.address_book.exceptions.ExampleEx
  * Created by loui on 18/03/15.
  */
 public interface IncomingCryptoManager {
-    public void exampleMethod() throws ExampleException;
+
+    public Registry getRegistry();
 
 }

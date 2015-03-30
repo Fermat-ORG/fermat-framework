@@ -28,7 +28,7 @@ import java.util.UUID;
  * * *
  */
 
-public class InterWalletTransactionPluginRoot implements Service, Transaction, InterWalletManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
+public class InterWalletTransactionPluginRoot implements Service, InterWalletManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
 
 
     /**

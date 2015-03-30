@@ -2,8 +2,8 @@ package com.bitdubai.fermat_core.layer._12_middleware.discount_wallet.developer.
 
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer._12_middleware.MiddlewareNotStartedException;
-import com.bitdubai.fermat_api.layer._12_middleware.WalletManager;
-import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.CantCreateWalletException;
+import com.bitdubai.fermat_api.layer._12_middleware.discount_wallet.interfaces.DiscountWalletManager;
+import com.bitdubai.fermat_api.layer._12_middleware.discount_wallet.exceptions.CantCreateWalletException;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer._1_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventHandler;
@@ -16,10 +16,10 @@ import java.util.UUID;
  */
 public class WalletCreatedEventHandler implements EventHandler {
 
-    WalletManager walletManager;
+    DiscountWalletManager discountWalletManager;
 
-    public void setWalletmanager ( WalletManager walletManager){
-        this.walletManager = walletManager;
+    public void setWalletmanager ( DiscountWalletManager discountWalletManager){
+        this.discountWalletManager = discountWalletManager;
     }
 
     @Override
@@ -27,11 +27,11 @@ public class WalletCreatedEventHandler implements EventHandler {
         UUID walletId = ((WalletCreatedEvent) platformEvent).getWalletId();
 
 
-        if (((Service) this.walletManager).getStatus() == ServiceStatus.STARTED){
+        if (((Service) this.discountWalletManager).getStatus() == ServiceStatus.STARTED){
 
             try
             {
-                this.walletManager.createWallet(walletId);
+                this.discountWalletManager.createWallet(walletId);
             }
             catch (CantCreateWalletException cantCreateWalletException)
             {

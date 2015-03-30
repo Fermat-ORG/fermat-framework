@@ -4,11 +4,11 @@ import com.bitdubai.fermat_api.layer._11_world.crypto_index.CryptoIndexManager;
 import com.bitdubai.fermat_api.layer._11_world.crypto_index.DealsWithCryptoIndex;
 import com.bitdubai.fermat_api.layer._11_world.crypto_index.exceptions.CryptoCurrencyNotSupportedException;
 import com.bitdubai.fermat_api.layer._11_world.crypto_index.exceptions.FiatCurrencyNotSupportedException;
-import com.bitdubai.fermat_api.layer._12_middleware.wallet.AccountLockStatus;
-import com.bitdubai.fermat_api.layer._12_middleware.wallet.AccountStatus;
-import com.bitdubai.fermat_api.layer._12_middleware.wallet.CryptoValueChunkStatus;
-import com.bitdubai.fermat_api.layer._12_middleware.wallet.Account;
-import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.OperationFailed;
+import com.bitdubai.fermat_api.layer._12_middleware.discount_wallet.enums.AccountLockStatus;
+import com.bitdubai.fermat_api.layer._12_middleware.discount_wallet.enums.AccountStatus;
+import com.bitdubai.fermat_api.layer._12_middleware.discount_wallet.enums.CryptoValueChunkStatus;
+import com.bitdubai.fermat_api.layer._12_middleware.discount_wallet.interfaces.Account;
+import com.bitdubai.fermat_api.layer._12_middleware.discount_wallet.exceptions.OperationFailed;
 import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer._1_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer._2_os.database_system.*;
@@ -17,7 +17,7 @@ import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.CantUpdate
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_core.layer._12_middleware.discount_wallet.developer.bitdubai.version_1.exceptions.CantCalculateBalanceException;
-import com.bitdubai.fermat_core.layer._12_middleware.discount_wallet.developer.bitdubai.version_1.exceptions.CantStartAccountException;
+import com.bitdubai.fermat_core.layer._12_middleware.discount_wallet.developer.bitdubai.version_1.exceptions.CantStartAccountServiceException;
 import com.bitdubai.fermat_core.layer._12_middleware.discount_wallet.developer.bitdubai.version_1.interfaces.AccountService;
 
 import java.util.HashMap;
@@ -279,7 +279,7 @@ class MiddlewareAccount implements  Account, AccountService, DealsWithCryptoInde
      * AccountService interface implementation.
      */
     @Override
-    public void start() throws CantStartAccountException {
+    public void start() throws CantStartAccountServiceException {
 
         /**
          * Check if the Account state is Open.
@@ -301,7 +301,7 @@ class MiddlewareAccount implements  Account, AccountService, DealsWithCryptoInde
              */
             System.err.println("CantCalculateBalanceException: " + cantCalculateBalanceException.getMessage());
             cantCalculateBalanceException.printStackTrace();
-            throw new CantStartAccountException();
+            throw new CantStartAccountServiceException();
         }
         
         // LOUI: TODO: Aca tiene que escuchar un evento disparado por CryptoIndex plugIn llamado: CryptoMarketPricesChanged  

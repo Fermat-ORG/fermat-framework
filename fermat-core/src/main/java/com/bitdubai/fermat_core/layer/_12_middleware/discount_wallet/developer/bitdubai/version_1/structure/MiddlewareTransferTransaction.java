@@ -1,12 +1,14 @@
 package com.bitdubai.fermat_core.layer._12_middleware.discount_wallet.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer._12_middleware.wallet.*;
-import com.bitdubai.fermat_api.layer._12_middleware.wallet.exceptions.TransferFailedException;
-import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer._12_middleware.discount_wallet.enums.AccountLockStatus;
+import com.bitdubai.fermat_api.layer._12_middleware.discount_wallet.enums.AccountStatus;
+import com.bitdubai.fermat_api.layer._12_middleware.discount_wallet.enums.CryptoValueChunkStatus;
+import com.bitdubai.fermat_api.layer._12_middleware.discount_wallet.enums.TransferFailedReasons;
+import com.bitdubai.fermat_api.layer._12_middleware.discount_wallet.exceptions.TransferFailedException;
+import com.bitdubai.fermat_api.layer._12_middleware.discount_wallet.interfaces.Account;
 import com.bitdubai.fermat_api.layer._2_os.database_system.*;
 import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.CantLoadTableToMemory;
 import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.DatabaseTransactionFailedException;
-import com.bitdubai.fermat_core.layer._12_middleware.discount_wallet.developer.bitdubai.version_1.exceptions.CantCalculateBalanceException;
 
 import java.util.List;
 import java.util.Map;
