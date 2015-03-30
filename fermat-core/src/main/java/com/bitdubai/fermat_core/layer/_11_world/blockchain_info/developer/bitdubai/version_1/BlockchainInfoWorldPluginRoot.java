@@ -29,8 +29,6 @@ import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventMana
 import com.bitdubai.fermat_api.layer._11_world.CantCreateCryptoWalletException;
 
 import com.bitdubai.fermat_api.layer._11_world.World;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventType;
-import com.bitdubai.fermat_core.layer._11_world.blockchain_info.developer.bitdubai.version_1.event_handlers.BlockchainInfoEventHandler;
 import com.bitdubai.fermat_core.layer._11_world.blockchain_info.developer.bitdubai.version_1.structure.api_v_1.APIException;
 import com.bitdubai.fermat_core.layer._11_world.blockchain_info.developer.bitdubai.version_1.structure.api_v_1.createwallet.CreateWallet;
 import com.bitdubai.fermat_core.layer._11_world.blockchain_info.developer.bitdubai.version_1.structure.api_v_1.createwallet.CreateWalletResponse;
@@ -99,7 +97,6 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Servic
           PluginTextFile walletIdsFile;
             try{
 
-                // TODO: El folder no puede ser wallets_data, debe ser un hash del UUID del plugin. En general cada plugin guarda archivos en un folder propio. Busca como se calcula en java un hash 256 de manera standard y eso usamos para el nombre del folder. El que debe hashear el nombre es el PluginFileSystem, no cada plugin individualmente.
 
                  walletIdsFile = pluginFileSystem.getTextFile(pluginId, pluginId.toString(), WALLET_IDS_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
 
@@ -180,18 +177,9 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Servic
             EventListener eventListener;
             EventHandler eventHandler;
 
-            eventListener = eventManager.getNewListener(EventType.WALLET_CREATED);
-            eventHandler = new BlockchainInfoEventHandler();
-            ((BlockchainInfoEventHandler) eventHandler).setCryptowalletManager(this);
-            eventListener.setEventHandler(eventHandler);
-            eventManager.addListener(eventListener);
-            listenersAdded.add(eventListener);
-        
-        // TODO NATALIA: La nomenclatura de los Event Handlers no es correcta aca. Debe ser el nombre del evento seguido de EventHandler. BlockchainInfo no es un evento. Cada evento tiene su event handler.
 
-        // TODO NATALIA: Fijate que pasa con el indentado que no esta bien.
         
-        this.serviceStatus = ServiceStatus.STARTED;
+            this.serviceStatus = ServiceStatus.STARTED;
 
 
 
