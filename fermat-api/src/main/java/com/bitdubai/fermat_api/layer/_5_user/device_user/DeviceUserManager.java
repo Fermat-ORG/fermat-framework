@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer._5_user.device_user;
 
+import com.bitdubai.fermat_api.layer._5_user.extra_user.User;
 import com.bitdubai.fermat_api.layer._5_user.device_user.exceptions.CantCreateDeviceUserException;
 import com.bitdubai.fermat_api.layer._5_user.device_user.exceptions.CantLoadDeviceUserException;
 
@@ -16,4 +17,5 @@ public interface DeviceUserManager {
 
     public void loadUser(UUID id)  throws CantLoadDeviceUserException;
 
+    public User getUser(UUID id);
 }

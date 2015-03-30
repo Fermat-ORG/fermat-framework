@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer._2_os.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer._8_crypto.Crypto;
 import com.bitdubai.fermat_api.layer._8_crypto.address_book.AddressBookManager;
 import com.bitdubai.fermat_api.layer._8_crypto.address_book.exceptions.ExampleException;
+import com.bitdubai.fermat_core.layer._8_crypto.address_book.developer.bitdubai.version_1.structure.AddressBook;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,10 @@ import java.util.UUID;
 
 public class AddressBookCryptoPluginRoot implements  AddressBookManager, Crypto, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithErrors, DealsWithEvents, Plugin, Service {
 
-
+    /**
+     * AddressBookManager Interface member variables.
+     */
+    private AddressBook addressBook;
     /**
      * DealWithEvents Interface member variables.
      */
@@ -124,6 +128,8 @@ public class AddressBookCryptoPluginRoot implements  AddressBookManager, Crypto,
         /**
          * I will initialize the handling of com.bitdubai.platform events.
          */
+
+        this.addressBook = new AddressBook(this.pluginId);
 
         EventListener eventListener;
         EventHandler eventHandler;

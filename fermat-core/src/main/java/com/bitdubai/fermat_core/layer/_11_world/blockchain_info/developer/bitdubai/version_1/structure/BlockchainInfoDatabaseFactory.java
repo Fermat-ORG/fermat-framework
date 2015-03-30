@@ -64,7 +64,7 @@ public class BlockchainInfoDatabaseFactory implements DealsWithPluginDatabaseSys
              * First the incoming crypto table.
              */
             table = ((DatabaseFactory) database).newTableFactory(ownerId, BlockchainInfoDatabaseConstants.INCOMING_CRYPTO_TABLE_NAME);
-            table.addColumn(BlockchainInfoDatabaseConstants.OUTGOING_CRYPTO_TABLE_TRX_COLUMN_NAME, DatabaseDataType.STRING, 36);
+            table.addColumn(BlockchainInfoDatabaseConstants.INCOMING_CRYPTO_TABLE_TRX_HASH_COLUMN_NAME, DatabaseDataType.STRING, 36);
             table.addColumn(BlockchainInfoDatabaseConstants.INCOMING_CRYPTO_TABLE_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
             table.addColumn(BlockchainInfoDatabaseConstants.INCOMING_CRYPTO_TABLE_CRYPTO_ADDRESS_TO_COLUMN_NAME, DatabaseDataType.STRING, 100);
             table.addColumn(BlockchainInfoDatabaseConstants.INCOMING_CRYPTO_TABLE_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 3);

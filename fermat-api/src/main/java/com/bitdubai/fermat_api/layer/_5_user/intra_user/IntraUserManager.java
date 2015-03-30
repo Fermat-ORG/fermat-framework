@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_api.layer._5_user.intra_user;
 
+
+import com.bitdubai.fermat_api.layer._5_user.extra_user.User;
 import com.bitdubai.fermat_api.layer._5_user.intra_user.exceptions.CantCreateIntraUserException;
 
 import java.util.UUID;
@@ -10,4 +12,6 @@ import java.util.UUID;
 public interface IntraUserManager {
     
     public void crateUser(UUID userId) throws CantCreateIntraUserException;
+
+    public User getUser(UUID id);
 }

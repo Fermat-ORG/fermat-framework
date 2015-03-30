@@ -209,6 +209,13 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
 
             this.query += ")";
 
+            /**
+             * get index column
+             */
+            if(table.getIndex() != "")
+                this.query += " CREATE INDEX IF NOT EXISTS "+ table.getIndex() +"_idx ON " + table.getTableName() + " ("+ table.getIndex() +")";
+
+
             executeQuery();
         }catch (Exception e)
         {

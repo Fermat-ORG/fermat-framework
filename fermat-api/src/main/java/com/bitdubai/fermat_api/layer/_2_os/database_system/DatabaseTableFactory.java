@@ -9,6 +9,10 @@ import java.util.ArrayList;
  */
 public interface DatabaseTableFactory {
 
+    public void addIndex(String index);
+
+    public String getIndex();
+
     public  String getTableName ();
 
     public void addColumn (String columnName, DatabaseDataType dataType, int dataTypeSize);
