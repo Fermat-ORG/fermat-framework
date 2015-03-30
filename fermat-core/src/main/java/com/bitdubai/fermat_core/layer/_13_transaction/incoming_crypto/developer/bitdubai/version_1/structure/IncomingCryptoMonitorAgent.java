@@ -39,7 +39,7 @@ public class IncomingCryptoMonitorAgent implements DealsWithPluginDatabaseSystem
     /**
      * TransactionAgent Member Variables.
      */
-    Thread thread;
+    Thread agentThread;
     MonitorAgent monitorAgent;
 
     
@@ -74,14 +74,14 @@ public class IncomingCryptoMonitorAgent implements DealsWithPluginDatabaseSystem
             throw new CantStartAgentException();
         }
         
-        this.thread = new Thread(monitorAgent);
-        this.thread.run();
+        this.agentThread = new Thread(monitorAgent);
+        this.agentThread.run();
     }
 
     @Override
     public void stop() {
         
-        this.thread.interrupt();
+        this.agentThread.interrupt();
         
     }
     
