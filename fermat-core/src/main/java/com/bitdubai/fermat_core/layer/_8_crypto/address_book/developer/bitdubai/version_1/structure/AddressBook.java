@@ -37,6 +37,7 @@ public class AddressBook implements CryptoAddressBook , DealsWithPluginDatabaseS
     // IdUser
     // UserType (sale del enum UserTypes que debe seguir el patron de diseño de exponer un getCode() de 3 digitos)
     // CryptoAddress  (un string de la longitud exacta de la direcciones bitcoin, averigua cuanto es)
+    // TimeStamp
     
     // CRYPTO_ADDRESSES_FIRST_KEY_COLUM = "CryptoAddress"  ---> Tenes que implementar en el modulo de base de datos que se pueda definir
     // indices para las tablas declarando una constante como la anterior.
