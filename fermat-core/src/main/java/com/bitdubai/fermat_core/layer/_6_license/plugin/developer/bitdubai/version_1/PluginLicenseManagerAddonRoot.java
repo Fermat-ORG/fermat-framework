@@ -9,7 +9,7 @@ import com.bitdubai.fermat_api.layer._6_license.License;
 /**
  * Created by ciencias on 21.01.15.
  */
-public class PluginLicenseManagerAddonRoot implements Service, License, Addon {
+public class PluginLicenseManagerAddonRoot implements Addon, License,Service  {
     
     /**
      * Service Interface member variables.

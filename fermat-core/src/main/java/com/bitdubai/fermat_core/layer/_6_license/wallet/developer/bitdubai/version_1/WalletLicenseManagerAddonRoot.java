@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer._6_license.License;
 /**
  * Created by ciencias on 21.01.15.
  */
-public class WalletLicenseManagerAddonRoot implements Service, License, Addon {
+public class WalletLicenseManagerAddonRoot implements Addon, License, Service {
     /**
      * Service Interface member variables.
      */

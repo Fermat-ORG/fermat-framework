@@ -29,14 +29,9 @@ import java.util.*;
  * Hi! I am a cloud service which centralizes the communications between system users.
  */
 
-public class CloudCommunicationChannelPluginRoot implements Service, CommunicationChannel, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
+public class CloudCommunicationChannelPluginRoot implements CommunicationChannel, DealsWithErrors, DealsWithEvents, DealsWithPluginFileSystem, Plugin, Service{
 
 
-    /**
-     * Service Interface member variables.
-     */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
-    List<EventListener> listenersAdded = new ArrayList<>();
 
     /**
      * CommunicationChannel Interface member variables.
@@ -47,9 +42,9 @@ public class CloudCommunicationChannelPluginRoot implements Service, Communicati
      * DealWithEvents Interface member variables.
      */
     EventManager eventManager;
-    
+
     /**
-     * UsesFileSystem Interface member variables.
+     * DealsWithPluginFileSystem Interface member variables.
      */
     PluginFileSystem pluginFileSystem;
     
@@ -58,6 +53,91 @@ public class CloudCommunicationChannelPluginRoot implements Service, Communicati
      */
     UUID pluginId;
 
+    /**
+     * Service Interface member variables.
+     */
+    ServiceStatus serviceStatus = ServiceStatus.CREATED;
+    List<EventListener> listenersAdded = new ArrayList<>();
+
+
+
+
+
+
+    /**
+     * CommunicationChannel Interface implementation.
+     */
+    @Override
+    public OnlineChannel createOnlineChannel() {
+
+        return new CloudOnlineChannel();
+    }
+
+    @Override
+    public void registerNetworkService(NetworkServices networkServices, UUID networkService) {
+        this.networkServices.put(networkService,networkServices );
+    }
+
+    @Override
+    public ServiceToServiceOnlineConnection acceptIncomingNetworkServiceConnectionRequest(NetworkServices networkService, UUID localNetworkService, UUID remoteNetworkService) {
+        return null;
+    }
+
+    @Override
+    public void rejectIncomingNetworkServiceConnectionRequest(NetworkServices networkService, UUID localNetworkService, UUID remoteNetworkService, RejectConnectionRequestReasons reason) {
+
+    }
+
+    @Override
+    public void unregisterNetworkService(UUID networkService) {
+        this.networkServices.remove(networkService);
+    }
+
+    /**
+     * DealsWithPluginFileSystem Interface implementation.
+     */
+
+    @Override
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem = pluginFileSystem;
+    }
+
+
+
+    
+    /**
+     *DealWithErrors Interface implementation.
+     */
+
+    @Override
+    public void setErrorManager(ErrorManager errorManager) {
+
+    }
+
+
+    /**
+     * DealWithEvents Interface implementation.
+     */
+
+    @Override
+    public void setEventManager(EventManager eventManager) {
+        this.eventManager = eventManager;
+    }
+
+
+
+    /**
+     * DealsWithPluginIdentity methods implementation.
+     */
+
+    @Override
+    public void setId(UUID pluginId) {
+        this.pluginId = pluginId;
+    }
+
+    /**
+     * Service Interface implementation.
+     */
     @Override
     public void start() {
         /**
@@ -105,75 +185,6 @@ public class CloudCommunicationChannelPluginRoot implements Service, Communicati
     @Override
     public ServiceStatus getStatus() {
         return this.serviceStatus;
-    }
-
-    /**
-     * CommunicationChannel Interface implementation.
-     */
-    @Override
-    public OnlineChannel createOnlineChannel() {
-
-        return new CloudOnlineChannel();
-    }
-
-    @Override
-    public void registerNetworkService(NetworkServices networkServices, UUID networkService) {
-        this.networkServices.put(networkService,networkServices );
-    }
-
-    @Override
-    public ServiceToServiceOnlineConnection acceptIncomingNetworkServiceConnectionRequest(NetworkServices networkService, UUID localNetworkService, UUID remoteNetworkService) {
-        return null;
-    }
-
-    @Override
-    public void rejectIncomingNetworkServiceConnectionRequest(NetworkServices networkService, UUID localNetworkService, UUID remoteNetworkService, RejectConnectionRequestReasons reason) {
-
-    }
-
-    @Override
-    public void unregisterNetworkService(UUID networkService) {
-        this.networkServices.remove(networkService);
-    }
-
-    /**
-     * UsesFileSystem Interface implementation.
-     */
-
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
-
-
-    /**
-     * DealWithEvents Interface implementation.
-     */
-
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-
-    
-    /**
-     *DealWithErrors Interface implementation.
-     */
-
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-
-    }
-
-
-    /**
-     * DealsWithPluginIdentity methods implementation.
-     */
-
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
     }
 
 

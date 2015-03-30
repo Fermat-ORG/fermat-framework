@@ -38,7 +38,12 @@ import java.util.UUID;
  * * * * * *
  */
 
-public class IntraUserUserAddonRoot implements Service,  IntraUserManager, DealsWithEvents, DealsWithPlatformFileSystem, DealsWithErrors, DealsWithDeviceUsers,  Addon {
+public class IntraUserUserAddonRoot implements Addon, DealsWithDeviceUsers, DealsWithEvents, DealsWithErrors, DealsWithPlatformFileSystem, IntraUserManager, Service  {
+
+    /**
+     * DealWithEvents Interface member variables.
+     */
+    EventManager eventManager;
 
     /**
      * Service Interface member variables.
@@ -46,67 +51,16 @@ public class IntraUserUserAddonRoot implements Service,  IntraUserManager, Deals
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
     List<EventListener> listenersAdded = new ArrayList<>();
 
-    
-    /**
-     * DealWithEvents Interface member variables.
-     */
-    EventManager eventManager;
+
 
 
 
     /**
-     * Service Interface implementation.
+     * DealWithDeviceUser Interface implementation.
      */
     @Override
-    public void start() {
+    public void crateUser(UUID userId) throws CantCreateIntraUserException {
 
-        EventListener eventListener;
-        EventHandler eventHandler;
-
-        eventListener = eventManager.getNewListener(EventType.DEVICE_USER_CREATED);
-        eventHandler = new UserCratedEventHandler();
-        ((UserCratedEventHandler) eventHandler).setIntraUserManager(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
-        
-        this.serviceStatus = ServiceStatus.STARTED;
-
-    }
-
-    @Override
-    public void pause() {
-
-        this.serviceStatus = ServiceStatus.PAUSED;
-
-    }
-
-    @Override
-    public void resume() {
-
-        this.serviceStatus = ServiceStatus.STARTED;
-
-    }
-
-    @Override
-    public void stop() {
-
-        this.serviceStatus = ServiceStatus.STOPPED;
-
-    }
-
-    private void intraUserLoggedIn(){
-        
-        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.INTRA_USER_LOGGED_IN);
-        platformEvent.setSource(EventSource.USER_INTRA_USER_PLUGIN);
-        eventManager.raiseEvent(platformEvent);
-
-
-    }
-    
-    @Override
-    public ServiceStatus getStatus() {
-        return serviceStatus;
     }
 
     /**
@@ -136,18 +90,65 @@ public class IntraUserUserAddonRoot implements Service,  IntraUserManager, Deals
 
     }
         
-    
+
     /**
-     * DealWithDeviceUser Interface implementation.
-     */   
+     * Service Interface implementation.
+     */
     @Override
-    public void crateUser(UUID userId) throws CantCreateIntraUserException {
-        
+    public void start() {
+
+        EventListener eventListener;
+        EventHandler eventHandler;
+
+        eventListener = eventManager.getNewListener(EventType.DEVICE_USER_CREATED);
+        eventHandler = new UserCratedEventHandler();
+        ((UserCratedEventHandler) eventHandler).setIntraUserManager(this);
+        eventListener.setEventHandler(eventHandler);
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);
+
+        this.serviceStatus = ServiceStatus.STARTED;
+
     }
-    
+
+    @Override
+    public void pause() {
+
+        this.serviceStatus = ServiceStatus.PAUSED;
+
+    }
+
+    @Override
+    public void resume() {
+
+        this.serviceStatus = ServiceStatus.STARTED;
+
+    }
+
+    @Override
+    public void stop() {
+
+        this.serviceStatus = ServiceStatus.STOPPED;
+
+    }
+
+    private void intraUserLoggedIn(){
+
+        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.INTRA_USER_LOGGED_IN);
+        platformEvent.setSource(EventSource.USER_INTRA_USER_PLUGIN);
+        eventManager.raiseEvent(platformEvent);
+
+
+    }
+
+    @Override
+    public ServiceStatus getStatus() {
+        return serviceStatus;
+    }
+
     @Override
     public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
-        
+
     }
 
 

@@ -54,14 +54,8 @@ import java.util.UUID;
  * * * * * *
  */
 
-public class AddressBookCryptoPluginRoot implements Service, Crypto, AddressBookManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, Plugin {
+public class AddressBookCryptoPluginRoot implements  AddressBookManager, Crypto, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithErrors, DealsWithEvents, Plugin, Service {
 
-
-    /**
-     * Service Interface member variables.
-     */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
-    List<EventListener> listenersAdded = new ArrayList<>();
 
     /**
      * DealWithEvents Interface member variables.
@@ -69,21 +63,80 @@ public class AddressBookCryptoPluginRoot implements Service, Crypto, AddressBook
     EventManager eventManager;
 
     /**
-     * UsesDatabaseSystem Interface member variables.
+     * DealsWithPluginDatabaseSystem Interface member variables.
      */
     PluginDatabaseSystem pluginDatabaseSystem;
 
-
     /**
-     * UsesFileSystem Interface member variables.
+     * DealsWithPluginFileSystem Interface member variables.
      */
     PluginFileSystem pluginFileSystem;
 
     /**
-     * DealsWithPluginIdentity Interface member variables.
+     * Plugin Interface member variables.
      */
     UUID pluginId;
 
+    /**
+     * Service Interface member variables.
+     */
+    ServiceStatus serviceStatus = ServiceStatus.CREATED;
+    List<EventListener> listenersAdded = new ArrayList<>();
+
+
+
+    /**
+     * Address Book Manager implementation. 
+     */
+    @Override
+    public void exampleMethod() throws ExampleException {
+
+    }
+
+    /**
+     *DealWithErrors Interface implementation.
+     */
+
+    @Override
+    public void setErrorManager(ErrorManager errorManager) {
+
+    }
+
+
+    /**
+     * DealWithEvents Interface implementation.
+     */
+
+    @Override
+    public void setEventManager(EventManager eventManager) {
+        this.eventManager = eventManager;
+    }
+
+    /**
+     * DealsWithPluginDatabaseSystem interface implementation.
+     */
+    @Override
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+    }
+
+    /**
+     * DealsWithPluginFileSystem Interface implementation.
+     */
+
+    @Override
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem = pluginFileSystem;
+    }
+
+    /**
+     * Plugin methods implementation.
+     */
+
+    @Override
+    public void setId(UUID pluginId) {
+        this.pluginId = pluginId;
+    }
 
     /**
      * Service Interface implementation.
@@ -136,64 +189,6 @@ public class AddressBookCryptoPluginRoot implements Service, Crypto, AddressBook
     @Override
     public ServiceStatus getStatus() {
         return this.serviceStatus;
-    }
-
-    /**
-     * Address Book Manager implementation. 
-     */
-    @Override
-    public void exampleMethod() throws ExampleException {
-
-    }
-    
-    /**
-     * UsesFileSystem Interface implementation.
-     */
-
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
-
-
-
-    /**
-     * DealsWithPluginDatabaseSystem interface implementation.
-     */
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    
-
-    /**
-     * DealWithEvents Interface implementation.
-     */
-
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-
-    /**
-     *DealWithErrors Interface implementation.
-     */
-
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-
-    }
-
-
-    /**
-     * DealsWithPluginIdentity methods implementation.
-     */
-
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
     }
 
 
