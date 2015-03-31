@@ -4,7 +4,10 @@ import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DealsWithPlatformDatabaseSystem;
+import com.bitdubai.fermat_api.layer._2_os.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer._2_os.database_system.PlatformDatabaseSystem;
+import com.bitdubai.fermat_api.layer._2_os.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer._2_os.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.DealsWithEvents;
@@ -13,6 +16,8 @@ import com.bitdubai.fermat_api.layer._2_os.file_system.DealsWithPlatformFileSyst
 import com.bitdubai.fermat_api.layer._2_os.file_system.PlatformFileSystem;
 import com.bitdubai.fermat_api.layer._5_user.extra_user.ExtraUserManager;
 import com.bitdubai.fermat_api.layer._5_user.User;
+import com.bitdubai.fermat_core.layer._5_user.extra_user.developer.bitdubai.version_1.structure.ExtraUser;
+import com.bitdubai.fermat_core.layer._5_user.extra_user.developer.bitdubai.version_1.structure.ExtraUserRegistry;
 
 import java.util.UUID;
 
@@ -26,7 +31,10 @@ import java.util.UUID;
 
 public class ExtraUserUserAddonRoot implements Addon, DealsWithErrors, DealsWithEvents, DealsWithPlatformDatabaseSystem, DealsWithPlatformFileSystem, ExtraUserManager, Service  {
 
-
+    /**
+     * Addon Interface member variables.
+     */
+     private ExtraUserRegistry extraUserRegistry;
     /**
      * DealWithEvents Interface member variables.
      */
@@ -42,8 +50,16 @@ public class ExtraUserUserAddonRoot implements Addon, DealsWithErrors, DealsWith
      *DealWithErrors Interface implementation.
      */
 
+    /**
+     * DealsWithPlatformDatabaseSystem Interface member variables.
+     */
+    PlatformDatabaseSystem platformDatabaseSystem;
 
 
+    /**
+     * DealsWithPlatformFileSystem Interface member variables.
+     */
+    PlatformFileSystem platformFileSystem;
 
 
 
@@ -61,22 +77,22 @@ public class ExtraUserUserAddonRoot implements Addon, DealsWithErrors, DealsWith
     }
 
     /**
-     * Platform Database System implementation.
-     */
-
-    @Override
-    public void setPlatformDatabaseSystem(PlatformDatabaseSystem platformDatabaseSystem) {
-
-    }
-
-    /**
      * Platform File System implementation.
      */
     
     @Override
     public void setPlatformFileSystem(PlatformFileSystem platformFileSystem) {
-
+        this.platformFileSystem  = platformFileSystem;
     }
+
+    /**
+     * DealsWithPluginDatabaseSystem interface implementation.
+     */
+    @Override
+    public void setPlatformDatabaseSystem(PlatformDatabaseSystem platformDatabaseSystem) {
+        this.platformDatabaseSystem = platformDatabaseSystem;
+    }
+
 
     /**
      * DeviceUserManager Interface implementation.
@@ -94,6 +110,13 @@ public class ExtraUserUserAddonRoot implements Addon, DealsWithErrors, DealsWith
     public void start() {
 
         this.serviceStatus = ServiceStatus.STARTED;
+
+        /**
+         * I created instance of ExtraUserRegistry
+         */
+        this.extraUserRegistry = new ExtraUserRegistry();
+
+        this.extraUserRegistry.setPlatformDatabaseSystem(this.platformDatabaseSystem);
 
     }
 
