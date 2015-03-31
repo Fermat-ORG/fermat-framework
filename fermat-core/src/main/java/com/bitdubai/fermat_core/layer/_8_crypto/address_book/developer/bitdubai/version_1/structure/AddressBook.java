@@ -42,11 +42,6 @@ public class AddressBook implements CryptoAddressBook ,DealsWithDeviceUsers,Deal
 
 
     /**
-     * UsesDatabaseSystem Interface member variables.
-     */
-    PluginDatabaseSystem pluginDatabaseSystem;
-
-    /**
      * CryptoAddressBook Interface member variables.
      */
 
@@ -72,6 +67,12 @@ public class AddressBook implements CryptoAddressBook ,DealsWithDeviceUsers,Deal
 
 
     IntraUserManager intraUserManager;
+
+
+    /**
+     * UsesDatabaseSystem Interface member variables.
+     */
+    PluginDatabaseSystem pluginDatabaseSystem;
 
     /**
      * Constructor.
@@ -159,7 +160,7 @@ public class AddressBook implements CryptoAddressBook ,DealsWithDeviceUsers,Deal
 
 
         /**
-         * Will go through the records getting each fiat account.
+         * Will go through the records getting each user address.
          */
         UserTypes userTypes;
         UUID user_id ;
@@ -182,33 +183,7 @@ public class AddressBook implements CryptoAddressBook ,DealsWithDeviceUsers,Deal
 
 
         }
-        /**
-         * La clase en el metodo initialize ya deja abierta una conexion a la base de datos (ese es otro patron de diseño)
-         * 
-         * A traves de esa conexion, pedis una tabla, le seteas como filtro la crypto address y obtenes el registro.
-         * 
-         * Como este metodo devuelve un User que este plugin no puede crear, se lo tiene que pedir a alguno de los siguientes
-         * tres plugins: DeviceUser, IntraUser, CryptoUser.
-         * 
-         * Para poder acceder a esos plugins debe implementar las interfaces 
-         * 
-         * DealsWithDeviceUsers
-         * DealsWithExtraUsers
-         * DealsWithIntraUsers
-         * 
-         * Segui el patron de diseño que tenemos para implementar las interfaces recordando que deben estar listadas en orden 
-         * alfabetico y lo mismo su implementacion.
-         * 
-         * Basandote en el codigo de UserType guardado en la base y ya transforamdo en el tipo del enum.hace un swithc y
-         * 
-         * pedi un User al manager del plugin que corresponda pasandole el id del usuario (si no esta ese metodo escribilo)
-         * 
-         * Ese User luego es el que devolves como resultado de esta fucnnion.
-         * 
-         * * * * * * * 
-         */
-        
-        
+
         return null;
     }
 

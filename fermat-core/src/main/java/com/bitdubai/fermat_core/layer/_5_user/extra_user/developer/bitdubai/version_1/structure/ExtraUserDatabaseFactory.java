@@ -1,37 +1,37 @@
-package com.bitdubai.fermat_core.layer._8_crypto.address_book.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_core.layer._5_user.extra_user.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer._2_os.database_system.Database;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseFactory;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableFactory;
+import com.bitdubai.fermat_api.layer._2_os.database_system.DealsWithPlatformDatabaseSystem;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer._2_os.database_system.PlatformDatabaseSystem;
 import com.bitdubai.fermat_api.layer._2_os.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.CantCreateTableException;
 import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.InvalidOwnerId;
-import com.bitdubai.fermat_core.layer._8_crypto.address_book.developer.bitdubai.version_1.structure.AddressBookDatabaseConstants;
 
-import java.util.UUID;
 
 /**
- * Created by Natalia on 30/03/2015.
+ * Created by Natalia on 31/03/2015.
  */
- class AddressBookDatabaseFactory implements DealsWithPluginDatabaseSystem {
+ class ExtraUserDatabaseFactory implements DealsWithPlatformDatabaseSystem {
 
     /**
-     * DealsWithPluginDatabaseSystem Interface member variables.
+     * DealsWithPlatformDatabaseSystem Interface member variables.
      */
-    private PluginDatabaseSystem pluginDatabaseSystem;
+    private PlatformDatabaseSystem platformDatabaseSystem;
 
     /**
      * DealsWithPluginDatabaseSystem Interface implementation.
      */
     @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
+    public void setPlatformDatabaseSystem(PlatformDatabaseSystem platformDatabaseSystem) {
+        this.platformDatabaseSystem = platformDatabaseSystem;
     }
 
-    Database createDatabase(UUID ownerId, UUID walletId) throws CantCreateDatabaseException {
+    Database createDatabase() throws CantCreateDatabaseException {
 
         Database database;
 
@@ -40,7 +40,7 @@ import java.util.UUID;
          */
         try {
 
-            database = this.pluginDatabaseSystem.createDatabase(ownerId, walletId.toString());
+            database = this.platformDatabaseSystem.createDatabase("ExtraUser");
 
         }
         catch (CantCreateDatabaseException cantCreateDatabaseException){
@@ -64,16 +64,14 @@ import java.util.UUID;
             /**
              * First the Address book table.
              */
-            table = ((DatabaseFactory) database).newTableFactory(ownerId, AddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME);
-            table.addColumn(AddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ID, DatabaseDataType.STRING, 36);
-            table.addColumn(AddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ID_USER, DatabaseDataType.STRING, 36);
-            table.addColumn(AddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_USER_TYPE, DatabaseDataType.STRING, 3);
-            table.addColumn(AddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS, DatabaseDataType.STRING, 33);
-            table.addColumn(AddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_TIME_STAMP, DatabaseDataType.LONG_INTEGER, 0);
-            table.addIndex(AddressBookDatabaseConstants.CRYPTO_ADDRESSES_FIRST_KEY_COLUM);
+            table = ((DatabaseFactory) database).newTableFactory( ExtraUserDatabaseConstants.EXTRA_USER_TABLE_NAME);
+            table.addColumn(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36);
+            table.addColumn(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100);
+            table.addColumn(ExtraUserDatabaseConstants.EXTRA_USER_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0);
+            table.addIndex(ExtraUserDatabaseConstants.EXTRA_USER_FIRST_KEY_COLUM);
 
             try {
-                ((DatabaseFactory) database).createTable(ownerId, table);
+                ((DatabaseFactory) database).createTable(table);
             }
             catch (CantCreateTableException cantCreateTableException) {
                 System.err.println("CantCreateTableException: " + cantCreateTableException.getMessage());

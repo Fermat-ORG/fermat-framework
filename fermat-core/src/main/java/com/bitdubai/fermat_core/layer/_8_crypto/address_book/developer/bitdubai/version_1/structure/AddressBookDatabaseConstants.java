@@ -3,7 +3,7 @@ package com.bitdubai.fermat_core.layer._8_crypto.address_book.developer.bitdubai
 /**
  * Created by Natalia on 30/03/2015.
  */
-public class AddressBookDatabaseConstants {
+class AddressBookDatabaseConstants {
     /**
      * Address Book database table definition.
      */

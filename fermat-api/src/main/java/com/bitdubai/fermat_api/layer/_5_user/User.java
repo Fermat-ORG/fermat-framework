@@ -8,6 +8,8 @@ import java.util.UUID;
 public interface User {
     
     public void setName(String name);
+
+    public void setId(UUID id);
     
     public String getName(String name);
     

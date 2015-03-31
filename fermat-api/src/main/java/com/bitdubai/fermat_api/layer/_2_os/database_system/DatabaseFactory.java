@@ -15,6 +15,10 @@ public interface DatabaseFactory {
 
     public DatabaseTableFactory newTableFactory(UUID ownerId, String tableName) throws InvalidOwnerId;
 
+    public void createTable(DatabaseTableFactory tableFactory) throws InvalidOwnerId, CantCreateTableException;
+
+    public DatabaseTableFactory newTableFactory(String tableName) throws InvalidOwnerId;
+
     public void createDatabase(String databaseName) throws CantCreateDatabaseException;
 
     
