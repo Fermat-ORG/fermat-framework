@@ -1,8 +1,9 @@
 package com.bitdubai.fermat_api.layer._8_crypto.address_book;
 
 import com.bitdubai.fermat_api.layer._1_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer._5_user.User;
+import com.bitdubai.fermat_api.layer._5_user.extra_user.User;
 import com.bitdubai.fermat_api.layer._5_user.UserTypes;
+import com.bitdubai.fermat_api.layer._8_crypto.address_book.exceptions.*;
 
 import java.util.UUID;
 
@@ -11,8 +12,8 @@ import java.util.UUID;
  */
 public interface CryptoAddressBook {
 
-    public User getUserByCryptoAddress (CryptoAddress cryptoAddress);
+    public User getUserByCryptoAddress (CryptoAddress cryptoAddress) throws CantGetUserCryptoAddress;
 
-    public void registerUserCryptoAddress (User user,CryptoAddress cryptoAddress);
+    public void registerUserCryptoAddress (UserTypes userType, UUID userId,CryptoAddress cryptoAddress) throws CantRegisterUserCryptoAddress;
 
 }

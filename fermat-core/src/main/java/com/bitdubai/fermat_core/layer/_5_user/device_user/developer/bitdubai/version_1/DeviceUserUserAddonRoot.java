@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer._5_user.device_user.exceptions.CantLoadDevi
 import com.bitdubai.fermat_api.layer._5_user.device_user.DeviceUser;
 import com.bitdubai.fermat_api.layer._5_user.device_user.DeviceUserManager;
 import com.bitdubai.fermat_api.layer._5_user.device_user.exceptions.LoginFailedException;
+import com.bitdubai.fermat_api.layer._5_user.extra_user.User;
 import com.bitdubai.fermat_core.layer._5_user.device_user.developer.bitdubai.version_1.structure.PlatformDeviceUser;
 
 import java.util.ArrayList;
@@ -145,6 +146,16 @@ public class DeviceUserUserAddonRoot implements Addon, DealsWithErrors, DealsWit
         }
 
     }
+
+        /**
+         * DeviceUserManager Interface implementation.
+         */
+
+        @Override
+        public User getUser(UUID id){
+            return null;
+        }
+
 
     /**
      * Service Interface implementation.

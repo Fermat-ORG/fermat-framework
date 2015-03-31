@@ -110,25 +110,9 @@ public class PlatformDeviceUser implements DeviceUser,DealsWithPlatformFileSyste
 
     }
 
-
     @Override
-    public void setName(String name) {
-
-    }
-
-    @Override
-    public String getName(String name) {
-        return null;
-    }
-
-    @Override
-    public UUID getId() {
-        return this.userId ;
-    }
-
-    @Override
-    public UserTypes getType() {
-        return null;
+    public UUID getId(){
+        return this.userId;
     }
 
     @Override

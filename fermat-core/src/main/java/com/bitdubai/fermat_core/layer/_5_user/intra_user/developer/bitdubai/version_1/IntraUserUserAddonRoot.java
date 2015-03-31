@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer._2_os.file_system.DealsWithPlatformFileSyst
 import com.bitdubai.fermat_api.layer._2_os.file_system.PlatformFileSystem;
 import com.bitdubai.fermat_api.layer._5_user.device_user.DealsWithDeviceUsers;
 import com.bitdubai.fermat_api.layer._5_user.device_user.DeviceUserManager;
+import com.bitdubai.fermat_api.layer._5_user.extra_user.User;
 import com.bitdubai.fermat_api.layer._5_user.intra_user.IntraUserManager;
 import com.bitdubai.fermat_api.layer._5_user.intra_user.exceptions.CantCreateIntraUserException;
 import com.bitdubai.fermat_core.layer._5_user.intra_user.developer.bitdubai.version_1.event_handlers.UserCratedEventHandler;
@@ -80,7 +81,15 @@ public class IntraUserUserAddonRoot implements Addon, DealsWithDeviceUsers, Deal
     public void setPlatformFileSystem(PlatformFileSystem platformFileSystem) {
 
     }
-        
+
+    /**
+     * DeviceUserManager Interface implementation.
+     */
+
+    @Override
+    public User getUser(UUID id){
+        return null;
+    }
 
     /**
      * Service Interface implementation.

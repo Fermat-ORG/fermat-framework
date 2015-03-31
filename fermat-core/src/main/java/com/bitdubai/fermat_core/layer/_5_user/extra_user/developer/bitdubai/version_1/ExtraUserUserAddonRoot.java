@@ -12,6 +12,9 @@ import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventMana
 import com.bitdubai.fermat_api.layer._2_os.file_system.DealsWithPlatformFileSystem;
 import com.bitdubai.fermat_api.layer._2_os.file_system.PlatformFileSystem;
 import com.bitdubai.fermat_api.layer._5_user.extra_user.ExtraUserManager;
+import com.bitdubai.fermat_api.layer._5_user.extra_user.User;
+
+import java.util.UUID;
 
 /**
  * Created by loui on 22/02/15.
@@ -75,7 +78,14 @@ public class ExtraUserUserAddonRoot implements Addon, DealsWithErrors, DealsWith
 
     }
 
+    /**
+     * DeviceUserManager Interface implementation.
+     */
 
+    @Override
+    public User getUser(UUID id){
+        return null;
+    }
 
     /**
      * Service Interface implementation.
