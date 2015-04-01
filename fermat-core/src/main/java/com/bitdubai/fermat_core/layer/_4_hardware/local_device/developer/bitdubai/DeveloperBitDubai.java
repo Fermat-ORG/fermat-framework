@@ -10,12 +10,20 @@ import com.bitdubai.fermat_core.layer._4_hardware.local_device.developer.bitduba
 public class DeveloperBitDubai implements AddonDeveloper{
     
     Addon addon;
-    
+
+
+
+
+
     @Override
     public Addon getAddon(){
         return addon;        
     }
-    
+
+
+
+
+
     public DeveloperBitDubai(){
         
         /**

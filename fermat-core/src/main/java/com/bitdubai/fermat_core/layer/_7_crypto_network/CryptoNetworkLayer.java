@@ -28,6 +28,10 @@ public class CryptoNetworkLayer implements PlatformLayer {
 
     List<CryptoNetworkSubsystem> plugin;
 
+
+
+
+
      @Override
     public void start() throws CantStartLayerException {
 

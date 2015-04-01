@@ -13,16 +13,23 @@ import com.bitdubai.fermat_core.layer._3_platform_service.event_manager.EventMan
  */
 public class PlatformServiceLayer implements PlatformLayer {
 
-    Addon eventManager;
     Addon errorManager;
+    Addon eventManager;
+
+
+
+
+    public Addon getErrorManager() {
+        return this.errorManager;
+    }
 
     public Addon getEventManager() {
         return this.eventManager;
     }
 
-    public Addon getErrorManager() {
-        return this.errorManager;
-    }
+
+
+
 
     @Override
     public void start() throws CantStartLayerException {

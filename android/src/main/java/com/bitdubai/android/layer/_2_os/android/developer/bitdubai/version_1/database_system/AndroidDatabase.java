@@ -36,9 +36,18 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
     private DatabaseTransaction databaseTransaction;
     private DatabaseTable databaseTable;
 
+    /**
+     *
+     *Constructor
+     */
     public AndroidDatabase(Context context, UUID ownerId, String databaseName) {
         this.context = context;
         this.ownerId = ownerId;
+        this.databaseName = databaseName;
+    }
+
+    public AndroidDatabase(Context context, String databaseName) {
+        this.context = context;
         this.databaseName = databaseName;
     }
 
@@ -227,6 +236,48 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
 
     }
 
+    @Override
+    public void createTable(DatabaseTableFactory table) throws InvalidOwnerId, CantCreateTableException {
+
+         /**
+         * Get the columns of the table and write the query to create it
+         */
+        try
+        {
+            this.query ="CREATE TABLE IF NOT EXISTS " + table.getTableName() + "(";
+            ArrayList<DatabaseTableColumn> tableColumns = table.getColumns();
+
+            for (int i = 0; i < tableColumns.size(); i++) {
+
+                this.query += tableColumns.get(i).getName() +" " +  tableColumns.get(i).getType().name();
+                if(tableColumns.get(i).getType() == DatabaseDataType.STRING)
+                    this.query +="("+ String.valueOf(tableColumns.get(i).getDataTypeSize()) + ")";
+
+                if(i < tableColumns.size()-1)
+                    this.query +=",";
+            }
+
+            this.query += ")";
+
+            /**
+             * get index column
+             */
+            if(table.getIndex() != "")
+                this.query += " CREATE INDEX IF NOT EXISTS "+ table.getIndex() +"_idx ON " + table.getTableName() + " ("+ table.getIndex() +")";
+
+
+            executeQuery();
+        }catch (Exception e)
+        {
+            System.err.println("CantCreateTableException: " + e.getMessage());
+            e.printStackTrace();
+            throw new CantCreateTableException();
+        }
+
+
+    }
+
+
     /**
      * This method provides the caller with a Table Structure object.
      */
@@ -241,5 +292,11 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
         }
 
         return new AndroidDatabaseTableFactory(tableName);
+    }
+
+    @Override
+    public DatabaseTableFactory newTableFactory(String tableName) throws InvalidOwnerId {
+
+             return new AndroidDatabaseTableFactory(tableName);
     }
 }

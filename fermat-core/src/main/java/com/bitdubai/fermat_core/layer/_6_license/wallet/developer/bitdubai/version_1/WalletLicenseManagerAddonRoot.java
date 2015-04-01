@@ -14,6 +14,10 @@ public class WalletLicenseManagerAddonRoot implements Addon, License, Service {
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
+
+
+
+
     /**
      * Service Interface implementation.
      */

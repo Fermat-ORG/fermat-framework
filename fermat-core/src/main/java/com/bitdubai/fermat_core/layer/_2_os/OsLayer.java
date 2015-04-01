@@ -25,9 +25,17 @@ public class OsLayer implements PlatformLayer {
 
     Os mOs;
 
+
+
+
+
     public Os getOs() {
         return mOs;
     }
+
+
+
+
 
     @Override
     public void start() throws CantStartLayerException {

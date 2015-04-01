@@ -14,10 +14,18 @@ public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
 
     Plugin plugin;
 
+
+
+
+
     @Override
     public Plugin getPlugin() {
         return plugin;
     }
+
+
+
+
 
     public DeveloperBitDubai () {
 

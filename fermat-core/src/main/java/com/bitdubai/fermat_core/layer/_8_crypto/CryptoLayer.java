@@ -13,10 +13,18 @@ import com.bitdubai.fermat_core.layer._8_crypto.address_book.AddressBookSubsyste
 public class CryptoLayer implements PlatformLayer {
     
     private Plugin mAddressBook;
-    
+
+
+
+
+
     public Plugin getmAddressBook(){
         return mAddressBook;
     }
+
+
+
+
 
     @Override
     public void start() throws CantStartLayerException {

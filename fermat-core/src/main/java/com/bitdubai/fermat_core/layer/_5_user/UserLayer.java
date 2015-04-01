@@ -15,14 +15,14 @@ import com.bitdubai.fermat_core.layer._5_user.intra_user.IntraUserSubsystem;
 public class UserLayer implements PlatformLayer {
 
     Addon deviceUser;
-    Addon intraUser;
     Addon extraUser;
-    
-    
-    public Addon getIntraUser(){
-        return intraUser;
-    }
-    
+    Addon intraUser;
+
+
+
+
+
+
     public Addon getExtraUser(){
         return extraUser;
     }
@@ -30,6 +30,15 @@ public class UserLayer implements PlatformLayer {
     public Addon getDeviceUser() {
         return deviceUser;
     }
+
+    public Addon getIntraUser(){
+        return intraUser;
+    }
+
+
+
+
+
 
     public void start() throws CantStartLayerException {
 
@@ -78,7 +87,7 @@ public class UserLayer implements PlatformLayer {
 
             throw new CantStartLayerException();
         }
-        
+
     }
 
 

@@ -15,7 +15,11 @@ public class HardwareLayer implements PlatformLayer{
     
     Addon mLocalDeviceManager;
     Addon mRemoteDeviceManager;
-    
+
+
+
+
+
     public Addon getLocalDeviceManager(){
         return mLocalDeviceManager;        
     }
@@ -23,7 +27,11 @@ public class HardwareLayer implements PlatformLayer{
     public Addon getRemoteDeviceManager(){
         return mRemoteDeviceManager;        
     }
-    
+
+
+
+
+
     @Override
     public void start() throws CantStartLayerException {
 

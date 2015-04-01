@@ -62,7 +62,11 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
     private List<EventListener> listenersIncomingMoneyRequestRejectedEvent = new ArrayList<>();
     private List<EventListener> listenersOutgoingMoneyRequestApprovedEvent = new ArrayList<>();
     private List<EventListener> listenersOutgoingMoneyRequestRejectedEvent = new ArrayList<>();
-    
+
+
+    /**
+     * DealsWithEventMonitor member variables
+     */
     EventMonitor eventMonitor;
 
 

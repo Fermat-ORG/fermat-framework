@@ -16,6 +16,10 @@ public class LicenseLayer implements PlatformLayer {
     Addon mComponentLicenseManager;
     Addon mUseLicenseManager;
 
+
+
+
+
     public Addon getComponentLicenseManager() {
         return mComponentLicenseManager;
     }
@@ -23,6 +27,10 @@ public class LicenseLayer implements PlatformLayer {
     public Addon getUseLicenseManager() {
         return mUseLicenseManager;
     }
+
+
+
+
 
     @Override
     public void start() throws CantStartLayerException {

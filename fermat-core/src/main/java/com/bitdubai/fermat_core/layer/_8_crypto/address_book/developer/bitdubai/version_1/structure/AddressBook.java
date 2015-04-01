@@ -42,13 +42,9 @@ public class AddressBook implements CryptoAddressBook ,DealsWithDeviceUsers,Deal
 
 
     /**
-     * UsesDatabaseSystem Interface member variables.
-     */
-    PluginDatabaseSystem pluginDatabaseSystem;
-
-    /**
      * CryptoAddressBook Interface member variables.
      */
+
 
     private UUID ownerId;
     private Database database;
@@ -68,8 +64,19 @@ public class AddressBook implements CryptoAddressBook ,DealsWithDeviceUsers,Deal
     /**
      * DealsWithIntraUsers Interface member variables.
      */
-    
+
+
     IntraUserManager intraUserManager;
+
+
+    /**
+     * UsesDatabaseSystem Interface member variables.
+     */
+    PluginDatabaseSystem pluginDatabaseSystem;
+
+
+
+
 
     /**
      * Constructor.
@@ -82,10 +89,15 @@ public class AddressBook implements CryptoAddressBook ,DealsWithDeviceUsers,Deal
         this.ownerId = ownerId;
 
     }
-    
+
+
+
+
+
     /**
      * CryptoAddressBook Interface implementation.
      */
+
     public void initialize() throws CantInitializeAddresBookException {
 
         /**
@@ -128,7 +140,8 @@ public class AddressBook implements CryptoAddressBook ,DealsWithDeviceUsers,Deal
         }
 
     }
-    
+
+
     @Override
     public User getUserByCryptoAddress(CryptoAddress cryptoAddress) throws CantGetUserCryptoAddress {
 
@@ -139,7 +152,6 @@ public class AddressBook implements CryptoAddressBook ,DealsWithDeviceUsers,Deal
          */
         table = this.database.getTable(AddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME);
         table.setStringFilter(AddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS,cryptoAddress.getAddress(), DatabaseFilterType.EQUAL);
-       
         try {
             table.loadToMemory();
         }
@@ -151,9 +163,10 @@ public class AddressBook implements CryptoAddressBook ,DealsWithDeviceUsers,Deal
             cantLoadTableToMemory.printStackTrace();
             throw new CantGetUserCryptoAddress();
         }
-        
+
+
         /**
-         * Will go through the records getting each fiat account.
+         * Will go through the records getting each user address.
          */
         UserTypes userTypes;
         UUID user_id ;
@@ -176,7 +189,7 @@ public class AddressBook implements CryptoAddressBook ,DealsWithDeviceUsers,Deal
 
 
         }
-        
+
         return null;
     }
 
@@ -210,11 +223,14 @@ public class AddressBook implements CryptoAddressBook ,DealsWithDeviceUsers,Deal
             e.printStackTrace();
             throw new CantRegisterUserCryptoAddress();
         }
+
+
     }
 
     /**
      * DealsWithDeviceUsers interface implementation.
      */
+
     @Override
     public void setDeviceUserManager(DeviceUserManager deviceUserManager){
        this.deviceUserManager = deviceUserManager;
@@ -223,6 +239,7 @@ public class AddressBook implements CryptoAddressBook ,DealsWithDeviceUsers,Deal
     /**
      * DealsWithExtraUsers interface implementation.
      */
+
     @Override
     public void setExtraUserManager(ExtraUserManager extraUserManager){
          this.extraUserManager = extraUserManager;
@@ -231,6 +248,7 @@ public class AddressBook implements CryptoAddressBook ,DealsWithDeviceUsers,Deal
     /**
      * DealsWithIntraUsers interface implementation.
      */
+
     @Override
     public void setIntraUserManager(IntraUserManager intraUserManager){
         this.intraUserManager = intraUserManager;
@@ -239,6 +257,7 @@ public class AddressBook implements CryptoAddressBook ,DealsWithDeviceUsers,Deal
     /**
      * DealsWithPluginDatabaseSystem interface implementation.
      */
+
     @Override
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
