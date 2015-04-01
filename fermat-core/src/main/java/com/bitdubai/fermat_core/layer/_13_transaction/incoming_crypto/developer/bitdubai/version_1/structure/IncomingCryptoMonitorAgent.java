@@ -7,10 +7,8 @@ package com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer
 
 import com.bitdubai.fermat_api.layer._2_os.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer._2_os.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer._2_os.file_system.PluginFileSystem;
-import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.exceptions.CantInitializeException;
+import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.exceptions.CantInitializeCryptoRegistryException;
 import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.exceptions.CantStartAgentException;
-import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.interfaces.TransactionAgent;
 
 /**
@@ -65,12 +63,12 @@ public class IncomingCryptoMonitorAgent implements DealsWithPluginDatabaseSystem
         try {
             ((MonitorAgent) this.monitorAgent).Initialize();
         }
-        catch (CantInitializeException cantInitializeException) {
+        catch (CantInitializeCryptoRegistryException cantInitializeCryptoRegistryException) {
             /**
              * I cant continue if this happens.
              */
-            System.err.println("CantInitializeException: " + cantInitializeException.getMessage());
-            cantInitializeException.printStackTrace();
+            System.err.println("CantInitializeException: " + cantInitializeCryptoRegistryException.getMessage());
+            cantInitializeCryptoRegistryException.printStackTrace();
             throw new CantStartAgentException();
         }
         
@@ -114,7 +112,7 @@ public class IncomingCryptoMonitorAgent implements DealsWithPluginDatabaseSystem
         /**
          * MonitorAgent interface implementation.
          */
-        private void Initialize () throws CantInitializeException {
+        private void Initialize () throws CantInitializeCryptoRegistryException {
 
             /**
              * Here I open the database read the event table and load it to memory.

@@ -70,7 +70,7 @@ public class AddressBookDatabaseFactory implements DealsWithPluginDatabaseSystem
             table.addColumn(AddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_USER_TYPE, DatabaseDataType.STRING, 3);
             table.addColumn(AddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS, DatabaseDataType.STRING, 33);
             table.addColumn(AddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_TIME_STAMP, DatabaseDataType.LONG_INTEGER, 0);
-            table.addIndex(AddressBookDatabaseConstants.CRYPTO_ADDRESSES_FIRST_KEY_COLUM);
+            table.addIndex(AddressBookDatabaseConstants.CRYPTO_ADDRESSES_FIRST_KEY_COLUMN_NAME);
 
             try {
                 ((DatabaseFactory) database).createTable(ownerId, table);

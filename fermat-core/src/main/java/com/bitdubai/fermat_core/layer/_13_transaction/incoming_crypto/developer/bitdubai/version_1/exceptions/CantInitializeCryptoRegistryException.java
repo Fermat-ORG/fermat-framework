@@ -3,5 +3,5 @@ package com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer
 /**
  * Created by ciencias on 3/30/15.
  */
-public class CantInitializeException extends Exception {
+public class CantInitializeCryptoRegistryException extends Exception {
 }

@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer._13_transaction.incoming_crypto.Registry;
-import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.exceptions.CantInitializeException;
+import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.exceptions.CantInitializeCryptoRegistryException;
 
 /**
  * Created by ciencias on 3/30/15.
@@ -44,7 +44,7 @@ import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.
 
 public class IncomingCryptoRegistry implements Registry {
 
-public void Initialize() throws CantInitializeException {
+public void Initialize() throws CantInitializeCryptoRegistryException {
     
     
 }

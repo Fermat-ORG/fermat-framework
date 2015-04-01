@@ -13,7 +13,7 @@ public class AddressBookDatabaseConstants {
     static final String CRYPTO_ADDRESS_BOOK_TABLE_USER_TYPE = "UserType";
     static final String CRYPTO_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS = "CryptoAddress";
     static final String CRYPTO_ADDRESS_BOOK_TABLE_TIME_STAMP = "TimeStamp";
-    static final String CRYPTO_ADDRESSES_FIRST_KEY_COLUM = "CryptoAddress";
+    static final String CRYPTO_ADDRESSES_FIRST_KEY_COLUMN_NAME = "CryptoAddress";
 
 
 }

@@ -14,9 +14,8 @@ import com.bitdubai.fermat_api.layer._2_os.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.DealsWithEvents;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventManager;
-import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.exceptions.CantInitializeException;
+import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.exceptions.CantInitializeCryptoRegistryException;
 import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.interfaces.TransactionAgent;
@@ -80,13 +79,13 @@ public class IncomingCryptoTransactionPluginRoot implements Service, IncomingCry
         try {
             ((IncomingCryptoRegistry) this.registry).Initialize();
         }
-        catch (CantInitializeException cantInitializeException) {
+        catch (CantInitializeCryptoRegistryException cantInitializeCryptoRegistryException) {
             /**
              * If I can not initialize the Registry then I can not start the service.
              * * * * 
              */
-            System.err.println("CantInitializeException: " + cantInitializeException.getMessage());
-            cantInitializeException.printStackTrace();
+            System.err.println("CantInitializeException: " + cantInitializeCryptoRegistryException.getMessage());
+            cantInitializeCryptoRegistryException.printStackTrace();
             throw new CantStartPluginException(Plugins.INCOMING_CRYPTO_TRANSACTION );
         }
 

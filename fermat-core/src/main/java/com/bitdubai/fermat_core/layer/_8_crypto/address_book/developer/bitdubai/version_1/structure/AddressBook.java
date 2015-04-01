@@ -50,7 +50,6 @@ public class AddressBook implements CryptoAddressBook ,DealsWithDeviceUsers,Deal
      * CryptoAddressBook Interface member variables.
      */
 
-
     private UUID ownerId;
     private Database database;
 
@@ -69,8 +68,7 @@ public class AddressBook implements CryptoAddressBook ,DealsWithDeviceUsers,Deal
     /**
      * DealsWithIntraUsers Interface member variables.
      */
-
-
+    
     IntraUserManager intraUserManager;
 
     /**
@@ -84,13 +82,10 @@ public class AddressBook implements CryptoAddressBook ,DealsWithDeviceUsers,Deal
         this.ownerId = ownerId;
 
     }
-
-
-
+    
     /**
      * CryptoAddressBook Interface implementation.
      */
-
     public void initialize() throws CantInitializeAddresBookException {
 
         /**
@@ -133,8 +128,7 @@ public class AddressBook implements CryptoAddressBook ,DealsWithDeviceUsers,Deal
         }
 
     }
-
-
+    
     @Override
     public User getUserByCryptoAddress(CryptoAddress cryptoAddress) throws CantGetUserCryptoAddress {
 
@@ -145,6 +139,7 @@ public class AddressBook implements CryptoAddressBook ,DealsWithDeviceUsers,Deal
          */
         table = this.database.getTable(AddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME);
         table.setStringFilter(AddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS,cryptoAddress.getAddress(), DatabaseFilterType.EQUAL);
+       
         try {
             table.loadToMemory();
         }
@@ -156,8 +151,7 @@ public class AddressBook implements CryptoAddressBook ,DealsWithDeviceUsers,Deal
             cantLoadTableToMemory.printStackTrace();
             throw new CantGetUserCryptoAddress();
         }
-
-
+        
         /**
          * Will go through the records getting each fiat account.
          */
@@ -182,32 +176,6 @@ public class AddressBook implements CryptoAddressBook ,DealsWithDeviceUsers,Deal
 
 
         }
-        /**
-         * La clase en el metodo initialize ya deja abierta una conexion a la base de datos (ese es otro patron de diseño)
-         * 
-         * A traves de esa conexion, pedis una tabla, le seteas como filtro la crypto address y obtenes el registro.
-         * 
-         * Como este metodo devuelve un User que este plugin no puede crear, se lo tiene que pedir a alguno de los siguientes
-         * tres plugins: DeviceUser, IntraUser, CryptoUser.
-         * 
-         * Para poder acceder a esos plugins debe implementar las interfaces 
-         * 
-         * DealsWithDeviceUsers
-         * DealsWithExtraUsers
-         * DealsWithIntraUsers
-         * 
-         * Segui el patron de diseño que tenemos para implementar las interfaces recordando que deben estar listadas en orden 
-         * alfabetico y lo mismo su implementacion.
-         * 
-         * Basandote en el codigo de UserType guardado en la base y ya transforamdo en el tipo del enum.hace un swithc y
-         * 
-         * pedi un User al manager del plugin que corresponda pasandole el id del usuario (si no esta ese metodo escribilo)
-         * 
-         * Ese User luego es el que devolves como resultado de esta fucnnion.
-         * 
-         * * * * * * * 
-         */
-        
         
         return null;
     }
@@ -242,14 +210,11 @@ public class AddressBook implements CryptoAddressBook ,DealsWithDeviceUsers,Deal
             e.printStackTrace();
             throw new CantRegisterUserCryptoAddress();
         }
-
-
     }
 
     /**
      * DealsWithDeviceUsers interface implementation.
      */
-
     @Override
     public void setDeviceUserManager(DeviceUserManager deviceUserManager){
        this.deviceUserManager = deviceUserManager;
@@ -258,7 +223,6 @@ public class AddressBook implements CryptoAddressBook ,DealsWithDeviceUsers,Deal
     /**
      * DealsWithExtraUsers interface implementation.
      */
-
     @Override
     public void setExtraUserManager(ExtraUserManager extraUserManager){
          this.extraUserManager = extraUserManager;
@@ -267,7 +231,6 @@ public class AddressBook implements CryptoAddressBook ,DealsWithDeviceUsers,Deal
     /**
      * DealsWithIntraUsers interface implementation.
      */
-
     @Override
     public void setIntraUserManager(IntraUserManager intraUserManager){
         this.intraUserManager = intraUserManager;
@@ -276,7 +239,6 @@ public class AddressBook implements CryptoAddressBook ,DealsWithDeviceUsers,Deal
     /**
      * DealsWithPluginDatabaseSystem interface implementation.
      */
-
     @Override
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
