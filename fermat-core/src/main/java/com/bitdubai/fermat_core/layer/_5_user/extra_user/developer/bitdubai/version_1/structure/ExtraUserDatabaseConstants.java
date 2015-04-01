@@ -4,6 +4,7 @@ package com.bitdubai.fermat_core.layer._5_user.extra_user.developer.bitdubai.ver
  * Created by Natalia on 31/03/2015.
  */
 class ExtraUserDatabaseConstants {
+
     /**
      * Extra User database table definition.
      */

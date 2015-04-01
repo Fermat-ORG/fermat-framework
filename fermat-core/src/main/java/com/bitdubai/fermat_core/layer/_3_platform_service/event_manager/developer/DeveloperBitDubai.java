@@ -12,10 +12,17 @@ public class DeveloperBitDubai implements AddonDeveloper {
 
     Addon addon;
 
+
+
+
+
     @Override
     public Addon getAddon() {
         return addon;
     }
+
+
+
 
 
     public DeveloperBitDubai () {

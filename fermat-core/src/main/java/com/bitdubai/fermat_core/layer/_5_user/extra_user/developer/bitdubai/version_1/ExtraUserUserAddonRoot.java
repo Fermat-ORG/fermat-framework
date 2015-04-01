@@ -35,6 +35,7 @@ public class ExtraUserUserAddonRoot implements Addon, DealsWithErrors, DealsWith
      * Addon Interface member variables.
      */
      private ExtraUserRegistry extraUserRegistry;
+
     /**
      * DealWithEvents Interface member variables.
      */
@@ -42,31 +43,31 @@ public class ExtraUserUserAddonRoot implements Addon, DealsWithErrors, DealsWith
 
 
     /**
-     * Service Interface member variables.
-     */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
-
-    /**
-     *DealWithErrors Interface implementation.
-     */
-
-    /**
-     * DealsWithPlatformDatabaseSystem Interface member variables.
-     */
-    PlatformDatabaseSystem platformDatabaseSystem;
-
-
+    * DealsWithPlatformDatabaseSystem Interface member variables.
+    */
     /**
      * DealsWithPlatformFileSystem Interface member variables.
      */
     PlatformFileSystem platformFileSystem;
 
+    /**
+     * Service Interface member variables.
+     */
+    ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
+
+
+
+
+    /**
+     *DealsWithErrors Interface implementation.
+     */
 
     @Override
     public void setErrorManager(ErrorManager errorManager) {
 
     }
+
     /**
      * DealWithEvents Interface implementation.
      */
@@ -75,15 +76,7 @@ public class ExtraUserUserAddonRoot implements Addon, DealsWithErrors, DealsWith
     public void setEventManager(EventManager eventManager) {
         this.eventManager = eventManager;
     }
-
-    /**
-     * Platform File System implementation.
-     */
-    
-    @Override
-    public void setPlatformFileSystem(PlatformFileSystem platformFileSystem) {
-        this.platformFileSystem  = platformFileSystem;
-    }
+    PlatformDatabaseSystem platformDatabaseSystem;
 
     /**
      * DealsWithPluginDatabaseSystem interface implementation.
@@ -93,6 +86,14 @@ public class ExtraUserUserAddonRoot implements Addon, DealsWithErrors, DealsWith
         this.platformDatabaseSystem = platformDatabaseSystem;
     }
 
+    /**
+     * DealsWithPlatformFileSystem implementation.
+     */
+
+    @Override
+    public void setPlatformFileSystem(PlatformFileSystem platformFileSystem) {
+        this.platformFileSystem  = platformFileSystem;
+    }
 
     /**
      * DeviceUserManager Interface implementation.

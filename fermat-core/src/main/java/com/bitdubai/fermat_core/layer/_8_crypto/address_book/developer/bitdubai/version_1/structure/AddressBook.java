@@ -74,6 +74,10 @@ public class AddressBook implements CryptoAddressBook ,DealsWithDeviceUsers,Deal
      */
     PluginDatabaseSystem pluginDatabaseSystem;
 
+
+
+
+
     /**
      * Constructor.
      */
@@ -85,6 +89,8 @@ public class AddressBook implements CryptoAddressBook ,DealsWithDeviceUsers,Deal
         this.ownerId = ownerId;
 
     }
+
+
 
 
 

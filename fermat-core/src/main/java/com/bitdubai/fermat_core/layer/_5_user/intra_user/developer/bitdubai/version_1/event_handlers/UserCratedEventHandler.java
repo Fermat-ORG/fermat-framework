@@ -16,9 +16,19 @@ import java.util.UUID;
 public class UserCratedEventHandler implements EventHandler {
     IntraUserManager intraUserManager;
 
+
+
+
+
+
     public void setIntraUserManager(IntraUserManager intraUserManager) {
         this.intraUserManager = intraUserManager;
     }
+
+
+
+
+
 
 
     @Override

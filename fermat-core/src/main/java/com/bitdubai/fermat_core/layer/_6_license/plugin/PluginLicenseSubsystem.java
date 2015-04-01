@@ -13,10 +13,18 @@ public class PluginLicenseSubsystem implements LicenseSubsystem {
 
     private Addon addon;
 
+
+
+
+
     @Override
     public Addon getAddon() {
         return addon;
     }
+
+
+
+
 
     @Override
     public void start() throws CantStartSubsystemException {

@@ -18,6 +18,12 @@ public class ExtraUser implements User{
     private UUID id;
     private UserTypes type;
 
+
+
+
+
+
+
     /**
      * User interface implementation.
      */

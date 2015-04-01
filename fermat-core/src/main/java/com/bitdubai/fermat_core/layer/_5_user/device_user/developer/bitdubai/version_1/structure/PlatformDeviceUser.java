@@ -24,15 +24,7 @@ import java.util.UUID;
 /**
  * Created by ciencias on 22.01.15.
  */
-public class PlatformDeviceUser implements DeviceUser,DealsWithPlatformFileSystem, DealsWithEvents, DealsWithErrors {
-
-    /**
-     * User Interface member variables.
-     */
-    UUID userId;
-    String userName = "";
-    String password = "";
-    DeviceUserStatus status;
+public class PlatformDeviceUser implements DeviceUser, DealsWithEvents, DealsWithErrors,DealsWithPlatformFileSystem {
 
     /**
      * DealsWithPlatformFileSystem Interface member variables.
@@ -48,10 +40,19 @@ public class PlatformDeviceUser implements DeviceUser,DealsWithPlatformFileSyste
      * DealsWithPluginIdentity Interface member variables.
      */
 
-    /**
-     * User Interface implementation.
-     */
 
+    /**
+    * DeviceUser Interface member variables.
+    */
+    String userName = "";
+    String password = "";
+    DeviceUserStatus status;
+    UUID userId;
+
+
+    /**
+     * DeviceUser Interface implementation.
+     */
 
     /**
      * This method is to be used for creating a new user.

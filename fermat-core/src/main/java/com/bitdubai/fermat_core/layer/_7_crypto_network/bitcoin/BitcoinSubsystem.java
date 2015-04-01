@@ -12,10 +12,17 @@ public class BitcoinSubsystem implements CryptoNetworkSubsystem {
 
     Plugin plugin;
 
+
+
+
     @Override
     public Plugin getPlugin() {
         return plugin;
     }
+
+
+
+
 
     @Override
     public void start() throws CantStartSubsystemException {

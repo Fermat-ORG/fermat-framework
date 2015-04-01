@@ -43,6 +43,11 @@ public class ExtraUserRegistry implements DealsWithPlatformDatabaseSystem,UserRe
     private Database database;
 
 
+
+
+
+
+
     /**
      * DealsWithPluginDatabaseSystem interface implementation.
      */
