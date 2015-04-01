@@ -39,7 +39,7 @@ public class IncomingCryptoTransactionPluginRoot implements Service, IncomingCry
     TransactionAgent monitor;
     TransactionAgent relay;
     TransactionService eventRecorder;
-    
+
     /**
      * IncomingCryptoManager Interface member variables.
      */
@@ -92,9 +92,9 @@ public class IncomingCryptoTransactionPluginRoot implements Service, IncomingCry
         /**
          * I will start the Event Recorder.
          */
-        this.eventRecorder = new IncomingCryptoEventRecorder();
-        
+        this.eventRecorder = new IncomingCryptoEventRecorder(this.eventManager);
         try {
+
             this.eventRecorder.start();
         }
         catch (CantStartServiceException cantStartServiceException) {

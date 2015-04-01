@@ -72,8 +72,9 @@ public class IncomingCryptoMonitorAgent implements DealsWithPluginDatabaseSystem
             throw new CantStartAgentException();
         }
         
-        this.agentThread = new Thread(monitorAgent);
-        this.agentThread.run();
+       this.agentThread = new Thread(new MonitorAgent());
+        this.agentThread.start();
+       // this.agentThread.run();
     }
 
     @Override
@@ -98,7 +99,7 @@ public class IncomingCryptoMonitorAgent implements DealsWithPluginDatabaseSystem
     
     
     
-    private class MonitorAgent implements DealsWithPluginDatabaseSystem, Runnable {
+    private class MonitorAgent implements DealsWithPluginDatabaseSystem, Runnable  {
 
         private final int SLEEP_TIME = 5000;
 

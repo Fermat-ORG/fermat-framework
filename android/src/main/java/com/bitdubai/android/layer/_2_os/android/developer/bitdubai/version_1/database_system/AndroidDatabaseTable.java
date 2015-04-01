@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.CancellationSignal;
 
 
 import com.bitdubai.fermat_api.layer._2_os.database_system.DataBaseTableOrder;
@@ -163,10 +164,13 @@ public class AndroidDatabaseTable implements  DatabaseTable {
         List<DatabaseRecord>  recordValues = new ArrayList<DatabaseRecord>();
         this.records = new ArrayList<DatabaseTableRecord>() ;
 
-
         try {
-            List<String> columns = getColumns();
+
+
+
             Cursor c = this.database.rawQuery("SELECT * FROM " + tableName + makeFilter() + makeOrder(), null);
+
+            List<String> columns = getColumns();
 
             if (c.moveToFirst()) {
                 do {
