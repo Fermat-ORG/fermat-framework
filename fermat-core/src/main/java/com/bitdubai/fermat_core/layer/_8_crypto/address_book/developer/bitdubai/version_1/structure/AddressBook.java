@@ -45,7 +45,6 @@ public class AddressBook implements CryptoAddressBook ,DealsWithDeviceUsers,Deal
      * CryptoAddressBook Interface member variables.
      */
 
-
     private UUID ownerId;
     private Database database;
 
