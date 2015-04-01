@@ -60,7 +60,15 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
          * First I try to open the database.
          */
         try {
-            String databasePath =  this.context.getFilesDir().getPath() +  "/" +  ownerId.toString();
+            String databasePath ="";
+            /**
+             * if owner id if null
+             * because it comes from platformdatabase
+             */
+            if(ownerId != null)
+                databasePath =  this.context.getFilesDir().getPath() +  "/" +  ownerId.toString();
+            else
+                databasePath =  this.context.getFilesDir().getPath();
 
             databasePath += "/" + databaseName.replace("-","") + ".db";
             File databaseFile = new File(databasePath);
@@ -90,7 +98,15 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
          * First I try to open the database.
          */
         try {
-            String databasePath =  this.context.getFilesDir().getPath() +  "/" +  ownerId.toString();
+            String databasePath ="";
+            /**
+             * if owner id if null
+             * because it comes from platformdatabase
+             */
+           if(ownerId != null)
+             databasePath =  this.context.getFilesDir().getPath() +  "/" +  ownerId.toString();
+           else
+                databasePath =  this.context.getFilesDir().getPath();
 
             File storagePath = new File(databasePath);
             if (!storagePath.exists()) {
@@ -218,12 +234,14 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
 
             this.query += ")";
 
+
+            executeQuery();
+
             /**
              * get index column
              */
             if(table.getIndex() != "")
-                this.query += " CREATE INDEX IF NOT EXISTS "+ table.getIndex() +"_idx ON " + table.getTableName() + " ("+ table.getIndex() +")";
-
+                this.query = " CREATE INDEX IF NOT EXISTS "+ table.getIndex() +"_idx ON " + table.getTableName() + " ("+ table.getIndex() +")";
 
             executeQuery();
         }catch (Exception e)
@@ -244,7 +262,7 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
          */
         try
         {
-            this.query ="CREATE TABLE IF NOT EXISTS " + table.getTableName() + "(";
+            this.query ="CREATE TABLE IF NOT EXISTS " + table.getTableName() + " (";
             ArrayList<DatabaseTableColumn> tableColumns = table.getColumns();
 
             for (int i = 0; i < tableColumns.size(); i++) {
@@ -258,15 +276,14 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
             }
 
             this.query += ")";
-
+            executeQuery();
             /**
              * get index column
              */
             if(table.getIndex() != "")
-                this.query += " CREATE INDEX IF NOT EXISTS "+ table.getIndex() +"_idx ON " + table.getTableName() + " ("+ table.getIndex() +")";
-
-
+                this.query = " CREATE INDEX IF NOT EXISTS "+ table.getIndex() +"_idx ON " + table.getTableName() + " ("+ table.getIndex() +")";
             executeQuery();
+
         }catch (Exception e)
         {
             System.err.println("CantCreateTableException: " + e.getMessage());

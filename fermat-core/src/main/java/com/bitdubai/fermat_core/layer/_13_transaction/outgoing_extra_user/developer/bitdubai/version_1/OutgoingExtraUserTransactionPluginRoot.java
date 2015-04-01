@@ -2,7 +2,7 @@ package com.bitdubai.fermat_core.layer._13_transaction.outgoing_extra_user.devel
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer._13_transaction.Transaction;
+import com.bitdubai.fermat_api.layer._13_transaction.TransactionSubsystem;
 import com.bitdubai.fermat_api.layer._13_transaction.outgoing_extrauser.OutgoingExtraUserManager;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors;

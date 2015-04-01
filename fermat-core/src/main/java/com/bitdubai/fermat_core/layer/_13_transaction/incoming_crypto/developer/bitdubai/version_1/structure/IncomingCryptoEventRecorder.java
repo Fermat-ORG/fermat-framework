@@ -7,12 +7,13 @@ import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.
 import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoReceptionConfirmedEventHandler;
 import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoReversedEventHandler;
 import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.exceptions.CantSaveEvent;
-import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.exceptions.CantStartAgentException;
+
 import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.interfaces.TransactionService;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * Created by ciencias on 3/30/15.
@@ -41,8 +42,20 @@ public class IncomingCryptoEventRecorder implements DealsWithEvents, Transaction
      * TransactionService Interface member variables.
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
-    
-    
+
+
+    /**
+     * Constructor.
+     */
+    public IncomingCryptoEventRecorder(EventManager eventManager){
+
+        /**
+         * The only one who can set the EventManager.
+         */
+        this.eventManager = eventManager;
+
+    }
+
     /**
      * IncomingCryptoEventRecorder Interface implementation.
      */
