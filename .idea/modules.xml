@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/bitDubai-system.iml" filepath="$PROJECT_DIR$/bitDubai-system.iml" />
       <module fileurl="file://$PROJECT_DIR$/fermat-api/fermat-api.iml" filepath="$PROJECT_DIR$/fermat-api/fermat-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/fermat-core/fermat-core.iml" filepath="$PROJECT_DIR$/fermat-core/fermat-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-kids-boys-bitdubai/fermat-dmp-android-wallet-runtime-kids-boys-bitdubai.iml" filepath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-kids-boys-bitdubai/fermat-dmp-android-wallet-runtime-kids-boys-bitdubai.iml" />
       <module fileurl="file://$PROJECT_DIR$/fermat-plugin-crypto-network-bitcoin-bitdubai/fermat-plugin-crypto-network-bitcoin-bitdubai.iml" filepath="$PROJECT_DIR$/fermat-plugin-crypto-network-bitcoin-bitdubai/fermat-plugin-crypto-network-bitcoin-bitdubai.iml" />
       <module fileurl="file://$PROJECT_DIR$/fermat-plugin-crypto-network-bitcoin-bitdubai/src/main/fermat-plugin-crypto-network-bitcoin-bitdubai.iml" filepath="$PROJECT_DIR$/fermat-plugin-crypto-network-bitcoin-bitdubai/src/main/fermat-plugin-crypto-network-bitcoin-bitdubai.iml" />
       <module fileurl="file://$PROJECT_DIR$/fermat-plugin-module-wallet-manager-bitdubai/fermat-plugin-module-wallet-manager-bitdubai.iml" filepath="$PROJECT_DIR$/fermat-plugin-module-wallet-manager-bitdubai/fermat-plugin-module-wallet-manager-bitdubai.iml" />

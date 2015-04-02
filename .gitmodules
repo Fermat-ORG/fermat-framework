@@ -16,3 +16,6 @@
 [submodule "fermat-plugin-module-wallet-store-bitdubai"]
 	path = fermat-plugin-module-wallet-store-bitdubai
 	url = https://github.com/bitDubai/fermat-plugin-module-wallet-store-bitdubai
+[submodule "fermat-dmp-android-wallet-runtime-kids-boys-bitdubai"]
+	path = fermat-dmp-android-wallet-runtime-kids-boys-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-android-wallet-runtime-kids-boys-bitdubai.git
