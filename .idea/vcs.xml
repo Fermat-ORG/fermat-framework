@@ -2,7 +2,7 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-kids-boys-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-plugin-crypto-network-bitcoin-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-plugin-module-wallet-manager-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-plugin-module-wallet-publisher-bitdubai" vcs="Git" />
@@ -10,4 +10,3 @@
     <mapping directory="$PROJECT_DIR$/fermat-plugin-module-wallet-store-bitdubai" vcs="Git" />
   </component>
 </project>
-

@@ -6,26 +6,26 @@ import com.bitdubai.fermat_api.layer._1_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventHandler;
 import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.exceptions.CantSaveEvent;
 import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.interfaces.TransactionService;
-import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.structure.IncomingCryptoEventRecorder;
+import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.structure.IncomingCryptoEventRecorderService;
 
 /**
  * Created by loui on 22/02/15.
  */
 public class IncomingCryptoReversedEventHandler implements EventHandler {
-    IncomingCryptoEventRecorder incomingCryptoEventRecorder;
+    IncomingCryptoEventRecorderService incomingCryptoEventRecorderService;
 
-    public void setIncomingCryptoEventRecorder(IncomingCryptoEventRecorder incomingCryptoEventRecorder){
-        this.incomingCryptoEventRecorder = incomingCryptoEventRecorder;
+    public void setIncomingCryptoEventRecorderService(IncomingCryptoEventRecorderService incomingCryptoEventRecorderService){
+        this.incomingCryptoEventRecorderService = incomingCryptoEventRecorderService;
     }
 
     @Override
     public void handleEvent(PlatformEvent platformEvent) throws Exception {
 
-        if (((TransactionService) this.incomingCryptoEventRecorder).getStatus() == ServiceStatus.STARTED){
+        if (((TransactionService) this.incomingCryptoEventRecorderService).getStatus() == ServiceStatus.STARTED){
 
             try
             {
-                this.incomingCryptoEventRecorder.incomingCryptoReversed();
+                this.incomingCryptoEventRecorderService.incomingCryptoReversed();
             }
             catch (CantSaveEvent cantSaveEvent)
             {

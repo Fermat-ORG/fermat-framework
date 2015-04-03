@@ -72,9 +72,9 @@ public class IncomingCryptoMonitorAgent implements DealsWithPluginDatabaseSystem
             throw new CantStartAgentException();
         }
         
-       this.agentThread = new Thread(new MonitorAgent());
+        this.agentThread = new Thread(new MonitorAgent());
         this.agentThread.start();
-       // this.agentThread.run();
+
     }
 
     @Override

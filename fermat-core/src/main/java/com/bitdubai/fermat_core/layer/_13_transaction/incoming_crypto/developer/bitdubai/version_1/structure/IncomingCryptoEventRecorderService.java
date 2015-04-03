@@ -30,7 +30,7 @@ import java.util.List;
  * * * * * * * *
  */
 
-public class IncomingCryptoEventRecorder implements DealsWithEvents, TransactionService {
+public class IncomingCryptoEventRecorderService implements DealsWithEvents, TransactionService {
     
     /**
      * DealsWithEvents Interface member variables.
@@ -47,7 +47,7 @@ public class IncomingCryptoEventRecorder implements DealsWithEvents, Transaction
     /**
      * Constructor.
      */
-    public IncomingCryptoEventRecorder(EventManager eventManager){
+    public IncomingCryptoEventRecorderService(EventManager eventManager){
 
         /**
          * The only one who can set the EventManager.
@@ -100,14 +100,14 @@ public class IncomingCryptoEventRecorder implements DealsWithEvents, Transaction
 
         eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_IDENTIFIED);
         eventHandler = new IncomingCryptoIdentifiedEventHandler();
-        ((IncomingCryptoIdentifiedEventHandler) eventHandler).setIncomingCryptoEventRecorder(this);
+        ((IncomingCryptoIdentifiedEventHandler) eventHandler).setIncomingCryptoEventRecorderService(this);
         eventListener.setEventHandler(eventHandler);
         eventManager.addListener(eventListener);
         listenersAdded.add(eventListener);
 
         eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_RECEIVED);
         eventHandler = new IncomingCryptoReceivedEventHandler();
-        ((IncomingCryptoReceivedEventHandler) eventHandler).setIncomingCryptoEventRecorder(this);
+        ((IncomingCryptoReceivedEventHandler) eventHandler).setIncomingCryptoEventRecorderService(this);
         eventListener.setEventHandler(eventHandler);
         eventManager.addListener(eventListener);
         listenersAdded.add(eventListener);
@@ -122,7 +122,7 @@ public class IncomingCryptoEventRecorder implements DealsWithEvents, Transaction
 
         eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_REVERSED);
         eventHandler = new IncomingCryptoReversedEventHandler();
-        ((IncomingCryptoReversedEventHandler) eventHandler).setIncomingCryptoEventRecorder(this);
+        ((IncomingCryptoReversedEventHandler) eventHandler).setIncomingCryptoEventRecorderService(this);
         eventListener.setEventHandler(eventHandler);
         eventManager.addListener(eventListener);
         listenersAdded.add(eventListener);

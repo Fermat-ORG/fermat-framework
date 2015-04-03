@@ -20,7 +20,7 @@ import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.
 import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.interfaces.TransactionAgent;
 import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.interfaces.TransactionService;
-import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.structure.IncomingCryptoEventRecorder;
+import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.structure.IncomingCryptoEventRecorderService;
 import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.structure.IncomingCryptoMonitorAgent;
 import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.structure.IncomingCryptoRegistry;
 import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.structure.IncomingCryptoRelayAgent;
@@ -92,7 +92,7 @@ public class IncomingCryptoTransactionPluginRoot implements Service, IncomingCry
         /**
          * I will start the Event Recorder.
          */
-        this.eventRecorder = new IncomingCryptoEventRecorder(this.eventManager);
+        this.eventRecorder = new IncomingCryptoEventRecorderService(this.eventManager);
         try {
 
             this.eventRecorder.start();
