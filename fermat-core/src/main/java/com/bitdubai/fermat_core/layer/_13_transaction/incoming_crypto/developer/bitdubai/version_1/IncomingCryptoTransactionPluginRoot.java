@@ -140,6 +140,7 @@ public class IncomingCryptoTransactionPluginRoot implements Service, IncomingCry
          * I will start the Monitor Agent.
          */
         this.monitor = new IncomingCryptoMonitorAgent();
+        ((DealsWithErrors) this.monitor).setErrorManager(this.errorManager);
 
         try {
             this.monitor.start();

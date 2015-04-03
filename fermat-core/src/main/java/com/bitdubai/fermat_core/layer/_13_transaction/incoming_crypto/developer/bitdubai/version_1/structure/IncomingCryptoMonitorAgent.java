@@ -5,8 +5,12 @@ package com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer
  */
 
 
+import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer._2_os.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.exceptions.CantInitializeCryptoRegistryException;
 import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.interfaces.TransactionAgent;
@@ -27,8 +31,13 @@ import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.
  */
 
 
-public class IncomingCryptoMonitorAgent implements DealsWithPluginDatabaseSystem, TransactionAgent {
+public class IncomingCryptoMonitorAgent implements DealsWithErrors, DealsWithPluginDatabaseSystem, TransactionAgent {
 
+    /**
+     * DealsWithEvents Interface member variables.
+     */
+    ErrorManager errorManager;
+    
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
@@ -40,6 +49,16 @@ public class IncomingCryptoMonitorAgent implements DealsWithPluginDatabaseSystem
     Thread agentThread;
     MonitorAgent monitorAgent;
 
+
+    
+    
+    /**
+     *DealsWithErrors Interface implementation.
+     */
+    @Override
+    public void setErrorManager(ErrorManager errorManager) {
+        this.errorManager = errorManager;
+    }
     
     /**
      * DealsWithPluginDatabaseSystem interface implementation.
@@ -67,8 +86,8 @@ public class IncomingCryptoMonitorAgent implements DealsWithPluginDatabaseSystem
             /**
              * I cant continue if this happens.
              */
-            System.err.println("CantInitializeException: " + cantInitializeCryptoRegistryException.getMessage());
-            cantInitializeCryptoRegistryException.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantInitializeCryptoRegistryException);
+
             throw new CantStartAgentException();
         }
         
@@ -119,7 +138,6 @@ public class IncomingCryptoMonitorAgent implements DealsWithPluginDatabaseSystem
              * Here I open the database read the event table and load it to memory.
              */
 
-            //open database
             readEvents();
         }
         
@@ -147,7 +165,7 @@ public class IncomingCryptoMonitorAgent implements DealsWithPluginDatabaseSystem
                  */
                 try {
                     Thread.sleep(SLEEP_TIME);
-                } catch (InterruptedException e) {
+                } catch (InterruptedException interruptedException) {
                     cleanResources();
                     return;
                 }
@@ -185,7 +203,10 @@ public class IncomingCryptoMonitorAgent implements DealsWithPluginDatabaseSystem
         }
         
         private void cleanResources() {
-            // disconnect from database
+            
+            /**
+             * Disconnect from database and explicitly set all references to null.
+             */
             
         }
     }
