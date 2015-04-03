@@ -31,8 +31,8 @@ public class IncomingCryptoReceptionConfirmedFromDeviceUserEventListener impleme
     }
 
     @Override
-    public void getEventHandler() {
-
+    public EventHandler getEventHandler() {
+        return this.eventHandler;
     }
 
     @Override

@@ -11,7 +11,7 @@ public interface EventListener {
 
     public void setEventHandler(EventHandler eventHandler);
 
-    public void getEventHandler();
+    public EventHandler getEventHandler();
 
     public void raiseEvent(PlatformEvent platformEvent);
 

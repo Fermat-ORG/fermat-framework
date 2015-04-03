@@ -31,8 +31,8 @@ public class IncomingCryptoIdentifiedFromIntraUserEventListener implements Event
     }
 
     @Override
-    public void getEventHandler() {
-
+    public EventHandler getEventHandler() {
+        return this.eventHandler;
     }
 
     @Override

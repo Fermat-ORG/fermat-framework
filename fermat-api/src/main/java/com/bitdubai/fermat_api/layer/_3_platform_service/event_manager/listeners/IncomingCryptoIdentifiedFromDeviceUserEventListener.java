@@ -31,8 +31,8 @@ public class IncomingCryptoIdentifiedFromDeviceUserEventListener implements Even
     }
 
     @Override
-    public void getEventHandler() {
-
+    public EventHandler getEventHandler() {
+        return this.eventHandler;
     }
 
     @Override

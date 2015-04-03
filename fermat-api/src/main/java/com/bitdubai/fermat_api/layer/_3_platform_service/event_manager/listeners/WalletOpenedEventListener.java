@@ -31,8 +31,8 @@ public class WalletOpenedEventListener implements EventListener {
     }
 
     @Override
-    public void getEventHandler() {
-
+    public EventHandler getEventHandler() {
+        return this.eventHandler;
     }
 
     @Override

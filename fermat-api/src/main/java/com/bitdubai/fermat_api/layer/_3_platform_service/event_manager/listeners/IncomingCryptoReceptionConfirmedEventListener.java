@@ -31,8 +31,8 @@ public class IncomingCryptoReceptionConfirmedEventListener implements EventListe
     }
 
     @Override
-    public void getEventHandler() {
-
+    public EventHandler getEventHandler() {
+        return this.eventHandler;
     }
 
     @Override

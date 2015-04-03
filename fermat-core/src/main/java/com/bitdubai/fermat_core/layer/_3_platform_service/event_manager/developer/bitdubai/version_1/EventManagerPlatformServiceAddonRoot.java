@@ -645,7 +645,9 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
         }
 
         listeners.remove(listener);
-
+        
+        listener.setEventHandler(null);
+        
     }
     
 

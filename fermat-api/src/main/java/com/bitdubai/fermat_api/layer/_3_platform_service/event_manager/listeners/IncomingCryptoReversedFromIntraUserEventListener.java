@@ -31,8 +31,8 @@ public class IncomingCryptoReversedFromIntraUserEventListener implements EventLi
     }
 
     @Override
-    public void getEventHandler() {
-
+    public EventHandler getEventHandler() {
+        return this.eventHandler;
     }
 
     @Override
