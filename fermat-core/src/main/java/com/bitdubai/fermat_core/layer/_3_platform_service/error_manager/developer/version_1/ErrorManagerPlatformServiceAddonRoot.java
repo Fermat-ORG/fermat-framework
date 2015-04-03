@@ -2,8 +2,10 @@ package com.bitdubai.fermat_core.layer._3_platform_service.error_manager.develop
 
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
 /**
  * Created by ciencias on 05.02.15.
@@ -17,8 +19,13 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon, ErrorManager
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
 
+    /**
+     * ErrorManager Interface implementation.
+     */
+    @Override
+    public void reportUnexpectedPluginException(Plugins exceptionSource, UnexpectedPluginExceptionSeverity unexpectedPluginExceptionSeverity, Exception exception) {
 
-
+    }
 
 
     /**
@@ -57,4 +64,6 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon, ErrorManager
     public ServiceStatus getStatus() {
         return serviceStatus;
     }
+
+
 }
