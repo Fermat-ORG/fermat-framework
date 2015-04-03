@@ -25,8 +25,6 @@ import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.SideMenu;
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.App;
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.AppRuntimeManager;
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.SubApp;
-import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.Tab;
-import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Activities;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.fermat_core.Platform;
@@ -131,7 +129,7 @@ public class NavigationDrawerFragment extends Fragment {
 
         this.platformContext = platform.getCorePlatformContext();
 
-        this.appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.APP_RUNTIME_MIDDLEWARE);
+        this.appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
 
         String[] menuOption = new String[]{} ;
 

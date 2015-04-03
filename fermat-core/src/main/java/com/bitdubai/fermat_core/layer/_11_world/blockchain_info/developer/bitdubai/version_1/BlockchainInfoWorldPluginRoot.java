@@ -123,7 +123,7 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Servic
                         catch (CantStartBlockchainInfoWallet e) {
                             System.err.println("CantStartBlockchainInfoWallet: " + e.getMessage());
                             e.printStackTrace();
-                            throw new CantStartPluginException(Plugins.BLOCKCHAIN_INFO_WORLD);
+                            throw new CantStartPluginException(Plugins.BITDUBAI_BLOCKCHAIN_INFO_WORLD);
                         }
 
 
@@ -140,7 +140,7 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Servic
                      */
                     System.err.println("CantLoadFileException: " + CantLoadFileException.getMessage());
                     CantLoadFileException.printStackTrace();
-                    throw new CantStartPluginException(Plugins.BLOCKCHAIN_INFO_WORLD);
+                    throw new CantStartPluginException(Plugins.BITDUBAI_BLOCKCHAIN_INFO_WORLD);
                 }
 
             }
@@ -164,7 +164,7 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Servic
                      */
                     System.err.println("CantPersistFileException: " + cantPersistFileException.getMessage());
                     cantPersistFileException.printStackTrace();
-                    throw new CantStartPluginException(Plugins.WALLET_MIDDLEWARE);
+                    throw new CantStartPluginException(Plugins.BITDUBAI_DISCOUNT_WALLET_MIDDLEWARE);
                 }
             }
 

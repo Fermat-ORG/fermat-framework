@@ -142,7 +142,7 @@ public class DiscountWalletMiddlewarePluginRoot implements Service, DiscountWall
                  */
                 System.err.println("CantLoadFileException: " + cantLoadFileException.getMessage());
                 cantLoadFileException.printStackTrace();
-                throw new CantStartPluginException(Plugins.WALLET_MIDDLEWARE);
+                throw new CantStartPluginException(Plugins.BITDUBAI_DISCOUNT_WALLET_MIDDLEWARE);
             }
         }
         catch (FileNotFoundException fileNotFoundException) {
@@ -165,7 +165,7 @@ public class DiscountWalletMiddlewarePluginRoot implements Service, DiscountWall
                  */
                 System.err.println("CantPersistFileException: " + cantPersistFileException.getMessage());
                 cantPersistFileException.printStackTrace();
-                throw new CantStartPluginException(Plugins.WALLET_MIDDLEWARE);
+                throw new CantStartPluginException(Plugins.BITDUBAI_DISCOUNT_WALLET_MIDDLEWARE);
             }
         }
         

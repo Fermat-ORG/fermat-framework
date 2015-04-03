@@ -30,7 +30,6 @@ import com.bitdubai.android.app.common.version_1.classes.MyApplication;
 
 import android.util.FloatMath;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.DialogFragment;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -76,7 +75,7 @@ public class UsdBalanceFragment extends Fragment {
     public static UsdBalanceFragment newInstance(int position) {
         Platform platform = MyApplication.getPlatform();
         CorePlatformContext platformContext = platform.getCorePlatformContext();
-        walletResourceManger = (WalletResourcesManager)platformContext.getPlugin(Plugins.WALLET_RESOURCES_NETWORK_SERVICE);
+        walletResourceManger = (WalletResourcesManager)platformContext.getPlugin(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE);
         walletResourceManger.setwalletType(Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI);
 
         UsdBalanceFragment f = new UsdBalanceFragment();

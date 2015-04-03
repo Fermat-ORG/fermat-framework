@@ -54,50 +54,22 @@ import android.widget.Toast;
 import android.view.ViewGroup;
 import android.os.StrictMode;
 
-import com.bitdubai.android.layer._2_os.android.developer.bitdubai.version_1.database_system.AndroidPlatformDatabaseSystem;
-import com.bitdubai.android.layer._2_os.android.developer.bitdubai.version_1.database_system.AndroidPluginDatabaseSystem;
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer._10_network_service.CantCheckResourcesException;
-import  com.bitdubai.fermat_api.layer._10_network_service.wallet_resources.WalletResourcesManager;
 import com.bitdubai.fermat_api.CantStartPlatformException;
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.*;
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.AppRuntimeManager;
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.Fragment;
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Activities;
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Fragments;
-import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Wallets;
-import com.bitdubai.fermat_api.layer._13_transaction.incoming_crypto.IncomingCryptoManager;
-import com.bitdubai.fermat_api.layer._13_transaction.incoming_crypto.Registry;
-import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer._1_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer._11_world.CryptoWalletManager;
-import com.bitdubai.fermat_api.layer._11_world.CantCreateCryptoWalletException;
-import com.bitdubai.fermat_api.layer._2_os.database_system.PlatformDatabaseSystem;
-import com.bitdubai.fermat_api.layer._2_os.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer._5_user.User;
-import com.bitdubai.fermat_api.layer._5_user.UserTypes;
-import com.bitdubai.fermat_api.layer._5_user.extra_user.exceptions.CantCreateExtraUserRegistry;
-import com.bitdubai.fermat_api.layer._5_user.extra_user.exceptions.CantGetExtraUserRegistry;
-import com.bitdubai.fermat_api.layer._8_crypto.address_book.exceptions.CantGetUserCryptoAddress;
-import com.bitdubai.fermat_api.layer._8_crypto.address_book.exceptions.CantRegisterUserCryptoAddress;
 import com.bitdubai.fermat_core.Platform;
-import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.IncomingCryptoTransactionPluginRoot;
-import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.structure.IncomingCryptoMonitorAgent;
-import com.bitdubai.fermat_core.layer._5_user.extra_user.developer.bitdubai.version_1.structure.ExtraUserRegistry;
-import com.bitdubai.fermat_core.layer._8_crypto.address_book.developer.bitdubai.version_1.exceptions.CantInitializeAddresBookException;
-import com.bitdubai.fermat_core.layer._8_crypto.address_book.developer.bitdubai.version_1.structure.AddressBook;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.fermat_core.layer._12_middleware.app_runtime.developer.bitdubai.version_1.structure.*;
 
 import com.bitdubai.fermat_core.CorePlatformContext;
 
-import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Iterator;
-import java.util.UUID;
 import java.util.Vector;
 
 /**
@@ -161,7 +133,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
             this.platformContext = platform.getCorePlatformContext();
 
-            this.appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.APP_RUNTIME_MIDDLEWARE);
+            this.appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
 
 
 
@@ -170,7 +142,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             StrictMode.setThreadPolicy(policy);
 
           /* try{
-                WalletResourcesManager  walletResourceManger = (WalletResourcesManager)platformContext.getPlugin(Plugins.WALLET_RESOURCES_NETWORK_SERVICE);
+                WalletResourcesManager  walletResourceManger = (WalletResourcesManager)platformContext.getPlugin(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE);
                 walletResourceManger.setwalletType(Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI);
                 walletResourceManger.checkResources();
             }
@@ -184,7 +156,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
 //wallet address = 1KCnxYFTS5bGmxRdWJCG9n8GkXVz6Lz3tw
           /*  try{
-                 CryptoWalletManager walletManager = (CryptoWalletManager) platformContext.getPlugin(Plugins.BLOCKCHAIN_INFO_WORLD);
+                 CryptoWalletManager walletManager = (CryptoWalletManager) platformContext.getPlugin(Plugins.BITDUBAI_BLOCKCHAIN_INFO_WORLD);
                 walletManager.createWallet(CryptoCurrency.BITCOIN);
             }
             catch (CantCreateCryptoWalletException e) {

@@ -79,7 +79,7 @@ public class FragmentActivity  extends Activity {
 
         this.platformContext = platform.getCorePlatformContext();
 
-        this.appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.APP_RUNTIME_MIDDLEWARE);
+        this.appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
 
         this.app = appRuntimeMiddleware.getLastApp();
         this.subApp = appRuntimeMiddleware.getLastSubApp();

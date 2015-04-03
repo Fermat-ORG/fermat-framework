@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer._2_os.file_system.DealsWithPluginFileSystem
 import com.bitdubai.fermat_api.layer._2_os.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.exceptions.CantInitializeCryptoRegistryException;
@@ -51,7 +52,7 @@ public class IncomingCryptoTransactionPluginRoot implements Service, IncomingCry
     PluginDatabaseSystem pluginDatabaseSystem;
 
     /**
-     * UsesFileSystem Interface member variables.
+     * DealsWithPluginFileSystem Interface member variables.
      */
     PluginFileSystem pluginFileSystem;
 
@@ -59,6 +60,11 @@ public class IncomingCryptoTransactionPluginRoot implements Service, IncomingCry
      * DealsWithEvents Interface member variables.
      */
     EventManager eventManager;
+
+    /**
+     * DealsWithEvents Interface member variables.
+     */
+    ErrorManager errorManager;
 
     /**
      * Plugin Interface member variables.
@@ -80,13 +86,13 @@ public class IncomingCryptoTransactionPluginRoot implements Service, IncomingCry
             ((IncomingCryptoRegistry) this.registry).Initialize();
         }
         catch (CantInitializeCryptoRegistryException cantInitializeCryptoRegistryException) {
+
             /**
              * If I can not initialize the Registry then I can not start the service.
-             * * * * 
              */
-            System.err.println("CantInitializeException: " + cantInitializeCryptoRegistryException.getMessage());
-            cantInitializeCryptoRegistryException.printStackTrace();
-            throw new CantStartPluginException(Plugins.INCOMING_CRYPTO_TRANSACTION );
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantInitializeCryptoRegistryException);
+            
+            throw new CantStartPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
         }
 
         /**
@@ -98,12 +104,13 @@ public class IncomingCryptoTransactionPluginRoot implements Service, IncomingCry
             this.eventRecorder.start();
         }
         catch (CantStartServiceException cantStartServiceException) {
+           
             /**
              * I cant continue if this happens.
              */
-            System.err.println("CantStartServiceException: " + cantStartServiceException.getMessage());
-            cantStartServiceException.printStackTrace();
-            throw new CantStartPluginException(Plugins.INCOMING_CRYPTO_TRANSACTION );
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantStartServiceException);
+           
+            throw new CantStartPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
         }
 
         /**
@@ -115,18 +122,18 @@ public class IncomingCryptoTransactionPluginRoot implements Service, IncomingCry
             this.relay.start();
         }
         catch (CantStartAgentException cantStartAgentException) {
-            /**
-             * I cant continue if this happens.
-             */
-            System.err.println("CantStartAgentException: " + cantStartAgentException.getMessage());
-            cantStartAgentException.printStackTrace();
 
             /**
              * Note that I stop previously started services and agents.
              */
             this.eventRecorder.stop();
-            
-            throw new CantStartPluginException(Plugins.INCOMING_CRYPTO_TRANSACTION );
+
+            /**
+             * I cant continue if this happens.
+             */
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantStartAgentException);
+
+            throw new CantStartPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
         }
 
         /**
@@ -139,11 +146,6 @@ public class IncomingCryptoTransactionPluginRoot implements Service, IncomingCry
             ((DealsWithPluginDatabaseSystem) this.monitor).setPluginDatabaseSystem(this.pluginDatabaseSystem);
         }
         catch (CantStartAgentException cantStartAgentException) {
-            /**
-             * I cant continue if this happens.
-             */
-            System.err.println("CantStartAgentException: " + cantStartAgentException.getMessage());
-            cantStartAgentException.printStackTrace();
 
             /**
              * Note that I stop previously started services and agents.
@@ -151,7 +153,12 @@ public class IncomingCryptoTransactionPluginRoot implements Service, IncomingCry
             this.eventRecorder.stop();
             this.relay.stop();
 
-            throw new CantStartPluginException(Plugins.INCOMING_CRYPTO_TRANSACTION );
+            /**
+             * I cant continue if this happens.
+             */
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantStartAgentException);
+
+            throw new CantStartPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
         }
         
         this.serviceStatus = ServiceStatus.STARTED;
@@ -226,19 +233,17 @@ public class IncomingCryptoTransactionPluginRoot implements Service, IncomingCry
 
 
     /**
-     *DealWithErrors Interface implementation.
+     *DealsWithErrors Interface implementation.
      */
-
     @Override
     public void setErrorManager(ErrorManager errorManager) {
-
+        this.errorManager = errorManager;
     }
 
 
     /**
      * DealsWithPluginIdentity methods implementation.
      */
-
     @Override
     public void setId(UUID pluginId) {
         this.pluginId = pluginId;

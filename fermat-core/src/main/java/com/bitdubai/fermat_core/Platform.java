@@ -440,7 +440,7 @@ public class Platform  {
         ((DealsWithPluginDatabaseSystem) blockchainInfoWorld).setPluginDatabaseSystem(os.getPluginDatabaseSystem());
         ((DealsWithEvents) blockchainInfoWorld).setEventManager((EventManager) eventManager);
 
-        corePlatformContext.addPlugin(blockchainInfoWorld, Plugins.BLOCKCHAIN_INFO_WORLD);
+        corePlatformContext.addPlugin(blockchainInfoWorld, Plugins.BITDUBAI_BLOCKCHAIN_INFO_WORLD);
 
         try
         {
@@ -496,7 +496,7 @@ public class Platform  {
         ((DealsWithPluginFileSystem) ShapeShiftWorld).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) ShapeShiftWorld).setEventManager((EventManager) eventManager);
 
-        corePlatformContext.addPlugin(ShapeShiftWorld, Plugins.SHAPE_SHIFT_WORLD);
+        corePlatformContext.addPlugin(ShapeShiftWorld, Plugins.BITDUBAI_SHAPE_SHIFT_WORLD);
 
         try
         {
@@ -551,7 +551,7 @@ public class Platform  {
         ((DealsWithPluginFileSystem) CoinapultWorld).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) CoinapultWorld).setEventManager((EventManager) eventManager);
 
-        corePlatformContext.addPlugin(CoinapultWorld, Plugins.COINAPULT_WORLD);
+        corePlatformContext.addPlugin(CoinapultWorld, Plugins.BITDUBAI_COINAPULT_WORLD);
 
         try
         {
@@ -612,7 +612,7 @@ public class Platform  {
         ((DealsWithPluginFileSystem) cryptoIndexWorld).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) cryptoIndexWorld).setEventManager((EventManager) eventManager);
 
-        corePlatformContext.addPlugin(cryptoIndexWorld, Plugins.CRYPTO_INDEX);
+        corePlatformContext.addPlugin(cryptoIndexWorld, Plugins.BITDUBAI_CRYPTO_INDEX);
         
         try
         {
@@ -669,7 +669,7 @@ public class Platform  {
         ((DealsWithPluginFileSystem) cryptoNetwork).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) cryptoNetwork).setEventManager((EventManager) eventManager);
 
-        corePlatformContext.addPlugin(cryptoNetwork, Plugins.BITCOIN_CRYPTO_NETWORK);
+        corePlatformContext.addPlugin(cryptoNetwork, Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK);
 
         try
         {
@@ -724,7 +724,7 @@ public class Platform  {
         ((DealsWithPluginFileSystem) addressBookCrypto).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) addressBookCrypto).setEventManager((EventManager) eventManager);
 
-        corePlatformContext.addPlugin(addressBookCrypto, Plugins.ADDRESS_BOOK_CRYPTO);
+        corePlatformContext.addPlugin(addressBookCrypto, Plugins.BITDUBAI_ADDRESS_BOOK_CRYPTO);
 
         try
         {
@@ -772,7 +772,7 @@ public class Platform  {
         ((DealsWithPluginFileSystem) cloudCommunication).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) cloudCommunication).setEventManager((EventManager) eventManager);
         
-        corePlatformContext.addPlugin(cloudCommunication, Plugins.CLOUD_CHANNEL);
+        corePlatformContext.addPlugin(cloudCommunication, Plugins.BITDUBAI_CLOUD_CHANNEL);
         
         try
         {
@@ -830,7 +830,7 @@ public class Platform  {
         ((DealsWithPluginFileSystem) bankNotesNetworkService).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) bankNotesNetworkService).setEventManager((EventManager) eventManager);
 
-        corePlatformContext.addPlugin(bankNotesNetworkService, Plugins.BANK_NOTES_NETWORK_SERVICE);
+        corePlatformContext.addPlugin(bankNotesNetworkService, Plugins.BITDUBAI_BANK_NOTES_NETWORK_SERVICE);
 
         try
         {
@@ -888,7 +888,7 @@ public class Platform  {
         ((DealsWithPluginFileSystem) walletResourcesNetworkService).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) walletResourcesNetworkService).setEventManager((EventManager) eventManager);
 
-        corePlatformContext.addPlugin(walletResourcesNetworkService, Plugins.WALLET_RESOURCES_NETWORK_SERVICE);
+        corePlatformContext.addPlugin(walletResourcesNetworkService, Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE);
 
         try
         {
@@ -945,7 +945,7 @@ public class Platform  {
         ((DealsWithPluginFileSystem) walletCommunityNetworkService).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) walletCommunityNetworkService).setEventManager((EventManager) eventManager);
 
-        corePlatformContext.addPlugin(walletCommunityNetworkService, Plugins.WALLET_STORE_NETWORK_SERVICE);
+        corePlatformContext.addPlugin(walletCommunityNetworkService, Plugins.BITDUBAI_WALLET_STORE_NETWORK_SERVICE);
 
         try
         {
@@ -1004,7 +1004,7 @@ public class Platform  {
         ((DealsWithPluginFileSystem) walletStoreNetworkService).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) walletStoreNetworkService).setEventManager((EventManager) eventManager);
 
-        corePlatformContext.addPlugin(walletStoreNetworkService, Plugins.WALLET_STORE_NETWORK_SERVICE);
+        corePlatformContext.addPlugin(walletStoreNetworkService, Plugins.BITDUBAI_WALLET_STORE_NETWORK_SERVICE);
 
         try
         {
@@ -1059,7 +1059,7 @@ public class Platform  {
         ((DealsWithPluginFileSystem) appRuntimeMiddleware).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) appRuntimeMiddleware).setEventManager((EventManager) eventManager);
 
-        corePlatformContext.addPlugin(appRuntimeMiddleware, Plugins.APP_RUNTIME_MIDDLEWARE);
+        corePlatformContext.addPlugin(appRuntimeMiddleware, Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
 
         try
         {
@@ -1118,7 +1118,7 @@ public class Platform  {
         ((DealsWithPluginFileSystem) bankNotesMiddleware).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) bankNotesMiddleware).setEventManager((EventManager) eventManager);
 
-        corePlatformContext.addPlugin(bankNotesMiddleware, Plugins.BANK_NOTES_MIDDLEWARE);
+        corePlatformContext.addPlugin(bankNotesMiddleware, Plugins.BITDUBAI_BANK_NOTES_MIDDLEWARE);
 
         try
         {
@@ -1179,7 +1179,7 @@ public class Platform  {
         ((DealsWithPluginFileSystem) walletMiddleware).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) walletMiddleware).setEventManager((EventManager) eventManager);
 
-        corePlatformContext.addPlugin(walletMiddleware, Plugins.WALLET_MIDDLEWARE);
+        corePlatformContext.addPlugin(walletMiddleware, Plugins.BITDUBAI_DISCOUNT_WALLET_MIDDLEWARE);
 
         try
         {
@@ -1235,7 +1235,7 @@ public class Platform  {
 
         ((DealsWithPluginFileSystem) walletContactsMiddleware).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) walletContactsMiddleware).setEventManager((EventManager) eventManager);
-        corePlatformContext.addPlugin(walletContactsMiddleware, Plugins.WALLET_CONTACTS_MIDDLEWARE);
+        corePlatformContext.addPlugin(walletContactsMiddleware, Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE);
 
         try
         {
@@ -1292,7 +1292,7 @@ public class Platform  {
 
         ((DealsWithPluginFileSystem) incomingCryptoTransaction).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) incomingCryptoTransaction).setEventManager((EventManager) eventManager);
-        corePlatformContext.addPlugin(incomingCryptoTransaction, Plugins.INCOMING_EXTRA_USER_TRANSACTION);
+        corePlatformContext.addPlugin(incomingCryptoTransaction, Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION);
 
         try
         {
@@ -1353,7 +1353,7 @@ public class Platform  {
 
         ((DealsWithPluginFileSystem) incomingExtraUserTransaction).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) incomingExtraUserTransaction).setEventManager((EventManager) eventManager);
-        corePlatformContext.addPlugin(incomingExtraUserTransaction, Plugins.INCOMING_EXTRA_USER_TRANSACTION);
+        corePlatformContext.addPlugin(incomingExtraUserTransaction, Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION);
 
         try
         {
@@ -1412,7 +1412,7 @@ public class Platform  {
         ((DealsWithPluginFileSystem) incomingIntraUserTransaction).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) incomingIntraUserTransaction).setEventManager((EventManager) eventManager);
 
-        corePlatformContext.addPlugin(incomingIntraUserTransaction, Plugins.INCOMING_INTRA_USER_TRANSACTION);
+        corePlatformContext.addPlugin(incomingIntraUserTransaction, Plugins.BITDUBAI_INCOMING_INTRA_USER_TRANSACTION);
 
         try
         {
@@ -1471,7 +1471,7 @@ public class Platform  {
         ((DealsWithPluginFileSystem) interWalletTransaction).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) interWalletTransaction).setEventManager((EventManager) eventManager);
 
-        corePlatformContext.addPlugin(interWalletTransaction, Plugins.INTER_WALLET_TRANSACTION);
+        corePlatformContext.addPlugin(interWalletTransaction, Plugins.BITDUBAI_INTER_WALLET_TRANSACTION);
 
         try
         {
@@ -1528,7 +1528,7 @@ public class Platform  {
         ((DealsWithPluginFileSystem) outgoingExtraUserTransaction).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) outgoingExtraUserTransaction).setEventManager((EventManager) eventManager);
 
-        corePlatformContext.addPlugin(outgoingExtraUserTransaction, Plugins.OUTGOING_EXTRA_USER_TRANSACTION);
+        corePlatformContext.addPlugin(outgoingExtraUserTransaction, Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION);
 
         try
         {
@@ -1587,7 +1587,7 @@ public class Platform  {
         ((DealsWithPluginFileSystem) outgoingDeviceUserTransaction).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) outgoingDeviceUserTransaction).setEventManager((EventManager) eventManager);
 
-        corePlatformContext.addPlugin(outgoingDeviceUserTransaction, Plugins.OUTGOING_DEVICE_USER_TRANSACTION);
+        corePlatformContext.addPlugin(outgoingDeviceUserTransaction, Plugins.BITDUBAI_OUTGOING_DEVICE_USER_TRANSACTION);
 
         try
         {
@@ -1646,7 +1646,7 @@ public class Platform  {
         ((DealsWithPluginFileSystem) outgoingIntraUserTransaction).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) outgoingIntraUserTransaction).setEventManager((EventManager) eventManager);
 
-        corePlatformContext.addPlugin(outgoingIntraUserTransaction, Plugins.OUTGOING_INTRA_USER_TRANSACTION);
+        corePlatformContext.addPlugin(outgoingIntraUserTransaction, Plugins.BITDUBAI_OUTGOING_INTRA_USER_TRANSACTION);
 
         try
         {
@@ -1708,7 +1708,7 @@ public class Platform  {
         ((DealsWithPluginFileSystem) incomingDeviceUserTransaction).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) incomingDeviceUserTransaction).setEventManager((EventManager) eventManager);
 
-        corePlatformContext.addPlugin(incomingDeviceUserTransaction, Plugins.INCOMING_DEVICE_USER_TRANSACTION);
+        corePlatformContext.addPlugin(incomingDeviceUserTransaction, Plugins.BITDUBAI_INCOMING_DEVICE_USER_TRANSACTION);
 
         try
         {
@@ -1767,7 +1767,7 @@ public class Platform  {
         ((DealsWithPluginFileSystem) walletManager).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) walletManager).setEventManager((EventManager) eventManager);
 
-        corePlatformContext.addPlugin(walletManager, Plugins.WALLET_MANAGER_MODULE);
+        corePlatformContext.addPlugin(walletManager, Plugins.BITDUBAI_WALLET_MANAGER_MODULE);
         
         try
         {
@@ -1829,7 +1829,7 @@ public class Platform  {
         ((DealsWithPluginFileSystem) walletRuntime).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) walletRuntime).setEventManager((EventManager) eventManager);
 
-        corePlatformContext.addPlugin(walletRuntime, Plugins.WALLET_RUNTIME_MODULE);
+        corePlatformContext.addPlugin(walletRuntime, Plugins.BITDUBAI_WALLET_RUNTIME_MODULE);
 
         try
         {
