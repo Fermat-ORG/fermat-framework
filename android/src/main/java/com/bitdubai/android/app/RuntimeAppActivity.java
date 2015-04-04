@@ -34,7 +34,7 @@ import com.bitdubai.android.app.subapp.shop.version_1.fragment.ShopShopFragment;
 import com.bitdubai.android.app.subapp.shop_manager.version_1.fragment.ShopDesktopFragment;
 import com.bitdubai.android.app.subapp.wallet_manager.version_1.fragment.WalletDesktopFragment;
 
-import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.kids.sub_segment.all.developer.bitdubai.version_1.fragment.ProfileCardFrontFragment;
+import com.runtime_wallet.bitdubai.age.kids.boys.fragments.ProfileCardFrontFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.BalanceFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.DiscountsFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.HomeFragment;
