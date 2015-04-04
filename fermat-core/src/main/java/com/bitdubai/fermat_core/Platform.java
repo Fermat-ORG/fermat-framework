@@ -5,9 +5,12 @@ import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
 
 import com.bitdubai.fermat_api.layer._1_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer._1_definition.enums.PlatformComponents;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer._1_definition.event.DealWithEventMonitor;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_api.layer._2_os.*;
@@ -40,7 +43,7 @@ public class Platform  {
 
 
     PlatformLayer mDefinitionLayer = new DefinitionLayer();
-    PlatformLayer mEventLayer = new PlatformServiceLayer();
+    PlatformLayer mPlatformServiceLayer = new PlatformServiceLayer();
     PlatformLayer mOsLayer = new OsLayer();
     PlatformLayer mHardwareLayer = new HardwareLayer();
     PlatformLayer mUserLayer = new UserLayer();
@@ -62,7 +65,7 @@ public class Platform  {
     }
 
     public PlatformLayer getEventLayer() {
-        return mEventLayer;
+        return mPlatformServiceLayer;
     }
 
     public PlatformLayer getOsLayer() {
@@ -172,7 +175,7 @@ public class Platform  {
 
 
 
-    public void start() throws CantStartPlatformException {
+    public void start() throws CantStartPlatformException, CantReportCriticalStartingProblem {
 
         
 
@@ -193,7 +196,59 @@ public class Platform  {
         try {
 
             mDefinitionLayer.start();
-            mEventLayer.start();
+            mPlatformServiceLayer.start();
+        }
+        catch (CantStartLayerException cantStartLayerException) {
+            /**
+             * At this point the platform not only can not be started but also the problem can not be reported. That is 
+             * the reason why I am going to throw a special exception in order to alert the situation to whoever is running
+             * the GUI. In this way it can alert the end user of what is going on and provide them with some information.
+             * * * *
+             */
+            throw new CantReportCriticalStartingProblem();
+        }
+
+        /**
+         * -----------------------------------------------------------------------------------------------------------
+         * Critical Addons initialization
+         * -----------------------------------------------------------------------------------------------------------
+         * * * * 
+         */
+        
+
+        /**
+         * -----------------------------
+         * Addon Error Manager
+         * -----------------------------
+         * * * * 
+         */
+
+        Service errorManager = (Service) ((PlatformServiceLayer) mPlatformServiceLayer).getErrorManager();
+        corePlatformContext.addAddon((Addon) errorManager, Addons.ERROR_MANAGER);
+
+
+
+        /**
+         * -----------------------------
+         * Addon Event Manager
+         * -----------------------------
+         * * * *
+         */
+
+
+
+        Service eventManager = (Service) ((PlatformServiceLayer) mPlatformServiceLayer).getEventManager();
+        corePlatformContext.addAddon((Addon) eventManager, Addons.EVENT_MANAGER);
+
+        /**
+         * I will give the Event Monitor to the Event Manager, in order to allow it to monitor listeners exceptions.
+         */
+
+        ((DealWithEventMonitor) eventManager).setEventMonitor(eventMonitor);
+        
+
+        try {
+            
             //mOsLayer.start(); // Due to an Android bug is not possible to handle this here.
             mHardwareLayer.start();
             mUserLayer.start();
@@ -209,8 +264,7 @@ public class Platform  {
             mTransactionLayer.start();
         }
         catch (CantStartLayerException cantStartLayerException) {
-            System.err.println("CantStartLayerException: " + cantStartLayerException.getMessage());
-            cantStartLayerException.printStackTrace();
+            ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, cantStartLayerException); 
             throw new CantStartPlatformException();
         }
 
@@ -223,41 +277,7 @@ public class Platform  {
          * * * * 
          */
 
-
-
-
-
-        /**
-         * -----------------------------
-         * Addon Error Manager
-         * -----------------------------
-         * * * * 
-         */
-
-        Service errorManager = (Service) ((PlatformServiceLayer) mEventLayer).getErrorManager();
-        corePlatformContext.addAddon((Addon) errorManager, Addons.ERROR_MANAGER);
-
-
         
-        /**
-         * -----------------------------
-         * Addon Event Manager
-         * -----------------------------
-         * * * *
-         */
-
-
-
-        Service eventManager = (Service) ((PlatformServiceLayer) mEventLayer).getEventManager();
-        corePlatformContext.addAddon((Addon) eventManager, Addons.EVENT_MANAGER);
-
-        /**
-         * I will give the Event Monitor to the Event Manager, in order to allow it to monitor listeners exceptions.
-         */
-
-        ((DealWithEventMonitor) eventManager).setEventMonitor(eventMonitor);
-
-
 
         /**
          * -----------------------------
@@ -365,7 +385,7 @@ public class Platform  {
         
         Service extraUser = (Service) ((UserLayer) mUserLayer).getExtraUser();
 
-            ((DealsWithPlatformFileSystem) extraUser).setPlatformFileSystem(os.getPlatformFileSystem());
+        ((DealsWithPlatformFileSystem) extraUser).setPlatformFileSystem(os.getPlatformFileSystem());
         
         ((DealsWithEvents) extraUser).setEventManager((EventManager) eventManager);
 
@@ -455,25 +475,27 @@ public class Platform  {
                 ((Service) blockchainInfoWorld).start();
             }
             catch (CantStartPluginException cantStartPluginException) {
-                
-                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
-                cantStartPluginException.printStackTrace();
 
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, cantStartPluginException);
+                
                 /**
-                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
-                 * start, then the platform wont start either. In the future we will review this policy.
+                 * This plugin wont disable the whole platform, so I will allow the Platform to start even if this one
+                 * will be disabled. In the future, I will re-try the start of plugins that are not starting at once. 
                  * * * 
                  */
             
-                throw new CantStartPlatformException();
             }
             
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
 
-            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
-            pluginNotRecognizedException.printStackTrace();
+            ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, pluginNotRecognizedException);
+
+            /**
+             * This exception definitely shouldn't happen in production, but if it does we should know about it.
+             * * *
+             */
 
         }
 
@@ -512,16 +534,13 @@ public class Platform  {
             }
             catch (CantStartPluginException cantStartPluginException) {
 
-                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
-                cantStartPluginException.printStackTrace();
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, cantStartPluginException);
 
                 /**
-                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
-                 * start, then the platform wont start either. In the future we will review this policy.
+                 * This plugin wont disable the whole platform, so I will allow the Platform to start even if this one
+                 * will be disabled. In the future, I will re-try the start of plugins that are not starting at once. 
                  * * * 
                  */
-
-                throw new CantStartPlatformException();
             }
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
@@ -567,12 +586,11 @@ public class Platform  {
             }
             catch (CantStartPluginException cantStartPluginException) {
 
-                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
-                cantStartPluginException.printStackTrace();
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, cantStartPluginException);
 
                 /**
-                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
-                 * start, then the platform wont start either. In the future we will review this policy.
+                 * This plugin wont disable the whole platform, so I will allow the Platform to start even if this one
+                 * will be disabled. In the future, I will re-try the start of plugins that are not starting at once.
                  * * * 
                  */
 
@@ -628,16 +646,13 @@ public class Platform  {
             }
             catch (CantStartPluginException cantStartPluginException) {
 
-                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
-                cantStartPluginException.printStackTrace();
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, cantStartPluginException);
 
                 /**
-                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
-                 * start, then the platform wont start either. In the future we will review this policy.
-                 * * * 
+                 * This plugin wont disable the whole platform, so I will allow the Platform to start even if this one
+                 * will be disabled. In the future, I will re-try the start of plugins that are not starting at once.
+                 * * *
                  */
-
-                throw new CantStartPlatformException();
             }
             
         }
@@ -685,16 +700,13 @@ public class Platform  {
             }
             catch (CantStartPluginException cantStartPluginException) {
 
-                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
-                cantStartPluginException.printStackTrace();
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, cantStartPluginException);
 
                 /**
-                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
-                 * start, then the platform wont start either. In the future we will review this policy.
-                 * * * 
+                 * This plugin wont disable the whole platform, so I will allow the Platform to start even if this one
+                 * will be disabled. In the future, I will re-try the start of plugins that are not starting at once.
+                 * * *
                  */
-
-                throw new CantStartPlatformException();
             }
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
@@ -703,8 +715,7 @@ public class Platform  {
              * Even if it is not desirable, the platform can still start without one crypto network. I will simply ask
              * this module to stop running. 
              */
-            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
-            pluginNotRecognizedException.printStackTrace();
+            ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, pluginNotRecognizedException);
 
             ((Service)cryptoNetwork).stop();
         }

@@ -54,6 +54,7 @@ import android.widget.Toast;
 import android.view.ViewGroup;
 import android.os.StrictMode;
 
+import com.bitdubai.fermat_api.CantReportCriticalStartingProblem;
 import com.bitdubai.fermat_api.CantStartPlatformException;
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.*;
 import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.AppRuntimeManager;
@@ -167,7 +168,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
             NavigateActivity();
         }
-        catch (CantStartPlatformException e) {
+        catch (CantStartPlatformException | CantReportCriticalStartingProblem e) {
             System.err.println("CantStartPlatformException: " + e.getMessage());
         }
 
