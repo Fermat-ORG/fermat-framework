@@ -22,3 +22,9 @@
 [submodule "fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai"]
 	path = fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai
 	url = https://github.com/bitDubai/fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai
+[submodule "fermat-dmp-android-wallet-store-bitdubai"]
+	path = fermat-dmp-android-wallet-store-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-android-wallet-store-bitdubai.git
+[submodule "fermat-dmp-android-wallet-manager-bitdubai"]
+	path = fermat-dmp-android-wallet-manager-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-android-wallet-manager-bitdubai.git
