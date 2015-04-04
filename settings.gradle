@@ -1,7 +1,7 @@
 
 include 'android'
 
-include ':fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai', ':fermat-dmp-android-wallet-manager-bitdubai'
+include ':fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai', ':fermat-dmp-android-wallet-manager-bitdubai', ':fermat-dmp-android-wallet-store-bitdubai'
 
 include 'fermat-core'
 
