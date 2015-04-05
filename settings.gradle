@@ -18,4 +18,4 @@ include ':fermat-pip-addon-platform-service-event-manager-bitdubai'
 include ':fermat-pip-addon-hardware-local-device-bitdubai'
 include ':fermat-pip-addon-platform-service-error-manager-bitdubai'
 include ':fermat-pip-addon-hardware-remote-device-bitdubai'
-
+include ':fermat-pip-addon-user-device-user-bitdubai'

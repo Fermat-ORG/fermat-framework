@@ -55,3 +55,6 @@
 [submodule "fermat-pip-addon-hardware-remote-device-bitdubai"]
 	path = fermat-pip-addon-hardware-remote-device-bitdubai
 	url = https://github.com/bitDubai/fermat-pip-addon-hardware-remote-device-bitdubai.git
+[submodule "fermat-pip-addon-user-device-user-bitdubai"]
+	path = fermat-pip-addon-user-device-user-bitdubai
+	url = https://github.com/bitDubai/fermat-pip-addon-user-device-user-bitdubai.git
