@@ -16,5 +16,10 @@ dependencies {
     compile project(':fermat-plugin-module-wallet-publisher-bitdubai')
     compile project(':fermat-plugin-module-wallet-runtime-bitdubai')
     compile 'com.google.code.gson:gson:2.2.4'
+    compile project(':fermat-dmp-plugin-middleware-money-request-bitdubai')
+    compile project(':fermat-dmp-plugin-middleware-wallet-contacts-bitdubai')
+    compile project(':fermat-dmp-pluigin-middleware-app-runtime')
+    compile project(':fermat-dmp-pluigin-middleware-bank-notes-bitdubai')
+    compile project(':fermat-dmp-pluigin-middleware-discount-wallet-bitdubai')
 }
 

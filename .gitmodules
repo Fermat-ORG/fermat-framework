@@ -28,3 +28,18 @@
 [submodule "fermat-dmp-android-wallet-manager-bitdubai"]
 	path = fermat-dmp-android-wallet-manager-bitdubai
 	url = https://github.com/bitDubai/fermat-dmp-android-wallet-manager-bitdubai.git
+[submodule "fermat-dmp-plugin-middleware-wallet-contacts-bitdubai"]
+	path = fermat-dmp-plugin-middleware-wallet-contacts-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-plugin-middleware-wallet-contacts-bitdubai.git
+[submodule "fermat-dmp-plugin-middleware-money-request-bitdubai"]
+	path = fermat-dmp-plugin-middleware-money-request-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-plugin-middleware-money-request-bitdubai.git
+[submodule "fermat-dmp-pluigin-middleware-bank-notes-bitdubai"]
+	path = fermat-dmp-pluigin-middleware-bank-notes-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-pluigin-middleware-bank-notes-bitdubai.git
+[submodule "fermat-dmp-pluigin-middleware-app-runtime"]
+	path = fermat-dmp-pluigin-middleware-app-runtime
+	url = https://github.com/bitDubai/fermat-dmp-pluigin-middleware-app-runtime.git
+[submodule "fermat-dmp-pluigin-middleware-discount-wallet-bitdubai"]
+	path = fermat-dmp-pluigin-middleware-discount-wallet-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-pluigin-middleware-discount-wallet-bitdubai.git

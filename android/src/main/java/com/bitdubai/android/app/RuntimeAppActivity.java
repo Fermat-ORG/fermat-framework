@@ -66,7 +66,7 @@ import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Fragments;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.smartwallet.R;
-import com.bitdubai.fermat_core.layer._12_middleware.app_runtime.developer.bitdubai.version_1.structure.*;
+import com.bitdubai.fermat_plugin.layer._12_middleware.app_runtime.developer.bitdubai.version_1.structure.*;
 
 import com.bitdubai.fermat_core.CorePlatformContext;
 import com.runtime_wallet.bitdubai.age.kids.boys.fragments.UsdBalanceFragment;

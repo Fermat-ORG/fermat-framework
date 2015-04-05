@@ -102,16 +102,21 @@
     <orderEntry type="library" exported="" name="support-annotations-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="support-v13-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="play-services-6.5.87" level="project" />
-    <orderEntry type="module" module-name="fermat-plugin-module-wallet-store-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-plugin-module-wallet-runtime-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-plugin-module-wallet-manager-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-plugin-module-wallet-publisher-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-api" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-money-request-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-core" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-android-wallet-manager-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-plugin-crypto-network-bitcoin-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-android-wallet-store-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-pluigin-middleware-discount-wallet-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-plugin-module-wallet-store-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-plugin-module-wallet-runtime-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-pluigin-middleware-app-runtime" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-wallet-contacts-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-pluigin-middleware-bank-notes-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-plugin-crypto-network-bitcoin-bitdubai" exported="" />
   </component>
 </module>
 

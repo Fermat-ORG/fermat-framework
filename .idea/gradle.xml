@@ -15,6 +15,11 @@
             <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-manager-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-store-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-middleware-money-request-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-middleware-wallet-contacts-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-pluigin-middleware-app-runtime" />
+            <option value="$PROJECT_DIR$/fermat-dmp-pluigin-middleware-bank-notes-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-pluigin-middleware-discount-wallet-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-plugin-crypto-network-bitcoin-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-plugin-module-wallet-manager-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-plugin-module-wallet-publisher-bitdubai" />
