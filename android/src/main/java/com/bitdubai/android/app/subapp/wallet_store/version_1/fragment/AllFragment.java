@@ -14,8 +14,8 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
-import com.bitdubai.smartwallet.R;
 import com.bitdubai.android.app.common.version_1.classes.MyApplication;
+import com.bitdubai.smartwallet.R;
 
 import java.io.Serializable;
 import java.util.ArrayList;

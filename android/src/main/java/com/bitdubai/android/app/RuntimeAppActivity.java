@@ -34,6 +34,8 @@ import com.bitdubai.android.app.subapp.shop.version_1.fragment.ShopShopFragment;
 import com.bitdubai.android.app.subapp.shop_manager.version_1.fragment.ShopDesktopFragment;
 import com.bitdubai.android.app.subapp.wallet_manager.version_1.fragment.WalletDesktopFragment;
 
+import com.runtime_wallet.bitdubai.age.kids.boys.fragments.CommunityFragment;
+import com.runtime_wallet.bitdubai.age.kids.boys.fragments.ContactsFragment;
 import com.runtime_wallet.bitdubai.age.kids.boys.fragments.ProfileCardFrontFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.BalanceFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.DiscountsFragment;
@@ -67,6 +69,7 @@ import com.bitdubai.smartwallet.R;
 import com.bitdubai.fermat_core.layer._12_middleware.app_runtime.developer.bitdubai.version_1.structure.*;
 
 import com.bitdubai.fermat_core.CorePlatformContext;
+import com.runtime_wallet.bitdubai.age.kids.boys.fragments.UsdBalanceFragment;
 
 import java.util.List;
 import java.util.Map;
@@ -803,13 +806,13 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                     currentFragment =  ProfileCardFrontFragment.newInstance(position);
                     break;
                 case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_DESKTOP:
-                    currentFragment =  com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.kids.sub_segment.all.developer.bitdubai.version_1.fragment.UsdBalanceFragment.newInstance(position);
+                    currentFragment =  UsdBalanceFragment.newInstance(position);
                     break;
                 case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_CONTACTS:
-                    currentFragment =  com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.kids.sub_segment.all.developer.bitdubai.version_1.fragment.ContactsFragment.newInstance(position);
+                    currentFragment =  ContactsFragment.newInstance(position);
                     break;
                 case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_COMMUNITY:
-                    currentFragment =  com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.kids.sub_segment.all.developer.bitdubai.version_1.fragment.CommunityFragment.newInstance(position);
+                    currentFragment =  CommunityFragment.newInstance(position);
                     break;
                 case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_HOME:
                     currentFragment =   HomeFragment.newInstance(position);

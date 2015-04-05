@@ -45,4 +45,6 @@ dependencies {
     compile 'com.android.support:support-v4:21.0.2'
     compile 'com.google.android.gms:play-services:6.5.87'
     compile project(':fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai')
+    compile project(':fermat-dmp-android-wallet-manager-bitdubai')
+    compile project(':fermat-dmp-android-wallet-store-bitdubai')
 }
