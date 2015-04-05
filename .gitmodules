@@ -49,3 +49,6 @@
 [submodule "fermat-pip-addon-platform-service-event-manager-bitdubai"]
 	path = fermat-pip-addon-platform-service-event-manager-bitdubai
 	url = https://github.com/bitDubai/fermat-pip-addon-platform-service-event-manager-bitdubai.git
+[submodule "fermat-pip-addon-hardware-local-device-bitdubai"]
+	path = fermat-pip-addon-hardware-local-device-bitdubai
+	url = https://github.com/bitDubai/fermat-pip-addon-hardware-local-device-bitdubai.git
