@@ -24,5 +24,6 @@ dependencies {
     compile project(':fermat-pip-addon-platform-service-error-manager-bitdubai')
     compile project(':fermat-pip-addon-platform-service-event-manager-bitdubai')
     compile project(':fermat-pip-addon-hardware-local-device-bitdubai')
+    compile project(':fermat-pip-addon-hardware-remote-device-bitdubai')
 }
 
