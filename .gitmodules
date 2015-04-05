@@ -43,3 +43,6 @@
 [submodule "fermat-dmp-plugin-module-wallet-store-bitdubai"]
 	path = fermat-dmp-plugin-module-wallet-store-bitdubai
 	url = https://github.com/bitDubai/fermat-dmp-plugin-module-wallet-store-bitdubai
+[submodule "fermat-pip-addon-platform-service-error-manager-bitdubai"]
+	path = fermat-pip-addon-platform-service-error-manager-bitdubai
+	url = https://github.com/bitDubai/fermat-pip-addon-platform-service-error-manager-bitdubai

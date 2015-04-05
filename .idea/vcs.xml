@@ -15,5 +15,6 @@
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-module-wallet-publisher-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-module-wallet-runtime-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-module-wallet-store-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-pip-addon-platform-service-error-manager-bitdubai" vcs="Git" />
   </component>
 </project>

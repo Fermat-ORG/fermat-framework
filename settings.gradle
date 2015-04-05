@@ -23,19 +23,5 @@ include 'fermat-dmp-plugin-module-wallet-publisher-bitdubai'
 include 'fermat-dmp-plugin-module-wallet-runtime-bitdubai'
 include 'fermat-dmp-plugin-module-wallet-store-bitdubai'
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-include 'fermat-dmp-plugin-module-wallet-manager-bitdubai'
+include 'fermat-pip-addon-platform-service-error-manager-bitdubai'
 
