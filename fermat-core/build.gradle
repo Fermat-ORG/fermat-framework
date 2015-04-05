@@ -21,5 +21,6 @@ dependencies {
     compile project(':fermat-dmp-plugin-module-wallet-runtime-bitdubai')
     compile project(':fermat-dmp-plugin-module-wallet-store-bitdubai')
     compile 'com.google.code.gson:gson:2.2.4'
+    compile project(':fermat-pip-addon-platform-service-error-manager-bitdubai')
 }
 
