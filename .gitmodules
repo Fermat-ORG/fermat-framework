@@ -46,3 +46,6 @@
 [submodule "fermat-pip-addon-platform-service-error-manager-bitdubai"]
 	path = fermat-pip-addon-platform-service-error-manager-bitdubai
 	url = https://github.com/bitDubai/fermat-pip-addon-platform-service-error-manager-bitdubai
+[submodule "fermat-pip-addon-platform-service-event-manager-bitdubai"]
+	path = fermat-pip-addon-platform-service-event-manager-bitdubai
+	url = https://github.com/bitDubai/fermat-pip-addon-platform-service-event-manager-bitdubai.git

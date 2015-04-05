@@ -26,6 +26,7 @@
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-module-wallet-runtime-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-module-wallet-store-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-addon-platform-service-error-manager-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-pip-addon-platform-service-event-manager-bitdubai" />
           </set>
         </option>
       </GradleProjectSettings>

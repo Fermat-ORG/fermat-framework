@@ -34,6 +34,8 @@ import com.bitdubai.android.app.subapp.shop.version_1.fragment.ShopShopFragment;
 import com.bitdubai.android.app.subapp.shop_manager.version_1.fragment.ShopDesktopFragment;
 import com.bitdubai.android.app.subapp.wallet_manager.version_1.fragment.WalletDesktopFragment;
 
+import com.bitdubai.fermat_dmp_plugin.layer._12_middleware.app_runtime.developer.bitdubai.version_1.structure.RuntimeActivity;
+import com.bitdubai.fermat_dmp_plugin.layer._12_middleware.app_runtime.developer.bitdubai.version_1.structure.RuntimeFragment;
 import com.runtime_wallet.bitdubai.age.kids.boys.fragments.CommunityFragment;
 import com.runtime_wallet.bitdubai.age.kids.boys.fragments.ContactsFragment;
 import com.runtime_wallet.bitdubai.age.kids.boys.fragments.ProfileCardFrontFragment;
@@ -66,7 +68,6 @@ import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Fragments;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.smartwallet.R;
-import com.bitdubai.fermat_dmp_plugin.layer._12_middleware.app_runtime.developer.bitdubai.version_1.structure.*;
 
 import com.bitdubai.fermat_core.CorePlatformContext;
 import com.runtime_wallet.bitdubai.age.kids.boys.fragments.UsdBalanceFragment;
