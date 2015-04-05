@@ -1,29 +1,41 @@
 
 include 'android'
 
-include ':fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai', ':fermat-dmp-android-wallet-manager-bitdubai', ':fermat-dmp-android-wallet-store-bitdubai'
-
 include 'fermat-core'
 
 include 'fermat-api'
 
-include 'fermat-plugin-module-wallet-manager-bitdubai'
 
-include 'fermat-plugin-crypto-network-bitcoin-bitdubai'
+include 'fermat-dmp-android-wallet-manager-bitdubai'
+include 'fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai'
+include 'fermat-dmp-android-wallet-store-bitdubai'
 
-include 'fermat-plugin-module-wallet-publisher-bitdubai'
+include 'fermat-dmp-plugin-crypto-network-bitcoin-bitdubai'
 
-include 'fermat-plugin-module-wallet-runtime-bitdubai'
-
-include 'fermat-plugin-module-wallet-store-bitdubai'
-
-include 'fermat-dmp-pluigin-middleware-discount-wallet-bitdubai'
-
-include 'fermat-dmp-pluigin-middleware-bank-notes-bitdubai'
-
-include 'fermat-dmp-pluigin-middleware-app-runtime'
-
+include 'fermat-dmp-plugin-middleware-app-runtime-bitdubai'
+include 'fermat-dmp-plugin-middleware-bank-notes-bitdubai'
+include 'fermat-dmp-plugin-middleware-discount-wallet-bitdubai'
+include 'fermat-dmp-plugin-middleware-money-request-bitdubai'
 include 'fermat-dmp-plugin-middleware-wallet-contacts-bitdubai'
 
-include 'fermat-dmp-plugin-middleware-money-request-bitdubai'
+include 'fermat-dmp-plugin-module-wallet-manager-bitdubai'
+include 'fermat-dmp-plugin-module-wallet-publisher-bitdubai'
+include 'fermat-dmp-plugin-module-wallet-runtime-bitdubai'
+include 'fermat-dmp-plugin-module-wallet-store-bitdubai'
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+include 'fermat-dmp-plugin-module-wallet-manager-bitdubai'
 

@@ -5,16 +5,15 @@
     <mapping directory="$PROJECT_DIR$/fermat-dmp-android-wallet-manager-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-android-wallet-store-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-crypto-network-bitcoin-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-middleware-app-runtime-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-middleware-discount-wallet-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-middleware-money-request-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-middleware-wallet-contacts-bitdubai" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/fermat-dmp-pluigin-middleware-app-runtime" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/fermat-dmp-pluigin-middleware-bank-notes-bitdubai" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/fermat-dmp-pluigin-middleware-discount-wallet-bitdubai" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/fermat-plugin-crypto-network-bitcoin-bitdubai" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/fermat-plugin-module-wallet-manager-bitdubai" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/fermat-plugin-module-wallet-publisher-bitdubai" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/fermat-plugin-module-wallet-runtime-bitdubai" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/fermat-plugin-module-wallet-store-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-module-wallet-manager-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-module-wallet-publisher-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-module-wallet-runtime-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-module-wallet-store-bitdubai" vcs="Git" />
   </component>
 </project>
-

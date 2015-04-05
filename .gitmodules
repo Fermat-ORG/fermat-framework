@@ -1,24 +1,3 @@
-[submodule "libraries"]
-	path = libraries
-	url = https://github.com/bitDubai/libraries
-[submodule "fermat-plugin-module-wallet-manager-bitdubai"]
-	path = fermat-plugin-module-wallet-manager-bitdubai
-	url = https://github.com/bitDubai/fermat-plugin-module-wallet-manager-bitdubai
-[submodule "fermat-plugin-crypto-network-bitcoin-bitdubai"]
-	path = fermat-plugin-crypto-network-bitcoin-bitdubai
-	url = https://github.com/bitDubai/fermat-plugin-crypto-network-bitcoin-bitdubai
-[submodule "fermat-plugin-module-wallet-publisher-bitdubai"]
-	path = fermat-plugin-module-wallet-publisher-bitdubai
-	url = https://github.com/bitDubai/fermat-plugin-module-wallet-publisher-bitdubai
-[submodule "fermat-plugin-module-wallet-runtime-bitdubai"]
-	path = fermat-plugin-module-wallet-runtime-bitdubai
-	url = https://github.com/bitDubai/fermat-plugin-module-wallet-runtime-bitdubai
-[submodule "fermat-plugin-module-wallet-store-bitdubai"]
-	path = fermat-plugin-module-wallet-store-bitdubai
-	url = https://github.com/bitDubai/fermat-plugin-module-wallet-store-bitdubai
-[submodule "fermat-dmp-android-wallet-runtime-kids-boys-bitdubai"]
-	path = fermat-dmp-android-wallet-runtime-kids-boys-bitdubai
-	url = https://github.com/bitDubai/fermat-dmp-android-wallet-runtime-kids-boys-bitdubai.git
 [submodule "fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai"]
 	path = fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai
 	url = https://github.com/bitDubai/fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai
@@ -28,18 +7,39 @@
 [submodule "fermat-dmp-android-wallet-manager-bitdubai"]
 	path = fermat-dmp-android-wallet-manager-bitdubai
 	url = https://github.com/bitDubai/fermat-dmp-android-wallet-manager-bitdubai.git
-[submodule "fermat-dmp-plugin-middleware-wallet-contacts-bitdubai"]
-	path = fermat-dmp-plugin-middleware-wallet-contacts-bitdubai
-	url = https://github.com/bitDubai/fermat-dmp-plugin-middleware-wallet-contacts-bitdubai.git
+
+
+[submodule "fermat-dmp-plugin-crypto-network-bitcoin-bitdubai"]
+	path = fermat-dmp-plugin-crypto-network-bitcoin-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-plugin-crypto-network-bitcoin-bitdubai
+	
+
+[submodule "fermat-dmp-plugin-middleware-app-runtime-bitdubai"]
+	path = fermat-dmp-plugin-middleware-app-runtime-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-plugin-middleware-app-runtime-bitdubai.git
+[submodule "fermat-dmp-plugin-middleware-bank-notes-bitdubai"]
+	path = fermat-dmp-plugin-middleware-bank-notes-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-plugin-middleware-bank-notes-bitdubai
+[submodule "fermat-dmp-plugin-middleware-discount-wallet-bitdubai"]
+	path = fermat-dmp-plugin-middleware-discount-wallet-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-plugin-middleware-discount-wallet-bitdubai
 [submodule "fermat-dmp-plugin-middleware-money-request-bitdubai"]
 	path = fermat-dmp-plugin-middleware-money-request-bitdubai
-	url = https://github.com/bitDubai/fermat-dmp-plugin-middleware-money-request-bitdubai.git
-[submodule "fermat-dmp-pluigin-middleware-bank-notes-bitdubai"]
-	path = fermat-dmp-pluigin-middleware-bank-notes-bitdubai
-	url = https://github.com/bitDubai/fermat-dmp-pluigin-middleware-bank-notes-bitdubai.git
-[submodule "fermat-dmp-pluigin-middleware-app-runtime"]
-	path = fermat-dmp-pluigin-middleware-app-runtime
-	url = https://github.com/bitDubai/fermat-dmp-pluigin-middleware-app-runtime.git
-[submodule "fermat-dmp-pluigin-middleware-discount-wallet-bitdubai"]
-	path = fermat-dmp-pluigin-middleware-discount-wallet-bitdubai
-	url = https://github.com/bitDubai/fermat-dmp-pluigin-middleware-discount-wallet-bitdubai.git
+	url = https://github.com/bitDubai/fermat-dmp-plugin-middleware-money-request-bitdubai
+[submodule "fermat-dmp-plugin-middleware-wallet-contacts-bitdubai"]
+	path = fermat-dmp-plugin-middleware-wallet-contacts-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-plugin-middleware-wallet-contacts-bitdubai
+
+
+[submodule "fermat-dmp-plugin-module-wallet-manager-bitdubai"]
+	path = fermat-dmp-plugin-module-wallet-manager-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-plugin-module-wallet-manager-bitdubai
+[submodule "fermat-dmp-plugin-module-wallet-publisher-bitdubai"]
+	path = fermat-dmp-plugin-module-wallet-publisher-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-plugin-module-wallet-publisher-bitdubai
+[submodule "fermat-dmp-plugin-module-wallet-runtime-bitdubai"]
+	path = fermat-dmp-plugin-module-wallet-runtime-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-plugin-module-wallet-runtime-bitdubai
+[submodule "fermat-dmp-plugin-module-wallet-store-bitdubai"]
+	path = fermat-dmp-plugin-module-wallet-store-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-plugin-module-wallet-store-bitdubai
