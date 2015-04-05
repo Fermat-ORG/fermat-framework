@@ -5,8 +5,8 @@ import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
 import com.bitdubai.fermat_api.layer._14_module.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer._14_module.ModuleSubsystem;
-import com.bitdubai.fermat_plugin.layer._14_module.wallet_manager.WalletManagerSubsystem;
-import com.bitdubai.fermat_plugin.layer._14_module.wallet_runtime.developer.WalletRuntimeSubsystem;
+import com.bitdubai.fermat_core.layer._14_module.wallet_manager.WalletManagerSubsystem;
+import com.bitdubai.fermat_core.layer._14_module.wallet_runtime.WalletRuntimeSubsystem;
 /*
 import com.bitdubai.wallet_platform_core.layer._11_module.wallet_manager.WalletManagerSubsystem;
 import com.bitdubai.wallet_platform_core.layer._11_module.wallet_publisher.WalletPublisherSubsystem;

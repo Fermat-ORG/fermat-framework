@@ -1,32 +1,25 @@
-package com.bitdubai.fermat_core.layer._7_crypto_network.bitcoin;
+package com.bitdubai.fermat_core.layer._12_middleware.discount_wallet;
+
 
 import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.layer._7_crypto_network.CantStartSubsystemException;
-import com.bitdubai.fermat_api.layer._7_crypto_network.CryptoNetworkSubsystem;
-import com.bitdubai.fermat_dmp_plugin.layer._7_crypto_network.bitcoin.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_api.layer._12_middleware.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer._12_middleware.MiddlewareSubsystem;
+import com.bitdubai.fermat_dmp_plugin.layer._12_middleware.discount_wallet.developer.bitdubai.DeveloperBitDubai;
 
 /**
- * Created by ciencias on 30.12.14.
+ * Created by ciencias on 20.01.15.
  */
-public class BitcoinSubsystem implements CryptoNetworkSubsystem {
+public class DiscountWalletSubsystem implements MiddlewareSubsystem {
 
     Plugin plugin;
-
-
-
 
     @Override
     public Plugin getPlugin() {
         return plugin;
     }
 
-
-
-
-
     @Override
     public void start() throws CantStartSubsystemException {
-
         /**
          * I will choose from the different Developers available which implementation to use. Right now there is only
          * one, so it is not difficult to choose.

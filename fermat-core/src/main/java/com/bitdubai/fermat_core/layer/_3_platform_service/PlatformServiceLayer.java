@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
 import com.bitdubai.fermat_api.layer._3_platform_service.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer._3_platform_service.PlatformServiceSubsystem;
-import com.bitdubai.fermat_pip_addon.layer._3_platform_service.error_manager.ErrorManagerSubsystem;
+import com.bitdubai.fermat_core.layer._3_platform_service.error_manager.ErrorManagerSubsystem;
 import com.bitdubai.fermat_core.layer._3_platform_service.event_manager.EventManagerSubsystem;
 
 /**

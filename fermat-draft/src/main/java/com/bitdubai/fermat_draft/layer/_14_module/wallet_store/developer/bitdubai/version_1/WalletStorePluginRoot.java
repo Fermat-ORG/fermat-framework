@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_plugin.layer._14_module.wallet_store.developer.bitdubai.version_1;
+package com.bitdubai.fermat_dmp_plugin.layer._14_module.wallet_store.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.Plugin;
