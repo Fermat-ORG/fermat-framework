@@ -31,6 +31,7 @@
             <option value="$PROJECT_DIR$/fermat-pip-addon-platform-service-event-manager-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-addon-user-device-user-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-addon-user-extra-user-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-pip-addon-user-intra-user-bitdubai" />
           </set>
         </option>
       </GradleProjectSettings>

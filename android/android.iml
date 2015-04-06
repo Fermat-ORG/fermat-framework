@@ -122,6 +122,7 @@
     <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-wallet-contacts-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-hardware-remote-device-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-crypto-network-bitcoin-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-pip-addon-user-intra-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-module-wallet-store-bitdubai" exported="" />
   </component>
 </module>
