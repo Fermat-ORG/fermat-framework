@@ -27,7 +27,7 @@ import com.bitdubai.fermat_api.layer._8_crypto.address_book.CryptoAddressBook;
 import com.bitdubai.fermat_api.layer._8_crypto.address_book.exceptions.CantGetUserCryptoAddress;
 import com.bitdubai.fermat_api.layer._8_crypto.address_book.exceptions.CantRegisterUserCryptoAddress;
 import com.bitdubai.fermat_pip_addon.layer._5_user.device_user.developer.bitdubai.version_1.DeviceUserUserAddonRoot;
-import com.bitdubai.fermat_core.layer._5_user.extra_user.developer.bitdubai.version_1.ExtraUserUserAddonRoot;
+import com.bitdubai.fermat_pip_addon.layer._5_user.extra_user.developer.bitdubai.version_1.ExtraUserUserAddonRoot;
 import com.bitdubai.fermat_core.layer._5_user.intra_user.developer.bitdubai.version_1.IntraUserUserAddonRoot;
 import com.bitdubai.fermat_core.layer._8_crypto.address_book.developer.bitdubai.version_1.exceptions.*;
 import com.bitdubai.fermat_api.layer._5_user.User;

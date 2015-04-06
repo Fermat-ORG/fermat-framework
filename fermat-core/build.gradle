@@ -26,5 +26,6 @@ dependencies {
     compile project(':fermat-pip-addon-hardware-local-device-bitdubai')
     compile project(':fermat-pip-addon-hardware-remote-device-bitdubai')
     compile project(':fermat-pip-addon-user-device-user-bitdubai')
+    compile project(':fermat-pip-addon-user-extra-user-bitdubai')
 }
 
