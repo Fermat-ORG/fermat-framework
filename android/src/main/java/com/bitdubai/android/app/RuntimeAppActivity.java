@@ -109,6 +109,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
     private boolean firstexecute = true;
     private Bundle savedInstanceState;
     private ViewGroup collection;
+    private Platform platform;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -119,8 +120,8 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             this.savedInstanceState = savedInstanceState;
             //init runtime app
 
-            Platform platform = MyApplication.getPlatform();
-            Context mContext = this.getApplicationContext();
+            platform = MyApplication.getPlatform();
+           // Context context = this.getApplicationContext();
 
             this.Os = new AndroidOsAddonRoot();
 
@@ -528,6 +529,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                 cleanWindows();
                 ((MyApplication) this.getApplication()).setWalletId(Integer.parseInt(paramId));
                 activity = this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_VERSION_1_MAIN);
+
                 NavigateActivity();
                 break;
             case CWP_WALLET_STORE_MAIN:
