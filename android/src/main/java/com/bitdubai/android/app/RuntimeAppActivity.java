@@ -36,13 +36,13 @@ import com.bitdubai.android.app.subapp.wallet_manager.version_1.fragment.WalletD
 
 import com.bitdubai.fermat_api.layer._10_network_service.CantCheckResourcesException;
 import com.bitdubai.fermat_api.layer._10_network_service.wallet_resources.WalletResourcesManager;
-import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Wallets;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_dmp_plugin.layer._12_middleware.app_runtime.developer.bitdubai.version_1.structure.RuntimeActivity;
 import com.bitdubai.fermat_dmp_plugin.layer._12_middleware.app_runtime.developer.bitdubai.version_1.structure.RuntimeFragment;
 import com.runtime_wallet.bitdubai.age.kids.boys.fragments.CommunityFragment;
 import com.runtime_wallet.bitdubai.age.kids.boys.fragments.ContactsFragment;
+import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Wallets;
+import com.bitdubai.fermat_dmp_plugin.layer._12_middleware.app_runtime.developer.bitdubai.version_1.structure.RuntimeActivity;
 import com.runtime_wallet.bitdubai.age.kids.boys.fragments.ProfileCardFrontFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.BalanceFragment;
 import com.bitdubai.android.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.DiscountsFragment;

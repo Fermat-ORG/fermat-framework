@@ -28,6 +28,6 @@ dependencies {
     compile project(':fermat-pip-addon-user-device-user-bitdubai')
     compile project(':fermat-pip-addon-user-extra-user-bitdubai')
     compile project(':fermat-pip-addon-user-intra-user-bitdubai')
-    compile project(':fermat-dmp-plugin-crypto-addres-book-bitdubai')
+    compile project(':fermat-dmp-plugin-crypto-address-book-bitdubai')
 }
 
