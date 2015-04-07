@@ -26,7 +26,7 @@ import com.bitdubai.fermat_core.layer._11_world.coinapult.developer.bitdubai.ver
 import com.bitdubai.fermat_core.layer._11_world.blockchain_info.developer.bitdubai.version_1.BlockchainInfoWorldPluginRoot;
 import com.bitdubai.fermat_core.layer._11_world.crypto_index.developer.bitdubai.version_1.CryptoIndexWorldPluginRoot;
 import com.bitdubai.fermat_core.layer._11_world.shape_shift.developer.bitdubai.version_1.ShapeShiftWorldPluginRoot;
-import com.bitdubai.fermat_core.layer._8_crypto.address_book.developer.bitdubai.version_1.AddressBookCryptoPluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer._8_crypto.address_book.developer.bitdubai.version_1.AddressBookCryptoPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._12_middleware.app_runtime.developer.bitdubai.version_1.AppRuntimeMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._12_middleware.bank_notes.developer.bitdubai.version_1.BankNotesMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._12_middleware.discount_wallet.developer.bitdubai.version_1.DiscountWalletMiddlewarePluginRoot;

@@ -64,3 +64,6 @@
 [submodule "fermat-pip-addon-user-intra-user-bitdubai"]
 	path = fermat-pip-addon-user-intra-user-bitdubai
 	url = https://github.com/bitDubai/fermat-pip-addon-user-intra-user-bitdubai.git
+[submodule "fermat-dmp-plugin-crypto-addres-book-bitdubai"]
+	path = fermat-dmp-plugin-crypto-addres-book-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-plugin-crypto-addres-book-bitdubai.git
