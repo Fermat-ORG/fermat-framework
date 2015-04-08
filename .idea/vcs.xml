@@ -23,6 +23,7 @@
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-network-service-money-request-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-network-service-wallet-community-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-network-service-wallet-resources-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-network-service-wallet-store-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-pip-addon-hardware-local-device-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-pip-addon-hardware-remote-device-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-pip-addon-platform-service-error-manager-bitdubai" vcs="Git" />

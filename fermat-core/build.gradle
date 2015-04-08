@@ -36,5 +36,6 @@ dependencies {
     compile project(':fermat-dmp-plugin-network-service-money-request-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-wallet-community-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-wallet-resources-bitdubai')
+    compile project(':fermat-dmp-plugin-network-service-wallet-store-bitdubai')
 }
 

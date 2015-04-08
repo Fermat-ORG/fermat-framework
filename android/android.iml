@@ -122,6 +122,7 @@
     <orderEntry type="module" module-name="fermat-dmp-plugin-crypto-address-book-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-user-intra-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-module-wallet-store-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-wallet-store-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-platform-service-error-manager-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-wallet-community-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-intra-user-bitcoin" exported="" />
