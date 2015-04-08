@@ -33,5 +33,6 @@ dependencies {
     compile project(':fermat-dmp-plugin-network-service-crypto-addresses-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-money-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-intra-user-bitcoin')
+    compile project(':fermat-dmp-plugin-network-service-money-request-bitdubai')
 }
 
