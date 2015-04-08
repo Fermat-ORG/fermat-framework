@@ -73,3 +73,6 @@
 [submodule "fermat-dmp-plugin-network-service-crypto-addresses-bitdubai"]
 	path = fermat-dmp-plugin-network-service-crypto-addresses-bitdubai
 	url = https://github.com/bitDubai/fermat-dmp-plugin-network-service-crypto-addresses-bitdubai.git
+[submodule "fermat-dmp-plugin-network-service-money-bitdubai"]
+	path = fermat-dmp-plugin-network-service-money-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-plugin-network-service-money-bitdubai.git

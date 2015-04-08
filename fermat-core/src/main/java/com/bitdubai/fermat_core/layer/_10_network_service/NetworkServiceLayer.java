@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.layer._10_network_service.CantStartSubsystemExcep
 import com.bitdubai.fermat_api.layer._10_network_service.NetworkSubsystem;
 import com.bitdubai.fermat_core.layer._10_network_service.bank_notes.BankNotesSubsystem;
 import com.bitdubai.fermat_core.layer._10_network_service.intra_user.IntraUserSubsystem;
-import com.bitdubai.fermat_core.layer._10_network_service.money.MoneySubsytem;
+import com.bitdubai.fermat_core.layer._10_network_service.money.MoneySubsystem;
 import com.bitdubai.fermat_core.layer._10_network_service.wallet_community.WalletCommunitySubsystem;
 import com.bitdubai.fermat_core.layer._10_network_service.wallet_resources.WalletResourcesSubsystem;
 import com.bitdubai.fermat_core.layer._10_network_service.wallet_store.WalletStoreSubsystem;
@@ -166,7 +166,7 @@ public class NetworkServiceLayer implements PlatformLayer {
 
         }
         
-        NetworkSubsystem moneySubsystem = new MoneySubsytem();
+        NetworkSubsystem moneySubsystem = new MoneySubsystem();
         
         try {
             moneySubsystem.start();
