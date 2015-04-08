@@ -102,20 +102,17 @@
     <orderEntry type="library" exported="" name="support-annotations-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="support-v13-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="play-services-6.5.87" level="project" />
-    <orderEntry type="module" module-name="fermat-pip-addon-platform-service-error-manager-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-bank-notes-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-money-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-user-device-user-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-pip-addon-platform-service-event-manager-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-hardware-local-device-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-module-wallet-manager-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-api" exported="" />
-    <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-money-request-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-crypto-addresses-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-money-request-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-core" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-android-wallet-manager-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-module-wallet-runtime-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-dmp-android-wallet-store-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-discount-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-module-wallet-publisher-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-app-runtime-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-user-extra-user-bitdubai" exported="" />
@@ -123,9 +120,17 @@
     <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-wallet-contacts-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-hardware-remote-device-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-crypto-address-book-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-dmp-plugin-crypto-network-bitcoin-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-user-intra-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-module-wallet-store-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-pip-addon-platform-service-error-manager-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-wallet-community-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-intra-user-bitcoin" exported="" />
+    <orderEntry type="module" module-name="fermat-pip-addon-platform-service-event-manager-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-api" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-money-request-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-android-wallet-store-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-discount-wallet-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-plugin-crypto-network-bitcoin-bitdubai" exported="" />
   </component>
 </module>
 
