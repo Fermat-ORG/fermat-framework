@@ -16,6 +16,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 import java.io.ByteArrayOutputStream;
 
@@ -91,7 +93,7 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
              * Then I create the file.
              * if not exist
              */
-            File file = new File(storagePath, fileName);
+            File file = new File(storagePath, this.fileName);
 
             if (!file.exists()) {
                 /**
@@ -106,7 +108,6 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
 
             
         } catch (Exception e) {
-            System.err.println("Error trying to persist file: " + e.getMessage());
             e.printStackTrace();
             throw new CantPersistFileException(this.fileName);
         }
@@ -116,7 +117,7 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
     @Override
     public void loadFromMedia() throws CantLoadFileException {
 
-
+        try {
         /**
          *  Evaluate privacyLevel to determine the location of directory - external or internal
          */
@@ -130,7 +131,7 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
          * Get the file handle.
          */
         File file = new File(path + "/" + this.ownerId + "/" + this.directoryName + "/" + this.fileName);
-        try {
+
 
             /**
              * Read the content.
@@ -153,10 +154,10 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
             this.content =buffer.toByteArray();
 
         } catch (Exception e) {
-            System.err.println("Error trying to persist file: " + e.getMessage());
             e.printStackTrace();
             throw new CantLoadFileException(this.fileName);
         }
     }
+
 
 }

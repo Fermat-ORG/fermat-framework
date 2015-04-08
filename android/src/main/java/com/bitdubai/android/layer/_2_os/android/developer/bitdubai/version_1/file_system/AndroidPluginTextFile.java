@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -127,9 +128,8 @@ public class AndroidPluginTextFile implements PluginTextFile {
 
             
         } catch (Exception e) {
-            System.err.println("Error trying to persist file: " + e.getMessage());
             e.printStackTrace();
-            throw new CantPersistFileException(this.fileName);
+            throw new CantPersistFileException("Error trying to persist file: " + this.fileName);
         }
     }
     
@@ -181,9 +181,8 @@ public class AndroidPluginTextFile implements PluginTextFile {
                 decryptedContent = this.decrypt(stringBuilder.toString());
 
             } catch (CantDecryptException e) {
-                System.err.println("Error trying to decrypt file: " + e.getMessage());
                 e.printStackTrace();
-                throw new CantLoadFileException(this.fileName);
+                throw new CantLoadFileException("Error trying to decrypt file: " +this.fileName);
             }
 
             /**
@@ -192,9 +191,9 @@ public class AndroidPluginTextFile implements PluginTextFile {
             this.content = decryptedContent;
             
         } catch (Exception e) {
-            System.err.println("Error trying to load file from media: " + e.getMessage());
+
             e.printStackTrace();
-            throw new CantLoadFileException(this.fileName);
+            throw new CantLoadFileException("Error trying to load file from media: " + this.fileName);
         }
     }
 
@@ -223,7 +222,6 @@ public class AndroidPluginTextFile implements PluginTextFile {
             base64EncryptedString = new String(base64Bytes);
 
         } catch (Exception e) {
-            System.err.println("Error trying to encrypt: " + e.getMessage());
             e.printStackTrace();
             throw  new CantEncryptException();
         }

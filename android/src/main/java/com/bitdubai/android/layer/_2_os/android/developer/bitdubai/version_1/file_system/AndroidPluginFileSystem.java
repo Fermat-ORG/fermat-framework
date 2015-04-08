@@ -2,10 +2,13 @@ package com.bitdubai.android.layer._2_os.android.developer.bitdubai.version_1.fi
 
 import android.content.Context;
 import com.bitdubai.fermat_api.layer._2_os.file_system.*;
+import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.FileNotFoundException;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
 /**
@@ -31,46 +34,66 @@ public class AndroidPluginFileSystem implements PluginFileSystem {
      */
     
     @Override
-    public PluginTextFile getTextFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException {
-
-        AndroidPluginTextFile newFile = new AndroidPluginTextFile(ownerId, this.context,directoryName, fileName, privacyLevel, lifeSpan);
-
+    public PluginTextFile getTextFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException,CantCreateFileException {
+        AndroidPluginTextFile newFile = null;
+        try {
+             newFile = new AndroidPluginTextFile(ownerId, this.context,directoryName, hashFileName(fileName), privacyLevel, lifeSpan);
+        }
+        catch (NoSuchAlgorithmException e){
+            e.printStackTrace();
+            throw new CantCreateFileException();
+        }
         try {
             newFile.loadFromMedia();
             return newFile;
         }
         catch (CantLoadFileException e){
-            System.err.println("CantLoadFileException: " + e.getMessage());
             e.printStackTrace();
             throw new FileNotFoundException();
         }
     }
 
     @Override
-    public PluginTextFile createTextFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) {
-
-        return new AndroidPluginTextFile(ownerId, this.context,directoryName,fileName, privacyLevel, lifeSpan);
+    public PluginTextFile createTextFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException{
+        try {
+            return new AndroidPluginTextFile(ownerId, this.context, directoryName, hashFileName(fileName), privacyLevel, lifeSpan);
+        }
+        catch (NoSuchAlgorithmException e){
+            e.printStackTrace();
+            throw new CantCreateFileException();
+        }
     }
 
     @Override
-    public PluginBinaryFile getBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException{
-        AndroidPluginBinaryFile newFile = new AndroidPluginBinaryFile(ownerId, directoryName, fileName, privacyLevel, lifeSpan);
-
+    public PluginBinaryFile getBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException,CantCreateFileException{
+        AndroidPluginBinaryFile newFile = null;
+        try {
+             newFile = new AndroidPluginBinaryFile(ownerId, directoryName, hashFileName(fileName), privacyLevel, lifeSpan);
+        }
+        catch (NoSuchAlgorithmException e){
+            e.printStackTrace();
+            throw new CantCreateFileException();
+        }
         try {
             newFile.loadFromMedia();
             return newFile;
         }
         catch (CantLoadFileException e){
-            System.err.println("CantLoadFileException: " + e.getMessage());
             e.printStackTrace();
             throw new FileNotFoundException();
         }
     }
 
     @Override
-    public PluginBinaryFile createBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
+    public PluginBinaryFile createBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException{
 
-        return new AndroidPluginBinaryFile(ownerId,directoryName,fileName, privacyLevel, lifeSpan);
+       try {
+            return new AndroidPluginBinaryFile(ownerId,directoryName,hashFileName(fileName), privacyLevel, lifeSpan);
+        }
+        catch (NoSuchAlgorithmException e){
+            e.printStackTrace();
+            throw new CantCreateFileException();
+        }
     }
 
     @Override
@@ -80,4 +103,20 @@ public class AndroidPluginFileSystem implements PluginFileSystem {
 
 
 
+    /**
+     *
+     * Hash the file name using the algorithm SHA 256
+     */
+
+    private String hashFileName(String fileName) throws NoSuchAlgorithmException {
+        String encryptedString = fileName;
+       /* try{
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+            messageDigest.update(fileName.getBytes());
+            encryptedString = new String(messageDigest.digest());
+        }catch(NoSuchAlgorithmException e){
+            throw e;
+        }*/
+        return encryptedString;
+    }
 }

@@ -18,6 +18,8 @@ import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.DatabaseTr
 import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.InvalidOwnerId;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantOpenDatabaseException;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -112,6 +114,10 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
             if (!storagePath.exists()) {
                 storagePath.mkdirs();
             }
+
+            /**
+             * Hash data base name
+             */
 
             databasePath += "/" + databaseName.replace("-","") + ".db";
             File databaseFile = new File(databasePath);
@@ -316,4 +322,6 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
 
              return new AndroidDatabaseTableFactory(tableName);
     }
+
+
 }

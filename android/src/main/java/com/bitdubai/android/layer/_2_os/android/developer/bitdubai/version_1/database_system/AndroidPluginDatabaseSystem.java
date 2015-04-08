@@ -3,12 +3,15 @@ package com.bitdubai.android.layer._2_os.android.developer.bitdubai.version_1.da
 import android.content.Context;
 
 import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.DatabaseNotFoundException;
+
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer._2_os.database_system.Database;
 import com.bitdubai.fermat_api.layer._2_os.database_system.PluginDatabaseSystem;
 
 import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.CantCreateDatabaseException;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.UUID;
 
 
@@ -29,24 +32,36 @@ public class AndroidPluginDatabaseSystem  implements PluginDatabaseSystem{
     
     @Override
     public Database openDatabase(UUID ownerId, String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException {
-        
-        AndroidDatabase database;
-        database = new AndroidDatabase(this.Context, ownerId, databaseName);
+        try{
+            AndroidDatabase database;
+            String hasDBName = hashDataBaseName(databaseName);
+            database = new AndroidDatabase(this.Context, ownerId, hasDBName);
+            database.openDatabase(hasDBName);
 
-        database.openDatabase(databaseName);
-        
-        return database;
+            return database;
+        }
+        catch (NoSuchAlgorithmException e){
+            e.printStackTrace();
+            throw new CantOpenDatabaseException();
+        }
+
     }
 
     @Override
     public Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException{
+        try{
+            AndroidDatabase database;
+            String hasDBName = hashDataBaseName(databaseName);
+            database = new AndroidDatabase(this.Context, ownerId, hasDBName);
+            database.createDatabase(hasDBName);
 
-        AndroidDatabase database;
-        database = new AndroidDatabase(this.Context, ownerId, databaseName);
+            return database;
+        }
+        catch (NoSuchAlgorithmException e){
+            e.printStackTrace();
+            throw new CantCreateDatabaseException();
+        }
 
-        database.createDatabase(databaseName);
-
-        return database;
     }
 
 
@@ -56,6 +71,20 @@ public class AndroidPluginDatabaseSystem  implements PluginDatabaseSystem{
     }
 
 
-
+    /**
+     *
+     * Hash the file name using the algorithm SHA 256
+     */
+    private String hashDataBaseName(String databaseName) throws NoSuchAlgorithmException {
+        String encryptedString = databaseName;
+       /* try{
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+            messageDigest.update(databaseName.getBytes());
+            encryptedString = new String(messageDigest.digest());
+        }catch(NoSuchAlgorithmException e){
+            throw e;
+        }*/
+        return encryptedString;
+    }
 
 }
