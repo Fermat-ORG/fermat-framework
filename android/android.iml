@@ -103,6 +103,7 @@
     <orderEntry type="library" exported="" name="support-v13-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="play-services-6.5.87" level="project" />
     <orderEntry type="module" module-name="fermat-pip-addon-platform-service-error-manager-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-bank-notes-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-user-device-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-platform-service-event-manager-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-hardware-local-device-bitdubai" exported="" />

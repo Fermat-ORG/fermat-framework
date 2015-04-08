@@ -29,5 +29,6 @@ dependencies {
     compile project(':fermat-pip-addon-user-extra-user-bitdubai')
     compile project(':fermat-pip-addon-user-intra-user-bitdubai')
     compile project(':fermat-dmp-plugin-crypto-address-book-bitdubai')
+    compile project(':fermat-dmp-plugin-network-service-bank-notes-bitdubai')
 }
 
