@@ -34,6 +34,7 @@
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-network-service-wallet-community-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-network-service-wallet-resources-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-network-service-wallet-store-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-addon-hardware-local-device-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-addon-hardware-remote-device-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-addon-platform-service-error-manager-bitdubai" />

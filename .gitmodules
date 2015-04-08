@@ -91,3 +91,6 @@
 [submodule "fermat-dmp-plugin-network-service-wallet-store-bitdubai"]
 	path = fermat-dmp-plugin-network-service-wallet-store-bitdubai
 	url = https://github.com/bitDubai/fermat-dmp-plugin-network-service-wallet-store-bitdubai.git
+[submodule "fermat-p2p-plugin-communication-cloud-bitdubai"]
+	path = fermat-p2p-plugin-communication-cloud-bitdubai
+	url = https://github.com/bitDubai/fermat-p2p-plugin-communication-cloud-bitdubai.git

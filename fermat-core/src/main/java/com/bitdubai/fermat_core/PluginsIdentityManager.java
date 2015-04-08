@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.layer._2_os.file_system.PlatformFileSystem;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.IncomingCryptoTransactionPluginRoot;
-import com.bitdubai.fermat_core.layer._9_communication.cloud.developer.bitdubai.version_1.CloudCommunicationChannelPluginRoot;
+import com.bitdubai.fermat_p2p_plugin.layer._9_communication.cloud.developer.bitdubai.version_1.CloudCommunicationChannelPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._10_network_service.bank_notes.developer.bitdubai.version_1.BankNotesNetworkServicePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._10_network_service.wallet_community.developer.bitdubai.version_1.WalletCommunityNetworkServicePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._10_network_service.wallet_resources.developer.bitdubai.version_1.WalletResourcesNetworkServicePluginRoot;
