@@ -106,3 +106,9 @@
 [submodule "fermat-dmp-plugin-world-shape-shift-bitdubai"]
 	path = fermat-dmp-plugin-world-shape-shift-bitdubai
 	url = https://github.com/bitDubai/fermat-dmp-plugin-world-shape-shift-bitdubai.git
+[submodule "fermat-dmp-plugin-transaction-incoming-crypto-bitdubai"]
+	path = fermat-dmp-plugin-transaction-incoming-crypto-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-plugin-transaction-incoming-crypto-bitdubai.git
+[submodule "fermat-dmp-plugin-transaction-incoming-device-user-bitdubai"]
+	path = fermat-dmp-plugin-transaction-incoming-device-user-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-plugin-transaction-incoming-device-user-bitdubai.git
