@@ -8,6 +8,7 @@ import android.os.Environment;
 
 import com.bitdubai.fermat_api.layer._2_os.file_system.*;
 
+import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantPersistFileException;
 
 import java.io.BufferedInputStream;
@@ -20,6 +21,8 @@ import java.io.InputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.BufferedOutputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 
 public class AndroidPlatformTextFile implements PlatformTextFile {
@@ -89,7 +92,7 @@ public class AndroidPlatformTextFile implements PlatformTextFile {
                 storagePath.mkdirs();
             }
 
-            File file = new File(storagePath, fileName);
+            File file = new File(storagePath, this.fileName);
 
             /**
              * Then I create the file.
@@ -106,15 +109,15 @@ public class AndroidPlatformTextFile implements PlatformTextFile {
                 outputStream.close();
             }
         } catch (Exception e) {
-            System.err.println("Error trying to persist file: " + e.getMessage());
+
             e.printStackTrace();
-            throw new CantPersistFileException(this.fileName);
+            throw new CantPersistFileException("Error trying to persist file: " +this.fileName);
         }
     }
 
 
     @Override
-    public void loadFromMedia() throws CantPersistFileException {
+    public void loadFromMedia() throws CantLoadFileException {
 
         try {
             /**
@@ -130,7 +133,7 @@ public class AndroidPlatformTextFile implements PlatformTextFile {
              * Get the file handle.
              */
 
-            File file = new File(path +"/"+ this.directoryName, this.fileName);
+            File file = new File(path +"/"+ this.directoryName,this.fileName);
             InputStream inputStream ;
             inputStream =  new BufferedInputStream(new FileInputStream(file));
             InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
@@ -151,9 +154,12 @@ public class AndroidPlatformTextFile implements PlatformTextFile {
             inputStream.close();
 
         } catch (Exception e) {
-            System.err.println("Error trying to persist file: " + e.getMessage());
             e.printStackTrace();
-            throw new CantPersistFileException(this.fileName);
+            throw new CantLoadFileException("Error trying to load file: " + this.fileName);
         }
     }
+
+
+
+
 }

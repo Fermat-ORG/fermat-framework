@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_core.layer._11_world.blockchain_info.developer.bitdubai.version_1.structure;
 
+
 import com.bitdubai.fermat_api.layer._11_world.CryptoWallet;
 import com.bitdubai.fermat_api.layer._11_world.blockchain_info.DealsWithBlockchainInfoApi;
 import com.bitdubai.fermat_api.layer._11_world.blockchain_info.exceptions.CantStartBlockchainInfoWallet;
@@ -21,6 +22,7 @@ import com.bitdubai.fermat_api.layer._2_os.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer._2_os.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer._2_os.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer._2_os.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_core.layer._11_world.blockchain_info.developer.bitdubai.version_1.structure.api_v_1.APIException;
@@ -247,7 +249,15 @@ public class BlockchainInfoWallet implements CryptoWallet ,DealsWithPluginFileSy
             System.err.println("CantNotGetWalletBalance: " + e.getMessage());
             e.printStackTrace();
            // throw new CantLoadFileException("wallet file");
-            }
+        }  catch (CantCreateFileException cantCreateFileException) {
+            /**
+             * This really should never happen. But if it does...
+             */
+            System.err.println("CantCreateFileException: " + cantCreateFileException.getMessage());
+            cantCreateFileException.printStackTrace();
+
+        }
+
         return balance;
     }
 
@@ -273,7 +283,14 @@ public class BlockchainInfoWallet implements CryptoWallet ,DealsWithPluginFileSy
             e.printStackTrace();}
         catch (FileNotFoundException e) {
             e.printStackTrace();}
+          catch (CantCreateFileException cantCreateFileException) {
+        /**
+         * This really should never happen. But if it does...
+         */
+        System.err.println("CantCreateFileException: " + cantCreateFileException.getMessage());
+        cantCreateFileException.printStackTrace();
 
+        }
         return addressBalance;
     }
 
@@ -295,7 +312,15 @@ public class BlockchainInfoWallet implements CryptoWallet ,DealsWithPluginFileSy
         } catch (IOException|APIException e) {
             e.printStackTrace();}
         catch (FileNotFoundException e) {
-            e.printStackTrace();}
+            e.printStackTrace(); }
+        catch (CantCreateFileException cantCreateFileException) {
+            /**
+             * This really should never happen. But if it does...
+             */
+            System.err.println("CantCreateFileException: " + cantCreateFileException.getMessage());
+            cantCreateFileException.printStackTrace();
+
+        }
 
 
     }

@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_core.layer._11_world.blockchain_info.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantInitializePluginsManagerException;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
@@ -16,6 +17,7 @@ import com.bitdubai.fermat_api.layer._2_os.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer._2_os.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer._2_os.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer._2_os.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantPersistFileException;
 
@@ -97,9 +99,16 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Servic
             
             try{
 
-
+            try{
                  walletIdsFile = pluginFileSystem.getTextFile(pluginId, pluginId.toString(), WALLET_IDS_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-
+            }  catch (CantCreateFileException cantCreateFileException) {
+                /**
+                 * This really should never happen. But if it does...
+                 */
+                System.err.println("CantCreateFileException: " + cantCreateFileException.getMessage());
+                cantCreateFileException.printStackTrace();
+                throw new CantStartPluginException(Plugins.BITDUBAI_BLOCKCHAIN_INFO_WORLD);
+            }
                 try {
                     walletIdsFile.loadFromMedia();
                     String[] stringWalletIds = walletIdsFile.getContent().split(";");
@@ -152,7 +161,16 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Servic
                  * with this file not existing again.
                  * * * * *
                  */
-                walletIdsFile = pluginFileSystem.createTextFile(pluginId, pluginId.toString(), WALLET_IDS_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                try{
+                    walletIdsFile = pluginFileSystem.createTextFile(pluginId, pluginId.toString(), WALLET_IDS_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                }  catch (CantCreateFileException cantCreateFileException) {
+                    /**
+                     * This really should never happen. But if it does...
+                     */
+                    System.err.println("CantCreateFileException: " + cantCreateFileException.getMessage());
+                    cantCreateFileException.printStackTrace();
+                    throw new CantStartPluginException(Plugins.BITDUBAI_BLOCKCHAIN_INFO_WORLD);
+                }
 
                 try {
                     walletIdsFile.persistToMedia();
@@ -241,7 +259,7 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Servic
                 String walletLink = response.getLink();
                 //save wallet guid, address and link in a binary file on disk
 
-                layoutFile = pluginFileSystem.createTextFile(pluginId, pluginId.toString(), walletId.toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                    layoutFile = pluginFileSystem.createTextFile(pluginId, pluginId.toString(), walletId.toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
 
                 layoutFile.setContent(walletAddress + ";" + walletGuid + ";" + walletLink + ";" + this.privateKey + ";" + this.password);
                 layoutFile.persistToMedia();
@@ -263,6 +281,13 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Servic
                     e.printStackTrace();
                     throw new CantCreateCryptoWalletException();
 
+            }  catch (CantCreateFileException cantCreateFileException) {
+                /**
+                 * This really should never happen. But if it does...
+                 */
+                System.err.println("CantCreateFileException: " + cantCreateFileException.getMessage());
+                cantCreateFileException.printStackTrace();
+                throw new CantCreateCryptoWalletException();
             }
 
         }

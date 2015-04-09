@@ -3,10 +3,12 @@ package com.bitdubai.fermat_core;
 import com.bitdubai.fermat_api.CantInitializePluginsManagerException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.PluginNotRecognizedException;
+import com.bitdubai.fermat_api.layer._12_middleware.discount_wallet.exceptions.CantCreateWalletException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer._2_os.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer._2_os.file_system.PlatformTextFile;
 import com.bitdubai.fermat_api.layer._2_os.file_system.PlatformFileSystem;
+import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_core.layer._13_transaction.incoming_crypto.developer.bitdubai.version_1.IncomingCryptoTransactionPluginRoot;
@@ -60,8 +62,17 @@ public class PluginsIdentityManager {
             /**
              * First I get the file where all ids are stored. 
              */
+            try{
+                platformTextFile =  platformFileSystem.getFile("Platform", "PluginsIds", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
 
-            platformTextFile =  platformFileSystem.getFile("Platform", "PluginsIds", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            }  catch (CantCreateFileException cantCreateFileException) {
+                /**
+                 * This really should never happen. But if it does...
+                 */
+                System.err.println("CantCreateFileException: " + cantCreateFileException.getMessage());
+                cantCreateFileException.printStackTrace();
+                throw new CantInitializePluginsManagerException();
+               }
 
             try
             {
@@ -143,8 +154,16 @@ public class PluginsIdentityManager {
         }
         catch (FileNotFoundException fileNotFoundException)
         {
-            platformTextFile =  platformFileSystem.createFile("Platform", "PluginsIds", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-
+            try{
+                    platformTextFile =  platformFileSystem.createFile("Platform", "PluginsIds", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            }  catch (CantCreateFileException cantCreateFileException) {
+                /**
+                 * This really should never happen. But if it does...
+                 */
+                System.err.println("CantCreateFileException: " + cantCreateFileException.getMessage());
+                cantCreateFileException.printStackTrace();
+                throw new CantInitializePluginsManagerException();
+            }
 
             for (int arrayPosition = 0; arrayPosition < AMOUNT_OF_KNOWN_PLUGINS; arrayPosition++) {
 

@@ -2,9 +2,18 @@ package com.bitdubai.android.layer._2_os.android.developer.bitdubai.version_1.fi
 
 import android.content.Context;
 
+import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer._2_os.file_system.*;
+import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Created by ciencias on 02.02.15.
@@ -15,27 +24,37 @@ import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.FileNotFoundEx
  */
 
 public class AndroidPlatformFileSystem implements PlatformFileSystem {
+
+
     /**
      * PlatformFileSystem interface member variables.
      */
 
     Context context;
 
+
     /**
      * PlatformFileSystem interface implementation.
      */
 
     @Override
-    public PlatformTextFile getFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException {
+    public PlatformTextFile getFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException,CantCreateFileException {
+        AndroidPlatformTextFile newFile =null;
+        try {
 
-        AndroidPlatformTextFile newFile = new AndroidPlatformTextFile( this.context, directoryName,fileName, privacyLevel, lifeSpan);
+            newFile = new AndroidPlatformTextFile( this.context, directoryName,hashFileName(fileName), privacyLevel, lifeSpan);
+
+        }
+        catch (NoSuchAlgorithmException e){
+            e.printStackTrace();
+            throw new CantCreateFileException();
+        }
 
         try {
             newFile.loadFromMedia();
             return newFile;
         }
-        catch (CantPersistFileException e){
-            System.err.println("GetFailedException: " + e.getMessage());
+        catch (CantLoadFileException e){
             e.printStackTrace();
             throw new FileNotFoundException();
         }
@@ -43,8 +62,14 @@ public class AndroidPlatformFileSystem implements PlatformFileSystem {
     }
 
     @Override
-    public PlatformTextFile createFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) {
-        return new AndroidPlatformTextFile( this.context,directoryName,fileName, privacyLevel, lifeSpan);
+    public PlatformTextFile createFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws  CantCreateFileException{
+        try {
+        return new AndroidPlatformTextFile( this.context,directoryName,hashFileName(fileName), privacyLevel, lifeSpan);
+        }
+        catch (NoSuchAlgorithmException e){
+            e.printStackTrace();
+            throw new CantCreateFileException();
+        }
     }
 
     @Override
@@ -52,5 +77,22 @@ public class AndroidPlatformFileSystem implements PlatformFileSystem {
 
         this.context = (Context)context;
 
+    }
+
+    /**
+     *
+     * Hash the file name using the algorithm SHA 256
+     */
+
+    private String hashFileName(String fileName) throws NoSuchAlgorithmException {
+        String encryptedString = fileName;
+      /*  try{
+            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+            messageDigest.update(fileName.getBytes());
+            encryptedString = new String(messageDigest.digest());
+        }catch(NoSuchAlgorithmException e){
+            throw e;
+        }*/
+        return encryptedString;
     }
 }
