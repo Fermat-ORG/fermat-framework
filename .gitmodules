@@ -112,3 +112,6 @@
 [submodule "fermat-dmp-plugin-transaction-incoming-device-user-bitdubai"]
 	path = fermat-dmp-plugin-transaction-incoming-device-user-bitdubai
 	url = https://github.com/bitDubai/fermat-dmp-plugin-transaction-incoming-device-user-bitdubai.git
+[submodule "fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai"]
+	path = fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai.git
