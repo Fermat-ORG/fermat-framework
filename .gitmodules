@@ -100,3 +100,6 @@
 [submodule "fermat-dmp-plugin-world-coinapult-bitdubai"]
 	path = fermat-dmp-plugin-world-coinapult-bitdubai
 	url = https://github.com/bitDubai/fermat-dmp-plugin-world-coinapult-bitdubai.git
+[submodule "fermat-dmp-plugin-world-crypto-index-bitdubai"]
+	path = fermat-dmp-plugin-world-crypto-index-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-plugin-world-crypto-index-bitdubai.git
