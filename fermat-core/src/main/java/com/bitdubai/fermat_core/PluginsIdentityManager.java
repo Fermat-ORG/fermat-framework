@@ -3,7 +3,6 @@ package com.bitdubai.fermat_core;
 import com.bitdubai.fermat_api.CantInitializePluginsManagerException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.PluginNotRecognizedException;
-import com.bitdubai.fermat_api.layer._12_middleware.discount_wallet.exceptions.CantCreateWalletException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer._2_os.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer._2_os.file_system.PlatformTextFile;
@@ -25,7 +24,7 @@ import com.bitdubai.fermat_core.layer._13_transaction.outgoing_device_user.devel
 import com.bitdubai.fermat_core.layer._13_transaction.outgoing_extra_user.developer.bitdubai.version_1.OutgoingExtraUserTransactionPluginRoot;
 import com.bitdubai.fermat_core.layer._13_transaction.outgoing_intra_user.developer.bitdubai.version_1.OutgoingIntraUserTransactionPluginRoot;
 import com.bitdubai.fermat_core.layer._11_world.coinapult.developer.bitdubai.version_1.CoinapultWorldPluginRoot;
-import com.bitdubai.fermat_core.layer._11_world.blockchain_info.developer.bitdubai.version_1.BlockchainInfoWorldPluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer._11_world.blockchain_info.developer.bitdubai.version_1.BlockchainInfoWorldPluginRoot;
 import com.bitdubai.fermat_core.layer._11_world.crypto_index.developer.bitdubai.version_1.CryptoIndexWorldPluginRoot;
 import com.bitdubai.fermat_core.layer._11_world.shape_shift.developer.bitdubai.version_1.ShapeShiftWorldPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._8_crypto.address_book.developer.bitdubai.version_1.AddressBookCryptoPluginRoot;
