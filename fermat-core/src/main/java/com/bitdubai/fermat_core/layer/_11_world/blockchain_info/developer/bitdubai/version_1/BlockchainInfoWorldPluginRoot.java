@@ -1,10 +1,12 @@
 package com.bitdubai.fermat_core.layer._11_world.blockchain_info.developer.bitdubai.version_1;
 
-import com.bitdubai.fermat_api.CantInitializePluginsManagerException;
+
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer._11_world.Agent;
 import com.bitdubai.fermat_api.layer._11_world.blockchain_info.exceptions.CantStartBlockchainInfoWallet;
+import com.bitdubai.fermat_api.layer._11_world.blockchain_info.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
 
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
@@ -24,6 +26,7 @@ import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantPersistFil
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventHandler;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventListener;
@@ -31,11 +34,14 @@ import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventMana
 import com.bitdubai.fermat_api.layer._11_world.CantCreateCryptoWalletException;
 
 import com.bitdubai.fermat_api.layer._11_world.World;
+import com.bitdubai.fermat_core.layer._11_world.blockchain_info.developer.bitdubai.version_1.structure.BlockchainInfoIncomingCryptoMonitorAgent;
 import com.bitdubai.fermat_core.layer._11_world.blockchain_info.developer.bitdubai.version_1.structure.api_v_1.APIException;
 import com.bitdubai.fermat_core.layer._11_world.blockchain_info.developer.bitdubai.version_1.structure.api_v_1.createwallet.CreateWallet;
 import com.bitdubai.fermat_core.layer._11_world.blockchain_info.developer.bitdubai.version_1.structure.api_v_1.createwallet.CreateWalletResponse;
 import com.bitdubai.fermat_api.layer._11_world.CryptoWalletManager;
 import  com.bitdubai.fermat_core.layer._11_world.blockchain_info.developer.bitdubai.version_1.structure.BlockchainInfoWallet;
+
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -52,7 +58,7 @@ import java.util.UUID;
  */
 
 
-public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Service, World,DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, Plugin{
+public class BlockchainInfoWorldPluginRoot implements Service,CryptoWalletManager, World,DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, Plugin{
 
 
         /**
@@ -60,6 +66,8 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Servic
          */
 
         ServiceStatus serviceStatus = ServiceStatus.CREATED;
+
+
         List<EventListener> listenersAdded = new ArrayList<>();
 
         /**
@@ -79,6 +87,11 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Servic
          * DealsWithEvents Interface member variables.
          */
         EventManager eventManager;
+
+        /**
+         * DealsWithEvents Interface member variables.
+         */
+        ErrorManager errorManager;
 
         /**
          * Plugin Interface member variables.
@@ -101,15 +114,15 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Servic
 
             try{
                  walletIdsFile = pluginFileSystem.getTextFile(pluginId, pluginId.toString(), WALLET_IDS_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-            }  catch (CantCreateFileException cantCreateFileException) {
+            }
+            catch (CantCreateFileException cantCreateFileException) {
                 /**
                  * This really should never happen. But if it does...
                  */
-                System.err.println("CantCreateFileException: " + cantCreateFileException.getMessage());
-                cantCreateFileException.printStackTrace();
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BLOCKCHAIN_INFO_WORLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateFileException);
                 throw new CantStartPluginException(Plugins.BITDUBAI_BLOCKCHAIN_INFO_WORLD);
             }
-                try {
+             try {
                     walletIdsFile.loadFromMedia();
                     String[] stringWalletIds = walletIdsFile.getContent().split(";");
 
@@ -119,7 +132,7 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Servic
                      */
                     for (int j = 0; j < stringWalletIds.length -1; j++) {
 
-                        BlockchainInfoWallet blockchainInfoWallet = new BlockchainInfoWallet(this.pluginId, UUID.fromString(stringWalletIds[j].toString()));
+                        BlockchainInfoWallet blockchainInfoWallet = new BlockchainInfoWallet(this.pluginId, UUID.fromString(stringWalletIds[j].toString()), this.errorManager);
 
                         blockchainInfoWallet.setPluginFileSystem(this.pluginFileSystem);
                         blockchainInfoWallet.setPluginDatabaseSystem(this.pluginDatabaseSystem);
@@ -136,19 +149,17 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Servic
                         }
 
 
+
                     }
                 }
-                catch (CantLoadFileException CantLoadFileException) {
+                catch (CantLoadFileException cantLoadFileException) {
 
                     /**
                      * In this situation we might have a corrupted file we can not read. For now the only thing I can do is
                      * to prevent the plug-in from running.
-                     *
-                     * In the future there should be implemented a method to deal with this situation.
-                     * * * *
+
                      */
-                    System.err.println("CantLoadFileException: " + CantLoadFileException.getMessage());
-                    CantLoadFileException.printStackTrace();
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BLOCKCHAIN_INFO_WORLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantLoadFileException);
                     throw new CantStartPluginException(Plugins.BITDUBAI_BLOCKCHAIN_INFO_WORLD);
                 }
 
@@ -167,8 +178,7 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Servic
                     /**
                      * This really should never happen. But if it does...
                      */
-                    System.err.println("CantCreateFileException: " + cantCreateFileException.getMessage());
-                    cantCreateFileException.printStackTrace();
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BLOCKCHAIN_INFO_WORLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateFileException);
                     throw new CantStartPluginException(Plugins.BITDUBAI_BLOCKCHAIN_INFO_WORLD);
                 }
 
@@ -180,8 +190,7 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Servic
                     /**
                      * If I can not save this file, then this plugin shouldn't be running at all.
                      */
-                    System.err.println("CantPersistFileException: " + cantPersistFileException.getMessage());
-                    cantPersistFileException.printStackTrace();
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BLOCKCHAIN_INFO_WORLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantPersistFileException);
                     throw new CantStartPluginException(Plugins.BITDUBAI_DISCOUNT_WALLET_MIDDLEWARE);
                 }
             }
@@ -268,25 +277,22 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Servic
                 /**
                  * If I can not create the  the new wallet in BlockChain Api , then this method fails.
                  */
-                System.err.println("CantCreateBlockChainWalletException: " + e.getMessage());
-                e.printStackTrace();
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BLOCKCHAIN_INFO_WORLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                 throw new CantCreateCryptoWalletException();
             }
-            catch (CantPersistFileException e) {
+            catch (CantPersistFileException cantPersistFileException) {
 
                     /**
                      * If I can not save the id of the new wallet created, then this method fails.
                      */
-                    System.err.println("CantPersistFileException: " + e.getMessage());
-                    e.printStackTrace();
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BLOCKCHAIN_INFO_WORLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantPersistFileException);
                     throw new CantCreateCryptoWalletException();
 
             }  catch (CantCreateFileException cantCreateFileException) {
                 /**
                  * This really should never happen. But if it does...
                  */
-                System.err.println("CantCreateFileException: " + cantCreateFileException.getMessage());
-                cantCreateFileException.printStackTrace();
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BLOCKCHAIN_INFO_WORLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateFileException);
                 throw new CantCreateCryptoWalletException();
             }
 
@@ -330,7 +336,7 @@ public class BlockchainInfoWorldPluginRoot implements CryptoWalletManager,Servic
 
         @Override
         public void setErrorManager(ErrorManager errorManager) {
-
+                this.errorManager=errorManager;
         }
 
         /**

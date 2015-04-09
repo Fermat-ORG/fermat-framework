@@ -1,12 +1,16 @@
 package com.bitdubai.fermat_core.layer._11_world.blockchain_info.developer.bitdubai.version_1.structure;
 
 
+import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.layer._11_world.Agent;
 import com.bitdubai.fermat_api.layer._11_world.CryptoWallet;
 import com.bitdubai.fermat_api.layer._11_world.blockchain_info.DealsWithBlockchainInfoApi;
+import com.bitdubai.fermat_api.layer._11_world.blockchain_info.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer._11_world.blockchain_info.exceptions.CantStartBlockchainInfoWallet;
 
 import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
 
+import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer._1_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer._2_os.database_system.PluginDatabaseSystem;
@@ -25,6 +29,9 @@ import com.bitdubai.fermat_api.layer._2_os.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_core.layer._11_world.blockchain_info.developer.bitdubai.version_1.structure.api_v_1.APIException;
 import com.bitdubai.fermat_core.layer._11_world.blockchain_info.developer.bitdubai.version_1.structure.api_v_1.wallet.Address;
 import com.bitdubai.fermat_core.layer._11_world.blockchain_info.developer.bitdubai.version_1.structure.api_v_1.wallet.PaymentResponse;
@@ -39,6 +46,12 @@ import com.bitdubai.fermat_api.layer._2_os.database_system.*;
  */
 public class BlockchainInfoWallet implements CryptoWallet ,DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem, DealsWithBlockchainInfoApi {
 
+    Agent monitor;
+
+    /**
+     * DealsWithEvents Interface member variables.
+     */
+    ErrorManager errorManager;
     /**
      * UsesFileSystem Interface member variable
      */
@@ -60,10 +73,11 @@ public class BlockchainInfoWallet implements CryptoWallet ,DealsWithPluginFileSy
      * Constructor.
      */
 
-    public BlockchainInfoWallet( UUID pluginId,UUID walletId){
+    public BlockchainInfoWallet( UUID pluginId,UUID walletId, ErrorManager errorManager){
 
         this.pluginId = pluginId;
         this.walletId = walletId;
+        this.errorManager = errorManager;
 
     }
 
@@ -119,6 +133,9 @@ public class BlockchainInfoWallet implements CryptoWallet ,DealsWithPluginFileSy
 
     @Override
     public void start() throws  CantStartBlockchainInfoWallet{
+
+
+
         /**
          * Will try to open the wallets' database.
          */
@@ -207,6 +224,19 @@ public class BlockchainInfoWallet implements CryptoWallet ,DealsWithPluginFileSy
             throw new CantStartBlockchainInfoWallet();
         }
 
+        /**
+         * I will start the Monitor Agent.
+         */
+        this.monitor = new BlockchainInfoIncomingCryptoMonitorAgent();
+        ((DealsWithErrors) this.monitor).setErrorManager(this.errorManager);
+
+        try {
+            this.monitor.start();
+        } catch (CantStartAgentException cantStartAgentException) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BLOCKCHAIN_INFO_WORLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantStartAgentException);
+            throw new CantStartBlockchainInfoWallet();
+        }
+        ((DealsWithPluginDatabaseSystem) this.monitor).setPluginDatabaseSystem(this.pluginDatabaseSystem);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.bitdubai.android.layer._2_os.android.developer.bitdubai.version_1.file_system;
 
 import android.content.Context;
+import android.util.Base64;
 
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer._2_os.file_system.*;
@@ -86,13 +87,21 @@ public class AndroidPlatformFileSystem implements PlatformFileSystem {
 
     private String hashFileName(String fileName) throws NoSuchAlgorithmException {
         String encryptedString = fileName;
-      /*  try{
-            MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
-            messageDigest.update(fileName.getBytes());
-            encryptedString = new String(messageDigest.digest());
+        try{
+           // MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+           // messageDigest.update(fileName.getBytes());
+           // encryptedString = new String(messageDigest.digest());
+
+            MessageDigest md = MessageDigest.getInstance("SHA-256");
+            md.update(fileName.getBytes());
+            byte[] digest = md.digest();
+            byte[] encoded = Base64.encode(digest,1);
+
+            encryptedString = new String(encoded);
+
         }catch(NoSuchAlgorithmException e){
             throw e;
-        }*/
-        return encryptedString;
+        }
+        return encryptedString.replace("/","");
     }
 }
