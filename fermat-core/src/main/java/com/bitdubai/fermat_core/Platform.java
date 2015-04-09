@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer._1_definition.enums.PlatformComponents;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer._1_definition.event.DealWithEventMonitor;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.DealsWithEvents;
@@ -459,6 +460,7 @@ public class Platform  {
         ((DealsWithPluginFileSystem) blockchainInfoWorld).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithPluginDatabaseSystem) blockchainInfoWorld).setPluginDatabaseSystem(os.getPluginDatabaseSystem());
         ((DealsWithEvents) blockchainInfoWorld).setEventManager((EventManager) eventManager);
+        ((DealsWithErrors) blockchainInfoWorld).setErrorManager((ErrorManager) errorManager);
 
         corePlatformContext.addPlugin(blockchainInfoWorld, Plugins.BITDUBAI_BLOCKCHAIN_INFO_WORLD);
 
@@ -898,6 +900,7 @@ public class Platform  {
 
         ((DealsWithPluginFileSystem) walletResourcesNetworkService).setPluginFileSystem(os.getPlugInFileSystem());
         ((DealsWithEvents) walletResourcesNetworkService).setEventManager((EventManager) eventManager);
+        ((DealsWithErrors) walletResourcesNetworkService).setErrorManager((ErrorManager) errorManager);
 
         corePlatformContext.addPlugin(walletResourcesNetworkService, Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE);
 
