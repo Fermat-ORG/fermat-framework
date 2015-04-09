@@ -3,7 +3,7 @@ package com.bitdubai.fermat_core.layer._11_world.coinapult;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer._14_module.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer._11_world.WorldSubsystem;
-import com.bitdubai.fermat_core.layer._11_world.coinapult.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_dmp_plugin.layer._11_world.coinapult.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by loui on 12/03/15.

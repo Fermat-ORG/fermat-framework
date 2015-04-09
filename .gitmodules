@@ -94,6 +94,9 @@
 [submodule "fermat-p2p-plugin-communication-cloud-bitdubai"]
 	path = fermat-p2p-plugin-communication-cloud-bitdubai
 	url = https://github.com/bitDubai/fermat-p2p-plugin-communication-cloud-bitdubai.git
-[submodule "fermat-dmp-plugin-wolrd-blockchain-info-bitdubai"]
-	path = fermat-dmp-plugin-wolrd-blockchain-info-bitdubai
-	url = https://github.com/bitDubai/fermat-dmp-plugin-wolrd-blockchain-info-bitdubai.git
+[submodule "fermat-dmp-plugin-world-blockchain-info-bitdubai"]
+	path = fermat-dmp-plugin-world-blockchain-info-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-plugin-world-blockchain-info-bitdubai.git
+[submodule "fermat-dmp-plugin-world-coinapult-bitdubai"]
+	path = fermat-dmp-plugin-world-coinapult-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-plugin-world-coinapult-bitdubai.git
