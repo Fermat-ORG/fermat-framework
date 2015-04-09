@@ -41,5 +41,6 @@ dependencies {
     compile project(':fermat-dmp-plugin-world-blockchain-info-bitdubai')
     compile project(':fermat-dmp-plugin-world-coinapult-bitdubai')
     compile project(':fermat-dmp-plugin-world-crypto-index-bitdubai')
+    compile project(':fermat-dmp-plugin-world-shape-shift-bitdubai')
 }
 

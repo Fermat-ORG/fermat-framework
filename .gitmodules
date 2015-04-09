@@ -103,3 +103,6 @@
 [submodule "fermat-dmp-plugin-world-crypto-index-bitdubai"]
 	path = fermat-dmp-plugin-world-crypto-index-bitdubai
 	url = https://github.com/bitDubai/fermat-dmp-plugin-world-crypto-index-bitdubai.git
+[submodule "fermat-dmp-plugin-world-shape-shift-bitdubai"]
+	path = fermat-dmp-plugin-world-shape-shift-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-plugin-world-shape-shift-bitdubai.git
