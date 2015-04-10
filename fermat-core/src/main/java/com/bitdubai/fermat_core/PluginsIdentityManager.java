@@ -21,7 +21,7 @@ import com.bitdubai.fermat_dmp_plugin.layer._13_transaction.incoming_extra_user.
 import com.bitdubai.fermat_dmp_plugin.layer._13_transaction.incoming_intra_user.developer.bitdubai.version_1.IncomingIntraUserTransactionPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._13_transaction.inter_wallet.developer.bitdubai.version_1.InterWalletTransactionPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._13_transaction.outgoing_device_user.developer.bitsubai.version_1.OutgoingDeviceUserTransactionPluginRoot;
-import com.bitdubai.fermat_core.layer._13_transaction.outgoing_extra_user.developer.bitdubai.version_1.OutgoingExtraUserTransactionPluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer._13_transaction.outgoing_extra_user.developer.bitdubai.version_1.OutgoingExtraUserTransactionPluginRoot;
 import com.bitdubai.fermat_core.layer._13_transaction.outgoing_intra_user.developer.bitdubai.version_1.OutgoingIntraUserTransactionPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._11_world.coinapult.developer.bitdubai.version_1.CoinapultWorldPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._11_world.blockchain_info.developer.bitdubai.version_1.BlockchainInfoWorldPluginRoot;

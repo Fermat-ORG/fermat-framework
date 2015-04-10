@@ -30,6 +30,7 @@
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-transaction-inter-wallet-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-transaction-outgoing-device-user-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-world-blockchain-info-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-world-coinapult-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-world-crypto-index-bitdubai" vcs="Git" />
