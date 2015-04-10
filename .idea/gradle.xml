@@ -9,9 +9,7 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/android" />
-            <option value="$PROJECT_DIR$/fermat-api" />
-            <option value="$PROJECT_DIR$/fermat-core" />
+            <option value="$PROJECT_DIR$/fermat-dmp-android-core" />
             <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-manager-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-store-bitdubai" />
@@ -54,10 +52,11 @@
             <option value="$PROJECT_DIR$/fermat-pip-addon-user-device-user-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-addon-user-extra-user-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-addon-user-intra-user-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-pip-api" />
+            <option value="$PROJECT_DIR$/fermat-pip-core" />
           </set>
         </option>
       </GradleProjectSettings>
     </option>
   </component>
 </project>
-

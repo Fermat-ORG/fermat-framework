@@ -96,16 +96,16 @@
 	url = https://github.com/bitDubai/fermat-p2p-plugin-communication-cloud-bitdubai.git
 [submodule "fermat-dmp-plugin-world-blockchain-info-bitdubai"]
 	path = fermat-dmp-plugin-world-blockchain-info-bitdubai
-	url = https://github.com/bitDubai/fermat-dmp-plugin-world-blockchain-info-bitdubai.git
+	url = https://github.com/bitDubai/fermat-dmp-plugin-world-blockchain-info-bitdubai
 [submodule "fermat-dmp-plugin-world-coinapult-bitdubai"]
 	path = fermat-dmp-plugin-world-coinapult-bitdubai
-	url = https://github.com/bitDubai/fermat-dmp-plugin-world-coinapult-bitdubai.git
+	url = https://github.com/bitDubai/fermat-dmp-plugin-world-coinapult-bitdubai
 [submodule "fermat-dmp-plugin-world-crypto-index-bitdubai"]
 	path = fermat-dmp-plugin-world-crypto-index-bitdubai
 	url = https://github.com/bitDubai/fermat-dmp-plugin-world-crypto-index-bitdubai.git
 [submodule "fermat-dmp-plugin-world-shape-shift-bitdubai"]
 	path = fermat-dmp-plugin-world-shape-shift-bitdubai
-	url = https://github.com/bitDubai/fermat-dmp-plugin-world-shape-shift-bitdubai.git
+	url = https://github.com/bitDubai/fermat-dmp-plugin-world-shape-shift-bitdubai
 [submodule "fermat-dmp-plugin-transaction-incoming-crypto-bitdubai"]
 	path = fermat-dmp-plugin-transaction-incoming-crypto-bitdubai
 	url = https://github.com/bitDubai/fermat-dmp-plugin-transaction-incoming-crypto-bitdubai.git
@@ -114,13 +114,13 @@
 	url = https://github.com/bitDubai/fermat-dmp-plugin-transaction-incoming-device-user-bitdubai.git
 [submodule "fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai"]
 	path = fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai
-	url = https://github.com/bitDubai/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai.git
+	url = https://github.com/bitDubai/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai
 [submodule "fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai"]
 	path = fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai
-	url = https://github.com/bitDubai/fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai.git
+	url = https://github.com/bitDubai/fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai
 [submodule "fermat-dmp-plugin-transaction-inter-wallet-bitdubai"]
 	path = fermat-dmp-plugin-transaction-inter-wallet-bitdubai
-	url = https://github.com/bitDubai/fermat-dmp-plugin-transaction-inter-wallet-bitdubai.git
+	url = https://github.com/bitDubai/fermat-dmp-plugin-transaction-inter-wallet-bitdubai
 [submodule "fermat-dmp-plugin-transaction-outgoing-device-user-bitdubai"]
 	path = fermat-dmp-plugin-transaction-outgoing-device-user-bitdubai
 	url = https://github.com/bitDubai/fermat-dmp-plugin-transaction-outgoing-device-user-bitdubai.git

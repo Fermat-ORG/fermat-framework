@@ -10,7 +10,7 @@ repositories {
 dependencies {
     compile 'com.google.code.gson:gson:2.2.4'
     testCompile 'junit:junit:4.11'
-    compile project(':fermat-api')
+    compile project(':fermat-pip-api')
     compile project(':fermat-dmp-plugin-crypto-network-bitcoin-bitdubai')
     compile project(':fermat-dmp-plugin-middleware-app-runtime-bitdubai')
     compile project(':fermat-dmp-plugin-middleware-bank-notes-bitdubai')
