@@ -2,10 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/android/android.iml" filepath="$PROJECT_DIR$/android/android.iml" />
       <module fileurl="file://$PROJECT_DIR$/bitDubai-system.iml" filepath="$PROJECT_DIR$/bitDubai-system.iml" />
       <module fileurl="file://$PROJECT_DIR$/fermat-api/fermat-api.iml" filepath="$PROJECT_DIR$/fermat-api/fermat-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/fermat-core/fermat-core.iml" filepath="$PROJECT_DIR$/fermat-core/fermat-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fermat-dmp-android-core/fermat-dmp-android-core.iml" filepath="$PROJECT_DIR$/fermat-dmp-android-core/fermat-dmp-android-core.iml" />
       <module fileurl="file://$PROJECT_DIR$/fermat-dmp-android-wallet-manager-bitdubai/fermat-dmp-android-wallet-manager-bitdubai.iml" filepath="$PROJECT_DIR$/fermat-dmp-android-wallet-manager-bitdubai/fermat-dmp-android-wallet-manager-bitdubai.iml" />
       <module fileurl="file://$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai/fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai.iml" filepath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai/fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai.iml" />
       <module fileurl="file://$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-kids-boys-bitdubai/fermat-dmp-android-wallet-runtime-kids-boys-bitdubai.iml" filepath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-kids-boys-bitdubai/fermat-dmp-android-wallet-runtime-kids-boys-bitdubai.iml" />
@@ -66,4 +66,3 @@
     </modules>
   </component>
 </project>
-
