@@ -38,6 +38,7 @@
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-transaction-incoming-device-user-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-transaction-inter-wallet-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-world-blockchain-info-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-world-coinapult-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-world-crypto-index-bitdubai" />
