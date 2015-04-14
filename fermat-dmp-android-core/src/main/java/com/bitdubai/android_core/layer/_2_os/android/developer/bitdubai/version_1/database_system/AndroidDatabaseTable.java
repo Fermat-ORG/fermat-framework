@@ -293,7 +293,6 @@ public class AndroidDatabaseTable implements  DatabaseTable {
         {
             for (int i = 0; i < tableOrder.size(); ++i) {
 
-                strOrder += tableOrder.get(i).getColumName();
                 switch (tableOrder.get(i).getDirection()) {
                     case DESCENDING:
                         strOrder +=  tableOrder.get(i).getColumName() + " DESC ";

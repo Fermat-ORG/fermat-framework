@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v4.app.*;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -123,6 +124,8 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             platform = MyApplication.getPlatform();
             // Context context = this.getApplicationContext();
 
+             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
             this.Os = new AndroidOsAddonRoot();
 
             this.Os.setContext(this);
@@ -144,9 +147,8 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
 
             /** Download wallet images **/
-          /*  StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
 
+/*
            try{
                 WalletResourcesManager  walletResourceManger = (WalletResourcesManager)platformContext.getPlugin(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE);
                 walletResourceManger.setwalletType(Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI);

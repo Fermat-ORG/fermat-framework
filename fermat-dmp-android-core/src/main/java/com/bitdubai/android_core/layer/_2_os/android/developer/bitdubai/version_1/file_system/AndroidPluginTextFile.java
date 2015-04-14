@@ -107,7 +107,7 @@ public class AndroidPluginTextFile implements PluginTextFile {
             /**
              * If the file does not exist, we create it here.
              */
-        if(!file.exists()){
+    //    if(!file.exists()){
             OutputStream outputStream;
 
             /**
@@ -121,7 +121,7 @@ public class AndroidPluginTextFile implements PluginTextFile {
             outputStream =  new BufferedOutputStream(new FileOutputStream(file));
             outputStream.write(encryptedContent.getBytes());
             outputStream.close();
-        }
+      //  }
 
 
             
