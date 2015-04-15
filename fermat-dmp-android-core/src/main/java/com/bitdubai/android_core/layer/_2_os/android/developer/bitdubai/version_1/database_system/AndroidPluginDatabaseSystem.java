@@ -41,8 +41,8 @@ public class AndroidPluginDatabaseSystem  implements PluginDatabaseSystem{
 
             return database;
         }
-        catch (NoSuchAlgorithmException e){
-            e.printStackTrace();
+        catch (NoSuchAlgorithmException e)
+        {
             throw new CantOpenDatabaseException();
         }
 
@@ -59,7 +59,6 @@ public class AndroidPluginDatabaseSystem  implements PluginDatabaseSystem{
             return database;
         }
         catch (NoSuchAlgorithmException e){
-            e.printStackTrace();
             throw new CantCreateDatabaseException();
         }
 

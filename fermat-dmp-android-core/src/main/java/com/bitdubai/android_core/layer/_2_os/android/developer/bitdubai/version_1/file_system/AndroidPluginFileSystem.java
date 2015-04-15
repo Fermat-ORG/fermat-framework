@@ -41,7 +41,6 @@ public class AndroidPluginFileSystem implements PluginFileSystem {
              newFile = new AndroidPluginTextFile(ownerId, this.context,directoryName, hashFileName(fileName), privacyLevel, lifeSpan);
         }
         catch (NoSuchAlgorithmException e){
-            e.printStackTrace();
             throw new CantCreateFileException();
         }
         try {
@@ -49,7 +48,6 @@ public class AndroidPluginFileSystem implements PluginFileSystem {
             return newFile;
         }
         catch (CantLoadFileException e){
-            e.printStackTrace();
             throw new FileNotFoundException();
         }
     }
@@ -60,7 +58,6 @@ public class AndroidPluginFileSystem implements PluginFileSystem {
             return new AndroidPluginTextFile(ownerId, this.context, directoryName, hashFileName(fileName), privacyLevel, lifeSpan);
         }
         catch (NoSuchAlgorithmException e){
-            e.printStackTrace();
             throw new CantCreateFileException();
         }
     }
@@ -72,7 +69,6 @@ public class AndroidPluginFileSystem implements PluginFileSystem {
              newFile = new AndroidPluginBinaryFile(ownerId, directoryName, hashFileName(fileName), privacyLevel, lifeSpan);
         }
         catch (NoSuchAlgorithmException e){
-            e.printStackTrace();
             throw new CantCreateFileException();
         }
         try {

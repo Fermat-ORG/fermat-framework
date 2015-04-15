@@ -38,7 +38,6 @@ public class AndroidPlatformDatabaseSystem implements PlatformDatabaseSystem {
             return database;
         }
         catch (NoSuchAlgorithmException e){
-            e.printStackTrace();
             throw new CantOpenDatabaseException();
         }
 
@@ -55,7 +54,6 @@ public class AndroidPlatformDatabaseSystem implements PlatformDatabaseSystem {
             return database;
         }
         catch (NoSuchAlgorithmException e){
-            e.printStackTrace();
             throw new CantCreateDatabaseException();
         }
 

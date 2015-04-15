@@ -63,7 +63,6 @@ public class AndroidPlatformFileSystem implements PlatformFileSystem {
         return new AndroidPlatformTextFile( this.context,directoryName,hashFileName(fileName), privacyLevel, lifeSpan);
         }
         catch (NoSuchAlgorithmException e){
-            e.printStackTrace();
             throw new CantCreateFileException();
         }
     }
