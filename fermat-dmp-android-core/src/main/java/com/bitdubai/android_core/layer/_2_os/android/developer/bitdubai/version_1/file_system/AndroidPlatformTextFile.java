@@ -37,7 +37,10 @@ public class AndroidPlatformTextFile implements PlatformTextFile {
     String directoryName;
 
 
-
+    /**
+     * Constructor
+     *
+     */
     public AndroidPlatformTextFile(Context context, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
 
         this.context = context;

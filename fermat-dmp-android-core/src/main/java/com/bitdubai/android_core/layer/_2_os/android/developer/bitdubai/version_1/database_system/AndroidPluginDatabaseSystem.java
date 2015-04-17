@@ -48,6 +48,22 @@ public class AndroidPluginDatabaseSystem  implements PluginDatabaseSystem{
 
     }
 
+    public Database deleteDatabase(UUID ownerId, String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException {
+        try{
+            AndroidDatabase database;
+            String hasDBName = hashDataBaseName(databaseName);
+            database = new AndroidDatabase(this.Context, ownerId, hasDBName);
+            database.openDatabase(hasDBName);
+
+            return database;
+        }
+        catch (NoSuchAlgorithmException e)
+        {
+            throw new CantOpenDatabaseException();
+        }
+
+    }
+
     @Override
     public Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException{
         try{

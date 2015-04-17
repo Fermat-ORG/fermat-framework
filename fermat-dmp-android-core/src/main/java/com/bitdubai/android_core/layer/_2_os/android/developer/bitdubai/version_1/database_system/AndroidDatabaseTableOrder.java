@@ -9,22 +9,33 @@ import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseFilterOrder;
  */
 public class AndroidDatabaseTableOrder implements DataBaseTableOrder {
 
+    /**
+     * DataBaseTableOrder Interface member variables.
+     */
     private String columnName;
     private DatabaseFilterOrder direction;
 
+    /**
+     * DataBaseTableOrder interface implementation.
+     */
+
+    @Override
     public void setColumName (String columnName){
         this.columnName = columnName;
     }
 
+    @Override
     public void setDirection (DatabaseFilterOrder direction){
         this.direction = direction;
     }
 
+    @Override
     public String getColumName (){
 
         return this.columnName;
     }
 
+    @Override
     public DatabaseFilterOrder getDirection (){
         return this.direction;
     }

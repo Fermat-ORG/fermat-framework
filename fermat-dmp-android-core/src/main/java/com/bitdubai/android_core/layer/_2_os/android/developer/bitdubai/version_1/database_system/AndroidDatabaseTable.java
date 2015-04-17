@@ -25,8 +25,11 @@ import java.util.UUID;
  * Created by Natalia on 09/02/2015.
  */
 public class AndroidDatabaseTable implements  DatabaseTable {
-    Context context;
 
+    /**
+     * DatabaseTable Member Variables.
+     */
+    Context context;
     String tableName;
     SQLiteDatabase database;
 
@@ -34,14 +37,22 @@ public class AndroidDatabaseTable implements  DatabaseTable {
     private  List<DatabaseTableRecord> records;
     private  DatabaseTableRecord tableRecord;
     private List<DataBaseTableOrder> tableOrder;
+    private String top = "";
+
+    /**
+     * Constructor
+     */
 
     public AndroidDatabaseTable (Context context,SQLiteDatabase database, String tableName){
         this.tableName = tableName;
         this.context = context;
         this.database = database;
     }
-    
-    
+
+    /**
+     * DatabaseTable interface implementation.
+     */
+
     @Override
     public DatabaseTableColumn newColumn(String name){
         return new AndroidDatabaseTableColumn();
@@ -60,12 +71,14 @@ public class AndroidDatabaseTable implements  DatabaseTable {
 
         return columns;
     }
+
     @Override
     public List<DatabaseTableRecord> getRecords()
     {
         return this.records;
 
     }
+
     @Override
     public DatabaseTableRecord getEmptyRecord()
     {
@@ -73,14 +86,13 @@ public class AndroidDatabaseTable implements  DatabaseTable {
         return record;
     }
 
-
-
     @Override
     public void clearAllFilters()
     {
         this.tableFilter = null;
     }
 
+    @Override
     public List<DatabaseTableFilter> getFilters()
     {
        return this.tableFilter;
@@ -109,24 +121,16 @@ public class AndroidDatabaseTable implements  DatabaseTable {
         }
 
 
-        this.database.update(tableName, recordUpdateList, makeFilter() + makeOrder(), null);
+        this.database.update(tableName, recordUpdateList, makeFilter().replace("WHERE",""), null);
 
        }
-        catch (Exception exception) {
-
-            System.err.println("CantNotUpdateRecord: " + exception.getMessage());
-            exception.printStackTrace();
+        catch (Exception exception)
+        {
             throw new CantUpdateRecord();
         }
     }
 
-
-    public void setContext(Object context) {
-        this.context = (Context) context;
-    }
-
-
-
+    @Override
     public void insertRecord(DatabaseTableRecord record) throws CantInsertRecord {
 
         /**
@@ -134,20 +138,30 @@ public class AndroidDatabaseTable implements  DatabaseTable {
          * and construct de ContentValues array for SqlLite
          */
         try{
+            String strRecords = "";
+            String strValues = "";
             List<DatabaseRecord> records =  record.getValues();
 
             ContentValues initialValues = new ContentValues();
 
             for (int i = 0; i < records.size(); ++i) {
                 initialValues.put(records.get(i).getName(),records.get(i).getValue());
+
+                if(strRecords.length() > 0 )
+                    strRecords +=  ",";
+                strRecords += records.get(i).getName();
+
+                if(strValues.length() > 0 )
+                    strValues +=  ",";
+
+                strValues += "'" + records.get(i).getValue() +"'";
             }
 
-            this.database.insert(tableName, null, initialValues);
+           // this.database.insert(tableName, null, initialValues);
+
+            this.database.execSQL("INSERT INTO " + tableName + "(" + strRecords + ")" + " VALUES (" +  strValues + ")");
         }
         catch (Exception exception) {
-
-            System.err.println("CantNotInsertRecord: " + exception.getMessage());
-            exception.printStackTrace();
             throw new CantInsertRecord();
           }
 
@@ -162,12 +176,14 @@ public class AndroidDatabaseTable implements  DatabaseTable {
 
         List<DatabaseRecord>  recordValues = new ArrayList<DatabaseRecord>();
         this.records = new ArrayList<DatabaseTableRecord>() ;
-
+        String topSentence = "";
         try {
 
 
+        if(this.top != "")
+            topSentence = " LIMIT " + this.top ;
 
-            Cursor c = this.database.rawQuery("SELECT * FROM " + tableName + makeFilter() + makeOrder(), null);
+            Cursor c = this.database.rawQuery("SELECT  * FROM " + tableName + makeFilter() + makeOrder() + topSentence , null);
 
             List<String> columns = getColumns();
 
@@ -192,8 +208,6 @@ public class AndroidDatabaseTable implements  DatabaseTable {
 
 
         } catch (Exception e) {
-            System.err.println("CantNotLoadTableToMemory: " + e.getMessage());
-            e.printStackTrace();
             throw new CantLoadTableToMemory();
         }
 
@@ -201,6 +215,24 @@ public class AndroidDatabaseTable implements  DatabaseTable {
         this.tableRecord.setValues(recordValues);
         this.records.add(this.tableRecord);
 
+    }
+
+    /**
+     * I verify if the table exists
+     *
+     */
+    @Override
+    public boolean isTableExists() {
+
+        Cursor cursor = this.database.rawQuery("select DISTINCT tbl_name from sqlite_master where tbl_name = '"+ this.tableName+"'", null);
+        if(cursor!=null) {
+            if(cursor.getCount()>0) {
+                cursor.close();
+                return true;
+            }
+            cursor.close();
+        }
+        return false;
     }
 
     @Override
@@ -249,6 +281,19 @@ public class AndroidDatabaseTable implements  DatabaseTable {
         this.tableOrder.add(order);
     }
 
+    @Override
+    public void setFilterTop(String top){
+        this.top = top;
+    }
+
+    /**
+     * DatabaseTable interface private void.
+     */
+
+    public void setContext(Object context) {
+        this.context = (Context) context;
+    }
+
     private String makeFilter(){
 
         String  strFilter = "";
@@ -283,7 +328,6 @@ public class AndroidDatabaseTable implements  DatabaseTable {
 
         return strFilter;
     }
-
 
     private String makeOrder(){
 
