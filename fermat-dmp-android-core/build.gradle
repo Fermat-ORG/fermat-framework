@@ -33,7 +33,6 @@ android {
         release {
             apply plugin: 'idea'
             minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }
