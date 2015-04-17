@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-store-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-crypto-address-book-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-crypto-network-bitcoin-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-license-wallet-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-middleware-app-runtime-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-middleware-discount-wallet-bitdubai" />
@@ -60,3 +61,4 @@
     </option>
   </component>
 </project>
+
