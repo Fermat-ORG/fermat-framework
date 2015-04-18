@@ -28,6 +28,10 @@ import java.io.File;
  */
 public class AndroidDatabase  implements Database, DatabaseFactory {
 
+    /**
+     * Database Interface member variables.
+     */
+
     private Context context;
     private String databaseName;
     private UUID ownerId;
@@ -52,94 +56,9 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
     }
 
     /**
-     * AndroidDatabase interface implementation.
-     */
-    public void openDatabase(String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException {
-        
-        /**
-         * First I try to open the database.
-         */
-        try {
-            String databasePath ="";
-            /**
-             * if owner id if null
-             * because it comes from platformdatabase
-             */
-            if(ownerId != null)
-                databasePath =  this.context.getFilesDir().getPath() +  "/" +  ownerId.toString();
-            else
-                databasePath =  this.context.getFilesDir().getPath();
-
-            databasePath += "/" + databaseName.replace("-","") + ".db";
-            File databaseFile = new File(databasePath);
-
-            this.Database = SQLiteDatabase.openDatabase(databasePath,null,0,null);
-
-          }
-        catch (Exception exception) {
-        
-            /**
-             * Probably there is no distinctions between a database that it can not be opened and a one that doesn't not exist.
-             * We will assume that if it didn't open it was because it didn't exist.
-             * * *
-             */
-            System.err.println("Exception: " + exception.getMessage());
-            exception.printStackTrace();
-            throw new DatabaseNotFoundException();
-            //TODO: NATALIA; Revisa si devuelve la misma exception cuando la base de datos no existe que cuando simplement no la puede abrir por otra razon. Y avisame el resultado de la investigacion esta.
-        }
-
-    }
-
-    @Override
-    public void createDatabase(String databaseName) throws CantCreateDatabaseException {
-
-        /**
-         * First I try to open the database.
-         */
-        try {
-            String databasePath ="";
-            /**
-             * if owner id if null
-             * because it comes from platformdatabase
-             */
-           if(ownerId != null)
-             databasePath =  this.context.getFilesDir().getPath() +  "/" +  ownerId.toString();
-           else
-                databasePath =  this.context.getFilesDir().getPath();
-
-            File storagePath = new File(databasePath);
-            if (!storagePath.exists()) {
-                storagePath.mkdirs();
-            }
-
-            /**
-             * Hash data base name
-             */
-
-            databasePath += "/" + databaseName.replace("-","") + ".db";
-            File databaseFile = new File(databasePath);
-            this.Database = SQLiteDatabase.openOrCreateDatabase(databaseFile,null);
-
-
-           }
-        catch (Exception exception) {
-
-
-            /**
-             * Probably there is no distinctions between a database that it can not be opened and a one that doesn't not exist.
-             * We will assume that if it didn't open it was because it didn't exist.
-             * * *
-             */
-            System.err.println("Exception: " + exception.getMessage());
-            exception.printStackTrace();
-            throw new CantCreateDatabaseException();
-        }
-
-    }
-    /**
      * Database interface implementation.
      */
+
     @Override
     public void executeQuery() {
         Database.execSQL(query);
@@ -177,9 +96,9 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
 
             //update
             if(updateTables != null)
-               for (int i = 0; i < updateTables.size(); ++i){
-                   updateTables.get(i).updateRecord(updateRecords.get(i));
-               }
+                for (int i = 0; i < updateTables.size(); ++i){
+                    updateTables.get(i).updateRecord(updateRecords.get(i));
+                }
 
             //insert
             if(insertTables != null)
@@ -194,11 +113,127 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
             /**
              * for error not complete transaction
              */
-            System.err.println("DatabaseTransactionFailedException: " + e.getMessage());
-            e.printStackTrace();
             throw new DatabaseTransactionFailedException();
-        } 
+        }
     }
+
+    public void openDatabase(String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException {
+        
+        /**
+         * First I try to open the database.
+         */
+        try {
+            String databasePath ="";
+            /**
+             * if owner id if null
+             * because it comes from platformdatabase
+             */
+            if(ownerId != null)
+                databasePath =  this.context.getFilesDir().getPath() +  "/databases/" +  ownerId.toString();
+            else
+                databasePath =  this.context.getFilesDir().getPath() + "/databases/";
+
+            databasePath += "/" + databaseName.replace("-","") + ".db";
+            File databaseFile = new File(databasePath);
+
+            this.Database = SQLiteDatabase.openDatabase(databasePath,null,0,null);
+
+          }
+        catch (Exception exception) {
+        
+            /**
+             * Probably there is no distinctions between a database that it can not be opened and a one that doesn't not exist.
+             * We will assume that if it didn't open it was because it didn't exist.
+             * * *
+             */
+
+            throw new DatabaseNotFoundException();
+            //TODO: NATALIA; Revisa si devuelve la misma exception cuando la base de datos no existe que cuando simplement no la puede abrir por otra razon. Y avisame el resultado de la investigacion esta.
+        }
+
+    }
+
+    public void deleteDatabase(String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException {
+
+        /**
+         * First I try to open the database.
+         */
+        try {
+            String databasePath ="";
+            /**
+             * if owner id if null
+             * because it comes from platformdatabase
+             */
+            if(ownerId != null)
+                databasePath =  this.context.getFilesDir().getPath() +  "/databases/" +  ownerId.toString();
+            else
+                databasePath =  this.context.getFilesDir().getPath() + "/databases/";
+
+            databasePath += "/" + databaseName.replace("-","") + ".db";
+            File databaseFile = new File(databasePath);
+
+             SQLiteDatabase.deleteDatabase(databaseFile);
+
+        }
+        catch (Exception exception) {
+
+            /**
+             * Probably there is no distinctions between a database that it can not be opened and a one that doesn't not exist.
+             * We will assume that if it didn't open it was because it didn't exist.
+             * * *
+             */
+
+            throw new DatabaseNotFoundException();
+            //TODO: NATALIA; Revisa si devuelve la misma exception cuando la base de datos no existe que cuando simplement no la puede abrir por otra razon. Y avisame el resultado de la investigacion esta.
+        }
+
+    }
+
+    @Override
+    public void createDatabase(String databaseName) throws CantCreateDatabaseException {
+
+        /**
+         * First I try to open the database.
+         */
+        try {
+            String databasePath ="";
+            /**
+             * if owner id if null
+             * because it comes from platformdatabase
+             */
+           if(ownerId != null)
+             databasePath =  this.context.getFilesDir().getPath() +   "/databases/" +   ownerId.toString();
+           else
+                databasePath =  this.context.getFilesDir().getPath() +  "/databases/" ;
+
+            File storagePath = new File(databasePath);
+            if (!storagePath.exists()) {
+                storagePath.mkdirs();
+            }
+
+            /**
+             * Hash data base name
+             */
+
+            databasePath += "/" + databaseName.replace("-","") + ".db";
+            File databaseFile = new File(databasePath);
+            this.Database = SQLiteDatabase.openOrCreateDatabase(databaseFile,null);
+
+
+           }
+        catch (Exception exception) {
+
+
+            /**
+             * Probably there is no distinctions between a database that it can not be opened and a one that doesn't not exist.
+             * We will assume that if it didn't open it was because it didn't exist.
+             * * *
+             */
+            throw new CantCreateDatabaseException();
+        }
+
+    }
+
 
     /**
      * DatabaseFactory interface implementation.
@@ -244,14 +279,14 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
             /**
              * get index column
              */
-            if(table.getIndex() != "")
-                this.query = " CREATE INDEX IF NOT EXISTS "+ table.getIndex() +"_idx ON " + table.getTableName() + " ("+ table.getIndex() +")";
+            if(table.getIndex() != "") {
+                this.query = " CREATE INDEX IF NOT EXISTS " + table.getIndex() + "_idx ON " + table.getTableName() + " (" + table.getIndex() + ")";
 
-            executeQuery();
+                executeQuery();
+            }
+
         }catch (Exception e)
         {
-            System.err.println("CantCreateTableException: " + e.getMessage());
-            e.printStackTrace();
             throw new CantCreateTableException();
         }
 
@@ -290,9 +325,7 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
 
         }catch (Exception e)
         {
-            System.err.println("CantCreateTableException: " + e.getMessage());
-            e.printStackTrace();
-            throw new CantCreateTableException();
+           throw new CantCreateTableException();
         }
 
 

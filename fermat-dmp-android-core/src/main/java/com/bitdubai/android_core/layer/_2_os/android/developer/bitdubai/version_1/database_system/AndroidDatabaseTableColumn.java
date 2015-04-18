@@ -4,13 +4,20 @@ import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableColumn;
 
 /**
- * Created by toshiba on 10/02/2015.
+ * Created by Natalia on 10/02/2015.
  */
 public class AndroidDatabaseTableColumn implements DatabaseTableColumn {
 
+    /**
+     * DatabaseTableColumn Member Variables.
+     */
     String name ="";
     DatabaseDataType type;
     int dataTypeSize;
+
+    /**
+     * DatabaseTableColumn interface implementation.
+     */
 
     public String getName ()
     {

@@ -46,6 +46,10 @@ public class AndroidPluginTextFile implements PluginTextFile {
     UUID ownerId;
 
 
+    /**
+     * Constructor
+     *
+     */
     public AndroidPluginTextFile(UUID ownerId, Context context, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
 
         this.ownerId = ownerId;

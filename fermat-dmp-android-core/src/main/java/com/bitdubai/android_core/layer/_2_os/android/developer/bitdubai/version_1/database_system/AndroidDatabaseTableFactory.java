@@ -11,13 +11,24 @@ import java.util.ArrayList;
  */
 public class AndroidDatabaseTableFactory implements DatabaseTableFactory {
 
+    /**
+     * DatabaseTableFactory Member Variables.
+     */
+
     private String indexName ="";
     private String tableName;
     ArrayList<DatabaseTableColumn> tableColumns = new ArrayList<DatabaseTableColumn>();
 
+    /**
+     * Constructor
+     */
     public AndroidDatabaseTableFactory (String tableName){
         this.tableName = tableName;
     }
+
+    /**
+     * DatabaseTableFactory interface implementation.
+     */
 
     @Override
     public void addIndex(String index) {

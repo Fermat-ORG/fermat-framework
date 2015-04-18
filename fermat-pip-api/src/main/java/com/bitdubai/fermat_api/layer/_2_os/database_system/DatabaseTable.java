@@ -28,11 +28,15 @@ public interface DatabaseTable {
 
     public void loadToMemory() throws CantLoadTableToMemory;
 
+    public boolean isTableExists();
+
     public void setStringFilter(String columnName, String value,DatabaseFilterType type);
 
     public void setUUIDFilter(String columnName, UUID value,DatabaseFilterType type);
 
     public void setFilterOrder(String columnName, DatabaseFilterOrder direction);
+
+    public void setFilterTop(String top);
 
 
 
