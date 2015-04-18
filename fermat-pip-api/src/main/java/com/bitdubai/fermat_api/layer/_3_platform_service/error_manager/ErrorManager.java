@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_api.layer._3_platform_service.error_manager;
 
-import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Wallets;
+import com.bitdubai.fermat_api.layer._14_middleware.app_runtime.enums.Wallets;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer._1_definition.enums.PlatformComponents;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;

@@ -13,13 +13,12 @@ import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
 import android.os.Handler;
-import android.support.v4.widget.DrawerLayout;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.view.Window;
 import android.widget.TextView;
 
-import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.TitleBar;
+import com.bitdubai.fermat_api.layer._14_middleware.app_runtime.TitleBar;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.fermat_core.Platform;
 

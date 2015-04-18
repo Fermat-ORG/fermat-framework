@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_api.layer._10_network_service.wallet_resources.enums;
 
-import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Wallets;
+import com.bitdubai.fermat_api.layer._14_middleware.app_runtime.enums.Wallets;
 
 /**
  * Created by toshiba on 05/03/2015.

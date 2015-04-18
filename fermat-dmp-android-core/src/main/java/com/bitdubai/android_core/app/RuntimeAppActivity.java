@@ -38,7 +38,7 @@ import com.bitdubai.android_core.app.subapp.wallet_manager.version_1.fragment.Wa
 import com.bitdubai.fermat_api.layer._10_network_service.wallet_resources.WalletResourcesManager;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_dmp_plugin.layer._12_middleware.app_runtime.developer.bitdubai.version_1.structure.RuntimeFragment;
+import com.bitdubai.fermat_dmp_plugin.layer._14_middleware.app_runtime.developer.bitdubai.version_1.structure.RuntimeFragment;
 import com.bitdubai.runtime_wallet.age.kids.boys.fragments.CommunityFragment;
 import com.bitdubai.runtime_wallet.age.kids.boys.fragments.ContactsFragment;
 import com.bitdubai.runtime_wallet.age.kids.boys.fragments.ProfileCardFrontFragment;
@@ -61,11 +61,11 @@ import android.view.ViewGroup;
 
 import com.bitdubai.fermat_api.CantReportCriticalStartingProblem;
 import com.bitdubai.fermat_api.CantStartPlatformException;
-import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.*;
-import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.AppRuntimeManager;
-import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.Fragment;
-import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Activities;
-import com.bitdubai.fermat_api.layer._12_middleware.app_runtime.enums.Fragments;
+import com.bitdubai.fermat_api.layer._14_middleware.app_runtime.*;
+import com.bitdubai.fermat_api.layer._14_middleware.app_runtime.AppRuntimeManager;
+import com.bitdubai.fermat_api.layer._14_middleware.app_runtime.Fragment;
+import com.bitdubai.fermat_api.layer._14_middleware.app_runtime.enums.Activities;
+import com.bitdubai.fermat_api.layer._14_middleware.app_runtime.enums.Fragments;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.smartwallet.R;
@@ -91,7 +91,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
     private PagerSlidingTabStrip tabStrip;
     private App app;
     private SubApp subApp;
-    private com.bitdubai.fermat_api.layer._12_middleware.app_runtime.Activity activity;
+    private com.bitdubai.fermat_api.layer._14_middleware.app_runtime.Activity activity;
     private Map<Fragments, Fragment> fragments;
     private AppRuntimeManager appRuntimeMiddleware;
     private AndroidOsAddonRoot Os;
@@ -487,7 +487,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
 
         Activities activityType = Activities.getValueFromString (activityKey);
-        com.bitdubai.fermat_api.layer._12_middleware.app_runtime.Activity activity;
+        com.bitdubai.fermat_api.layer._14_middleware.app_runtime.Activity activity;
         Intent intent;
 
         switch (activityType) {
