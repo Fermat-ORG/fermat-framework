@@ -133,3 +133,6 @@
 [submodule "fermat-dmp-plugin-license-wallet-bitdubai"]
 	path = fermat-dmp-plugin-license-wallet-bitdubai
 	url = https://github.com/bitDubai/fermat-dmp-plugin-license-wallet-bitdubai.git
+[submodule "fermat-dmp-plugin-world-coinbase-bitdubai"]
+	path = fermat-dmp-plugin-world-coinbase-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-plugin-world-coinbase-bitdubai.git

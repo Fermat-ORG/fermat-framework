@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer._16_module.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer._11_world.WorldSubsystem;
 import com.bitdubai.fermat_core.layer._11_world.coinapult.CoinapultWorldSubsystem;
 import com.bitdubai.fermat_core.layer._11_world.blockchain_info.BlockchainInfoWorldSubsystem;
+import com.bitdubai.fermat_core.layer._11_world.coinbase.CoinbaseWorldSubsystem;
 import com.bitdubai.fermat_core.layer._11_world.crypto_index.CryptoIndexWorldSubsystem;
 import com.bitdubai.fermat_core.layer._11_world.shape_shift.ShapeShiftWorldSubsystem;
 
@@ -18,8 +19,12 @@ public class WorldLayer implements PlatformLayer {
     Plugin mBlockchainInfo;
     Plugin mCoinapult;
     Plugin mShapeShift;
+    Plugin mCoinbase;
     
-    
+
+
+
+
     public Plugin getCryptoIndex(){
         return mCryptoIndex;
     }
@@ -35,7 +40,14 @@ public class WorldLayer implements PlatformLayer {
     public Plugin getShapeShift() {
         return mShapeShift;        
     }
-    
+
+    public Plugin getCoinbase(){
+        return mCoinbase;
+    }
+
+
+
+
     @Override
     public void start() {
 
@@ -93,6 +105,20 @@ public class WorldLayer implements PlatformLayer {
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());
         }
+
+        /**
+         * Let's try to start the Coinbase subsystem.
+         */
+
+        WorldSubsystem coinbaseSubsystem = new CoinbaseWorldSubsystem();
+
+        try {
+            coinbaseSubsystem.start();
+            mCoinbase = ((WorldSubsystem) coinbaseSubsystem).getPlugin();
+        } catch (CantStartSubsystemException e) {
+            System.err.println("CantStartSubsystemException: " + e.getMessage());
+        }
+
 
 
     }

@@ -609,6 +609,60 @@ public class Platform  {
         }
 
 
+        /**
+         * -----------------------------
+         * Plugin Coinbase World
+         * -----------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the Coinbase plugin access to the File System so it can load and save information from persistent
+         * media.
+         */
+
+        Plugin coinbaseWorld = ((WorldLayer)  mWorldLayer).getCoinbase();
+
+        ((DealsWithPluginFileSystem) coinbaseWorld).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) coinbaseWorld).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(coinbaseWorld, Plugins.BITDUBAI_CRYPTO_INDEX);
+
+        try
+        {
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(coinbaseWorld);
+            (coinbaseWorld).setId(pluginID);
+
+            try {
+                ((Service) coinbaseWorld).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, cantStartPluginException);
+
+                /**
+                 * This plugin wont disable the whole platform, so I will allow the Platform to start even if this one
+                 * will be disabled. In the future, I will re-try the start of plugins that are not starting at once.
+                 * * *
+                 */
+            }
+
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+        }
+
+
 
 
 

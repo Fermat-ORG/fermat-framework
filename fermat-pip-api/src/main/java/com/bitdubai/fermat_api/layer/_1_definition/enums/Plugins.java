@@ -6,10 +6,10 @@ package com.bitdubai.fermat_api.layer._1_definition.enums;
 public enum Plugins {
     
     BITDUBAI_LICENSE_MANAGER("license Manager", Developers.BITDUBAI),
-    BITDUBAI_BLOCKCHAIN_INFO_WORLD("Blockchain Info", Developers.BITDUBAI),
-    BITDUBAI_SHAPE_SHIFT_WORLD("Shape Shift", Developers.BITDUBAI),
-    BITDUBAI_COINAPULT_WORLD("Coinapult", Developers.BITDUBAI),
-    BITDUBAI_CRYPTO_INDEX("Crypto Index", Developers.BITDUBAI),
+    BITDUBAI_BLOCKCHAIN_INFO_WORLD("Blockchain Info World", Developers.BITDUBAI),
+    BITDUBAI_SHAPE_SHIFT_WORLD("Shape Shift World", Developers.BITDUBAI),
+    BITDUBAI_COINAPULT_WORLD("Coinapult World", Developers.BITDUBAI),
+    BITDUBAI_CRYPTO_INDEX("Crypto Index World", Developers.BITDUBAI),
     BITDUBAI_BITCOIN_CRYPTO_NETWORK("Bitcoin Crypto Network", Developers.BITDUBAI),
     BITDUBAI_CLOUD_CHANNEL("Cloud Channel", Developers.BITDUBAI),
     BITDUBAI_USER_NETWORK_SERVICE("user NetWork Service", Developers.BITDUBAI),
@@ -31,7 +31,8 @@ public enum Plugins {
     BITDUBAI_ADDRESS_BOOK_CRYPTO("Address Book Crypto", Developers.BITDUBAI),
     BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION("Outgoing Extra User Transaction", Developers.BITDUBAI),
     BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION("Incoming Extra User Transaction", Developers.BITDUBAI),
-    BITDUBAI_INCOMING_CRYPTO_TRANSACTION("Incoming Crypto Transaction", Developers.BITDUBAI);
+    BITDUBAI_INCOMING_CRYPTO_TRANSACTION("Incoming Crypto Transaction", Developers.BITDUBAI),
+    BITDUBAI_COINBASE_WORLD("Coinbase World", Developers.BITDUBAI);
 
     private final String key;
     private final Developers developer;

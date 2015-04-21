@@ -51,5 +51,6 @@ dependencies {
     compile project(':fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai')
     compile project(':fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai')
     compile project(':fermat-dmp-plugin-license-wallet-bitdubai')
+    compile project(':fermat-dmp-plugin-world-coinbase-bitdubai')
 }
 

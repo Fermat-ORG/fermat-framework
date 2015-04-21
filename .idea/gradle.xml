@@ -43,6 +43,7 @@
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-world-blockchain-info-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-world-coinapult-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-world-coinbase-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-world-crypto-index-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-world-shape-shift-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-bitdubai" />
