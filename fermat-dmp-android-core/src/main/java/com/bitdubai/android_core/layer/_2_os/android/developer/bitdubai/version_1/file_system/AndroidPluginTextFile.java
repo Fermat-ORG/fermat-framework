@@ -108,10 +108,7 @@ public class AndroidPluginTextFile implements PluginTextFile {
              */
             File file = new File(storagePath, fileName);
 
-            /**
-             * If the file does not exist, we create it here.
-             */
-    //    if(!file.exists()){
+
             OutputStream outputStream;
 
             /**
@@ -125,12 +122,11 @@ public class AndroidPluginTextFile implements PluginTextFile {
             outputStream =  new BufferedOutputStream(new FileOutputStream(file));
             outputStream.write(encryptedContent.getBytes());
             outputStream.close();
-      //  }
 
 
             
         } catch (Exception e) {
-            e.printStackTrace();
+
             throw new CantPersistFileException("Error trying to persist file: " + this.fileName);
         }
     }
@@ -152,8 +148,6 @@ public class AndroidPluginTextFile implements PluginTextFile {
                 path = Environment.getExternalStorageDirectory().toString();
             else
                 path = this.context.getFilesDir().toString();
-
-
 
             /**
              * We open the file and read its encrypted content.
@@ -183,7 +177,6 @@ public class AndroidPluginTextFile implements PluginTextFile {
                 decryptedContent = this.decrypt(stringBuilder.toString());
 
             } catch (CantDecryptException e) {
-                e.printStackTrace();
                 throw new CantLoadFileException("Error trying to decrypt file: " +this.fileName);
             }
 
@@ -193,8 +186,6 @@ public class AndroidPluginTextFile implements PluginTextFile {
             this.content = decryptedContent;
             
         } catch (Exception e) {
-
-            e.printStackTrace();
             throw new CantLoadFileException("Error trying to load file from media: " + this.fileName);
         }
     }
@@ -224,7 +215,6 @@ public class AndroidPluginTextFile implements PluginTextFile {
             base64EncryptedString = new String(base64Bytes);
 
         } catch (Exception e) {
-            e.printStackTrace();
             throw  new CantEncryptException();
         }
         return base64EncryptedString;
@@ -256,8 +246,6 @@ public class AndroidPluginTextFile implements PluginTextFile {
             return base64EncryptedString;
 
         } catch (Exception e) {
-            System.err.println("Error trying to decrypt: " + e.getMessage());
-            e.printStackTrace();
             throw  new CantDecryptException();
 
         }

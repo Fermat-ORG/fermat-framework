@@ -106,7 +106,6 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
 
             
         } catch (Exception e) {
-            e.printStackTrace();
             throw new CantPersistFileException(this.fileName);
         }
     }
@@ -152,7 +151,6 @@ public class AndroidPluginBinaryFile implements PluginBinaryFile {
             this.content =buffer.toByteArray();
 
         } catch (Exception e) {
-            e.printStackTrace();
             throw new CantLoadFileException(this.fileName);
         }
     }
