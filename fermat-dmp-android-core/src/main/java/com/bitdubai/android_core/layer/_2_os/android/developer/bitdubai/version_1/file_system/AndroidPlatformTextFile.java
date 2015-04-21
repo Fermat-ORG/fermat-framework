@@ -110,8 +110,6 @@ public class AndroidPlatformTextFile implements PlatformTextFile {
                 outputStream.close();
             }
         } catch (Exception e) {
-
-            e.printStackTrace();
             throw new CantPersistFileException("Error trying to persist file: " +this.fileName);
         }
     }
@@ -155,7 +153,6 @@ public class AndroidPlatformTextFile implements PlatformTextFile {
             inputStream.close();
 
         } catch (Exception e) {
-            e.printStackTrace();
             throw new CantLoadFileException("Error trying to load file: " + this.fileName);
         }
     }
