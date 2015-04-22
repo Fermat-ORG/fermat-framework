@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.DealsWith
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_api.layer._2_os.*;
 import com.bitdubai.fermat_api.layer._2_os.file_system.*;
+import com.bitdubai.fermat_core.layer._12_basic_wallet.BasicWalletLayer;
 import com.bitdubai.fermat_core.layer._15_transaction.TransactionLayer;
 import com.bitdubai.fermat_core.layer._3_platform_service.PlatformServiceLayer;
 
@@ -58,6 +59,7 @@ public class Platform  {
     PlatformLayer mMiddlewareLayer = new MiddlewareLayer();
     PlatformLayer mModuleLayer = new ModuleLayer();
     PlatformLayer mAgentLayer = new AgentLayer();
+    PlatformLayer mBasicWalletLayer = new BasicWalletLayer();
 
 
 
@@ -117,6 +119,9 @@ public class Platform  {
         return mAgentLayer;
     }
 
+    public PlatformLayer getBasicWalletLayer(){
+        return mBasicWalletLayer;
+    }
 
 
     PlatformEventMonitor eventMonitor;
@@ -263,6 +268,7 @@ public class Platform  {
             mModuleLayer.start();
             mAgentLayer.start();
             mTransactionLayer.start();
+            mBasicWalletLayer.start();
         }
         catch (CantStartLayerException cantStartLayerException) {
             ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, cantStartLayerException); 
@@ -1242,12 +1248,12 @@ public class Platform  {
          * I will give the Wallet Middleware access to the File System and to the Event Manager
          */
 
-        Plugin walletMiddleware = ((MiddlewareLayer) mMiddlewareLayer).getWalletPlugin();
+        Plugin discountWalletBasicWallet = ((BasicWalletLayer) mBasicWalletLayer).getDiscountWallet();
 
-        ((DealsWithPluginFileSystem) walletMiddleware).setPluginFileSystem(os.getPlugInFileSystem());
-        ((DealsWithEvents) walletMiddleware).setEventManager((EventManager) eventManager);
+        ((DealsWithPluginFileSystem) discountWalletBasicWallet).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) discountWalletBasicWallet).setEventManager((EventManager) eventManager);
 
-        corePlatformContext.addPlugin(walletMiddleware, Plugins.BITDUBAI_DISCOUNT_WALLET_MIDDLEWARE);
+        corePlatformContext.addPlugin(discountWalletBasicWallet, Plugins.BITDUBAI_DISCOUNT_WALLET_BASIC_WALLET);
 
         try
         {
@@ -1256,11 +1262,11 @@ public class Platform  {
              * As any other plugin, this one will need its identity in order to access the data it persisted before.
              */
 
-            UUID pluginID = pluginsIdentityManager.getPluginId(walletMiddleware);
-            (walletMiddleware).setId(pluginID);
+            UUID pluginID = pluginsIdentityManager.getPluginId(discountWalletBasicWallet);
+            (discountWalletBasicWallet).setId(pluginID);
             
             try {
-                ((Service) walletMiddleware).start();
+                ((Service) discountWalletBasicWallet).start();
             }
             catch (CantStartPluginException cantStartPluginException) {
 

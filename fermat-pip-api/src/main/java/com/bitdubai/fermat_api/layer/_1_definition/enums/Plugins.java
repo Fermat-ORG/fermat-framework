@@ -14,7 +14,7 @@ public enum Plugins {
     BITDUBAI_CLOUD_CHANNEL("Cloud Channel", Developers.BITDUBAI),
     BITDUBAI_USER_NETWORK_SERVICE("user NetWork Service", Developers.BITDUBAI),
     BITDUBAI_APP_RUNTIME_MIDDLEWARE("App Runtime Middleware", Developers.BITDUBAI),
-    BITDUBAI_DISCOUNT_WALLET_MIDDLEWARE("Discount Wallet Middleware", Developers.BITDUBAI),
+    BITDUBAI_DISCOUNT_WALLET_BASIC_WALLET("Discount Wallet Basic Wallet", Developers.BITDUBAI),
     BITDUBAI_WALLET_RUNTIME_MODULE("Wallet runtime Module", Developers.BITDUBAI),
     BITDUBAI_WALLET_MANAGER_MODULE("Wallet Manager Module", Developers.BITDUBAI),
     BITDUBAI_INCOMING_INTRA_USER_TRANSACTION("Incoming Intra User Transaction", Developers.BITDUBAI),

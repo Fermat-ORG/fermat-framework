@@ -20,9 +20,6 @@
 [submodule "fermat-dmp-plugin-middleware-bank-notes-bitdubai"]
 	path = fermat-dmp-plugin-middleware-bank-notes-bitdubai
 	url = https://github.com/bitDubai/fermat-dmp-plugin-middleware-bank-notes-bitdubai
-[submodule "fermat-dmp-plugin-middleware-discount-wallet-bitdubai"]
-	path = fermat-dmp-plugin-middleware-discount-wallet-bitdubai
-	url = https://github.com/bitDubai/fermat-dmp-plugin-middleware-discount-wallet-bitdubai
 [submodule "fermat-dmp-plugin-middleware-money-request-bitdubai"]
 	path = fermat-dmp-plugin-middleware-money-request-bitdubai
 	url = https://github.com/bitDubai/fermat-dmp-plugin-middleware-money-request-bitdubai
@@ -136,3 +133,6 @@
 [submodule "fermat-dmp-plugin-world-coinbase-bitdubai"]
 	path = fermat-dmp-plugin-world-coinbase-bitdubai
 	url = https://github.com/bitDubai/fermat-dmp-plugin-world-coinbase-bitdubai.git
+[submodule "fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai"]
+	path = fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai.git

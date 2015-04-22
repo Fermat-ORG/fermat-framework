@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer._14_middleware.MiddlewareSubsystem;
 // import com.bitdubai.wallet_platform_core.layer._10_middleware.shell.ShellSubsystem;
 import com.bitdubai.fermat_core.layer._14_middleware.app_runtime.AppRuntimeSubsystem;
 import com.bitdubai.fermat_core.layer._14_middleware.bank_notes.BankNotesSubsystem;
-import com.bitdubai.fermat_core.layer._14_middleware.discount_wallet.DiscountWalletSubsystem;
+import com.bitdubai.fermat_core.layer._12_basic_wallet.discount_wallet.DiscountWalletSubsystem;
 import com.bitdubai.fermat_core.layer._14_middleware.wallet_contacts.WalletContactsSubsystem;
 
 /**
@@ -84,20 +84,7 @@ public class MiddlewareLayer implements PlatformLayer {
 
 
         /**
-         * Let's try to start the wallet subsystem.
-         */
-        MiddlewareSubsystem walletSubsystem = new DiscountWalletSubsystem();
-
-        try {
-            walletSubsystem.start();
-            mWalletPlugin = walletSubsystem.getPlugin();
-
-        } catch (CantStartSubsystemException e) {
-            System.err.println("CantStartSubsystemException: " + e.getMessage());
-        }
-
-        /**
-         * Let's try to start the wallet subsystem.
+         * Let's try to start the bank notes subsystem.
          */
         MiddlewareSubsystem bankNotesSubsystem = new BankNotesSubsystem();
 
@@ -110,7 +97,7 @@ public class MiddlewareLayer implements PlatformLayer {
         }
 
         /**
-         * Let's try to start the wallet subsystem.
+         * Let's try to start the wallet contacts subsystem.
          */
         MiddlewareSubsystem walletContactsSubsystem = new WalletContactsSubsystem();
 

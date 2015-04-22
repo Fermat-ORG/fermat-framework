@@ -31,7 +31,7 @@ import com.bitdubai.fermat_dmp_plugin.layer._11_world.shape_shift.developer.bitd
 import com.bitdubai.fermat_dmp_plugin.layer._8_crypto.address_book.developer.bitdubai.version_1.AddressBookCryptoPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._14_middleware.app_runtime.developer.bitdubai.version_1.AppRuntimeMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._14_middleware.bank_notes.developer.bitdubai.version_1.BankNotesMiddlewarePluginRoot;
-import com.bitdubai.fermat_dmp_plugin.layer._14_middleware.discount_wallet.developer.bitdubai.version_1.DiscountWalletMiddlewarePluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer._12_basic_wallet.discount_wallet.developer.bitdubai.version_1.DiscountWalletBasicWalletPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._14_middleware.wallet_contacts.developer.bitdubai.version_1.WalletContactsMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._16_module.wallet_manager.developer.bitdubai.version_1.WalletManagerModulePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._16_module.wallet_runtime.developer.bitdubai.version_1.WalletRuntimeModulePluginRoot;
@@ -244,8 +244,8 @@ public class PluginsIdentityManager {
         if (pluginIndex == 0) {
             try
             {
-                DiscountWalletMiddlewarePluginRoot tryType;
-                tryType = (DiscountWalletMiddlewarePluginRoot) plugin;
+                DiscountWalletBasicWalletPluginRoot tryType;
+                tryType = (DiscountWalletBasicWalletPluginRoot) plugin;
                 pluginIndex = 3;
             }
             catch (Exception e)
