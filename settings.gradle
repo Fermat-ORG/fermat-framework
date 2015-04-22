@@ -1,4 +1,4 @@
-include ':fermat-dmp-android-core', ':fermat-dmp-android-wallet-factory-bitdubai'
+include ':fermat-dmp-android-core', ':fermat-dmp-android-wallet-factory-bitdubai', ':fermat-dmp-android-wallet-publisher-bitdubai'
 include ':fermat-pip-core'
 include ':fermat-pip-api'
 include ':fermat-dmp-android-wallet-manager-bitdubai'

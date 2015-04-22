@@ -4,6 +4,7 @@
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-android-wallet-factory-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-android-wallet-manager-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-dmp-android-wallet-publisher-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-android-wallet-store-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai" vcs="Git" />
