@@ -33,7 +33,7 @@ import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopProducts
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopReviewsFragment;
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopShopFragment;
 import com.bitdubai.android_core.app.subapp.shop_manager.version_1.fragment.ShopDesktopFragment;
-import com.bitdubai.android_core.app.subapp.wallet_manager.version_1.fragment.WalletDesktopFragment;
+import com.bitdubai.wallet_manager.wallet.manager.fragment.WalletDesktopFragment;
 
 import com.bitdubai.fermat_api.layer._10_network_service.wallet_resources.WalletResourcesManager;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Addons;
