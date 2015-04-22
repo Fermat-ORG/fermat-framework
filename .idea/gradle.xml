@@ -14,6 +14,7 @@
             <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-store-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-crypto-address-book-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-crypto-network-bitcoin-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-license-wallet-bitdubai" />
@@ -62,4 +63,3 @@
     </option>
   </component>
 </project>
-

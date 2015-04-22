@@ -136,3 +136,6 @@
 [submodule "fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai"]
 	path = fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai
 	url = https://github.com/bitDubai/fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai.git
+[submodule "fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai"]
+	path = fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai
