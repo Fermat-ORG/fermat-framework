@@ -139,3 +139,6 @@
 [submodule "fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai"]
 	path = fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai
 	url = https://github.com/bitDubai/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai
+[submodule "fermat-dmp-android-wallet-factory-bitdubai"]
+	path = fermat-dmp-android-wallet-factory-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-android-wallet-factory-bitdubai.git
