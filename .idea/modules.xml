@@ -7,6 +7,7 @@
       <module fileurl="file://$PROJECT_DIR$/fermat-dmp-android-wallet-factory-bitdubai/fermat-dmp-android-wallet-factory-bitdubai.iml" filepath="$PROJECT_DIR$/fermat-dmp-android-wallet-factory-bitdubai/fermat-dmp-android-wallet-factory-bitdubai.iml" />
       <module fileurl="file://$PROJECT_DIR$/fermat-dmp-android-wallet-manager-bitdubai/fermat-dmp-android-wallet-manager-bitdubai.iml" filepath="$PROJECT_DIR$/fermat-dmp-android-wallet-manager-bitdubai/fermat-dmp-android-wallet-manager-bitdubai.iml" />
       <module fileurl="file://$PROJECT_DIR$/fermat-dmp-android-wallet-publisher-bitdubai/fermat-dmp-android-wallet-publisher-bitdubai.iml" filepath="$PROJECT_DIR$/fermat-dmp-android-wallet-publisher-bitdubai/fermat-dmp-android-wallet-publisher-bitdubai.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fermat-dmp-android-wallet-publisher-bitdubai/fermat-dmp-android-wallet-publisher-bitdubai.iml" filepath="$PROJECT_DIR$/fermat-dmp-android-wallet-publisher-bitdubai/fermat-dmp-android-wallet-publisher-bitdubai.iml" />
       <module fileurl="file://$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai/fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai.iml" filepath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai/fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai.iml" />
       <module fileurl="file://$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-kids-boys-bitdubai/fermat-dmp-android-wallet-runtime-kids-boys-bitdubai.iml" filepath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-kids-boys-bitdubai/fermat-dmp-android-wallet-runtime-kids-boys-bitdubai.iml" />
       <module fileurl="file://$PROJECT_DIR$/fermat-dmp-android-wallet-store-bitdubai/fermat-dmp-android-wallet-store-bitdubai.iml" filepath="$PROJECT_DIR$/fermat-dmp-android-wallet-store-bitdubai/fermat-dmp-android-wallet-store-bitdubai.iml" />
@@ -76,4 +77,3 @@
     </modules>
   </component>
 </project>
-
