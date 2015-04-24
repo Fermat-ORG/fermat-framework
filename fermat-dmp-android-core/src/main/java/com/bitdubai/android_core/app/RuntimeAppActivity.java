@@ -1,6 +1,7 @@
 package com.bitdubai.android_core.app;
 
 import android.app.ActionBar;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -73,6 +74,7 @@ import com.bitdubai.smartwallet.R;
 import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.runtime_wallet.age.kids.boys.fragments.UsdBalanceFragment;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Iterator;
@@ -121,8 +123,11 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             this.savedInstanceState = savedInstanceState;
             //init runtime app
 
+           // Context context = this.getApplicationContext();
+
+
             platform = MyApplication.getPlatform();
-            // Context context = this.getApplicationContext();
+
 
              StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);

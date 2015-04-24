@@ -33,7 +33,7 @@ import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 import com.bitdubai.android_core.app.common.version_1.classes.NavigationDrawerArrayAdapter;
 import com.bitdubai.android_core.app.subapp.publisher.version_1.activity.PublisherActivity;
 import com.bitdubai.android_core.app.subapp.publisher.version_1.activity.ShopsActivity;
-import com.bitdubai.android_core.app.subapp.wallet_factory.version_2.activity.FactoryActivity;
+import com.bitdubai.wallet_factory.fragment.version_2.activity.FactoryActivity;
 
 
 import java.util.List;

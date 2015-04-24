@@ -50,36 +50,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
-            android:name="com.bitdubai.android_core.app.FragmentActivity"
-            android:label="" >
+            android:name="com.bitdubai.wallet_factory.fragment.version_1.activity.FactoryActivity"
+            android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.bitdubai.android_core.app.subapp.wallet_factory.version_1.activity.FactoryActivity"
-            android:label="" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <activity
-            android:name="com.bitdubai.android_core.app.RepositoryActivity"
-            android:label="@string/title_activity_blank" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
         <activity
             android:name="com.bitdubai.android_core.app.subapp.publisher.version_1.activity.PublisherActivity"
             android:label="Publisher" >
@@ -124,7 +103,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.bitdubai.android_core.app.shell.version_1.activity.DesktopActivity" />
         </activity>
-        <activity android:name="com.bitdubai.android_core.app.subapp.wallet_factory.version_2.activity.FactoryActivity"
+        <activity android:name="com.bitdubai.wallet_factory.fragment.version_2.activity.FactoryActivity"
             android:label="Wallet Factory">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

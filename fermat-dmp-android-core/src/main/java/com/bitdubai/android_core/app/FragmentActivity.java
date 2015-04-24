@@ -261,6 +261,7 @@ public class FragmentActivity  extends Activity {
             case CWP_WALLET_ADULTS_ALL_REQUEST_SEND:
                 break;
             case CWP_WALLET_FACTORY_MAIN:
+
                 break;
         }
 
