@@ -32,7 +32,7 @@ android {
     buildTypes {
         release {
             apply plugin: 'idea'
-            minifyEnabled true
+            minifyEnabled false
         }
     }
 }
@@ -44,6 +44,7 @@ dependencies {
     compile project(':fermat-dmp-android-wallet-manager-bitdubai')
     compile project(':fermat-dmp-android-wallet-factory-bitdubai')
     compile project(':fermat-dmp-android-wallet-store-bitdubai')
+    
     compile 'com.android.support:support-v13:21.0.2'
     compile 'com.android.support:support-v4:21.0.2'
     compile 'com.google.android.gms:play-services:6.5.87'
