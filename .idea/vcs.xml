@@ -8,7 +8,6 @@
     <mapping directory="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-android-wallet-store-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-communication-cloud-server-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-crypto-address-book-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-crypto-network-bitcoin-bitdubai" vcs="Git" />
@@ -43,6 +42,7 @@
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-world-crypto-index-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-world-shape-shift-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-pip-addon-hardware-local-device-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-pip-addon-hardware-remote-device-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-pip-addon-platform-service-error-manager-bitdubai" vcs="Git" />

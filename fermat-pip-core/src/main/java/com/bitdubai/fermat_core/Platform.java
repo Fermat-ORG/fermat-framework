@@ -789,7 +789,7 @@ public class Platform  {
          * * * * 
          */
         /**
-         * I will give the Cloud Communication access to the File System and to the Event Manager
+         * I will give the Address book crypto access to the File System and to the Event Manager
          */
 
         Plugin addressBookCrypto = ((CryptoLayer) mCryptoLayer).getmAddressBook();
@@ -825,7 +825,65 @@ public class Platform  {
 
             throw new CantStartPlatformException();
         }
-        
+
+
+        /**
+         * -----------------------------
+         * Plugin Cloud Server Communication
+         * -----------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the Cloud Server Communication access to the File System and to the Event Manager
+         */
+
+        Plugin cloudServerCommunication = ((CommunicationLayer) mCommunicationLayer).getCloudServerPlugin();
+
+        ((DealsWithPluginFileSystem) cloudServerCommunication).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) cloudServerCommunication).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(cloudServerCommunication, Plugins.BITDUBAI_CLOUD_SERVER_COMMUNICATION);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(cloudServerCommunication);
+            (cloudServerCommunication).setId(pluginID);
+
+            try {
+                ((Service) cloudServerCommunication).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * *
+                 */
+
+                throw new CantStartPlatformException();
+            }
+
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
         
         /**
          * -----------------------------

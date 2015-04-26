@@ -16,7 +16,6 @@
             <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-store-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-dmp-plugin-communication-cloud-server-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-crypto-address-book-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-crypto-network-bitcoin-bitdubai" />
@@ -51,6 +50,7 @@
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-world-crypto-index-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-world-shape-shift-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-addon-hardware-local-device-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-addon-hardware-remote-device-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-addon-platform-service-error-manager-bitdubai" />

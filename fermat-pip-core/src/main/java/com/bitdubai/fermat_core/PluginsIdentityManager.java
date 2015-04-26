@@ -17,6 +17,7 @@ import com.bitdubai.fermat_dmp_plugin.layer._10_network_service.bank_notes.devel
 import com.bitdubai.fermat_dmp_plugin.layer._10_network_service.wallet_community.developer.bitdubai.version_1.WalletCommunityNetworkServicePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._10_network_service.wallet_resources.developer.bitdubai.version_1.WalletResourcesNetworkServicePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._10_network_service.wallet_store.developer.bitdubai.version_1.WalletStoreNetworkServicePluginRoot;
+import com.bitdubai.fermat_p2p_plugin.layer._9_communication.cloud_server.developer.bitdubai.version_1.CloudServerCommunicationPluginRoot;
 import com.bitdubai.fremat_dmp_plugin.layer._15_transaction.incoming_device_user.developer.bitdubai.version_1.IncomingDeviceUserTransactionPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._15_transaction.incoming_extra_user.developer.bitdubai.version_1.IncomingExtraUserTransactionPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._15_transaction.incoming_intra_user.developer.bitdubai.version_1.IncomingIntraUserTransactionPluginRoot;
@@ -47,7 +48,7 @@ import java.util.UUID;
 public class PluginsIdentityManager {
 
     private PlatformFileSystem platformFileSystem;
-    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 27;
+    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 28;
     private List<UUID> pluginIds = new ArrayList<>();
 
 
@@ -594,6 +595,20 @@ public class PluginsIdentityManager {
                      */
                 }
             }
+
+
+            if (pluginIndex == 0) {
+                try {
+                    CloudServerCommunicationPluginRoot tryType;
+                    tryType = (CloudServerCommunicationPluginRoot) plugin;
+                    pluginIndex = 27;
+                } catch (Exception e) {
+                    /**
+                     * If this fails, is because this is not the index for this plug in.
+                     */
+                }
+            }
+
         }
 
 

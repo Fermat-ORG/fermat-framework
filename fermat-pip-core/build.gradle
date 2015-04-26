@@ -34,7 +34,6 @@ dependencies {
     compile project(':fermat-dmp-plugin-network-service-wallet-community-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-wallet-resources-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-wallet-store-bitdubai')
-    compile project(':fermat-p2p-plugin-communication-cloud-bitdubai')
     compile project(':fermat-dmp-plugin-world-blockchain-info-bitdubai')
     compile project(':fermat-dmp-plugin-world-coinapult-bitdubai')
     compile project(':fermat-dmp-plugin-world-crypto-index-bitdubai')
@@ -50,6 +49,7 @@ dependencies {
     compile project(':fermat-dmp-plugin-license-wallet-bitdubai')
     compile project(':fermat-dmp-plugin-world-coinbase-bitdubai')
     compile project(':fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai')
-    compile project(':fermat-dmp-plugin-communication-cloud-server-bitdubai')
+    compile project(':fermat-p2p-plugin-communication-cloud-bitdubai')
+    compile project(':fermat-p2p-plugin-communication-cloud-server-bitdubai')
 }
 

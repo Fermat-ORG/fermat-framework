@@ -12,6 +12,7 @@ public enum Plugins {
     BITDUBAI_CRYPTO_INDEX("Crypto Index World", Developers.BITDUBAI),
     BITDUBAI_BITCOIN_CRYPTO_NETWORK("Bitcoin Crypto Network", Developers.BITDUBAI),
     BITDUBAI_CLOUD_CHANNEL("Cloud Channel", Developers.BITDUBAI),
+    BITDUBAI_CLOUD_SERVER_COMMUNICATION("cloud Server Communication", Developers.BITDUBAI),
     BITDUBAI_USER_NETWORK_SERVICE("user NetWork Service", Developers.BITDUBAI),
     BITDUBAI_APP_RUNTIME_MIDDLEWARE("App Runtime Middleware", Developers.BITDUBAI),
     BITDUBAI_DISCOUNT_WALLET_BASIC_WALLET("Discount Wallet Basic Wallet", Developers.BITDUBAI),
