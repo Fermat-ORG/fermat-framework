@@ -145,3 +145,6 @@
 [submodule "fermat-dmp-android-wallet-publisher-bitdubai"]
 	path = fermat-dmp-android-wallet-publisher-bitdubai
 	url = https://github.com/bitDubai/fermat-dmp-android-wallet-publisher-bitdubai
+[submodule "fermat-dmp-plugin-communication-cloud-server-bitdubai"]
+	path = fermat-dmp-plugin-communication-cloud-server-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-plugin-communication-cloud-server-bitdubai.git

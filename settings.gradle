@@ -42,6 +42,7 @@ include ':fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai'
 include ':fermat-dmp-plugin-license-wallet-bitdubai'
 include ':fermat-dmp-plugin-world-coinbase-bitdubai'
 include ':fermat-dmp-plugin-crypto-network-bitcoin-bitdubai'
+include ':fermat-dmp-plugin-communication-cloud-server-bitdubai'
 
 include ':fermat-p2p-plugin-communication-cloud-bitdubai'
 

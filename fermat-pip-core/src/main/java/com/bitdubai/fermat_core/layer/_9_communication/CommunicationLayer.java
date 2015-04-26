@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer._1_definition.enums.NetworkServices;
 import com.bitdubai.fermat_api.layer._9_communication.*;
 import com.bitdubai.fermat_api.layer._9_communication.cloud.RejectConnectionRequestReasons;
 import com.bitdubai.fermat_core.layer._9_communication.cloud.CloudSubsystem;
+import com.bitdubai.fermat_core.layer._9_communication.cloud_server.CloudServerSubsystem;
 
 import java.util.*;
 
@@ -22,7 +23,7 @@ import java.util.*;
 public class CommunicationLayer implements PlatformLayer, CommunicationLayerManager {
 
     private Plugin mCloudPlugin;
-
+    private Plugin mCloudServerPlugin;
 
     /**
      * CommunicationLayerManager Interface member variables.
@@ -41,7 +42,10 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
         return mCloudPlugin;
     }
 
- 
+    public Plugin getCloudServerPlugin(){
+        return mCloudServerPlugin;
+    }
+
     /**
      * PlatformLayer Interface implementation.
      */
@@ -58,6 +62,24 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
         try {
             cloudSubsystem.start();
             mCloudPlugin = ((CloudSubsystem) cloudSubsystem).getPlugin();
+
+        } catch (CantStartSubsystemException e) {
+            System.err.println("CantStartSubsystemException: " + e.getMessage());
+
+            /**
+             * Since this is the only implementation, if this does not start, then the layer can't start either.
+             */
+            throw new CantStartLayerException();
+        }
+
+        /**
+         * For now, the only way to communicate with other devices is through a cloud service.
+         */
+        CommunicationSubsystem cloudServerSubsystem = new CloudServerSubsystem();
+
+        try {
+            cloudServerSubsystem.start();
+            mCloudServerPlugin = ((CloudServerSubsystem) cloudServerSubsystem).getPlugin();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());

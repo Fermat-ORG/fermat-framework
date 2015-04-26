@@ -8,7 +8,6 @@ repositories {
 
 
 dependencies {
-
     compile project(':fermat-pip-api')
     compile project(':fermat-dmp-plugin-crypto-network-bitcoin-bitdubai')
     compile project(':fermat-dmp-plugin-middleware-app-runtime-bitdubai')
@@ -51,5 +50,6 @@ dependencies {
     compile project(':fermat-dmp-plugin-license-wallet-bitdubai')
     compile project(':fermat-dmp-plugin-world-coinbase-bitdubai')
     compile project(':fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai')
+    compile project(':fermat-dmp-plugin-communication-cloud-server-bitdubai')
 }
 
