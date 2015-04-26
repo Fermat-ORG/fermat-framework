@@ -18,6 +18,7 @@ public enum Plugins {
     BITDUBAI_DISCOUNT_WALLET_BASIC_WALLET("Discount Wallet Basic Wallet", Developers.BITDUBAI),
     BITDUBAI_WALLET_RUNTIME_MODULE("Wallet runtime Module", Developers.BITDUBAI),
     BITDUBAI_WALLET_MANAGER_MODULE("Wallet Manager Module", Developers.BITDUBAI),
+    BITDUBAI_WALLET_FACTORY_MODULE("Wallet Factory Module", Developers.BITDUBAI),
     BITDUBAI_INCOMING_INTRA_USER_TRANSACTION("Incoming Intra User Transaction", Developers.BITDUBAI),
     BITDUBAI_OUTGOING_INTRA_USER_TRANSACTION("Outgoing Intra User Transaction", Developers.BITDUBAI),
     BITDUBAI_INCOMING_DEVICE_USER_TRANSACTION("Incoming Device User Transaction", Developers.BITDUBAI),

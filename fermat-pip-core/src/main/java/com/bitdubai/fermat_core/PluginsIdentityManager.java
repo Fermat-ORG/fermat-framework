@@ -37,6 +37,7 @@ import com.bitdubai.fermat_dmp_plugin.layer._14_middleware.wallet_contacts.devel
 import com.bitdubai.fermat_dmp_plugin.layer._16_module.wallet_manager.developer.bitdubai.version_1.WalletManagerModulePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._16_module.wallet_runtime.developer.bitdubai.version_1.WalletRuntimeModulePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._7_crypto_network.bitcoin.developer.bitdubai.version_1.BitcoinCryptoNetworkPluginRoot;
+import com.fermat_dmp_plugin.layer._16_module.wallet_factory.developer.bitdubai.version_1.WalletFactoryModulePluginRoot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +49,7 @@ import java.util.UUID;
 public class PluginsIdentityManager {
 
     private PlatformFileSystem platformFileSystem;
-    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 28;
+    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 29;
     private List<UUID> pluginIds = new ArrayList<>();
 
 
@@ -602,6 +603,18 @@ public class PluginsIdentityManager {
                     CloudServerCommunicationPluginRoot tryType;
                     tryType = (CloudServerCommunicationPluginRoot) plugin;
                     pluginIndex = 27;
+                } catch (Exception e) {
+                    /**
+                     * If this fails, is because this is not the index for this plug in.
+                     */
+                }
+            }
+
+            if (pluginIndex == 0) {
+                try {
+                    WalletFactoryModulePluginRoot tryType;
+                    tryType = (WalletFactoryModulePluginRoot) plugin;
+                    pluginIndex = 28;
                 } catch (Exception e) {
                     /**
                      * If this fails, is because this is not the index for this plug in.

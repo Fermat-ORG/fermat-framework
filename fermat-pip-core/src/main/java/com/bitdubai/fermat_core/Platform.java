@@ -1883,6 +1883,69 @@ public class Platform  {
 
         /**
          * -----------------------------
+         * Plugin Wallet factory
+         * -----------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the Wallet Manager access to the File System and to the Event Manager
+         */
+
+        Plugin walletFactoryModule =  ((ModuleLayer) mModuleLayer).getWalletFactory();
+
+        ((DealsWithPluginFileSystem) walletFactoryModule).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) walletFactoryModule).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(walletFactoryModule, Plugins.BITDUBAI_WALLET_FACTORY_MODULE);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(walletFactoryModule);
+            (walletFactoryModule).setId(pluginID);
+
+            try {
+                ((Service) walletFactoryModule).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * *
+                 */
+
+                throw new CantStartPlatformException();
+            }
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+            /**
+             * The wallet manager is a critical component for the platform to run. Whiteout it there is no platform.
+             */
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
+
+
+
+        /**
+         * -----------------------------
          * Plugin Wallet Manager
          * -----------------------------
          * * * * 

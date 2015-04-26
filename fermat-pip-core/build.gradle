@@ -51,5 +51,6 @@ dependencies {
     compile project(':fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai')
     compile project(':fermat-p2p-plugin-communication-cloud-bitdubai')
     compile project(':fermat-p2p-plugin-communication-cloud-server-bitdubai')
+    compile project(':fermat-dmp-plugin-module-wallet-factory-bitdubai')
 }
 

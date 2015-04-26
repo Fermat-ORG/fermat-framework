@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
 import com.bitdubai.fermat_api.layer._16_module.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer._16_module.ModuleSubsystem;
+import com.bitdubai.fermat_core.layer._16_module.wallet_factory.WalletFactorySubsystem;
 import com.bitdubai.fermat_core.layer._16_module.wallet_manager.WalletManagerSubsystem;
 import com.bitdubai.fermat_core.layer._16_module.wallet_runtime.WalletRuntimeSubsystem;
 /*
@@ -21,6 +22,7 @@ public class ModuleLayer implements PlatformLayer {
 
     Plugin mWalletRuntime;
     Plugin mWalletManager;
+    Plugin mWalletFactory;
  /*
     Plugin mWalletPublisher;
     Plugin mWalletStore;
@@ -28,9 +30,9 @@ public class ModuleLayer implements PlatformLayer {
     public Plugin getWalletRuntime() {
         return mWalletRuntime;
     }
-/*
-
- */
+    public Plugin getWalletFactory() {
+        return mWalletFactory;
+    }
     public Plugin getWalletManager() {
         return mWalletManager;
     }
@@ -45,6 +47,21 @@ public class ModuleLayer implements PlatformLayer {
 */
     @Override
     public void start()  throws CantStartLayerException {
+
+        /**
+         * Let's try to start the wallet factory subsystem.
+         */
+
+        ModuleSubsystem walletFactorySubsystem = new WalletFactorySubsystem();
+
+        try {
+            walletFactorySubsystem.start();
+            mWalletRuntime = walletFactorySubsystem.getPlugin();
+
+        } catch (CantStartSubsystemException e) {
+            System.err.println("CantStartSubsystemException: " + e.getMessage());
+        }
+
 
         /**
          * Let's try to start the wallet runtime subsystem.

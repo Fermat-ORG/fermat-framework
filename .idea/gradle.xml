@@ -24,6 +24,7 @@
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-middleware-money-request-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-middleware-wallet-contacts-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-module-wallet-factory-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-module-wallet-manager-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-module-wallet-publisher-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-module-wallet-runtime-bitdubai" />

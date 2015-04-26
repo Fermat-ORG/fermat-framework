@@ -16,6 +16,7 @@
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-middleware-money-request-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-middleware-wallet-contacts-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-module-wallet-factory-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-module-wallet-manager-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-module-wallet-publisher-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-module-wallet-runtime-bitdubai" vcs="Git" />
