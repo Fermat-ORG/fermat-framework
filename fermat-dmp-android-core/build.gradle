@@ -40,10 +40,12 @@ android {
 dependencies {
     compile project(':fermat-pip-api')
     compile project(':fermat-pip-core')
+    
     compile project(':fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai')
     compile project(':fermat-dmp-android-wallet-manager-bitdubai')
     compile project(':fermat-dmp-android-wallet-factory-bitdubai')
     compile project(':fermat-dmp-android-wallet-store-bitdubai')
+    compile project(':fermat-dmp-android-wallet-publisher-bitdubai')
     
     compile 'com.android.support:support-v13:21.0.2'
     compile 'com.android.support:support-v4:21.0.2'
