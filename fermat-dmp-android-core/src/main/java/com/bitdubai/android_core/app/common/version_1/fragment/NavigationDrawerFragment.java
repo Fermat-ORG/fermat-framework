@@ -31,8 +31,6 @@ import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 import com.bitdubai.android_core.app.common.version_1.classes.NavigationDrawerArrayAdapter;
-import com.bitdubai.wallet_publisher.activity.PublisherActivity;
-import com.bitdubai.wallet_publisher.activity.ShopsActivity;
 import com.bitdubai.wallet_factory.fragment.version_2.activity.FactoryActivity;
 
 
@@ -295,16 +293,16 @@ public class NavigationDrawerFragment extends Fragment {
             }
             if (position == 4){
                 Intent intent;
-                intent = new Intent(super.getActivity(), PublisherActivity.class);
-                startActivity(intent);
+               // intent = new Intent(super.getActivity(), PublisherActivity.class);   LO COMENTE PORQUE NO COMPILABA (LUIS)
+              //  startActivity(intent); LO COMENTE PORQUE NO COMPILABA (LUIS)
             }
         }else if(MyApplication.getActivityId()=="PublisherActivity") {
             if (position == 1)
             {
                 Intent intent;
-                intent = new Intent(super.getActivity(), ShopsActivity.class);
+                //intent = new Intent(super.getActivity(), ShopsActivity.class); LO COMENTE PORQUE NO COMPILABA (LUIS)
 
-                startActivity(intent);
+               // startActivity(intent); LO COMENTE PORQUE NO COMPILABA (LUIS)
             }
         }else {
             if(MyApplication.getActivityId()=="FactoryActivity") {
