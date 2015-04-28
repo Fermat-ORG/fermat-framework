@@ -11,25 +11,43 @@ import java.util.UUID;
  */
 public interface DiscountWallet {
 
-    /**
-     * Accounts functionality.
-     */
-    
+    /*
+     * Get wallet Id
+    */
     public UUID getWalletId();
 
-    public Account[] getFiatAccounts();
+    /*
+     * This wallet works with a fixed crypto currency
+    */
+    public CryptoCurrency getCryptoCurrency();
 
-    public Account createAccount(FiatCurrency fiatCurrency) throws CantCreateAccountException;
+    /*
+     * This wallet works with a fixed Fiat currency
+    */
+    public FiatCurrency getFiatCurrency();
 
+    /*
+     * Get the balance of the wallet, the result represents the
+     * fiat amuont of money the user has.
+    */
+    public long balance();
 
-    /**
-     * Transactional functionality.
-     */
+    /*
+     * Get the balance of the wallet, the result represents the
+     * fiat amuont of money the user has.
+    */
+    public long available();
 
-    public void transfer (Account accountFrom, Account accountTo, long amountFrom, long amountTo, String memo) throws TransferFailedException;
-    
-    public void debit (Account account,long fiatAmount, CryptoCurrency cryptoCurrency,long cryptoAmount) throws DebitFailedException;
+    /*
+     * Debit a fiat amount of money that is equivalent to the crypto amount 
+     * taken as second parameter
+    */
+    public void debit (long fiatAmount, long cryptoAmount) throws DebitFailedException;
 
-    public void credit (Account account,long fiatAmount, CryptoCurrency cryptoCurrency,long cryptoAmount) throws CreditFailedException;
+    /*
+     * Deposit a fiat amount of money that is equivalent to the crypto amount 
+     * taken as second parameter
+    */
+    public void credit (long fiatAmount, long cryptoAmount) throws CreditFailedException;
 
 }

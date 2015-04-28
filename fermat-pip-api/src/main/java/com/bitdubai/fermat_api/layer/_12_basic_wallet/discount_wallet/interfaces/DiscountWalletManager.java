@@ -3,6 +3,9 @@ package com.bitdubai.fermat_api.layer._12_basic_wallet.discount_wallet.interface
 
 import com.bitdubai.fermat_api.layer._12_basic_wallet.discount_wallet.exceptions.CantCreateWalletException;
 import com.bitdubai.fermat_api.layer._12_basic_wallet.discount_wallet.exceptions.CantLoadWalletException;
+import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer._1_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer._8_crypto.Crypto;
 
 import java.util.UUID;
 
@@ -13,7 +16,7 @@ public interface DiscountWalletManager {
 
     public void loadWallet (UUID walletId) throws CantLoadWalletException;
 
-    public void createWallet (UUID walletId) throws CantCreateWalletException;
+    public void createWallet (UUID walletId, FiatCurrency fiatCurrency, CryptoCurrency cryptoCurrency) throws CantCreateWalletException;
     
     public DiscountWallet getCurrentDiscountWallet();
 }
