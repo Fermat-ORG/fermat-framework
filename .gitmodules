@@ -151,3 +151,6 @@
 [submodule "fermat-dmp-plugin-module-wallet-factory-bitdubai"]
 	path = fermat-dmp-plugin-module-wallet-factory-bitdubai
 	url = https://github.com/bitDubai/fermat-dmp-plugin-module-wallet-factory-bitdubai.git
+[submodule "fermat-dmp-android-shop-manager-bitdubai"]
+	path = fermat-dmp-android-shop-manager-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-android-shop-manager-bitdubai

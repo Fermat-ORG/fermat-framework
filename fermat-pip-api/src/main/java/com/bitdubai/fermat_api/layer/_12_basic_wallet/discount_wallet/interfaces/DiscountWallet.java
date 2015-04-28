@@ -1,6 +1,6 @@
-package com.bitdubai.fermat_api.layer._14_middleware.discount_wallet.interfaces;
+package com.bitdubai.fermat_api.layer._12_basic_wallet.discount_wallet.interfaces;
 
-import com.bitdubai.fermat_api.layer._14_middleware.discount_wallet.exceptions.*;
+import com.bitdubai.fermat_api.layer._12_basic_wallet.discount_wallet.exceptions.*;
 import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer._1_definition.enums.FiatCurrency;
 

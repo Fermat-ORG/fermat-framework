@@ -1,6 +1,6 @@
-package com.bitdubai.fermat_api.layer._14_middleware.discount_wallet.exceptions;
+package com.bitdubai.fermat_api.layer._12_basic_wallet.discount_wallet.exceptions;
 
-import com.bitdubai.fermat_api.layer._14_middleware.discount_wallet.enums.CreditFailedReasons;
+import com.bitdubai.fermat_api.layer._12_basic_wallet.discount_wallet.enums.CreditFailedReasons;
 
 /**
  * Created by ciencias on 3/24/15.
