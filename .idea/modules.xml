@@ -47,8 +47,10 @@
       <module fileurl="file://$PROJECT_DIR$/fermat-dmp-plugin-world-shape-shift-bitdubai/fermat-dmp-plugin-world-shape-shift-bitdubai.iml" filepath="$PROJECT_DIR$/fermat-dmp-plugin-world-shape-shift-bitdubai/fermat-dmp-plugin-world-shape-shift-bitdubai.iml" />
       <module fileurl="file://$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-bitdubai/fermat-p2p-plugin-communication-cloud-bitdubai.iml" filepath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-bitdubai/fermat-p2p-plugin-communication-cloud-bitdubai.iml" />
       <module fileurl="file://$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/fermat-p2p-plugin-communication-cloud-server-bitdubai.iml" filepath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/fermat-p2p-plugin-communication-cloud-server-bitdubai.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/fermat-p2p-plugin-communication-cloud-server-bitdubai.iml" filepath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/fermat-p2p-plugin-communication-cloud-server-bitdubai.iml" />
       <module fileurl="file://$PROJECT_DIR$/fermat-pip-addon-hardware-local-device-bitdubai/fermat-pip-addon-hardware-local-device-bitdubai.iml" filepath="$PROJECT_DIR$/fermat-pip-addon-hardware-local-device-bitdubai/fermat-pip-addon-hardware-local-device-bitdubai.iml" />
       <module fileurl="file://$PROJECT_DIR$/fermat-pip-addon-hardware-remote-device-bitdubai/fermat-pip-addon-hardware-remote-device-bitdubai.iml" filepath="$PROJECT_DIR$/fermat-pip-addon-hardware-remote-device-bitdubai/fermat-pip-addon-hardware-remote-device-bitdubai.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fermat-pip-addon-os-device-location-bitdubai/fermat-pip-addon-os-device-location-bitdubai.iml" filepath="$PROJECT_DIR$/fermat-pip-addon-os-device-location-bitdubai/fermat-pip-addon-os-device-location-bitdubai.iml" />
       <module fileurl="file://$PROJECT_DIR$/fermat-pip-addon-platform-service-error-manager-bitdubai/fermat-pip-addon-platform-service-error-manager-bitdubai.iml" filepath="$PROJECT_DIR$/fermat-pip-addon-platform-service-error-manager-bitdubai/fermat-pip-addon-platform-service-error-manager-bitdubai.iml" />
       <module fileurl="file://$PROJECT_DIR$/fermat-pip-addon-platform-service-event-manager-bitdubai/fermat-pip-addon-platform-service-event-manager-bitdubai.iml" filepath="$PROJECT_DIR$/fermat-pip-addon-platform-service-event-manager-bitdubai/fermat-pip-addon-platform-service-event-manager-bitdubai.iml" />
       <module fileurl="file://$PROJECT_DIR$/fermat-pip-addon-platform-service-location-subsystem-bitdubai/fermat-pip-addon-platform-service-location-subsystem-bitdubai.iml" filepath="$PROJECT_DIR$/fermat-pip-addon-platform-service-location-subsystem-bitdubai/fermat-pip-addon-platform-service-location-subsystem-bitdubai.iml" />
@@ -60,3 +62,4 @@
     </modules>
   </component>
 </project>
+
