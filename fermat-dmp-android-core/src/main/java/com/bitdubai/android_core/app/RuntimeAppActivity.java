@@ -34,6 +34,7 @@ import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopProducts
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopReviewsFragment;
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopShopFragment;
 import com.bitdubai.android_core.app.subapp.shop_manager.version_1.fragment.ShopDesktopFragment;
+import com.bitdubai.fermat_api.layer._10_network_service.wallet_resources.DealsWithWalletResources;
 import com.bitdubai.wallet_manager.wallet.manager.fragment.WalletDesktopFragment;
 
 import com.bitdubai.fermat_api.layer._10_network_service.wallet_resources.WalletResourcesManager;
@@ -71,10 +72,11 @@ import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.smartwallet.R;
 
+
 import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.runtime_wallet.age.kids.boys.fragments.UsdBalanceFragment;
 
-import java.io.File;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Iterator;
@@ -123,13 +125,13 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             this.savedInstanceState = savedInstanceState;
             //init runtime app
 
-           // Context context = this.getApplicationContext();
+            // Context context = this.getApplicationContext();
 
 
             platform = MyApplication.getPlatform();
 
 
-             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
             this.Os = new AndroidOsAddonRoot();
 
@@ -774,6 +776,10 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                     currentFragment =  AllFragment.newInstance(3);
                     break;
                 case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_PROFILE:
+                    platform = new com.bitdubai.runtime_wallet.Platform();
+                    platform.setWalletResourcesManager((WalletResourcesManager) platformContext.getPlugin(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE));
+                    platform.setErrorManager((ErrorManager)platformContext.getAddon(Addons.ERROR_MANAGER));
+                    ProfileCardFrontFragment.setPlatform(platform);
                     currentFragment =  ProfileCardFrontFragment.newInstance(position);
                     break;
                 case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_DESKTOP:

@@ -46,11 +46,12 @@ public class AndroidDatabaseTableFactory implements DatabaseTableFactory {
     }
 
     @Override
-    public void addColumn(String columnName, DatabaseDataType dataType, int dataTypeSize) {
+    public void addColumn(String columnName, DatabaseDataType dataType, int dataTypeSize, boolean primaryKey) {
         DatabaseTableColumn tableColumn = new AndroidDatabaseTableColumn();
         tableColumn.setName(columnName);
         tableColumn.setDataTypeSize(dataTypeSize);
         tableColumn.setType(dataType);
+        tableColumn.setPrimaryKey(primaryKey);
 
         this.tableColumns.add(tableColumn);
 
