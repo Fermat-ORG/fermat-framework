@@ -11,9 +11,11 @@ public class AndroidDatabaseTableColumn implements DatabaseTableColumn {
     /**
      * DatabaseTableColumn Member Variables.
      */
+
     String name ="";
     DatabaseDataType type;
     int dataTypeSize;
+    boolean primaryKey;
 
     /**
      * DatabaseTableColumn interface implementation.
@@ -45,5 +47,13 @@ public class AndroidDatabaseTableColumn implements DatabaseTableColumn {
 
     public int getDataTypeSize (){
         return this.dataTypeSize;
+    }
+
+    public void setPrimaryKey (boolean primaryKey){
+        this.primaryKey = primaryKey;
+    }
+
+    public boolean getPrimaryKey (){
+        return primaryKey;
     }
 }
