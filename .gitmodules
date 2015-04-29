@@ -162,4 +162,4 @@
 	url = https://github.com/bitDubai/fermat-pip-api
 [submodule "fermat-pip-addon-os-device-location-bitdubai"]
 	path = fermat-pip-addon-os-device-location-bitdubai
-	url = https://github.com/bitDubai/fermat-pip-addon-os-device-location-bitdubai.git
+	url = https://github.com/bitDubai/fermat-pip-addon-os-device-location-bitdubai
