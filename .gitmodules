@@ -157,3 +157,6 @@
 [submodule "fermat-pip-addon-platform-service-location-subsystem-bitdubai"]
 	path = fermat-pip-addon-platform-service-location-subsystem-bitdubai
 	url = https://github.com/bitDubai/fermat-pip-addon-platform-service-location-subsystem-bitdubai.git
+[submodule "fermat-pip-api"]
+	path = fermat-pip-api
+	url = https://github.com/bitDubai/fermat-pip-api

@@ -1,9 +1,0 @@
-
-
-title WALLET_WENT_ONLINE Event
-
-Wallet manager/ Wallet-> Event Manager:Raise WALLET_WENT_ONLINE Event.
-
-Event Manager ->???????????:Listen To WALLET_WENT_ONLINE Event.
-
-note right of Wallet manager/ Wallet:
