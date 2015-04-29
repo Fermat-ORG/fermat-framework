@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer._3_platform_service.CantStartSubsystemExcep
 import com.bitdubai.fermat_api.layer._3_platform_service.PlatformServiceSubsystem;
 import com.bitdubai.fermat_core.layer._3_platform_service.error_manager.ErrorManagerSubsystem;
 import com.bitdubai.fermat_core.layer._3_platform_service.event_manager.EventManagerSubsystem;
+import com.bitdubai.fermat_core.layer._3_platform_service.location_subsystem.LocationSubsystemSubsystem;
 
 /**
  * Created by ciencias on 23.01.15.
@@ -15,6 +16,7 @@ public class PlatformServiceLayer implements PlatformLayer {
 
     Addon errorManager;
     Addon eventManager;
+    Addon locationSubsystem;
 
 
 
@@ -27,6 +29,9 @@ public class PlatformServiceLayer implements PlatformLayer {
         return this.eventManager;
     }
 
+    public Addon getLocationSubsystem(){
+        return this.locationSubsystem;
+    }
 
 
 
@@ -47,14 +52,11 @@ public class PlatformServiceLayer implements PlatformLayer {
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());
 
-            /**
-             * Since this is the only implementation, if this does not start, then the layer can't start either.
-             */
             throw new CantStartLayerException();
         }
 
         /**
-         * FI will start the error Manager.
+         * I will start the error Manager.
          */
         PlatformServiceSubsystem errorManagerSubsystem = new ErrorManagerSubsystem();
 
@@ -65,9 +67,22 @@ public class PlatformServiceLayer implements PlatformLayer {
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());
 
-            /**
-             * Since this is the only implementation, if this does not start, then the layer can't start either.
-             */
+            throw new CantStartLayerException();
+        }
+
+        /**
+         * I will start the Location Subsystem.
+         */
+
+        PlatformServiceSubsystem locationSubsystemSubsystem = new LocationSubsystemSubsystem();
+
+        try {
+            locationSubsystemSubsystem.start();
+            this.locationSubsystem = ((PlatformServiceSubsystem) locationSubsystemSubsystem).getAddon();
+
+        } catch (CantStartSubsystemException e) {
+            System.err.println("CanStartSubsystemException: " + e.getMessage());
+
             throw new CantStartLayerException();
         }
         

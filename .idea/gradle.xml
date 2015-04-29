@@ -3,9 +3,9 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
-        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="distributionType" value="LOCAL" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleHome" value="$APPLICATION_HOME_DIR$/gradle-2.2.1" />
+        <option name="gradleHome" value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
@@ -57,6 +57,7 @@
             <option value="$PROJECT_DIR$/fermat-pip-addon-hardware-remote-device-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-addon-platform-service-error-manager-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-addon-platform-service-event-manager-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-pip-addon-platform-service-location-subsystem-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-addon-user-device-user-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-addon-user-extra-user-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-addon-user-intra-user-bitdubai" />
@@ -68,3 +69,4 @@
     </option>
   </component>
 </project>
+

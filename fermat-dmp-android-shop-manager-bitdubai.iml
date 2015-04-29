@@ -9,6 +9,7 @@
     <facet type="android" name="Android">
       <configuration>
         <option name="SELECTED_BUILD_VARIANT" value="debug" />
+        <option name="SELECTED_TEST_ARTIFACT" value="_android_test_" />
         <option name="ASSEMBLE_TASK_NAME" value="assembleDebug" />
         <option name="COMPILE_JAVA_TASK_NAME" value="compileDebugSources" />
         <option name="ASSEMBLE_TEST_TASK_NAME" value="assembleDebugTest" />
@@ -25,6 +26,7 @@
   </component>
   <component name="NewModuleRootManager" inherit-compiler-output="false">
     <output url="file://$MODULE_DIR$/fermat-dmp-android-shop-manager-bitdubai/build/intermediates/classes/debug" />
+    <output-test url="file://$MODULE_DIR$/fermat-dmp-android-shop-manager-bitdubai/build/intermediates/classes/test/debug" />
     <exclude-output />
     <content url="file://$MODULE_DIR$/fermat-dmp-android-shop-manager-bitdubai">
       <sourceFolder url="file://$MODULE_DIR$/fermat-dmp-android-shop-manager-bitdubai/build/generated/source/r/debug" isTestSource="false" generated="true" />
@@ -91,3 +93,4 @@
     <orderEntry type="module" module-name="fermat-pip-api" exported="" />
   </component>
 </module>
+

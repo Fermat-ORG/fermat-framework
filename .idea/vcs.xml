@@ -49,8 +49,10 @@
     <mapping directory="$PROJECT_DIR$/fermat-pip-addon-hardware-remote-device-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-pip-addon-platform-service-error-manager-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-pip-addon-platform-service-event-manager-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-pip-addon-platform-service-location-subsystem-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-pip-addon-user-device-user-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-pip-addon-user-extra-user-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-pip-addon-user-intra-user-bitdubai" vcs="Git" />
   </component>
 </project>
+
