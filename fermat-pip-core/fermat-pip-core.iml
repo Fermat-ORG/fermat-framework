@@ -72,6 +72,7 @@
     <orderEntry type="module" module-name="fermat-pip-addon-platform-service-location-subsystem-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-os-device-location-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-intra-user-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai" exported="" />
   </component>
 </module>
 

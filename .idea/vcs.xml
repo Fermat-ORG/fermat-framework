@@ -8,6 +8,7 @@
     <mapping directory="$PROJECT_DIR$/fermat-dmp-android-wallet-publisher-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-android-wallet-store-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-crypto-address-book-bitdubai" vcs="Git" />

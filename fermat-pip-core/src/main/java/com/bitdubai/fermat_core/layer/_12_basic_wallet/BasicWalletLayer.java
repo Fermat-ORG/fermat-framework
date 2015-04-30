@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
 import com.bitdubai.fermat_api.layer._12_basic_wallet.BasicWalletSubsystem;
 import com.bitdubai.fermat_api.layer._12_basic_wallet.CantStartSubsystemException;
+import com.bitdubai.fermat_core.layer._12_basic_wallet.bitcoin_wallet.BitcoinWalletSubsystem;
 import com.bitdubai.fermat_core.layer._12_basic_wallet.discount_wallet.DiscountWalletSubsystem;
 
 /**
@@ -13,17 +14,22 @@ import com.bitdubai.fermat_core.layer._12_basic_wallet.discount_wallet.DiscountW
 public class BasicWalletLayer implements PlatformLayer {
 
     private Plugin mDiscountWallet;
+    private Plugin mBitcoinWallet;
 
 
     public Plugin getDiscountWallet(){
         return mDiscountWallet;
     }
 
+    public Plugin getBitcoinWallet() {
+        return mBitcoinWallet;
+    }
+
     @Override
     public void start() throws CantStartLayerException {
 
         /**
-         * Let's try to start the App Runtime subsystem.
+         * Let's try to start the Discount Wallet subsystem.
          */
 
         BasicWalletSubsystem discountWalletSubsystem = new DiscountWalletSubsystem();
@@ -31,6 +37,21 @@ public class BasicWalletLayer implements PlatformLayer {
         try {
             discountWalletSubsystem .start();
             mDiscountWallet = discountWalletSubsystem .getPlugin();
+
+        } catch (CantStartSubsystemException e) {
+            System.err.println("CantStartSubsystemException: " + e.getMessage());
+        }
+
+
+        /**
+         * Let's try to start the Bitcoin Wallet subsystem.
+         */
+
+        BasicWalletSubsystem bitcoinWalletSubsystem = new BitcoinWalletSubsystem();
+
+        try {
+            bitcoinWalletSubsystem .start();
+            mDiscountWallet = bitcoinWalletSubsystem .getPlugin();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());
