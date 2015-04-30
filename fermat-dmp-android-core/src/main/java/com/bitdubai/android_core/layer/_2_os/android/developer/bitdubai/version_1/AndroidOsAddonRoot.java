@@ -1,7 +1,10 @@
 package com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1;
 
 import android.content.Context;
+
+import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.database_system.AndroidPlatformDatabaseSystem;
 import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.file_system.AndroidPlatformFileSystem;
+import com.bitdubai.fermat_api.layer._2_os.database_system.PlatformDatabaseSystem;
 import com.bitdubai.fermat_api.layer._2_os.file_system.PlatformFileSystem;
 import com.bitdubai.fermat_api.layer._2_os.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer._2_os.file_system.PluginFileSystem;
@@ -24,20 +27,21 @@ public class AndroidOsAddonRoot implements Os {
     /**
      * Os interface member variables.
      */
-    
+    PlatformDatabaseSystem platformDatabaseSystem;
     PluginDatabaseSystem pluginDatabaseSystem;
     PluginFileSystem pluginFileSystem;
     PlatformFileSystem platformFileSystem;
     LocationSystem pluginLocationSystem;
-    
+
     Context context;
 
     public AndroidOsAddonRoot() {
-        
+
         this.pluginDatabaseSystem = new AndroidPluginDatabaseSystem();
         this.pluginFileSystem = new AndroidPluginFileSystem();
         this.platformFileSystem = new AndroidPlatformFileSystem();
-        
+        this.platformDatabaseSystem = new AndroidPlatformDatabaseSystem();
+
     }
 
     /**
@@ -48,10 +52,15 @@ public class AndroidOsAddonRoot implements Os {
     public PluginFileSystem getPlugInFileSystem() {
         return this.pluginFileSystem;
     }
-    
+
     @Override
     public PluginDatabaseSystem getPluginDatabaseSystem() {
         return this.pluginDatabaseSystem;
+    }
+
+    @Override
+    public PlatformDatabaseSystem getPlatformDatabaseSystem() {
+        return this.platformDatabaseSystem;
     }
 
     @Override
@@ -66,12 +75,13 @@ public class AndroidOsAddonRoot implements Os {
 
     @Override
     public void setContext(Object context) {
-        
+
         this.context = (Context) context;
-        
+
         this.pluginFileSystem.setContext(context);
         this.pluginDatabaseSystem.setContext(context);
         this.platformFileSystem.setContext(context);
+        this.platformDatabaseSystem.setContext(context);
     }
 
 

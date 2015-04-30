@@ -118,7 +118,8 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
     }
 
     public void openDatabase(String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException {
-        
+
+        deleteDatabase(databaseName);
         /**
          * First I try to open the database.
          */
@@ -192,10 +193,14 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
     @Override
     public void createDatabase(String databaseName) throws CantCreateDatabaseException {
 
+
         /**
          * First I try to open the database.
          */
         try {
+
+
+
             String databasePath ="";
             /**
              * if owner id if null
@@ -301,27 +306,45 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
          */
         try
         {
+            String primaryKey = "";
             this.query ="CREATE TABLE IF NOT EXISTS " + table.getTableName() + " (";
             ArrayList<DatabaseTableColumn> tableColumns = table.getColumns();
 
             for (int i = 0; i < tableColumns.size(); i++) {
 
                 this.query += tableColumns.get(i).getName() +" " +  tableColumns.get(i).getType().name();
+
                 if(tableColumns.get(i).getType() == DatabaseDataType.STRING)
                     this.query +="("+ String.valueOf(tableColumns.get(i).getDataTypeSize()) + ")";
 
+                if(tableColumns.get(i).getPrimaryKey())
+                    primaryKey = tableColumns.get(i).getName();
                 if(i < tableColumns.size()-1)
                     this.query +=",";
+
+
             }
+
+            if(primaryKey != "")
+                this.query += ", PRIMARY KEY ("+primaryKey+") ";
 
             this.query += ")";
             executeQuery();
             /**
              * get index column
              */
-            if(table.getIndex() != "")
-                this.query = " CREATE INDEX IF NOT EXISTS "+ table.getIndex() +"_idx ON " + table.getTableName() + " ("+ table.getIndex() +")";
-            executeQuery();
+            if(table.getIndex() != "") {
+                this.query = " CREATE INDEX IF NOT EXISTS " + table.getIndex() + "_idx ON " + table.getTableName() + " (" + table.getIndex() + ")";
+                executeQuery();
+            }
+
+            /**
+             * add primary key
+             */
+
+
+
+
 
         }catch (Exception e)
         {

@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer._1_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer._1_definition.enums.PlatformComponents;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer._1_definition.event.DealWithEventMonitor;
+import com.bitdubai.fermat_api.layer._2_os.database_system.DealsWithPlatformDatabaseSystem;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
@@ -16,6 +17,8 @@ import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.DealsWith
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_api.layer._2_os.*;
 import com.bitdubai.fermat_api.layer._2_os.file_system.*;
+import com.bitdubai.fermat_api.layer._5_user.User;
+import com.bitdubai.fermat_api.layer._5_user.extra_user.ExtraUserManager;
 import com.bitdubai.fermat_core.layer._12_basic_wallet.BasicWalletLayer;
 import com.bitdubai.fermat_core.layer._15_transaction.TransactionLayer;
 import com.bitdubai.fermat_core.layer._3_platform_service.PlatformServiceLayer;
@@ -379,6 +382,7 @@ public class Platform  {
         Service deviceUser = (Service) ((UserLayer) mUserLayer).getDeviceUser();
 
         ((DealsWithPlatformFileSystem) deviceUser).setPlatformFileSystem(os.getPlatformFileSystem());
+        ((DealsWithPlatformDatabaseSystem) deviceUser).setPlatformDatabaseSystem(os.getPlatformDatabaseSystem());
         ((DealsWithEvents) deviceUser).setEventManager((EventManager) eventManager);
 
         corePlatformContext.addAddon((Addon) deviceUser, Addons.DEVICE_USER);
@@ -387,16 +391,35 @@ public class Platform  {
          *---------------------------------
          * Addon Extra User
          * -------------------------------
-         * * * *  
+         * * * *
          */
-        
+
         Service extraUser = (Service) ((UserLayer) mUserLayer).getExtraUser();
 
         ((DealsWithPlatformFileSystem) extraUser).setPlatformFileSystem(os.getPlatformFileSystem());
-        
+        ((DealsWithPlatformDatabaseSystem) extraUser).setPlatformDatabaseSystem(os.getPlatformDatabaseSystem());
         ((DealsWithEvents) extraUser).setEventManager((EventManager) eventManager);
 
         corePlatformContext.addAddon((Addon) extraUser, Addons.EXTRA_USER);
+
+
+
+        try {
+            extraUser.start();
+        }
+        catch (CantStartPluginException cantStartPluginException) {
+
+            System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+            cantStartPluginException.printStackTrace();
+
+            /**
+             * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+             * start, then the platform wont start either. In the future we will review this policy.
+             * * *
+             */
+
+            throw new CantStartPlatformException();
+        }
 
 
 
@@ -404,21 +427,21 @@ public class Platform  {
          *-------------------------------
          * Addon Intra User
          * -----------------------------
-         * * * *  
+         * * * *
          */
-        
-        
+
+
         Service intraUser = (Service) ((UserLayer) mUserLayer).getIntraUser();
 
         ((DealsWithPlatformFileSystem) intraUser).setPlatformFileSystem(os.getPlatformFileSystem());
-
+        ((DealsWithPlatformFileSystem) intraUser).setPlatformFileSystem(os.getPlatformFileSystem());
         ((DealsWithEvents) intraUser).setEventManager((EventManager) eventManager);
-        
+
         corePlatformContext.addAddon((Addon) intraUser, Addons.INTRA_USER);
 
 
-        
-        
+
+
         /**
          * -----------------------------------------------------------------------------------------------------------
          * Plugins initialization
