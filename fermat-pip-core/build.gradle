@@ -29,7 +29,6 @@ dependencies {
     compile project(':fermat-dmp-plugin-network-service-bank-notes-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-crypto-addresses-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-money-bitdubai')
-    compile project(':fermat-dmp-plugin-network-service-intra-user-bitcoin')
     compile project(':fermat-dmp-plugin-network-service-money-request-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-wallet-community-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-wallet-resources-bitdubai')
@@ -54,5 +53,6 @@ dependencies {
     compile project(':fermat-dmp-plugin-module-wallet-factory-bitdubai')
     compile project(':fermat-pip-addon-platform-service-location-subsystem-bitdubai')
     compile project(':fermat-pip-addon-os-device-location-bitdubai')
+    compile project(':fermat-dmp-plugin-network-service-intra-user-bitdubai')
 }
 

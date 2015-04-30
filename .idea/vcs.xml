@@ -24,7 +24,7 @@
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-module-wallet-store-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-network-service-bank-notes-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-network-service-crypto-addresses-bitdubai" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-network-service-intra-user-bitcoin" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-network-service-intra-user-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-network-service-money-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-network-service-money-request-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-network-service-wallet-community-bitdubai" vcs="Git" />
@@ -57,3 +57,4 @@
     <mapping directory="$PROJECT_DIR$/fermat-pip-api" vcs="Git" />
   </component>
 </project>
+

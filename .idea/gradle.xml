@@ -5,7 +5,7 @@
       <GradleProjectSettings>
         <option name="distributionType" value="LOCAL" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleHome" value="$APPLICATION_HOME_DIR$/gradle-2.2.1" />
+        <option name="gradleHome" value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
@@ -32,7 +32,7 @@
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-module-wallet-store-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-network-service-bank-notes-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-network-service-crypto-addresses-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-dmp-plugin-network-service-intra-user-bitcoin" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-network-service-intra-user-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-network-service-money-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-network-service-money-request-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-network-service-wallet-community-bitdubai" />
@@ -70,3 +70,4 @@
     </option>
   </component>
 </project>
+
