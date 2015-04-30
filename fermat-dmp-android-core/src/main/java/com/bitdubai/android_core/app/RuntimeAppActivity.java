@@ -34,7 +34,10 @@ import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopProducts
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopReviewsFragment;
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopShopFragment;
 import com.bitdubai.android_core.app.subapp.shop_manager.version_1.fragment.ShopDesktopFragment;
+import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.device_location.AndroidLocationManager;
 import com.bitdubai.fermat_api.layer._10_network_service.wallet_resources.DealsWithWalletResources;
+import com.bitdubai.fermat_api.layer._2_os.device_location.Location;
+import com.bitdubai.fermat_api.layer._2_os.device_location.LocationManager;
 import com.bitdubai.wallet_manager.wallet.manager.fragment.WalletDesktopFragment;
 
 import com.bitdubai.fermat_api.layer._10_network_service.wallet_resources.WalletResourcesManager;
@@ -77,6 +80,7 @@ import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.runtime_wallet.age.kids.boys.fragments.UsdBalanceFragment;
 
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Iterator;
@@ -125,7 +129,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             this.savedInstanceState = savedInstanceState;
             //init runtime app
 
-            // Context context = this.getApplicationContext();
+            Context context = this.getApplicationContext();
 
 
             platform = MyApplication.getPlatform();
@@ -165,6 +169,10 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                 e.printStackTrace();}*/
 
             /**************/
+//Device Location testing
+          // LocationManager deviceLocation = new AndroidLocationManager();
+          //  deviceLocation.setContext(context);
+          // Location location = deviceLocation.getLocation();
 
             NavigateActivity();
         }
