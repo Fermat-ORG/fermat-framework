@@ -5,6 +5,7 @@ import android.content.Context;
 import android.location.LocationListener;
 import android.os.Bundle;
 
+import com.bitdubai.fermat_api.CantGetDeviceLocationException;
 import com.bitdubai.fermat_api.layer._2_os.device_location.Location;
 import com.bitdubai.fermat_api.layer._2_os.device_location.LocationManager;
 
@@ -41,7 +42,7 @@ public class AndroidLocationManager implements LocationManager,LocationListener 
     }
 
     @Override
-    public Location getLocation() {
+    public Location getLocation() throws CantGetDeviceLocationException {
         com.bitdubai.fermat_api.layer._2_os.device_location.Location location = new AndroidLocation();
         try {
             locationManager = (android.location.LocationManager) context.getSystemService(context.LOCATION_SERVICE);
@@ -62,8 +63,8 @@ public class AndroidLocationManager implements LocationManager,LocationListener 
                     if (locationManager != null) {
                         deviceLocation = locationManager.getLastKnownLocation(android.location.LocationManager.NETWORK_PROVIDER);
                         if (deviceLocation != null) {
-                            lat = deviceLocation.getLatitude();
-                            lng = deviceLocation.getLongitude();
+                            location.setLatitude(deviceLocation.getLatitude());
+                            location.setLongitude(deviceLocation.getLongitude());
                         }
                     }
                 }
@@ -84,7 +85,10 @@ public class AndroidLocationManager implements LocationManager,LocationListener 
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            /**
+             * unexpected error
+             */
+            throw  new CantGetDeviceLocationException();
         }
 
         return location;
@@ -98,7 +102,7 @@ public class AndroidLocationManager implements LocationManager,LocationListener 
     @Override
     public void onLocationChanged( android.location.Location location) {
 
-        if (location != null && isBetterLocation(location, this.deviceLocation)) {
+        if (location != null) {
 
             this.deviceLocation = location;
 
@@ -118,49 +122,4 @@ public class AndroidLocationManager implements LocationManager,LocationListener 
     }
 
 
-    public static boolean isBetterLocation(android.location.Location location,
-                                           android.location.Location currentBestLocation) {
-        if (currentBestLocation == null) {
-            // A new location is always better than no location
-            return true;
-        }
-
-        // Check whether the new location fix is newer or older
-        long timeDelta = location.getTime() - currentBestLocation.getTime();
-        boolean isSignificantlyNewer = timeDelta > MIN_TIME_INTERVAL;
-        boolean isSignificantlyOlder = timeDelta < -MIN_TIME_INTERVAL;
-        boolean isNewer = timeDelta > 0;
-
-        // If it's been more than two minutes since the current location,
-        // use the new location
-        // because the user has likely moved
-        if (isSignificantlyNewer) {
-            return true;
-            // If the new location is more than two minutes older, it must
-            // be worse
-        } else if (isSignificantlyOlder) {
-            return false;
-        }
-
-        // Check whether the new location fix is more or less accurate
-        int accuracyDelta = (int) (location.getAccuracy() - currentBestLocation.getAccuracy());
-        boolean isLessAccurate = accuracyDelta > 0;
-        boolean isMoreAccurate = accuracyDelta < 0;
-        boolean isSignificantlyLessAccurate = accuracyDelta > 200;
-
-        // Check if the old and new location are from the same provider
-        boolean isFromSameProvider = false; //isSameProvider(location.getProvider(),currentBestLocation.getProvider());
-
-        // Determine location quality using a combination of timeliness and
-        // accuracy
-        if (isMoreAccurate) {
-            return true;
-        } else if (isNewer && !isLessAccurate) {
-            return true;
-        } else if (isNewer && !isSignificantlyLessAccurate
-                && isFromSameProvider) {
-            return true;
-        }
-        return false;
-    }
 }
