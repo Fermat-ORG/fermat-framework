@@ -1305,30 +1305,30 @@ public class Platform  {
          * I will give the Wallet Middleware access to the File System and to the Event Manager
          */
 
-        Plugin bitcoinWalletBasicWallet = ((BasicWalletLayer) mBasicWalletLayer).getBitcoinWallet();
+      // Plugin bitcoinWalletBasicWallet = ((BasicWalletLayer) mBasicWalletLayer).getBitcoinWallet();
 
-        ((DealsWithPluginFileSystem) bitcoinWalletBasicWallet).setPluginFileSystem(os.getPlugInFileSystem());
-        ((DealsWithEvents) bitcoinWalletBasicWallet).setEventManager((EventManager) eventManager);
+      //  ((DealsWithPluginFileSystem) bitcoinWalletBasicWallet).setPluginFileSystem(os.getPlugInFileSystem());
+       // ((DealsWithEvents) bitcoinWalletBasicWallet).setEventManager((EventManager) eventManager);
 
-        corePlatformContext.addPlugin(bitcoinWalletBasicWallet, Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET);
+       // corePlatformContext.addPlugin(bitcoinWalletBasicWallet, Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET);
 
-        try
-        {
+      //  try
+       // {
 
             /**
              * As any other plugin, this one will need its identity in order to access the data it persisted before.
              */
 
-            UUID pluginID = pluginsIdentityManager.getPluginId(bitcoinWalletBasicWallet);
-            (bitcoinWalletBasicWallet).setId(pluginID);
+         //  UUID pluginID = pluginsIdentityManager.getPluginId(bitcoinWalletBasicWallet);
+          //  (bitcoinWalletBasicWallet).setId(pluginID);
 
-            try {
-                ((Service) bitcoinWalletBasicWallet).start();
-            }
-            catch (CantStartPluginException cantStartPluginException) {
+           // try {
+         //       ((Service) bitcoinWalletBasicWallet).start();
+        //    }
+         //   catch (CantStartPluginException cantStartPluginException) {
 
-                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
-                cantStartPluginException.printStackTrace();
+           //     System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+            //    cantStartPluginException.printStackTrace();
 
                 /**
                  * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
@@ -1336,19 +1336,18 @@ public class Platform  {
                  * * *
                  */
 
-                throw new CantStartPlatformException();
-            }
-        }
-        catch (PluginNotRecognizedException pluginNotRecognizedException)
-        {
+             //  throw new CantStartPlatformException();
+            //}
+      //  }
+       // catch (PluginNotRecognizedException pluginNotRecognizedException)
+       // {
 
 
-            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
-            pluginNotRecognizedException.printStackTrace();
+          //  System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+          //  pluginNotRecognizedException.printStackTrace();
 
-            throw new CantStartPlatformException();
-        }
-
+            //throw new CantStartPlatformException();
+       // }
 
 
 
@@ -1365,30 +1364,30 @@ public class Platform  {
          * I will give the Discount Wallet access to the File System and to the Event Manager
          */
 
-        Plugin discountWalletBasicWallet = ((BasicWalletLayer) mBasicWalletLayer).getDiscountWallet();
+    //    Plugin discountWalletBasicWallet = ((BasicWalletLayer) mBasicWalletLayer).getDiscountWallet();
 
-        ((DealsWithPluginFileSystem) discountWalletBasicWallet).setPluginFileSystem(os.getPlugInFileSystem());
-        ((DealsWithEvents) discountWalletBasicWallet).setEventManager((EventManager) eventManager);
+      //  ((DealsWithPluginFileSystem) discountWalletBasicWallet).setPluginFileSystem(os.getPlugInFileSystem());
+      //  ((DealsWithEvents) discountWalletBasicWallet).setEventManager((EventManager) eventManager);
 
-        corePlatformContext.addPlugin(discountWalletBasicWallet, Plugins.BITDUBAI_DISCOUNT_WALLET_BASIC_WALLET);
+      //  corePlatformContext.addPlugin(discountWalletBasicWallet, Plugins.BITDUBAI_DISCOUNT_WALLET_BASIC_WALLET);
 
-        try
-        {
+     //   try
+      //  {
 
             /**
              * As any other plugin, this one will need its identity in order to access the data it persisted before.
              */
 
-            UUID pluginID = pluginsIdentityManager.getPluginId(discountWalletBasicWallet);
-            (discountWalletBasicWallet).setId(pluginID);
+       //     UUID pluginID = pluginsIdentityManager.getPluginId(discountWalletBasicWallet);
+        //    (discountWalletBasicWallet).setId(pluginID);
             
-            try {
-                ((Service) discountWalletBasicWallet).start();
-            }
-            catch (CantStartPluginException cantStartPluginException) {
+           // try {
+          //      ((Service) discountWalletBasicWallet).start();
+          //  }
+          //  catch (CantStartPluginException cantStartPluginException) {
 
-                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
-                cantStartPluginException.printStackTrace();
+              //  System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+              //  cantStartPluginException.printStackTrace();
 
                 /**
                  * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
@@ -1396,18 +1395,18 @@ public class Platform  {
                  * * * 
                  */
 
-                throw new CantStartPlatformException();
-            }
-        }
-        catch (PluginNotRecognizedException pluginNotRecognizedException)
-        {
+              //  throw new CantStartPlatformException();
+          //  }
+       // }
+      //  catch (PluginNotRecognizedException pluginNotRecognizedException)
+      //  {
 
 
-            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
-            pluginNotRecognizedException.printStackTrace();
+          //  System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+          //  pluginNotRecognizedException.printStackTrace();
 
-            throw new CantStartPlatformException();
-        }
+           // throw new CantStartPlatformException();
+       // }
 
         /**
          * ----------------------------------
