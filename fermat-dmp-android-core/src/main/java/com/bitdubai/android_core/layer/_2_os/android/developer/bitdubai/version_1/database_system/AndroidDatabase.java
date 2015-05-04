@@ -118,7 +118,8 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
     }
 
     public void openDatabase(String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException {
-        /**
+
+   /**
          * First I try to open the database.
          */
         try {

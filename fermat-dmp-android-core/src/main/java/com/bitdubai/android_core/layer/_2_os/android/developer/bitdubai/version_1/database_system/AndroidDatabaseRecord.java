@@ -57,6 +57,16 @@ public class AndroidDatabaseRecord implements DatabaseTableRecord {
         return 0;
     }
 
+    @Override
+    public float getfloatValue(String columnName){
+        for (int i = 0; i < values.size(); i++) {
+            if(values.get(i).getName().equals(columnName)){
+                return Float.parseFloat(values.get(i).getValue());
+            }
+        }
+        return 0;
+    }
+
     /**
      * Set the field as modified to take in method after update
      */
@@ -100,6 +110,20 @@ public class AndroidDatabaseRecord implements DatabaseTableRecord {
         record.setChange(true);
         values.add(record);
 
+    }
+
+    @Override
+    public void setfloatValue (String columnName, float value){
+
+        if(values == null)
+            values = new ArrayList<DatabaseRecord>();
+
+        DatabaseRecord record = new AndroidRecord();
+
+        record.setName(columnName);
+        record.setValue(Float.toString(value));
+        record.setChange(true);
+        values.add(record);
     }
 
     @Override
