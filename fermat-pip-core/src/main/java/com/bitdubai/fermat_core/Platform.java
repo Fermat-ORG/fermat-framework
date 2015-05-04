@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer._1_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer._1_definition.enums.PlatformComponents;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer._1_definition.event.DealWithEventMonitor;
+import com.bitdubai.fermat_api.layer._2_os.database_system.DealsWithPlatformDatabaseSystem;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
@@ -393,7 +394,7 @@ public class Platform  {
         Service extraUser = (Service) ((UserLayer) mUserLayer).getExtraUser();
 
         ((DealsWithPlatformFileSystem) extraUser).setPlatformFileSystem(os.getPlatformFileSystem());
-        
+        ((DealsWithPlatformDatabaseSystem) extraUser).setPlatformDatabaseSystem(os.getPlatfotmDatabaseSystem());
         ((DealsWithEvents) extraUser).setEventManager((EventManager) eventManager);
 
         corePlatformContext.addAddon((Addon) extraUser, Addons.EXTRA_USER);
