@@ -33,6 +33,7 @@ public class AndroidOsAddonRoot implements Os {
     PlatformFileSystem platformFileSystem;
     LocationSystem pluginLocationSystem;
 
+
     Context context;
 
     public AndroidOsAddonRoot() {
@@ -58,8 +59,9 @@ public class AndroidOsAddonRoot implements Os {
         return this.pluginDatabaseSystem;
     }
 
-    //@Override COMENTADO PORQUE NO COMPILA (LUIS)
-    public PlatformDatabaseSystem getPlatformDatabaseSystem() {
+
+    @Override
+    public PlatformDatabaseSystem getPlatfotmDatabaseSystem(){
         return this.platformDatabaseSystem;
     }
 
