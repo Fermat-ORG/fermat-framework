@@ -45,7 +45,7 @@ include ':fermat-dmp-plugin-license-wallet-bitdubai'
 include ':fermat-dmp-plugin-world-coinbase-bitdubai'
 include ':fermat-dmp-plugin-crypto-network-bitcoin-bitdubai'
 
-include ':fermat-p2p-plugin-communication-cloud-bitdubai'
+include ':fermat-p2p-plugin-communication-cloud-client-bitdubai'
 include ':fermat-p2p-plugin-communication-cloud-server-bitdubai'
 
 include ':fermat-pip-addon-os-device-location-bitdubai'
