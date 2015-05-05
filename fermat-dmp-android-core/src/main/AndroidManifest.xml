@@ -42,8 +42,8 @@
             android:value="AIzaSyDr98sVKnkeB-C26gU3Yu0HHpoVHETwdKo" />
         <activity
             android:name="com.bitdubai.android_core.app.RuntimeAppActivity"
-            android:icon="@drawable/burj_shield"
-            android:label="@string/app_name"
+            android:icon="@drawable/fermat"
+            android:label="Fermat"
             android:theme="@style/CustomActionBarTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
