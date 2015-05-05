@@ -11,7 +11,11 @@ android {
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
+
+    dexOptions{ javaMaxHeapSize "4g"}
+    
     sourceSets {
         main {
             res.srcDirs = ['src/main/structured_res/app/shell/version_1',
