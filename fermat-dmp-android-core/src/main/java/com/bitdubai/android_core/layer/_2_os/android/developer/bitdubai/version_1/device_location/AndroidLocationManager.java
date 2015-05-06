@@ -66,6 +66,18 @@ public class AndroidLocationManager implements LocationManager,LocationListener 
                             location.setLatitude(deviceLocation.getLatitude());
                             location.setLongitude(deviceLocation.getLongitude());
                         }
+                        else{
+                            /**
+                             * I not get location device return an exception
+                             */
+                            throw  new CantGetDeviceLocationException();
+                        }
+                    }else
+                    {
+                        /**
+                         * I not get location device return an exception
+                         */
+                        throw  new CantGetDeviceLocationException();
                     }
                 }
                 //get the location by gps
@@ -73,12 +85,26 @@ public class AndroidLocationManager implements LocationManager,LocationListener 
                     if (deviceLocation == null) {
                         locationManager.requestLocationUpdates(android.location.LocationManager.GPS_PROVIDER,MIN_TIME_BW_UPDATES,MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
                         //"GPS Enabled"
-                        if (locationManager != null) {deviceLocation = locationManager.getLastKnownLocation(android.location.LocationManager.GPS_PROVIDER);
+                        if (locationManager != null)
+                        {
+                            deviceLocation = locationManager.getLastKnownLocation(android.location.LocationManager.GPS_PROVIDER);
                             if (deviceLocation != null) {
 
                                 location.setLatitude(deviceLocation.getLatitude());
                                 location.setLongitude( deviceLocation.getLongitude());
                             }
+                            else{
+                                /**
+                                 * I not get location device return an exception
+                                 */
+                                throw  new CantGetDeviceLocationException();
+                            }
+                        }
+                        else{
+                            /**
+                             * I not get location device return an exception
+                             */
+                            throw  new CantGetDeviceLocationException();
                         }
                     }
                 }
