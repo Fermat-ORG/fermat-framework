@@ -96,29 +96,7 @@ public class MyApplication extends android.support.multidex.MultiDexApplication 
 
         mPlatform = new Platform();
 
-     /*    try {
 
-        // mContext = this.getApplicationContext();
-
-         AndroidOsAddonRoot Os = new AndroidOsAddonRoot();
-
-
-        ///  Os.setContext(this);
-          mPlatform.setOs(Os);
-          mPlatform.start();
-
-        //File file = new File(mContext.getFilesDir(), "Platform_Last_State");
-
-        //Context context = getContext();
-
-        //Platform com.bitdubai.platform = new Platform(this.getApplicationContext());
-        //mPlatform = com.bitdubai.platform;
-         }
-         catch (CantStartPlatformException e) {
-           System.err.println("CantStartPlatformException: " + e.getMessage());
-
-         }
-*/
     }
 
     public static void setActivityProperties(Activity activity, Window window,Resources context,PagerSlidingTabStrip tabStrip,ActionBar actionBar,TitleBar titleBar,TextView abTitle, CharSequence Title)
