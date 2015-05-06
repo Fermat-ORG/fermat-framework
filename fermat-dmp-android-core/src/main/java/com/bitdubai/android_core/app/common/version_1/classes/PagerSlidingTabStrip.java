@@ -144,6 +144,8 @@ public class PagerSlidingTabStrip extends HorizontalScrollView {
         //scrollOffset = a.getDimensionPixelSize(R.styleable.PagerSlidingTabStrip_pstsScrollOffset, scrollOffset);
         //textAllCaps = a.getBoolean(R.styleable.PagerSlidingTabStrip_pstsTextAllCaps, textAllCaps);
 
+
+        //*** este siguiente recycle estaba asi originalmente pero da un error y tod o se cae....
         //a.recycle();
 
         rectPaint = new Paint();
