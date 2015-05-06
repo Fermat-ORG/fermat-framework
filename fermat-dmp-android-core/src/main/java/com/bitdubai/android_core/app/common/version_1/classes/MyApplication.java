@@ -22,7 +22,7 @@ import com.bitdubai.fermat_api.layer._14_middleware.app_runtime.TitleBar;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.fermat_core.Platform;
 
-public class MyApplication extends Application {
+public class MyApplication extends android.support.multidex.MultiDexApplication {
 
     private final static Handler handler = new Handler();
     public static Typeface mDefaultTypeface;

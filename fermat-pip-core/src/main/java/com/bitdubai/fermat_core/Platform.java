@@ -494,6 +494,16 @@ public class Platform  {
                  */
             
             }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
             
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
@@ -551,6 +561,16 @@ public class Platform  {
                  * * * 
                  */
             }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -603,6 +623,16 @@ public class Platform  {
                  * * * 
                  */
 
+                throw new CantStartPlatformException();
+            }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
                 throw new CantStartPlatformException();
             }
             
@@ -658,6 +688,16 @@ public class Platform  {
                  * will be disabled. In the future, I will re-try the start of plugins that are not starting at once.
                  * * *
                  */
+            }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+                throw new CantStartPlatformException();
             }
 
         }
@@ -717,6 +757,16 @@ public class Platform  {
                  * * *
                  */
             }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+                throw new CantStartPlatformException();
+            }
             
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
@@ -770,6 +820,16 @@ public class Platform  {
                  * will be disabled. In the future, I will re-try the start of plugins that are not starting at once.
                  * * *
                  */
+            }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
             }
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
@@ -874,6 +934,16 @@ public class Platform  {
 
                 throw new CantStartPlatformException();
             }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
 
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
@@ -932,6 +1002,16 @@ public class Platform  {
 
                 throw new CantStartPlatformException();
             }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
             
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
@@ -989,6 +1069,16 @@ public class Platform  {
                  */
 
                 throw new CantStartPlatformException();
+            }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
             }
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
@@ -1049,6 +1139,17 @@ public class Platform  {
 
                 throw new CantStartPlatformException();
             }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
+            
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -1106,6 +1207,17 @@ public class Platform  {
 
                 throw new CantStartPlatformException();
             }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
+            
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -1165,6 +1277,17 @@ public class Platform  {
 
                 throw new CantStartPlatformException();
             }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
+            
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -1220,6 +1343,17 @@ public class Platform  {
 
                 throw new CantStartPlatformException();
             }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
+            
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -1279,6 +1413,17 @@ public class Platform  {
 
                 throw new CantStartPlatformException();
             }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
+            
 
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
@@ -1454,6 +1599,17 @@ public class Platform  {
 
                 throw new CantStartPlatformException();
             }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
+            
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -1511,6 +1667,17 @@ public class Platform  {
 
                 throw new CantStartPlatformException();
             }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
+            
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -1572,6 +1739,16 @@ public class Platform  {
 
                 throw new CantStartPlatformException();
             }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -1631,6 +1808,17 @@ public class Platform  {
 
                 throw new CantStartPlatformException();
             }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
+            
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -1690,6 +1878,17 @@ public class Platform  {
 
                 throw new CantStartPlatformException();
             }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
+            
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -1747,6 +1946,17 @@ public class Platform  {
 
                 throw new CantStartPlatformException();
             }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
+            
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -1806,6 +2016,17 @@ public class Platform  {
 
                 throw new CantStartPlatformException();
             }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
+            
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -1864,6 +2085,16 @@ public class Platform  {
                  */
 
                 throw new CantStartPlatformException();
+            }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
             }
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
@@ -1927,6 +2158,17 @@ public class Platform  {
 
                 throw new CantStartPlatformException();
             }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
+            
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -2049,6 +2291,17 @@ public class Platform  {
 
                 throw new CantStartPlatformException();
             }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
+            
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
@@ -2111,6 +2364,17 @@ public class Platform  {
 
                 throw new CantStartPlatformException();
             }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
+            
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {

@@ -125,7 +125,14 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
 
         try {
-            setContentView(R.layout.runtime_app_activity_runtime);
+            try {
+                setContentView(R.layout.runtime_app_activity_runtime);    
+            }
+            catch (Exception e)
+            {
+                System.err.println("Can't set content view as runtime_app_activity_runtime: " + e.getMessage());
+            }
+            
             this.savedInstanceState = savedInstanceState;
             //init runtime app
 
