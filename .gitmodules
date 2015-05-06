@@ -165,4 +165,4 @@
 	url = https://github.com/bitDubai/fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai.git
 [submodule "fermat-p2p-plugin-communication-cloud-client-bitdubai"]
 	path = fermat-p2p-plugin-communication-cloud-client-bitdubai
-	url = https://github.com/bitDubai/fermat-p2p-plugin-communication-cloud-client-bitdubai.git
+	url = https://github.com/bitDubai/fermat-p2p-plugin-communication-cloud-client-bitdubai
