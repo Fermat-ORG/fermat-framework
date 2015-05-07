@@ -1,13 +1,19 @@
 package com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.device_connectivity;
 
+import android.bluetooth.le.ScanResult;
+
 import android.content.Context;
+
+import com.bitdubai.fermat_api.CantGetActiveConnectionException;
+import com.bitdubai.fermat_api.CantGetConnectionsException;
+import com.bitdubai.fermat_api.CantGetIsConnectedException;
 import com.bitdubai.fermat_api.layer._2_os.device_connectivity.ConnectionCapacity;
 import com.bitdubai.fermat_api.layer._2_os.device_connectivity.ConnectionType;
 import com.bitdubai.fermat_api.layer._2_os.device_connectivity.ConnectivityManager;
 import com.bitdubai.fermat_api.layer._2_os.device_connectivity.Network;
 
 import android.net.NetworkInfo;
-import android.net.wifi.p2p.WifiP2pManager;
+import android.net.wifi.WifiManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +41,7 @@ public class AndroidConnectivityManager implements ConnectivityManager {
     }
 
     @Override
-    public List<Network> getConnections(){
+    public List<Network> getConnections() throws CantGetConnectionsException {
 
         android.net.ConnectivityManager connection = (android.net.ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo[] netinfo = connection.getAllNetworkInfo();
@@ -102,7 +108,10 @@ public class AndroidConnectivityManager implements ConnectivityManager {
 
     }
 
-    public Network getActiveConnection(){
+    /**
+     * Return the network who is connected in the phone
+     */
+    public Network getActiveConnection() throws CantGetActiveConnectionException {
         android.net.ConnectivityManager connection = (android.net.ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netinfo = connection.getActiveNetworkInfo();
         Network connectionIfo = new AndroidNetwork();
@@ -152,18 +161,10 @@ public class AndroidConnectivityManager implements ConnectivityManager {
     }
 
 
-    @Override
-    public ConnectionCapacity getConnectionIntensity(){
-      //  android.net.ConnectivityManager connection = (android.net.ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        //NetworkInfo info = connection.getNetworkInfo(1);
 
-       // WifiP2pManager wifiP2pManager = (WifiP2pManager)context.getSystemService(context.WIFI_P2P_SERVICE);
-
-        return null;
-    }
 
     @Override
-    public boolean isConnected(ConnectionType redType){
+    public boolean isConnected(ConnectionType redType) throws CantGetIsConnectedException {
         android.net.ConnectivityManager connection = (android.net.ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         int networkType =1;
         switch(redType) {

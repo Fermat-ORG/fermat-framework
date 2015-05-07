@@ -3,8 +3,10 @@ package com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version
 import android.content.Context;
 
 import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.database_system.AndroidPlatformDatabaseSystem;
+import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.device_location.AndroidLocationManager;
 import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.file_system.AndroidPlatformFileSystem;
 import com.bitdubai.fermat_api.layer._2_os.database_system.PlatformDatabaseSystem;
+import com.bitdubai.fermat_api.layer._2_os.device_location.LocationManager;
 import com.bitdubai.fermat_api.layer._2_os.file_system.PlatformFileSystem;
 import com.bitdubai.fermat_api.layer._2_os.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer._2_os.file_system.PluginFileSystem;
@@ -32,6 +34,7 @@ public class AndroidOsAddonRoot implements Os {
     PluginFileSystem pluginFileSystem;
     PlatformFileSystem platformFileSystem;
     LocationSystem pluginLocationSystem;
+    LocationManager pluginLocationManager;
 
 
     Context context;
@@ -42,6 +45,7 @@ public class AndroidOsAddonRoot implements Os {
         this.pluginFileSystem = new AndroidPluginFileSystem();
         this.platformFileSystem = new AndroidPlatformFileSystem();
         this.platformDatabaseSystem = new AndroidPlatformDatabaseSystem();
+        this.pluginLocationManager = new AndroidLocationManager();
 
     }
 
@@ -76,6 +80,11 @@ public class AndroidOsAddonRoot implements Os {
     }
 
     @Override
+    public LocationManager getLocationManager(){
+        return this.pluginLocationManager;
+    }
+
+    @Override
     public void setContext(Object context) {
 
         this.context = (Context) context;
@@ -84,6 +93,7 @@ public class AndroidOsAddonRoot implements Os {
         this.pluginDatabaseSystem.setContext(context);
         this.platformFileSystem.setContext(context);
         this.platformDatabaseSystem.setContext(context);
+        this.pluginLocationManager.setContext(context);
     }
 
 

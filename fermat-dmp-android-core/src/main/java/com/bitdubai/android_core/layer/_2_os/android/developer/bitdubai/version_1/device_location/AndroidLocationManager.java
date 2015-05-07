@@ -8,6 +8,7 @@ import android.os.Bundle;
 import com.bitdubai.fermat_api.CantGetDeviceLocationException;
 import com.bitdubai.fermat_api.layer._2_os.device_location.Location;
 import com.bitdubai.fermat_api.layer._2_os.device_location.LocationManager;
+import com.bitdubai.fermat_api.layer._2_os.device_location.LocationProvider;
 
 /**
  * Created by Natalia on 30/04/2015.
@@ -43,7 +44,7 @@ public class AndroidLocationManager implements LocationManager,LocationListener 
 
     @Override
     public Location getLocation() throws CantGetDeviceLocationException {
-        com.bitdubai.fermat_api.layer._2_os.device_location.Location location = new AndroidLocation();
+        com.bitdubai.fermat_api.layer._2_os.device_location.Location location = null;
         try {
             locationManager = (android.location.LocationManager) context.getSystemService(context.LOCATION_SERVICE);
 
@@ -63,8 +64,9 @@ public class AndroidLocationManager implements LocationManager,LocationListener 
                     if (locationManager != null) {
                         deviceLocation = locationManager.getLastKnownLocation(android.location.LocationManager.NETWORK_PROVIDER);
                         if (deviceLocation != null) {
-                            location.setLatitude(deviceLocation.getLatitude());
-                            location.setLongitude(deviceLocation.getLongitude());
+
+                            location = new AndroidLocation(deviceLocation.getLatitude(),deviceLocation.getLongitude(),deviceLocation.getTime(),deviceLocation.getAltitude(),LocationProvider.NETWORK);
+
                         }
                         else{
                             /**
@@ -90,8 +92,8 @@ public class AndroidLocationManager implements LocationManager,LocationListener 
                             deviceLocation = locationManager.getLastKnownLocation(android.location.LocationManager.GPS_PROVIDER);
                             if (deviceLocation != null) {
 
-                                location.setLatitude(deviceLocation.getLatitude());
-                                location.setLongitude( deviceLocation.getLongitude());
+                                location = new AndroidLocation(deviceLocation.getLatitude(),deviceLocation.getLongitude(),deviceLocation.getTime(),deviceLocation.getAltitude(),LocationProvider.GPS);
+
                             }
                             else{
                                 /**
