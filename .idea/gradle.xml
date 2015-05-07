@@ -5,7 +5,8 @@
       <GradleProjectSettings>
         <option name="distributionType" value="LOCAL" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleHome" value="$APPLICATION_HOME_DIR$/gradle-2.2.1" />
+        <option name="gradleHome" value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1" />
+        <option name="gradleJvm" value="1.7" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
@@ -19,8 +20,9 @@
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-dmp-plugin-crypto-address-book-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-crypto-network-bitcoin-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-crypto-user-address-book-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-crypto-wallet-address-book-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-license-wallet-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-middleware-app-runtime-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai" />

@@ -25,7 +25,6 @@ dependencies {
     compile project(':fermat-pip-addon-user-device-user-bitdubai')
     compile project(':fermat-pip-addon-user-extra-user-bitdubai')
     compile project(':fermat-pip-addon-user-intra-user-bitdubai')
-    compile project(':fermat-dmp-plugin-crypto-address-book-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-bank-notes-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-crypto-addresses-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-money-bitdubai')
@@ -55,5 +54,7 @@ dependencies {
     compile project(':fermat-dmp-plugin-network-service-intra-user-bitdubai')
     compile project(':fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai')
     compile project(':fermat-p2p-plugin-communication-cloud-client-bitdubai')
+    compile project(':fermat-dmp-plugin-crypto-user-address-book-bitdubai')
+    compile project(':fermat-dmp-plugin-crypto-wallet-address-book-bitdubai')
 }
 

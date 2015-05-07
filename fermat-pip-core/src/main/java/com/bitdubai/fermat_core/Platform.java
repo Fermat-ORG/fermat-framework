@@ -842,23 +842,23 @@ public class Platform  {
 
             ((Service)cryptoNetwork).stop();
         }
-
+        
         /**
          * ------------------------------
-         *  Plugin Address Book Crypto
+         *  Plugin Wallet Address Book Crypto
          * ------------------------------
          * * * * 
          */
         /**
-         * I will give the Address book crypto access to the File System and to the Event Manager
+         * I will give the Wallet Address book crypto access to the File System and to the Event Manager
          */
 
-        Plugin addressBookCrypto = ((CryptoLayer) mCryptoLayer).getmAddressBook();
+        Plugin walletAddressBookCrypto = ((CryptoLayer) mCryptoLayer).getmWalletAddressBook();
 
-        ((DealsWithPluginFileSystem) addressBookCrypto).setPluginFileSystem(os.getPlugInFileSystem());
-        ((DealsWithEvents) addressBookCrypto).setEventManager((EventManager) eventManager);
+        ((DealsWithPluginFileSystem) walletAddressBookCrypto).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) walletAddressBookCrypto).setEventManager((EventManager) eventManager);
 
-        corePlatformContext.addPlugin(addressBookCrypto, Plugins.BITDUBAI_ADDRESS_BOOK_CRYPTO);
+        corePlatformContext.addPlugin(walletAddressBookCrypto, Plugins.BITDUBAI_WALLET_ADDRESS_BOOK_CRYPTO);
 
         try
         {
@@ -867,11 +867,56 @@ public class Platform  {
              * As any other plugin, this one will need its identity in order to access the data it persisted before.
              */
 
-            UUID pluginID = pluginsIdentityManager.getPluginId(addressBookCrypto);
-            (addressBookCrypto).setId(pluginID);
+            UUID pluginID = pluginsIdentityManager.getPluginId(walletAddressBookCrypto);
+            (walletAddressBookCrypto).setId(pluginID);
+
+            try {
+                ((Service) walletAddressBookCrypto).start();
+            }
+            catch (Exception e){
+                System.err.println(e.getMessage());
+
+            }
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+        
+        
+        /**
+         * ------------------------------
+         *  Plugin User Address Book Crypto
+         * ------------------------------
+         * * * * 
+         */
+        /**
+         * I will give the User Address book crypto access to the File System and to the Event Manager
+         */
+
+        Plugin userAddressBookCrypto = ((CryptoLayer) mCryptoLayer).getmUserAddressBook();
+
+        ((DealsWithPluginFileSystem) userAddressBookCrypto).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) userAddressBookCrypto).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(userAddressBookCrypto, Plugins.BITDUBAI_USER_ADDRESS_BOOK_CRYPTO);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(userAddressBookCrypto);
+            (userAddressBookCrypto).setId(pluginID);
             
             try {
-                ((Service) addressBookCrypto).start();
+                ((Service) userAddressBookCrypto).start();
             }
             catch (Exception e){
                 System.err.println(e.getMessage());

@@ -61,9 +61,6 @@
 [submodule "fermat-pip-addon-user-intra-user-bitdubai"]
 	path = fermat-pip-addon-user-intra-user-bitdubai
 	url = https://github.com/bitDubai/fermat-pip-addon-user-intra-user-bitdubai.git
-[submodule "fermat-dmp-plugin-crypto-address-book-bitdubai"]
-	path = fermat-dmp-plugin-crypto-address-book-bitdubai
-	url = https://github.com/bitDubai/fermat-dmp-plugin-crypto-address-book-bitdubai.git
 [submodule "fermat-dmp-plugin-network-service-bank-notes-bitdubai"]
 	path = fermat-dmp-plugin-network-service-bank-notes-bitdubai
 	url = https://github.com/bitDubai/fermat-dmp-plugin-network-service-bank-notes-bitdubai.git
@@ -166,3 +163,9 @@
 [submodule "fermat-p2p-plugin-communication-cloud-client-bitdubai"]
 	path = fermat-p2p-plugin-communication-cloud-client-bitdubai
 	url = https://github.com/bitDubai/fermat-p2p-plugin-communication-cloud-client-bitdubai
+[submodule "fermat-dmp-plugin-crypto-user-address-book-bitdubai"]
+	path = fermat-dmp-plugin-crypto-user-address-book-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-plugin-crypto-user-address-book-bitdubai.git
+[submodule "fermat-dmp-plugin-crypto-wallet-address-book-bitdubai"]
+	path = fermat-dmp-plugin-crypto-wallet-address-book-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-plugin-crypto-wallet-address-book-bitdubai.git

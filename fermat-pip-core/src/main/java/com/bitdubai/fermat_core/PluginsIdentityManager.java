@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.FileNotFoundEx
 import com.bitdubai.fermat_dmp_plugin.layer._11_world.coinbase.developer.bitdubai.version_1.CoinbaseWorldPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._12_basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.BitcoinWalletBasicWalletPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._15_transaction.incoming_crypto.developer.bitdubai.version_1.IncomingCryptoTransactionPluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer._8_crypto.wallet_address_book.developer.bitdubai.version_1.WalletAddressBookCryptoPluginRoot;
 import com.bitdubai.fermat_p2p_plugin.layer._9_communication.cloud.developer.bitdubai.version_1.CloudCommunicationChannelPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._10_network_service.bank_notes.developer.bitdubai.version_1.BankNotesNetworkServicePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._10_network_service.wallet_community.developer.bitdubai.version_1.WalletCommunityNetworkServicePluginRoot;
@@ -30,7 +31,7 @@ import com.bitdubai.fermat_dmp_plugin.layer._11_world.coinapult.developer.bitdub
 import com.bitdubai.fermat_dmp_plugin.layer._11_world.blockchain_info.developer.bitdubai.version_1.BlockchainInfoWorldPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._11_world.crypto_index.developer.bitdubai.version_1.CryptoIndexWorldPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._11_world.shape_shift.developer.bitdubai.version_1.ShapeShiftWorldPluginRoot;
-import com.bitdubai.fermat_dmp_plugin.layer._8_crypto.address_book.developer.bitdubai.version_1.AddressBookCryptoPluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer._8_crypto.user_address_book.developer.bitdubai.version_1.UserAddressBookCryptoPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._14_middleware.app_runtime.developer.bitdubai.version_1.AppRuntimeMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._14_middleware.bank_notes.developer.bitdubai.version_1.BankNotesMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._12_basic_wallet.discount_wallet.developer.bitdubai.version_1.DiscountWalletBasicWalletPluginRoot;
@@ -50,7 +51,7 @@ import java.util.UUID;
 public class PluginsIdentityManager {
 
     private PlatformFileSystem platformFileSystem;
-    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 30;
+    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 31;
     private List<UUID> pluginIds = new ArrayList<>();
 
 
@@ -472,8 +473,8 @@ public class PluginsIdentityManager {
         if (pluginIndex == 0) {
             try
             {
-                AddressBookCryptoPluginRoot tryType;
-                tryType = (AddressBookCryptoPluginRoot) plugin;
+                UserAddressBookCryptoPluginRoot tryType;
+                tryType = (UserAddressBookCryptoPluginRoot) plugin;
                 pluginIndex = 18;
             }
             catch (Exception e)
@@ -628,6 +629,18 @@ public class PluginsIdentityManager {
                     BitcoinWalletBasicWalletPluginRoot tryType;
                     tryType = (BitcoinWalletBasicWalletPluginRoot) plugin;
                     pluginIndex = 29;
+                } catch (Exception e) {
+                    /**
+                     * If this fails, is because this is not the index for this plug in.
+                     */
+                }
+            }
+
+            if (pluginIndex == 0) {
+                try {
+                    WalletAddressBookCryptoPluginRoot tryType;
+                    tryType = (WalletAddressBookCryptoPluginRoot) plugin;
+                    pluginIndex = 30;
                 } catch (Exception e) {
                     /**
                      * If this fails, is because this is not the index for this plug in.

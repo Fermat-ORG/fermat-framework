@@ -1,14 +1,14 @@
-package com.bitdubai.fermat_core.layer._8_crypto.address_book;
+package com.bitdubai.fermat_core.layer._8_crypto.user_address_book;
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer._8_crypto.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer._8_crypto.CryptoSubsystem;
-import com.bitdubai.fermat_dmp_plugin.layer._8_crypto.address_book.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_dmp_plugin.layer._8_crypto.user_address_book.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by loui on 20/02/15.
  */
-public class AddressBookSubsystem implements CryptoSubsystem {
+public class UserAddressBookSubsystem implements CryptoSubsystem {
 
     Plugin plugin;
 

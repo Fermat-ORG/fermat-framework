@@ -8,7 +8,8 @@
     </facet>
     <facet type="java-gradle" name="Java-Gradle">
       <configuration>
-        <option name="BUILD_FOLDER_PATH" />
+        <option name="BUILD_FOLDER_PATH" value="$MODULE_DIR$/build" />
+        <option name="BUILDABLE" value="true" />
       </configuration>
     </facet>
   </component>
@@ -43,7 +44,6 @@
     <orderEntry type="module" module-name="fermat-pip-addon-user-device-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-user-extra-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-user-intra-user-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-dmp-plugin-crypto-address-book-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-bank-notes-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-crypto-addresses-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-money-bitdubai" exported="" />
@@ -73,5 +73,7 @@
     <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-intra-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-p2p-plugin-communication-cloud-client-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-plugin-crypto-user-address-book-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-plugin-crypto-wallet-address-book-bitdubai" exported="" />
   </component>
 </module>
