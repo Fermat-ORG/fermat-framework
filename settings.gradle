@@ -49,7 +49,6 @@ include ':fermat-dmp-plugin-crypto-network-bitcoin-bitdubai'
 include ':fermat-p2p-plugin-communication-cloud-client-bitdubai'
 include ':fermat-p2p-plugin-communication-cloud-server-bitdubai'
 
-include ':fermat-pip-addon-os-device-location-bitdubai'
 include ':fermat-pip-addon-hardware-local-device-bitdubai'
 include ':fermat-pip-addon-platform-service-error-manager-bitdubai'
 include ':fermat-pip-addon-platform-service-event-manager-bitdubai'

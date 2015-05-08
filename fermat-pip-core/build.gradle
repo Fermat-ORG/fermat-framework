@@ -50,7 +50,6 @@ dependencies {
     compile project(':fermat-p2p-plugin-communication-cloud-server-bitdubai')
     compile project(':fermat-dmp-plugin-module-wallet-factory-bitdubai')
     compile project(':fermat-pip-addon-platform-service-location-subsystem-bitdubai')
-    compile project(':fermat-pip-addon-os-device-location-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-intra-user-bitdubai')
     compile project(':fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai')
     compile project(':fermat-p2p-plugin-communication-cloud-client-bitdubai')

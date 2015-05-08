@@ -58,13 +58,18 @@
             <option value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-addon-hardware-local-device-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-addon-hardware-remote-device-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-pip-addon-os-device-location-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-addon-platform-service-error-manager-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-addon-platform-service-event-manager-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-addon-platform-service-location-subsystem-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-addon-user-device-user-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-addon-user-extra-user-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-addon-user-intra-user-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-pip-android-addon-os-android-database-system-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-pip-android-addon-os-device-connectivity-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-pip-android-addon-os-device-location-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-pip-android-addon-os-device-power-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-pip-android-addon-os-file-system-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-pip-android-addon-os-location-system-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-api" />
             <option value="$PROJECT_DIR$/fermat-pip-core" />
           </set>
