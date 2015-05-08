@@ -9,6 +9,7 @@
     <facet type="java-gradle" name="Java-Gradle">
       <configuration>
         <option name="BUILD_FOLDER_PATH" value="$MODULE_DIR$/build" />
+        <option name="BUILDABLE" value="true" />
       </configuration>
     </facet>
   </component>
@@ -68,11 +69,11 @@
     <orderEntry type="module" module-name="fermat-p2p-plugin-communication-cloud-server-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-module-wallet-factory-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-platform-service-location-subsystem-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-pip-addon-os-device-location-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-intra-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-p2p-plugin-communication-cloud-client-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-crypto-user-address-book-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-crypto-wallet-address-book-bitdubai" exported="" />
+    <orderEntry type="library" exported="" name="fermat-pip-core.fermat-pip-core-1.0" level="project" />
   </component>
 </module>

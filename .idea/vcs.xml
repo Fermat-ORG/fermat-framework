@@ -49,13 +49,18 @@
     <mapping directory="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-pip-addon-hardware-local-device-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-pip-addon-hardware-remote-device-bitdubai" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/fermat-pip-addon-os-device-location-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-pip-addon-platform-service-error-manager-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-pip-addon-platform-service-event-manager-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-pip-addon-platform-service-location-subsystem-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-pip-addon-user-device-user-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-pip-addon-user-extra-user-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-pip-addon-user-intra-user-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-pip-android-addon-os-android-database-system-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-pip-android-addon-os-device-connectivity-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-pip-android-addon-os-device-location-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-pip-android-addon-os-device-power-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-pip-android-addon-os-file-system-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-pip-android-addon-os-location-system-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-pip-api" vcs="Git" />
   </component>
 </project>

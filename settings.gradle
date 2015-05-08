@@ -1,4 +1,4 @@
-include ':fermat-dmp-android-core', ':fermat-dmp-android-shop-manager-bitdubai'
+include ':fermat-dmp-android-core', ':fermat-dmp-android-shop-manager-bitdubai', ':fermat-pip-android-addon-os-android-database-system-bitdubai', ':fermat-pip-android-addon-os-device-connectivity-bitdubai', ':fermat-pip-android-addon-os-device-location-bitdubai', ':fermat-pip-android-addon-os-device-power-bitdubai', ':fermat-pip-android-addon-os-file-system-bitdubai', ':fermat-pip-android-addon-os-location-system-bitdubai'
 include ':fermat-pip-core'
 include ':fermat-pip-api'
 
@@ -49,7 +49,6 @@ include ':fermat-dmp-plugin-crypto-network-bitcoin-bitdubai'
 include ':fermat-p2p-plugin-communication-cloud-client-bitdubai'
 include ':fermat-p2p-plugin-communication-cloud-server-bitdubai'
 
-include ':fermat-pip-addon-os-device-location-bitdubai'
 include ':fermat-pip-addon-hardware-local-device-bitdubai'
 include ':fermat-pip-addon-platform-service-error-manager-bitdubai'
 include ':fermat-pip-addon-platform-service-event-manager-bitdubai'

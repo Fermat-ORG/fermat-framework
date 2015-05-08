@@ -151,9 +151,6 @@
 [submodule "fermat-pip-api"]
 	path = fermat-pip-api
 	url = https://github.com/bitDubai/fermat-pip-api
-[submodule "fermat-pip-addon-os-device-location-bitdubai"]
-	path = fermat-pip-addon-os-device-location-bitdubai
-	url = https://github.com/bitDubai/fermat-pip-addon-os-device-location-bitdubai
 [submodule "fermat-dmp-plugin-network-service-intra-user-bitdubai"]
 	path = fermat-dmp-plugin-network-service-intra-user-bitdubai
 	url = https://github.com/bitDubai/fermat-dmp-plugin-network-service-intra-user-bitdubai
@@ -169,3 +166,21 @@
 [submodule "fermat-dmp-plugin-crypto-wallet-address-book-bitdubai"]
 	path = fermat-dmp-plugin-crypto-wallet-address-book-bitdubai
 	url = https://github.com/bitDubai/fermat-dmp-plugin-crypto-wallet-address-book-bitdubai.git
+[submodule "fermat-pip-android-addon-os-android-database-system-bitdubai"]
+	path = fermat-pip-android-addon-os-android-database-system-bitdubai
+	url = https://github.com/bitDubai/fermat-pip-android-addon-os-android-database-system-bitdubai.git
+[submodule "fermat-pip-android-addon-os-device-location-bitdubai"]
+	path = fermat-pip-android-addon-os-device-location-bitdubai
+	url = https://github.com/bitDubai/fermat-pip-android-addon-os-device-location-bitdubai.git
+[submodule "fermat-pip-android-addon-os-device-connectivity-bitdubai"]
+	path = fermat-pip-android-addon-os-device-connectivity-bitdubai
+	url = https://github.com/bitDubai/fermat-pip-android-addon-os-device-connectivity-bitdubai.git
+[submodule "fermat-pip-android-addon-os-device-power-bitdubai"]
+	path = fermat-pip-android-addon-os-device-power-bitdubai
+	url = https://github.com/bitDubai/fermat-pip-android-addon-os-device-power-bitdubai.git
+[submodule "fermat-pip-android-addon-os-file-system-bitdubai"]
+	path = fermat-pip-android-addon-os-file-system-bitdubai
+	url = https://github.com/bitDubai/fermat-pip-android-addon-os-file-system-bitdubai.git
+[submodule "fermat-pip-android-addon-os-location-system-bitdubai"]
+	path = fermat-pip-android-addon-os-location-system-bitdubai
+	url = https://github.com/bitDubai/fermat-pip-android-addon-os-location-system-bitdubai.git
