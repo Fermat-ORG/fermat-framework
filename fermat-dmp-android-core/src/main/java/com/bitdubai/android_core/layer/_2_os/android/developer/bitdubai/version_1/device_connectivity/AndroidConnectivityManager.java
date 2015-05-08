@@ -2,16 +2,21 @@ package com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version
 
 import android.bluetooth.le.ScanResult;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 
 import com.bitdubai.fermat_api.CantGetActiveConnectionException;
 import com.bitdubai.fermat_api.CantGetConnectionsException;
 import com.bitdubai.fermat_api.CantGetIsConnectedException;
+import com.bitdubai.fermat_api.layer._1_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer._2_os.device_connectivity.ConnectionCapacity;
 import com.bitdubai.fermat_api.layer._2_os.device_connectivity.ConnectionType;
 import com.bitdubai.fermat_api.layer._2_os.device_connectivity.ConnectivityManager;
 import com.bitdubai.fermat_api.layer._2_os.device_connectivity.Network;
+import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.DealsWithEvents;
+import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventManager;
 
+import android.content.Intent;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 
@@ -29,7 +34,6 @@ public class AndroidConnectivityManager implements ConnectivityManager {
     private Context context;
 
     private List<Network> conecctions;
-
 
     /**
      * ConnectivityManager Interface implementation.
@@ -202,4 +206,6 @@ public class AndroidConnectivityManager implements ConnectivityManager {
 
         return info.isConnected();
     }
+
+
 }
