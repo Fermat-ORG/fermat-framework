@@ -31,7 +31,7 @@ import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 import com.bitdubai.android_core.app.common.version_1.classes.NavigationDrawerArrayAdapter;
-import com.bitdubai.wallet_factory.fragment.version_2.activity.FactoryActivity;
+import com.bitdubai.wallet_factory.fragment.version_3.activity.FactoryActivity;
 import com.bitdubai.wallet_publisher.activity.PublisherActivity;
 import com.bitdubai.wallet_publisher.activity.ShopsActivity;
 

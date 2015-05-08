@@ -102,7 +102,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.bitdubai.android_core.app.shell.version_1.activity.DesktopActivity" />
         </activity>
-        <activity android:name="com.bitdubai.wallet_factory.fragment.version_2.activity.FactoryActivity"
+        <activity android:name="com.bitdubai.wallet_factory.fragment.version_3.activity.FactoryActivity"
             android:label="Wallet Factory">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
