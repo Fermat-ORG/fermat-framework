@@ -2,7 +2,7 @@ package com.bitdubai.fermat_core.layer._2_os.android.device_location;
 
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.layer._2_os.CantStartSubsystemException;
-import com.bitdubai.fermat_pip_addon.layer._2_os.device_location.developer.bitdubai.DeveloperBitDubai;
+//import com.bitdubai.fermat_pip_addon.layer._2_os.device_location.developer.bitdubai.DeveloperBitDubai; (No compilaba LUIS)
 
 /**
  * Created by loui on 29/04/15.
@@ -28,8 +28,8 @@ public class DeviceLocationSubsystem  {
          */
 
         try {
-            DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
-            addon = developerBitDubai.getAddon();
+    //        DeveloperBitDubai developerBitDubai = new DeveloperBitDubai(); (No compilaba LUIS)
+     //       addon = developerBitDubai.getAddon();(No compilaba LUIS)
         }
         catch (Exception e)
         {
