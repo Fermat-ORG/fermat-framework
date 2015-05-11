@@ -47,7 +47,7 @@ public class AndroidDatabaseRecord implements DatabaseTableRecord {
     }
 
     @Override
-    public long getlongValue(String columnName) {
+    public long getLongValue(String columnName) {
 
         for (int i = 0; i < values.size(); i++) {
             if(values.get(i).getName().equals(columnName)){
@@ -58,7 +58,7 @@ public class AndroidDatabaseRecord implements DatabaseTableRecord {
     }
 
     @Override
-    public float getfloatValue(String columnName){
+    public float getFloatValue(String columnName){
         for (int i = 0; i < values.size(); i++) {
             if(values.get(i).getName().equals(columnName)){
                 return Float.parseFloat(values.get(i).getValue());
@@ -99,7 +99,7 @@ public class AndroidDatabaseRecord implements DatabaseTableRecord {
     }
 
     @Override
-    public void setlongValue(String columnName, long value) {
+    public void setLongValue(String columnName, long value) {
         if(values == null)
             values = new ArrayList<DatabaseRecord>();
 
@@ -113,7 +113,7 @@ public class AndroidDatabaseRecord implements DatabaseTableRecord {
     }
 
     @Override
-    public void setfloatValue (String columnName, float value){
+    public void setFloatValue(String columnName, float value){
 
         if(values == null)
             values = new ArrayList<DatabaseRecord>();
