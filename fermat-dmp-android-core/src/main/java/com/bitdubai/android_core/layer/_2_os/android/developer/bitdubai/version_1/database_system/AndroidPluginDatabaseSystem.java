@@ -53,7 +53,7 @@ public class AndroidPluginDatabaseSystem  implements PluginDatabaseSystem{
             AndroidDatabase database;
             String hasDBName = hashDataBaseName(databaseName);
             database = new AndroidDatabase(this.Context, ownerId, hasDBName);
-            database.openDatabase(hasDBName);
+            database.deleteDatabase(hasDBName);
 
             return database;
         }

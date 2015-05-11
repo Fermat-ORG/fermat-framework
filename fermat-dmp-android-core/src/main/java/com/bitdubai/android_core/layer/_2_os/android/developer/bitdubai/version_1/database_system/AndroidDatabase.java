@@ -178,13 +178,11 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
         catch (Exception exception) {
 
             /**
-             * Probably there is no distinctions between a database that it can not be opened and a one that doesn't not exist.
-             * We will assume that if it didn't open it was because it didn't exist.
+             * unexpected error deleting the database
              * * *
              */
 
             throw new DatabaseNotFoundException();
-            //TODO: NATALIA; Revisa si devuelve la misma exception cuando la base de datos no existe que cuando simplement no la puede abrir por otra razon. Y avisame el resultado de la investigacion esta.
         }
 
     }

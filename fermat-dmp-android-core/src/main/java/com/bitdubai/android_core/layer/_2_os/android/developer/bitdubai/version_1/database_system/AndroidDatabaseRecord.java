@@ -16,7 +16,7 @@ public class AndroidDatabaseRecord implements DatabaseTableRecord {
     /**
      * DatabaseTableRecord Interface member variables.
      */
-    private List<DatabaseRecord> values;
+     static List<DatabaseRecord> values = new ArrayList<DatabaseRecord>();
 
 
     /**
@@ -58,6 +58,16 @@ public class AndroidDatabaseRecord implements DatabaseTableRecord {
     }
 
     @Override
+    public Integer getIntegerValue(String columnName){
+        for (int i = 0; i < values.size(); i++) {
+            if(values.get(i).getName().equals(columnName)){
+                return Integer.valueOf(values.get(i).getValue());
+            }
+        }
+        return 0;
+    }
+
+    @Override
     public float getFloatValue(String columnName){
         for (int i = 0; i < values.size(); i++) {
             if(values.get(i).getName().equals(columnName)){
@@ -67,6 +77,15 @@ public class AndroidDatabaseRecord implements DatabaseTableRecord {
         return 0;
     }
 
+    @Override
+    public double getDoubleValue(String columnName){
+        for (int i = 0; i < values.size(); i++) {
+            if(values.get(i).getName().equals(columnName)){
+                return Double.parseDouble(values.get(i).getValue());
+            }
+        }
+        return 0;
+    }
     /**
      * Set the field as modified to take in method after update
      */
@@ -113,7 +132,21 @@ public class AndroidDatabaseRecord implements DatabaseTableRecord {
     }
 
     @Override
-    public void setFloatValue(String columnName, float value){
+    public void setIntegerValue(String columnName, Integer value) {
+        if(values == null)
+            values = new ArrayList<DatabaseRecord>();
+
+        DatabaseRecord record = new AndroidRecord();
+
+        record.setName(columnName);
+        record.setValue(String.valueOf(value));
+        record.setChange(true);
+        values.add(record);
+
+    }
+
+    @Override
+     public void setFloatValue(String columnName, float value){
 
         if(values == null)
             values = new ArrayList<DatabaseRecord>();
@@ -127,14 +160,28 @@ public class AndroidDatabaseRecord implements DatabaseTableRecord {
     }
 
     @Override
-    public List<DatabaseRecord> getValues(){
-        return this.values;
+    public void setDoubleValue(String columnName, double value){
+
+        if(values == null)
+            values = new ArrayList<DatabaseRecord>();
+
+        DatabaseRecord record = new AndroidRecord();
+
+        record.setName(columnName);
+        record.setValue(Double.toString(value));
+        record.setChange(true);
+        values.add(record);
     }
 
-    @Override
-    public void setValues( List<DatabaseRecord> values ){
-        this.values = values;
-    }
+   // @Override
+    //public List<DatabaseRecord> getValues(){
+    //   return this.values;
+   // }
+
+   // @Override
+   // public void setValues( List<DatabaseRecord> values ){
+       // this.values = values;
+    //}
 
 
 

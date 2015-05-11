@@ -105,7 +105,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
         try
         {
 
-            List<DatabaseRecord> records =  record.getValues();
+            List<DatabaseRecord> records =  ((AndroidDatabaseRecord) record).values;
 
             ContentValues recordUpdateList = new ContentValues();
 
@@ -140,7 +140,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
         try{
             String strRecords = "";
             String strValues = "";
-            List<DatabaseRecord> records =  record.getValues();
+            List<DatabaseRecord> records =  ((AndroidDatabaseRecord) record).values;
 
             ContentValues initialValues = new ContentValues();
 
@@ -176,6 +176,8 @@ public class AndroidDatabaseTable implements  DatabaseTable {
 
         List<DatabaseRecord>  recordValues = new ArrayList<DatabaseRecord>();
         this.records = new ArrayList<DatabaseTableRecord>() ;
+
+
         String topSentence = "";
         try {
 
@@ -196,7 +198,6 @@ public class AndroidDatabaseTable implements  DatabaseTable {
 
                     for (int i = 0; i < columns.size(); ++i) {
                         DatabaseRecord recordValue = new AndroidRecord();
-                        recordValue = new AndroidRecord();
                         recordValue.setName(columns.get(i).toString());
                         recordValue.setValue(c.getString(c.getColumnIndex(columns.get(i).toString())));
                         recordValue.setChange(false);
@@ -211,9 +212,8 @@ public class AndroidDatabaseTable implements  DatabaseTable {
             throw new CantLoadTableToMemory();
         }
 
-
-        this.tableRecord.setValues(recordValues);
-        this.records.add(this.tableRecord);
+            AndroidDatabaseRecord.values = recordValues;
+            this.records.add(this.tableRecord);
 
     }
 
