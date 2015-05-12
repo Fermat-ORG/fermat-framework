@@ -184,3 +184,6 @@
 [submodule "fermat-pip-android-addon-os-location-system-bitdubai"]
 	path = fermat-pip-android-addon-os-location-system-bitdubai
 	url = https://github.com/bitDubai/fermat-pip-android-addon-os-location-system-bitdubai.git
+[submodule "fermat-dmp-plugin-world-location-bitdubai"]
+	path = fermat-dmp-plugin-world-location-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-plugin-world-location-bitdubai.git

@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantPersistFil
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_dmp_plugin.layer._11_world.coinbase.developer.bitdubai.version_1.CoinbaseWorldPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._12_basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.BitcoinWalletBasicWalletPluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer._12_world.location.developer.bitdubai.version_1.LocationWorldPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._15_transaction.incoming_crypto.developer.bitdubai.version_1.IncomingCryptoTransactionPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._8_crypto.wallet_address_book.developer.bitdubai.version_1.WalletAddressBookCryptoPluginRoot;
 import com.bitdubai.fermat_p2p_plugin.layer._9_communication.cloud.developer.bitdubai.version_1.CloudCommunicationChannelPluginRoot;
@@ -51,7 +52,7 @@ import java.util.UUID;
 public class PluginsIdentityManager {
 
     private PlatformFileSystem platformFileSystem;
-    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 31;
+    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 32;
     private List<UUID> pluginIds = new ArrayList<>();
 
 
@@ -648,6 +649,17 @@ public class PluginsIdentityManager {
                 }
             }
 
+            if (pluginIndex == 0) {
+                try {
+                    LocationWorldPluginRoot tryType;
+                    tryType = (LocationWorldPluginRoot) plugin;
+                    pluginIndex = 31;
+                } catch (Exception e) {
+                    /**
+                     * If this fails, is because this is not the index for this plug in.
+                     */
+                }
+            }
 
         }
 

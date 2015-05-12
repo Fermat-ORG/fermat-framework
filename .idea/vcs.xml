@@ -44,6 +44,7 @@
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-world-coinapult-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-world-coinbase-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-world-crypto-index-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-world-location-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-world-shape-shift-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" vcs="Git" />

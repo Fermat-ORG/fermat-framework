@@ -8,6 +8,7 @@ import com.bitdubai.fermat_core.layer._11_world.coinapult.CoinapultWorldSubsyste
 import com.bitdubai.fermat_core.layer._11_world.blockchain_info.BlockchainInfoWorldSubsystem;
 import com.bitdubai.fermat_core.layer._11_world.coinbase.CoinbaseWorldSubsystem;
 import com.bitdubai.fermat_core.layer._11_world.crypto_index.CryptoIndexWorldSubsystem;
+import com.bitdubai.fermat_core.layer._11_world.location.LocationWorldSubsystem;
 import com.bitdubai.fermat_core.layer._11_world.shape_shift.ShapeShiftWorldSubsystem;
 
 /**
@@ -20,6 +21,7 @@ public class WorldLayer implements PlatformLayer {
     Plugin mCoinapult;
     Plugin mShapeShift;
     Plugin mCoinbase;
+    Plugin mLocation;
     
 
 
@@ -45,6 +47,9 @@ public class WorldLayer implements PlatformLayer {
         return mCoinbase;
     }
 
+    public Plugin getLocation() {
+        return mLocation;
+    }
 
 
 
@@ -119,7 +124,18 @@ public class WorldLayer implements PlatformLayer {
             System.err.println("CantStartSubsystemException: " + e.getMessage());
         }
 
+        /**
+         * Let's try to start the Shape Shift subsystem.
+         */
 
+        WorldSubsystem locationSubsystem = new LocationWorldSubsystem();
+
+        try {
+            locationSubsystem.start();
+            mLocation = ((WorldSubsystem) locationSubsystem).getPlugin();
+        } catch (CantStartSubsystemException e) {
+            System.err.println("CantStartSubsystemException: " + e.getMessage());
+        }
 
     }
 }

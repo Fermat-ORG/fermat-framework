@@ -594,12 +594,12 @@ public class Platform  {
          * media.
          */
 
-        Plugin CoinapultWorld = ((WorldLayer)  mWorldLayer).getCoinapult();
+        Plugin coinapultWorld = ((WorldLayer)  mWorldLayer).getCoinapult();
 
-        ((DealsWithPluginFileSystem) CoinapultWorld).setPluginFileSystem(os.getPlugInFileSystem());
-        ((DealsWithEvents) CoinapultWorld).setEventManager((EventManager) eventManager);
+        ((DealsWithPluginFileSystem) coinapultWorld).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) coinapultWorld).setEventManager((EventManager) eventManager);
 
-        corePlatformContext.addPlugin(CoinapultWorld, Plugins.BITDUBAI_COINAPULT_WORLD);
+        corePlatformContext.addPlugin(coinapultWorld, Plugins.BITDUBAI_COINAPULT_WORLD);
 
         try
         {
@@ -607,11 +607,11 @@ public class Platform  {
              * As any other plugin, this one will need its identity in order to access the data it persisted before.
              */
 
-            UUID pluginID = pluginsIdentityManager.getPluginId(CoinapultWorld);
-            (CoinapultWorld).setId(pluginID);
+            UUID pluginID = pluginsIdentityManager.getPluginId(coinapultWorld);
+            (coinapultWorld).setId(pluginID);
 
             try {
-                ((Service) CoinapultWorld).start();
+                ((Service) coinapultWorld).start();
             }
             catch (CantStartPluginException cantStartPluginException) {
 
@@ -710,6 +710,68 @@ public class Platform  {
         }
 
 
+        /**
+         * -----------------------------
+         * Plugin Location World
+         * -----------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the Crypto Index plugin access to the File System so it can load and save information from persistent
+         * media.
+         */
+
+        Plugin locationWorld = ((WorldLayer)  mWorldLayer).getLocation();
+
+        ((DealsWithPluginFileSystem) locationWorld).setPluginFileSystem(os.getPlugInFileSystem());
+        ((DealsWithEvents) locationWorld).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(locationWorld, Plugins.BITDUBAI_CRYPTO_INDEX);
+
+        try
+        {
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(locationWorld);
+            (locationWorld).setId(pluginID);
+
+            try {
+                ((Service) locationWorld).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, cantStartPluginException);
+
+                /**
+                 * This plugin wont disable the whole platform, so I will allow the Platform to start even if this one
+                 * will be disabled. In the future, I will re-try the start of plugins that are not starting at once.
+                 * * *
+                 */
+            }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+                throw new CantStartPlatformException();
+            }
+
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+        }
 
 
 
