@@ -111,6 +111,10 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                         imageView.setImageResource(R.drawable.ic_action_wallet_published);
                         break;
                     case 5:
+                        imageView.setImageResource(R.drawable.ic_action_wallet);
+                        break;
+
+                    case 6:
                         imageView.setImageResource(R.drawable.ic_action_exit);
                         break;
                 }

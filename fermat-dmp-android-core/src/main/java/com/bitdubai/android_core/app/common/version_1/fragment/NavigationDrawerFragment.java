@@ -21,13 +21,16 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import java.util.ArrayList;
 
+import com.bitdubai.android_core.app.RuntimeAppActivity;
 import com.bitdubai.fermat_api.layer._14_middleware.app_runtime.SideMenu;
 import com.bitdubai.fermat_api.layer._14_middleware.app_runtime.App;
 import com.bitdubai.fermat_api.layer._14_middleware.app_runtime.AppRuntimeManager;
 import com.bitdubai.fermat_api.layer._14_middleware.app_runtime.SubApp;
+import com.bitdubai.fermat_api.layer._14_middleware.app_runtime.enums.Activities;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.fermat_core.Platform;
+import com.bitdubai.fermat_dmp_plugin.layer._14_middleware.app_runtime.developer.bitdubai.version_1.structure.RuntimeApp;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 import com.bitdubai.android_core.app.common.version_1.classes.NavigationDrawerArrayAdapter;
@@ -298,6 +301,18 @@ public class NavigationDrawerFragment extends Fragment {
                 intent = new Intent(super.getActivity(), PublisherActivity.class);
                startActivity(intent);
             }
+            if (position == 5){
+                AppRuntimeManager appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
+                appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
+                Intent intent;
+                appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_STORE_MAIN);
+                intent = new Intent(getActivity(), com.bitdubai.android_core.app.RuntimeAppActivity.class);
+                intent.putExtra("executeStart","1");
+                startActivity(intent);
+
+
+            }
+
         }else if(MyApplication.getActivityId()=="PublisherActivity") {
             if (position == 1)
             {
