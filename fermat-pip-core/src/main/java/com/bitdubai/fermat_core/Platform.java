@@ -232,6 +232,18 @@ public class Platform  {
 
         Service errorManager = (Service) ((PlatformServiceLayer) mPlatformServiceLayer).getErrorManager();
         corePlatformContext.addAddon((Addon) errorManager, Addons.ERROR_MANAGER);
+        ((DealsWithPlatformDatabaseSystem) errorManager).setPlatformDatabaseSystem(os.getPlatfotmDatabaseSystem());
+
+        try {
+            errorManager.start();
+            //((Service)errorManager).start();
+        }
+        catch (CantStartPluginException cantStartPluginException) {
+            System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage());
+            cantStartPluginException.printStackTrace();
+            throw new CantStartPlatformException();
+        }
+
 
 
 
@@ -1759,6 +1771,7 @@ public class Platform  {
             (incomingCryptoTransaction).setId(pluginID);
             
             try {
+                //TODO: ver que da error null point
                 ((Service) incomingCryptoTransaction).start();
             }
             catch (CantStartPluginException cantStartPluginException) {
