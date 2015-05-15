@@ -236,7 +236,7 @@ public class Platform  {
 
         try {
             errorManager.start();
-            //((Service)errorManager).start();
+
         }
         catch (CantStartPluginException cantStartPluginException) {
             System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage());
