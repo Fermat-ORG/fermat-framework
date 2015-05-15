@@ -36,8 +36,7 @@ import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopShopFrag
 import com.bitdubai.android_core.app.subapp.shop_manager.version_1.fragment.ShopDesktopFragment;
 // NO COMPILA (LUIS)import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.device_location.AndroidLocationManager;
 import com.bitdubai.fermat_api.layer._10_network_service.wallet_resources.DealsWithWalletResources;
-import com.bitdubai.fermat_api.layer._2_os.device_location.Location;
-import com.bitdubai.fermat_api.layer._2_os.device_location.LocationManager;
+
 import com.bitdubai.wallet_manager.wallet.manager.fragment.WalletDesktopFragment;
 
 import com.bitdubai.fermat_api.layer._10_network_service.wallet_resources.WalletResourcesManager;
@@ -522,6 +521,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
                 break;
             case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_VERSION_1_MAIN:
+                //si navego a una wallet tengo que usar el wallet runtime, para eso tengo que setear que es una wallet
                 cleanWindows();
                 ((MyApplication) this.getApplication()).setWalletId(Integer.parseInt(paramId));
                 activity = this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_VERSION_1_MAIN);
