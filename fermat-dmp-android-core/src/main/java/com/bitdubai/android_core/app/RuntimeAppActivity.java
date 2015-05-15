@@ -34,9 +34,9 @@ import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopProducts
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopReviewsFragment;
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopShopFragment;
 import com.bitdubai.android_core.app.subapp.shop_manager.version_1.fragment.ShopDesktopFragment;
-// NO COMPILA (LUIS)import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.device_location.AndroidLocationManager;
-import com.bitdubai.fermat_api.layer._10_network_service.wallet_resources.DealsWithWalletResources;
 
+import com.bitdubai.android_fermat_dmp_subapp.bitdubai.wallet.store.fragment.AllFragment;
+import com.bitdubai.android_fermat_dmp_subapp.bitdubai.wallet.store.fragment.FreeFragment;
 import com.bitdubai.wallet_manager.wallet.manager.fragment.WalletDesktopFragment;
 
 import com.bitdubai.fermat_api.layer._10_network_service.wallet_resources.WalletResourcesManager;
@@ -55,8 +55,6 @@ import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.su
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ShopFragment;
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.AccountDetailAllFragment;
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.AccountDetailCreditsFragment;
-// NO COMPILA (LUIS)import com.bitdubai.android_core.app.subapp.wallet_store.version_1.fragment.AllFragment;
-// NO COMPILA (LUIS)import com.bitdubai.android_core.app.subapp.wallet_store.version_1.fragment.FreeFragment;
 import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsAddonRoot;
 import android.view.View;
 import android.widget.TextView;
@@ -778,17 +776,17 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                     currentFragment =  ShopDesktopFragment.newInstance(position);
                     break;
                 case CWP_SHOP_MANAGER_MAIN:
-                    // NO COMPILA (LUIS)currentFragment =  AllFragment.newInstance(0);
+                    currentFragment =  AllFragment.newInstance(0);
                     break;
                 case CWP_SHOP_MANAGER_FREE:
-                    // NO COMPILA (LUIS)currentFragment =  FreeFragment.newInstance(1);
+                    currentFragment =  FreeFragment.newInstance(1);
                     break;
 
                 case CWP_SHOP_MANAGER_PAID:
-                    // NO COMPILA (LUIS)currentFragment =  AllFragment.newInstance(2);
+                   currentFragment =  AllFragment.newInstance(2);
                     break;
                 case CWP_SHOP_MANAGER_ACCEPTED_NEARBY:
-                   // NO COMPILA (LUIS) currentFragment =  AllFragment.newInstance(3);
+                    currentFragment =  AllFragment.newInstance(3);
                     break;
                 case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_PROFILE:
                     platform = new com.bitdubai.runtime_wallet.Platform();
