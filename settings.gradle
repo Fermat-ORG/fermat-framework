@@ -1,4 +1,5 @@
-include ':fermat-dmp-android-core', ':fermat-dmp-android-shop-manager-bitdubai', ':fermat-pip-android-addon-os-android-database-system-bitdubai', ':fermat-pip-android-addon-os-device-connectivity-bitdubai', ':fermat-pip-android-addon-os-device-location-bitdubai', ':fermat-pip-android-addon-os-device-power-bitdubai', ':fermat-pip-android-addon-os-file-system-bitdubai', ':fermat-pip-android-addon-os-location-system-bitdubai'
+include ':fermat-dmp-android-core'
+
 include ':fermat-pip-core'
 include ':fermat-pip-api'
 
@@ -7,21 +8,27 @@ include ':fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai'
 include ':fermat-dmp-android-wallet-store-bitdubai'
 include ':fermat-dmp-android-wallet-factory-bitdubai'
 include ':fermat-dmp-android-wallet-publisher-bitdubai'
+include ':fermat-dmp-android-shop-manager-bitdubai'
 
-include ':fermat-dmp-plugin-middleware-app-runtime-bitdubai'
-include ':fermat-dmp-plugin-middleware-bank-notes-bitdubai'
-include ':fermat-dmp-plugin-middleware-money-request-bitdubai'
-include ':fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai'
-include ':fermat-dmp-plugin-middleware-wallet-contacts-bitdubai'
-include ':fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai'
-include ':fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai'
 include ':fermat-dmp-plugin-module-wallet-factory-bitdubai'
 include ':fermat-dmp-plugin-module-wallet-manager-bitdubai'
 include ':fermat-dmp-plugin-module-wallet-publisher-bitdubai'
 include ':fermat-dmp-plugin-module-wallet-runtime-bitdubai'
 include ':fermat-dmp-plugin-module-wallet-store-bitdubai'
+
+include ':fermat-dmp-plugin-middleware-app-runtime-bitdubai'
+include ':fermat-dmp-plugin-middleware-bank-notes-bitdubai'
+include ':fermat-dmp-plugin-middleware-money-request-bitdubai'
+include ':fermat-dmp-plugin-middleware-wallet-contacts-bitdubai'
+
+include ':fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai'
+
+include ':fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai'
+include ':fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai'
+
 include ':fermat-dmp-plugin-crypto-user-address-book-bitdubai'
 include ':fermat-dmp-plugin-crypto-wallet-address-book-bitdubai'
+
 include ':fermat-dmp-plugin-network-service-bank-notes-bitdubai'
 include ':fermat-dmp-plugin-network-service-crypto-addresses-bitdubai'
 include ':fermat-dmp-plugin-network-service-money-bitdubai'
@@ -30,11 +37,13 @@ include ':fermat-dmp-plugin-network-service-money-request-bitdubai'
 include ':fermat-dmp-plugin-network-service-wallet-community-bitdubai'
 include ':fermat-dmp-plugin-network-service-wallet-resources-bitdubai'
 include ':fermat-dmp-plugin-network-service-wallet-store-bitdubai'
+
 include ':fermat-dmp-plugin-world-blockchain-info-bitdubai'
 include ':fermat-dmp-plugin-world-coinapult-bitdubai'
 include ':fermat-dmp-plugin-world-crypto-index-bitdubai'
 include ':fermat-dmp-plugin-world-location-bitdubai'
 include ':fermat-dmp-plugin-world-shape-shift-bitdubai'
+
 include ':fermat-dmp-plugin-transaction-incoming-crypto-bitdubai'
 include ':fermat-dmp-plugin-transaction-incoming-device-user-bitdubai'
 include ':fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai'
@@ -43,7 +52,9 @@ include ':fermat-dmp-plugin-transaction-inter-wallet-bitdubai'
 include ':fermat-dmp-plugin-transaction-outgoing-device-user-bitdubai'
 include ':fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai'
 include ':fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai'
+
 include ':fermat-dmp-plugin-license-wallet-bitdubai'
+
 include ':fermat-dmp-plugin-world-coinbase-bitdubai'
 include ':fermat-dmp-plugin-crypto-network-bitcoin-bitdubai'
 
@@ -59,8 +70,12 @@ include ':fermat-pip-addon-user-device-user-bitdubai'
 include ':fermat-pip-addon-user-extra-user-bitdubai'
 include ':fermat-pip-addon-user-intra-user-bitdubai'
 
-
-
+include ':fermat-pip-android-addon-os-android-database-system-bitdubai'
+include ':fermat-pip-android-addon-os-device-connectivity-bitdubai'
+include ':fermat-pip-android-addon-os-device-location-bitdubai'
+include ':fermat-pip-android-addon-os-device-power-bitdubai'
+include ':fermat-pip-android-addon-os-file-system-bitdubai'
+include ':fermat-pip-android-addon-os-logger-bitdubai'
 
 
 
