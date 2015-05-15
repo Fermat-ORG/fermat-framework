@@ -37,6 +37,7 @@ import com.bitdubai.android_core.app.subapp.shop_manager.version_1.fragment.Shop
 
 import com.bitdubai.android_fermat_dmp_subapp.bitdubai.wallet.store.fragment.AllFragment;
 import com.bitdubai.android_fermat_dmp_subapp.bitdubai.wallet.store.fragment.FreeFragment;
+import com.bitdubai.fermat_api.layer._16_module.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.wallet_manager.wallet.manager.fragment.WalletDesktopFragment;
 
 import com.bitdubai.fermat_api.layer._10_network_service.wallet_resources.WalletResourcesManager;
@@ -99,6 +100,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
     private com.bitdubai.fermat_api.layer._14_middleware.app_runtime.Activity activity;
     private Map<Fragments, Fragment> fragments;
     private AppRuntimeManager appRuntimeMiddleware;
+    private WalletRuntimeManager walletRuntimeMiddleware;
     private AndroidOsAddonRoot Os;
     private CorePlatformContext platformContext;
     private ViewPager pager;
@@ -159,6 +161,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
             this.appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
 
+            this.walletRuntimeMiddleware =  (WalletRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_WALLET_RUNTIME_MODULE);
 
 
             /** Download wallet images **/
@@ -288,13 +291,77 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
      * Init activity navigation
      */
     //if the activity has more of a fragment and has no tabs I create a PagerAdapter
-    // to arm the NavigationDrawerFragment verified whether the activity has a SideMenu
+    // to make the NavigationDrawerFragment verified whether the activity has a SideMenu
     private void NavigateActivity() {
 
-        int walletId = ((MyApplication) this.getApplication()).getWalletId();
+
         this.app = appRuntimeMiddleware.getLastApp();
         this.subApp = appRuntimeMiddleware.getLastSubApp();
         this.activity = appRuntimeMiddleware.getLasActivity();
+
+
+        MyApplication.setActivityId(activity.getType().getKey());
+
+
+        this.tabs = activity.getTabStrip();
+        this.fragments =activity.getFragments();
+        this.titleBar = activity.getTitleBar();
+
+        this.mainMenumenu= activity.getMainMenu();
+        this.sidemenu = activity.getSideMenu();
+
+        if(tabs == null)
+            ((PagerSlidingTabStrip) findViewById(R.id.tabs)).setVisibility(View.INVISIBLE);
+        else{
+            ((PagerSlidingTabStrip) findViewById(R.id.tabs)).setVisibility(View.VISIBLE);
+            this.tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+
+        }
+        int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
+        this.abTitle = (TextView) findViewById(titleId);
+
+
+        MyApplication.setActivityProperties(this, getWindow(),getResources(),tabStrip,getActionBar(), titleBar,abTitle,Title);
+
+        if(sidemenu != null)
+        {
+            this.NavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
+
+            this.NavigationDrawerFragment.setMenuVisibility(true);
+            // Set up the drawer.
+            this.NavigationDrawerFragment.setUp(
+                    R.id.navigation_drawer,
+                    (DrawerLayout) findViewById(R.id.drawer_layout),sidemenu);
+        }
+
+
+        if(tabs == null && fragments.size() > 1){
+            this.initialisePaging();
+
+        }
+        else{
+            pagertabs = (ViewPager) findViewById(R.id.pager);
+            pagertabs.setVisibility(View.VISIBLE);
+            adapter = new MyPagerAdapter(getSupportFragmentManager());
+
+            pagertabs.setAdapter(adapter);
+
+            final int pageMargin = (int) TypedValue.applyDimension( TypedValue.COMPLEX_UNIT_DIP, 4, getResources()
+                    .getDisplayMetrics());
+            pagertabs.setPageMargin(pageMargin);
+
+            tabStrip.setViewPager(pagertabs);
+
+            String color = activity.getColor();
+            if (color != null)
+                ((MyApplication) this.getApplication()).changeColor(Color.parseColor(color), getResources());
+
+        }
+    }
+
+    private void NavigateWallet() {
+
+        this.activity = walletRuntimeMiddleware.getLasActivity();
 
 
         MyApplication.setActivityId(activity.getType().getKey());
@@ -522,9 +589,10 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                 //si navego a una wallet tengo que usar el wallet runtime, para eso tengo que setear que es una wallet
                 cleanWindows();
                 ((MyApplication) this.getApplication()).setWalletId(Integer.parseInt(paramId));
-                activity = this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_VERSION_1_MAIN);
+                activity = this.walletRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_VERSION_1_MAIN);
 
-                NavigateActivity();
+                //voy a crear un NavigateWallet y tengo que setear el last wallet y ejecutar primer activity de esa wallet
+                NavigateWallet();
                 break;
             case CWP_WALLET_STORE_MAIN:
                 break;
@@ -538,8 +606,8 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                 else
                 {
                     ((MyApplication) this.getApplication()).setWalletId(Integer.parseInt(paramId));
-                    this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_ADULTS_ALL_MAIN);
-                    NavigateActivity();
+                    this.walletRuntimeMiddleware.getActivity(Activities.CWP_WALLET_ADULTS_ALL_MAIN);
+                    NavigateWallet();
 
 
                 }
