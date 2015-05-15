@@ -3,7 +3,7 @@ package com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version
 import android.content.Context;
 
 import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.database_system.AndroidPlatformDatabaseSystem;
-import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.device_location.AndroidLocationManager;
+// NO COMPILA (LUI) import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.device_location.AndroidLocationManager;
 import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.file_system.AndroidPlatformFileSystem;
 import com.bitdubai.fermat_api.layer._2_os.database_system.PlatformDatabaseSystem;
 import com.bitdubai.fermat_api.layer._2_os.device_location.LocationManager;
@@ -45,7 +45,7 @@ public class AndroidOsAddonRoot implements Os {
         this.pluginFileSystem = new AndroidPluginFileSystem();
         this.platformFileSystem = new AndroidPlatformFileSystem();
         this.platformDatabaseSystem = new AndroidPlatformDatabaseSystem();
-        this.pluginLocationManager = new AndroidLocationManager();
+// NO COMPILA (LUI)         this.pluginLocationManager = new AndroidLocationManager();
 
     }
 
@@ -93,7 +93,7 @@ public class AndroidOsAddonRoot implements Os {
         this.pluginDatabaseSystem.setContext(context);
         this.platformFileSystem.setContext(context);
         this.platformDatabaseSystem.setContext(context);
-        this.pluginLocationManager.setContext(context);
+// NO COMPILA (LUIS)        this.pluginLocationManager.setContext(context);
     }
 
 

@@ -35,8 +35,8 @@ import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_framework.vers
 import com.bitdubai.android_core.app.common.version_1.classes.PagerSlidingTabStrip;
 
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.AccountDetailFiltersFragment;
-import com.bitdubai.android_core.app.subapp.wallet_store.version_1.fragment.AllFragment;
-import com.bitdubai.android_core.app.subapp.wallet_store.version_1.fragment.FreeFragment;
+// NO COMPILA (LUIS)import com.bitdubai.android_core.app.subapp.wallet_store.version_1.fragment.AllFragment;
+// NO COMPILA (LUIS)import com.bitdubai.android_core.app.subapp.wallet_store.version_1.fragment.FreeFragment;
 
 
 public class StoreFrontActivity extends FragmentActivity
@@ -313,16 +313,16 @@ public class StoreFrontActivity extends FragmentActivity
             Fragment currentFragment;
            switch (position) {
                 case 0:
-                    currentFragment =   AllFragment.newInstance(position);
+                    // NO COMPILA (LUIS)                  currentFragment =   AllFragment.newInstance(position);
                     break;
                 case 1:
-                    currentFragment =   FreeFragment.newInstance(position);
+// NO COMPILA (LUIS)                    currentFragment =   FreeFragment.newInstance(position);
                     break;
                 case 2:
-                    currentFragment =  AllFragment.newInstance(position);
+                    // NO COMPILA (LUIS)                currentFragment =  AllFragment.newInstance(position);
                     break;
                 case 3:
-                    currentFragment =  AllFragment.newInstance(position);
+                    // NO COMPILA (LUIS)              currentFragment =  AllFragment.newInstance(position);
                     break;
 
                 default:
@@ -330,7 +330,8 @@ public class StoreFrontActivity extends FragmentActivity
                     break;
             }
 
-            return currentFragment;
+            // NO COMPILA (LUIS)       return currentFragment;
+            return null;
         }
 
     }
