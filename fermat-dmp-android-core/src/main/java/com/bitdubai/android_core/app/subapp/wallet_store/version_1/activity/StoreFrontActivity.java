@@ -35,6 +35,8 @@ import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_framework.vers
 import com.bitdubai.android_core.app.common.version_1.classes.PagerSlidingTabStrip;
 
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.AccountDetailFiltersFragment;
+import com.bitdubai.android_core.app.subapp.wallet_store.version_1.fragment.AllFragment;
+import com.bitdubai.android_core.app.subapp.wallet_store.version_1.fragment.FreeFragment;
 
 
 public class StoreFrontActivity extends FragmentActivity
@@ -309,19 +311,18 @@ public class StoreFrontActivity extends FragmentActivity
             {titles = titles_2;}
 
             Fragment currentFragment;
-            currentFragment =   AccountDetailFiltersFragment.newInstance(position);
            switch (position) {
                 case 0:
-                    //currentFragment =   AllFragment.newInstance(position);
+                    currentFragment =   AllFragment.newInstance(position);
                     break;
                 case 1:
-                   // currentFragment =   FreeFragment.newInstance(position);
+                    currentFragment =   FreeFragment.newInstance(position);
                     break;
                 case 2:
-                   // currentFragment =  AllFragment.newInstance(position);
+                    currentFragment =  AllFragment.newInstance(position);
                     break;
                 case 3:
-                   // currentFragment =  AllFragment.newInstance(position);
+                    currentFragment =  AllFragment.newInstance(position);
                     break;
 
                 default:

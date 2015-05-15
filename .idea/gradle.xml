@@ -69,7 +69,7 @@
             <option value="$PROJECT_DIR$/fermat-pip-android-addon-os-device-location-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-android-addon-os-device-power-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-android-addon-os-file-system-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-pip-android-addon-os-location-system-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-pip-android-addon-os-logger-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-api" />
             <option value="$PROJECT_DIR$/fermat-pip-core" />
           </set>

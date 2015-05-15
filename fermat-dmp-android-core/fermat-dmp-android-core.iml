@@ -17,7 +17,7 @@
         <option name="ALLOW_USER_CONFIGURATION" value="false" />
         <option name="MANIFEST_FILE_RELATIVE_PATH" value="/src/main/AndroidManifest.xml" />
         <option name="RES_FOLDER_RELATIVE_PATH" value="/src/main/structured_res/app/shell/version_1" />
-        <option name="RES_FOLDERS_RELATIVE_PATH" value="file://$MODULE_DIR$/src/main/res;file://$MODULE_DIR$/src/main/structured_res/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1;file://$MODULE_DIR$/src/main/structured_res/app/shell/version_1;file://$MODULE_DIR$/src/main/structured_res/app/subapp/shop/version_1;file://$MODULE_DIR$/src/main/structured_res/app/subapp/shop_manager/version_1;file://$MODULE_DIR$/src/main/structured_res/app/subapp/wallet_runtime/wallet_framework/version_1" />
+        <option name="RES_FOLDERS_RELATIVE_PATH" value="file://$MODULE_DIR$/src/main/structured_res/app/shell/version_1;file://$MODULE_DIR$/src/main/res;file://$MODULE_DIR$/src/main/structured_res/app/subapp/shop/version_1;file://$MODULE_DIR$/src/main/structured_res/app/subapp/shop_manager/version_1;file://$MODULE_DIR$/src/main/structured_res/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1;file://$MODULE_DIR$/src/main/structured_res/app/subapp/wallet_runtime/wallet_framework/version_1" />
         <option name="ASSETS_FOLDER_RELATIVE_PATH" value="/src/main/assets" />
       </configuration>
     </facet>
@@ -158,6 +158,7 @@
     <orderEntry type="module" module-name="fermat-dmp-plugin-module-wallet-runtime-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-android-wallet-manager-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-user-device-user-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-plugin-world-location-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-transaction-incoming-crypto-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-wallet-community-bitdubai" exported="" />

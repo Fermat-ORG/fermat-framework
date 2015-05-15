@@ -34,7 +34,10 @@ import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopProducts
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopReviewsFragment;
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopShopFragment;
 import com.bitdubai.android_core.app.subapp.shop_manager.version_1.fragment.ShopDesktopFragment;
-
+import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.device_location.AndroidLocationManager;
+import com.bitdubai.fermat_api.layer._10_network_service.wallet_resources.DealsWithWalletResources;
+import com.bitdubai.fermat_api.layer._2_os.device_location.Location;
+import com.bitdubai.fermat_api.layer._2_os.device_location.LocationManager;
 import com.bitdubai.wallet_manager.wallet.manager.fragment.WalletDesktopFragment;
 
 import com.bitdubai.fermat_api.layer._10_network_service.wallet_resources.WalletResourcesManager;
@@ -53,8 +56,8 @@ import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.su
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ShopFragment;
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.AccountDetailAllFragment;
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.AccountDetailCreditsFragment;
-import com.bitdubai.wallet_manager.bitdubai.wallet.store.fragment.AllFragment;
-import com.bitdubai.wallet_manager.bitdubai.wallet.store.fragment.FreeFragment;
+import com.bitdubai.android_core.app.subapp.wallet_store.version_1.fragment.AllFragment;
+import com.bitdubai.android_core.app.subapp.wallet_store.version_1.fragment.FreeFragment;
 import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsAddonRoot;
 import android.view.View;
 import android.widget.TextView;
