@@ -61,7 +61,6 @@
     <mapping directory="$PROJECT_DIR$/fermat-pip-android-addon-os-device-location-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-pip-android-addon-os-device-power-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-pip-android-addon-os-file-system-bitdubai" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/fermat-pip-android-addon-os-location-system-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-pip-api" vcs="Git" />
   </component>
 </project>
