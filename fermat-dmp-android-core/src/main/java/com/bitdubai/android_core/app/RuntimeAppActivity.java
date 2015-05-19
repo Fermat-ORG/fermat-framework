@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.*;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 
@@ -15,6 +16,9 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import android.support.v7.widget.*;
+//import android.support.v7.widget.SearchView;
+import android.widget.SearchView;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -78,6 +82,7 @@ import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.runtime_wallet.age.kids.boys.fragments.UsdBalanceFragment;
 
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Iterator;
@@ -117,6 +122,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
     private Bundle savedInstanceState;
     private ViewGroup collection;
     private Platform platform;
+    private SearchView mSearchView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -431,7 +437,11 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             case CWP_SHELL_LOGIN:
                 break;
             case CWP_SHOP_MANAGER_MAIN:
+                MenuItem searchItem = menu.findItem(com.wallet_store.bitdubai.R.id.action_search);
+                MenuItemCompat.setShowAsAction(searchItem, MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_ALWAYS);
+                //mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 
+                //mSearchView.setIconifiedByDefault(false);
                 break;
             case CWP_WALLET_MANAGER_MAIN:
                 break;
@@ -448,6 +458,13 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                     inflater.inflate(R.menu.wallet_framework_activity_framework_menu, menu);
                 break;
             case CWP_WALLET_RUNTIME_STORE_MAIN:
+                /*inflater.inflate(R.menu.wallet_store_activity_wallet_menu, menu);
+                MenuItem searchItem1 = menu.findItem(com.wallet_store.bitdubai.R.id.action_search);
+                MenuItemCompat.setShowAsAction(searchItem1, MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+                mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem1);
+                mSearchView.setIconifiedByDefault(false);
+                */
                 break;
             case CWP_WALLET_RUNTIME_WALLET_AGE_ADULTS_ALL_BITDUBAI_VERSION_1_MAIN:
                 break;
@@ -512,7 +529,17 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
             return true;
         }
+	if (id == R.id.action_search) {
 
+            /*((MyApplication) this.getApplication()).setWalletId(0);
+            this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_STORE_MAIN);
+            NavigateActivity();
+
+            */
+
+            //Toast.makeText(this,"holas_runtime",Toast.LENGTH_SHORT).show();
+            return true;
+	}
         if (id == R.id.action_file) {
 
             Intent intent;
@@ -585,7 +612,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
                 break;
             case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_VERSION_1_MAIN:
-                //si navego a una wallet tengo que usar el wallet runtime, para eso tengo que setear que es una wallet
+                //si navego a una wallet tengo que usar el wallet runtime
                 cleanWindows();
                 ((MyApplication) this.getApplication()).setWalletId(Integer.parseInt(paramId));
                 activity = this.walletRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_VERSION_1_MAIN);
