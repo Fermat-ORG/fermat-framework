@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_core.layer._2_os;
 
+import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
 import com.bitdubai.fermat_api.layer._2_os.Os;
@@ -24,8 +25,8 @@ import com.bitdubai.wallet_platform_core.layer._3_os.windows.WindowsOsSubsystem;
 public class OsLayer implements PlatformLayer {
 
     Os mOs;
-
-
+    Addon mFileSystem;
+    Addon mDatabaseSystem;
 
 
 
@@ -34,8 +35,13 @@ public class OsLayer implements PlatformLayer {
     }
 
 
+    public Addon getFileSystem(){
+        return mFileSystem;
+    }
 
-
+    public Addon getDataBaseSystem(){
+        return mDatabaseSystem;
+    }
 
     @Override
     public void start() throws CantStartLayerException {

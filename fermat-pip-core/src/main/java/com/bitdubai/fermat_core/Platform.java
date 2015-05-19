@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_core;
 
+
 import com.bitdubai.fermat_api.*;
 import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
@@ -134,6 +135,7 @@ public class Platform  {
     
     Object osContext;
     Os os;
+
 
     
     public CorePlatformContext getCorePlatformContext() {
@@ -326,6 +328,17 @@ public class Platform  {
 
             os.setContext(this.osContext);
         }
+
+        /**
+         * --------------------------------
+         * Addon FileSytemOs
+         * -------------------------
+         */
+
+      //  Addon fileSystemOsAddonRoot = ((OsLayer) mOsLayer).getFileSystem();
+
+       // ((FileSystemOs) fileSystemOsAddonRoot).setContext(this.osContext);
+
 
 
         /**
