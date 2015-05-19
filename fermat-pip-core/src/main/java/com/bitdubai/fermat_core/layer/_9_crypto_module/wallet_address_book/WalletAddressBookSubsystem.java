@@ -3,7 +3,7 @@ package com.bitdubai.fermat_core.layer._9_crypto_module.wallet_address_book;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer._9_crypto_module.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer._9_crypto_module.CryptoSubsystem;
-import com.bitdubai.fermat_dmp_plugin.layer._8_crypto.wallet_address_book.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_dmp_plugin.layer._9_crypto_module.wallet_address_book.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by loui on 20/02/15.

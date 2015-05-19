@@ -3,7 +3,7 @@ package com.bitdubai.fermat_core.layer._12_world.crypto_index;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer._16_module.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer._12_world.WorldSubsystem;
-import com.bitdubai.fermat_dmp_plugin.layer._11_world.crypto_index.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_dmp_plugin.layer._12_world.crypto_index.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by loui on 12/02/15.
