@@ -3,7 +3,6 @@ package com.bitdubai.android_core.app.common.version_1.classes;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.Application;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -18,7 +17,7 @@ import android.text.SpannableString;
 import android.view.Window;
 import android.widget.TextView;
 
-import com.bitdubai.fermat_api.layer._14_middleware.app_runtime.TitleBar;
+import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.TitleBar;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.fermat_core.Platform;
 

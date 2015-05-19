@@ -40,7 +40,7 @@ import com.bitdubai.android_fermat_dmp_subapp.bitdubai.wallet.store.fragment.Fre
 import com.bitdubai.fermat_api.layer._16_module.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.wallet_manager.wallet.manager.fragment.WalletDesktopFragment;
 
-import com.bitdubai.fermat_api.layer._10_network_service.wallet_resources.WalletResourcesManager;
+import com.bitdubai.fermat_api.layer._11_network_service.wallet_resources.WalletResourcesManager;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_dmp_plugin.layer._14_middleware.app_runtime.developer.bitdubai.version_1.structure.RuntimeFragment;
@@ -64,11 +64,11 @@ import android.view.ViewGroup;
 
 import com.bitdubai.fermat_api.CantReportCriticalStartingProblem;
 import com.bitdubai.fermat_api.CantStartPlatformException;
-import com.bitdubai.fermat_api.layer._14_middleware.app_runtime.*;
-import com.bitdubai.fermat_api.layer._14_middleware.app_runtime.AppRuntimeManager;
-import com.bitdubai.fermat_api.layer._14_middleware.app_runtime.Fragment;
-import com.bitdubai.fermat_api.layer._14_middleware.app_runtime.enums.Activities;
-import com.bitdubai.fermat_api.layer._14_middleware.app_runtime.enums.Fragments;
+import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.*;
+import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.AppRuntimeManager;
+import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.Fragment;
+import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.enums.Activities;
+import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.enums.Fragments;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.smartwallet.R;
@@ -78,7 +78,6 @@ import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.runtime_wallet.age.kids.boys.fragments.UsdBalanceFragment;
 
 
-import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Iterator;
@@ -97,7 +96,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
     private PagerSlidingTabStrip tabStrip;
     private App app;
     private SubApp subApp;
-    private com.bitdubai.fermat_api.layer._14_middleware.app_runtime.Activity activity;
+    private com.bitdubai.fermat_api.layer._15_middleware.app_runtime.Activity activity;
     private Map<Fragments, Fragment> fragments;
     private AppRuntimeManager appRuntimeMiddleware;
     private WalletRuntimeManager walletRuntimeMiddleware;
@@ -573,7 +572,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
 
         Activities activityType = Activities.getValueFromString (activityKey);
-        com.bitdubai.fermat_api.layer._14_middleware.app_runtime.Activity activity;
+        com.bitdubai.fermat_api.layer._15_middleware.app_runtime.Activity activity;
         Intent intent;
 
         switch (activityType) {

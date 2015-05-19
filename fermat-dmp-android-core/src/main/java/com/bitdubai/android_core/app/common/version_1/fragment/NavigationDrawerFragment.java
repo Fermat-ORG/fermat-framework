@@ -21,16 +21,14 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import java.util.ArrayList;
 
-import com.bitdubai.android_core.app.RuntimeAppActivity;
-import com.bitdubai.fermat_api.layer._14_middleware.app_runtime.SideMenu;
-import com.bitdubai.fermat_api.layer._14_middleware.app_runtime.App;
-import com.bitdubai.fermat_api.layer._14_middleware.app_runtime.AppRuntimeManager;
-import com.bitdubai.fermat_api.layer._14_middleware.app_runtime.SubApp;
-import com.bitdubai.fermat_api.layer._14_middleware.app_runtime.enums.Activities;
+import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.SideMenu;
+import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.App;
+import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.AppRuntimeManager;
+import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.SubApp;
+import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.enums.Activities;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.fermat_core.Platform;
-import com.bitdubai.fermat_dmp_plugin.layer._14_middleware.app_runtime.developer.bitdubai.version_1.structure.RuntimeApp;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 import com.bitdubai.android_core.app.common.version_1.classes.NavigationDrawerArrayAdapter;
@@ -50,7 +48,7 @@ public class NavigationDrawerFragment extends Fragment {
     private AppRuntimeManager appRuntimeMiddleware;
     private App app;
     private SubApp subApp;
-    private com.bitdubai.fermat_api.layer._14_middleware.app_runtime.Activity activity;
+    private com.bitdubai.fermat_api.layer._15_middleware.app_runtime.Activity activity;
     private CorePlatformContext platformContext;
     /**
      * Remember the position of the selected item.
@@ -194,14 +192,14 @@ public class NavigationDrawerFragment extends Fragment {
 
 
         List<String> menuOption = new ArrayList<String>();
-        List<com.bitdubai.fermat_api.layer._14_middleware.app_runtime.MenuItem> menuItem = new ArrayList<>();
+        List<com.bitdubai.fermat_api.layer._15_middleware.app_runtime.MenuItem> menuItem = new ArrayList<>();
 
             if(sideMenu !=null)
             {
                  menuItem = sideMenu.getMenuItems();
                 for (int i = 0; i < menuItem.size(); i++) {
 
-                    com.bitdubai.fermat_api.layer._14_middleware.app_runtime.MenuItem menu = menuItem.get(i);
+                    com.bitdubai.fermat_api.layer._15_middleware.app_runtime.MenuItem menu = menuItem.get(i);
                     menuOption.add(menu.getLabel());
                 }
 

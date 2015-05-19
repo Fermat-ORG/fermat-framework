@@ -17,8 +17,8 @@ import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.DealsWith
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_api.layer._2_os.*;
 import com.bitdubai.fermat_api.layer._2_os.file_system.*;
-import com.bitdubai.fermat_core.layer._12_basic_wallet.BasicWalletLayer;
-import com.bitdubai.fermat_core.layer._15_transaction.TransactionLayer;
+import com.bitdubai.fermat_core.layer._13_basic_wallet.BasicWalletLayer;
+import com.bitdubai.fermat_core.layer._16_transaction.TransactionLayer;
 import com.bitdubai.fermat_core.layer._3_platform_service.PlatformServiceLayer;
 
 import com.bitdubai.fermat_core.layer._1_definition.DefinitionLayer;
@@ -26,14 +26,14 @@ import com.bitdubai.fermat_core.layer._2_os.OsLayer;
 import com.bitdubai.fermat_core.layer._4_hardware.HardwareLayer;
 import com.bitdubai.fermat_core.layer._5_user.UserLayer;
 import com.bitdubai.fermat_core.layer._6_license.LicenseLayer;
-import com.bitdubai.fermat_core.layer._11_world.WorldLayer;
+import com.bitdubai.fermat_core.layer._12_world.WorldLayer;
 import com.bitdubai.fermat_core.layer._7_crypto_network.CryptoNetworkLayer;
 import com.bitdubai.fermat_api.layer._7_crypto_network.CryptoNetworks;
-import com.bitdubai.fermat_core.layer._8_crypto.CryptoLayer;
-import com.bitdubai.fermat_core.layer._9_communication.CommunicationLayer;
-import com.bitdubai.fermat_core.layer._10_network_service.NetworkServiceLayer;
-import com.bitdubai.fermat_core.layer._14_middleware.MiddlewareLayer;
-import com.bitdubai.fermat_core.layer._16_module.ModuleLayer;
+import com.bitdubai.fermat_core.layer._9_crypto_module.CryptoLayer;
+import com.bitdubai.fermat_core.layer._10_communication.CommunicationLayer;
+import com.bitdubai.fermat_core.layer._11_network_service.NetworkServiceLayer;
+import com.bitdubai.fermat_core.layer._15_middleware.MiddlewareLayer;
+import com.bitdubai.fermat_core.layer._18_module.ModuleLayer;
 import com.bitdubai.fermat_core.layer._17_agent.AgentLayer;
 
 import java.util.UUID;
