@@ -2,16 +2,16 @@ package com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version
 
 import android.content.Context;
 
-import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.database_system.AndroidPlatformDatabaseSystem;
-import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.file_system.AndroidPlatformFileSystem;
+//import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.database_system.AndroidPlatformDatabaseSystem;
+//import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.file_system.AndroidPlatformFileSystem;
 import com.bitdubai.fermat_api.layer._2_os.database_system.PlatformDatabaseSystem;
 
 import com.bitdubai.fermat_api.layer._2_os.file_system.PlatformFileSystem;
 import com.bitdubai.fermat_api.layer._2_os.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer._2_os.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer._2_os.Os;
-import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.database_system.AndroidPluginDatabaseSystem;
-import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.file_system.AndroidPluginFileSystem;
+//import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.database_system.AndroidPluginDatabaseSystem;
+//import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.file_system.AndroidPluginFileSystem;
 import com.bitdubai.fermat_api.layer._2_os.location_system.LocationSystem;
 
 
@@ -40,11 +40,11 @@ public class AndroidOsAddonRoot implements Os {
 
     public AndroidOsAddonRoot() {
 
-        this.pluginDatabaseSystem = new AndroidPluginDatabaseSystem();
-        this.pluginFileSystem = new AndroidPluginFileSystem();
-        this.platformFileSystem = new AndroidPlatformFileSystem();
-        this.platformDatabaseSystem = new AndroidPlatformDatabaseSystem();
-// NO COMPILA (LUI)         this.pluginLocationManager = new AndroidLocationManager();
+       // this.pluginDatabaseSystem = new AndroidPluginDatabaseSystem();
+      //  this.pluginFileSystem = new AndroidPluginFileSystem();
+      //  this.platformFileSystem = new AndroidPlatformFileSystem();
+      //  this.platformDatabaseSystem = new AndroidPlatformDatabaseSystem();
+
 
     }
 

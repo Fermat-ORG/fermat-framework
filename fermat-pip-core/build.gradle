@@ -56,5 +56,10 @@ dependencies {
     compile project(':fermat-dmp-plugin-crypto-user-address-book-bitdubai')
     compile project(':fermat-dmp-plugin-crypto-wallet-address-book-bitdubai')
     compile project(':fermat-dmp-plugin-world-location-bitdubai')
+
+
+
+
+
 }
 

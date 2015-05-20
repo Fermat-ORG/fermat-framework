@@ -29,7 +29,7 @@ import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 import com.bitdubai.android_core.app.common.version_1.classes.PagerSlidingTabStrip;
 
 import com.bitdubai.android_core.app.common.version_1.fragment.NavigationDrawerFragment;
-import com.bitdubai.android_core.app.shell.version_1.activity.FileImageActivity;
+
 import com.bitdubai.android_core.app.shell.version_1.activity.PagerAdapter;
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopChatFragment;
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopHistoryFragment;
@@ -39,9 +39,12 @@ import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopReviewsF
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopShopFragment;
 import com.bitdubai.android_core.app.subapp.shop_manager.version_1.fragment.ShopDesktopFragment;
 
+import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsDataBaseSystem;
+import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsFileSystem;
 import com.bitdubai.android_fermat_dmp_subapp.bitdubai.wallet.store.fragment.AllFragment;
 import com.bitdubai.android_fermat_dmp_subapp.bitdubai.wallet.store.fragment.FreeFragment;
 import com.bitdubai.fermat_api.layer._16_module.wallet_runtime.WalletRuntimeManager;
+
 import com.bitdubai.wallet_manager.wallet.manager.fragment.WalletDesktopFragment;
 
 import com.bitdubai.fermat_api.layer._11_network_service.wallet_resources.WalletResourcesManager;
@@ -106,7 +109,9 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
     private AppRuntimeManager appRuntimeMiddleware;
     private WalletRuntimeManager walletRuntimeMiddleware;
     private AndroidOsAddonRoot Os;
+   private  AndroidOsFileSystem fileSystemOs;
     private CorePlatformContext platformContext;
+    private AndroidOsDataBaseSystem databaseSystemOs;
     private ViewPager pager;
     private ViewPager pagertabs;
     private MyPagerAdapter adapter;
@@ -148,10 +153,17 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
-            this.Os = new AndroidOsAddonRoot();
 
-            this.Os.setContext(this);
-            platform.setOs(Os);
+
+            //set Os Addons in platform
+            this.fileSystemOs = new AndroidOsFileSystem();
+            this.fileSystemOs.setContext(this);
+            platform.setFileSystemOs(fileSystemOs);
+
+
+            this.databaseSystemOs = new AndroidOsDataBaseSystem();
+            this.databaseSystemOs.setContext(this);
+            platform.setDataBaseSystemOs(databaseSystemOs);
 
             Bundle bundle = getIntent().getExtras();
             if(bundle != null){
@@ -541,11 +553,6 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             return true;
 	}
         if (id == R.id.action_file) {
-
-            Intent intent;
-            intent = new Intent(this, FileImageActivity.class);
-            startActivity(intent);
-
             return true;
         }
 
