@@ -51,8 +51,8 @@ dependencies {
     compile project(':fermat-dmp-android-wallet-store-bitdubai')
     compile project(':fermat-dmp-android-wallet-publisher-bitdubai')
     compile project(':fermat-pip-android-addon-os-file-system-bitdubai')
-
     compile project(':fermat-pip-android-addon-os-android-database-system-bitdubai')
+    compile project(':fermat-pip-android-addon-os-device-location-bitdubai')
 
     compile 'com.android.support:support-v13:21.0.2'
     compile 'com.android.support:support-v4:21.0.2'

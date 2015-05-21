@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer._1_definition.event.DealWithEventMonitor;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DealsWithPlatformDatabaseSystem;
 import com.bitdubai.fermat_api.layer._2_os.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer._2_os.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
@@ -18,7 +19,7 @@ import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.DealsWith
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_api.layer._2_os.*;
 import com.bitdubai.fermat_api.layer._2_os.file_system.*;
-import com.bitdubai.fermat_api.layer._5_user.extra_user.ExtraUserManager;
+
 import com.bitdubai.fermat_core.layer._13_basic_wallet.BasicWalletLayer;
 import com.bitdubai.fermat_core.layer._16_transaction.TransactionLayer;
 import com.bitdubai.fermat_core.layer._3_platform_service.PlatformServiceLayer;
@@ -139,6 +140,7 @@ public class Platform  {
 
     FileSystemOs fileSystemOs;
     DataBaseSystemOs databaseSystemOs;
+    LocationSystemOs locationSystemOs;
 
     
     public CorePlatformContext getCorePlatformContext() {
@@ -188,6 +190,11 @@ public class Platform  {
         this.databaseSystemOs = databaseSystemOs;
     }
 
+
+    public void setLocationSystemOs(LocationSystemOs locationSystemOs)
+    {
+        this.locationSystemOs  = locationSystemOs;
+    }
     public void start() throws CantStartPlatformException, CantReportCriticalStartingProblem {
 
         
@@ -294,21 +301,10 @@ public class Platform  {
             throw new CantStartPlatformException();
         }
 
-
-
         /**
          * -----------------------------------------------------------------------------------------------------------
          * Addons initialization
          * -----------------------------------------------------------------------------------------------------------
-         * * * * 
-         */
-
-        
-
-        /**
-         * -----------------------------
-         * Addon Os
-         * -----------------------------
          * * * * 
          */
 

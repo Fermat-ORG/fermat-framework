@@ -41,6 +41,7 @@ import com.bitdubai.android_core.app.subapp.shop_manager.version_1.fragment.Shop
 
 import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsDataBaseSystem;
 import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsFileSystem;
+import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsLocationSystem;
 import com.bitdubai.android_fermat_dmp_subapp.bitdubai.wallet.store.fragment.AllFragment;
 import com.bitdubai.android_fermat_dmp_subapp.bitdubai.wallet.store.fragment.FreeFragment;
 import com.bitdubai.fermat_api.layer._16_module.wallet_runtime.WalletRuntimeManager;
@@ -63,7 +64,7 @@ import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.su
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ShopFragment;
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.AccountDetailAllFragment;
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.AccountDetailCreditsFragment;
-import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsAddonRoot;
+
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -85,7 +86,6 @@ import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.runtime_wallet.age.kids.boys.fragments.UsdBalanceFragment;
 
 
-import java.io.File;
 import java.util.List;
 import java.util.Map;
 import java.util.Iterator;
@@ -108,10 +108,12 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
     private Map<Fragments, Fragment> fragments;
     private AppRuntimeManager appRuntimeMiddleware;
     private WalletRuntimeManager walletRuntimeMiddleware;
-    private AndroidOsAddonRoot Os;
+
    private  AndroidOsFileSystem fileSystemOs;
     private CorePlatformContext platformContext;
     private AndroidOsDataBaseSystem databaseSystemOs;
+    private AndroidOsLocationSystem locationSystemOs;
+
     private ViewPager pager;
     private ViewPager pagertabs;
     private MyPagerAdapter adapter;
@@ -164,6 +166,10 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             this.databaseSystemOs = new AndroidOsDataBaseSystem();
             this.databaseSystemOs.setContext(this);
             platform.setDataBaseSystemOs(databaseSystemOs);
+
+            this.locationSystemOs = new AndroidOsLocationSystem();
+            this.locationSystemOs.setContext(this);
+            platform.setLocationSystemOs(locationSystemOs);
 
             Bundle bundle = getIntent().getExtras();
             if(bundle != null){

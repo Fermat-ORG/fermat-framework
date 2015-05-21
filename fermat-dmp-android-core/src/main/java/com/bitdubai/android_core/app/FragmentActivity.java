@@ -22,7 +22,7 @@ import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.su
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.SendAllFragment;
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.SendToContactFragment;
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.SendToNewContactFragment;
-import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsAddonRoot;
+
 import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.App;
 import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.AppRuntimeManager;
 import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.Fragment;
@@ -57,7 +57,7 @@ public class FragmentActivity  extends Activity {
     private com.bitdubai.fermat_api.layer._15_middleware.app_runtime.Activity activity;
     private Map<Fragments, Fragment> fragments;
     private AppRuntimeManager appRuntimeMiddleware;
-    private AndroidOsAddonRoot Os;
+
     private CorePlatformContext platformContext;
     private ViewPager pager;
 
