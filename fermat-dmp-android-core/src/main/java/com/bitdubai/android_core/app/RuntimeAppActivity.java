@@ -16,7 +16,6 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import android.support.v7.widget.*;
 //import android.support.v7.widget.SearchView;
 import android.widget.SearchView;
 import android.util.TypedValue;
@@ -37,7 +36,7 @@ import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopMapFragm
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopProductsFragment;
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopReviewsFragment;
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopShopFragment;
-import com.bitdubai.android_core.app.subapp.shop_manager.version_1.fragment.ShopDesktopFragment;
+import com.bitdubai.shop_manager.fragment.ShopDesktopFragment;
 
 import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsDataBaseSystem;
 import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsFileSystem;
@@ -820,12 +819,15 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
         public MyPagerAdapter(FragmentManager fm) {
             super(fm);
-            List<Tab> titleTabs = tabs.getTabs();
-            titles = new String[titleTabs.size()];
-            for (int i = 0; i < titleTabs.size(); i++) {
-                Tab tab = titleTabs.get(i);
-                titles[i] = tab.getLabel();
+            if(tabs != null){
+                List<Tab> titleTabs = tabs.getTabs();
+                titles = new String[titleTabs.size()];
+                for (int i = 0; i < titleTabs.size(); i++) {
+                    Tab tab = titleTabs.get(i);
+                    titles[i] = tab.getLabel();
+                }
             }
+
         }
 
 
@@ -852,7 +854,10 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
         @Override
         public int getCount() {
 
-            return titles.length;
+            if (titles != null)
+                return titles.length;
+            else
+                return 0;
         }
 
         @Override
