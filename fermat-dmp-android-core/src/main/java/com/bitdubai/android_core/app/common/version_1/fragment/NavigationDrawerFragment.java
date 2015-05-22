@@ -289,16 +289,24 @@ public class NavigationDrawerFragment extends Fragment {
         }
         if(MyApplication.getActivityId()=="DesktopActivity") {
 
+            //Factory projects
             if (position == 3) {
                 Intent intent;
                 intent = new Intent(super.getActivity(), FactoryActivity.class);
                 startActivity(intent);
             }
+            //Shop MANAGER
+            if (position == 1) {
+
+            }
+            //Publisher Wallets
             if (position == 4){
                 Intent intent;
                 intent = new Intent(super.getActivity(), PublisherActivity.class);
                startActivity(intent);
             }
+
+            //wallet store
             if (position == 5){
                 AppRuntimeManager appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
                 appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);

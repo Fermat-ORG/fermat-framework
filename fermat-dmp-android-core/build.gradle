@@ -53,7 +53,7 @@ dependencies {
     compile project(':fermat-pip-android-addon-os-file-system-bitdubai')
     compile project(':fermat-pip-android-addon-os-android-database-system-bitdubai')
     compile project(':fermat-pip-android-addon-os-device-location-bitdubai')
-
+    compile project(':fermat-dmp-android-shop-manager-bitdubai')
     compile 'com.android.support:support-v13:21.0.2'
     compile 'com.android.support:support-v4:21.0.2'
     compile 'com.google.android.gms:play-services:6.5.87'
