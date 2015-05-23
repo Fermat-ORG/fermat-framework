@@ -187,3 +187,24 @@
 [submodule "fermat-dmp-plugin-world-location-bitdubai"]
 	path = fermat-dmp-plugin-world-location-bitdubai
 	url = https://github.com/bitDubai/fermat-dmp-plugin-world-location-bitdubai
+[submodule "fermat-dmp-android-wallet-runtime-bitcoin-wallet-bitdubai"]
+	path = fermat-dmp-android-wallet-runtime-bitcoin-wallet-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-android-wallet-runtime-bitcoin-wallet-bitdubai.git
+[submodule "fermat-dmp-android-wallet-runtime-argentina-bitcoin-wallet-bitdubai"]
+	path = fermat-dmp-android-wallet-runtime-argentina-bitcoin-wallet-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-android-wallet-runtime-argentina-bitcoin-wallet-bitdubai.git
+[submodule "fermat-dmp-android-wallet-runtime-bitcoin-loss-protected-wallet-bitdubai"]
+	path = fermat-dmp-android-wallet-runtime-bitcoin-loss-protected-wallet-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-android-wallet-runtime-bitcoin-loss-protected-wallet-bitdubai.git
+[submodule "fermat-dmp-android-wallet-runtime-argetina-loss-protected-wallet-bitdubai"]
+	path = fermat-dmp-android-wallet-runtime-argetina-loss-protected-wallet-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-android-wallet-runtime-argetina-loss-protected-wallet-bitdubai.git
+[submodule "fermat-dmp-android-wallet-runtime-argentina-discount-wallet-bitdubai"]
+	path = fermat-dmp-android-wallet-runtime-argentina-discount-wallet-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-android-wallet-runtime-argentina-discount-wallet-bitdubai.git
+[submodule "fermat-dmp-android-wallet-runtime-argentina-multi-account-wallet-bitdubai"]
+	path = fermat-dmp-android-wallet-runtime-argentina-multi-account-wallet-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-android-wallet-runtime-argentina-multi-account-wallet-bitdubai.git
+[submodule "fermat-dmp-android-wallet-runtime-argentina-bank-notes-wallet-bitdubai"]
+	path = fermat-dmp-android-wallet-runtime-argentina-bank-notes-wallet-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-android-wallet-runtime-argentina-bank-notes-wallet-bitdubai.git

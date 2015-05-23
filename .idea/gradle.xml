@@ -5,7 +5,8 @@
       <GradleProjectSettings>
         <option name="distributionType" value="LOCAL" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleHome" value="$APPLICATION_HOME_DIR$/gradle-2.2.1" />
+        <option name="gradleHome" value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1" />
+        <option name="gradleJvm" value="1.7" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
@@ -15,6 +16,13 @@
             <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-manager-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-publisher-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-argentina-bank-notes-wallet-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-argentina-bitcoin-wallet-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-argentina-discount-wallet-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-argentina-multi-account-wallet-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-argetina-loss-protected-wallet-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-bitcoin-loss-protected-wallet-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-bitcoin-wallet-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-store-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai" />
