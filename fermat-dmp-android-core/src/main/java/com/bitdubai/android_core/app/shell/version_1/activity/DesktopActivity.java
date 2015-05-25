@@ -20,7 +20,7 @@ import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 
 import com.bitdubai.wallet_manager.wallet.manager.fragment.WalletDesktopFragment;
 //import com.bitdubai.android_core.app.subapp.shop_manager.version_1.fragment.ShopDesktopFragment;
-import com.bitdubai.android_core.app.subapp.wallet_store.version_1.activity.StoreFrontActivity;
+//import com.bitdubai.android_core.app.subapp.wallet_store.version_1.activity.StoreFrontActivity;
 
 import android.support.v4.app.FragmentActivity;
 
@@ -110,9 +110,9 @@ public class DesktopActivity extends FragmentActivity
 
         if (id == R.id.action_wallet_store) {
 
-            Intent intent;
-            intent = new Intent(this, StoreFrontActivity.class);
-            startActivity(intent);
+           // Intent intent;
+            //intent = new Intent(this, StoreFrontActivity.class);
+            //startActivity(intent);
 
             return true;
         }
