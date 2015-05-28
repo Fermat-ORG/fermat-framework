@@ -22,6 +22,7 @@ import com.bitdubai.fermat_api.layer._2_os.file_system.*;
 
 import com.bitdubai.fermat_core.layer._13_basic_wallet.BasicWalletLayer;
 import com.bitdubai.fermat_core.layer._16_transaction.TransactionLayer;
+import com.bitdubai.fermat_core.layer._19_niche_type_wallet.NicheTypeWalletLayer;
 import com.bitdubai.fermat_core.layer._3_platform_service.PlatformServiceLayer;
 
 import com.bitdubai.fermat_core.layer._1_definition.DefinitionLayer;
@@ -65,6 +66,7 @@ public class Platform  {
     PlatformLayer mModuleLayer = new ModuleLayer();
     PlatformLayer mAgentLayer = new AgentLayer();
     PlatformLayer mBasicWalletLayer = new BasicWalletLayer();
+    PlatformLayer mNicheTypeWalletLayer = new NicheTypeWalletLayer();
 
 
 
@@ -126,6 +128,10 @@ public class Platform  {
 
     public PlatformLayer getBasicWalletLayer(){
         return mBasicWalletLayer;
+    }
+
+    public PlatformLayer getmNicheTypeWalletLayer() {
+        return mNicheTypeWalletLayer;
     }
 
 

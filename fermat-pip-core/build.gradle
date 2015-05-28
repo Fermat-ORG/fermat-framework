@@ -56,10 +56,13 @@ dependencies {
     compile project(':fermat-dmp-plugin-crypto-user-address-book-bitdubai')
     compile project(':fermat-dmp-plugin-crypto-wallet-address-book-bitdubai')
     compile project(':fermat-dmp-plugin-world-location-bitdubai')
-
-
-
-
-
+    compile project(':fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai')
+    compile project(':fermat-dmp-plugin-niche-type-wallet-bank-notes-wallet-bitdubai')
+    compile project(':fermat-dmp-plugin-niche-type-wallet-crypto-loss-protected-wallet-bitdubai')
+    compile project(':fermat-dmp-plugin-niche-type-wallet-crypto-wallet-bitdubai')
+    compile project(':fermat-dmp-plugin-niche-type-wallet-discount-wallet-bitdubai')
+    compile project(':fermat-dmp-plugin-niche-type-wallet-fiat-over-crypto-bitdubai')
+    compile project(':fermat-dmp-plugin-niche-type-wallet-fiat-over-crypto-loss-protected-wallet-bitdubai')
+    compile project(':fermat-dmp-plugin-niche-type-wallet-multi-account-wallet-bitdubai')
 }
 

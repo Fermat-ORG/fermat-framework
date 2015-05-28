@@ -5,7 +5,8 @@
       <GradleProjectSettings>
         <option name="distributionType" value="LOCAL" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="gradleHome" value="$APPLICATION_HOME_DIR$/gradle-2.2.1" />
+        <option name="gradleHome" value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1" />
+        <option name="gradleJvm" value="1.7" />
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
@@ -47,6 +48,13 @@
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-network-service-wallet-community-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-network-service-wallet-resources-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-network-service-wallet-store-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-niche-type-wallet-bank-notes-wallet-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-niche-type-wallet-crypto-loss-protected-wallet-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-niche-type-wallet-crypto-wallet-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-niche-type-wallet-discount-wallet-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-niche-type-wallet-fiat-over-crypto-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-niche-type-wallet-fiat-over-crypto-loss-protected-wallet-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-niche-type-wallet-multi-account-wallet-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-transaction-incoming-crypto-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-transaction-incoming-device-user-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai" />

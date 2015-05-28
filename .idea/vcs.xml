@@ -7,6 +7,13 @@
     <mapping directory="$PROJECT_DIR$/fermat-dmp-android-wallet-manager-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-android-wallet-publisher-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-argentina-bank-notes-wallet-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-argentina-bitcoin-wallet-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-argentina-discount-wallet-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-argentina-multi-account-wallet-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-argetina-loss-protected-wallet-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-bitcoin-loss-protected-wallet-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-bitcoin-wallet-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-android-wallet-store-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai" vcs="Git" />
@@ -32,6 +39,13 @@
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-network-service-wallet-community-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-network-service-wallet-resources-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-network-service-wallet-store-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-niche-type-wallet-bank-notes-wallet-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-niche-type-wallet-crypto-loss-protected-wallet-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-niche-type-wallet-crypto-wallet-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-niche-type-wallet-discount-wallet-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-niche-type-wallet-fiat-over-crypto-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-niche-type-wallet-fiat-over-crypto-loss-protected-wallet-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-niche-type-wallet-multi-account-wallet-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-transaction-incoming-crypto-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-transaction-incoming-device-user-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai" vcs="Git" />
@@ -61,7 +75,7 @@
     <mapping directory="$PROJECT_DIR$/fermat-pip-android-addon-os-device-location-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-pip-android-addon-os-device-power-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-pip-android-addon-os-file-system-bitdubai" vcs="Git" />
-      <mapping directory="$PROJECT_DIR$/fermat-pip-android-addon-os-logger-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-pip-android-addon-os-logger-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-pip-api" vcs="Git" />
   </component>
 </project>
