@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.*;
 import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
 
+
 import com.bitdubai.fermat_api.layer._1_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer._1_definition.enums.PlatformComponents;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
@@ -20,6 +21,12 @@ import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventMana
 import com.bitdubai.fermat_api.layer._2_os.*;
 import com.bitdubai.fermat_api.layer._2_os.file_system.*;
 
+import com.bitdubai.fermat_api.layer._5_user.device_user.DealsWithDeviceUsers;
+import com.bitdubai.fermat_api.layer._5_user.device_user.DeviceUserManager;
+import com.bitdubai.fermat_api.layer._5_user.extra_user.DealsWithExtraUsers;
+import com.bitdubai.fermat_api.layer._5_user.extra_user.ExtraUserManager;
+import com.bitdubai.fermat_api.layer._5_user.intra_user.DealsWithIntraUsers;
+import com.bitdubai.fermat_api.layer._5_user.intra_user.IntraUserManager;
 import com.bitdubai.fermat_core.layer._13_basic_wallet.BasicWalletLayer;
 import com.bitdubai.fermat_core.layer._16_transaction.TransactionLayer;
 import com.bitdubai.fermat_core.layer._19_niche_type_wallet.NicheTypeWalletLayer;
@@ -962,6 +969,9 @@ public class Platform  {
 
         ((DealsWithPluginFileSystem) userAddressBookCrypto).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
         ((DealsWithEvents) userAddressBookCrypto).setEventManager((EventManager) eventManager);
+        ((DealsWithExtraUsers) userAddressBookCrypto).setExtraUserManager((ExtraUserManager) extraUser);
+        ((DealsWithDeviceUsers) userAddressBookCrypto).setDeviceUserManager((DeviceUserManager) deviceUser);
+        ((DealsWithIntraUsers) userAddressBookCrypto).setIntraUserManager((IntraUserManager) intraUser);
 
         corePlatformContext.addPlugin(userAddressBookCrypto, Plugins.BITDUBAI_USER_ADDRESS_BOOK_CRYPTO);
 
