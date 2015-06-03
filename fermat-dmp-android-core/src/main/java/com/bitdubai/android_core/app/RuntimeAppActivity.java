@@ -36,6 +36,8 @@ import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopMapFragm
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopProductsFragment;
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopReviewsFragment;
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopShopFragment;
+import com.bitdubai.android_fermat_dmp_wallet_basic.fragments.BasicReceiveFragment;
+import com.bitdubai.android_fermat_dmp_wallet_basic.fragments.BasicSendFragment;
 import com.bitdubai.shop_manager.fragment.ShopDesktopFragment;
 
 import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsDataBaseSystem;
@@ -43,8 +45,10 @@ import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_
 import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsLocationSystem;
 import com.bitdubai.android_fermat_dmp_subapp.bitdubai.wallet.store.fragment.AllFragment;
 import com.bitdubai.android_fermat_dmp_subapp.bitdubai.wallet.store.fragment.FreeFragment;
+
 import com.bitdubai.fermat_api.layer._16_module.wallet_runtime.WalletRuntimeManager;
 
+import com.bitdubai.android_fermat_dmp_wallet_basic.fragments.BasicBalanceFragment;
 import com.bitdubai.wallet_manager.wallet.manager.fragment.WalletDesktopFragment;
 
 import com.bitdubai.fermat_api.layer._11_network_service.wallet_resources.WalletResourcesManager;
@@ -90,6 +94,8 @@ import java.util.Map;
 import java.util.Iterator;
 import java.util.Vector;
 
+
+
 /**
  * Created by toshiba on 16/02/2015.
  */
@@ -108,7 +114,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
     private AppRuntimeManager appRuntimeMiddleware;
     private WalletRuntimeManager walletRuntimeMiddleware;
 
-   private  AndroidOsFileSystem fileSystemOs;
+    private  AndroidOsFileSystem fileSystemOs;
     private CorePlatformContext platformContext;
     private AndroidOsDataBaseSystem databaseSystemOs;
     private AndroidOsLocationSystem locationSystemOs;
@@ -136,13 +142,13 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
         try {
             try {
-                setContentView(R.layout.runtime_app_activity_runtime);    
+                setContentView(R.layout.runtime_app_activity_runtime);
             }
             catch (Exception e)
             {
                 System.err.println("Can't set content view as runtime_app_activity_runtime: " + e.getMessage());
             }
-            
+
             this.savedInstanceState = savedInstanceState;
             //init runtime app
 
@@ -199,9 +205,9 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
             /**************/
 //Device Location testing
-          // LocationManager deviceLocation = new AndroidLocationManager();
-          //  deviceLocation.setContext(context);
-          // Location location = deviceLocation.getLocation();
+            // LocationManager deviceLocation = new AndroidLocationManager();
+            //  deviceLocation.setContext(context);
+            // Location location = deviceLocation.getLocation();
 
             NavigateActivity();
         }
@@ -546,7 +552,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
             return true;
         }
-	if (id == R.id.action_search) {
+        if (id == R.id.action_search) {
 
             /*((MyApplication) this.getApplication()).setWalletId(0);
             this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_STORE_MAIN);
@@ -556,7 +562,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
             //Toast.makeText(this,"holas_runtime",Toast.LENGTH_SHORT).show();
             return true;
-	}
+        }
         if (id == R.id.action_file) {
             return true;
         }
@@ -628,11 +634,16 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                 cleanWindows();
                 ((MyApplication) this.getApplication()).setWalletId(Integer.parseInt(paramId));
                 activity = this.walletRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_VERSION_1_MAIN);
-
-                //voy a crear un NavigateWallet y tengo que setear el last wallet y ejecutar primer activity de esa wallet
+                //execute NavigateWallet to go wallet activity
                 NavigateWallet();
                 break;
             case CWP_WALLET_STORE_MAIN:
+                break;
+            case CWP_WALLET_BASIC_ALL_MAIN: //basic Wallet
+                //go to wallet basic definition
+                this.walletRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
+                NavigateWallet();
+
                 break;
             case CWP_WALLET_ADULTS_ALL_MAIN:
                 cleanWindows();
@@ -895,7 +906,16 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                     break;
 
                 case CWP_SHOP_MANAGER_PAID:
-                   currentFragment =  AllFragment.newInstance(2);
+                    currentFragment =  AllFragment.newInstance(2);
+                    break;
+                case CWP_WALLET_RUNTIME_WALLET_BASIC_ALL_BITDUBAI_BALANCE:
+                    currentFragment =  BasicBalanceFragment.newInstance(0);
+                    break;
+                case CWP_WALLET_RUNTIME_WALLET_BASIC_ALL_BITDUBAI_RECEIVE:
+                    currentFragment = BasicReceiveFragment.newInstance(0);
+                    break;
+                case CWP_WALLET_RUNTIME_WALLET_BASIC_ALL_BITDUBAI_SEND:
+                    currentFragment =  BasicSendFragment.newInstance(0);
                     break;
                 case CWP_SHOP_MANAGER_ACCEPTED_NEARBY:
                     currentFragment =  AllFragment.newInstance(3);
