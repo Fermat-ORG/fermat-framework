@@ -13,7 +13,15 @@ import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.FileNotFoundEx
 import com.bitdubai.fermat_dmp_plugin.layer._12_world.coinbase.developer.bitdubai.version_1.CoinbaseWorldPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._13_basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.BitcoinWalletBasicWalletPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._12_world.location.developer.bitdubai.version_1.LocationWorldPluginRoot;
+//import com.bitdubai.fermat_dmp_plugin.layer._13_basic_wallet.discount_wallet.developer.bitdubai.version_1.DiscountWalletBasicWalletPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._16_transaction.incoming_crypto.developer.bitdubai.version_1.IncomingCryptoTransactionPluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer._19_niche_wallet_type.bank_notes_wallet.developer.bitdubai.version_1.BankNotesWalletNicheWalletTypePluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer._19_niche_wallet_type.crypto_loss_protected_wallet.developer.bitdubai.version_1.CryptoLossProtectedWalletNicheWalletTypePluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer._19_niche_wallet_type.crypto_wallet.developer.bitdubai.version_1.CryptoWalletNicheWalletTypePluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer._19_niche_wallet_type.discount_wallet.developer.bitdubai.version_1.DiscountWalletNicheWalletTypePluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer._19_niche_wallet_type.fiat_over_crypto_loss_protected_wallet.developer.bitdubai.version_1.FiatOverCryptoLossProtectedWalletNicheWalletTypePluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer._19_niche_wallet_type.fiat_over_crypto_wallet.developer.bitdubai.version_1.FiatOverCryptoWalletNicheWalletTypePluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer._19_niche_wallet_type.multi_account_wallet.developer.bitdubai.version_1.MultiAccountWalletNicheWalletTypePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._9_crypto_module.wallet_address_book.developer.bitdubai.version_1.WalletAddressBookCryptoPluginRoot;
 import com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud.developer.bitdubai.version_1.CloudCommunicationChannelPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._11_network_service.bank_notes.developer.bitdubai.version_1.BankNotesNetworkServicePluginRoot;
@@ -35,7 +43,6 @@ import com.bitdubai.fermat_dmp_plugin.layer._12_world.shape_shift.developer.bitd
 import com.bitdubai.fermat_dmp_plugin.layer._9_crypto_module.user_address_book.developer.bitdubai.version_1.UserAddressBookCryptoPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._15_middleware.app_runtime.developer.bitdubai.version_1.AppRuntimeMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._15_middleware.bank_notes.developer.bitdubai.version_1.BankNotesMiddlewarePluginRoot;
-import com.bitdubai.fermat_dmp_plugin.layer._13_basic_wallet.discount_wallet.developer.bitdubai.version_1.DiscountWalletBasicWalletPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._15_middleware.wallet_contacts.developer.bitdubai.version_1.WalletContactsMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._17_module.wallet_manager.developer.bitdubai.version_1.WalletManagerModulePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._17_module.wallet_runtime.developer.bitdubai.version_1.WalletRuntimeModulePluginRoot;
@@ -52,7 +59,7 @@ import java.util.UUID;
 public class PluginsIdentityManager {
 
     private PlatformFileSystem platformFileSystem;
-    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 32;
+    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 39;
     private List<UUID> pluginIds = new ArrayList<>();
 
 
@@ -77,7 +84,7 @@ public class PluginsIdentityManager {
                 System.err.println("CantCreateFileException: " + cantCreateFileException.getMessage());
                 cantCreateFileException.printStackTrace();
                 throw new CantInitializePluginsManagerException();
-               }
+            }
 
             try
             {
@@ -93,33 +100,33 @@ public class PluginsIdentityManager {
                 cantLoadFileException.printStackTrace();
                 throw new CantInitializePluginsManagerException();
             }
-            
+
             /**
              * Then I put the content of the file on an Array String.
              */
-            
+
             String[] stringPluginIds = platformTextFile.getContent().split(";" , -1);
 
             Integer arrayPosition = 0;
 
-             for (String stringPluginId : stringPluginIds ) {
+            for (String stringPluginId : stringPluginIds ) {
 
-                    if(stringPluginId != "")
+                if(stringPluginId != "")
+                {
+                    try {
+                        pluginIds.add(arrayPosition, UUID.fromString(stringPluginId));
+                        arrayPosition++;
+                    }
+                    catch (IllegalArgumentException e )
                     {
-                        try {
-                            pluginIds.add(arrayPosition, UUID.fromString(stringPluginId));
-                            arrayPosition++;
-                        }
-                        catch (IllegalArgumentException e )
-                        {
-                            /**
-                             * This exception occurs when we reach the end of the file. So there is nothing to do here.
-                             */
-                        }
-                        
+                        /**
+                         * This exception occurs when we reach the end of the file. So there is nothing to do here.
+                         */
                     }
 
                 }
+
+            }
 
             /**
              * Now I check if the amount of plugins on file is the same that the amount of plugin implemented
@@ -160,7 +167,7 @@ public class PluginsIdentityManager {
         catch (FileNotFoundException fileNotFoundException)
         {
             try{
-                    platformTextFile =  platformFileSystem.createFile("Platform", "PluginsIds", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                platformTextFile =  platformFileSystem.createFile("Platform", "PluginsIds", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             }  catch (CantCreateFileException cantCreateFileException) {
                 /**
                  * This really should never happen. But if it does...
@@ -246,20 +253,20 @@ public class PluginsIdentityManager {
             }
         }
 
-        if (pluginIndex == 0) {
-            try
-            {
-                DiscountWalletBasicWalletPluginRoot tryType;
-                tryType = (DiscountWalletBasicWalletPluginRoot) plugin;
-                pluginIndex = 3;
-            }
-            catch (Exception e)
-            {
-                /**
-                 * If this fails, is because this is not the index for this plug in.
-                 */
-            }
-        }
+      //  if (pluginIndex == 0) {
+       //     try
+       //     {
+                //DiscountWalletBasicWalletPluginRoot tryType;
+             //   tryType = (DiscountWalletBasicWalletPluginRoot) plugin;
+            //    pluginIndex = 3;
+           // }
+       //     catch (Exception e)
+       //     {
+      //          /**
+        //         * If this fails, is because this is not the index for this plug in.
+       //          */
+       //     }
+    //    }
         if (pluginIndex == 0) {
             try
             {
@@ -395,7 +402,7 @@ public class PluginsIdentityManager {
                  */
             }
         }
-        
+
         if (pluginIndex == 0) {
             try
             {
@@ -660,6 +667,94 @@ public class PluginsIdentityManager {
                      */
                 }
             }
+
+            if (pluginIndex == 0) {
+                try {
+                    BankNotesWalletNicheWalletTypePluginRoot tryType;
+                    tryType = (BankNotesWalletNicheWalletTypePluginRoot) plugin;
+                    pluginIndex = 32;
+                } catch (Exception e) {
+                    /**
+                     * If this fails, is because this is not the index for this plug in.
+                     */
+                }
+            }
+
+
+            if (pluginIndex == 0) {
+                try {
+                    CryptoLossProtectedWalletNicheWalletTypePluginRoot tryType;
+                    tryType = (CryptoLossProtectedWalletNicheWalletTypePluginRoot) plugin;
+                    pluginIndex = 33;
+                } catch (Exception e) {
+                    /**
+                     * If this fails, is because this is not the index for this plug in.
+                     */
+                }
+            }
+
+
+            if (pluginIndex == 0) {
+                try {
+                    CryptoWalletNicheWalletTypePluginRoot tryType;
+                    tryType = (CryptoWalletNicheWalletTypePluginRoot) plugin;
+                    pluginIndex = 34;
+                } catch (Exception e) {
+                    /**
+                     * If this fails, is because this is not the index for this plug in.
+                     */
+                }
+            }
+
+            if (pluginIndex == 0) {
+                try {
+                    DiscountWalletNicheWalletTypePluginRoot tryType;
+                    tryType = (DiscountWalletNicheWalletTypePluginRoot) plugin;
+                    pluginIndex = 35;
+                } catch (Exception e) {
+                    /**
+                     * If this fails, is because this is not the index for this plug in.
+                     */
+                }
+            }
+
+            if (pluginIndex == 0) {
+                try {
+                    FiatOverCryptoLossProtectedWalletNicheWalletTypePluginRoot tryType;
+                    tryType = (FiatOverCryptoLossProtectedWalletNicheWalletTypePluginRoot) plugin;
+                    pluginIndex = 36;
+                } catch (Exception e) {
+                    /**
+                     * If this fails, is because this is not the index for this plug in.
+                     */
+                }
+            }
+
+            if (pluginIndex == 0) {
+                try {
+                    FiatOverCryptoWalletNicheWalletTypePluginRoot tryType;
+                    tryType = (FiatOverCryptoWalletNicheWalletTypePluginRoot) plugin;
+                    pluginIndex = 37;
+                } catch (Exception e) {
+                    /**
+                     * If this fails, is because this is not the index for this plug in.
+                     */
+                }
+            }
+
+            if (pluginIndex == 0) {
+                try {
+                    MultiAccountWalletNicheWalletTypePluginRoot tryType;
+                    tryType = (MultiAccountWalletNicheWalletTypePluginRoot) plugin;
+                    pluginIndex = 38;
+                } catch (Exception e) {
+                    /**
+                     * If this fails, is because this is not the index for this plug in.
+                     */
+                }
+            }
+
+
 
         }
 

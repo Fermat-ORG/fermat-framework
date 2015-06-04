@@ -208,24 +208,24 @@
 [submodule "fermat-dmp-android-wallet-runtime-argentina-bank-notes-wallet-bitdubai"]
 	path = fermat-dmp-android-wallet-runtime-argentina-bank-notes-wallet-bitdubai
 	url = https://github.com/bitDubai/fermat-dmp-android-wallet-runtime-argentina-bank-notes-wallet-bitdubai.git
-[submodule "fermat-dmp-plugin-niche-type-wallet-crypto-wallet-bitdubai"]
-	path = fermat-dmp-plugin-niche-type-wallet-crypto-wallet-bitdubai
-	url = https://github.com/bitDubai/fermat-dmp-plugin-niche-type-wallet-crypto-wallet-bitdubai.git
-[submodule "fermat-dmp-plugin-niche-type-wallet-fiat-over-crypto-bitdubai"]
-	path = fermat-dmp-plugin-niche-type-wallet-fiat-over-crypto-bitdubai
-	url = https://github.com/bitDubai/fermat-dmp-plugin-niche-type-wallet-fiat-over-crypto-bitdubai.git
-[submodule "fermat-dmp-plugin-niche-type-wallet-crypto-loss-protected-wallet-bitdubai"]
-	path = fermat-dmp-plugin-niche-type-wallet-crypto-loss-protected-wallet-bitdubai
-	url = https://github.com/bitDubai/fermat-dmp-plugin-niche-type-wallet-crypto-loss-protected-wallet-bitdubai.git
-[submodule "fermat-dmp-plugin-niche-type-wallet-fiat-over-crypto-loss-protected-wallet-bitdubai"]
-	path = fermat-dmp-plugin-niche-type-wallet-fiat-over-crypto-loss-protected-wallet-bitdubai
-	url = https://github.com/bitDubai/fermat-dmp-plugin-niche-type-wallet-fiat-over-crypto-loss-protected-wallet-bitdubai.git
-[submodule "fermat-dmp-plugin-niche-type-wallet-discount-wallet-bitdubai"]
-	path = fermat-dmp-plugin-niche-type-wallet-discount-wallet-bitdubai
-	url = https://github.com/bitDubai/fermat-dmp-plugin-niche-type-wallet-discount-wallet-bitdubai.git
-[submodule "fermat-dmp-plugin-niche-type-wallet-multi-account-wallet-bitdubai"]
-	path = fermat-dmp-plugin-niche-type-wallet-multi-account-wallet-bitdubai
-	url = https://github.com/bitDubai/fermat-dmp-plugin-niche-type-wallet-multi-account-wallet-bitdubai.git
-[submodule "fermat-dmp-plugin-niche-type-wallet-bank-notes-wallet-bitdubai"]
-	path = fermat-dmp-plugin-niche-type-wallet-bank-notes-wallet-bitdubai
-	url = https://github.com/bitDubai/fermat-dmp-plugin-niche-type-wallet-bank-notes-wallet-bitdubai.git
+[submodule "fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai"]
+	path = fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai.git
+[submodule "fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-bitdubai"]
+	path = fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-bitdubai.git
+[submodule "fermat-dmp-plugin-niche-wallet-type-discount-wallet-bitdubai"]
+	path = fermat-dmp-plugin-niche-wallet-type-discount-wallet-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-plugin-niche-wallet-type-discount-wallet-bitdubai.git
+[submodule "fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai"]
+	path = fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai.git
+[submodule "fermat-dmp-plugin-niche-wallet-type-crypto-loss-protected-wallet-bitdubai"]
+	path = fermat-dmp-plugin-niche-wallet-type-crypto-loss-protected-wallet-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-plugin-niche-wallet-type-crypto-loss-protected-wallet-bitdubai.git
+[submodule "fermat-dmp-plugin-niche-wallet-type-bank-notes-wallet-bitdubai"]
+	path = fermat-dmp-plugin-niche-wallet-type-bank-notes-wallet-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-plugin-niche-wallet-type-bank-notes-wallet-bitdubai.git
+[submodule "fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai"]
+	path = fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai
+	url = https://github.com/bitDubai/fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai.git

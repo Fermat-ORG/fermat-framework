@@ -1,22 +1,22 @@
-package com.bitdubai.fermat_core.layer._19_niche_type_wallet;
+package com.bitdubai.fermat_core.layer._19_niche_wallet_type;
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
-import com.bitdubai.fermat_api.layer._19_niche_type_wallet.CantStartSubsystemException;
-import com.bitdubai.fermat_api.layer._19_niche_type_wallet.NicheTypeWalletSubsystem;
-import com.bitdubai.fermat_core.layer._19_niche_type_wallet.bank_notes_wallet.BankNotesWalletNicheTypeWalletSubsystem;
-import com.bitdubai.fermat_core.layer._19_niche_type_wallet.crypto_loss_protected_wallet.CryptoLossProtectedWalletNicheTypeWalletSubsystem;
-import com.bitdubai.fermat_core.layer._19_niche_type_wallet.crypto_wallet.CryptoWalletNicheTypeWalletSubsystem;
-import com.bitdubai.fermat_core.layer._19_niche_type_wallet.discount_wallet.DiscountWalletNicheTypeWalletSubsystem;
-import com.bitdubai.fermat_core.layer._19_niche_type_wallet.fiat_over_crypto_loss_protected_wallet.FiatOverCryptoLossProtectedWalletNicheTypeWalletSubsystem;
-import com.bitdubai.fermat_core.layer._19_niche_type_wallet.fiat_over_crypto_wallet.FiatOverCryptoWalletNicheTypeWalletSubsystem;
-import com.bitdubai.fermat_core.layer._19_niche_type_wallet.multi_account_wallet.MultiAccountWalletNicheTypeWalletSubsystem;
+import com.bitdubai.fermat_api.layer._19_niche_wallet_type.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer._19_niche_wallet_type.NicheWalletTypeSubsystem;
+import com.bitdubai.fermat_core.layer._19_niche_wallet_type.bank_notes_wallet.BankNotesWalletNicheWalletTypeSubsystem;
+import com.bitdubai.fermat_core.layer._19_niche_wallet_type.crypto_loss_protected_wallet.CryptoLossProtectedWalletNicheWalletTypeSubsystem;
+import com.bitdubai.fermat_core.layer._19_niche_wallet_type.crypto_wallet.CryptoWalletNicheWalletTypeSubsystem;
+import com.bitdubai.fermat_core.layer._19_niche_wallet_type.discount_wallet.DiscountWalletNicheWalletTypeSubsystem;
+import com.bitdubai.fermat_core.layer._19_niche_wallet_type.fiat_over_crypto_loss_protected_wallet.FiatOverCryptoLossProtectedWalletNicheWalletTypeSubsystem;
+import com.bitdubai.fermat_core.layer._19_niche_wallet_type.fiat_over_crypto_wallet.FiatOverCryptoWalletNicheWalletTypeSubsystem;
+import com.bitdubai.fermat_core.layer._19_niche_wallet_type.multi_account_wallet.MultiAccountWalletNicheWalletTypeSubsystem;
 
 /**
  * Created by loui on 21/05/15.
  */
-public class NicheTypeWalletLayer implements PlatformLayer {
+public class NicheWalletTypeLayer implements PlatformLayer {
 
     private Plugin mBankNotesWallet;
     private Plugin mCryptoLossProtectedWallet;
@@ -58,11 +58,11 @@ public class NicheTypeWalletLayer implements PlatformLayer {
     @Override
     public void start() throws CantStartLayerException {
 
-        NicheTypeWalletSubsystem bankNotesWalletNicheTypeWalletSubsystem = new BankNotesWalletNicheTypeWalletSubsystem();
+        NicheWalletTypeSubsystem bankNotesWalletNicheWalletSubsystemType = new BankNotesWalletNicheWalletTypeSubsystem();
 
         try {
-            bankNotesWalletNicheTypeWalletSubsystem.start();
-            mBankNotesWallet = (bankNotesWalletNicheTypeWalletSubsystem).getPlugin();
+            bankNotesWalletNicheWalletSubsystemType.start();
+            mBankNotesWallet = (bankNotesWalletNicheWalletSubsystemType).getPlugin();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartCryptoNetworkException: " + e.getMessage());
@@ -75,11 +75,11 @@ public class NicheTypeWalletLayer implements PlatformLayer {
 
         }
 
-        NicheTypeWalletSubsystem cryptoLossProtectedWalletNicheTypeWalletSubsystem  = new CryptoLossProtectedWalletNicheTypeWalletSubsystem();
+        NicheWalletTypeSubsystem cryptoLossProtectedWalletNicheWalletTypeSubsystem  = new CryptoLossProtectedWalletNicheWalletTypeSubsystem();
 
         try {
-            cryptoLossProtectedWalletNicheTypeWalletSubsystem.start();
-            mCryptoLossProtectedWallet = (cryptoLossProtectedWalletNicheTypeWalletSubsystem).getPlugin();
+            cryptoLossProtectedWalletNicheWalletTypeSubsystem.start();
+            mCryptoLossProtectedWallet = (cryptoLossProtectedWalletNicheWalletTypeSubsystem).getPlugin();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartCryptoNetworkException: " + e.getMessage());
@@ -92,11 +92,11 @@ public class NicheTypeWalletLayer implements PlatformLayer {
 
         }
 
-        NicheTypeWalletSubsystem cryptoWalletNicheTypeWalletSubsystem  = new CryptoWalletNicheTypeWalletSubsystem();
+        NicheWalletTypeSubsystem cryptoWalletNicheWalletTypeSubsystem  = new CryptoWalletNicheWalletTypeSubsystem();
 
         try {
-            cryptoWalletNicheTypeWalletSubsystem.start();
-            mCryptoWallet = (cryptoWalletNicheTypeWalletSubsystem).getPlugin();
+            cryptoWalletNicheWalletTypeSubsystem.start();
+            mCryptoWallet = (cryptoWalletNicheWalletTypeSubsystem).getPlugin();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartCryptoNetworkException: " + e.getMessage());
@@ -109,11 +109,11 @@ public class NicheTypeWalletLayer implements PlatformLayer {
 
         }
 
-        NicheTypeWalletSubsystem discountWalletNicheTypeWalletSubsystem  = new DiscountWalletNicheTypeWalletSubsystem();
+        NicheWalletTypeSubsystem discountWalletNicheWalletTypeSubsystem  = new DiscountWalletNicheWalletTypeSubsystem();
 
         try {
-            discountWalletNicheTypeWalletSubsystem.start();
-            mDiscountWallet = (discountWalletNicheTypeWalletSubsystem).getPlugin();
+            discountWalletNicheWalletTypeSubsystem.start();
+            mDiscountWallet = (discountWalletNicheWalletTypeSubsystem).getPlugin();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartCryptoNetworkException: " + e.getMessage());
@@ -126,11 +126,11 @@ public class NicheTypeWalletLayer implements PlatformLayer {
 
         }
 
-        NicheTypeWalletSubsystem fiatOverCryptoLossProtectedWalletNicheTypeWalletSubsystem  = new FiatOverCryptoLossProtectedWalletNicheTypeWalletSubsystem();
+        NicheWalletTypeSubsystem fiatOverCryptoLossProtectedWalletNicheWalletTypeSubsystem  = new FiatOverCryptoLossProtectedWalletNicheWalletTypeSubsystem();
 
         try {
-            fiatOverCryptoLossProtectedWalletNicheTypeWalletSubsystem.start();
-            mFiatOverCryptoLossProtectedWallet = (fiatOverCryptoLossProtectedWalletNicheTypeWalletSubsystem).getPlugin();
+            fiatOverCryptoLossProtectedWalletNicheWalletTypeSubsystem.start();
+            mFiatOverCryptoLossProtectedWallet = (fiatOverCryptoLossProtectedWalletNicheWalletTypeSubsystem).getPlugin();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartCryptoNetworkException: " + e.getMessage());
@@ -143,11 +143,11 @@ public class NicheTypeWalletLayer implements PlatformLayer {
 
         }
 
-        NicheTypeWalletSubsystem fiatOverCryptoWalletNicheTypeWalletSubsystem  = new FiatOverCryptoWalletNicheTypeWalletSubsystem();
+        NicheWalletTypeSubsystem fiatOverCryptoWalletNicheWalletTypeSubsystem  = new FiatOverCryptoWalletNicheWalletTypeSubsystem();
 
         try {
-            fiatOverCryptoWalletNicheTypeWalletSubsystem.start();
-            mFiatOverCryptoWallet = (fiatOverCryptoWalletNicheTypeWalletSubsystem).getPlugin();
+            fiatOverCryptoWalletNicheWalletTypeSubsystem.start();
+            mFiatOverCryptoWallet = (fiatOverCryptoWalletNicheWalletTypeSubsystem).getPlugin();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartCryptoNetworkException: " + e.getMessage());
@@ -160,11 +160,11 @@ public class NicheTypeWalletLayer implements PlatformLayer {
 
         }
 
-        NicheTypeWalletSubsystem multiAccountWalletNicheTypeWalletSubsystem  = new MultiAccountWalletNicheTypeWalletSubsystem();
+        NicheWalletTypeSubsystem multiAccountWalletNicheWalletTypeSubsystem  = new MultiAccountWalletNicheWalletTypeSubsystem();
 
         try {
-            multiAccountWalletNicheTypeWalletSubsystem.start();
-            mMultiAccountWallet = (multiAccountWalletNicheTypeWalletSubsystem).getPlugin();
+            multiAccountWalletNicheWalletTypeSubsystem.start();
+            mMultiAccountWallet = (multiAccountWalletNicheWalletTypeSubsystem).getPlugin();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartCryptoNetworkException: " + e.getMessage());
