@@ -1565,29 +1565,30 @@ public class Platform  {
          * I will give the crypto loss protected wallet access to the File System and to the Event Manager
          */
 
-        Plugin cryptoLossProtectedWalletNicheWalletType = ((NicheWalletTypeLayer) mNicheWalletTypeLayer).getmCryptoLossProtectedWallet();
+        //TODO lo comente porque la variable cryptoLossProtectedWalletNicheWalletType es null y da error al inicializar la APP (Natalia)
+       // Plugin cryptoLossProtectedWalletNicheWalletType = ((NicheWalletTypeLayer) mNicheWalletTypeLayer).getmCryptoLossProtectedWallet();
 
-        ((DealsWithPluginFileSystem) cryptoLossProtectedWalletNicheWalletType).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
-        ((DealsWithEvents) cryptoLossProtectedWalletNicheWalletType).setEventManager((EventManager) eventManager);
-        corePlatformContext.addPlugin(cryptoLossProtectedWalletNicheWalletType, Plugins.BITDUBAI_CRYPTO_LOSS_PROTECTED_WALLET_NICHE_WALLET_TYPE);
+       // ((DealsWithPluginFileSystem) cryptoLossProtectedWalletNicheWalletType).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
+       // ((DealsWithEvents) cryptoLossProtectedWalletNicheWalletType).setEventManager((EventManager) eventManager);
+       // corePlatformContext.addPlugin(cryptoLossProtectedWalletNicheWalletType, Plugins.BITDUBAI_CRYPTO_LOSS_PROTECTED_WALLET_NICHE_WALLET_TYPE);
 
-        try
-        {
+      //  try
+      //  {
 
             /**
              * As any other plugin, this one will need its identity in order to access the data it persisted before.
              */
 
-            UUID pluginID = pluginsIdentityManager.getPluginId(cryptoLossProtectedWalletNicheWalletType);
-            (cryptoLossProtectedWalletNicheWalletType).setId(pluginID);
+         //   UUID pluginID = pluginsIdentityManager.getPluginId(cryptoLossProtectedWalletNicheWalletType);
+         //   (cryptoLossProtectedWalletNicheWalletType).setId(pluginID);
 
-            try {
-                ((Service) cryptoLossProtectedWalletNicheWalletType).start();
-            }
-            catch (CantStartPluginException cantStartPluginException) {
+          //  try {
+           //     ((Service) cryptoLossProtectedWalletNicheWalletType).start();
+          //  }
+           // catch (CantStartPluginException cantStartPluginException) {
 
-                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
-                cantStartPluginException.printStackTrace();
+             //   System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+            //    cantStartPluginException.printStackTrace();
 
                 /**
                  * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
@@ -1595,29 +1596,29 @@ public class Platform  {
                  * * *
                  */
 
-                throw new CantStartPlatformException();
-            }
-            catch (Exception e){
+               // throw new CantStartPlatformException();
+          //  }
+          //  catch (Exception e){
 
-                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+           //     ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
 
                 /**
                  * This is worse than the previous catch since the plugin didn't even throw an expected exception.
                  * * *
                  */
 
-            }
+            //}
 
-        }
-        catch (PluginNotRecognizedException pluginNotRecognizedException)
-        {
+       // }
+        //catch (PluginNotRecognizedException pluginNotRecognizedException)
+        //{
 
 
-            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
-            pluginNotRecognizedException.printStackTrace();
+            //System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+           // pluginNotRecognizedException.printStackTrace();
 
-            throw new CantStartPlatformException();
-        }
+           // throw new CantStartPlatformException();
+       // }
 
         /**
          * ----------------------------------
@@ -1769,30 +1770,30 @@ public class Platform  {
         /**
          * I will give the Fiat over crypto loss protected wallet access to the File System and to the Event Manager
          */
+        //TODO lo comente porque la variable fiatOverCryptoLossProtectedWalletNicheWalletType es null  y da error al levantar la APP (Natalia)
+      //  Plugin fiatOverCryptoLossProtectedWalletNicheWalletType = ((NicheWalletTypeLayer) mNicheWalletTypeLayer).getmFiatOverCryptoLossProtectedWallet();
 
-        Plugin fiatOverCryptoLossProtectedWalletNicheWalletType = ((NicheWalletTypeLayer) mNicheWalletTypeLayer).getmFiatOverCryptoLossProtectedWallet();
+       // ((DealsWithPluginFileSystem) fiatOverCryptoLossProtectedWalletNicheWalletType).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
+       // ((DealsWithEvents) fiatOverCryptoLossProtectedWalletNicheWalletType).setEventManager((EventManager) eventManager);
+       // corePlatformContext.addPlugin(fiatOverCryptoLossProtectedWalletNicheWalletType, Plugins.BITDUBAI_FIAT_OVER_CRYPTO_LOSS_PROTECTED_WALLET_NICHE_WALLET_TYPE);
 
-        ((DealsWithPluginFileSystem) fiatOverCryptoLossProtectedWalletNicheWalletType).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
-        ((DealsWithEvents) fiatOverCryptoLossProtectedWalletNicheWalletType).setEventManager((EventManager) eventManager);
-        corePlatformContext.addPlugin(fiatOverCryptoLossProtectedWalletNicheWalletType, Plugins.BITDUBAI_FIAT_OVER_CRYPTO_LOSS_PROTECTED_WALLET_NICHE_WALLET_TYPE);
-
-        try
-        {
+       // try
+       // {
 
             /**
              * As any other plugin, this one will need its identity in order to access the data it persisted before.
              */
 
-            UUID pluginID = pluginsIdentityManager.getPluginId(fiatOverCryptoLossProtectedWalletNicheWalletType);
-            (fiatOverCryptoLossProtectedWalletNicheWalletType).setId(pluginID);
+          //  UUID pluginID = pluginsIdentityManager.getPluginId(fiatOverCryptoLossProtectedWalletNicheWalletType);
+          //  (fiatOverCryptoLossProtectedWalletNicheWalletType).setId(pluginID);
 
-            try {
-                ((Service) fiatOverCryptoLossProtectedWalletNicheWalletType).start();
-            }
-            catch (CantStartPluginException cantStartPluginException) {
+          //  try {
+          //      ((Service) fiatOverCryptoLossProtectedWalletNicheWalletType).start();
+          //  }
+          //  catch (CantStartPluginException cantStartPluginException) {
 
-                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
-                cantStartPluginException.printStackTrace();
+               // System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                //cantStartPluginException.printStackTrace();
 
                 /**
                  * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
@@ -1800,29 +1801,29 @@ public class Platform  {
                  * * *
                  */
 
-                throw new CantStartPlatformException();
-            }
-            catch (Exception e){
+               // throw new CantStartPlatformException();
+           // }
+           // catch (Exception e){
 
-                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+             //   ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
 
                 /**
                  * This is worse than the previous catch since the plugin didn't even throw an expected exception.
                  * * *
                  */
 
-            }
+            //}
 
-        }
-        catch (PluginNotRecognizedException pluginNotRecognizedException)
-        {
+       // }
+       // catch (PluginNotRecognizedException pluginNotRecognizedException)
+       // {
 
 
-            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
-            pluginNotRecognizedException.printStackTrace();
+          //  System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+          //  pluginNotRecognizedException.printStackTrace();
 
-            throw new CantStartPlatformException();
-        }
+           // throw new CantStartPlatformException();
+        //}
 
 
         /**

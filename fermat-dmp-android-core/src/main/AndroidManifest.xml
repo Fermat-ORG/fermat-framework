@@ -80,21 +80,15 @@
                 android:value="com.bitdubai.wallet_publisher.activity.ShopsActivity" />
         </activity>
         <activity
-            android:name="com.bitdubai.android_core.app.subapp.wallet_store.version_1.activity.StoreFrontActivity"
-            android:label="Wallet Store" >
+            android:name="com.bitdubai.android_core.app.FragmentActivity"
+            android:label="Desktop" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.android_core.app.shell.version_1.activity.DesktopActivity" />
+                android:value="com.bitdubai.android_core.app.RuntimeAppActivity" />
         </activity>
 
-        <activity
-            android:name="com.bitdubai.android_core.app.subapp.wallet_store.version_1.activity.WalletActivity"
-            android:label="@string/title_activity_wallet"
-            android:parentActivityName="com.bitdubai.android_core.app.subapp.wallet_store.version_1.activity.StoreFrontActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.android_core.app.subapp.wallet_store.version_1.activity.StoreFrontActivity" />
-        </activity>
+
+
         <activity
             android:name="com.bitdubai.android_core.app.subapp.shop.version_1.activity.ShopActivity"
             android:label="Wallet Store" >

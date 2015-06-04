@@ -203,11 +203,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             catch (CantCheckResourcesException e) {
                 e.printStackTrace();}*/
 
-            /**************/
-//Device Location testing
-            // LocationManager deviceLocation = new AndroidLocationManager();
-            //  deviceLocation.setContext(context);
-            // Location location = deviceLocation.getLocation();
+
 
             NavigateActivity();
         }
@@ -645,6 +641,34 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                 NavigateWallet();
 
                 break;
+            //basic wallet fragments
+            case CWP_WALLET_RUNTIME_BASIC_ALL_CONTACTS_SEND:
+                this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_BASIC_ALL_CONTACTS_SEND);
+                intent = new Intent(this, com.bitdubai.android_core.app.FragmentActivity.class);
+
+                startActivity(intent);
+
+                break;
+            case CWP_WALLET_RUNTIME_BASIC_ALL_CONTACTS_NEW_SEND :
+                this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_BASIC_ALL_CONTACTS_NEW_SEND);
+                intent = new Intent(this, com.bitdubai.android_core.app.FragmentActivity.class);
+
+                startActivity(intent);
+                break;
+
+            case CWP_WALLET_RUNTIME_BASIC_ALL_CONTACTS_RECEIVE :
+                this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_BASIC_ALL_CONTACTS_RECEIVE);
+                intent = new Intent(this, com.bitdubai.android_core.app.FragmentActivity.class);
+
+                startActivity(intent);
+                break;
+            case CWP_WALLET_RUNTIME_BASIC_ALL_CONTACTS_NEW_RECEIVE :
+                this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_BASIC_ALL_CONTACTS_NEW_RECEIVE);
+                intent = new Intent(this, com.bitdubai.android_core.app.FragmentActivity.class);
+
+                startActivity(intent);
+               break;
+
             case CWP_WALLET_ADULTS_ALL_MAIN:
                 cleanWindows();
                 if (Integer.parseInt(paramId) > 4)

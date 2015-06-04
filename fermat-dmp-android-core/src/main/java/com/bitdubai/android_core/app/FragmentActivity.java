@@ -23,6 +23,12 @@ import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.su
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.SendToContactFragment;
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.SendToNewContactFragment;
 
+import com.bitdubai.android_fermat_dmp_wallet_basic.fragments.BasicBalanceFragment;
+import com.bitdubai.android_fermat_dmp_wallet_basic.fragments.BasicReceiveFragment;
+import com.bitdubai.android_fermat_dmp_wallet_basic.fragments.BasicReceiveFromContactFragment;
+import com.bitdubai.android_fermat_dmp_wallet_basic.fragments.BasicReceiveFromNewContactFragment;
+import com.bitdubai.android_fermat_dmp_wallet_basic.fragments.BasicSendFragment;
+import com.bitdubai.android_fermat_dmp_wallet_basic.fragments.BasicSendToContactFragment;
 import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.App;
 import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.AppRuntimeManager;
 import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.Fragment;
@@ -44,7 +50,7 @@ import java.util.Map;
 import java.util.Vector;
 
 /**
- * Created by toshiba on 24/02/2015.
+ * Created by Natalia on 24/02/2015.
  */
 public class FragmentActivity  extends Activity {
 
@@ -108,6 +114,37 @@ public class FragmentActivity  extends Activity {
                 RuntimeFragment fragment = (RuntimeFragment) fragmentEntry.getValue();
                 Fragments type = fragment.getType();
                 switch (type) {
+                    //basic wallet fragments
+
+
+                    case   CWP_WALLET_RUNTIME_WALLET_BASIC_ALL_BITDUBAI_CONTACTS_SEND:
+                        if (savedInstanceState == null) {
+                            getFragmentManager().beginTransaction()
+                                    .add(R.id.container, new BasicSendToContactFragment())
+                                    .commit();
+                        }
+                        break;
+                    case   CWP_WALLET_RUNTIME_WALLET_BASIC_ALL_BITDUBAI_CONTACTS_NEW_SEND:
+                        if (savedInstanceState == null) {
+                            getFragmentManager().beginTransaction()
+                                    .add(R.id.container, new BasicSendToContactFragment())
+                                    .commit();
+                        }
+                        break;
+                    case    CWP_WALLET_RUNTIME_WALLET_BASIC_ALL_BITDUBAI_CONTACTS_RECEIVE:
+                        if (savedInstanceState == null) {
+                            getFragmentManager().beginTransaction()
+                                    .add(R.id.container, new BasicReceiveFromContactFragment())
+                                    .commit();
+                        }
+                        break;
+                    case    CWP_WALLET_RUNTIME_WALLET_BASIC_ALL_BITDUBAI_CONTACTS_NEW_RECEIVE:
+                        if (savedInstanceState == null) {
+                            getFragmentManager().beginTransaction()
+                                    .add(R.id.container, new BasicReceiveFromNewContactFragment())
+                                    .commit();
+                        }
+                        break;
                     case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS:
                         if (savedInstanceState == null) {
                             getFragmentManager().beginTransaction()
