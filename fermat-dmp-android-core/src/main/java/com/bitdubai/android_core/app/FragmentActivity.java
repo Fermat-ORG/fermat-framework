@@ -29,6 +29,7 @@ import com.bitdubai.android_fermat_dmp_wallet_basic.fragments.BasicReceiveFromCo
 import com.bitdubai.android_fermat_dmp_wallet_basic.fragments.BasicReceiveFromNewContactFragment;
 import com.bitdubai.android_fermat_dmp_wallet_basic.fragments.BasicSendFragment;
 import com.bitdubai.android_fermat_dmp_wallet_basic.fragments.BasicSendToContactFragment;
+import com.bitdubai.android_fermat_dmp_wallet_basic.fragments.BasicSendToNewContactFragment;
 import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.App;
 import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.AppRuntimeManager;
 import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.Fragment;
@@ -38,10 +39,9 @@ import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.TabStrip;
 import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.TitleBar;
 import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.enums.Fragments;
-import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer._16_module.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.fermat_core.CorePlatformContext;
-import com.bitdubai.fermat_core.Platform;
-import com.bitdubai.fermat_dmp_plugin.layer._15_middleware.app_runtime.developer.bitdubai.version_1.structure.RuntimeFragment;
+import com.bitdubai.fermat_dmp_plugin.layer._17_module.wallet_runtime.developer.bitdubai.version_1.structure.RuntimeFragment;
 import com.bitdubai.smartwallet.R;
 
 import java.util.Iterator;
@@ -62,7 +62,9 @@ public class FragmentActivity  extends Activity {
     private SubApp subApp;
     private com.bitdubai.fermat_api.layer._15_middleware.app_runtime.Activity activity;
     private Map<Fragments, Fragment> fragments;
+
     private AppRuntimeManager appRuntimeMiddleware;
+    private static WalletRuntimeManager walletRuntimeMiddleware;
 
     private CorePlatformContext platformContext;
     private ViewPager pager;
@@ -81,21 +83,24 @@ public class FragmentActivity  extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.runtime_app_activity_fragment);
 
-        Platform platform = MyApplication.getPlatform();
 
-        this.platformContext = platform.getCorePlatformContext();
+       // get instances of Runtime middleware object
 
-        this.appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
+        this.appRuntimeMiddleware =  MyApplication.getAppRuntime(); //(AppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
 
         this.app = appRuntimeMiddleware.getLastApp();
         this.subApp = appRuntimeMiddleware.getLastSubApp();
-        this.activity = appRuntimeMiddleware.getLasActivity();
+
+        walletRuntimeMiddleware = MyApplication.getwalletRuntime();
+
+        //get actual activity to execute
+        this.activity = walletRuntimeMiddleware.getLasActivity();
 
 
         // Fragment fragment = appRuntimeMiddleware.getLastFragment();
         MyApplication.setActivityId(activity.getType().getKey());
 
-
+        //get activity settings
         this.tabs = activity.getTabStrip();
         this.fragments =activity.getFragments();
         this.titleBar = activity.getTitleBar();
@@ -127,7 +132,7 @@ public class FragmentActivity  extends Activity {
                     case   CWP_WALLET_RUNTIME_WALLET_BASIC_ALL_BITDUBAI_CONTACTS_NEW_SEND:
                         if (savedInstanceState == null) {
                             getFragmentManager().beginTransaction()
-                                    .add(R.id.container, new BasicSendToContactFragment())
+                                    .add(R.id.container, new BasicSendToNewContactFragment())
                                     .commit();
                         }
                         break;
