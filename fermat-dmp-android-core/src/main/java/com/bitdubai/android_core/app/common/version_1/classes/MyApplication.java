@@ -17,7 +17,9 @@ import android.text.SpannableString;
 import android.view.Window;
 import android.widget.TextView;
 
+import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.AppRuntimeManager;
 import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.TitleBar;
+import com.bitdubai.fermat_api.layer._16_module.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.fermat_core.Platform;
 
@@ -39,6 +41,9 @@ public class MyApplication extends android.support.multidex.MultiDexApplication 
     private static String walletStyle = "";
     private static PagerSlidingTabStrip tabs;
 
+    private static AppRuntimeManager appRuntimeMiddleware;
+    private static WalletRuntimeManager walletRuntimeMiddleware;
+
     public static String getActivityId() {
         return mActivityId;
     }
@@ -54,6 +59,22 @@ public class MyApplication extends android.support.multidex.MultiDexApplication 
     public static void setWalletId(int WalletId) {
         mWalletId = WalletId;
     }
+    public static void setAppRuntime(AppRuntimeManager appRuntime) {
+        appRuntimeMiddleware = appRuntime;
+    }
+
+    public static AppRuntimeManager getAppRuntime() {
+        return appRuntimeMiddleware;
+    }
+
+    public static void setWalletRuntime(WalletRuntimeManager walletRuntime) {
+        walletRuntimeMiddleware = walletRuntime;
+    }
+
+    public static WalletRuntimeManager getwalletRuntime() {
+        return walletRuntimeMiddleware;
+    }
+
     public static Typeface getDefaultTypeface() {
         return mDefaultTypeface;
     }
