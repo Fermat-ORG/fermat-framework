@@ -54,6 +54,8 @@ $RECYCLE.BIN/
 *.pydevproject
 .metadata
 .gradle
+.classpath
+.project
 bin/
 tmp/
 *.tmp
