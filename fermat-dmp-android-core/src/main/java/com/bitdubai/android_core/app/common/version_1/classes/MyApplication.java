@@ -32,7 +32,7 @@ public class MyApplication extends android.support.multidex.MultiDexApplication 
     public static String mContact;
     public static int mWalletId;
     public static String mActivityId;
-    public static String mCHILDID;
+    public static String mCHILDID = "";
     public static String mTicketID;
     private static CharSequence mTitle;
     private static Drawable oldBackground = null;

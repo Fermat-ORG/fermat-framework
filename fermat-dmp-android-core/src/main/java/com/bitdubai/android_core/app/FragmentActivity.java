@@ -77,6 +77,7 @@ public class FragmentActivity  extends Activity {
     private String walletStyle = "";
     private TabStrip tabs;
     private TitleBar titleBar; // Comment
+    private String tagParam  = MyApplication.getChildId(); //get param with data for fragment
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,8 +125,14 @@ public class FragmentActivity  extends Activity {
 
                     case   CWP_WALLET_RUNTIME_WALLET_BASIC_ALL_BITDUBAI_CONTACTS_SEND:
                         if (savedInstanceState == null) {
+
+                            BasicSendToContactFragment bc = new  BasicSendToContactFragment();
+                            //pass to fragment params
+                            Bundle b = new Bundle();
+                            b.putString("contactId",tagParam);
+                            bc.setArguments(b);
                             getFragmentManager().beginTransaction()
-                                    .add(R.id.container, new BasicSendToContactFragment())
+                                    .add(R.id.container, bc)
                                     .commit();
                         }
                         break;
@@ -138,8 +145,15 @@ public class FragmentActivity  extends Activity {
                         break;
                     case    CWP_WALLET_RUNTIME_WALLET_BASIC_ALL_BITDUBAI_CONTACTS_RECEIVE:
                         if (savedInstanceState == null) {
+
+                            BasicReceiveFromContactFragment bc = new  BasicReceiveFromContactFragment();
+                            //pass to fragment params
+                            Bundle b = new Bundle();
+                            b.putString("contactId",tagParam);
+                            bc.setArguments(b);
+
                             getFragmentManager().beginTransaction()
-                                    .add(R.id.container, new BasicReceiveFromContactFragment())
+                                    .add(R.id.container, bc)
                                     .commit();
                         }
                         break;

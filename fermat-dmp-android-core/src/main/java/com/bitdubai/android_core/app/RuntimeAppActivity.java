@@ -647,6 +647,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                 break;
             //basic wallet fragments
             case CWP_WALLET_RUNTIME_BASIC_ALL_CONTACTS_SEND:
+                MyApplication.setChildId(paramId);
                 this.walletRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_BASIC_ALL_CONTACTS_SEND);
                 intent = new Intent(this, com.bitdubai.android_core.app.FragmentActivity.class);
 
@@ -654,6 +655,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
                 break;
             case CWP_WALLET_RUNTIME_BASIC_ALL_CONTACTS_NEW_SEND :
+                MyApplication.setChildId(paramId);
                 this.walletRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_BASIC_ALL_CONTACTS_NEW_SEND);
                 intent = new Intent(this, com.bitdubai.android_core.app.FragmentActivity.class);
 
@@ -661,12 +663,14 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                 break;
 
             case CWP_WALLET_RUNTIME_BASIC_ALL_CONTACTS_RECEIVE :
+                MyApplication.setChildId(paramId);
                 this.walletRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_BASIC_ALL_CONTACTS_RECEIVE);
                 intent = new Intent(this, com.bitdubai.android_core.app.FragmentActivity.class);
 
                 startActivity(intent);
                 break;
             case CWP_WALLET_RUNTIME_BASIC_ALL_CONTACTS_NEW_RECEIVE :
+                MyApplication.setChildId(paramId);
                 this.walletRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_BASIC_ALL_CONTACTS_NEW_RECEIVE);
                 intent = new Intent(this, com.bitdubai.android_core.app.FragmentActivity.class);
 
