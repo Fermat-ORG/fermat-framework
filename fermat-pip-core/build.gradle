@@ -64,5 +64,6 @@ dependencies {
     compile project(':fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai')
     compile project(':fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai')
     compile project(':fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-bitdubai')
+    compile project(':fermat-cry-plugin-crypto-vault-bitcoin-bitdubai')
 }
 

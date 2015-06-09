@@ -3,6 +3,8 @@ include ':fermat-dmp-android-core'
 include ':fermat-pip-core'
 include ':fermat-pip-api'
 
+include ':fermat-cry-plugin-crypto-vault-bitcoin-bitdubai'
+
 include ':fermat-dmp-android-wallet-manager-bitdubai'
 include ':fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai'
 include ':fermat-dmp-android-wallet-store-bitdubai'

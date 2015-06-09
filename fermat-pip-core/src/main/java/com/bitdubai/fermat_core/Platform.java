@@ -39,6 +39,7 @@ import com.bitdubai.fermat_core.layer._6_license.LicenseLayer;
 import com.bitdubai.fermat_core.layer._12_world.WorldLayer;
 import com.bitdubai.fermat_core.layer._7_crypto_network.CryptoNetworkLayer;
 import com.bitdubai.fermat_api.layer._7_crypto_network.CryptoNetworks;
+import com.bitdubai.fermat_core.layer._8_cypto_vault.CryptoVaultLayer;
 import com.bitdubai.fermat_core.layer._9_crypto_module.CryptoLayer;
 import com.bitdubai.fermat_core.layer._10_communication.CommunicationLayer;
 import com.bitdubai.fermat_core.layer._11_network_service.NetworkServiceLayer;
@@ -63,6 +64,7 @@ public class Platform  {
     PlatformLayer mLicenseLayer = new LicenseLayer();
     PlatformLayer mWorldLayer = new WorldLayer();
     PlatformLayer mCryptoNetworkLayer = new CryptoNetworkLayer();
+    PlatformLayer mCryptoVaultLayer = new CryptoVaultLayer();
     PlatformLayer mCryptoLayer = new CryptoLayer();
     PlatformLayer mCommunicationLayer = new CommunicationLayer();
     PlatformLayer mNetworkServiceLayer = new NetworkServiceLayer();
@@ -105,6 +107,10 @@ public class Platform  {
 
     public PlatformLayer getCryptoNetworkLayer() {
         return mCryptoNetworkLayer;
+    }
+
+    public PlatformLayer getCryptoVault() {
+        return mCryptoVaultLayer;
     }
 
     public PlatformLayer getCrypto() {
@@ -298,6 +304,7 @@ public class Platform  {
             mLicenseLayer.start();
             mWorldLayer.start();
             mCryptoNetworkLayer.start();
+            mCryptoVaultLayer.start();
             mCryptoLayer.start();
             mCommunicationLayer.start();
             mNetworkServiceLayer.start();
@@ -2211,6 +2218,78 @@ public class Platform  {
 
             throw new CantStartPlatformException();
         }
+
+
+        /**
+         * ----------------------------------
+         * Plugin Bitcoin Crypto Vault
+         * ----------------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the Bitcoin Crypto Vault access to the File System and to the Event Manager
+         */
+
+        Plugin bitcoinCryptoVault = ((CryptoVaultLayer) mCryptoVaultLayer).getmBitcoin();
+
+        ((DealsWithPluginFileSystem) bitcoinCryptoVault).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
+        ((DealsWithEvents) bitcoinCryptoVault).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(bitcoinCryptoVault, Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(bitcoinCryptoVault);
+            (bitcoinCryptoVault).setId(pluginID);
+
+            try {
+                ((Service) bitcoinCryptoVault).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * *
+                 */
+
+                throw new CantStartPlatformException();
+            }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
+
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
+
+
 
 
         /**

@@ -229,3 +229,6 @@
 [submodule "fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai"]
 	path = fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai
 	url = https://github.com/bitDubai/fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai.git
+[submodule "fermat-cry-plugin-crypto-vault-bitcoin-bitdubai"]
+	path = fermat-cry-plugin-crypto-vault-bitcoin-bitdubai
+	url = https://github.com/bitDubai/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai.git

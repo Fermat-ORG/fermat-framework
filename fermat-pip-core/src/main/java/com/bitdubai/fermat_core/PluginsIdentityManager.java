@@ -10,10 +10,12 @@ import com.bitdubai.fermat_api.layer._2_os.file_system.PlatformFileSystem;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_cry_plugin.layer._8_crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._12_world.coinbase.developer.bitdubai.version_1.CoinbaseWorldPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._13_basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.BitcoinWalletBasicWalletPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._12_world.location.developer.bitdubai.version_1.LocationWorldPluginRoot;
 //import com.bitdubai.fermat_dmp_plugin.layer._13_basic_wallet.discount_wallet.developer.bitdubai.version_1.DiscountWalletBasicWalletPluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer._13_basic_wallet.discount_wallet.developer.bitdubai.version_1.DiscountWalletBasicWalletPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._16_transaction.incoming_crypto.developer.bitdubai.version_1.IncomingCryptoTransactionPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._19_niche_wallet_type.bank_notes_wallet.developer.bitdubai.version_1.BankNotesWalletNicheWalletTypePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._19_niche_wallet_type.crypto_loss_protected_wallet.developer.bitdubai.version_1.CryptoLossProtectedWalletNicheWalletTypePluginRoot;
@@ -23,11 +25,11 @@ import com.bitdubai.fermat_dmp_plugin.layer._19_niche_wallet_type.fiat_over_cryp
 import com.bitdubai.fermat_dmp_plugin.layer._19_niche_wallet_type.fiat_over_crypto_wallet.developer.bitdubai.version_1.FiatOverCryptoWalletNicheWalletTypePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._19_niche_wallet_type.multi_account_wallet.developer.bitdubai.version_1.MultiAccountWalletNicheWalletTypePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._9_crypto_module.wallet_address_book.developer.bitdubai.version_1.WalletAddressBookCryptoPluginRoot;
-import com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud.developer.bitdubai.version_1.CloudCommunicationChannelPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._11_network_service.bank_notes.developer.bitdubai.version_1.BankNotesNetworkServicePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._11_network_service.wallet_community.developer.bitdubai.version_1.WalletCommunityNetworkServicePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._11_network_service.wallet_resources.developer.bitdubai.version_1.WalletResourcesNetworkServicePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._11_network_service.wallet_store.developer.bitdubai.version_1.WalletStoreNetworkServicePluginRoot;
+import com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud_client.developer.bitdubai.version_1.CloudCommunicationChannelPluginRoot;
 import com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud_server.developer.bitdubai.version_1.CloudServerCommunicationPluginRoot;
 import com.bitdubai.fremat_dmp_plugin.layer._16_transaction.incoming_device_user.developer.bitdubai.version_1.IncomingDeviceUserTransactionPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._16_transaction.incoming_extra_user.developer.bitdubai.version_1.IncomingExtraUserTransactionPluginRoot;
@@ -59,7 +61,7 @@ import java.util.UUID;
 public class PluginsIdentityManager {
 
     private PlatformFileSystem platformFileSystem;
-    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 39;
+    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 40;
     private List<UUID> pluginIds = new ArrayList<>();
 
 
@@ -253,20 +255,20 @@ public class PluginsIdentityManager {
             }
         }
 
-      //  if (pluginIndex == 0) {
-       //     try
-       //     {
-                //DiscountWalletBasicWalletPluginRoot tryType;
-             //   tryType = (DiscountWalletBasicWalletPluginRoot) plugin;
-            //    pluginIndex = 3;
-           // }
-       //     catch (Exception e)
-       //     {
-      //          /**
-        //         * If this fails, is because this is not the index for this plug in.
-       //          */
-       //     }
-    //    }
+        if (pluginIndex == 0) {
+            try
+            {
+                DiscountWalletBasicWalletPluginRoot tryType;
+                tryType = (DiscountWalletBasicWalletPluginRoot) plugin;
+                pluginIndex = 3;
+          }
+            catch (Exception e)
+            {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
         if (pluginIndex == 0) {
             try
             {
@@ -754,6 +756,17 @@ public class PluginsIdentityManager {
                 }
             }
 
+            if (pluginIndex == 0) {
+                try {
+                    BitcoinCryptoVaultPluginRoot tryType;
+                    tryType = (BitcoinCryptoVaultPluginRoot) plugin;
+                    pluginIndex = 39;
+                } catch (Exception e) {
+                    /**
+                     * If this fails, is because this is not the index for this plug in.
+                     */
+                }
+            }
 
 
         }

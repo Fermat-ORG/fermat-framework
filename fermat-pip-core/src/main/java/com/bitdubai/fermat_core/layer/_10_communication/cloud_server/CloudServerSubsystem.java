@@ -3,7 +3,7 @@ package com.bitdubai.fermat_core.layer._10_communication.cloud_server;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer._10_communication.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer._10_communication.CommunicationSubsystem;
-import com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud_server.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by loui on 26/04/15.

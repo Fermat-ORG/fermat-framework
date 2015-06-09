@@ -1,21 +1,29 @@
-package com.bitdubai.fermat_core.layer._10_communication.cloud;
+package com.bitdubai.fermat_core.layer._8_cypto_vault.bitcoin;
 
 import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.layer._10_communication.CantStartSubsystemException;
-import com.bitdubai.fermat_api.layer._10_communication.CommunicationSubsystem;
-import com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud_client.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_api.layer._8_crypto_vault.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer._8_crypto_vault.CryptoVaultSubsystem;
+import com.bitdubai.fermat_cry_plugin.layer._8_crypto_vault.developer.bitdubai.DeveloperBitDubai;
 
 /**
- * Created by ciencias on 20.01.15.
+ * Created by loui on 08/06/15.
  */
-public class CloudSubsystem implements CommunicationSubsystem {
+public class BitcoinSubsystem implements CryptoVaultSubsystem {
 
-    private Plugin plugin;
+    Plugin plugin;
+
+
+
+
 
     @Override
     public Plugin getPlugin() {
         return plugin;
     }
+
+
+
+
 
     @Override
     public void start() throws CantStartSubsystemException {
@@ -33,8 +41,6 @@ public class CloudSubsystem implements CommunicationSubsystem {
             System.err.println("Exception: " + e.getMessage());
             throw new CantStartSubsystemException();
         }
-
     }
-
 
 }
