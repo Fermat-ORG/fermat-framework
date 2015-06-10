@@ -867,8 +867,8 @@ public class Platform  {
          */
         Plugin cryptoNetwork = ((CryptoNetworkLayer) mCryptoNetworkLayer).getCryptoNetwork(CryptoNetworks.BITCOIN);
 
-        ((DealsWithPluginFileSystem) cryptoNetwork).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
-        ((DealsWithEvents) cryptoNetwork).setEventManager((EventManager) eventManager);
+       // ((DealsWithPluginFileSystem) cryptoNetwork).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
+        //((DealsWithEvents) cryptoNetwork).setEventManager((EventManager) eventManager);
 
         corePlatformContext.addPlugin(cryptoNetwork, Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK);
 
@@ -2307,7 +2307,7 @@ public class Platform  {
 
         Plugin incomingCryptoTransaction = ((TransactionLayer) mTransactionLayer).getIncomingCrypto();
 
-        ((DealsWithPluginFileSystem) incomingCryptoTransaction).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
+       // ((DealsWithPluginFileSystem) incomingCryptoTransaction).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
         ((DealsWithEvents) incomingCryptoTransaction).setEventManager((EventManager) eventManager);
         corePlatformContext.addPlugin(incomingCryptoTransaction, Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION);
 

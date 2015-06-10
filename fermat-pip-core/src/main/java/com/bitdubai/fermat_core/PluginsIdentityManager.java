@@ -18,10 +18,10 @@ import com.bitdubai.fermat_dmp_plugin.layer._12_world.location.developer.bitduba
 import com.bitdubai.fermat_dmp_plugin.layer._13_basic_wallet.discount_wallet.developer.bitdubai.version_1.DiscountWalletBasicWalletPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._16_transaction.incoming_crypto.developer.bitdubai.version_1.IncomingCryptoTransactionPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._19_niche_wallet_type.bank_notes_wallet.developer.bitdubai.version_1.BankNotesWalletNicheWalletTypePluginRoot;
-import com.bitdubai.fermat_dmp_plugin.layer._19_niche_wallet_type.crypto_loss_protected_wallet.developer.bitdubai.version_1.CryptoLossProtectedWalletNicheWalletTypePluginRoot;
+//import com.bitdubai.fermat_dmp_plugin.layer._19_niche_wallet_type.crypto_loss_protected_wallet.developer.bitdubai.version_1.CryptoLossProtectedWalletNicheWalletTypePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._19_niche_wallet_type.crypto_wallet.developer.bitdubai.version_1.CryptoWalletNicheWalletTypePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._19_niche_wallet_type.discount_wallet.developer.bitdubai.version_1.DiscountWalletNicheWalletTypePluginRoot;
-import com.bitdubai.fermat_dmp_plugin.layer._19_niche_wallet_type.fiat_over_crypto_loss_protected_wallet.developer.bitdubai.version_1.FiatOverCryptoLossProtectedWalletNicheWalletTypePluginRoot;
+//import com.bitdubai.fermat_dmp_plugin.layer._19_niche_wallet_type.fiat_over_crypto_loss_protected_wallet.developer.bitdubai.version_1.FiatOverCryptoLossProtectedWalletNicheWalletTypePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._19_niche_wallet_type.fiat_over_crypto_wallet.developer.bitdubai.version_1.FiatOverCryptoWalletNicheWalletTypePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._19_niche_wallet_type.multi_account_wallet.developer.bitdubai.version_1.MultiAccountWalletNicheWalletTypePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._9_crypto_module.wallet_address_book.developer.bitdubai.version_1.WalletAddressBookCryptoPluginRoot;
@@ -685,8 +685,8 @@ public class PluginsIdentityManager {
 
             if (pluginIndex == 0) {
                 try {
-                    CryptoLossProtectedWalletNicheWalletTypePluginRoot tryType;
-                    tryType = (CryptoLossProtectedWalletNicheWalletTypePluginRoot) plugin;
+                    //CryptoLossProtectedWalletNicheWalletTypePluginRoot tryType;
+                   // tryType = (CryptoLossProtectedWalletNicheWalletTypePluginRoot) plugin;
                     pluginIndex = 33;
                 } catch (Exception e) {
                     /**
@@ -722,8 +722,8 @@ public class PluginsIdentityManager {
 
             if (pluginIndex == 0) {
                 try {
-                    FiatOverCryptoLossProtectedWalletNicheWalletTypePluginRoot tryType;
-                    tryType = (FiatOverCryptoLossProtectedWalletNicheWalletTypePluginRoot) plugin;
+                  //  FiatOverCryptoLossProtectedWalletNicheWalletTypePluginRoot tryType;
+                  //  tryType = (FiatOverCryptoLossProtectedWalletNicheWalletTypePluginRoot) plugin;
                     pluginIndex = 36;
                 } catch (Exception e) {
                     /**
