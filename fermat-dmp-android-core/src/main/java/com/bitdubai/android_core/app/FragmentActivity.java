@@ -27,7 +27,6 @@ import com.bitdubai.android_fermat_dmp_wallet_basic.fragments.BasicBalanceFragme
 import com.bitdubai.android_fermat_dmp_wallet_basic.fragments.BasicReceiveFragment;
 import com.bitdubai.android_fermat_dmp_wallet_basic.fragments.BasicReceiveFromContactFragment;
 import com.bitdubai.android_fermat_dmp_wallet_basic.fragments.BasicReceiveFromNewContactFragment;
-import com.bitdubai.android_fermat_dmp_wallet_basic.fragments.BasicSendFragment;
 import com.bitdubai.android_fermat_dmp_wallet_basic.fragments.BasicSendToContactFragment;
 import com.bitdubai.android_fermat_dmp_wallet_basic.fragments.BasicSendToNewContactFragment;
 import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.App;
@@ -123,7 +122,7 @@ public class FragmentActivity  extends Activity {
                     //basic wallet fragments
 
 
-                    case   CWP_WALLET_RUNTIME_WALLET_BASIC_ALL_BITDUBAI_CONTACTS_SEND:
+                    case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS_SEND:
                         if (savedInstanceState == null) {
 
                             BasicSendToContactFragment bc = new  BasicSendToContactFragment();
@@ -136,14 +135,14 @@ public class FragmentActivity  extends Activity {
                                     .commit();
                         }
                         break;
-                    case   CWP_WALLET_RUNTIME_WALLET_BASIC_ALL_BITDUBAI_CONTACTS_NEW_SEND:
+                    case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS_NEW_SEND:
                         if (savedInstanceState == null) {
                             getFragmentManager().beginTransaction()
                                     .add(R.id.container, new BasicSendToNewContactFragment())
                                     .commit();
                         }
                         break;
-                    case    CWP_WALLET_RUNTIME_WALLET_BASIC_ALL_BITDUBAI_CONTACTS_RECEIVE:
+                    case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS_RECEIVE:
                         if (savedInstanceState == null) {
 
                             BasicReceiveFromContactFragment bc = new  BasicReceiveFromContactFragment();
@@ -157,7 +156,7 @@ public class FragmentActivity  extends Activity {
                                     .commit();
                         }
                         break;
-                    case    CWP_WALLET_RUNTIME_WALLET_BASIC_ALL_BITDUBAI_CONTACTS_NEW_RECEIVE:
+                    case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS_NEW_RECEIVE:
                         if (savedInstanceState == null) {
                             getFragmentManager().beginTransaction()
                                     .add(R.id.container, new BasicReceiveFromNewContactFragment())
