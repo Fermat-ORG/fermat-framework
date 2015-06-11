@@ -232,3 +232,15 @@
 [submodule "fermat-cry-plugin-crypto-vault-bitcoin-bitdubai"]
 	path = fermat-cry-plugin-crypto-vault-bitcoin-bitdubai
 	url = https://github.com/bitDubai/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai.git
+[submodule "fermat-desktop-core"]
+	path = fermat-desktop-core
+	url = https://github.com/bitDubai/fermat-desktop-core.git
+[submodule "fermat-pip-desktop-addon-database-system-bitdubai"]
+	path = fermat-pip-desktop-addon-database-system-bitdubai
+	url = https://github.com/bitDubai/fermat-pip-desktop-addon-database-system-bitdubai.git
+[submodule "fermat-pip-desktop-addon-file-system-bitdubai"]
+	path = fermat-pip-desktop-addon-file-system-bitdubai
+	url = https://github.com/bitDubai/fermat-pip-desktop-addon-file-system-bitdubai.git
+[submodule "fermat-pip-desktop-update-center"]
+	path = fermat-pip-desktop-update-center
+	url = https://github.com/bitDubai/fermat-pip-desktop-update-center.git
