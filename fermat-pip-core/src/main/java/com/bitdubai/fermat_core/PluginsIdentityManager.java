@@ -48,7 +48,7 @@ import com.bitdubai.fermat_dmp_plugin.layer._15_middleware.bank_notes.developer.
 import com.bitdubai.fermat_dmp_plugin.layer._15_middleware.wallet_contacts.developer.bitdubai.version_1.WalletContactsMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._17_module.wallet_manager.developer.bitdubai.version_1.WalletManagerModulePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._17_module.wallet_runtime.developer.bitdubai.version_1.WalletRuntimeModulePluginRoot;
-import com.bitdubai.fermat_dmp_plugin.layer._7_crypto_network.bitcoin.developer.bitdubai.version_1.BitcoinCryptoNetworkPluginRoot;
+import com.bitdubai.fermat_cry_plugin.layer._7_crypto_network.bitcoin.developer.bitdubai.version_1.BitcoinCryptoNetworkPluginRoot;
 import com.fermat_dmp_plugin.layer._17_module.wallet_factory.developer.bitdubai.version_1.WalletFactoryModulePluginRoot;
 
 import java.util.ArrayList;
