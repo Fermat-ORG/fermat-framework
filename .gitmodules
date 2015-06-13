@@ -233,12 +233,12 @@
 [submodule "fermat-pip-desktop-update-center"]
 	path = fermat-pip-desktop-update-center
 	url = https://github.com/bitDubai/fermat-pip-desktop-update-center.git
-[submodule "fermat-cry-plugin-crypto-wallet-address-book-bitdubai"]
-	path = fermat-cry-plugin-crypto-wallet-address-book-bitdubai
-	url = https://github.com/bitDubai/fermat-cry-plugin-crypto-wallet-address-book-bitdubai
-[submodule "fermat-cry-plugin-crypto-actor-address-book-bitdubai"]
-	path = fermat-cry-plugin-crypto-actor-address-book-bitdubai
-	url = https://github.com/bitDubai/fermat-cry-plugin-crypto-actor-address-book-bitdubai
 [submodule "fermat-cry-plugin-crypto-network-bitcoin-bitdubai"]
 	path = fermat-cry-plugin-crypto-network-bitcoin-bitdubai
 	url = https://github.com/bitDubai/fermat-cry-plugin-crypto-network-bitcoin-bitdubai
+[submodule "fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai"]
+	path = fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai
+	url = https://github.com/bitDubai/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai
+[submodule "fermat-cry-plugin-crypto-module-actor-address-book-bitdubai"]
+	path = fermat-cry-plugin-crypto-module-actor-address-book-bitdubai
+	url = https://github.com/bitDubai/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai
