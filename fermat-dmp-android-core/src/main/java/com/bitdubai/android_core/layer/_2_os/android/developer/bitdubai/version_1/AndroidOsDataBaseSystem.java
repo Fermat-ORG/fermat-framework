@@ -2,8 +2,8 @@ package com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version
 
 import android.content.Context;
 
-import com.bitdubai.android_fermat_pip_addon_layer_2_os_file_system.version_1.structure.AndroidPlatformDatabaseSystem;
-import com.bitdubai.android_fermat_pip_addon_layer_2_os_file_system.version_1.structure.AndroidPluginDatabaseSystem;
+import com.bitdubai.fermat_osa_addon.layer.osa_android.database_system.developer.bitdubai.version_1.structure.AndroidPlatformDatabaseSystem;
+import com.bitdubai.fermat_osa_addon.layer.osa_android.database_system.developer.bitdubai.version_1.structure.AndroidPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer._2_os.DataBaseSystemOs;
 import com.bitdubai.fermat_api.layer._2_os.database_system.PlatformDatabaseSystem;
 import com.bitdubai.fermat_api.layer._2_os.database_system.PluginDatabaseSystem;

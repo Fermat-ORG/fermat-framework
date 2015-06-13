@@ -155,9 +155,6 @@
 [submodule "fermat-p2p-plugin-communication-cloud-client-bitdubai"]
 	path = fermat-p2p-plugin-communication-cloud-client-bitdubai
 	url = https://github.com/bitDubai/fermat-p2p-plugin-communication-cloud-client-bitdubai
-[submodule "fermat-pip-android-addon-os-android-database-system-bitdubai"]
-	path = fermat-pip-android-addon-os-android-database-system-bitdubai
-	url = https://github.com/bitDubai/fermat-pip-android-addon-os-android-database-system-bitdubai.git
 [submodule "fermat-pip-android-addon-os-device-location-bitdubai"]
 	path = fermat-pip-android-addon-os-device-location-bitdubai
 	url = https://github.com/bitDubai/fermat-pip-android-addon-os-device-location-bitdubai.git
@@ -242,3 +239,6 @@
 [submodule "fermat-cry-plugin-crypto-module-actor-address-book-bitdubai"]
 	path = fermat-cry-plugin-crypto-module-actor-address-book-bitdubai
 	url = https://github.com/bitDubai/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai
+[submodule "fermat-osa-addon-android-database-system-bitdubai"]
+	path = fermat-osa-addon-android-database-system-bitdubai
+	url = https://github.com/bitDubai/fermat-osa-addon-android-database-system-bitdubai

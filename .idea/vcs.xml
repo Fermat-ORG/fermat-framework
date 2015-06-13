@@ -62,6 +62,7 @@
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-world-crypto-index-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-world-location-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-world-shape-shift-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-osa-addon-android-database-system-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-pip-addon-hardware-local-device-bitdubai" vcs="Git" />
@@ -72,7 +73,6 @@
     <mapping directory="$PROJECT_DIR$/fermat-pip-addon-user-device-user-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-pip-addon-user-extra-user-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-pip-addon-user-intra-user-bitdubai" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/fermat-pip-android-addon-os-android-database-system-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-pip-android-addon-os-device-connectivity-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-pip-android-addon-os-device-location-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-pip-android-addon-os-device-power-bitdubai" vcs="Git" />

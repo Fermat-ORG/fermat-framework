@@ -70,6 +70,7 @@
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-world-crypto-index-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-world-location-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-world-shape-shift-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-osa-addon-android-database-system-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-addon-hardware-local-device-bitdubai" />
@@ -80,7 +81,6 @@
             <option value="$PROJECT_DIR$/fermat-pip-addon-user-device-user-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-addon-user-extra-user-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-addon-user-intra-user-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-pip-android-addon-os-android-database-system-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-android-addon-os-device-connectivity-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-android-addon-os-device-location-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-android-addon-os-device-power-bitdubai" />

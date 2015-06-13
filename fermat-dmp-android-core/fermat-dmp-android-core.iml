@@ -130,7 +130,7 @@
     <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-wallet-resources-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-money-request-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-pip-android-addon-os-android-database-system-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-osa-addon-android-database-system-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-module-wallet-manager-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-world-blockchain-info-bitdubai" exported="" />

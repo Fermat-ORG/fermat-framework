@@ -89,13 +89,12 @@ include ':fermat-pip-addon-user-device-user-bitdubai'
 include ':fermat-pip-addon-user-extra-user-bitdubai'
 include ':fermat-pip-addon-user-intra-user-bitdubai'
 
-include ':fermat-pip-android-addon-os-android-database-system-bitdubai'
 include ':fermat-pip-android-addon-os-device-connectivity-bitdubai'
 include ':fermat-pip-android-addon-os-device-location-bitdubai'
 include ':fermat-pip-android-addon-os-device-power-bitdubai'
 include ':fermat-pip-android-addon-os-file-system-bitdubai'
 include ':fermat-pip-android-addon-os-logger-bitdubai'
 
-
+include ':fermat-osa-addon-android-database-system-bitdubai'
 
 
