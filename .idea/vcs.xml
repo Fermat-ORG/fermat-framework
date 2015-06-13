@@ -3,6 +3,7 @@
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-desktop-core" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-android-shop-manager-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-android-wallet-factory-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-android-wallet-manager-bitdubai" vcs="Git" />
@@ -78,5 +79,8 @@
     <mapping directory="$PROJECT_DIR$/fermat-pip-android-addon-os-file-system-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-pip-android-addon-os-logger-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-pip-api" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-pip-desktop-addon-database-system-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-pip-desktop-addon-file-system-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-pip-desktop-update-center" vcs="Git" />
   </component>
 </project>
