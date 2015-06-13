@@ -9,11 +9,6 @@
 	url = https://github.com/bitDubai/fermat-dmp-android-wallet-manager-bitdubai.git
 
 
-[submodule "fermat-dmp-plugin-crypto-network-bitcoin-bitdubai"]
-	path = fermat-dmp-plugin-crypto-network-bitcoin-bitdubai
-	url = https://github.com/bitDubai/fermat-dmp-plugin-crypto-network-bitcoin-bitdubai
-	
-
 [submodule "fermat-dmp-plugin-middleware-app-runtime-bitdubai"]
 	path = fermat-dmp-plugin-middleware-app-runtime-bitdubai
 	url = https://github.com/bitDubai/fermat-dmp-plugin-middleware-app-runtime-bitdubai.git
@@ -160,12 +155,6 @@
 [submodule "fermat-p2p-plugin-communication-cloud-client-bitdubai"]
 	path = fermat-p2p-plugin-communication-cloud-client-bitdubai
 	url = https://github.com/bitDubai/fermat-p2p-plugin-communication-cloud-client-bitdubai
-[submodule "fermat-dmp-plugin-crypto-user-address-book-bitdubai"]
-	path = fermat-dmp-plugin-crypto-user-address-book-bitdubai
-	url = https://github.com/bitDubai/fermat-dmp-plugin-crypto-user-address-book-bitdubai.git
-[submodule "fermat-dmp-plugin-crypto-wallet-address-book-bitdubai"]
-	path = fermat-dmp-plugin-crypto-wallet-address-book-bitdubai
-	url = https://github.com/bitDubai/fermat-dmp-plugin-crypto-wallet-address-book-bitdubai.git
 [submodule "fermat-pip-android-addon-os-android-database-system-bitdubai"]
 	path = fermat-pip-android-addon-os-android-database-system-bitdubai
 	url = https://github.com/bitDubai/fermat-pip-android-addon-os-android-database-system-bitdubai.git
@@ -244,3 +233,12 @@
 [submodule "fermat-pip-desktop-update-center"]
 	path = fermat-pip-desktop-update-center
 	url = https://github.com/bitDubai/fermat-pip-desktop-update-center.git
+[submodule "fermat-cry-plugin-crypto-wallet-address-book-bitdubai"]
+	path = fermat-cry-plugin-crypto-wallet-address-book-bitdubai
+	url = https://github.com/bitDubai/fermat-cry-plugin-crypto-wallet-address-book-bitdubai
+[submodule "fermat-cry-plugin-crypto-actor-address-book-bitdubai"]
+	path = fermat-cry-plugin-crypto-actor-address-book-bitdubai
+	url = https://github.com/bitDubai/fermat-cry-plugin-crypto-actor-address-book-bitdubai
+[submodule "fermat-cry-plugin-crypto-network-bitcoin-bitdubai"]
+	path = fermat-cry-plugin-crypto-network-bitcoin-bitdubai
+	url = https://github.com/bitDubai/fermat-cry-plugin-crypto-network-bitcoin-bitdubai

@@ -9,7 +9,12 @@ repositories {
 
 dependencies {
     compile project(':fermat-pip-api')
-    compile project(':fermat-dmp-plugin-crypto-network-bitcoin-bitdubai')
+
+    compile project(':fermat-cry-plugin-crypto-network-bitcoin-bitdubai')
+    compile project(':fermat-cry-plugin-crypto-actor-address-book-bitdubai')
+    compile project(':fermat-cry-plugin-crypto-wallet-address-book-bitdubai')
+    compile project(':fermat-cry-plugin-crypto-vault-bitcoin-bitdubai')
+
     compile project(':fermat-dmp-plugin-middleware-app-runtime-bitdubai')
     compile project(':fermat-dmp-plugin-middleware-bank-notes-bitdubai')
     compile project(':fermat-dmp-plugin-middleware-money-request-bitdubai')
@@ -53,8 +58,7 @@ dependencies {
     compile project(':fermat-dmp-plugin-network-service-intra-user-bitdubai')
     compile project(':fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai')
     compile project(':fermat-p2p-plugin-communication-cloud-client-bitdubai')
-    compile project(':fermat-dmp-plugin-crypto-user-address-book-bitdubai')
-    compile project(':fermat-dmp-plugin-crypto-wallet-address-book-bitdubai')
+
     compile project(':fermat-dmp-plugin-world-location-bitdubai')
     compile project(':fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai')
     compile project(':fermat-dmp-plugin-niche-wallet-type-bank-notes-wallet-bitdubai')
@@ -64,6 +68,6 @@ dependencies {
     compile project(':fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai')
     compile project(':fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai')
     compile project(':fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-bitdubai')
-    compile project(':fermat-cry-plugin-crypto-vault-bitcoin-bitdubai')
+
 }
 

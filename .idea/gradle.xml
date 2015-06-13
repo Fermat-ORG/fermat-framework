@@ -10,7 +10,10 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/fermat-cry-plugin-crypto-actor-address-book-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-cry-plugin-crypto-wallet-address-book-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-android-core" />
             <option value="$PROJECT_DIR$/fermat-dmp-android-shop-manager-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-factory-bitdubai" />
@@ -28,9 +31,6 @@
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-dmp-plugin-crypto-network-bitcoin-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-dmp-plugin-crypto-user-address-book-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-dmp-plugin-crypto-wallet-address-book-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-license-wallet-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-middleware-app-runtime-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai" />

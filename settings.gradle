@@ -4,6 +4,9 @@ include ':fermat-pip-core'
 include ':fermat-pip-api'
 
 include ':fermat-cry-plugin-crypto-vault-bitcoin-bitdubai'
+include ':fermat-cry-plugin-crypto-network-bitcoin-bitdubai'
+include ':fermat-cry-plugin-crypto-actor-address-book-bitdubai'
+include ':fermat-cry-plugin-crypto-wallet-address-book-bitdubai'
 
 include ':fermat-dmp-android-wallet-manager-bitdubai'
 include ':fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai'
@@ -36,8 +39,6 @@ include ':fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai'
 include ':fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai'
 include ':fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai'
 
-include ':fermat-dmp-plugin-crypto-user-address-book-bitdubai'
-include ':fermat-dmp-plugin-crypto-wallet-address-book-bitdubai'
 
 include ':fermat-dmp-plugin-network-service-bank-notes-bitdubai'
 include ':fermat-dmp-plugin-network-service-crypto-addresses-bitdubai'
@@ -74,7 +75,7 @@ include ':fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai'
 include ':fermat-dmp-plugin-license-wallet-bitdubai'
 
 include ':fermat-dmp-plugin-world-coinbase-bitdubai'
-include ':fermat-dmp-plugin-crypto-network-bitcoin-bitdubai'
+
 
 include ':fermat-p2p-plugin-communication-cloud-client-bitdubai'
 include ':fermat-p2p-plugin-communication-cloud-server-bitdubai'

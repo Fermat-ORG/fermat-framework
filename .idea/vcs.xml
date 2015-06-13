@@ -2,7 +2,10 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-cry-plugin-crypto-actor-address-book-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-cry-plugin-crypto-network-bitcoin-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/fermat-cry-plugin-crypto-wallet-address-book-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-desktop-core" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-android-shop-manager-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-android-wallet-factory-bitdubai" vcs="Git" />
@@ -20,9 +23,6 @@
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-crypto-network-bitcoin-bitdubai" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-crypto-user-address-book-bitdubai" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-crypto-wallet-address-book-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-license-wallet-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-middleware-app-runtime-bitdubai" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai" vcs="Git" />

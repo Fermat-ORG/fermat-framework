@@ -27,7 +27,10 @@
     <orderEntry type="jdk" jdkName="1.7" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="fermat-pip-api" exported="" />
-    <orderEntry type="module" module-name="fermat-dmp-plugin-crypto-network-bitcoin-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-cry-plugin-crypto-network-bitcoin-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-cry-plugin-crypto-actor-address-book-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-cry-plugin-crypto-wallet-address-book-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-app-runtime-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-bank-notes-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-money-request-bitdubai" exported="" />
@@ -71,8 +74,6 @@
     <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-intra-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-p2p-plugin-communication-cloud-client-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-dmp-plugin-crypto-user-address-book-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-dmp-plugin-crypto-wallet-address-book-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-world-location-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-niche-wallet-type-bank-notes-wallet-bitdubai" exported="" />
@@ -82,6 +83,5 @@
     <orderEntry type="module" module-name="fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" exported="" />
   </component>
 </module>
