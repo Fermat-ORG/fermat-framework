@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
 import com.bitdubai.fermat_api.layer.cry_3_crypto_module.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.cry_3_crypto_module.CryptoSubsystem;
-import com.bitdubai.fermat_core.layer.cry_3_crypto_module.user_address_book.UserAddressBookSubsystem;
+import com.bitdubai.fermat_core.layer.cry_3_crypto_module.actor_crypto_address_book.UserAddressBookSubsystem;
 import com.bitdubai.fermat_core.layer.cry_3_crypto_module.wallet_address_book.WalletAddressBookSubsystem;
 
 /**
