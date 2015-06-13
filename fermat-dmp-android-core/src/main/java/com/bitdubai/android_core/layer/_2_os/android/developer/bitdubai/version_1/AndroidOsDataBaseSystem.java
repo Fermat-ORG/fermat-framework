@@ -5,8 +5,8 @@ import android.content.Context;
 import com.bitdubai.fermat_osa_addon.layer.osa_android.database_system.developer.bitdubai.version_1.structure.AndroidPlatformDatabaseSystem;
 import com.bitdubai.fermat_osa_addon.layer.osa_android.database_system.developer.bitdubai.version_1.structure.AndroidPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer._2_os.DataBaseSystemOs;
-import com.bitdubai.fermat_api.layer._2_os.database_system.PlatformDatabaseSystem;
-import com.bitdubai.fermat_api.layer._2_os.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 
 /**
  * Created by toshiba on 20/05/2015.
