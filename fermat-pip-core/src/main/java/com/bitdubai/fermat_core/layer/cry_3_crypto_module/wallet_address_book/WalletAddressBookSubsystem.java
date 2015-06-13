@@ -1,14 +1,14 @@
-package com.bitdubai.fermat_core.layer._8_cypto_vault.bitcoin;
+package com.bitdubai.fermat_core.layer.cry_3_crypto_module.wallet_address_book;
 
 import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.layer._8_crypto_vault.CantStartSubsystemException;
-import com.bitdubai.fermat_api.layer._8_crypto_vault.CryptoVaultSubsystem;
-import com.bitdubai.fermat_cry_plugin.layer._8_crypto_vault.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_api.layer.cry_3_crypto_module.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer.cry_3_crypto_module.CryptoSubsystem;
+import com.bitdubai.fermat_cry_plugin.layer.cry_3_crypto_module.wallet_address_book.developer.bitdubai.DeveloperBitDubai;
 
 /**
- * Created by loui on 08/06/15.
+ * Created by loui on 20/02/15.
  */
-public class BitcoinSubsystem implements CryptoVaultSubsystem {
+public class WalletAddressBookSubsystem implements CryptoSubsystem {
 
     Plugin plugin;
 

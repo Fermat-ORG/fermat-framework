@@ -1,9 +1,9 @@
-package com.bitdubai.fermat_core.layer._9_crypto_module.user_address_book;
+package com.bitdubai.fermat_core.layer.cry_3_crypto_module.user_address_book;
 
 import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.layer._9_crypto_module.CantStartSubsystemException;
-import com.bitdubai.fermat_api.layer._9_crypto_module.CryptoSubsystem;
-import com.bitdubai.fermat_cry_plugin.layer._9_crypto_module.user_address_book.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_api.layer.cry_3_crypto_module.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer.cry_3_crypto_module.CryptoSubsystem;
+import com.bitdubai.fermat_cry_plugin.layer.cry_3_crypto_module.user_address_book.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by loui on 20/02/15.
