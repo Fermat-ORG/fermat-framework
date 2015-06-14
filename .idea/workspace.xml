@@ -13,71 +13,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="002dcb19-6857-46a5-8dce-b1b1a0984b49" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/plugin/crypto_module/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/cry_plugin_crypto_module_fermat-cry-plugin-crypto-module-actor-address-book-bitdubai.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/plugin/crypto_module/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/cry_plugin_crypto_module_fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/plugin/crypto_network/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/cry_plugin_crypto_network_fermat-cry-plugin-crypto-network-bitcoin-bitdubai.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/cry_plugin_crypto_vault_fermat-cry-plugin-crypto-vault-bitcoin-bitdubai.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/p2p_plugin_communication_fermat-p2p-plugin-communication-cloud-client-bitdubai.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/p2p_plugin_communication_fermat-p2p-plugin-communication-cloud-server-bitdubai.iml" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai/fermat-p2p-plugin-communication-cloud-client-bitdubai.iml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/fermat-p2p-plugin-communication-cloud-server-bitdubai.iml" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai/.gitignore" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/.gitignore" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai/README.md" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/README.md" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai/build.gradle" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/build.gradle" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai/config/checkstyle/checkstyle.xml" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/config/checkstyle/checkstyle.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_client/developer/bitdubai/DeveloperBitDubai.java" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/communication/cloud_client/developer/bitdubai/DeveloperBitDubai.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_client/developer/bitdubai/version_1/CloudCommunicationChannelPluginRoot.java" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/communication/cloud_client/developer/bitdubai/version_1/CloudCommunicationChannelPluginRoot.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_client/developer/bitdubai/version_1/exceptions/ConnectionAlreadyRegisteredException.java" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/communication/cloud_client/developer/bitdubai/version_1/exceptions/ConnectionAlreadyRegisteredException.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_client/developer/bitdubai/version_1/exceptions/ConnectionAlreadyRequestedException.java" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/communication/cloud_client/developer/bitdubai/version_1/exceptions/ConnectionAlreadyRequestedException.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_client/developer/bitdubai/version_1/exceptions/IllegalPacketSenderException.java" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/communication/cloud_client/developer/bitdubai/version_1/exceptions/IllegalPacketSenderException.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_client/developer/bitdubai/version_1/exceptions/IllegalSignatureException.java" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/communication/cloud_client/developer/bitdubai/version_1/exceptions/IllegalSignatureException.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_client/developer/bitdubai/version_1/structure/CloudClientManager.java" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/communication/cloud_client/developer/bitdubai/version_1/structure/CloudClientManager.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_client/developer/bitdubai/version_1/structure/NetworkServiceClientManager.java" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/communication/cloud_client/developer/bitdubai/version_1/structure/NetworkServiceClientManager.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai/src/test/java/integration/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_client/developer/bitdubai/version_1/structure/CloudClientManager/CloudClientManagerIntegrationTest.java" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/src/test/java/integration/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_client/developer/bitdubai/version_1/structure/CloudClientManager/CloudClientManagerIntegrationTest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai/src/test/java/integration/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_client/developer/bitdubai/version_1/structure/CloudClientManager/RegisterNetworkServiceTest.java" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/src/test/java/integration/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_client/developer/bitdubai/version_1/structure/CloudClientManager/RegisterNetworkServiceTest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai/src/test/java/integration/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_client/developer/bitdubai/version_1/structure/CloudClientManager/RequestConnectionTest.java" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/src/test/java/integration/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_client/developer/bitdubai/version_1/structure/CloudClientManager/RequestConnectionTest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai/src/test/java/unit/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_client/developer/bitdubai/version_1/structure/CloudClientManager/CloudClientManagerUnitTest.java" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/src/test/java/unit/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_client/developer/bitdubai/version_1/structure/CloudClientManager/CloudClientManagerUnitTest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai/src/test/java/unit/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_client/developer/bitdubai/version_1/structure/CloudClientManager/StartTest.java" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/src/test/java/unit/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_client/developer/bitdubai/version_1/structure/CloudClientManager/StartTest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/.gitignore" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/.gitignore" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/FermatMessagingProtocolSpecification.md" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/FermatMessagingProtocolSpecification.md" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/IntraUserCallManagerMessagingDiagram.png" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/IntraUserCallManagerMessagingDiagram.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/MessagingArchitecture.md" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/MessagingArchitecture.md" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/README.md" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/README.md" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/build.gradle" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/build.gradle" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/config/checkstyle/checkstyle.xml" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/config/checkstyle/checkstyle.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/DeveloperBitDubai.java" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/communication/cloud_server/developer/bitdubai/DeveloperBitDubai.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/CloudServerCommunicationPluginRoot.java" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/communication/cloud_server/developer/bitdubai/version_1/CloudServerCommunicationPluginRoot.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/exceptions/IncorrectFMPPacketDestinationException.java" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/communication/cloud_server/developer/bitdubai/version_1/exceptions/IncorrectFMPPacketDestinationException.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/exceptions/NetworkServiceAlreadyRegisteredException.java" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/communication/cloud_server/developer/bitdubai/version_1/exceptions/NetworkServiceAlreadyRegisteredException.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/structure/CloudNetworkServiceManager.java" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/communication/cloud_server/developer/bitdubai/version_1/structure/CloudNetworkServiceManager.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/structure/CloudServiceManager.java" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/communication/cloud_server/developer/bitdubai/version_1/structure/CloudServiceManager.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/structure/ECCKeyPair.java" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/communication/cloud_server/developer/bitdubai/version_1/structure/ECCKeyPair.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/test/java/integration/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/cloud/CloudNetworkServiceManager/CloudNetworkServiceManagerIntegrationTest.java" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/test/java/integration/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/cloud/CloudNetworkServiceManager/CloudNetworkServiceManagerIntegrationTest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/test/java/integration/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/cloud/CloudNetworkServiceManager/ConnectionRegisterTest.java" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/test/java/integration/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/cloud/CloudNetworkServiceManager/ConnectionRegisterTest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/test/java/integration/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/cloud/CloudNetworkServiceManager/ConnectionRequestTest.java" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/test/java/integration/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/cloud/CloudNetworkServiceManager/ConnectionRequestTest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/test/java/integration/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/cloud/CloudServiceManager/CloudServiceIntegrationTest.java" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/test/java/integration/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/cloud/CloudServiceManager/CloudServiceIntegrationTest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/test/java/integration/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/cloud/CloudServiceManager/ConnectionRegisterTest.java" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/test/java/integration/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/cloud/CloudServiceManager/ConnectionRegisterTest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/test/java/integration/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/cloud/CloudServiceManager/ConnectionRequestTest.java" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/test/java/integration/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/cloud/CloudServiceManager/ConnectionRequestTest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/test/java/integration/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/cloud/CloudServiceManager/ConnectionRequestToNetworkServiceTest.java" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/test/java/integration/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/cloud/CloudServiceManager/ConnectionRequestToNetworkServiceTest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/test/java/integration/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/cloud/mocks/MockFMPPacketsFactory.java" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/test/java/integration/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/cloud/mocks/MockFMPPacketsFactory.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/test/java/integration/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/cloud/mocks/MockNIOClient.java" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/test/java/integration/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/cloud/mocks/MockNIOClient.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/test/java/unit/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/structure/CloudNetworkServiceManager/CloudNetworkServiceManagerUnitTest.java" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/test/java/unit/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/structure/CloudNetworkServiceManager/CloudNetworkServiceManagerUnitTest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/test/java/unit/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/structure/CloudNetworkServiceManager/ConstructionTest.java" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/test/java/unit/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/structure/CloudNetworkServiceManager/ConstructionTest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/test/java/unit/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/structure/CloudNetworkServiceManager/EqualsAndHashTest.java" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/test/java/unit/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/structure/CloudNetworkServiceManager/EqualsAndHashTest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/test/java/unit/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/structure/CloudServiceManager/RegisterNetworkServiceTest.java" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/test/java/unit/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/structure/CloudServiceManager/RegisterNetworkServiceTest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/test/java/unit/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/structure/KeyPair/ConstructionTest.java" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/test/java/unit/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/structure/KeyPair/ConstructionTest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/test/java/unit/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/structure/KeyPair/EqualsAndHashTest.java" afterPath="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/test/java/unit/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/structure/KeyPair/EqualsAndHashTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-core/src/main/java/com/bitdubai/fermat_core/layer/_10_communication/cloud_server/CloudServerSubsystem.java" afterPath="$PROJECT_DIR$/fermat-pip-core/src/main/java/com/bitdubai/fermat_core/layer/_10_communication/cloud_server/CloudServerSubsystem.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-core/src/main/java/com/bitdubai/fermat_core/layer/_10_communication/cloud/CloudSubsystem.java" afterPath="$PROJECT_DIR$/fermat-pip-core/src/main/java/com/bitdubai/fermat_core/layer/_10_communication/cloud/CloudSubsystem.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-core/src/main/java/com/bitdubai/fermat_core/PluginsIdentityManager.java" afterPath="$PROJECT_DIR$/fermat-pip-core/src/main/java/com/bitdubai/fermat_core/PluginsIdentityManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-core/build.gradle" afterPath="$PROJECT_DIR$/fermat-pip-core/build.gradle" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-core/fermat-dmp-android-core.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-core/fermat-dmp-android-core.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-wallet-publisher-bitdubai/fermat-dmp-android-wallet-publisher-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-wallet-publisher-bitdubai/fermat-dmp-android-wallet-publisher-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-wallet-store-bitdubai/fermat-dmp-android-wallet-store-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-wallet-store-bitdubai/fermat-dmp-android-wallet-store-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-core/fermat-pip-core.iml" afterPath="$PROJECT_DIR$/fermat-pip-core/fermat-pip-core.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/gradle.xml" afterPath="$PROJECT_DIR$/.idea/gradle.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/settings.gradle" afterPath="$PROJECT_DIR$/settings.gradle" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="bitDubai-system.iws" />
@@ -129,27 +65,27 @@
       <file leaf-file-name="settings.gradle" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/settings.gradle">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-5.870968">
-              <caret line="26" column="6" selection-start-line="26" selection-start-column="3" selection-end-line="26" selection-end-column="6" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/fermat-pip-core/build.gradle">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-5.870968">
-              <caret line="30" column="57" selection-start-line="30" selection-start-column="54" selection-end-line="30" selection-end-column="57" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="5" column="15" selection-start-line="5" selection-start-column="15" selection-end-line="5" selection-end-column="15" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
       <file leaf-file-name="build.gradle" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/fermat-pip-core/build.gradle">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.17100978">
+              <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.26324788">
+            <state vertical-scroll-proportion="-0.0">
               <caret line="31" column="5" selection-start-line="31" selection-start-column="5" selection-end-line="31" selection-end-column="5" />
               <folding />
             </state>
@@ -11311,338 +11247,6 @@
             </list>
           </value>
         </entry>
-        <entry key="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai">
-          <value>
-            <list>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles the outputs of this project." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-                <option name="name" value="assemble" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles and tests this project." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-                <option name="name" value="build" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles and tests this project and all projects that depend on it." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-                <option name="name" value="buildDependents" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles and tests this project and all projects it depends on." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-                <option name="name" value="buildNeeded" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Runs all checks." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-                <option name="name" value="check" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Run Checkstyle analysis for main classes" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-                <option name="name" value="checkstyleMain" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Run Checkstyle analysis for test classes" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-                <option name="name" value="checkstyleTest" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles classes 'main'." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-                <option name="name" value="classes" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Deletes the build directory." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-                <option name="name" value="clean" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Cleans all Eclipse files." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-                <option name="name" value="cleanEclipse" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-                <option name="name" value="cleanEclipseClasspath" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-                <option name="name" value="cleanEclipseJdt" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-                <option name="name" value="cleanEclipseProject" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Compiles Java source 'main:java'." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-                <option name="name" value="compileJava" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Compiles Java source 'test:java'." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-                <option name="name" value="compileTestJava" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Generates all Eclipse files." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-                <option name="name" value="eclipse" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Generates the Eclipse classpath file." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-                <option name="name" value="eclipseClasspath" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Generates the Eclipse JDT settings file." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-                <option name="name" value="eclipseJdt" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Generates the Eclipse project file." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-                <option name="name" value="eclipseProject" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Run FindBugs analysis for main classes" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-                <option name="name" value="findbugsMain" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Run FindBugs analysis for test classes" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-                <option name="name" value="findbugsTest" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Installs the 'archives' artifacts into the local Maven repository." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-                <option name="name" value="install" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-                <option name="name" value="jacocoTestReport" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles a jar archive containing the main classes." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-                <option name="name" value="jar" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Generates Javadoc API documentation for the main source code." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-                <option name="name" value="javadoc" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-                <option name="name" value="jenkins" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Run PMD analysis for main classes" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-                <option name="name" value="pmdMain" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Run PMD analysis for test classes" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-                <option name="name" value="pmdTest" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Processes JVM resources 'main:resources'." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-                <option name="name" value="processResources" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Processes JVM resources 'test:resources'." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-                <option name="name" value="processTestResources" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Runs the unit tests." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-                <option name="name" value="test" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles classes 'test'." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-                <option name="name" value="testClasses" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Uploads all artifacts belonging to configuration ':fermat-p2p-plugin-communication-cloud-client-bitdubai:archives'" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-                <option name="name" value="uploadArchives" />
-              </ExternalTaskPojo>
-            </list>
-          </value>
-        </entry>
-        <entry key="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai">
-          <value>
-            <list>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles the outputs of this project." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
-                <option name="name" value="assemble" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles and tests this project." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
-                <option name="name" value="build" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles and tests this project and all projects that depend on it." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
-                <option name="name" value="buildDependents" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles and tests this project and all projects it depends on." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
-                <option name="name" value="buildNeeded" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Runs all checks." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
-                <option name="name" value="check" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Run Checkstyle analysis for main classes" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
-                <option name="name" value="checkstyleMain" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Run Checkstyle analysis for test classes" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
-                <option name="name" value="checkstyleTest" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles classes 'main'." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
-                <option name="name" value="classes" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Deletes the build directory." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
-                <option name="name" value="clean" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Cleans all Eclipse files." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
-                <option name="name" value="cleanEclipse" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
-                <option name="name" value="cleanEclipseClasspath" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
-                <option name="name" value="cleanEclipseJdt" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
-                <option name="name" value="cleanEclipseProject" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Compiles Java source 'main:java'." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
-                <option name="name" value="compileJava" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Compiles Java source 'test:java'." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
-                <option name="name" value="compileTestJava" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Generates all Eclipse files." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
-                <option name="name" value="eclipse" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Generates the Eclipse classpath file." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
-                <option name="name" value="eclipseClasspath" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Generates the Eclipse JDT settings file." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
-                <option name="name" value="eclipseJdt" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Generates the Eclipse project file." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
-                <option name="name" value="eclipseProject" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Run FindBugs analysis for main classes" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
-                <option name="name" value="findbugsMain" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Run FindBugs analysis for test classes" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
-                <option name="name" value="findbugsTest" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Installs the 'archives' artifacts into the local Maven repository." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
-                <option name="name" value="install" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
-                <option name="name" value="jacocoTestReport" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles a jar archive containing the main classes." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
-                <option name="name" value="jar" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Generates Javadoc API documentation for the main source code." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
-                <option name="name" value="javadoc" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
-                <option name="name" value="jenkins" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Run PMD analysis for main classes" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
-                <option name="name" value="pmdMain" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Run PMD analysis for test classes" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
-                <option name="name" value="pmdTest" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Processes JVM resources 'main:resources'." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
-                <option name="name" value="processResources" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Processes JVM resources 'test:resources'." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
-                <option name="name" value="processTestResources" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Runs the unit tests." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
-                <option name="name" value="test" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Assembles classes 'test'." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
-                <option name="name" value="testClasses" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Uploads all artifacts belonging to configuration ':fermat-p2p-plugin-communication-cloud-server-bitdubai:archives'" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
-                <option name="name" value="uploadArchives" />
-              </ExternalTaskPojo>
-            </list>
-          </value>
-        </entry>
         <entry key="$PROJECT_DIR$/fermat-pip-addon-hardware-local-device-bitdubai">
           <value>
             <list>
@@ -13814,7 +13418,7 @@
     </option>
     <option name="modificationStamps">
       <map>
-        <entry key="$PROJECT_DIR$" value="114743558931020" />
+        <entry key="$PROJECT_DIR$" value="114744110514420" />
       </map>
     </option>
     <option name="projectBuildClasspath">
@@ -21325,9 +20929,9 @@
         <option value="$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/structure/dao/WalletDaoSupport.java" />
         <option value="$PROJECT_DIR$/build.gradle" />
         <option value="$PROJECT_DIR$/fermat-dmp-android-core/build.gradle" />
-        <option value="$PROJECT_DIR$/settings.gradle" />
         <option value="$PROJECT_DIR$/fermat-pip-core/build.gradle" />
         <option value="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/build.gradle" />
+        <option value="$PROJECT_DIR$/settings.gradle" />
       </list>
     </option>
   </component>
@@ -21374,8 +20978,9 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
       <pane id="Scratches" />
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -21394,283 +20999,8 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="pip" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="addon" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="platform_service" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="p2p" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="plugin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="communication" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat-p2p-plugin-communication-cloud-server-bitdubai" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="p2p" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="plugin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="communication" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat-p2p-plugin-communication-cloud-server-bitdubai" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="p2p" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="plugin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="communication" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat-p2p-plugin-communication-cloud-server-bitdubai" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bitdubai" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat_p2p_plugin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="layer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="communication" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="cloud_server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="developer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bitdubai" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="p2p" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="plugin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="communication" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="p2p" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="plugin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="communication" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="p2p" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="plugin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="communication" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bitdubai" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat_p2p_plugin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="layer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="communication" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="cloud_client" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="developer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bitdubai" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="AndroidView">
         <subPane>
           <PATH>
@@ -22076,6 +21406,7 @@
       <workItem from="1434274551035" duration="2765000" />
       <workItem from="1434281424303" duration="11168000" />
       <workItem from="1434294465717" duration="1455000" />
+      <workItem from="1434301369938" duration="1969000" />
     </task>
     <task id="LOCAL-00001" summary="Compiling and Running the APP all without sub-modules">
       <created>1434275293906</created>
@@ -22165,34 +21496,34 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="15493000" />
+    <option name="totallyTimeSpent" value="17462000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="-4" width="1855" height="1084" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32916668" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32916668" sideWeight="0.49806523" order="14" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.328125" sideWeight="0.5085683" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32916668" sideWeight="0.50193477" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32916668" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.35625" sideWeight="0.56771696" order="12" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.328125" sideWeight="0.49143174" order="13" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.6458333" sideWeight="0.5655058" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.328125" sideWeight="0.4870094" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32946378" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="PlantUML" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3604201" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.328125" sideWeight="0.4870094" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3410724" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.328125" sideWeight="0.48479822" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Memory Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="true" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
@@ -22240,6 +21571,30 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/settings.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="26" column="6" selection-start-line="26" selection-start-column="3" selection-end-line="26" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-pip-core/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="30" column="57" selection-start-line="30" selection-start-column="54" selection-end-line="30" selection-end-column="57" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/settings.gradle">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -22427,26 +21782,26 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.0">
+          <caret line="31" column="5" selection-start-line="31" selection-start-column="5" selection-end-line="31" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/settings.gradle">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.870968">
-          <caret line="26" column="6" selection-start-line="26" selection-start-column="3" selection-end-line="26" selection-end-column="6" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="5" column="15" selection-start-line="5" selection-start-column="15" selection-end-line="5" selection-end-column="15" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/fermat-pip-core/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.870968">
-          <caret line="30" column="57" selection-start-line="30" selection-start-column="54" selection-end-line="30" selection-end-column="57" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.26324788">
-          <caret line="31" column="5" selection-start-line="31" selection-start-column="5" selection-end-line="31" selection-end-column="5" />
+        <state vertical-scroll-proportion="0.17100978">
+          <caret line="7" column="0" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
           <folding />
         </state>
       </provider>
