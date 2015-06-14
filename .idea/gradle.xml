@@ -82,11 +82,11 @@
             <option value="$PROJECT_DIR$/fermat-pip-android-addon-os-device-connectivity-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-android-addon-os-device-location-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-android-addon-os-device-power-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-pip-android-addon-os-file-system-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-android-addon-os-logger-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-api" />
             <option value="$PROJECT_DIR$/fermat-pip-core" />
             <option value="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-database-system-bitdubai" />
+            <option value="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-file-system-bitdubai" />
           </set>
         </option>
       </GradleProjectSettings>
