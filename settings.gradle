@@ -30,7 +30,7 @@ include ':pip/addon/platform_service/fermat-pip-addon-platform-service-location-
 include ':p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai'
 include ':p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai'
 
-// DMP Projects
+// DMP Projects (Plugins)
 
 include ':dmp/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai'
 include ':dmp/plugin/identity/fermat-dmp-plugin-identity-extra-user-bitdubai'
@@ -43,24 +43,37 @@ include ':dmp/plugin/world/fermat-dmp-plugin-world-shape-shift-bitdubai'
 include ':dmp/plugin/world/fermat-dmp-plugin-world-coinbase-bitdubai'
 
 
+// DMP Projects (Wallets)
+
+include ':dmp/android/wallet_runtime/fermat-dmp-android-wallet-runtime-bitcoin-wallet-bitdubai'
+include ':dmp/android/wallet_runtime/fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai'
+
+/*
+
+Wallets on the pipeline:
+
+include ':dmp/android/wallet_runtime/fermat-dmp-android-wallet-runtime-bitcoin-loss-protected-wallet-bitdubai'
+include ':dmp/android/wallet_runtime/fermat-dmp-android-wallet-runtime-argetina-loss-protected-wallet-bitdubai'
+include ':dmp/android/wallet_runtime/fermat-dmp-android-wallet-runtime-argentina-multi-account-wallet-bitdubai'
+include ':dmp/android/wallet_runtime/fermat-dmp-android-wallet-runtime-argentina-discount-wallet-bitdubai'
+include ':dmp/android/wallet_runtime/fermat-dmp-android-wallet-runtime-argentina-bitcoin-wallet-bitdubai'
+include ':dmp/android/wallet_runtime/fermat-dmp-android-wallet-runtime-argentina-bank-notes-wallet-bitdubai'
+
+*/
+
+//--------------------------
 
 
 
 
 include ':fermat-dmp-android-wallet-manager-bitdubai'
-include ':fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai'
 include ':fermat-dmp-android-wallet-store-bitdubai'
 include ':fermat-dmp-android-wallet-factory-bitdubai'
 include ':fermat-dmp-android-wallet-publisher-bitdubai'
 include ':fermat-dmp-android-shop-manager-bitdubai'
 
-include ':fermat-dmp-android-wallet-runtime-bitcoin-wallet-bitdubai'
-include ':fermat-dmp-android-wallet-runtime-bitcoin-loss-protected-wallet-bitdubai'
-include ':fermat-dmp-android-wallet-runtime-argetina-loss-protected-wallet-bitdubai'
-include ':fermat-dmp-android-wallet-runtime-argentina-multi-account-wallet-bitdubai'
-include ':fermat-dmp-android-wallet-runtime-argentina-discount-wallet-bitdubai'
-include ':fermat-dmp-android-wallet-runtime-argentina-bitcoin-wallet-bitdubai'
-include ':fermat-dmp-android-wallet-runtime-argentina-bank-notes-wallet-bitdubai'
+
+
 
 include ':fermat-dmp-plugin-module-wallet-factory-bitdubai'
 include ':fermat-dmp-plugin-module-wallet-manager-bitdubai'

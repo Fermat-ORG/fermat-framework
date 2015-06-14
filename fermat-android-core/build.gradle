@@ -55,15 +55,37 @@ dependencies {
     compile project(':osa/addon/android/fermat-osa-addon-android-file-system-bitdubai')
     compile project(':osa/addon/android/fermat-osa-addon-android-device-location-bitdubai')
 
-    
-    compile project(':fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai')
+// DMP Projects (Wallets)
+
+    compile project(':dmp/android/wallet_runtime/fermat-dmp-android-wallet-runtime-bitcoin-wallet-bitdubai')
+    compile project(':dmp/android/wallet_runtime/fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai')
+
+/*
+
+Wallets on the pipeline:
+
+    compile project(':dmp/android/wallet_runtime/fermat-dmp-android-wallet-runtime-bitcoin-loss-protected-wallet-bitdubai')
+    compile project(':dmp/android/wallet_runtime/fermat-dmp-android-wallet-runtime-argetina-loss-protected-wallet-bitdubai')
+    compile project(':dmp/android/wallet_runtime/fermat-dmp-android-wallet-runtime-argentina-multi-account-wallet-bitdubai')
+    compile project(':dmp/android/wallet_runtime/fermat-dmp-android-wallet-runtime-argentina-discount-wallet-bitdubai')
+    compile project(':dmp/android/wallet_runtime/fermat-dmp-android-wallet-runtime-argentina-bitcoin-wallet-bitdubai')
+    compile project(':dmp/android/wallet_runtime/fermat-dmp-android-wallet-runtime-argentina-bank-notes-wallet-bitdubai')
+
+
+*/
+
+//-----------------------------
+
+
+
+
     compile project(':fermat-dmp-android-wallet-manager-bitdubai')
     compile project(':fermat-dmp-android-wallet-factory-bitdubai')
     compile project(':fermat-dmp-android-wallet-store-bitdubai')
     compile project(':fermat-dmp-android-wallet-publisher-bitdubai')
 
     compile project(':fermat-dmp-android-shop-manager-bitdubai')
-    compile project(':fermat-dmp-android-wallet-runtime-bitcoin-wallet-bitdubai')
+
 
 
 
