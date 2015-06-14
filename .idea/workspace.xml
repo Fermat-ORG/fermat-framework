@@ -13,104 +13,131 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="002dcb19-6857-46a5-8dce-b1b1a0984b49" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/android/device_conectivity/developer/bitdubai/version_1/interfaces/ConnectivityManager.java" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/ConnectivityManager.java" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-database-system-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/osa_android/database_system/developer/bitdubai/version_1/DataBaseSystemAndroidAddonRoot.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-database-system-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/android/database_system/developer/bitdubai/version_1/DataBaseSystemAndroidAddonRoot.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-database-system-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/osa_android/database_system/developer/bitdubai/version_1/DeveloperBitDubai.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-database-system-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/android/database_system/developer/bitdubai/DeveloperBitDubai.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-database-system-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/osa_android/database_system/developer/bitdubai/version_1/structure/AndroidDatabase.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-database-system-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/android/database_system/developer/bitdubai/version_1/structure/AndroidDatabase.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-database-system-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/osa_android/database_system/developer/bitdubai/version_1/structure/AndroidDatabaseRecord.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-database-system-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/android/database_system/developer/bitdubai/version_1/structure/AndroidDatabaseRecord.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-database-system-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/osa_android/database_system/developer/bitdubai/version_1/structure/AndroidDatabaseTable.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-database-system-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/android/database_system/developer/bitdubai/version_1/structure/AndroidDatabaseTable.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-database-system-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/osa_android/database_system/developer/bitdubai/version_1/structure/AndroidDatabaseTableColumn.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-database-system-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/android/database_system/developer/bitdubai/version_1/structure/AndroidDatabaseTableColumn.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-database-system-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/osa_android/database_system/developer/bitdubai/version_1/structure/AndroidDatabaseTableFactory.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-database-system-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/android/database_system/developer/bitdubai/version_1/structure/AndroidDatabaseTableFactory.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-database-system-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/osa_android/database_system/developer/bitdubai/version_1/structure/AndroidDatabaseTableFilter.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-database-system-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/android/database_system/developer/bitdubai/version_1/structure/AndroidDatabaseTableFilter.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-database-system-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/osa_android/database_system/developer/bitdubai/version_1/structure/AndroidDatabaseTableFilterGroup.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-database-system-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/android/database_system/developer/bitdubai/version_1/structure/AndroidDatabaseTableFilterGroup.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-database-system-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/osa_android/database_system/developer/bitdubai/version_1/structure/AndroidDatabaseTableOrder.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-database-system-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/android/database_system/developer/bitdubai/version_1/structure/AndroidDatabaseTableOrder.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-database-system-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/osa_android/database_system/developer/bitdubai/version_1/structure/AndroidDatabaseTransaction.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-database-system-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/android/database_system/developer/bitdubai/version_1/structure/AndroidDatabaseTransaction.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-database-system-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/osa_android/database_system/developer/bitdubai/version_1/structure/AndroidPlatformDatabaseSystem.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-database-system-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/android/database_system/developer/bitdubai/version_1/structure/AndroidPlatformDatabaseSystem.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-database-system-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/osa_android/database_system/developer/bitdubai/version_1/structure/AndroidPluginDatabaseSystem.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-database-system-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/android/database_system/developer/bitdubai/version_1/structure/AndroidPluginDatabaseSystem.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-database-system-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/osa_android/database_system/developer/bitdubai/version_1/structure/AndroidRecord.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-database-system-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/android/database_system/developer/bitdubai/version_1/structure/AndroidRecord.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/DeveloperBitDubai.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/android/device_conectivity/developer/bitdubai/DeveloperBitDubai.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/DeviceConnectivityAddonRoot.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/android/device_conectivity/developer/bitdubai/version_1/DeviceConnectivityAddonRoot.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/exceptions/CantGetActiveConnectionException.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/android/device_conectivity/developer/bitdubai/version_1/exceptions/CantGetActiveConnectionException.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/exceptions/CantGetConnectionsException.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/android/device_conectivity/developer/bitdubai/version_1/exceptions/CantGetConnectionsException.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/exceptions/CantGetIsConnectedException.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/android/device_conectivity/developer/bitdubai/version_1/exceptions/CantGetIsConnectedException.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/ConnectionType.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/android/device_conectivity/developer/bitdubai/version_1/interfaces/ConnectionType.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/ConnectivityAgent.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/android/device_conectivity/developer/bitdubai/version_1/interfaces/ConnectivityAgent.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/Network.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/android/device_conectivity/developer/bitdubai/version_1/interfaces/Network.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/DeviceConnectivityAgent.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/android/device_conectivity/developer/bitdubai/version_1/structure/DeviceConnectivityAgent.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/DeviceNetwork.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/android/device_conectivity/developer/bitdubai/version_1/structure/DeviceNetwork.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-location-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon/layer_2_os/location_system/DeveloperBitDubai.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-location-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/android/location_system/developer/bitdubai/DeveloperBitDubai.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-location-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon/layer_2_os/location_system/version_1/DeviceLocationOsAddonRoot.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-location-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/android/location_system/developer/bitdubai/version_1/DeviceLocationOsAddonRoot.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-location-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon/layer_2_os/location_system/version_1/structure/DeviceLocation.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-location-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/android/location_system/developer/bitdubai/version_1/structure/DeviceLocation.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-location-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon/layer_2_os/location_system/version_1/structure/DeviceLocationManager.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-location-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/android/location_system/developer/bitdubai/version_1/structure/DeviceLocationManager.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-file-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/DeveloperBitDubai.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-file-system-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/android/file_system/developer/bitdubai/DeveloperBitDubai.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-file-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/FileSystemOsAddonRoot.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-file-system-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/android/file_system/developer/bitdubai/version_1/FileSystemOsAddonRoot.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-file-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/AndroidPlatformFileSystem.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-file-system-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/android/file_system/developer/bitdubai/version_1/structure/AndroidPlatformFileSystem.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-file-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/AndroidPlatformTextFile.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-file-system-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/android/file_system/developer/bitdubai/version_1/structure/AndroidPlatformTextFile.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-file-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/AndroidPluginBinaryFile.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-file-system-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/android/file_system/developer/bitdubai/version_1/structure/AndroidPluginBinaryFile.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-file-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/AndroidPluginFileSystem.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-file-system-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/android/file_system/developer/bitdubai/version_1/structure/AndroidPluginFileSystem.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-file-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/AndroidPluginTextFile.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-file-system-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/android/file_system/developer/bitdubai/version_1/structure/AndroidPluginTextFile.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-power-bitdubai/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-power-bitdubai/src/main/AndroidManifest.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-core/src/main/java/com/bitdubai/android_core/layer/_2_os/android/developer/bitdubai/version_1/AndroidOsDataBaseSystem.java" afterPath="$PROJECT_DIR$/fermat-dmp-android-core/src/main/java/com/bitdubai/android_core/layer/_2_os/android/developer/bitdubai/version_1/AndroidOsDataBaseSystem.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-core/src/main/java/com/bitdubai/android_core/layer/_2_os/android/developer/bitdubai/version_1/AndroidOsFileSystem.java" afterPath="$PROJECT_DIR$/fermat-dmp-android-core/src/main/java/com/bitdubai/android_core/layer/_2_os/android/developer/bitdubai/version_1/AndroidOsFileSystem.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-core/src/main/java/com/bitdubai/android_core/layer/_2_os/android/developer/bitdubai/version_1/AndroidOsLocationSystem.java" afterPath="$PROJECT_DIR$/fermat-dmp-android-core/src/main/java/com/bitdubai/android_core/layer/_2_os/android/developer/bitdubai/version_1/AndroidOsLocationSystem.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-database-system-bitdubai/src/androidTest/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/ApplicationTest.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-database-system-bitdubai/src/androidTest/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/ApplicationTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai/src/androidTest/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/ApplicationTest.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai/src/androidTest/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/ApplicationTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-location-bitdubai/src/androidTest/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/ApplicationTest.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-location-bitdubai/src/androidTest/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/ApplicationTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-power-bitdubai/src/androidTest/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/ApplicationTest.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-power-bitdubai/src/androidTest/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/ApplicationTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-file-system-bitdubai/src/androidTest/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/ApplicationTest.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-file-system-bitdubai/src/androidTest/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/ApplicationTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-logger-bitdubai/src/androidTest/java/com/bitdubai/android_fermat_pip_addon/ApplicationTest.java" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-logger-bitdubai/src/androidTest/java/com/bitdubai/android_fermat_pip_addon/ApplicationTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/androidTest/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/ApplicationTest.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/androidTest/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/ApplicationTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-file-system-bitdubai/src/androidTest/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/ApplicationTest.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-file-system-bitdubai/src/androidTest/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/ApplicationTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/DataBaseSystemOsAddonRoot.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/DataBaseSystemOsAddonRoot.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/DataBaseTableOrder.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/DataBaseTableOrder.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/Database.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/Database.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/DatabaseDataType.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/DatabaseDataType.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/DatabaseFactory.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/DatabaseFactory.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/DatabaseFilterOrder.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/DatabaseFilterOrder.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/DatabaseFilterType.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/DatabaseFilterType.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/DatabaseRecord.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/DatabaseRecord.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/DatabaseRecordSet.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/DatabaseRecordSet.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/DatabaseTable.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/DatabaseTable.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/DatabaseTableColumn.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/DatabaseTableColumn.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/DatabaseTableFactory.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/DatabaseTableFactory.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/DatabaseTableFilter.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/DatabaseTableFilter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/DatabaseTableRecord.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/DatabaseTableRecord.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/DatabaseTransaction.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/DatabaseTransaction.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/DealsWithPlatformDatabaseSystem.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/DealsWithPlatformDatabaseSystem.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/DealsWithPluginDatabaseSystem.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/DealsWithPluginDatabaseSystem.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/DesktopDatabase.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/DesktopDatabase.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/desktop/database/bridge/DesktopDatabaseBridge.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/desktop/database/bridge/DesktopDatabaseBridge.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/DesktopDatabaseRecord.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/DesktopDatabaseRecord.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/DesktopDatabaseTable.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/DesktopDatabaseTable.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/DesktopDatabaseTableColumn.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/DesktopDatabaseTableColumn.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/DesktopDatabaseTableFactory.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/DesktopDatabaseTableFactory.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/DesktopDatabaseTableFilter.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/DesktopDatabaseTableFilter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/DesktopDatabaseTableFilterGroup.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/DesktopDatabaseTableFilterGroup.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/DesktopDatabaseTableOrder.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/DesktopDatabaseTableOrder.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/DesktopDatabaseTransaction.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/DesktopDatabaseTransaction.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/DesktopPlatformDatabaseSystem.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/DesktopPlatformDatabaseSystem.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-file-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/DesktopPlatformFileSystem.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-file-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/DesktopPlatformFileSystem.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-file-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/DesktopPlatformTextFile.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-file-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/DesktopPlatformTextFile.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-file-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/DesktopPluginBinaryFile.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-file-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/DesktopPluginBinaryFile.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/DesktopPluginDatabaseSystem.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/DesktopPluginDatabaseSystem.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-file-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/DesktopPluginFileSystem.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-file-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/DesktopPluginFileSystem.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-file-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/DesktopPluginTextFile.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-file-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/DesktopPluginTextFile.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/DesktopRecord.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/DesktopRecord.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/DeveloperBitDubai.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/DeveloperBitDubai.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-file-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/DeveloperBitDubai.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-file-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/DeveloperBitDubai.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/desktop/database/bridge/EnviromentVariables.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/desktop/database/bridge/EnviromentVariables.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-file-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/EnviromentVariables.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-file-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/EnviromentVariables.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-file-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/FileSystemOsAddonRoot.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-file-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/FileSystemOsAddonRoot.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/PlatformDatabaseSystem.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/PlatformDatabaseSystem.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/PluginDatabaseSystem.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/PluginDatabaseSystem.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/desktop/database/bridge/Utils.java" afterPath="$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/desktop/database/bridge/Utils.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-database-system-bitdubai/config/findbugs/findbugs-exclude-filter.xml" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-database-system-bitdubai/config/findbugs/findbugs-exclude-filter.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai/config/findbugs/findbugs-exclude-filter.xml" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai/config/findbugs/findbugs-exclude-filter.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai/src/config/findbugs/findbugs-exclude-filter.xml" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai/src/config/findbugs/findbugs-exclude-filter.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-location-bitdubai/config/findbugs/findbugs-exclude-filter.xml" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-location-bitdubai/config/findbugs/findbugs-exclude-filter.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-file-system-bitdubai/config/findbugs/findbugs-exclude-filter.xml" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-file-system-bitdubai/config/findbugs/findbugs-exclude-filter.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-logger-bitdubai/config/findbugs/findbugs-exclude-filter.xml" afterPath="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-logger-bitdubai/config/findbugs/findbugs-exclude-filter.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/backgrounds.ai" afterPath="$PROJECT_DIR$/_others/graphic_design/backgrounds.ai" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/bit_Dubai_Business_card.ai" afterPath="$PROJECT_DIR$/_others/graphic_design/bit_Dubai_Business_card.ai" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/bit_Dubai_Business_card.pdf" afterPath="$PROJECT_DIR$/_others/graphic_design/bit_Dubai_Business_card.pdf" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/bit_dubai.ai" afterPath="$PROJECT_DIR$/_others/graphic_design/bit_dubai.ai" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/bit_dubai.png" afterPath="$PROJECT_DIR$/_others/graphic_design/bit_dubai.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/fermat.ai" afterPath="$PROJECT_DIR$/_others/graphic_design/fermat.ai" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/fermat_logos/fermat_dmp_hq.png" afterPath="$PROJECT_DIR$/_others/graphic_design/fermat_logos/fermat_dmp_hq.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/fermat_logos/fermat_dmp_lq.png" afterPath="$PROJECT_DIR$/_others/graphic_design/fermat_logos/fermat_dmp_lq.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/fermat_logos/fermat_p2p_hq.png" afterPath="$PROJECT_DIR$/_others/graphic_design/fermat_logos/fermat_p2p_hq.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/fermat_logos/fermat_p2p_lq.png" afterPath="$PROJECT_DIR$/_others/graphic_design/fermat_logos/fermat_p2p_lq.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/fermat_logos/fermat_pip_hq.png" afterPath="$PROJECT_DIR$/_others/graphic_design/fermat_logos/fermat_pip_hq.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/fermat_logos/fermat_pip_lq.png" afterPath="$PROJECT_DIR$/_others/graphic_design/fermat_logos/fermat_pip_lq.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons.ai" afterPath="$PROJECT_DIR$/_others/graphic_design/icons.ai" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_with_circle_all_sizes/android-icon-144x144.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_with_circle_all_sizes/android-icon-144x144.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_with_circle_all_sizes/android-icon-192x192.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_with_circle_all_sizes/android-icon-192x192.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_with_circle_all_sizes/android-icon-36x36.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_with_circle_all_sizes/android-icon-36x36.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_with_circle_all_sizes/android-icon-48x48.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_with_circle_all_sizes/android-icon-48x48.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_with_circle_all_sizes/android-icon-72x72.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_with_circle_all_sizes/android-icon-72x72.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_with_circle_all_sizes/android-icon-96x96.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_with_circle_all_sizes/android-icon-96x96.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_with_circle_all_sizes/apple-icon-114x114.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_with_circle_all_sizes/apple-icon-114x114.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_with_circle_all_sizes/apple-icon-120x120.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_with_circle_all_sizes/apple-icon-120x120.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_with_circle_all_sizes/apple-icon-144x144.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_with_circle_all_sizes/apple-icon-144x144.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_with_circle_all_sizes/apple-icon-152x152.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_with_circle_all_sizes/apple-icon-152x152.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_with_circle_all_sizes/apple-icon-180x180.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_with_circle_all_sizes/apple-icon-180x180.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_with_circle_all_sizes/apple-icon-57x57.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_with_circle_all_sizes/apple-icon-57x57.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_with_circle_all_sizes/apple-icon-60x60.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_with_circle_all_sizes/apple-icon-60x60.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_with_circle_all_sizes/apple-icon-72x72.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_with_circle_all_sizes/apple-icon-72x72.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_with_circle_all_sizes/apple-icon-76x76.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_with_circle_all_sizes/apple-icon-76x76.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_with_circle_all_sizes/apple-icon-precomposed.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_with_circle_all_sizes/apple-icon-precomposed.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_with_circle_all_sizes/apple-icon.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_with_circle_all_sizes/apple-icon.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_with_circle_all_sizes/favicon-16x16.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_with_circle_all_sizes/favicon-16x16.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_with_circle_all_sizes/favicon-32x32.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_with_circle_all_sizes/favicon-32x32.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_with_circle_all_sizes/favicon-96x96.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_with_circle_all_sizes/favicon-96x96.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_with_circle_all_sizes/favicon.ico" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_with_circle_all_sizes/favicon.ico" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_with_circle_all_sizes/ms-icon-144x144.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_with_circle_all_sizes/ms-icon-144x144.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_with_circle_all_sizes/ms-icon-150x150.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_with_circle_all_sizes/ms-icon-150x150.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_with_circle_all_sizes/ms-icon-310x310.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_with_circle_all_sizes/ms-icon-310x310.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_with_circle_all_sizes/ms-icon-70x70.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_with_circle_all_sizes/ms-icon-70x70.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_without_circle_all_sizes/android-icon-144x144.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_without_circle_all_sizes/android-icon-144x144.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_without_circle_all_sizes/android-icon-192x192.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_without_circle_all_sizes/android-icon-192x192.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_without_circle_all_sizes/android-icon-36x36.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_without_circle_all_sizes/android-icon-36x36.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_without_circle_all_sizes/android-icon-48x48.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_without_circle_all_sizes/android-icon-48x48.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_without_circle_all_sizes/android-icon-72x72.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_without_circle_all_sizes/android-icon-72x72.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_without_circle_all_sizes/android-icon-96x96.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_without_circle_all_sizes/android-icon-96x96.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_without_circle_all_sizes/apple-icon-114x114.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_without_circle_all_sizes/apple-icon-114x114.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_without_circle_all_sizes/apple-icon-120x120.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_without_circle_all_sizes/apple-icon-120x120.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_without_circle_all_sizes/apple-icon-144x144.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_without_circle_all_sizes/apple-icon-144x144.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_without_circle_all_sizes/apple-icon-152x152.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_without_circle_all_sizes/apple-icon-152x152.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_without_circle_all_sizes/apple-icon-180x180.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_without_circle_all_sizes/apple-icon-180x180.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_without_circle_all_sizes/apple-icon-57x57.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_without_circle_all_sizes/apple-icon-57x57.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_without_circle_all_sizes/apple-icon-60x60.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_without_circle_all_sizes/apple-icon-60x60.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_without_circle_all_sizes/apple-icon-72x72.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_without_circle_all_sizes/apple-icon-72x72.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_without_circle_all_sizes/apple-icon-76x76.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_without_circle_all_sizes/apple-icon-76x76.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_without_circle_all_sizes/apple-icon-precomposed.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_without_circle_all_sizes/apple-icon-precomposed.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_without_circle_all_sizes/apple-icon.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_without_circle_all_sizes/apple-icon.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_without_circle_all_sizes/favicon-16x16.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_without_circle_all_sizes/favicon-16x16.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_without_circle_all_sizes/favicon-32x32.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_without_circle_all_sizes/favicon-32x32.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_without_circle_all_sizes/favicon-96x96.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_without_circle_all_sizes/favicon-96x96.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_without_circle_all_sizes/favicon.ico" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_without_circle_all_sizes/favicon.ico" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_without_circle_all_sizes/ms-icon-144x144.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_without_circle_all_sizes/ms-icon-144x144.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_without_circle_all_sizes/ms-icon-150x150.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_without_circle_all_sizes/ms-icon-150x150.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_without_circle_all_sizes/ms-icon-310x310.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_without_circle_all_sizes/ms-icon-310x310.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_fermat_dmp_without_circle_all_sizes/ms-icon-70x70.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_fermat_dmp_without_circle_all_sizes/ms-icon-70x70.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_hq/1.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_hq/1.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_hq/10.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_hq/10.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_hq/11.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_hq/11.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_hq/12.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_hq/12.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_hq/13.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_hq/13.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_hq/14.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_hq/14.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_hq/15.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_hq/15.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_hq/16.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_hq/16.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_hq/17.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_hq/17.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_hq/18.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_hq/18.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_hq/19.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_hq/19.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_hq/2.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_hq/2.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_hq/20.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_hq/20.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_hq/21.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_hq/21.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_hq/22.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_hq/22.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_hq/23.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_hq/23.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_hq/24.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_hq/24.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_hq/25.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_hq/25.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_hq/26.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_hq/26.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_hq/27.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_hq/27.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_hq/3.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_hq/3.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_hq/4.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_hq/4.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_hq/5.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_hq/5.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_hq/6.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_hq/6.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_hq/7.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_hq/7.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_hq/8.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_hq/8.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/graphic_design/icons_hq/9.png" afterPath="$PROJECT_DIR$/_others/graphic_design/icons_hq/9.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/proto/publisher_1.png" afterPath="$PROJECT_DIR$/_others/proto/publisher_1.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/proto/publisher_2.png" afterPath="$PROJECT_DIR$/_others/proto/publisher_2.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/proto/publisher_3.png" afterPath="$PROJECT_DIR$/_others/proto/publisher_3.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/proto/publisher_4.png" afterPath="$PROJECT_DIR$/_others/proto/publisher_4.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/proto/publisher_5.png" afterPath="$PROJECT_DIR$/_others/proto/publisher_5.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/proto/publisher_6.png" afterPath="$PROJECT_DIR$/_others/proto/publisher_6.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/proto/shop_manager_1.png" afterPath="$PROJECT_DIR$/_others/proto/shop_manager_1.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/proto/smart-wallet-android-debug.apk" afterPath="$PROJECT_DIR$/_others/proto/smart-wallet-android-debug.apk" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/proto/wallet_factory_1.png" afterPath="$PROJECT_DIR$/_others/proto/wallet_factory_1.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/proto/wallet_factory_2.png" afterPath="$PROJECT_DIR$/_others/proto/wallet_factory_2.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/proto/wallet_factory_3.png" afterPath="$PROJECT_DIR$/_others/proto/wallet_factory_3.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/proto/wallet_factory_4.png" afterPath="$PROJECT_DIR$/_others/proto/wallet_factory_4.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/proto/wallet_factory_5.png" afterPath="$PROJECT_DIR$/_others/proto/wallet_factory_5.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/proto/wallet_kids_1.png" afterPath="$PROJECT_DIR$/_others/proto/wallet_kids_1.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/proto/wallet_kids_2.png" afterPath="$PROJECT_DIR$/_others/proto/wallet_kids_2.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/proto/wallet_kids_3.png" afterPath="$PROJECT_DIR$/_others/proto/wallet_kids_3.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/proto/wallet_kids_4.png" afterPath="$PROJECT_DIR$/_others/proto/wallet_kids_4.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/proto/wallet_manager_1.png" afterPath="$PROJECT_DIR$/_others/proto/wallet_manager_1.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/proto/wallet_store_1.png" afterPath="$PROJECT_DIR$/_others/proto/wallet_store_1.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/proto/wallet_store_2.png" afterPath="$PROJECT_DIR$/_others/proto/wallet_store_2.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/proto/wallet_store_3.png" afterPath="$PROJECT_DIR$/_others/proto/wallet_store_3.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/proto/wallet_store_4.png" afterPath="$PROJECT_DIR$/_others/proto/wallet_store_4.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/proto/wallet_teens_1.png" afterPath="$PROJECT_DIR$/_others/proto/wallet_teens_1.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/proto/wallet_teens_10.png" afterPath="$PROJECT_DIR$/_others/proto/wallet_teens_10.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/proto/wallet_teens_11.png" afterPath="$PROJECT_DIR$/_others/proto/wallet_teens_11.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/proto/wallet_teens_12.png" afterPath="$PROJECT_DIR$/_others/proto/wallet_teens_12.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/proto/wallet_teens_13.jpg" afterPath="$PROJECT_DIR$/_others/proto/wallet_teens_13.jpg" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/proto/wallet_teens_2.png" afterPath="$PROJECT_DIR$/_others/proto/wallet_teens_2.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/proto/wallet_teens_3.png" afterPath="$PROJECT_DIR$/_others/proto/wallet_teens_3.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/proto/wallet_teens_4.png" afterPath="$PROJECT_DIR$/_others/proto/wallet_teens_4.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/proto/wallet_teens_5.png" afterPath="$PROJECT_DIR$/_others/proto/wallet_teens_5.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/proto/wallet_teens_6.png" afterPath="$PROJECT_DIR$/_others/proto/wallet_teens_6.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/proto/wallet_teens_7.png" afterPath="$PROJECT_DIR$/_others/proto/wallet_teens_7.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/proto/wallet_teens_8.png" afterPath="$PROJECT_DIR$/_others/proto/wallet_teens_8.png" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/proto/wallet_teens_9.png" afterPath="$PROJECT_DIR$/_others/proto/wallet_teens_9.png" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="bitDubai-system.iws" />
@@ -234,48 +261,7 @@
     <favorites_list name="bitDubai-system" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/fermat-dmp-android-core/build.gradle">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.51039696">
-              <caret line="38" column="16" selection-start-line="38" selection-start-column="16" selection-end-line="38" selection-end-column="16" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="menu_main.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/res/menu/menu_main.xml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/fermat-pip-core/build.gradle">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-3.672131">
-              <caret line="23" column="0" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="settings.gradle" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/settings.gradle">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-2.9508197">
-              <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="15" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf />
   </component>
   <component name="Git.Settings">
     <option name="UPDATE_TYPE" value="MERGE" />
@@ -22381,14 +22367,15 @@
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.58161765" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/_others" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/_others" />
       <recent name="$PROJECT_DIR$/osa/addon/android" />
       <recent name="$PROJECT_DIR$/osa/addon/multi_os" />
       <recent name="$PROJECT_DIR$/cry/plugin/crypto_network" />
       <recent name="$PROJECT_DIR$/cry/plugin/crypto_vault" />
-      <recent name="$PROJECT_DIR$/cry/plugin/crypto_module" />
     </key>
   </component>
   <component name="RunManager" selected="Android Application.fermat-dmp-android-core">
@@ -22758,7 +22745,7 @@
       <updated>1434271125916</updated>
       <workItem from="1434274420173" duration="105000" />
       <workItem from="1434274551035" duration="2765000" />
-      <workItem from="1434281424303" duration="7665000" />
+      <workItem from="1434281424303" duration="7901000" />
     </task>
     <task id="LOCAL-00001" summary="Compiling and Running the APP all without sub-modules">
       <created>1434275293906</created>
@@ -22826,11 +22813,17 @@
       <option name="project" value="LOCAL" />
       <updated>1434289494865</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="osa android mdolules all refactored Part 2">
+      <created>1434290318476</created>
+      <option name="number" value="00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1434290318476</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="10535000" />
+    <option name="totallyTimeSpent" value="10771000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="-4" width="1855" height="1084" extended-state="6" />
@@ -22846,7 +22839,7 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
-      <window_info id="Event Log" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.41770834" sideWeight="0.42454395" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.41770834" sideWeight="0.42454395" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32916668" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.41041666" sideWeight="0.5754561" order="12" side_tool="false" content_ui="tabs" />
@@ -22857,7 +22850,7 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.4344942" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.4344942" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.328125" sideWeight="0.49143174" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Memory Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="true" content_ui="tabs" />
@@ -22891,7 +22884,8 @@
     <MESSAGE value="osa file system refactored" />
     <MESSAGE value="osa multi os addons refactored" />
     <MESSAGE value="osa android mdolules all refactored" />
-    <option name="LAST_COMMIT_MESSAGE" value="osa android mdolules all refactored" />
+    <MESSAGE value="osa android mdolules all refactored Part 2" />
+    <option name="LAST_COMMIT_MESSAGE" value="osa android mdolules all refactored Part 2" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -23049,9 +23043,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/res/menu/menu_main.xml">
+    <entry file="file://$PROJECT_DIR$/fermat-dmp-android-core/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
+          <caret line="38" column="16" selection-start-line="38" selection-start-column="16" selection-end-line="38" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/_others/proto/publisher_1.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/osa/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/res/menu/menu_main.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.09677419">
           <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
           <folding />
         </state>
@@ -23059,7 +23066,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/fermat-pip-core/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-3.672131">
+        <state vertical-scroll-proportion="0.24916574">
           <caret line="23" column="0" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
           <folding />
         </state>
@@ -23067,16 +23074,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/settings.gradle">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-2.9508197">
+        <state vertical-scroll-proportion="0.20022246">
           <caret line="12" column="0" selection-start-line="12" selection-start-column="0" selection-end-line="12" selection-end-column="15" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/fermat-dmp-android-core/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.51039696">
-          <caret line="38" column="16" selection-start-line="38" selection-start-column="16" selection-end-line="38" selection-end-column="16" />
           <folding />
         </state>
       </provider>
