@@ -1,0 +1,37 @@
+package unit.com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud_client.developer.bitdubai.version_1.structure.CloudClientManager;
+
+import static org.fest.assertions.api.Assertions.*;
+import static com.googlecode.catchexception.CatchException.*;
+
+import org.junit.Test;
+
+import com.bitdubai.fermat_api.layer._10_communication.cloud.CloudConnectionException;
+
+public class StartTest extends CloudClientManagerUnitTest{
+	private static final int TCP_PORT_PADDING = 100;
+	
+	@Test
+	public void Start_NoServer_ThrowsCloudConnectionException() throws Exception {
+		setUp(TCP_PORT_PADDING + 1);
+		catchException(testClient).start();
+		assertThat(caughtException()).isInstanceOf(CloudConnectionException.class);
+	}
+	
+	@Test
+	public void Start_Success_IsRunning() throws Exception{
+		setUpWithServer(TCP_PORT_PADDING + 2);
+		testClient.start();
+		Thread.sleep(getThreadSleepMillis());
+		assertThat(testClient.isRunning()).isTrue();
+	}
+	
+	@Test
+	public void Start_AlreadyStarted_ThrowsCloudConnectionException() throws Exception{
+		setUpWithServer(TCP_PORT_PADDING + 3);
+		testClient.start();
+		Thread.sleep(getThreadSleepMillis());
+		catchException(testClient).start();
+		assertThat(caughtException()).isInstanceOf(CloudConnectionException.class);
+	}
+
+}

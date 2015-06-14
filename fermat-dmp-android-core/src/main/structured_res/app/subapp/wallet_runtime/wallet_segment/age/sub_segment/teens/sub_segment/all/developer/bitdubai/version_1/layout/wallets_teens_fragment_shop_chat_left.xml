@@ -1,0 +1,36 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/receive_message_bubble"
+            android:gravity="center">
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:maxWidth="260dp"
+                android:text="Hi!, how are you doing tonight?"
+                android:textColor="#FF000000"
+                android:textStyle="normal"/>
+        </LinearLayout>
+
+        <TextView android:id="@+id/hour"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="15:53"
+            android:textColor="#aaaaaa"
+            android:textSize="8dp"
+            android:paddingLeft="12dp"
+            android:paddingBottom="5dp"
+            android:layout_gravity="bottom"/>
+    </LinearLayout>
+
+</FrameLayout>

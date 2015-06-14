@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement />
+  <nodes>
+    <node x="-2.0" y="353.0">com.bitdubai.fermat_api.layer._1_definition.diagrams.wallets.ExternalWallet</node>
+    <node x="231.0" y="143.0">com.bitdubai.fermat_api.layer._1_definition.diagrams.wallets.ExternalBitcoinWallet</node>
+    <node x="58.75" y="55.0">com.bitdubai.fermat_api.layer._1_definition.diagrams.wallets.BitcoinWallet</node>
+    <node x="56.75" y="-37.0">com.bitdubai.fermat_api.layer._1_definition.diagrams.wallets.CryptoWallet</node>
+    <node x="-158.0" y="279.0">com.bitdubai.fermat_api.layer._1_definition.diagrams.wallets.FiatWallet</node>
+    <node x="197.0" y="232.0">com.bitdubai.fermat_api.layer._1_definition.diagrams.wallets.DiscountWallet</node>
+    <node x="-350.0" y="281.0">com.bitdubai.fermat_api.layer._1_definition.diagrams.wallets.MultiAccountWallet</node>
+    <node x="-133.0" y="152.0">com.bitdubai.fermat_api.layer._1_definition.diagrams.wallets.LocalBitcoinWallet</node>
+    <node x="158.0" y="354.0">com.bitdubai.fermat_api.layer._1_definition.diagrams.wallets.LocalWallet</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="com.bitdubai.fermat_api.layer._1_definition.diagrams.wallets.LocalBitcoinWallet" target="com.bitdubai.fermat_api.layer._1_definition.diagrams.wallets.BitcoinWallet">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+    <edge source="com.bitdubai.fermat_api.layer._1_definition.diagrams.wallets.BitcoinWallet" target="com.bitdubai.fermat_api.layer._1_definition.diagrams.wallets.CryptoWallet">
+      <point x="0.0" y="-14.5" />
+      <point x="0.0" y="14.5" />
+    </edge>
+    <edge source="com.bitdubai.fermat_api.layer._1_definition.diagrams.wallets.ExternalBitcoinWallet" target="com.bitdubai.fermat_api.layer._1_definition.diagrams.wallets.BitcoinWallet">
+      <point x="0.0" y="0.0" />
+      <point x="0.0" y="0.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="1.0" x="0.0" y="0.0" />
+  <SelectedNodes>
+    <node>com.bitdubai.fermat_api.layer._1_definition.diagrams.wallets.LocalWallet</node>
+  </SelectedNodes>
+  <Categories />
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

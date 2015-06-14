@@ -1,0 +1,32 @@
+package com.bitdubai.android_fermat_pip_addon_layer_2_os_file_system.version_1.desktop.database.bridge;
+
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ *
+ * @author Mati
+ */
+public class Utils {
+
+    public static String[] getColumnsNames(ResultSet rs){
+        String[] columnNames = null;
+        try{
+            ResultSetMetaData rsmd = rs.getMetaData();
+            List<String> lstColumnNames=new ArrayList<String>();
+            for(int i=0;i<rsmd.getColumnCount();i++){
+                lstColumnNames.add(rsmd.getColumnName(i));
+            }
+            columnNames= new String[lstColumnNames.size()];
+
+            columnNames = lstColumnNames.toArray(columnNames);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return columnNames;
+    }
+
+
+}

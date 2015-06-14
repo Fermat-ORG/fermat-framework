@@ -1,0 +1,19 @@
+apply plugin: 'java'
+
+sourceCompatibility = 1.7
+version = '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+
+
+dependencies {
+    compile project(':fermat-pip-api')
+    testCompile 'junit:junit:4.11'
+    compile('org.bitcoinj:bitcoinj-core:0.12.3') {
+        exclude module: 'scrypt'
+    }
+    testCompile 'org.mockito:mockito-all:2.0.2-beta'
+}

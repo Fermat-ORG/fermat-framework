@@ -1,0 +1,3 @@
+The shell is where the APP starts. When configured, is where users login or choose what to do. If the first time the
+APP runs the shell identifies a regular wallet user, then i will probably be bypassed in further starts directly to the
+wallet manager or to the only a wallet if the user only has one.

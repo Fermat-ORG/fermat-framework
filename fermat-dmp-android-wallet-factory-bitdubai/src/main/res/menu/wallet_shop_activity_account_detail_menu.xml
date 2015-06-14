@@ -1,0 +1,6 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:osContext="com.bitdubai.android_core.app.subapp.shop.version_1.activity.ShopActivity">
+    <item android:id="@+id/action_settings" android:title="@string/action_settings"
+        android:orderInCategory="100" android:showAsAction="never" />
+</menu>

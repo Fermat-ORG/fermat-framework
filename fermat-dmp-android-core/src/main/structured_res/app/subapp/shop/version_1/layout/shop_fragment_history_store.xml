@@ -1,0 +1,23 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_tabs_diagonal_rotated"
+    >
+
+
+
+    <ExpandableListView
+        android:id="@+id/expListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.14"
+        android:layout_below="@+id/send_form"
+        android:headerDividersEnabled="false"
+        android:divider="#00000000"
+        >
+    </ExpandableListView>
+
+
+
+</RelativeLayout>

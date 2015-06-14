@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingLeft="7dip"
+    android:paddingRight="7dip"
+    android:paddingBottom="0dip"
+    android:paddingTop="0dip"
+    android:gravity="end|right">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="106dp"
+        android:layout_height="106dp"
+
+        >
+
+
+
+        <ImageView
+            android:id="@+id/profile_picture"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:src="@drawable/luis_profile_picture"
+            android:layout_gravity="center"
+
+            android:padding="6dp"
+            />
+
+        <ImageView
+            android:id="@+id/frame_contact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scaleType="centerCrop"
+            android:src="@drawable/object_frame_1x1"
+            android:layout_gravity="center"
+
+            />
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:paddingLeft="8dip"
+            android:paddingRight="8dip"
+            android:paddingTop="3dip"
+            android:paddingBottom="8dip"
+
+            >
+
+
+            <TextView
+                android:id="@+id/contact_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+
+                android:textColor="#FFFFFFFF"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:text="New contact name"
+
+                android:background="@color/black_overlay"
+                android:layout_gravity="center"
+
+                android:paddingLeft="8dip"
+                android:paddingRight="8dip"
+                />
+        </FrameLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="106dp"
+
+
+        >
+
+        <ImageView
+            android:id="@+id/frame_tx_record"
+            android:layout_width="match_parent"
+            android:layout_height="106dp"
+            android:scaleType="centerCrop"
+
+            android:layout_gravity="center"
+            android:background="@drawable/object_frame_3x1_filled"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_alignParentRight="true"
+
+            >
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:paddingTop="14dip"
+                android:paddingLeft="8dip"
+                android:paddingRight="8dip">
+                <TextView android:id="@+id/review"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="reviews"
+                    android:textColor="#aaaaaa"
+                    android:textStyle="italic"
+                    android:textSize="12sp"
+                    android:gravity="center|top"/>
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dip"
+                android:paddingRight="10dip"
+                android:paddingBottom="10dip"
+                android:layout_gravity="bottom">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_weight="1">
+                    <TextView android:id="@+id/like_amount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1234"
+                        android:textColor="#aaaaaa"
+
+                        android:layout_gravity="center"
+                        android:textSize="12sp"
+                        android:textStyle="normal"/>
+                    <ImageView
+                        android:id="@+id/good"
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_action_good_grey"
+                        />
+
+                    </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center"
+                    >
+
+                    <ImageView
+                        android:id="@+id/star_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/grid_background_star_empty"
+                        android:scaleType="fitCenter"
+                        android:scaleX="0.8"
+                        android:scaleY="0.8"
+                        android:gravity="center"
+                        />
+                    <ImageView
+                        android:id="@+id/star_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/grid_background_star_empty"
+                        android:scaleType="fitCenter"
+                        android:scaleX="0.8"
+                        android:scaleY="0.8"
+                        android:gravity="center"
+                        />
+                    <ImageView
+                        android:id="@+id/star_3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/grid_background_star_empty"
+                        android:scaleType="fitCenter"
+                        android:scaleX="0.8"
+                        android:scaleY="0.8"
+                        android:gravity="center"
+                        />
+                    <ImageView
+                        android:id="@+id/star_4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/grid_background_star_empty"
+                        android:scaleType="fitCenter"
+                        android:scaleX="0.8"
+                        android:scaleY="0.8"
+                        android:gravity="center"
+
+                        />
+                    <ImageView
+                        android:id="@+id/star_5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/grid_background_star_empty"
+                        android:scaleType="fitCenter"
+                        android:scaleX="0.8"
+                        android:scaleY="0.8"
+                        android:gravity="center"
+                        />
+
+
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_alignParentRight="true"
+                    android:layout_weight="1">
+                    <TextView android:id="@+id/dislike_amount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1234"
+                        android:textColor="#aaaaaa"
+
+                        android:layout_gravity="center"
+                        android:textSize="12sp"
+                        android:textStyle="normal"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_action_bad_grey"
+                    android:id="@+id/bad"
+                    android:layout_gravity="center"
+                    android:layout_alignParentRight="true"/>
+
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>
