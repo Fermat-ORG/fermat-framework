@@ -33,7 +33,7 @@ public abstract class CloudNetworkServiceManagerIntegrationTest {
 	
 	protected static final int RESPONSE_READ_ATTEMPTS = 50;
 	
-	protected static final int TCP_BASE_TEST_PORT = 21000;
+	protected static final int TCP_BASE_TEST_PORT = 50000;
 	
 	protected void setUpAddressInfo(int port) throws Exception{
 		testHost = "localhost";
@@ -63,7 +63,7 @@ public abstract class CloudNetworkServiceManagerIntegrationTest {
 	}
 	
 	protected void requestConnection() throws Exception{
-		FMPPacket request = MockFMPPacketsFactory.mockRequestPacket(testManager.getPublicKey());
+		FMPPacket request = MockFMPPacketsFactory.mockRequestIntraUserNetworkServicePacket(testManager.getPublicKey());
 		testClient.sendMessage(request);
 		FMPPacket response = getResponse();
 		assertEquals(FMPPacketType.CONNECTION_ACCEPT, response.getType());

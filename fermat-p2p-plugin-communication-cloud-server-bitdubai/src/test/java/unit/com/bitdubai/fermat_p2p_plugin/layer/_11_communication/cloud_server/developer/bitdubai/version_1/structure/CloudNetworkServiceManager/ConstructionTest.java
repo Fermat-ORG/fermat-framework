@@ -8,11 +8,11 @@ import com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud_server.devel
 
 public class ConstructionTest extends CloudNetworkServiceManagerUnitTest {
 	
-	private static final int TCP_BASE_TEST_PORT = 12000;
+	private static final int TCP_PORT_PADDING = 100;
 	
 	@Test
 	public void NetworkServiceManager_ValidParameters_ValidValues() throws Exception{
-		setUpParameters(TCP_BASE_TEST_PORT+1);
+		setUpParameters(TCP_PORT_PADDING+1);
 		testManager = new CloudNetworkServiceManager(testAddress, testExecutor, testKeyPair, testNetworkService, testVPNPorts);
 		assertThat(testManager).isNotNull();
 		assertThat(testManager.getNetworkService()).isEqualTo(testNetworkService);
@@ -22,7 +22,7 @@ public class ConstructionTest extends CloudNetworkServiceManagerUnitTest {
 	
 	@Test
 	public void NetworkServiceManager_ValidParameters_CanBeStarted() throws Exception{
-		setUpParameters(TCP_BASE_TEST_PORT+2);
+		setUpParameters(TCP_PORT_PADDING+2);
 		testManager = new CloudNetworkServiceManager(testAddress, testExecutor, testKeyPair, testNetworkService, testVPNPorts);
 		testManager.start();
 		assertThat(testManager.isRunning()).isTrue();
@@ -30,18 +30,18 @@ public class ConstructionTest extends CloudNetworkServiceManagerUnitTest {
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void NetworkServiceManager_NullNetworkService_IllegalArgumentException() throws Exception{
-		setUpParameters(TCP_BASE_TEST_PORT+3);
+		setUpParameters(TCP_PORT_PADDING+3);
 		testManager = new CloudNetworkServiceManager(testAddress, testExecutor, testKeyPair, null, testVPNPorts);
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void NetworkServiceManager_NullVPNPorts_IllegalArgumentException() throws Exception{
-		setUpParameters(TCP_BASE_TEST_PORT+3);
+		setUpParameters(TCP_PORT_PADDING+3);
 		testManager = new CloudNetworkServiceManager(testAddress, testExecutor, testKeyPair, testNetworkService, null);
 	}
 	@Test(expected=IllegalArgumentException.class)
 	public void NetworkServiceManager_NoVPNPorts_IllegalArgumentException() throws Exception{
-		setUpParameters(TCP_BASE_TEST_PORT+3);
+		setUpParameters(TCP_PORT_PADDING+3);
 		testVPNPorts.clear();
 		testManager = new CloudNetworkServiceManager(testAddress, testExecutor, testKeyPair, testNetworkService, testVPNPorts);
 	}

@@ -28,7 +28,7 @@ public abstract class CloudServiceIntegrationTest {
 	
 	protected static final int RESPONSE_READ_ATTEMPTS = 50;
 	
-	protected static final int TCP_BASE_TEST_PORT = 11000;
+	protected static final int TCP_BASE_TEST_PORT = 51000;
 	
 	protected void setUpAddressInfo(int port) throws Exception{
 		testHost = "localhost";
