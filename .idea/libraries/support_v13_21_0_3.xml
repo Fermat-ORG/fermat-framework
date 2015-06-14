@@ -6,6 +6,8 @@
       <root url="file://$PROJECT_DIR$/fermat-dmp-android-core/build/intermediates/exploded-aar/com.android.support/support-v13/21.0.3/res" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="jar:///opt/android/extras/android/m2repository/com/android/support/support-v13/21.0.3/support-v13-21.0.3-sources.jar!/" />
+    </SOURCES>
   </library>
 </component>

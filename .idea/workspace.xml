@@ -2,119 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="002dcb19-6857-46a5-8dce-b1b1a0984b49" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/.name" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/Java_WebSocket_1_3_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/android_4_1_1_4.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/android_integration_3_2_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/appcompat_v7_21_0_3.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/bcpkix_jdk15on_1_51.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/bcprov_jdk15on_1_52.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/bitcoinj_core_0_12_3.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/catch_exception_1_2_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/commons_codec_1_3.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/commons_collections_3_2.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/commons_logging_1_1_1.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/compiler.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/core_1_50_0_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/core_1_51_0_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/core_3_2_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/fermat_cry_plugin_crypto_module_actor_address_book_bitdubai_fermat_cry_plugin_crypto_module_actor_address_book_bitdubai_1_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/fermat_cry_plugin_crypto_module_wallet_address_book_bitdubai_fermat_cry_plugin_crypto_module_wallet_address_book_bitdubai_1_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/fermat_cry_plugin_crypto_network_bitcoin_bitdubai_fermat_cry_plugin_crypto_network_bitcoin_bitdubai_1_0_1.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/fermat_cry_plugin_crypto_vault_bitcoin_bitdubai_fermat_cry_plugin_crypto_vault_bitcoin_bitdubai_1_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/fermat_dmp_plugin_basic_wallet_bitcoin_wallet_bitdubai_fermat_dmp_plugin_basic_wallet_bitcoin_wallet_bitdubai_1_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/fermat_dmp_plugin_basic_wallet_discount_wallet_bitdubai_fermat_dmp_plugin_basic_wallet_discount_wallet_bitdubai_1_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/fermat_dmp_plugin_composite_wallet_multi_account_wallet_bitdubai_fermat_dmp_plugin_composite_wallet_multi_account_wallet_bitdubai_1_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/fermat_dmp_plugin_license_wallet_bitdubai_fermat_dmp_plugin_license_wallet_bitdubai_1_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/fermat_dmp_plugin_middleware_app_runtime_bitdubai_fermat_dmp_plugin_middleware_app_runtime_bitdubai_1_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/fermat_p2p_plugin_communication_cloud_server_bitdubai_1_6_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/fermat_pip_addon_user_device_user_bitdubai_fermat_pip_addon_user_device_user_bitdubai_1_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/fermat_pip_addon_user_extra_user_bitdubai_fermat_pip_addon_user_extra_user_bitdubai_1_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/fermat_pip_addon_user_intra_user_bitdubai_fermat_pip_addon_user_intra_user_bitdubai_1_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/fermat_pip_api_1_0_2.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/fermat_pip_api_1_4_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/fermat_pip_api_1_6_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/fermat_pip_api_1_8_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/fermat_pip_api_fermat_pip_api_2_0_1.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/fest_assert_core_2_0M10.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/fest_util_1_2_5.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/google_api_client_1_18_0_rc.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/google_http_client_1_18_0_rc.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/google_http_client_jackson2_1_18_0_rc.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/google_oauth_client_1_18_0_rc.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/gradle.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/gson_2_2_4.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/guava_16_0_1.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/hamcrest_core_1_3.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/httpclient_4_0_1.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/httpcore_4_0_1.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/jackson_annotations_2_1_2.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/jackson_core_2_1_3.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/jackson_databind_2_1_3.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/jcip_annotations_1_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/json_20080701.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/jsr305_1_3_9.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/jsr305_2_0_1.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/junit_4_11.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/junit_4_12.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/mockito_all_1_9_5.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/mockito_all_2_0_2_beta.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/mockito_core_1_9_5.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/multidex_1_0_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/objenesis_1_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/opengl_api_gl1_1_android_2_1_r1.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/orchid_1_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/otto_1_3_5.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/play_services_6_5_87.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/copyright/profiles_settings.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/protobuf_java_2_5_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/prov_1_50_0_0.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/slf4j_api_1_7_6.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/support_annotations_21_0_3.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/support_v13_21_0_2.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/support_v13_21_0_3.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/support_v4_21_0_3.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/vcs.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/xmlParserAPIs_2_6_2.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/libraries/xpp3_1_1_4c.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/structure/BankNotesDatabaseFactory.java" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/structure/BankNotesDatabaseFactory.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/structure/dao/BillDaoSupport.java" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/structure/dao/BillDaoSupport.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/structure/dao/CoinDaoSupport.java" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/structure/dao/CoinDaoSupport.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/interfaces/dao/DatabaseCallback.java" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/interfaces/dao/DatabaseCallback.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/structure/dao/DatabaseTemplate.java" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/structure/dao/DatabaseTemplate.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/structure/dao/DepotDaoSupport.java" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/structure/dao/DepotDaoSupport.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/structure/dao/ItemByAccountDaoSupport.java" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/structure/dao/ItemByAccountDaoSupport.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/structure/dao/ItemByDepotDaoSupport.java" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/structure/dao/ItemByDepotDaoSupport.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/beans/dto/Record.java" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/beans/dto/Record.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/structure/dao/WalletDaoSupport.java" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/structure/dao/WalletDaoSupport.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bitDubai-system.iml" afterPath="$PROJECT_DIR$/bitDubai-system.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/build.gradle" afterPath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/fermat-cry-plugin-crypto-network-bitcoin-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/fermat-cry-plugin-crypto-network-bitcoin-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-core/fermat-dmp-android-core.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-core/fermat-dmp-android-core.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-shop-manager-bitdubai/fermat-dmp-android-shop-manager-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-shop-manager-bitdubai/fermat-dmp-android-shop-manager-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-wallet-factory-bitdubai/fermat-dmp-android-wallet-factory-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-wallet-factory-bitdubai/fermat-dmp-android-wallet-factory-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-wallet-manager-bitdubai/fermat-dmp-android-wallet-manager-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-wallet-manager-bitdubai/fermat-dmp-android-wallet-manager-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-wallet-publisher-bitdubai/fermat-dmp-android-wallet-publisher-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-wallet-publisher-bitdubai/fermat-dmp-android-wallet-publisher-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai/fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai/fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-argentina-bank-notes-wallet-bitdubai/fermat-dmp-android-wallet-runtime-argentina-bank-notes-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-argentina-bank-notes-wallet-bitdubai/fermat-dmp-android-wallet-runtime-argentina-bank-notes-wallet-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-argentina-bitcoin-wallet-bitdubai/fermat-dmp-android-wallet-runtime-argentina-bitcoin-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-argentina-bitcoin-wallet-bitdubai/fermat-dmp-android-wallet-runtime-argentina-bitcoin-wallet-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-argentina-discount-wallet-bitdubai/fermat-dmp-android-wallet-runtime-argentina-discount-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-argentina-discount-wallet-bitdubai/fermat-dmp-android-wallet-runtime-argentina-discount-wallet-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-argentina-multi-account-wallet-bitdubai/fermat-dmp-android-wallet-runtime-argentina-multi-account-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-argentina-multi-account-wallet-bitdubai/fermat-dmp-android-wallet-runtime-argentina-multi-account-wallet-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-argetina-loss-protected-wallet-bitdubai/fermat-dmp-android-wallet-runtime-argetina-loss-protected-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-argetina-loss-protected-wallet-bitdubai/fermat-dmp-android-wallet-runtime-argetina-loss-protected-wallet-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-bitcoin-loss-protected-wallet-bitdubai/fermat-dmp-android-wallet-runtime-bitcoin-loss-protected-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-bitcoin-loss-protected-wallet-bitdubai/fermat-dmp-android-wallet-runtime-bitcoin-loss-protected-wallet-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-bitcoin-wallet-bitdubai/fermat-dmp-android-wallet-runtime-bitcoin-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-bitcoin-wallet-bitdubai/fermat-dmp-android-wallet-runtime-bitcoin-wallet-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-wallet-store-bitdubai/fermat-dmp-android-wallet-store-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-wallet-store-bitdubai/fermat-dmp-android-wallet-store-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai/fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai/fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai/fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai/fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-license-wallet-bitdubai/fermat-dmp-plugin-license-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-license-wallet-bitdubai/fermat-dmp-plugin-license-wallet-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-middleware-app-runtime-bitdubai/fermat-dmp-plugin-middleware-app-runtime-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-middleware-app-runtime-bitdubai/fermat-dmp-plugin-middleware-app-runtime-bitdubai.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/fermat-dmp-plugin-middleware-bank-notes-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/fermat-dmp-plugin-middleware-bank-notes-bitdubai.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-middleware-money-request-bitdubai/fermat-dmp-plugin-middleware-money-request-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-middleware-money-request-bitdubai/fermat-dmp-plugin-middleware-money-request-bitdubai.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-middleware-wallet-contacts-bitdubai/fermat-dmp-plugin-middleware-wallet-contacts-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-middleware-wallet-contacts-bitdubai/fermat-dmp-plugin-middleware-wallet-contacts-bitdubai.iml" />
@@ -160,16 +47,13 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-addon-platform-service-error-manager-bitdubai/fermat-pip-addon-platform-service-error-manager-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-pip-addon-platform-service-error-manager-bitdubai/fermat-pip-addon-platform-service-error-manager-bitdubai.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-addon-platform-service-event-manager-bitdubai/fermat-pip-addon-platform-service-event-manager-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-pip-addon-platform-service-event-manager-bitdubai/fermat-pip-addon-platform-service-event-manager-bitdubai.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-addon-platform-service-location-subsystem-bitdubai/fermat-pip-addon-platform-service-location-subsystem-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-pip-addon-platform-service-location-subsystem-bitdubai/fermat-pip-addon-platform-service-location-subsystem-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-addon-user-device-user-bitdubai/fermat-pip-addon-user-device-user-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-pip-addon-user-device-user-bitdubai/fermat-pip-addon-user-device-user-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-addon-user-extra-user-bitdubai/fermat-pip-addon-user-extra-user-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-pip-addon-user-extra-user-bitdubai/fermat-pip-addon-user-extra-user-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-addon-user-intra-user-bitdubai/fermat-pip-addon-user-intra-user-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-pip-addon-user-intra-user-bitdubai/fermat-pip-addon-user-intra-user-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-android-addon-os-device-connectivity-bitdubai/fermat-pip-android-addon-os-device-connectivity-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-pip-android-addon-os-device-connectivity-bitdubai/fermat-pip-android-addon-os-device-connectivity-bitdubai.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-android-addon-os-device-location-bitdubai/fermat-pip-android-addon-os-device-location-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-pip-android-addon-os-device-location-bitdubai/fermat-pip-android-addon-os-device-location-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-android-addon-os-device-power-bitdubai/fermat-pip-android-addon-os-device-power-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-pip-android-addon-os-device-power-bitdubai/fermat-pip-android-addon-os-device-power-bitdubai.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-android-addon-os-file-system-bitdubai/fermat-pip-android-addon-os-file-system-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-pip-android-addon-os-file-system-bitdubai/fermat-pip-android-addon-os-file-system-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-android-addon-os-logger-bitdubai/fermat-pip-android-addon-os-logger-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-pip-android-addon-os-logger-bitdubai/fermat-pip-android-addon-os-logger-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-api/fermat-pip-api.iml" afterPath="$PROJECT_DIR$/fermat-pip-api/fermat-pip-api.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-core/fermat-pip-core.iml" afterPath="$PROJECT_DIR$/fermat-pip-core/fermat-pip-core.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/support_v13_21_0_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/support_v13_21_0_2.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/support_v13_21_0_3.xml" afterPath="$PROJECT_DIR$/.idea/libraries/support_v13_21_0_3.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/support_v4_21_0_3.xml" afterPath="$PROJECT_DIR$/.idea/libraries/support_v4_21_0_3.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="bitDubai-system.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -289,86 +173,12 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="BillDaoSupport.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/structure/dao/BillDaoSupport.java">
+      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="19" column="44" selection-start-line="19" selection-start-column="44" selection-end-line="19" selection-end-column="44" />
+            <state vertical-scroll-proportion="0.40268457">
+              <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
               <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CoinDaoSupport.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/structure/dao/CoinDaoSupport.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="13" column="48" selection-start-line="13" selection-start-column="48" selection-end-line="13" selection-end-column="48" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ItemByDepotDaoSupport.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/structure/dao/ItemByDepotDaoSupport.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="13" column="48" selection-start-line="13" selection-start-column="48" selection-end-line="13" selection-end-column="48" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DepotDaoSupport.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/structure/dao/DepotDaoSupport.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="13" column="48" selection-start-line="13" selection-start-column="48" selection-end-line="13" selection-end-column="48" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ItemByAccountDaoSupport.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/structure/dao/ItemByAccountDaoSupport.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="13" column="37" selection-start-line="13" selection-start-column="37" selection-end-line="13" selection-end-column="37" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="WalletDaoSupport.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/structure/dao/WalletDaoSupport.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.45302013">
-              <caret line="22" column="0" selection-start-line="22" selection-start-column="0" selection-end-line="22" selection-end-column="0" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DatabaseCallback.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/interfaces/dao/DatabaseCallback.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="10" column="48" selection-start-line="10" selection-start-column="48" selection-end-line="10" selection-end-column="48" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Record.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/beans/dto/Record.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="30" column="12" selection-start-line="30" selection-start-column="12" selection-end-line="30" selection-end-column="12" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -13691,7 +13501,7 @@
     </option>
     <option name="modificationStamps">
       <map>
-        <entry key="$PROJECT_DIR$" value="114741625549664" />
+        <entry key="$PROJECT_DIR$" value="114741629738572" />
       </map>
     </option>
     <option name="projectBuildClasspath">
@@ -19932,6 +19742,7 @@
         <option value="$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/structure/dao/DepotDaoSupport.java" />
         <option value="$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/structure/dao/ItemByAccountDaoSupport.java" />
         <option value="$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/structure/dao/WalletDaoSupport.java" />
+        <option value="$PROJECT_DIR$/build.gradle" />
       </list>
     </option>
   </component>
@@ -19998,178 +19809,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bitDubai-system" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bitDubai-system" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat-dmp-plugin-middleware-bank-notes-bitdubai" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bitDubai-system" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bitDubai-system" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat-dmp-plugin-middleware-bank-notes-bitdubai" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bitdubai" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bitDubai-system" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bitDubai-system" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat-dmp-plugin-middleware-bank-notes-bitdubai" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bitdubai" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="version_1" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bitDubai-system" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bitDubai-system" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat-dmp-plugin-middleware-bank-notes-bitdubai" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bitdubai" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="version_1" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="structure" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bitDubai-system" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bitDubai-system" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat-dmp-plugin-middleware-bank-notes-bitdubai" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bitdubai" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="version_1" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="structure" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="dao" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bitDubai-system" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bitDubai-system" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat-desktop-core" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
     </panes>
@@ -20179,8 +19818,10 @@
     <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
     <property name="settings.editor.splitter.proportion" value="0.2" />
     <property name="dynamic.classpath" value="false" />
+    <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_SERIALS" value="" />
+    <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_AVD" value="Nexus_5_API_22_x86" />
   </component>
-  <component name="RunManager" selected="Gradle.bitDubai-system:fermat-p2p-plugin-communication-cloud-server-bitdubai [jenkins]">
+  <component name="RunManager" selected="Android Application.fermat-dmp-android-core">
     <configuration default="false" name="build" type="GroovyScriptRunConfiguration" factoryName="Groovy" temporary="true">
       <module name="fermat-dmp-plugin-middleware-bank-notes-bitdubai" />
       <setting name="path" value="file://$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/build.gradle" />
@@ -20424,27 +20065,27 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="-4" width="1855" height="1084" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3290461" sideWeight="0.5085683" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3290461" sideWeight="0.50193477" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290461" sideWeight="0.49143174" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290461" sideWeight="0.49806523" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32946378" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2498618" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290461" sideWeight="0.49585405" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290461" sideWeight="0.4936429" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -20532,46 +20173,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/structure/dao/BillDaoSupport.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="19" column="44" selection-start-line="19" selection-start-column="44" selection-end-line="19" selection-end-column="44" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/structure/dao/CoinDaoSupport.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="13" column="48" selection-start-line="13" selection-start-column="48" selection-end-line="13" selection-end-column="48" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/structure/dao/ItemByDepotDaoSupport.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="13" column="48" selection-start-line="13" selection-start-column="48" selection-end-line="13" selection-end-column="48" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/structure/dao/DepotDaoSupport.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="13" column="48" selection-start-line="13" selection-start-column="48" selection-end-line="13" selection-end-column="48" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/structure/dao/ItemByAccountDaoSupport.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="13" column="37" selection-start-line="13" selection-start-column="37" selection-end-line="13" selection-end-column="37" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/structure/dao/WalletDaoSupport.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.45302013">
@@ -20579,6 +20180,54 @@
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/structure/dao/ItemByAccountDaoSupport.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.22651006">
+          <caret line="13" column="37" selection-start-line="13" selection-start-column="37" selection-end-line="13" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/structure/dao/DepotDaoSupport.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.22651006">
+          <caret line="13" column="48" selection-start-line="13" selection-start-column="48" selection-end-line="13" selection-end-column="48" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/structure/dao/ItemByDepotDaoSupport.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.22651006">
+          <caret line="13" column="48" selection-start-line="13" selection-start-column="48" selection-end-line="13" selection-end-column="48" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/structure/dao/CoinDaoSupport.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.22651006">
+          <caret line="13" column="48" selection-start-line="13" selection-start-column="48" selection-end-line="13" selection-end-column="48" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/structure/dao/BillDaoSupport.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.22651006">
+          <caret line="19" column="44" selection-start-line="19" selection-start-column="44" selection-end-line="19" selection-end-column="44" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.40268457">
+          <caret line="16" column="0" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>

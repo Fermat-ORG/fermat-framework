@@ -84,5 +84,6 @@
     <orderEntry type="module" module-name="fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-bitdubai" exported="" />
+    <orderEntry type="library" exported="" name="fermat-pip-core.fermat-pip-core-1.0" level="project" />
   </component>
 </module>
