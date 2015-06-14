@@ -14,6 +14,12 @@ include ':cry/plugin/crypto_module/fermat-cry-plugin-crypto-module-wallet-addres
 
 include ':osa/addon/android/fermat-osa-addon-android-database-system-bitdubai'
 include ':osa/addon/android/fermat-osa-addon-android-file-system-bitdubai'
+include ':osa/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai'
+include ':osa/addon/android/fermat-osa-addon-android-device-location-bitdubai'
+include ':osa/addon/android/fermat-osa-addon-android-device-power-bitdubai'
+include ':osa/addon/android/fermat-osa-addon-android-logger-bitdubai'
+
+
 
 
 include ':fermat-dmp-android-wallet-manager-bitdubai'
@@ -97,10 +103,7 @@ include ':fermat-pip-addon-user-device-user-bitdubai'
 include ':fermat-pip-addon-user-extra-user-bitdubai'
 include ':fermat-pip-addon-user-intra-user-bitdubai'
 
-include ':fermat-pip-android-addon-os-device-connectivity-bitdubai'
-include ':fermat-pip-android-addon-os-device-location-bitdubai'
-include ':fermat-pip-android-addon-os-device-power-bitdubai'
-include ':fermat-pip-android-addon-os-logger-bitdubai'
+
 
 
 
