@@ -23,8 +23,13 @@ dependencies {
 
 // PIP Projects
 
-    compile project( ':pip/addon/platform_service/fermat-pip-addon-platform-service-event-manager-bitdubai')
-    compile project( ':pip/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai')
+    compile project(':pip/addon/platform_service/fermat-pip-addon-platform-service-event-manager-bitdubai')
+    compile project(':pip/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai')
+
+// P2P Projects
+
+    compile project(':p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai')
+    compile project(':p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai')
 
 
 
@@ -65,12 +70,12 @@ dependencies {
     compile project(':fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai')
     compile project(':fermat-dmp-plugin-license-wallet-bitdubai')
     compile project(':fermat-dmp-plugin-world-coinbase-bitdubai')
-    compile project(':fermat-p2p-plugin-communication-cloud-server-bitdubai')
+
     compile project(':fermat-dmp-plugin-module-wallet-factory-bitdubai')
     compile project(':fermat-pip-addon-platform-service-location-subsystem-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-intra-user-bitdubai')
     compile project(':fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai')
-    compile project(':fermat-p2p-plugin-communication-cloud-client-bitdubai')
+
 
     compile project(':fermat-dmp-plugin-world-location-bitdubai')
     compile project(':fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai')

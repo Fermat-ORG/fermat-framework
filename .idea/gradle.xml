@@ -69,8 +69,6 @@
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-world-crypto-index-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-world-location-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-world-shape-shift-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-addon-hardware-local-device-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-addon-hardware-remote-device-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-addon-platform-service-location-subsystem-bitdubai" />
@@ -85,6 +83,8 @@
             <option value="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-power-bitdubai" />
             <option value="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-file-system-bitdubai" />
             <option value="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-logger-bitdubai" />
+            <option value="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
+            <option value="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
             <option value="$PROJECT_DIR$/pip/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai" />
             <option value="$PROJECT_DIR$/pip/addon/platform_service/fermat-pip-addon-platform-service-event-manager-bitdubai" />
           </set>
