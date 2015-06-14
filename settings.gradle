@@ -5,8 +5,8 @@ include ':fermat-pip-api'
 
 include ':cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai'
 include ':cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai'
-include ':cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai'
-include ':cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai'
+include ':cry/plugin/crypto_module/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai'
+include ':cry/plugin/crypto_module/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai'
 
 include ':fermat-dmp-android-wallet-manager-bitdubai'
 include ':fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai'

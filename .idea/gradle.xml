@@ -9,10 +9,10 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai" />
-            <option value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai" />
             <option value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
             <option value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" />
+            <option value="$PROJECT_DIR$/cry/plugin/crypto_module/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai" />
+            <option value="$PROJECT_DIR$/cry/plugin/crypto_module/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-android-core" />
             <option value="$PROJECT_DIR$/fermat-dmp-android-shop-manager-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-factory-bitdubai" />
