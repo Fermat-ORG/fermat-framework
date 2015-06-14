@@ -28,7 +28,7 @@ public class RegisterNetworkServiceTest {
 	private ECCKeyPair testKeyPair;
 	private CloudNetworkServiceManager testNetworkServiceManager;
 	
-	protected static final int TCP_BASE_TEST_PORT = 13000;
+	protected static final int TCP_BASE_TEST_PORT = 11000;
 	
 	public void setUpManager(int tcpPadding){
 		testHost = "localhost";

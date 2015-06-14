@@ -12,13 +12,13 @@ import com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud_server.devel
 
 public class EqualsAndHashTest extends CloudNetworkServiceManagerUnitTest {
 	
-	private static final int TCP_BASE_TEST_PORT = 14000;
+	private static final int TCP_PORT_PADDING = 200;
 	
 	private CloudNetworkServiceManager testManager2;
 	
 	@Before
 	public void setUpTestManager(){
-		setUpParameters(TCP_BASE_TEST_PORT);
+		setUpParameters(TCP_PORT_PADDING);
 		testManager = new CloudNetworkServiceManager(testAddress, testExecutor, testKeyPair, testNetworkService, testVPNPorts);
 	}
 	

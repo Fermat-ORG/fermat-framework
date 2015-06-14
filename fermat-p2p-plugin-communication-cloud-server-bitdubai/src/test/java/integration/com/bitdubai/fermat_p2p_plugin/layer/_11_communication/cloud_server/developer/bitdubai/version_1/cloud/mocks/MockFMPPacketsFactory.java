@@ -31,6 +31,13 @@ public class MockFMPPacketsFactory {
 		return FMPPacketFactory.constructCloudPacket(mockSender, destination, mockType, mockMessage, mockSignature);
 	}
 	
+	public static FMPPacket mockRequestIntraUserNetworkServicePacket() throws FMPException {
+		mockType = FMPPacketType.CONNECTION_REQUEST;
+		String message = AsymmectricCryptography.encryptMessagePublicKey(NetworkServices.INTRA_USER.toString(), mockDestination);
+		String signature = AsymmectricCryptography.createMessageSignature(message, MOCK_PRIVATE_KEY);
+		return FMPPacketFactory.constructCloudPacket(mockSender, mockDestination, mockType, message, signature);
+	}
+	
 	public static FMPPacket mockRequestIntraUserNetworkServicePacket(final String destination) throws FMPException {
 		mockType = FMPPacketType.CONNECTION_REQUEST;
 		String message = AsymmectricCryptography.encryptMessagePublicKey(NetworkServices.INTRA_USER.toString(), destination);
