@@ -1,4 +1,4 @@
-package com.bitdubai.android_fermat_pip_addon_layer_2_os_file_system.version_1;
+package com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.Service;
@@ -6,8 +6,8 @@ import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer._2_os.DataBaseSystemOs;
 import com.bitdubai.fermat_api.layer._2_os.database_system.PlatformDatabaseSystem;
 import com.bitdubai.fermat_api.layer._2_os.database_system.PluginDatabaseSystem;
-import com.bitdubai.android_fermat_pip_addon_layer_2_os_file_system.version_1.structure.DesktopPlatformDatabaseSystem;
-import com.bitdubai.android_fermat_pip_addon_layer_2_os_file_system.version_1.structure.DesktopPluginDatabaseSystem;
+import com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1.structure.DesktopPlatformDatabaseSystem;
+import com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1.structure.DesktopPluginDatabaseSystem;
 
 
 /**

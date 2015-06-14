@@ -1,5 +1,5 @@
-package com.bitdubai.android_fermat_pip_addon_layer_2_os_file_system;
-import com.bitdubai.android_fermat_pip_addon_layer_2_os_file_system.version_1.FileSystemOsAddonRoot;
+package com.bitdubai.fermat_osa_addon;
+import com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1.FileSystemOsAddonRoot;
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.AddonDeveloper;
 

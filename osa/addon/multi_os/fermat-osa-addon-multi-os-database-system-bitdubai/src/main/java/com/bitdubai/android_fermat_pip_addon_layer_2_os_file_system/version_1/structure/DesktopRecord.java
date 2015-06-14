@@ -1,4 +1,4 @@
-package com.bitdubai.android_fermat_pip_addon_layer_2_os_file_system.version_1.structure;
+package com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1.structure;
 
 /**
  * Created by Natalia on 25/03/2015.

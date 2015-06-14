@@ -1,7 +1,7 @@
 package com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1;
 
 import android.content.Context;
-import com.bitdubai.android_fermat_pip_addon.layer_2_os.location_system.version_1.DeviceLocationOsAddonRoot;
+import com.bitdubai.fermat_osa_addon.layer.android.location_system.developer.bitdubai.version_1.DeviceLocationOsAddonRoot;
 import com.bitdubai.fermat_api.layer._2_os.LocationSystemOs;
 import com.bitdubai.fermat_api.layer._2_os.location_system.LocationManager;
 

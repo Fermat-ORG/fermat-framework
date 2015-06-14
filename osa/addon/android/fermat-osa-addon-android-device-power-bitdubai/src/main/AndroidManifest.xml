@@ -6,7 +6,7 @@
         android:allowBackup="true"
         android:label="@string/app_name" >
         <activity
-            android:name="com.bitdubai.android_fermat_pip_addon_layer_2_os_file_system.MainActivity"
+            android:name="com.bitdubai.fermat_osa_addon.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -25,7 +25,7 @@
     
     <!-- Don't check android -->
     <Match>
-        <Package name="com.bitdubai.android_fermat_pip_addon.*" />
+        <Package name="com.bitdubai.fermat_osa_addon.*" />
     </Match>
     
     
@@ -33,21 +33,21 @@
     <Match>
         <Bug pattern="NP_UNWRITTEN_FIELD" />
         <Or>
-            <Class name="com.bitdubai.android_fermat_pip_addon_layer_2_os_file_system.version_1.structure.DeviceConnectivityAgent" />
+            <Class name="com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.structure.DeviceConnectivityAgent" />
         </Or>
     </Match>
     
     <Match>
         <Bug pattern="NP_UNWRITTEN_FIELD" />
         <Or>
-            <Class name="com.bitdubai.android_fermat_pip_addon_layer_2_os_file_system.version_1.structure.DeviceConnectivityAgent$MonitorAgent" />
+            <Class name="com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.structure.DeviceConnectivityAgent$MonitorAgent" />
         </Or>
     </Match>
     
     <Match>
         <Bug pattern="UWF_UNWRITTEN_FIELD" />
         <Or>
-            <Class name="com.bitdubai.android_fermat_pip_addon_layer_2_os_file_system.version_1.structure.DeviceConnectivityAgent" />
+            <Class name="com.bitdubai.fermat_osa_addon.layer.android.device_conectivity.developer.bitdubai.version_1.structure.DeviceConnectivityAgent" />
         </Or>
     </Match>
     

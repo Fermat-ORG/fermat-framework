@@ -25,7 +25,7 @@
     
     <!-- Don't check android -->
     <Match>
-        <Package name="com.bitdubai.android_fermat_pip_addon.*" />
+        <Package name="com.bitdubai.fermat_osa_addon.*" />
     </Match>
     
 </FindBugsFilter>

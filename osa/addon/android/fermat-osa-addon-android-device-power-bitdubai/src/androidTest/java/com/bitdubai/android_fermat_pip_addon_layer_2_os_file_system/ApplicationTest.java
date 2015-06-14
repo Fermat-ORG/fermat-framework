@@ -1,4 +1,4 @@
-package com.bitdubai.android_fermat_pip_addon_layer_2_os_file_system;
+package com.bitdubai.fermat_osa_addon;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
