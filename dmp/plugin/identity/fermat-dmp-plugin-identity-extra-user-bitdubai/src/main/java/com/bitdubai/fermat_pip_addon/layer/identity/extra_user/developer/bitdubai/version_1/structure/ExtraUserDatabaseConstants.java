@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_pip_addon.layer._5_user.extra_user.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_pip_addon.layer.identity.extra_user.developer.bitdubai.version_1.structure;
 
 /**
  * Created by Natalia on 31/03/2015.

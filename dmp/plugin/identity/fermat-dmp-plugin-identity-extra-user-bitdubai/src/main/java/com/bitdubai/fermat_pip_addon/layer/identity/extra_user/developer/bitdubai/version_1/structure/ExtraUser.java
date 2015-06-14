@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_pip_addon.layer._5_user.extra_user.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_pip_addon.layer.identity.extra_user.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer._5_user.User;
 import com.bitdubai.fermat_api.layer._5_user.UserTypes;

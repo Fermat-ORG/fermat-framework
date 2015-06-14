@@ -1,8 +1,8 @@
-package com.bitdubai.fermat_pip_addon.layer._5_user.intra_user.developer.bitdubai;
+package com.bitdubai.fermat_pip_addon.layer.identity.extra_user.developer.bitdubai;
 
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.AddonDeveloper;
-import com.bitdubai.fermat_pip_addon.layer._5_user.intra_user.developer.bitdubai.version_1.IntraUserUserAddonRoot;
+import com.bitdubai.fermat_pip_addon.layer.identity.extra_user.developer.bitdubai.version_1.ExtraUserUserAddonRoot;
 
 /**
  * Created by loui on 22/02/15.
@@ -31,7 +31,7 @@ public class DeveloperBitDubai implements AddonDeveloper {
          * it is easy to choose.
          */
 
-        addon = new IntraUserUserAddonRoot();
+        addon = new ExtraUserUserAddonRoot();
 
     }
 

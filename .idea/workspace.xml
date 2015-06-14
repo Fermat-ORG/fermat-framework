@@ -13,32 +13,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="002dcb19-6857-46a5-8dce-b1b1a0984b49" name="Default" comment="">
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-pip-addon-user-extra-user-bitdubai/.gitignore" afterPath="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-extra-user-bitdubai/.gitignore" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-pip-addon-user-extra-user-bitdubai/README.md" afterPath="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-extra-user-bitdubai/README.md" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-pip-addon-user-extra-user-bitdubai/build.gradle" afterPath="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-extra-user-bitdubai/build.gradle" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-pip-addon-user-extra-user-bitdubai/fermat-pip-addon-user-extra-user-bitdubai.iml" afterPath="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai/fermat-dmp-plugin-identity-intra-user-bitdubai.iml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-pip-addon-user-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/_5_user/extra_user/developer/bitdubai/DeveloperBitDubai.java" afterPath="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/_5_user/extra_user/developer/bitdubai/DeveloperBitDubai.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-pip-addon-user-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/_5_user/extra_user/developer/bitdubai/version_1/ExtraUserUserAddonRoot.java" afterPath="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/_5_user/extra_user/developer/bitdubai/version_1/ExtraUserUserAddonRoot.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-pip-addon-user-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/_5_user/extra_user/developer/bitdubai/version_1/structure/ExtraUser.java" afterPath="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/_5_user/extra_user/developer/bitdubai/version_1/structure/ExtraUser.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-pip-addon-user-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/_5_user/extra_user/developer/bitdubai/version_1/structure/ExtraUserDatabaseConstants.java" afterPath="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/_5_user/extra_user/developer/bitdubai/version_1/structure/ExtraUserDatabaseConstants.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-pip-addon-user-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/_5_user/extra_user/developer/bitdubai/version_1/structure/ExtraUserDatabaseFactory.java" afterPath="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/_5_user/extra_user/developer/bitdubai/version_1/structure/ExtraUserDatabaseFactory.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-pip-addon-user-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/_5_user/extra_user/developer/bitdubai/version_1/structure/ExtraUserRegistry.java" afterPath="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/_5_user/extra_user/developer/bitdubai/version_1/structure/ExtraUserRegistry.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-pip-addon-user-intra-user-bitdubai/.gitignore" afterPath="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai/.gitignore" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-pip-addon-user-intra-user-bitdubai/README.md" afterPath="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai/README.md" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-pip-addon-user-intra-user-bitdubai/build.gradle" afterPath="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai/build.gradle" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-pip-addon-user-intra-user-bitdubai/fermat-pip-addon-user-intra-user-bitdubai.iml" afterPath="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-extra-user-bitdubai/fermat-dmp-plugin-identity-extra-user-bitdubai.iml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-pip-addon-user-intra-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/_5_user/intra_user/developer/bitdubai/DeveloperBitDubai.java" afterPath="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/_5_user/intra_user/developer/bitdubai/DeveloperBitDubai.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-pip-addon-user-intra-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/_5_user/intra_user/developer/bitdubai/version_1/IntraUserUserAddonRoot.java" afterPath="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/_5_user/intra_user/developer/bitdubai/version_1/IntraUserUserAddonRoot.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-pip-addon-user-intra-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/_5_user/intra_user/developer/bitdubai/version_1/event_handlers/UserCratedEventHandler.java" afterPath="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/_5_user/intra_user/developer/bitdubai/version_1/event_handlers/UserCratedEventHandler.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/cry/plugin/crypto_module/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/build.gradle" afterPath="$PROJECT_DIR$/cry/plugin/crypto_module/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-core/build.gradle" afterPath="$PROJECT_DIR$/fermat-pip-core/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-core/fermat-dmp-android-core.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-core/fermat-dmp-android-core.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-wallet-publisher-bitdubai/fermat-dmp-android-wallet-publisher-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-wallet-publisher-bitdubai/fermat-dmp-android-wallet-publisher-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-wallet-store-bitdubai/fermat-dmp-android-wallet-store-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-wallet-store-bitdubai/fermat-dmp-android-wallet-store-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-core/fermat-pip-core.iml" afterPath="$PROJECT_DIR$/fermat-pip-core/fermat-pip-core.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/gradle.xml" afterPath="$PROJECT_DIR$/.idea/gradle.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/settings.gradle" afterPath="$PROJECT_DIR$/settings.gradle" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/_5_user/extra_user/developer/bitdubai/DeveloperBitDubai.java" afterPath="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/identity/extra_user/developer/bitdubai/DeveloperBitDubai.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/_5_user/extra_user/developer/bitdubai/version_1/ExtraUserUserAddonRoot.java" afterPath="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/identity/extra_user/developer/bitdubai/version_1/ExtraUserUserAddonRoot.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/_5_user/extra_user/developer/bitdubai/version_1/structure/ExtraUser.java" afterPath="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/identity/extra_user/developer/bitdubai/version_1/structure/ExtraUser.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/_5_user/extra_user/developer/bitdubai/version_1/structure/ExtraUserDatabaseConstants.java" afterPath="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/identity/extra_user/developer/bitdubai/version_1/structure/ExtraUserDatabaseConstants.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/_5_user/extra_user/developer/bitdubai/version_1/structure/ExtraUserDatabaseFactory.java" afterPath="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/identity/extra_user/developer/bitdubai/version_1/structure/ExtraUserDatabaseFactory.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/_5_user/extra_user/developer/bitdubai/version_1/structure/ExtraUserRegistry.java" afterPath="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/identity/extra_user/developer/bitdubai/version_1/structure/ExtraUserRegistry.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/_5_user/intra_user/developer/bitdubai/DeveloperBitDubai.java" afterPath="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/identity/intra_user/developer/bitdubai/DeveloperBitDubai.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/_5_user/intra_user/developer/bitdubai/version_1/IntraUserUserAddonRoot.java" afterPath="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/identity/intra_user/developer/bitdubai/version_1/IntraUserUserAddonRoot.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/_5_user/intra_user/developer/bitdubai/version_1/event_handlers/UserCratedEventHandler.java" afterPath="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/identity/intra_user/developer/bitdubai/version_1/event_handlers/UserCratedEventHandler.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-pip-addon-user-device-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/_5_user/device_user/developer/bitdubai/DeveloperBitDubai.java" afterPath="$PROJECT_DIR$/fermat-pip-addon-user-device-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/identity/device_user/developer/bitdubai/DeveloperBitDubai.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-pip-addon-user-device-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/_5_user/device_user/developer/bitdubai/version_1/DeviceUserUserAddonRoot.java" afterPath="$PROJECT_DIR$/fermat-pip-addon-user-device-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/identity/device_user/developer/bitdubai/version_1/DeviceUserUserAddonRoot.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-pip-addon-user-device-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/_5_user/device_user/developer/bitdubai/version_1/structure/PlatformDeviceUser.java" afterPath="$PROJECT_DIR$/fermat-pip-addon-user-device-user-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/identity/device_user/developer/bitdubai/version_1/structure/PlatformDeviceUser.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-core/src/main/java/com/bitdubai/fermat_core/layer/_5_user/device_user/DeviceUserSubsystem.java" afterPath="$PROJECT_DIR$/fermat-pip-core/src/main/java/com/bitdubai/fermat_core/layer/_5_user/device_user/DeviceUserSubsystem.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-api/src/main/java/com/bitdubai/fermat_api/layer/_5_user/extra_user/ExtraUserManager.java" afterPath="$PROJECT_DIR$/fermat-pip-api/src/main/java/com/bitdubai/fermat_api/layer/_5_user/extra_user/ExtraUserManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-core/src/main/java/com/bitdubai/fermat_core/layer/_5_user/extra_user/ExtraUserSubsystem.java" afterPath="$PROJECT_DIR$/fermat-pip-core/src/main/java/com/bitdubai/fermat_core/layer/_5_user/extra_user/ExtraUserSubsystem.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-core/src/main/java/com/bitdubai/fermat_core/layer/_5_user/intra_user/IntraUserSubsystem.java" afterPath="$PROJECT_DIR$/fermat-pip-core/src/main/java/com/bitdubai/fermat_core/layer/_5_user/intra_user/IntraUserSubsystem.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-api/src/main/java/com/bitdubai/fermat_api/layer/_5_user/User.java" afterPath="$PROJECT_DIR$/fermat-pip-api/src/main/java/com/bitdubai/fermat_api/layer/_5_user/User.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-api/src/main/java/com/bitdubai/fermat_api/layer/_5_user/extra_user/UserRegistry.java" afterPath="$PROJECT_DIR$/fermat-pip-api/src/main/java/com/bitdubai/fermat_api/layer/_5_user/extra_user/UserRegistry.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="bitDubai-system.iws" />
@@ -21659,6 +21651,176 @@
               <option name="myItemId" value="identity" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat-dmp-plugin-identity-intra-user-bitdubai" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dmp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="plugin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="identity" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat-dmp-plugin-identity-intra-user-bitdubai" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="com" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bitdubai" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat_pip_addon" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="layer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="identity" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="intra_user" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="developer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bitdubai" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dmp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="plugin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="identity" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat-dmp-plugin-identity-extra-user-bitdubai" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="dmp" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="plugin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="identity" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat-dmp-plugin-identity-extra-user-bitdubai" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="com" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bitdubai" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat_pip_addon" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="layer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="identity" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="extra_user" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="developer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bitdubai" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
@@ -22068,7 +22230,7 @@
       <workItem from="1434281424303" duration="11168000" />
       <workItem from="1434294465717" duration="1455000" />
       <workItem from="1434301369938" duration="2013000" />
-      <workItem from="1434305632942" duration="822000" />
+      <workItem from="1434305632942" duration="1659000" />
     </task>
     <task id="LOCAL-00001" summary="Compiling and Running the APP all without sub-modules">
       <created>1434275293906</created>
@@ -22160,28 +22322,41 @@
       <option name="project" value="LOCAL" />
       <updated>1434303476377</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="Intra &amp; Extra User Refactored">
+      <created>1434306574421</created>
+      <option name="number" value="00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1434306574421</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Intra &amp; Extra User Refactored - New IMLs">
+      <created>1434306629646</created>
+      <option name="number" value="00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1434306629646</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="18328000" />
+    <option name="totallyTimeSpent" value="19165000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="24" width="1855" height="1056" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32916668" sideWeight="0.49585405" order="14" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32916668" sideWeight="0.49806523" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.35416666" sideWeight="0.43670535" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.35416666" sideWeight="0.50193477" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32916668" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Messages" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.35416666" sideWeight="0.56329465" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.35416666" sideWeight="0.56329465" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.328125" sideWeight="0.4870094" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32946378" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -22189,14 +22364,13 @@
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3410724" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.46268657" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Memory Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.328125" sideWeight="0.48479822" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32916668" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -22229,7 +22403,9 @@
     <MESSAGE value="folder _others created and other stuff moved there" />
     <MESSAGE value="pip error manager  &amp; event manager refactored" />
     <MESSAGE value="Compiling &amp; Running" />
-    <option name="LAST_COMMIT_MESSAGE" value="Compiling &amp; Running" />
+    <MESSAGE value="Intra &amp; Extra User Refactored" />
+    <MESSAGE value="Intra &amp; Extra User Refactored - New IMLs" />
+    <option name="LAST_COMMIT_MESSAGE" value="Intra &amp; Extra User Refactored - New IMLs" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />

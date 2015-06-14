@@ -1,13 +1,11 @@
-package com.bitdubai.fermat_pip_addon.layer._5_user.device_user.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_pip_addon.layer.identity.device_user.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer._1_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer._1_definition.enums.DeviceDirectory;
-import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.UnexpectedAddonsExceptionSeverity;
-import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.*;
 import com.bitdubai.fermat_api.layer._1_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.DeviceUserCreatedEvent;

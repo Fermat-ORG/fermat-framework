@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_pip_addon.layer._5_user.intra_user.developer.bitdubai.version_1;
+package com.bitdubai.fermat_pip_addon.layer.identity.intra_user.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.Service;
@@ -21,7 +21,7 @@ import com.bitdubai.fermat_api.layer._5_user.device_user.DeviceUserManager;
 import com.bitdubai.fermat_api.layer._5_user.User;
 import com.bitdubai.fermat_api.layer._5_user.intra_user.IntraUserManager;
 import com.bitdubai.fermat_api.layer._5_user.intra_user.exceptions.CantCreateIntraUserException;
-import com.bitdubai.fermat_pip_addon.layer._5_user.intra_user.developer.bitdubai.version_1.event_handlers.UserCratedEventHandler;
+import com.bitdubai.fermat_pip_addon.layer.identity.intra_user.developer.bitdubai.version_1.event_handlers.UserCratedEventHandler;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_pip_addon.layer._5_user.device_user.developer.bitdubai.version_1;
+package com.bitdubai.fermat_pip_addon.layer.identity.device_user.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.Service;
@@ -26,7 +26,7 @@ import com.bitdubai.fermat_api.layer._5_user.device_user.DeviceUser;
 import com.bitdubai.fermat_api.layer._5_user.device_user.DeviceUserManager;
 import com.bitdubai.fermat_api.layer._5_user.device_user.exceptions.LoginFailedException;
 import com.bitdubai.fermat_api.layer._5_user.User;
-import com.bitdubai.fermat_pip_addon.layer._5_user.device_user.developer.bitdubai.version_1.structure.PlatformDeviceUser;
+import com.bitdubai.fermat_pip_addon.layer.identity.device_user.developer.bitdubai.version_1.structure.PlatformDeviceUser;
 
 import java.util.ArrayList;
 import java.util.List;

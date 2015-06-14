@@ -1,16 +1,17 @@
-package com.bitdubai.fermat_pip_addon.layer._5_user.extra_user.developer.bitdubai;
+package com.bitdubai.fermat_pip_addon.layer.identity.device_user.developer.bitdubai;
+
 
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.AddonDeveloper;
-import com.bitdubai.fermat_pip_addon.layer._5_user.extra_user.developer.bitdubai.version_1.ExtraUserUserAddonRoot;
+import com.bitdubai.fermat_pip_addon.layer.identity.device_user.developer.bitdubai.version_1.DeviceUserUserAddonRoot;
+
 
 /**
- * Created by loui on 22/02/15.
+ * Created by ciencias on 22.01.15.
  */
 public class DeveloperBitDubai implements AddonDeveloper {
 
     Addon addon;
-
 
 
 
@@ -31,7 +32,7 @@ public class DeveloperBitDubai implements AddonDeveloper {
          * it is easy to choose.
          */
 
-        addon = new ExtraUserUserAddonRoot();
+        addon = new DeviceUserUserAddonRoot();
 
     }
 

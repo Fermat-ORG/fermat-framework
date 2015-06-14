@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_pip_addon.layer._5_user.extra_user.developer.bitdubai.version_1;
+package com.bitdubai.fermat_pip_addon.layer.identity.extra_user.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.Addon;
 
@@ -22,7 +22,7 @@ import com.bitdubai.fermat_api.layer._5_user.User;
 import com.bitdubai.fermat_api.layer._5_user.extra_user.exceptions.CantCreateExtraUserRegistry;
 import com.bitdubai.fermat_api.layer._5_user.extra_user.exceptions.CantGetExtraUserRegistry;
 import com.bitdubai.fermat_api.layer._5_user.extra_user.exceptions.CantInitializeExtraUserRegistryException;
-import com.bitdubai.fermat_pip_addon.layer._5_user.extra_user.developer.bitdubai.version_1.structure.ExtraUserRegistry;
+import com.bitdubai.fermat_pip_addon.layer.identity.extra_user.developer.bitdubai.version_1.structure.ExtraUserRegistry;
 
 import java.util.UUID;
 

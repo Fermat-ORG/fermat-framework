@@ -3,7 +3,7 @@ package com.bitdubai.fermat_core.layer._5_user.device_user;
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.layer._5_user.UserSubsystem;
 import com.bitdubai.fermat_api.layer._5_user.CantStartSubsystemException;
-import com.bitdubai.fermat_pip_addon.layer._5_user.device_user.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_pip_addon.layer.identity.device_user.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by ciencias on 22.01.15.
