@@ -59,7 +59,7 @@ dependencies {
     compile project(':fermat-dmp-android-shop-manager-bitdubai')
     compile project(':fermat-dmp-android-wallet-runtime-bitcoin-wallet-bitdubai')
 
-    compile project(':fermat-osa-addon-android-database-system-bitdubai')
+    compile project(':osa/addon/android/fermat-osa-addon-android-database-system-bitdubai')
 
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:21.0.3'
