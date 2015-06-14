@@ -1,7 +1,7 @@
 <component name="libraryTable">
   <library name="fermat-pip-api-1.4.0">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.bitdubai.fermat.pip/fermat-pip-api/1.4.0/f0eb94e1bc1c0011a3c329f92fbbe96bdf155690/fermat-pip-api-1.4.0.jar!/" />
+      <root url="jar://$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.bitdubai.fermat.pip/fermat-pip-api/1.4.0/916f559619a570a2202273788eb40c99a23b5931/fermat-pip-api-1.4.0.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
