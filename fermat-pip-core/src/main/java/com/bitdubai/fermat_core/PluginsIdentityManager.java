@@ -11,9 +11,9 @@ import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantCreateFile
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot;
-import com.bitdubai.fermat_dmp_plugin.layer._12_world.coinbase.developer.bitdubai.version_1.CoinbaseWorldPluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.world.coinbase.developer.bitdubai.version_1.CoinbaseWorldPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._13_basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.BitcoinWalletBasicWalletPluginRoot;
-import com.bitdubai.fermat_dmp_plugin.layer._12_world.location.developer.bitdubai.version_1.LocationWorldPluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.world.location.developer.bitdubai.version_1.LocationWorldPluginRoot;
 //import com.bitdubai.fermat_dmp_plugin.layer._13_basic_wallet.discount_wallet.developer.bitdubai.version_1.DiscountWalletBasicWalletPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._13_basic_wallet.discount_wallet.developer.bitdubai.version_1.DiscountWalletBasicWalletPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._16_transaction.incoming_crypto.developer.bitdubai.version_1.IncomingCryptoTransactionPluginRoot;
@@ -38,10 +38,10 @@ import com.bitdubai.fermat_dmp_plugin.layer._16_transaction.inter_wallet.develop
 import com.bitdubai.fermat_dmp_plugin.layer._16_transaction.outgoing_device_user.developer.bitsubai.version_1.OutgoingDeviceUserTransactionPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._16_transaction.outgoing_extra_user.developer.bitdubai.version_1.OutgoingExtraUserTransactionPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._16_transaction.outgoing_intra_user.developer.bitdubai.version_1.OutgoingIntraUserTransactionPluginRoot;
-import com.bitdubai.fermat_dmp_plugin.layer._12_world.coinapult.developer.bitdubai.version_1.CoinapultWorldPluginRoot;
-import com.bitdubai.fermat_dmp_plugin.layer._12_world.blockchain_info.developer.bitdubai.version_1.BlockchainInfoWorldPluginRoot;
-import com.bitdubai.fermat_dmp_plugin.layer._12_world.crypto_index.developer.bitdubai.version_1.CryptoIndexWorldPluginRoot;
-import com.bitdubai.fermat_dmp_plugin.layer._12_world.shape_shift.developer.bitdubai.version_1.ShapeShiftWorldPluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.world.coinapult.developer.bitdubai.version_1.CoinapultWorldPluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.world.blockchain_info.developer.bitdubai.version_1.BlockchainInfoWorldPluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.CryptoIndexWorldPluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.world.shape_shift.developer.bitdubai.version_1.ShapeShiftWorldPluginRoot;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.ActorAddressBookPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._15_middleware.app_runtime.developer.bitdubai.version_1.AppRuntimeMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer._15_middleware.bank_notes.developer.bitdubai.version_1.BankNotesMiddlewarePluginRoot;

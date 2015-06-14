@@ -35,6 +35,14 @@ include ':p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-
 include ':dmp/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai'
 include ':dmp/plugin/identity/fermat-dmp-plugin-identity-extra-user-bitdubai'
 
+include ':dmp/plugin/world/fermat-dmp-plugin-world-blockchain-info-bitdubai'
+include ':dmp/plugin/world/fermat-dmp-plugin-world-coinapult-bitdubai'
+include ':dmp/plugin/world/fermat-dmp-plugin-world-crypto-index-bitdubai'
+include ':dmp/plugin/world/fermat-dmp-plugin-world-location-bitdubai'
+include ':dmp/plugin/world/fermat-dmp-plugin-world-shape-shift-bitdubai'
+include ':dmp/plugin/world/fermat-dmp-plugin-world-coinbase-bitdubai'
+
+
 
 
 
@@ -88,11 +96,7 @@ include ':fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-bitdubai'
 include ':fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai'
 include ':fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai'
 
-include ':fermat-dmp-plugin-world-blockchain-info-bitdubai'
-include ':fermat-dmp-plugin-world-coinapult-bitdubai'
-include ':fermat-dmp-plugin-world-crypto-index-bitdubai'
-include ':fermat-dmp-plugin-world-location-bitdubai'
-include ':fermat-dmp-plugin-world-shape-shift-bitdubai'
+
 
 include ':fermat-dmp-plugin-transaction-incoming-crypto-bitdubai'
 include ':fermat-dmp-plugin-transaction-incoming-device-user-bitdubai'
@@ -105,7 +109,7 @@ include ':fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai'
 
 include ':fermat-dmp-plugin-license-wallet-bitdubai'
 
-include ':fermat-dmp-plugin-world-coinbase-bitdubai'
+
 
 
 
