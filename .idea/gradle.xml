@@ -13,6 +13,8 @@
             <option value="$PROJECT_DIR$/cry/plugin/crypto_module/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai" />
             <option value="$PROJECT_DIR$/cry/plugin/crypto_network/fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
             <option value="$PROJECT_DIR$/cry/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" />
+            <option value="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-extra-user-bitdubai" />
+            <option value="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-android-core" />
             <option value="$PROJECT_DIR$/fermat-dmp-android-shop-manager-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-factory-bitdubai" />
@@ -73,8 +75,6 @@
             <option value="$PROJECT_DIR$/fermat-pip-addon-hardware-remote-device-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-addon-platform-service-location-subsystem-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-addon-user-device-user-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-pip-addon-user-extra-user-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-pip-addon-user-intra-user-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-api" />
             <option value="$PROJECT_DIR$/fermat-pip-core" />
             <option value="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-database-system-bitdubai" />

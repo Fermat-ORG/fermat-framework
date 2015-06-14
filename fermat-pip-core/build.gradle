@@ -31,7 +31,10 @@ dependencies {
     compile project(':p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai')
     compile project(':p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai')
 
+// DMP Projects
 
+    compile project(':dmp/plugin/identity/fermat-dmp-plugin-identity-extra-user-bitdubai')
+    compile project(':dmp/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai')
 
 
     compile project(':fermat-dmp-plugin-middleware-app-runtime-bitdubai')
@@ -46,8 +49,7 @@ dependencies {
     compile project(':fermat-pip-addon-hardware-local-device-bitdubai')
     compile project(':fermat-pip-addon-hardware-remote-device-bitdubai')
     compile project(':fermat-pip-addon-user-device-user-bitdubai')
-    compile project(':fermat-pip-addon-user-extra-user-bitdubai')
-    compile project(':fermat-pip-addon-user-intra-user-bitdubai')
+
     compile project(':fermat-dmp-plugin-network-service-bank-notes-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-crypto-addresses-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-money-bitdubai')

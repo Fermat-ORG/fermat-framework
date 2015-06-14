@@ -29,6 +29,11 @@ include ':pip/addon/platform_service/fermat-pip-addon-platform-service-error-man
 include ':p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai'
 include ':p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai'
 
+// DMP Projects
+
+include ':dmp/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai'
+include ':dmp/plugin/identity/fermat-dmp-plugin-identity-extra-user-bitdubai'
+
 
 
 
@@ -107,9 +112,8 @@ include ':fermat-pip-addon-hardware-local-device-bitdubai'
 include ':fermat-pip-addon-platform-service-location-subsystem-bitdubai'
 
 include ':fermat-pip-addon-hardware-remote-device-bitdubai'
+
 include ':fermat-pip-addon-user-device-user-bitdubai'
-include ':fermat-pip-addon-user-extra-user-bitdubai'
-include ':fermat-pip-addon-user-intra-user-bitdubai'
 
 
 
