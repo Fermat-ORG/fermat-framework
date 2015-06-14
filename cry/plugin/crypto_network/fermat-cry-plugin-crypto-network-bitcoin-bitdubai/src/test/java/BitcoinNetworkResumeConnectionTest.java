@@ -1,8 +1,8 @@
 import com.bitdubai.fermat_api.layer._12_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_cry_plugin.layer.cry_1_crypto_network.bitcoin.developer.bitdubai.version_1.structure.BitcoinCryptoNetworkMonitoringAgent;
-import com.bitdubai.fermat_cry_plugin.layer.cry_1_crypto_network.bitcoin.developer.bitdubai.version_1.structure.BitcoinNetworkConfiguration;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure.BitcoinCryptoNetworkMonitoringAgent;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure.BitcoinNetworkConfiguration;
 
 import org.bitcoinj.core.Wallet;
 import org.junit.Test;

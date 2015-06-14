@@ -2,7 +2,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer._2_os.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.cry_1_crypto_network.bitcoin.exceptions.CantCreateCryptoWalletException;
-import com.bitdubai.fermat_cry_plugin.layer.cry_2_crypto_vault.developer.bitdubai.version_1.structure.BitcoinCryptoVault;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.BitcoinCryptoVault;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
