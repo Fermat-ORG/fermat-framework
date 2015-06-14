@@ -19,6 +19,10 @@ include ':osa/addon/android/fermat-osa-addon-android-device-location-bitdubai'
 include ':osa/addon/android/fermat-osa-addon-android-device-power-bitdubai'
 include ':osa/addon/android/fermat-osa-addon-android-logger-bitdubai'
 
+// PIP Projects
+
+include ':pip/addon/platform_service/fermat-pip-addon-platform-service-event-manager-bitdubai'
+include ':pip/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai'
 
 
 
@@ -95,9 +99,8 @@ include ':fermat-p2p-plugin-communication-cloud-client-bitdubai'
 include ':fermat-p2p-plugin-communication-cloud-server-bitdubai'
 
 include ':fermat-pip-addon-hardware-local-device-bitdubai'
-include ':fermat-pip-addon-platform-service-error-manager-bitdubai'
-include ':fermat-pip-addon-platform-service-event-manager-bitdubai'
 include ':fermat-pip-addon-platform-service-location-subsystem-bitdubai'
+
 include ':fermat-pip-addon-hardware-remote-device-bitdubai'
 include ':fermat-pip-addon-user-device-user-bitdubai'
 include ':fermat-pip-addon-user-extra-user-bitdubai'

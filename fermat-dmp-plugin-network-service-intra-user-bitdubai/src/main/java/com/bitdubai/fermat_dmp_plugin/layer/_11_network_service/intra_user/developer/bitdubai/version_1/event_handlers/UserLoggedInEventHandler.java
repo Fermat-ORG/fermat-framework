@@ -16,7 +16,7 @@ import com.bitdubai.fermat_dmp_plugin.layer._11_network_service.intra_user.devel
 
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer._11_network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceDao</code> have
- * logic implementation to handle the event <code>com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.IntraUserLoggedInEvent</code>
+ * logic implementation to handle the event <code>com.bitdubai.fermat_api.layer.platform_service.event_manager.events.IntraUserLoggedInEvent</code>
  * <p/>
  *
  * Created by loui on 19/02/15.

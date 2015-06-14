@@ -16,7 +16,7 @@ import com.bitdubai.fermat_dmp_plugin.layer._11_network_service.intra_user.devel
 
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer._11_network_service.intra_user.developer.bitdubai.version_1.event_handlers.IntraUserIncomingNetworkServiceConnectionRequestHandler</code>
- * implements the handle to the event <code>com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.IncomingNetworkServiceConnectionRequestEvent</code><p/>
+ * implements the handle to the event <code>com.bitdubai.fermat_api.layer.platform_service.event_manager.events.IncomingNetworkServiceConnectionRequestEvent</code><p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 07/06/15.
  *
  * @version 1.0

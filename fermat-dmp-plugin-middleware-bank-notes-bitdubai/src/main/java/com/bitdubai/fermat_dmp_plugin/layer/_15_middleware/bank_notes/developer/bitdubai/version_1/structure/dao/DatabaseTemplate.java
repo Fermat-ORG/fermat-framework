@@ -212,7 +212,7 @@ public class DatabaseTemplate implements DealsWithErrors, DealsWithPluginDatabas
     }
 
 
-    // Public instance methods declarations extends of com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors interface.
+    // Public instance methods declarations extends of com.bitdubai.fermat_api.layer.platform_service.error_manager.DealsWithErrors interface.
     /**
      *
      *  <p>Method that set the error manager.

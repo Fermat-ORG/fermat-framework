@@ -17,9 +17,14 @@ dependencies {
     compile project(':cry/plugin/crypto_module/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai')
     compile project(':cry/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai')
 
-// OSA Projects
+// OSA Projects   --- Hace falta esto aca??
 
     compile project(':osa/addon/android/fermat-osa-addon-android-database-system-bitdubai')
+
+// PIP Projects
+
+    compile project( ':pip/addon/platform_service/fermat-pip-addon-platform-service-event-manager-bitdubai')
+    compile project( ':pip/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai')
 
 
 
@@ -32,8 +37,7 @@ dependencies {
     compile project(':fermat-dmp-plugin-module-wallet-publisher-bitdubai')
     compile project(':fermat-dmp-plugin-module-wallet-runtime-bitdubai')
     compile project(':fermat-dmp-plugin-module-wallet-store-bitdubai')
-    compile project(':fermat-pip-addon-platform-service-error-manager-bitdubai')
-    compile project(':fermat-pip-addon-platform-service-event-manager-bitdubai')
+
     compile project(':fermat-pip-addon-hardware-local-device-bitdubai')
     compile project(':fermat-pip-addon-hardware-remote-device-bitdubai')
     compile project(':fermat-pip-addon-user-device-user-bitdubai')

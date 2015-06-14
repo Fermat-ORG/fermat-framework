@@ -14,7 +14,7 @@ import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventType
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.IncomingNetworkServiceConnectionRequestEvent</code> represent the event
+ * The Class <code>com.bitdubai.fermat_api.layer.platform_service.event_manager.events.IncomingNetworkServiceConnectionRequestEvent</code> represent the event
  * when a new Incoming Network Service Connection Request is made
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 07/06/15.

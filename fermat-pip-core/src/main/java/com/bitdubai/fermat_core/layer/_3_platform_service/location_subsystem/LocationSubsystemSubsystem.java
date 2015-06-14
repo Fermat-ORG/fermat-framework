@@ -3,7 +3,7 @@ package com.bitdubai.fermat_core.layer._3_platform_service.location_subsystem;
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.layer._3_platform_service.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer._3_platform_service.PlatformServiceSubsystem;
-import com.bitdubai.fermat_pip_addon.layer._3_platform_service.location_subsystem.developer.bitdubai.DeveloperBitDubai;
+import com.bitdubai.fermat_pip_addon.layer.platform_service.location_subsystem.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by loui on 28/04/15.
