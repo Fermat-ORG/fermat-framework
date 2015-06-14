@@ -21,8 +21,8 @@
             <option value="$PROJECT_DIR$/dmp/plugin/world/fermat-dmp-plugin-world-crypto-index-bitdubai" />
             <option value="$PROJECT_DIR$/dmp/plugin/world/fermat-dmp-plugin-world-location-bitdubai" />
             <option value="$PROJECT_DIR$/dmp/plugin/world/fermat-dmp-plugin-world-shape-shift-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-android-core" />
             <option value="$PROJECT_DIR$/fermat-core" />
-            <option value="$PROJECT_DIR$/fermat-dmp-android-core" />
             <option value="$PROJECT_DIR$/fermat-dmp-android-shop-manager-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-factory-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-manager-bitdubai" />
