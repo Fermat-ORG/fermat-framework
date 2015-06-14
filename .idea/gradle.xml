@@ -73,7 +73,6 @@
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-world-shape-shift-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-addon-hardware-local-device-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-addon-hardware-remote-device-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-pip-addon-platform-service-location-subsystem-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-addon-user-device-user-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-api" />
             <option value="$PROJECT_DIR$/fermat-pip-core" />
@@ -87,6 +86,7 @@
             <option value="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
             <option value="$PROJECT_DIR$/pip/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai" />
             <option value="$PROJECT_DIR$/pip/addon/platform_service/fermat-pip-addon-platform-service-event-manager-bitdubai" />
+            <option value="$PROJECT_DIR$/pip/addon/platform_service/fermat-pip-addon-platform-service-location-subsystem-bitdubai" />
           </set>
         </option>
       </GradleProjectSettings>

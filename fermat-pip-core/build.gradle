@@ -25,6 +25,7 @@ dependencies {
 
     compile project(':pip/addon/platform_service/fermat-pip-addon-platform-service-event-manager-bitdubai')
     compile project(':pip/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai')
+    compile project(':pip/addon/platform_service/fermat-pip-addon-platform-service-location-subsystem-bitdubai')
 
 // P2P Projects
 
@@ -74,7 +75,6 @@ dependencies {
     compile project(':fermat-dmp-plugin-world-coinbase-bitdubai')
 
     compile project(':fermat-dmp-plugin-module-wallet-factory-bitdubai')
-    compile project(':fermat-pip-addon-platform-service-location-subsystem-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-intra-user-bitdubai')
     compile project(':fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai')
 
