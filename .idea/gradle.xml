@@ -9,14 +9,9 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/cry" />
-            <option value="$PROJECT_DIR$/cry/plugin" />
-            <option value="$PROJECT_DIR$/cry/plugin/crypto_module" />
             <option value="$PROJECT_DIR$/cry/plugin/crypto_module/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai" />
             <option value="$PROJECT_DIR$/cry/plugin/crypto_module/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai" />
-            <option value="$PROJECT_DIR$/cry/plugin/crypto_network" />
             <option value="$PROJECT_DIR$/cry/plugin/crypto_network/fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
-            <option value="$PROJECT_DIR$/cry/plugin/crypto_vault" />
             <option value="$PROJECT_DIR$/cry/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-android-core" />
             <option value="$PROJECT_DIR$/fermat-dmp-android-shop-manager-bitdubai" />
@@ -82,23 +77,14 @@
             <option value="$PROJECT_DIR$/fermat-pip-addon-user-intra-user-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-api" />
             <option value="$PROJECT_DIR$/fermat-pip-core" />
-            <option value="$PROJECT_DIR$/osa" />
-            <option value="$PROJECT_DIR$/osa/addon" />
-            <option value="$PROJECT_DIR$/osa/addon/android" />
             <option value="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-database-system-bitdubai" />
             <option value="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai" />
             <option value="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-location-bitdubai" />
             <option value="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-power-bitdubai" />
             <option value="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-file-system-bitdubai" />
             <option value="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-logger-bitdubai" />
-            <option value="$PROJECT_DIR$/p2p" />
-            <option value="$PROJECT_DIR$/p2p/plugin" />
-            <option value="$PROJECT_DIR$/p2p/plugin/communication" />
             <option value="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
             <option value="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
-            <option value="$PROJECT_DIR$/pip" />
-            <option value="$PROJECT_DIR$/pip/addon" />
-            <option value="$PROJECT_DIR$/pip/addon/platform_service" />
             <option value="$PROJECT_DIR$/pip/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai" />
             <option value="$PROJECT_DIR$/pip/addon/platform_service/fermat-pip-addon-platform-service-event-manager-bitdubai" />
           </set>
