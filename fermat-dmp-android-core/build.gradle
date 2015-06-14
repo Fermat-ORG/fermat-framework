@@ -47,7 +47,7 @@ android {
 
 dependencies {
     compile project(':fermat-pip-api')
-    compile project(':fermat-pip-core')
+    compile project(':fermat-core')
 
 // OSA Projects
 
