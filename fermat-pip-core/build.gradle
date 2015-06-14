@@ -10,10 +10,10 @@ repositories {
 dependencies {
     compile project(':fermat-pip-api')
 
-    compile project(':fermat-cry-plugin-crypto-network-bitcoin-bitdubai')
-    compile project(':fermat-cry-plugin-crypto-module-actor-address-book-bitdubai')
-    compile project(':fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai')
-    compile project(':fermat-cry-plugin-crypto-vault-bitcoin-bitdubai')
+    compile project(':cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai')
+    compile project(':cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai')
+    compile project(':cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai')
+    compile project(':cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai')
 
     compile project(':fermat-dmp-plugin-middleware-app-runtime-bitdubai')
     compile project(':fermat-dmp-plugin-middleware-bank-notes-bitdubai')

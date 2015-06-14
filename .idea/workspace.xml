@@ -13,38 +13,105 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="002dcb19-6857-46a5-8dce-b1b1a0984b49" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/fermat_cry_plugin_crypto_module_actor_address_book_bitdubai_fermat_cry_plugin_crypto_module_actor_address_book_bitdubai_1_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/fermat_cry_plugin_crypto_module_wallet_address_book_bitdubai_fermat_cry_plugin_crypto_module_wallet_address_book_bitdubai_1_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/fermat_cry_plugin_crypto_network_bitcoin_bitdubai_fermat_cry_plugin_crypto_network_bitcoin_bitdubai_1_0_1.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/fermat_cry_plugin_crypto_vault_bitcoin_bitdubai_fermat_cry_plugin_crypto_vault_bitcoin_bitdubai_1_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/fermat_dmp_plugin_basic_wallet_bitcoin_wallet_bitdubai_fermat_dmp_plugin_basic_wallet_bitcoin_wallet_bitdubai_1_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/fermat_dmp_plugin_basic_wallet_discount_wallet_bitdubai_fermat_dmp_plugin_basic_wallet_discount_wallet_bitdubai_1_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/fermat_dmp_plugin_composite_wallet_multi_account_wallet_bitdubai_fermat_dmp_plugin_composite_wallet_multi_account_wallet_bitdubai_1_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/fermat_dmp_plugin_license_wallet_bitdubai_fermat_dmp_plugin_license_wallet_bitdubai_1_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/fermat_dmp_plugin_middleware_app_runtime_bitdubai_fermat_dmp_plugin_middleware_app_runtime_bitdubai_1_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/fermat_pip_addon_user_device_user_bitdubai_fermat_pip_addon_user_device_user_bitdubai_1_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/fermat_pip_addon_user_extra_user_bitdubai_fermat_pip_addon_user_extra_user_bitdubai_1_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/fermat_pip_addon_user_intra_user_bitdubai_fermat_pip_addon_user_intra_user_bitdubai_1_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/fermat_pip_api_fermat_pip_api_2_0_1.xml" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/Java_WebSocket_1_3_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/Java_WebSocket_1_3_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/android_4_1_1_4.xml" afterPath="$PROJECT_DIR$/.idea/libraries/android_4_1_1_4.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/android_integration_3_2_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/android_integration_3_2_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/appcompat_v7_21_0_3.xml" afterPath="$PROJECT_DIR$/.idea/libraries/appcompat_v7_21_0_3.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/bcpkix_jdk15on_1_51.xml" afterPath="$PROJECT_DIR$/.idea/libraries/bcpkix_jdk15on_1_51.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/bcprov_jdk15on_1_52.xml" afterPath="$PROJECT_DIR$/.idea/libraries/bcprov_jdk15on_1_52.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/bitDubai-system.iml" afterPath="$PROJECT_DIR$/bitDubai-system.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/bitcoinj_core_0_12_3.xml" afterPath="$PROJECT_DIR$/.idea/libraries/bitcoinj_core_0_12_3.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/catch_exception_1_2_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/catch_exception_1_2_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/commons_codec_1_3.xml" afterPath="$PROJECT_DIR$/.idea/libraries/commons_codec_1_3.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/commons_collections_3_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/commons_collections_3_2.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/commons_logging_1_1_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/commons_logging_1_1_1.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/core_1_50_0_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/core_1_50_0_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/core_1_51_0_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/core_1_51_0_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/core_3_2_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/core_3_2_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/fermat-cry-plugin-crypto-network-bitcoin-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/fermat-cry-plugin-crypto-network-bitcoin-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai.iml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/.gitignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/.gitignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/.gitignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/.gitignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/actor_address_book/developer/bitdubai/version_1/structure/ActorAddressBook.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/actor_address_book/developer/bitdubai/version_1/structure/ActorAddressBookDatabaseConstants.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/actor_address_book/developer/bitdubai/version_1/structure/ActorAddressBookDatabaseFactory.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/actor_address_book/developer/bitdubai/version_1/ActorAddressBookPluginRoot.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_1_crypto_network/bitcoin/developer/bitdubai/version_1/structure/BitcoinCryptoNetworkMonitoringAgent.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_1_crypto_network/bitcoin/developer/bitdubai/version_1/BitcoinCryptoNetworkPluginRoot.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_2_crypto_vault/developer/bitdubai/version_1/structure/BitcoinCryptoVault.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_2_crypto_vault/developer/bitdubai/version_1/BitcoinCryptoVaultPluginRoot.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_1_crypto_network/bitcoin/developer/bitdubai/version_1/structure/BitcoinEventListeners.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_1_crypto_network/bitcoin/developer/bitdubai/version_1/structure/BitcoinNetworkConfiguration.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_2_crypto_vault/developer/bitdubai/version_1/structure/BitcoinNetworkConfiguration.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/test/java/BitcoinNetworkConnectionTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/test/java/BitcoinNetworkResumeConnectionTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_1_crypto_network/bitcoin/developer/bitdubai/version_1/exceptions/CantCreateBlockStoreFileException.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/actor_address_book/developer/bitdubai/version_1/exceptions/CantInitializeActorAddressBookException.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/wallet_address_book/developer/bitdubai/version_1/exceptions/CantInitializeWalletAddressBookException.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_1_crypto_network/bitcoin/developer/bitdubai/version_1/exceptions/CantStartPeerServiceException.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/test/java/ConnectVaultToNetworkTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/test/java/CreateNewVaultTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_2_crypto_vault/developer/bitdubai/version_1/structure/CryptoVaultDatabaseConstants.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_2_crypto_vault/developer/bitdubai/version_1/structure/CryptoVaultDatabaseFactory.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/actor_address_book/developer/bitdubai/DeveloperBitDubai.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/wallet_address_book/developer/bitdubai/DeveloperBitDubai.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_1_crypto_network/bitcoin/developer/bitdubai/DeveloperBitDubai.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_2_crypto_vault/developer/bitdubai/DeveloperBitDubai.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_1_crypto_network/bitcoin/developer/bitdubai/version_1/structure/StoredBlockChain.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_2_crypto_vault/developer/bitdubai/version_1/structure/VaultEventListeners.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/wallet_address_book/developer/bitdubai/version_1/structure/WalletAddressBook.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/wallet_address_book/developer/bitdubai/version_1/WalletAddressBookCryptoPluginRoot.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/wallet_address_book/developer/bitdubai/version_1/structure/WalletAddressBookDataBaseConstants.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/wallet_address_book/developer/bitdubai/version_1/structure/WalletAddressBookDataBaseFactory.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/build.gradle" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/build.gradle" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/build.gradle" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/build.gradle" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/config/checkstyle/checkstyle.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/cry_fermat-cry-plugin-crypto-module-actor-address-book-bitdubai.iml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/cry_fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai.iml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/cry_fermat-cry-plugin-crypto-network-bitcoin-bitdubai.iml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/cry_fermat-cry-plugin-crypto-vault-bitcoin-bitdubai.iml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai.iml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/mockito_all_2_0_2_beta.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/.gitignore" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/README.md" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/build.gradle" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai.iml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/actor_address_book/developer/bitdubai/DeveloperBitDubai.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/actor_address_book/developer/bitdubai/version_1/ActorAddressBookPluginRoot.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/actor_address_book/developer/bitdubai/version_1/exceptions/CantInitializeActorAddressBookException.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/actor_address_book/developer/bitdubai/version_1/structure/ActorAddressBook.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/actor_address_book/developer/bitdubai/version_1/structure/ActorAddressBookDatabaseConstants.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/actor_address_book/developer/bitdubai/version_1/structure/ActorAddressBookDatabaseFactory.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/.gitignore" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/README.md" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/build.gradle" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai.iml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/wallet_address_book/developer/bitdubai/DeveloperBitDubai.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/wallet_address_book/developer/bitdubai/version_1/WalletAddressBookCryptoPluginRoot.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/wallet_address_book/developer/bitdubai/version_1/exceptions/CantInitializeWalletAddressBookException.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/wallet_address_book/developer/bitdubai/version_1/structure/WalletAddressBook.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/wallet_address_book/developer/bitdubai/version_1/structure/WalletAddressBookDataBaseConstants.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/wallet_address_book/developer/bitdubai/version_1/structure/WalletAddressBookDataBaseFactory.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/.gitignore" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/README.md" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/build.gradle" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/config/checkstyle/checkstyle.xml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/fermat-cry-plugin-crypto-network-bitcoin-bitdubai.iml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_1_crypto_network/bitcoin/developer/bitdubai/DeveloperBitDubai.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_1_crypto_network/bitcoin/developer/bitdubai/version_1/BitcoinCryptoNetworkPluginRoot.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_1_crypto_network/bitcoin/developer/bitdubai/version_1/exceptions/CantCreateBlockStoreFileException.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_1_crypto_network/bitcoin/developer/bitdubai/version_1/exceptions/CantStartPeerServiceException.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_1_crypto_network/bitcoin/developer/bitdubai/version_1/structure/BitcoinCryptoNetworkMonitoringAgent.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_1_crypto_network/bitcoin/developer/bitdubai/version_1/structure/BitcoinEventListeners.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_1_crypto_network/bitcoin/developer/bitdubai/version_1/structure/BitcoinNetworkConfiguration.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_1_crypto_network/bitcoin/developer/bitdubai/version_1/structure/StoredBlockChain.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/test/java/BitcoinNetworkConnectionTest.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/test/java/BitcoinNetworkResumeConnectionTest.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/.gitignore" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/README.md" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/build.gradle" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai.iml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_2_crypto_vault/developer/bitdubai/DeveloperBitDubai.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_2_crypto_vault/developer/bitdubai/version_1/BitcoinCryptoVaultPluginRoot.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_2_crypto_vault/developer/bitdubai/version_1/structure/BitcoinCryptoVault.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_2_crypto_vault/developer/bitdubai/version_1/structure/BitcoinNetworkConfiguration.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_2_crypto_vault/developer/bitdubai/version_1/structure/CryptoVaultDatabaseConstants.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_2_crypto_vault/developer/bitdubai/version_1/structure/CryptoVaultDatabaseFactory.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_2_crypto_vault/developer/bitdubai/version_1/structure/VaultEventListeners.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/test/java/ConnectVaultToNetworkTest.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/test/java/CreateNewVaultTest.java" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-core/build.gradle" afterPath="$PROJECT_DIR$/fermat-pip-core/build.gradle" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-core/fermat-dmp-android-core.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-core/fermat-dmp-android-core.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-shop-manager-bitdubai/fermat-dmp-android-shop-manager-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-shop-manager-bitdubai/fermat-dmp-android-shop-manager-bitdubai.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-wallet-factory-bitdubai/fermat-dmp-android-wallet-factory-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-wallet-factory-bitdubai/fermat-dmp-android-wallet-factory-bitdubai.iml" />
@@ -59,110 +126,14 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-bitcoin-loss-protected-wallet-bitdubai/fermat-dmp-android-wallet-runtime-bitcoin-loss-protected-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-bitcoin-loss-protected-wallet-bitdubai/fermat-dmp-android-wallet-runtime-bitcoin-loss-protected-wallet-bitdubai.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-bitcoin-wallet-bitdubai/fermat-dmp-android-wallet-runtime-bitcoin-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-bitcoin-wallet-bitdubai/fermat-dmp-android-wallet-runtime-bitcoin-wallet-bitdubai.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-wallet-store-bitdubai/fermat-dmp-android-wallet-store-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-wallet-store-bitdubai/fermat-dmp-android-wallet-store-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai/fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai/fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai/fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai/fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-license-wallet-bitdubai/fermat-dmp-plugin-license-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-license-wallet-bitdubai/fermat-dmp-plugin-license-wallet-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-middleware-app-runtime-bitdubai/fermat-dmp-plugin-middleware-app-runtime-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-middleware-app-runtime-bitdubai/fermat-dmp-plugin-middleware-app-runtime-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/fermat-dmp-plugin-middleware-bank-notes-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/fermat-dmp-plugin-middleware-bank-notes-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-middleware-money-request-bitdubai/fermat-dmp-plugin-middleware-money-request-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-middleware-money-request-bitdubai/fermat-dmp-plugin-middleware-money-request-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-middleware-wallet-contacts-bitdubai/fermat-dmp-plugin-middleware-wallet-contacts-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-middleware-wallet-contacts-bitdubai/fermat-dmp-plugin-middleware-wallet-contacts-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-module-wallet-factory-bitdubai/fermat-dmp-plugin-module-wallet-factory-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-module-wallet-factory-bitdubai/fermat-dmp-plugin-module-wallet-factory-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-module-wallet-manager-bitdubai/fermat-dmp-plugin-module-wallet-manager-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-module-wallet-manager-bitdubai/fermat-dmp-plugin-module-wallet-manager-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-module-wallet-publisher-bitdubai/fermat-dmp-plugin-module-wallet-publisher-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-module-wallet-publisher-bitdubai/fermat-dmp-plugin-module-wallet-publisher-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-module-wallet-runtime-bitdubai/fermat-dmp-plugin-module-wallet-runtime-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-module-wallet-runtime-bitdubai/fermat-dmp-plugin-module-wallet-runtime-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-module-wallet-store-bitdubai/fermat-dmp-plugin-module-wallet-store-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-module-wallet-store-bitdubai/fermat-dmp-plugin-module-wallet-store-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-network-service-bank-notes-bitdubai/fermat-dmp-plugin-network-service-bank-notes-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-network-service-bank-notes-bitdubai/fermat-dmp-plugin-network-service-bank-notes-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-network-service-crypto-addresses-bitdubai/fermat-dmp-plugin-network-service-crypto-addresses-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-network-service-crypto-addresses-bitdubai/fermat-dmp-plugin-network-service-crypto-addresses-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-network-service-intra-user-bitdubai/fermat-dmp-plugin-network-service-intra-user-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-network-service-intra-user-bitdubai/fermat-dmp-plugin-network-service-intra-user-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-network-service-money-bitdubai/fermat-dmp-plugin-network-service-money-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-network-service-money-bitdubai/fermat-dmp-plugin-network-service-money-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-network-service-money-request-bitdubai/fermat-dmp-plugin-network-service-money-request-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-network-service-money-request-bitdubai/fermat-dmp-plugin-network-service-money-request-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-network-service-wallet-community-bitdubai/fermat-dmp-plugin-network-service-wallet-community-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-network-service-wallet-community-bitdubai/fermat-dmp-plugin-network-service-wallet-community-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-network-service-wallet-resources-bitdubai/fermat-dmp-plugin-network-service-wallet-resources-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-network-service-wallet-resources-bitdubai/fermat-dmp-plugin-network-service-wallet-resources-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-network-service-wallet-store-bitdubai/fermat-dmp-plugin-network-service-wallet-store-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-network-service-wallet-store-bitdubai/fermat-dmp-plugin-network-service-wallet-store-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-niche-wallet-type-bank-notes-wallet-bitdubai/fermat-dmp-plugin-niche-wallet-type-bank-notes-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-niche-wallet-type-bank-notes-wallet-bitdubai/fermat-dmp-plugin-niche-wallet-type-bank-notes-wallet-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-niche-wallet-type-crypto-loss-protected-wallet-bitdubai/fermat-dmp-plugin-niche-wallet-type-crypto-loss-protected-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-niche-wallet-type-crypto-loss-protected-wallet-bitdubai/fermat-dmp-plugin-niche-wallet-type-crypto-loss-protected-wallet-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai/fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai/fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-niche-wallet-type-discount-wallet-bitdubai/fermat-dmp-plugin-niche-wallet-type-discount-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-niche-wallet-type-discount-wallet-bitdubai/fermat-dmp-plugin-niche-wallet-type-discount-wallet-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-bitdubai/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-bitdubai/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai/fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai/fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-transaction-incoming-crypto-bitdubai/fermat-dmp-plugin-transaction-incoming-crypto-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-transaction-incoming-crypto-bitdubai/fermat-dmp-plugin-transaction-incoming-crypto-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-transaction-incoming-device-user-bitdubai/fermat-dmp-plugin-transaction-incoming-device-user-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-transaction-incoming-device-user-bitdubai/fermat-dmp-plugin-transaction-incoming-device-user-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai/fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai/fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-transaction-inter-wallet-bitdubai/fermat-dmp-plugin-transaction-inter-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-transaction-inter-wallet-bitdubai/fermat-dmp-plugin-transaction-inter-wallet-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-transaction-outgoing-device-user-bitdubai/fermat-dmp-plugin-transaction-outgoing-device-user-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-transaction-outgoing-device-user-bitdubai/fermat-dmp-plugin-transaction-outgoing-device-user-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai/fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai/fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai/fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai/fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-world-blockchain-info-bitdubai/fermat-dmp-plugin-world-blockchain-info-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-world-blockchain-info-bitdubai/fermat-dmp-plugin-world-blockchain-info-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-world-coinapult-bitdubai/fermat-dmp-plugin-world-coinapult-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-world-coinapult-bitdubai/fermat-dmp-plugin-world-coinapult-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-world-coinbase-bitdubai/fermat-dmp-plugin-world-coinbase-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-world-coinbase-bitdubai/fermat-dmp-plugin-world-coinbase-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-world-crypto-index-bitdubai/fermat-dmp-plugin-world-crypto-index-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-world-crypto-index-bitdubai/fermat-dmp-plugin-world-crypto-index-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-world-location-bitdubai/fermat-dmp-plugin-world-location-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-world-location-bitdubai/fermat-dmp-plugin-world-location-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-plugin-world-shape-shift-bitdubai/fermat-dmp-plugin-world-shape-shift-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-plugin-world-shape-shift-bitdubai/fermat-dmp-plugin-world-shape-shift-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-osa-addon-android-database-system-bitdubai/fermat-osa-addon-android-database-system-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-osa-addon-android-database-system-bitdubai/fermat-osa-addon-android-database-system-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai/fermat-p2p-plugin-communication-cloud-client-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai/fermat-p2p-plugin-communication-cloud-client-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/fermat-p2p-plugin-communication-cloud-server-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/fermat-p2p-plugin-communication-cloud-server-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-addon-hardware-local-device-bitdubai/fermat-pip-addon-hardware-local-device-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-pip-addon-hardware-local-device-bitdubai/fermat-pip-addon-hardware-local-device-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-addon-hardware-remote-device-bitdubai/fermat-pip-addon-hardware-remote-device-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-pip-addon-hardware-remote-device-bitdubai/fermat-pip-addon-hardware-remote-device-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-addon-platform-service-error-manager-bitdubai/fermat-pip-addon-platform-service-error-manager-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-pip-addon-platform-service-error-manager-bitdubai/fermat-pip-addon-platform-service-error-manager-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-addon-platform-service-event-manager-bitdubai/fermat-pip-addon-platform-service-event-manager-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-pip-addon-platform-service-event-manager-bitdubai/fermat-pip-addon-platform-service-event-manager-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-addon-platform-service-location-subsystem-bitdubai/fermat-pip-addon-platform-service-location-subsystem-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-pip-addon-platform-service-location-subsystem-bitdubai/fermat-pip-addon-platform-service-location-subsystem-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-addon-user-device-user-bitdubai/fermat-pip-addon-user-device-user-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-pip-addon-user-device-user-bitdubai/fermat-pip-addon-user-device-user-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-addon-user-extra-user-bitdubai/fermat-pip-addon-user-extra-user-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-pip-addon-user-extra-user-bitdubai/fermat-pip-addon-user-extra-user-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-addon-user-intra-user-bitdubai/fermat-pip-addon-user-intra-user-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-pip-addon-user-intra-user-bitdubai/fermat-pip-addon-user-intra-user-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-android-addon-os-device-connectivity-bitdubai/fermat-pip-android-addon-os-device-connectivity-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-pip-android-addon-os-device-connectivity-bitdubai/fermat-pip-android-addon-os-device-connectivity-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-android-addon-os-device-location-bitdubai/fermat-pip-android-addon-os-device-location-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-pip-android-addon-os-device-location-bitdubai/fermat-pip-android-addon-os-device-location-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-android-addon-os-device-power-bitdubai/fermat-pip-android-addon-os-device-power-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-pip-android-addon-os-device-power-bitdubai/fermat-pip-android-addon-os-device-power-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-android-addon-os-file-system-bitdubai/fermat-pip-android-addon-os-file-system-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-pip-android-addon-os-file-system-bitdubai/fermat-pip-android-addon-os-file-system-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-android-addon-os-logger-bitdubai/fermat-pip-android-addon-os-logger-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-pip-android-addon-os-logger-bitdubai/fermat-pip-android-addon-os-logger-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-api/fermat-pip-api.iml" afterPath="$PROJECT_DIR$/fermat-pip-api/fermat-pip-api.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-core/fermat-pip-core.iml" afterPath="$PROJECT_DIR$/fermat-pip-core/fermat-pip-core.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/fermat_p2p_plugin_communication_cloud_server_bitdubai_1_6_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/fermat_p2p_plugin_communication_cloud_server_bitdubai_1_6_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/fermat_pip_api_1_0_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/fermat_pip_api_1_0_2.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/fermat_pip_api_1_4_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/fermat_pip_api_1_4_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/fermat_pip_api_1_6_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/fermat_pip_api_1_6_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/fermat_pip_api_1_8_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/fermat_pip_api_1_8_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/fest_assert_core_2_0M10.xml" afterPath="$PROJECT_DIR$/.idea/libraries/fest_assert_core_2_0M10.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/fest_util_1_2_5.xml" afterPath="$PROJECT_DIR$/.idea/libraries/fest_util_1_2_5.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/google_api_client_1_18_0_rc.xml" afterPath="$PROJECT_DIR$/.idea/libraries/google_api_client_1_18_0_rc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/google_http_client_1_18_0_rc.xml" afterPath="$PROJECT_DIR$/.idea/libraries/google_http_client_1_18_0_rc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/google_http_client_jackson2_1_18_0_rc.xml" afterPath="$PROJECT_DIR$/.idea/libraries/google_http_client_jackson2_1_18_0_rc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/google_oauth_client_1_18_0_rc.xml" afterPath="$PROJECT_DIR$/.idea/libraries/google_oauth_client_1_18_0_rc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/gson_2_2_4.xml" afterPath="$PROJECT_DIR$/.idea/libraries/gson_2_2_4.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/guava_16_0_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/guava_16_0_1.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/hamcrest_core_1_3.xml" afterPath="$PROJECT_DIR$/.idea/libraries/hamcrest_core_1_3.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/httpclient_4_0_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/httpclient_4_0_1.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/httpcore_4_0_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/httpcore_4_0_1.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/jackson_annotations_2_1_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/jackson_annotations_2_1_2.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/jackson_core_2_1_3.xml" afterPath="$PROJECT_DIR$/.idea/libraries/jackson_core_2_1_3.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/jackson_databind_2_1_3.xml" afterPath="$PROJECT_DIR$/.idea/libraries/jackson_databind_2_1_3.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/jcip_annotations_1_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/jcip_annotations_1_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/json_20080701.xml" afterPath="$PROJECT_DIR$/.idea/libraries/json_20080701.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/jsr305_1_3_9.xml" afterPath="$PROJECT_DIR$/.idea/libraries/jsr305_1_3_9.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/jsr305_2_0_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/jsr305_2_0_1.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/junit_4_11.xml" afterPath="$PROJECT_DIR$/.idea/libraries/junit_4_11.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/junit_4_12.xml" afterPath="$PROJECT_DIR$/.idea/libraries/junit_4_12.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/mockito_all_1_9_5.xml" afterPath="$PROJECT_DIR$/.idea/libraries/mockito_all_1_9_5.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/mockito_all_2_0_2_beta.xml" afterPath="$PROJECT_DIR$/.idea/libraries/mockito_all_2_0_2_beta.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/mockito_core_1_9_5.xml" afterPath="$PROJECT_DIR$/.idea/libraries/mockito_core_1_9_5.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/objenesis_1_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/objenesis_1_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/opengl_api_gl1_1_android_2_1_r1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/opengl_api_gl1_1_android_2_1_r1.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/orchid_1_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/orchid_1_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/otto_1_3_5.xml" afterPath="$PROJECT_DIR$/.idea/libraries/otto_1_3_5.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/play_services_6_5_87.xml" afterPath="$PROJECT_DIR$/.idea/libraries/play_services_6_5_87.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/protobuf_java_2_5_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/protobuf_java_2_5_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/prov_1_50_0_0.xml" afterPath="$PROJECT_DIR$/.idea/libraries/prov_1_50_0_0.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/slf4j_api_1_7_6.xml" afterPath="$PROJECT_DIR$/.idea/libraries/slf4j_api_1_7_6.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/support_annotations_21_0_3.xml" afterPath="$PROJECT_DIR$/.idea/libraries/support_annotations_21_0_3.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/gradle.xml" afterPath="$PROJECT_DIR$/.idea/gradle.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/settings.gradle" afterPath="$PROJECT_DIR$/settings.gradle" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/support_v13_21_0_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/support_v13_21_0_2.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/support_v13_21_0_3.xml" afterPath="$PROJECT_DIR$/.idea/libraries/support_v13_21_0_3.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/support_v4_21_0_3.xml" afterPath="$PROJECT_DIR$/.idea/libraries/support_v4_21_0_3.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/xmlParserAPIs_2_6_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/xmlParserAPIs_2_6_2.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/xpp3_1_1_4c.xml" afterPath="$PROJECT_DIR$/.idea/libraries/xpp3_1_1_4c.xml" />
     </list>
     <ignored path="bitDubai-system.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -183,6 +154,9 @@
     <system id="GRADLE">
       <state>
         <task path="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai">
+          <activation />
+        </task>
+        <task path="$PROJECT_DIR$/fermat-dmp-android-core">
           <activation />
         </task>
         <projects_view>
@@ -284,10 +258,30 @@
   <component name="FileEditorManager">
     <leaf>
       <file leaf-file-name="build.gradle" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/build.gradle">
+        <entry file="file://$PROJECT_DIR$/fermat-dmp-android-core/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.14634146">
-              <caret line="6" column="18" selection-start-line="6" selection-start-column="18" selection-end-line="6" selection-end-column="18" />
+            <state vertical-scroll-proportion="-0.35958904">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="settings.gradle" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/settings.gradle">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-4.137931">
+              <caret line="8" column="14" selection-start-line="8" selection-start-column="14" selection-end-line="8" selection-end-column="14" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/fermat-pip-core/build.gradle">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-7.5">
+              <caret line="15" column="26" selection-start-line="15" selection-start-column="26" selection-end-line="15" selection-end-column="26" />
               <folding />
             </state>
           </provider>
@@ -296,6 +290,7 @@
     </leaf>
   </component>
   <component name="Git.Settings">
+    <option name="UPDATE_TYPE" value="MERGE" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GradleLocalSettings">
@@ -310,10 +305,6 @@
           </key>
           <value>
             <list>
-              <ExternalProjectPojo>
-                <option name="name" value=":fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" />
-                <option name="path" value="$PROJECT_DIR$/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" />
-              </ExternalProjectPojo>
               <ExternalProjectPojo>
                 <option name="name" value=":fermat-dmp-android-core" />
                 <option name="path" value="$PROJECT_DIR$/fermat-dmp-android-core" />
@@ -383,20 +374,16 @@
                 <option name="path" value="$PROJECT_DIR$/fermat-pip-core" />
               </ExternalProjectPojo>
               <ExternalProjectPojo>
+                <option name="name" value=":cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" />
+                <option name="path" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" />
+              </ExternalProjectPojo>
+              <ExternalProjectPojo>
                 <option name="name" value=":fermat-dmp-plugin-world-coinbase-bitdubai" />
                 <option name="path" value="$PROJECT_DIR$/fermat-dmp-plugin-world-coinbase-bitdubai" />
               </ExternalProjectPojo>
               <ExternalProjectPojo>
-                <option name="name" value=":fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
-                <option name="path" value="$PROJECT_DIR$/fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
-              </ExternalProjectPojo>
-              <ExternalProjectPojo>
                 <option name="name" value=":fermat-dmp-android-wallet-runtime-argentina-multi-account-wallet-bitdubai" />
                 <option name="path" value="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-argentina-multi-account-wallet-bitdubai" />
-              </ExternalProjectPojo>
-              <ExternalProjectPojo>
-                <option name="name" value=":fermat-cry-plugin-crypto-module-actor-address-book-bitdubai" />
-                <option name="path" value="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai" />
               </ExternalProjectPojo>
               <ExternalProjectPojo>
                 <option name="name" value=":fermat-dmp-plugin-network-service-bank-notes-bitdubai" />
@@ -437,6 +424,10 @@
               <ExternalProjectPojo>
                 <option name="name" value=":fermat-dmp-android-wallet-store-bitdubai" />
                 <option name="path" value="$PROJECT_DIR$/fermat-dmp-android-wallet-store-bitdubai" />
+              </ExternalProjectPojo>
+              <ExternalProjectPojo>
+                <option name="name" value=":cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
+                <option name="path" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
               </ExternalProjectPojo>
               <ExternalProjectPojo>
                 <option name="name" value=":fermat-pip-android-addon-os-device-power-bitdubai" />
@@ -487,6 +478,10 @@
                 <option name="path" value="$PROJECT_DIR$/fermat-dmp-android-wallet-publisher-bitdubai" />
               </ExternalProjectPojo>
               <ExternalProjectPojo>
+                <option name="name" value=":cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai" />
+                <option name="path" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai" />
+              </ExternalProjectPojo>
+              <ExternalProjectPojo>
                 <option name="name" value=":fermat-dmp-plugin-network-service-crypto-addresses-bitdubai" />
                 <option name="path" value="$PROJECT_DIR$/fermat-dmp-plugin-network-service-crypto-addresses-bitdubai" />
               </ExternalProjectPojo>
@@ -515,6 +510,10 @@
                 <option name="path" value="$PROJECT_DIR$/fermat-pip-android-addon-os-device-location-bitdubai" />
               </ExternalProjectPojo>
               <ExternalProjectPojo>
+                <option name="name" value=":cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai" />
+                <option name="path" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai" />
+              </ExternalProjectPojo>
+              <ExternalProjectPojo>
                 <option name="name" value=":fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai" />
                 <option name="path" value="$PROJECT_DIR$/fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai" />
               </ExternalProjectPojo>
@@ -525,10 +524,6 @@
               <ExternalProjectPojo>
                 <option name="name" value=":fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai" />
                 <option name="path" value="$PROJECT_DIR$/fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai" />
-              </ExternalProjectPojo>
-              <ExternalProjectPojo>
-                <option name="name" value=":fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai" />
-                <option name="path" value="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai" />
               </ExternalProjectPojo>
               <ExternalProjectPojo>
                 <option name="name" value=":fermat-dmp-plugin-module-wallet-runtime-bitdubai" />
@@ -747,7 +742,7 @@
                 <option name="name" value="pmdTest" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Uploads all artifacts belonging to configuration ':fermat-cry-plugin-crypto-network-bitcoin-bitdubai:archives'" />
+                <option name="description" value="Uploads all artifacts belonging to configuration ':cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai:archives'" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="uploadArchives" />
               </ExternalTaskPojo>
@@ -1318,6 +1313,370 @@
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="jenkins" />
+              </ExternalTaskPojo>
+            </list>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai">
+          <value>
+            <list>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles the outputs of this project." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai" />
+                <option name="name" value="assemble" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles and tests this project." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai" />
+                <option name="name" value="build" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles and tests this project and all projects that depend on it." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai" />
+                <option name="name" value="buildDependents" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles and tests this project and all projects it depends on." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai" />
+                <option name="name" value="buildNeeded" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Runs all checks." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai" />
+                <option name="name" value="check" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles classes 'main'." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai" />
+                <option name="name" value="classes" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Deletes the build directory." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai" />
+                <option name="name" value="clean" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Compiles Java source 'main:java'." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai" />
+                <option name="name" value="compileJava" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Compiles Java source 'test:java'." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai" />
+                <option name="name" value="compileTestJava" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles a jar archive containing the main classes." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai" />
+                <option name="name" value="jar" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Generates Javadoc API documentation for the main source code." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai" />
+                <option name="name" value="javadoc" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Processes JVM resources 'main:resources'." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai" />
+                <option name="name" value="processResources" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Processes JVM resources 'test:resources'." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai" />
+                <option name="name" value="processTestResources" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Runs the unit tests." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai" />
+                <option name="name" value="test" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles classes 'test'." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai" />
+                <option name="name" value="testClasses" />
+              </ExternalTaskPojo>
+            </list>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai">
+          <value>
+            <list>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles the outputs of this project." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai" />
+                <option name="name" value="assemble" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles and tests this project." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai" />
+                <option name="name" value="build" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles and tests this project and all projects that depend on it." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai" />
+                <option name="name" value="buildDependents" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles and tests this project and all projects it depends on." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai" />
+                <option name="name" value="buildNeeded" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Runs all checks." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai" />
+                <option name="name" value="check" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles classes 'main'." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai" />
+                <option name="name" value="classes" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Deletes the build directory." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai" />
+                <option name="name" value="clean" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Compiles Java source 'main:java'." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai" />
+                <option name="name" value="compileJava" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Compiles Java source 'test:java'." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai" />
+                <option name="name" value="compileTestJava" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles a jar archive containing the main classes." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai" />
+                <option name="name" value="jar" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Generates Javadoc API documentation for the main source code." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai" />
+                <option name="name" value="javadoc" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Processes JVM resources 'main:resources'." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai" />
+                <option name="name" value="processResources" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Processes JVM resources 'test:resources'." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai" />
+                <option name="name" value="processTestResources" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Runs the unit tests." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai" />
+                <option name="name" value="test" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles classes 'test'." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai" />
+                <option name="name" value="testClasses" />
+              </ExternalTaskPojo>
+            </list>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai">
+          <value>
+            <list>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles the outputs of this project." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
+                <option name="name" value="assemble" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles and tests this project." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
+                <option name="name" value="build" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles and tests this project and all projects that depend on it." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
+                <option name="name" value="buildDependents" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles and tests this project and all projects it depends on." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
+                <option name="name" value="buildNeeded" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Runs all checks." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
+                <option name="name" value="check" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Run Checkstyle analysis for main classes" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
+                <option name="name" value="checkstyleMain" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Run Checkstyle analysis for test classes" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
+                <option name="name" value="checkstyleTest" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles classes 'main'." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
+                <option name="name" value="classes" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Deletes the build directory." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
+                <option name="name" value="clean" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Compiles Java source 'main:java'." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
+                <option name="name" value="compileJava" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Compiles Java source 'test:java'." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
+                <option name="name" value="compileTestJava" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Run FindBugs analysis for main classes" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
+                <option name="name" value="findbugsMain" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Run FindBugs analysis for test classes" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
+                <option name="name" value="findbugsTest" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Installs the 'archives' artifacts into the local Maven repository." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
+                <option name="name" value="install" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles a jar archive containing the main classes." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
+                <option name="name" value="jar" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Generates Javadoc API documentation for the main source code." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
+                <option name="name" value="javadoc" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Run PMD analysis for main classes" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
+                <option name="name" value="pmdMain" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Run PMD analysis for test classes" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
+                <option name="name" value="pmdTest" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Processes JVM resources 'main:resources'." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
+                <option name="name" value="processResources" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Processes JVM resources 'test:resources'." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
+                <option name="name" value="processTestResources" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Runs the unit tests." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
+                <option name="name" value="test" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles classes 'test'." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
+                <option name="name" value="testClasses" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Uploads all artifacts belonging to configuration ':cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai:archives'" />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
+                <option name="name" value="uploadArchives" />
+              </ExternalTaskPojo>
+            </list>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai">
+          <value>
+            <list>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles the outputs of this project." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" />
+                <option name="name" value="assemble" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles and tests this project." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" />
+                <option name="name" value="build" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles and tests this project and all projects that depend on it." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" />
+                <option name="name" value="buildDependents" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles and tests this project and all projects it depends on." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" />
+                <option name="name" value="buildNeeded" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Runs all checks." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" />
+                <option name="name" value="check" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles classes 'main'." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" />
+                <option name="name" value="classes" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Deletes the build directory." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" />
+                <option name="name" value="clean" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Compiles Java source 'main:java'." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" />
+                <option name="name" value="compileJava" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Compiles Java source 'test:java'." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" />
+                <option name="name" value="compileTestJava" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles a jar archive containing the main classes." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" />
+                <option name="name" value="jar" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Generates Javadoc API documentation for the main source code." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" />
+                <option name="name" value="javadoc" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Processes JVM resources 'main:resources'." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" />
+                <option name="name" value="processResources" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Processes JVM resources 'test:resources'." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" />
+                <option name="name" value="processTestResources" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Runs the unit tests." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" />
+                <option name="name" value="test" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Assembles classes 'test'." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" />
+                <option name="name" value="testClasses" />
               </ExternalTaskPojo>
             </list>
           </value>
@@ -13611,7 +13970,7 @@
     </option>
     <option name="modificationStamps">
       <map>
-        <entry key="$PROJECT_DIR$" value="114741908688320" />
+        <entry key="$PROJECT_DIR$" value="114741922419628" />
       </map>
     </option>
     <option name="projectBuildClasspath">
@@ -13693,6 +14052,322 @@
                           </list>
                         </option>
                         <option name="path" value="$PROJECT_DIR$" />
+                      </ExternalModuleBuildClasspathPojo>
+                    </value>
+                  </entry>
+                  <entry key="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai">
+                    <value>
+                      <ExternalModuleBuildClasspathPojo>
+                        <option name="entries">
+                          <list>
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/gradle/1.0.0-rc2/aa497e3a75df838a66b2143e7f30cc497bdd2928/gradle-1.0.0-rc2-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/gradle/1.0.0-rc2/4ac3b23df1c7b2d264337cd467f6df5be2720c29/gradle-1.0.0-rc2.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/builder/1.0.0-rc2/6fe3b4b94576c414a6d54ae1208dddaa37ad1382/builder-1.0.0-rc2-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/builder/1.0.0-rc2/63a3e0c84445cefbad367ab20038e4790338b226/builder-1.0.0-rc2.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.lint/lint/23.2.6/f2adfa35a1e9c80a6a21c298b995aa7d09f39234/lint-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.lint/lint/23.2.6/35162cd0d80dc296651fa1e05b6a620200eefc28/lint-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/net.sf.proguard/proguard-gradle/5.1/1052878364479b1eb101e52e625713d2362973bb/proguard-gradle-5.1-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/net.sf.proguard/proguard-gradle/5.1/672d43cbfde4765080e5bea19c51a2cc45dfc00/proguard-gradle-5.1.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/builder-model/1.0.0-rc2/37d0f0e57807191902d7483526f788400550ed20/builder-model-1.0.0-rc2-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/builder-model/1.0.0-rc2/65aaa74f2001a6a1d867c2f0d30f964faac60814/builder-model-1.0.0-rc2.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.bouncycastle/bcprov-jdk15on/1.48/3824866f059053c43b118eb5a067ea1800d8c913/bcprov-jdk15on-1.48-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.bouncycastle/bcprov-jdk15on/1.48/960dea7c9181ba0b17e8bab0c06a43f0a5f04e65/bcprov-jdk15on-1.48.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/builder-test-api/1.0.0-rc2/6434ca12629506c997df3c74972e68fadbc969e5/builder-test-api-1.0.0-rc2-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/builder-test-api/1.0.0-rc2/118679b795c211e0ab1595368fc00b15ee4521b1/builder-test-api-1.0.0-rc2.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.squareup/javawriter/2.5.0/1b2a0925ff06220c0261b6fd468183cd9e9a9a47/javawriter-2.5.0-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.squareup/javawriter/2.5.0/81241ff7078ef14f42ea2a8995fa09c096256e6b/javawriter-2.5.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools/sdk-common/23.2.6/79895bdd97c7c4d1a9db5a8b7e1dc8d6134e3ea9/sdk-common-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools/sdk-common/23.2.6/44ffe8f46ef2a051bed3e3c086f4b09a292bca71/sdk-common-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools/sdklib/23.2.6/e43e1eaa9278eca87c20a018695041e5077f0e51/sdklib-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools/sdklib/23.2.6/eeb0d4081fde3d0057bf7ecbcea91ef085466a1a/sdklib-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools/common/23.2.6/9b390b94b70be363b3d31f514da29eefd61d1818/common-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools/common/23.2.6/6a0c5ad7acf13286b97106839daffde8ca1a1667/common-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.ddms/ddmlib/23.2.6/4fb2b3f938b51be3a8d18c1406645dbf4da57760/ddmlib-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.ddms/ddmlib/23.2.6/7cd4dc9564407e782232bbe65b58a97e086eb7c7/ddmlib-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.bouncycastle/bcpkix-jdk15on/1.48/8cff777fce5ef53cc35fa569faa8d12faaf34a78/bcpkix-jdk15on-1.48-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.bouncycastle/bcpkix-jdk15on/1.48/28b7614b908a47844bb27e3c94b45b6893656265/bcpkix-jdk15on-1.48.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/manifest-merger/23.2.6/e1fe3f8de0784873266e59a81f5032c92607a5a4/manifest-merger-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/manifest-merger/23.2.6/736405c2c1f31e911acc2b4cfda2b392d8cdea57/manifest-merger-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.eclipse.jdt.core.compiler/ecj/4.2.2/fb9dc21349d06dd00b395af5c42f299df828f9da/ecj-4.2.2-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.eclipse.jdt.core.compiler/ecj/4.2.2/d9fd79499c664bccaf24dbe04be417de6c6af64a/ecj-4.2.2.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.lint/lint-checks/23.2.6/c6ab383cb61c761187a1acb3f84d15f9b13e6969/lint-checks-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.lint/lint-checks/23.2.6/c53b00510c943bcccd5dab010cad53da4045c96c/lint-checks-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/net.sf.proguard/proguard-base/5.1/8fe59a34d305b39211bec38479c0e23114d87805/proguard-base-5.1-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/net.sf.proguard/proguard-base/5.1/dc606dd778fe4685be16d5a171782ccfe0ef5637/proguard-base-5.1.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient/4.1.1/42f6189003f355107f53b937770092517de69710/httpclient-4.1.1-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient/4.1.1/3d1d918f32709e33ba7ddb2c4e8d1c543ebe713e/httpclient-4.1.1.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.apache.httpcomponents/httpmime/4.1/3ac83213baeab2b21fde6c0bf47ed68ea3e6a8da/httpmime-4.1-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.apache.httpcomponents/httpmime/4.1/9ba2dcdf94ce35c8a8e9bff242db0618ca932e92/httpmime-4.1.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.layoutlib/layoutlib-api/23.2.6/771516e5ca4fb3322a0ecb6b23731fcc1b4be0fe/layoutlib-api-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.layoutlib/layoutlib-api/23.2.6/fd3584c3afd5a1038b93f76239da8b2e47ffe0b4/layoutlib-api-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools/dvlib/23.2.6/b10e87918df4de02eb224f1740c9821c337425a8/dvlib-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools/dvlib/23.2.6/97f88bebfa83c537ac200967777a2e5ad989b07d/dvlib-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.apache.commons/commons-compress/1.8.1/3caea4421428752206c7a94c3e3097f0c47f1bb8/commons-compress-1.8.1-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.apache.commons/commons-compress/1.8.1/a698750c16740fd5b3871425f4cb3bbaa87f529d/commons-compress-1.8.1.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.google.guava/guava/17.0/7ca0efbeb87ca845b5d7a0ac9c21a4b7b95f7b28/guava-17.0-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.google.guava/guava/17.0/9c6ef172e8de35fd8d4d8783e4821e57cdef7445/guava-17.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/net.sf.kxml/kxml2/2.3.0/309cd2cff7260e465792fda3dcbb063b730d8050/kxml2-2.3.0-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/net.sf.kxml/kxml2/2.3.0/ccbc77a5fd907ef863c29f3596c6f54ffa4e9442/kxml2-2.3.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.lint/lint-api/23.2.6/be00d5912593583af2ef5486b2dce02bcee3a7f8/lint-api-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.lint/lint-api/23.2.6/f5d94c17f44fc76a8773b9c793c51fc02bd62e0c/lint-api-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.ow2.asm/asm-analysis/4.0/4a33d6206d6d442446a8edbd2b0798ecfaebc229/asm-analysis-4.0-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.ow2.asm/asm-analysis/4.0/1c45d52b6f6c638db13cf3ac12adeb56b254cdd7/asm-analysis-4.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.1/1fdf61e5ba87e0e4676c22677e0b2fe3a05c2fd8/httpcore-4.1-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.1/33fc26c02f8043ab0ede19eadc8c9885386b255c/httpcore-4.1.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/commons-logging/commons-logging/1.1.1/f3f156cbff0e0fb0d64bfce31a352cce4a33bc19/commons-logging-1.1.1-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/commons-logging/commons-logging/1.1.1/5043bfebc3db072ed80fbd362e7caf00e885d8ae/commons-logging-1.1.1.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/commons-codec/commons-codec/1.4/5310da9f90e843883309e9e0bf5950faa79882a0/commons-codec-1.4-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/commons-codec/commons-codec/1.4/4216af16d38465bbab0f3dff8efa14204f7a399a/commons-codec-1.4.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.ow2.asm/asm/4.0/4a33d6206d6d442446a8edbd2b0798ecfaebc229/asm-4.0-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.ow2.asm/asm/4.0/659add6efc75a4715d738e73f07505246edf4d66/asm-4.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.external.lombok/lombok-ast/0.2.2/47ebe619db7def288aad08bd65d26eea6d67f8ee/lombok-ast-0.2.2-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.external.lombok/lombok-ast/0.2.2/57e560b535ceaa14fb6f15422d74594acd6c5b64/lombok-ast-0.2.2.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.ow2.asm/asm-tree/4.0/4a33d6206d6d442446a8edbd2b0798ecfaebc229/asm-tree-4.0-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.ow2.asm/asm-tree/4.0/67bd266cd17adcee486b76952ece4cc85fe248b8/asm-tree-4.0.jar" />
+                          </list>
+                        </option>
+                        <option name="path" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai" />
+                      </ExternalModuleBuildClasspathPojo>
+                    </value>
+                  </entry>
+                  <entry key="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai">
+                    <value>
+                      <ExternalModuleBuildClasspathPojo>
+                        <option name="entries">
+                          <list>
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/gradle/1.0.0-rc2/aa497e3a75df838a66b2143e7f30cc497bdd2928/gradle-1.0.0-rc2-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/gradle/1.0.0-rc2/4ac3b23df1c7b2d264337cd467f6df5be2720c29/gradle-1.0.0-rc2.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/builder/1.0.0-rc2/6fe3b4b94576c414a6d54ae1208dddaa37ad1382/builder-1.0.0-rc2-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/builder/1.0.0-rc2/63a3e0c84445cefbad367ab20038e4790338b226/builder-1.0.0-rc2.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.lint/lint/23.2.6/f2adfa35a1e9c80a6a21c298b995aa7d09f39234/lint-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.lint/lint/23.2.6/35162cd0d80dc296651fa1e05b6a620200eefc28/lint-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/net.sf.proguard/proguard-gradle/5.1/1052878364479b1eb101e52e625713d2362973bb/proguard-gradle-5.1-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/net.sf.proguard/proguard-gradle/5.1/672d43cbfde4765080e5bea19c51a2cc45dfc00/proguard-gradle-5.1.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/builder-model/1.0.0-rc2/37d0f0e57807191902d7483526f788400550ed20/builder-model-1.0.0-rc2-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/builder-model/1.0.0-rc2/65aaa74f2001a6a1d867c2f0d30f964faac60814/builder-model-1.0.0-rc2.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.bouncycastle/bcprov-jdk15on/1.48/3824866f059053c43b118eb5a067ea1800d8c913/bcprov-jdk15on-1.48-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.bouncycastle/bcprov-jdk15on/1.48/960dea7c9181ba0b17e8bab0c06a43f0a5f04e65/bcprov-jdk15on-1.48.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/builder-test-api/1.0.0-rc2/6434ca12629506c997df3c74972e68fadbc969e5/builder-test-api-1.0.0-rc2-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/builder-test-api/1.0.0-rc2/118679b795c211e0ab1595368fc00b15ee4521b1/builder-test-api-1.0.0-rc2.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.squareup/javawriter/2.5.0/1b2a0925ff06220c0261b6fd468183cd9e9a9a47/javawriter-2.5.0-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.squareup/javawriter/2.5.0/81241ff7078ef14f42ea2a8995fa09c096256e6b/javawriter-2.5.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools/sdk-common/23.2.6/79895bdd97c7c4d1a9db5a8b7e1dc8d6134e3ea9/sdk-common-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools/sdk-common/23.2.6/44ffe8f46ef2a051bed3e3c086f4b09a292bca71/sdk-common-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools/sdklib/23.2.6/e43e1eaa9278eca87c20a018695041e5077f0e51/sdklib-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools/sdklib/23.2.6/eeb0d4081fde3d0057bf7ecbcea91ef085466a1a/sdklib-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools/common/23.2.6/9b390b94b70be363b3d31f514da29eefd61d1818/common-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools/common/23.2.6/6a0c5ad7acf13286b97106839daffde8ca1a1667/common-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.ddms/ddmlib/23.2.6/4fb2b3f938b51be3a8d18c1406645dbf4da57760/ddmlib-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.ddms/ddmlib/23.2.6/7cd4dc9564407e782232bbe65b58a97e086eb7c7/ddmlib-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.bouncycastle/bcpkix-jdk15on/1.48/8cff777fce5ef53cc35fa569faa8d12faaf34a78/bcpkix-jdk15on-1.48-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.bouncycastle/bcpkix-jdk15on/1.48/28b7614b908a47844bb27e3c94b45b6893656265/bcpkix-jdk15on-1.48.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/manifest-merger/23.2.6/e1fe3f8de0784873266e59a81f5032c92607a5a4/manifest-merger-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/manifest-merger/23.2.6/736405c2c1f31e911acc2b4cfda2b392d8cdea57/manifest-merger-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.eclipse.jdt.core.compiler/ecj/4.2.2/fb9dc21349d06dd00b395af5c42f299df828f9da/ecj-4.2.2-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.eclipse.jdt.core.compiler/ecj/4.2.2/d9fd79499c664bccaf24dbe04be417de6c6af64a/ecj-4.2.2.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.lint/lint-checks/23.2.6/c6ab383cb61c761187a1acb3f84d15f9b13e6969/lint-checks-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.lint/lint-checks/23.2.6/c53b00510c943bcccd5dab010cad53da4045c96c/lint-checks-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/net.sf.proguard/proguard-base/5.1/8fe59a34d305b39211bec38479c0e23114d87805/proguard-base-5.1-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/net.sf.proguard/proguard-base/5.1/dc606dd778fe4685be16d5a171782ccfe0ef5637/proguard-base-5.1.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient/4.1.1/42f6189003f355107f53b937770092517de69710/httpclient-4.1.1-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient/4.1.1/3d1d918f32709e33ba7ddb2c4e8d1c543ebe713e/httpclient-4.1.1.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.apache.httpcomponents/httpmime/4.1/3ac83213baeab2b21fde6c0bf47ed68ea3e6a8da/httpmime-4.1-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.apache.httpcomponents/httpmime/4.1/9ba2dcdf94ce35c8a8e9bff242db0618ca932e92/httpmime-4.1.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.layoutlib/layoutlib-api/23.2.6/771516e5ca4fb3322a0ecb6b23731fcc1b4be0fe/layoutlib-api-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.layoutlib/layoutlib-api/23.2.6/fd3584c3afd5a1038b93f76239da8b2e47ffe0b4/layoutlib-api-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools/dvlib/23.2.6/b10e87918df4de02eb224f1740c9821c337425a8/dvlib-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools/dvlib/23.2.6/97f88bebfa83c537ac200967777a2e5ad989b07d/dvlib-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.apache.commons/commons-compress/1.8.1/3caea4421428752206c7a94c3e3097f0c47f1bb8/commons-compress-1.8.1-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.apache.commons/commons-compress/1.8.1/a698750c16740fd5b3871425f4cb3bbaa87f529d/commons-compress-1.8.1.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.google.guava/guava/17.0/7ca0efbeb87ca845b5d7a0ac9c21a4b7b95f7b28/guava-17.0-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.google.guava/guava/17.0/9c6ef172e8de35fd8d4d8783e4821e57cdef7445/guava-17.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/net.sf.kxml/kxml2/2.3.0/309cd2cff7260e465792fda3dcbb063b730d8050/kxml2-2.3.0-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/net.sf.kxml/kxml2/2.3.0/ccbc77a5fd907ef863c29f3596c6f54ffa4e9442/kxml2-2.3.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.lint/lint-api/23.2.6/be00d5912593583af2ef5486b2dce02bcee3a7f8/lint-api-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.lint/lint-api/23.2.6/f5d94c17f44fc76a8773b9c793c51fc02bd62e0c/lint-api-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.ow2.asm/asm-analysis/4.0/4a33d6206d6d442446a8edbd2b0798ecfaebc229/asm-analysis-4.0-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.ow2.asm/asm-analysis/4.0/1c45d52b6f6c638db13cf3ac12adeb56b254cdd7/asm-analysis-4.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.1/1fdf61e5ba87e0e4676c22677e0b2fe3a05c2fd8/httpcore-4.1-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.1/33fc26c02f8043ab0ede19eadc8c9885386b255c/httpcore-4.1.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/commons-logging/commons-logging/1.1.1/f3f156cbff0e0fb0d64bfce31a352cce4a33bc19/commons-logging-1.1.1-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/commons-logging/commons-logging/1.1.1/5043bfebc3db072ed80fbd362e7caf00e885d8ae/commons-logging-1.1.1.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/commons-codec/commons-codec/1.4/5310da9f90e843883309e9e0bf5950faa79882a0/commons-codec-1.4-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/commons-codec/commons-codec/1.4/4216af16d38465bbab0f3dff8efa14204f7a399a/commons-codec-1.4.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.ow2.asm/asm/4.0/4a33d6206d6d442446a8edbd2b0798ecfaebc229/asm-4.0-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.ow2.asm/asm/4.0/659add6efc75a4715d738e73f07505246edf4d66/asm-4.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.external.lombok/lombok-ast/0.2.2/47ebe619db7def288aad08bd65d26eea6d67f8ee/lombok-ast-0.2.2-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.external.lombok/lombok-ast/0.2.2/57e560b535ceaa14fb6f15422d74594acd6c5b64/lombok-ast-0.2.2.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.ow2.asm/asm-tree/4.0/4a33d6206d6d442446a8edbd2b0798ecfaebc229/asm-tree-4.0-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.ow2.asm/asm-tree/4.0/67bd266cd17adcee486b76952ece4cc85fe248b8/asm-tree-4.0.jar" />
+                          </list>
+                        </option>
+                        <option name="path" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai" />
+                      </ExternalModuleBuildClasspathPojo>
+                    </value>
+                  </entry>
+                  <entry key="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai">
+                    <value>
+                      <ExternalModuleBuildClasspathPojo>
+                        <option name="entries">
+                          <list>
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/gradle/1.0.0-rc2/aa497e3a75df838a66b2143e7f30cc497bdd2928/gradle-1.0.0-rc2-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/gradle/1.0.0-rc2/4ac3b23df1c7b2d264337cd467f6df5be2720c29/gradle-1.0.0-rc2.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/builder/1.0.0-rc2/6fe3b4b94576c414a6d54ae1208dddaa37ad1382/builder-1.0.0-rc2-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/builder/1.0.0-rc2/63a3e0c84445cefbad367ab20038e4790338b226/builder-1.0.0-rc2.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.lint/lint/23.2.6/f2adfa35a1e9c80a6a21c298b995aa7d09f39234/lint-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.lint/lint/23.2.6/35162cd0d80dc296651fa1e05b6a620200eefc28/lint-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/net.sf.proguard/proguard-gradle/5.1/1052878364479b1eb101e52e625713d2362973bb/proguard-gradle-5.1-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/net.sf.proguard/proguard-gradle/5.1/672d43cbfde4765080e5bea19c51a2cc45dfc00/proguard-gradle-5.1.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/builder-model/1.0.0-rc2/37d0f0e57807191902d7483526f788400550ed20/builder-model-1.0.0-rc2-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/builder-model/1.0.0-rc2/65aaa74f2001a6a1d867c2f0d30f964faac60814/builder-model-1.0.0-rc2.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.bouncycastle/bcprov-jdk15on/1.48/3824866f059053c43b118eb5a067ea1800d8c913/bcprov-jdk15on-1.48-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.bouncycastle/bcprov-jdk15on/1.48/960dea7c9181ba0b17e8bab0c06a43f0a5f04e65/bcprov-jdk15on-1.48.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/builder-test-api/1.0.0-rc2/6434ca12629506c997df3c74972e68fadbc969e5/builder-test-api-1.0.0-rc2-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/builder-test-api/1.0.0-rc2/118679b795c211e0ab1595368fc00b15ee4521b1/builder-test-api-1.0.0-rc2.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.squareup/javawriter/2.5.0/1b2a0925ff06220c0261b6fd468183cd9e9a9a47/javawriter-2.5.0-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.squareup/javawriter/2.5.0/81241ff7078ef14f42ea2a8995fa09c096256e6b/javawriter-2.5.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools/sdk-common/23.2.6/79895bdd97c7c4d1a9db5a8b7e1dc8d6134e3ea9/sdk-common-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools/sdk-common/23.2.6/44ffe8f46ef2a051bed3e3c086f4b09a292bca71/sdk-common-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools/sdklib/23.2.6/e43e1eaa9278eca87c20a018695041e5077f0e51/sdklib-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools/sdklib/23.2.6/eeb0d4081fde3d0057bf7ecbcea91ef085466a1a/sdklib-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools/common/23.2.6/9b390b94b70be363b3d31f514da29eefd61d1818/common-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools/common/23.2.6/6a0c5ad7acf13286b97106839daffde8ca1a1667/common-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.ddms/ddmlib/23.2.6/4fb2b3f938b51be3a8d18c1406645dbf4da57760/ddmlib-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.ddms/ddmlib/23.2.6/7cd4dc9564407e782232bbe65b58a97e086eb7c7/ddmlib-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.bouncycastle/bcpkix-jdk15on/1.48/8cff777fce5ef53cc35fa569faa8d12faaf34a78/bcpkix-jdk15on-1.48-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.bouncycastle/bcpkix-jdk15on/1.48/28b7614b908a47844bb27e3c94b45b6893656265/bcpkix-jdk15on-1.48.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/manifest-merger/23.2.6/e1fe3f8de0784873266e59a81f5032c92607a5a4/manifest-merger-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/manifest-merger/23.2.6/736405c2c1f31e911acc2b4cfda2b392d8cdea57/manifest-merger-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.eclipse.jdt.core.compiler/ecj/4.2.2/fb9dc21349d06dd00b395af5c42f299df828f9da/ecj-4.2.2-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.eclipse.jdt.core.compiler/ecj/4.2.2/d9fd79499c664bccaf24dbe04be417de6c6af64a/ecj-4.2.2.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.lint/lint-checks/23.2.6/c6ab383cb61c761187a1acb3f84d15f9b13e6969/lint-checks-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.lint/lint-checks/23.2.6/c53b00510c943bcccd5dab010cad53da4045c96c/lint-checks-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/net.sf.proguard/proguard-base/5.1/8fe59a34d305b39211bec38479c0e23114d87805/proguard-base-5.1-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/net.sf.proguard/proguard-base/5.1/dc606dd778fe4685be16d5a171782ccfe0ef5637/proguard-base-5.1.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient/4.1.1/42f6189003f355107f53b937770092517de69710/httpclient-4.1.1-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient/4.1.1/3d1d918f32709e33ba7ddb2c4e8d1c543ebe713e/httpclient-4.1.1.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.apache.httpcomponents/httpmime/4.1/3ac83213baeab2b21fde6c0bf47ed68ea3e6a8da/httpmime-4.1-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.apache.httpcomponents/httpmime/4.1/9ba2dcdf94ce35c8a8e9bff242db0618ca932e92/httpmime-4.1.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.layoutlib/layoutlib-api/23.2.6/771516e5ca4fb3322a0ecb6b23731fcc1b4be0fe/layoutlib-api-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.layoutlib/layoutlib-api/23.2.6/fd3584c3afd5a1038b93f76239da8b2e47ffe0b4/layoutlib-api-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools/dvlib/23.2.6/b10e87918df4de02eb224f1740c9821c337425a8/dvlib-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools/dvlib/23.2.6/97f88bebfa83c537ac200967777a2e5ad989b07d/dvlib-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.apache.commons/commons-compress/1.8.1/3caea4421428752206c7a94c3e3097f0c47f1bb8/commons-compress-1.8.1-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.apache.commons/commons-compress/1.8.1/a698750c16740fd5b3871425f4cb3bbaa87f529d/commons-compress-1.8.1.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.google.guava/guava/17.0/7ca0efbeb87ca845b5d7a0ac9c21a4b7b95f7b28/guava-17.0-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.google.guava/guava/17.0/9c6ef172e8de35fd8d4d8783e4821e57cdef7445/guava-17.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/net.sf.kxml/kxml2/2.3.0/309cd2cff7260e465792fda3dcbb063b730d8050/kxml2-2.3.0-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/net.sf.kxml/kxml2/2.3.0/ccbc77a5fd907ef863c29f3596c6f54ffa4e9442/kxml2-2.3.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.lint/lint-api/23.2.6/be00d5912593583af2ef5486b2dce02bcee3a7f8/lint-api-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.lint/lint-api/23.2.6/f5d94c17f44fc76a8773b9c793c51fc02bd62e0c/lint-api-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.ow2.asm/asm-analysis/4.0/4a33d6206d6d442446a8edbd2b0798ecfaebc229/asm-analysis-4.0-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.ow2.asm/asm-analysis/4.0/1c45d52b6f6c638db13cf3ac12adeb56b254cdd7/asm-analysis-4.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.1/1fdf61e5ba87e0e4676c22677e0b2fe3a05c2fd8/httpcore-4.1-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.1/33fc26c02f8043ab0ede19eadc8c9885386b255c/httpcore-4.1.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/commons-logging/commons-logging/1.1.1/f3f156cbff0e0fb0d64bfce31a352cce4a33bc19/commons-logging-1.1.1-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/commons-logging/commons-logging/1.1.1/5043bfebc3db072ed80fbd362e7caf00e885d8ae/commons-logging-1.1.1.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/commons-codec/commons-codec/1.4/5310da9f90e843883309e9e0bf5950faa79882a0/commons-codec-1.4-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/commons-codec/commons-codec/1.4/4216af16d38465bbab0f3dff8efa14204f7a399a/commons-codec-1.4.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.ow2.asm/asm/4.0/4a33d6206d6d442446a8edbd2b0798ecfaebc229/asm-4.0-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.ow2.asm/asm/4.0/659add6efc75a4715d738e73f07505246edf4d66/asm-4.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.external.lombok/lombok-ast/0.2.2/47ebe619db7def288aad08bd65d26eea6d67f8ee/lombok-ast-0.2.2-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.external.lombok/lombok-ast/0.2.2/57e560b535ceaa14fb6f15422d74594acd6c5b64/lombok-ast-0.2.2.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.ow2.asm/asm-tree/4.0/4a33d6206d6d442446a8edbd2b0798ecfaebc229/asm-tree-4.0-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.ow2.asm/asm-tree/4.0/67bd266cd17adcee486b76952ece4cc85fe248b8/asm-tree-4.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.bitcoinj/bitcoinj-core/0.12.3/ef3afa5e4718e895c8bbece98a0b25b4b39c829d/bitcoinj-core-0.12.3.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.madgag.spongycastle/core/1.51.0.0/f642963312ea0e615ad65f28adc5a5b3a2a0862/core-1.51.0.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.google.protobuf/protobuf-java/2.5.0/a10732c76bfacdbd633a7eb0f7968b1059a65dfa/protobuf-java-2.5.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.google.guava/guava/16.0.1/5fa98cd1a63c99a44dd8d3b77e4762b066a5d0c5/guava-16.0.1.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/2.0.1/516c03b21d50a644d538de0f0369c620989cd8f0/jsr305-2.0.1.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/net.jcip/jcip-annotations/1.0/afba4942caaeaf46aab0b976afd57cc7c181467e/jcip-annotations-1.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.bitcoinj/orchid/1.0/bd98285f39f88875bb91bde940d6ca2d020edaa4/orchid-1.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.6/562424e36df3d2327e8e9301a76027fca17d54ea/slf4j-api-1.7.6.jar" />
+                          </list>
+                        </option>
+                        <option name="path" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
+                      </ExternalModuleBuildClasspathPojo>
+                    </value>
+                  </entry>
+                  <entry key="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai">
+                    <value>
+                      <ExternalModuleBuildClasspathPojo>
+                        <option name="entries">
+                          <list>
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/gradle/1.0.0-rc2/aa497e3a75df838a66b2143e7f30cc497bdd2928/gradle-1.0.0-rc2-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/gradle/1.0.0-rc2/4ac3b23df1c7b2d264337cd467f6df5be2720c29/gradle-1.0.0-rc2.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/builder/1.0.0-rc2/6fe3b4b94576c414a6d54ae1208dddaa37ad1382/builder-1.0.0-rc2-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/builder/1.0.0-rc2/63a3e0c84445cefbad367ab20038e4790338b226/builder-1.0.0-rc2.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.lint/lint/23.2.6/f2adfa35a1e9c80a6a21c298b995aa7d09f39234/lint-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.lint/lint/23.2.6/35162cd0d80dc296651fa1e05b6a620200eefc28/lint-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/net.sf.proguard/proguard-gradle/5.1/1052878364479b1eb101e52e625713d2362973bb/proguard-gradle-5.1-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/net.sf.proguard/proguard-gradle/5.1/672d43cbfde4765080e5bea19c51a2cc45dfc00/proguard-gradle-5.1.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/builder-model/1.0.0-rc2/37d0f0e57807191902d7483526f788400550ed20/builder-model-1.0.0-rc2-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/builder-model/1.0.0-rc2/65aaa74f2001a6a1d867c2f0d30f964faac60814/builder-model-1.0.0-rc2.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.bouncycastle/bcprov-jdk15on/1.48/3824866f059053c43b118eb5a067ea1800d8c913/bcprov-jdk15on-1.48-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.bouncycastle/bcprov-jdk15on/1.48/960dea7c9181ba0b17e8bab0c06a43f0a5f04e65/bcprov-jdk15on-1.48.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/builder-test-api/1.0.0-rc2/6434ca12629506c997df3c74972e68fadbc969e5/builder-test-api-1.0.0-rc2-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/builder-test-api/1.0.0-rc2/118679b795c211e0ab1595368fc00b15ee4521b1/builder-test-api-1.0.0-rc2.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.squareup/javawriter/2.5.0/1b2a0925ff06220c0261b6fd468183cd9e9a9a47/javawriter-2.5.0-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.squareup/javawriter/2.5.0/81241ff7078ef14f42ea2a8995fa09c096256e6b/javawriter-2.5.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools/sdk-common/23.2.6/79895bdd97c7c4d1a9db5a8b7e1dc8d6134e3ea9/sdk-common-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools/sdk-common/23.2.6/44ffe8f46ef2a051bed3e3c086f4b09a292bca71/sdk-common-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools/sdklib/23.2.6/e43e1eaa9278eca87c20a018695041e5077f0e51/sdklib-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools/sdklib/23.2.6/eeb0d4081fde3d0057bf7ecbcea91ef085466a1a/sdklib-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools/common/23.2.6/9b390b94b70be363b3d31f514da29eefd61d1818/common-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools/common/23.2.6/6a0c5ad7acf13286b97106839daffde8ca1a1667/common-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.ddms/ddmlib/23.2.6/4fb2b3f938b51be3a8d18c1406645dbf4da57760/ddmlib-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.ddms/ddmlib/23.2.6/7cd4dc9564407e782232bbe65b58a97e086eb7c7/ddmlib-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.bouncycastle/bcpkix-jdk15on/1.48/8cff777fce5ef53cc35fa569faa8d12faaf34a78/bcpkix-jdk15on-1.48-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.bouncycastle/bcpkix-jdk15on/1.48/28b7614b908a47844bb27e3c94b45b6893656265/bcpkix-jdk15on-1.48.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/manifest-merger/23.2.6/e1fe3f8de0784873266e59a81f5032c92607a5a4/manifest-merger-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.build/manifest-merger/23.2.6/736405c2c1f31e911acc2b4cfda2b392d8cdea57/manifest-merger-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.eclipse.jdt.core.compiler/ecj/4.2.2/fb9dc21349d06dd00b395af5c42f299df828f9da/ecj-4.2.2-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.eclipse.jdt.core.compiler/ecj/4.2.2/d9fd79499c664bccaf24dbe04be417de6c6af64a/ecj-4.2.2.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.lint/lint-checks/23.2.6/c6ab383cb61c761187a1acb3f84d15f9b13e6969/lint-checks-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.lint/lint-checks/23.2.6/c53b00510c943bcccd5dab010cad53da4045c96c/lint-checks-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/net.sf.proguard/proguard-base/5.1/8fe59a34d305b39211bec38479c0e23114d87805/proguard-base-5.1-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/net.sf.proguard/proguard-base/5.1/dc606dd778fe4685be16d5a171782ccfe0ef5637/proguard-base-5.1.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient/4.1.1/42f6189003f355107f53b937770092517de69710/httpclient-4.1.1-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient/4.1.1/3d1d918f32709e33ba7ddb2c4e8d1c543ebe713e/httpclient-4.1.1.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.apache.httpcomponents/httpmime/4.1/3ac83213baeab2b21fde6c0bf47ed68ea3e6a8da/httpmime-4.1-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.apache.httpcomponents/httpmime/4.1/9ba2dcdf94ce35c8a8e9bff242db0618ca932e92/httpmime-4.1.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.layoutlib/layoutlib-api/23.2.6/771516e5ca4fb3322a0ecb6b23731fcc1b4be0fe/layoutlib-api-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.layoutlib/layoutlib-api/23.2.6/fd3584c3afd5a1038b93f76239da8b2e47ffe0b4/layoutlib-api-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools/dvlib/23.2.6/b10e87918df4de02eb224f1740c9821c337425a8/dvlib-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools/dvlib/23.2.6/97f88bebfa83c537ac200967777a2e5ad989b07d/dvlib-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.apache.commons/commons-compress/1.8.1/3caea4421428752206c7a94c3e3097f0c47f1bb8/commons-compress-1.8.1-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.apache.commons/commons-compress/1.8.1/a698750c16740fd5b3871425f4cb3bbaa87f529d/commons-compress-1.8.1.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.google.guava/guava/17.0/7ca0efbeb87ca845b5d7a0ac9c21a4b7b95f7b28/guava-17.0-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.google.guava/guava/17.0/9c6ef172e8de35fd8d4d8783e4821e57cdef7445/guava-17.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/net.sf.kxml/kxml2/2.3.0/309cd2cff7260e465792fda3dcbb063b730d8050/kxml2-2.3.0-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/net.sf.kxml/kxml2/2.3.0/ccbc77a5fd907ef863c29f3596c6f54ffa4e9442/kxml2-2.3.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.lint/lint-api/23.2.6/be00d5912593583af2ef5486b2dce02bcee3a7f8/lint-api-23.2.6-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.lint/lint-api/23.2.6/f5d94c17f44fc76a8773b9c793c51fc02bd62e0c/lint-api-23.2.6.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.ow2.asm/asm-analysis/4.0/4a33d6206d6d442446a8edbd2b0798ecfaebc229/asm-analysis-4.0-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.ow2.asm/asm-analysis/4.0/1c45d52b6f6c638db13cf3ac12adeb56b254cdd7/asm-analysis-4.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.1/1fdf61e5ba87e0e4676c22677e0b2fe3a05c2fd8/httpcore-4.1-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.1/33fc26c02f8043ab0ede19eadc8c9885386b255c/httpcore-4.1.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/commons-logging/commons-logging/1.1.1/f3f156cbff0e0fb0d64bfce31a352cce4a33bc19/commons-logging-1.1.1-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/commons-logging/commons-logging/1.1.1/5043bfebc3db072ed80fbd362e7caf00e885d8ae/commons-logging-1.1.1.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/commons-codec/commons-codec/1.4/5310da9f90e843883309e9e0bf5950faa79882a0/commons-codec-1.4-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/commons-codec/commons-codec/1.4/4216af16d38465bbab0f3dff8efa14204f7a399a/commons-codec-1.4.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.ow2.asm/asm/4.0/4a33d6206d6d442446a8edbd2b0798ecfaebc229/asm-4.0-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.ow2.asm/asm/4.0/659add6efc75a4715d738e73f07505246edf4d66/asm-4.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.external.lombok/lombok-ast/0.2.2/47ebe619db7def288aad08bd65d26eea6d67f8ee/lombok-ast-0.2.2-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.android.tools.external.lombok/lombok-ast/0.2.2/57e560b535ceaa14fb6f15422d74594acd6c5b64/lombok-ast-0.2.2.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.ow2.asm/asm-tree/4.0/4a33d6206d6d442446a8edbd2b0798ecfaebc229/asm-tree-4.0-sources.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.ow2.asm/asm-tree/4.0/67bd266cd17adcee486b76952ece4cc85fe248b8/asm-tree-4.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.bitcoinj/bitcoinj-core/0.12.3/ef3afa5e4718e895c8bbece98a0b25b4b39c829d/bitcoinj-core-0.12.3.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.madgag.spongycastle/core/1.51.0.0/f642963312ea0e615ad65f28adc5a5b3a2a0862/core-1.51.0.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.google.protobuf/protobuf-java/2.5.0/a10732c76bfacdbd633a7eb0f7968b1059a65dfa/protobuf-java-2.5.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.google.guava/guava/16.0.1/5fa98cd1a63c99a44dd8d3b77e4762b066a5d0c5/guava-16.0.1.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/com.google.code.findbugs/jsr305/2.0.1/516c03b21d50a644d538de0f0369c620989cd8f0/jsr305-2.0.1.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/net.jcip/jcip-annotations/1.0/afba4942caaeaf46aab0b976afd57cc7c181467e/jcip-annotations-1.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.bitcoinj/orchid/1.0/bd98285f39f88875bb91bde940d6ca2d020edaa4/orchid-1.0.jar" />
+                            <option value="$APPLICATION_HOME_DIR$/gradle-2.2.1/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.6/562424e36df3d2327e8e9301a76027fca17d54ea/slf4j-api-1.7.6.jar" />
+                          </list>
+                        </option>
+                        <option name="path" value="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" />
                       </ExternalModuleBuildClasspathPojo>
                     </value>
                   </entry>
@@ -19845,6 +20520,8 @@
         <option value="$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/structure/dao/ItemByAccountDaoSupport.java" />
         <option value="$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/_15_middleware/bank_notes/developer/bitdubai/version_1/structure/dao/WalletDaoSupport.java" />
         <option value="$PROJECT_DIR$/build.gradle" />
+        <option value="$PROJECT_DIR$/fermat-pip-core/build.gradle" />
+        <option value="$PROJECT_DIR$/settings.gradle" />
       </list>
     </option>
   </component>
@@ -19910,6 +20587,88 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bitDubai-system" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bitDubai-system" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat-pip-core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bitDubai-system" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bitDubai-system" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="cry" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bitDubai-system" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bitDubai-system" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="cry" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bitDubai-system" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bitDubai-system" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="cry" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bitDubai-system" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bitDubai-system" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="cry" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat-cry-plugin-crypto-module-actor-address-book-bitdubai" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
         </subPane>
       </pane>
       <pane id="PackagesPane" />
@@ -19939,6 +20698,130 @@
     <property name="project.structure.last.edited" value="SDKs" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.58161765" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/cry" />
+    </key>
+  </component>
+  <component name="RestoreUpdateTree" date="Moments ago" ActionInfo="_Update">
+    <UpdatedFiles>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Updated from server" />
+        <option name="myStatusName" value="Changed on server" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="CHANGED_ON_SERVER" />
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Updated" />
+          <option name="myStatusName" value="Changed" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="UPDATED" />
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/build.gradle</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/structure/CloudNetworkServiceManager.java</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/test/java/integration/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/cloud/CloudNetworkServiceManager/CloudNetworkServiceManagerIntegrationTest.java</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/test/java/integration/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/cloud/CloudNetworkServiceManager/ConnectionRequestTest.java</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/test/java/integration/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/cloud/CloudServiceManager/CloudServiceIntegrationTest.java</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/test/java/integration/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/cloud/mocks/MockFMPPacketsFactory.java</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/test/java/unit/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/structure/CloudNetworkServiceManager/CloudNetworkServiceManagerUnitTest.java</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/test/java/unit/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/structure/CloudNetworkServiceManager/ConstructionTest.java</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/test/java/unit/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/structure/CloudNetworkServiceManager/EqualsAndHashTest.java</PATH>
+          <PATH vcs="Git" revision="">$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/test/java/unit/com/bitdubai/fermat_p2p_plugin/layer/_11_communication/cloud_server/developer/bitdubai/version_1/structure/CloudServiceManager/RegisterNetworkServiceTest.java</PATH>
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Created" />
+          <option name="myStatusName" value="Created" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="CREATED" />
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Deleted" />
+          <option name="myStatusName" value="Deleted" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="true" />
+          <option name="myId" value="REMOVED_FROM_REPOSITORY" />
+        </FILE-GROUP>
+        <FILE-GROUP>
+          <option name="myUpdateName" value="Restored" />
+          <option name="myStatusName" value="Will be restored" />
+          <option name="mySupportsDeletion" value="false" />
+          <option name="myCanBeAbsent" value="false" />
+          <option name="myId" value="RESTORED" />
+        </FILE-GROUP>
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Modified" />
+        <option name="myStatusName" value="Modified" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="MODIFIED" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Skipped" />
+        <option name="myStatusName" value="Skipped" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="SKIPPED" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Merged with conflicts" />
+        <option name="myStatusName" value="Will be merged with conflicts" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="MERGED_WITH_CONFLICTS" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Merged with tree conflicts" />
+        <option name="myStatusName" value="Merged with tree conflicts" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="MERGED_WITH_TREE_CONFLICT" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Merged with property conflicts" />
+        <option name="myStatusName" value="Will be merged with property conflicts" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="MERGED_WITH_PROPERTY_CONFLICT" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Merged" />
+        <option name="myStatusName" value="Will be merged" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="MERGED" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Not in repository" />
+        <option name="myStatusName" value="Not in repository" />
+        <option name="mySupportsDeletion" value="true" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="UNKNOWN" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Locally added" />
+        <option name="myStatusName" value="Locally added" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="LOCALLY_ADDED" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Locally removed" />
+        <option name="myStatusName" value="Locally removed" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="LOCALLY_REMOVED" />
+      </FILE-GROUP>
+      <FILE-GROUP>
+        <option name="myUpdateName" value="Switched" />
+        <option name="myStatusName" value="Switched" />
+        <option name="mySupportsDeletion" value="false" />
+        <option name="myCanBeAbsent" value="false" />
+        <option name="myId" value="SWITCHED" />
+      </FILE-GROUP>
+    </UpdatedFiles>
   </component>
   <component name="RunManager" selected="Android Application.fermat-dmp-android-core">
     <configuration default="false" name="build" type="GroovyScriptRunConfiguration" factoryName="Groovy" temporary="true">
@@ -20247,6 +21130,12 @@
       <method />
     </configuration>
     <configuration default="true" type="js.build_tools.gulp" factoryName="Gulp.js">
+      <node-options />
+      <gulpfile />
+      <tasks />
+      <arguments />
+      <pass-parent-envs>true</pass-parent-envs>
+      <envs />
       <method />
     </configuration>
     <configuration default="true" type="osgi.bnd.run" factoryName="Run Launcher">
@@ -20276,10 +21165,10 @@
       <method />
     </configuration>
     <list size="4">
-      <item index="0" class="java.lang.String" itemvalue="Groovy.build" />
-      <item index="1" class="java.lang.String" itemvalue="Gradle.bitDubai-system:fermat-p2p-plugin-communication-cloud-server-bitdubai [jenkins]" />
-      <item index="2" class="java.lang.String" itemvalue="Gradle.Tests in 'fermat-dmp-android-core'" />
-      <item index="3" class="java.lang.String" itemvalue="Android Application.fermat-dmp-android-core" />
+      <item index="0" class="java.lang.String" itemvalue="Android Application.fermat-dmp-android-core" />
+      <item index="1" class="java.lang.String" itemvalue="Groovy.build" />
+      <item index="2" class="java.lang.String" itemvalue="Gradle.bitDubai-system:fermat-p2p-plugin-communication-cloud-server-bitdubai [jenkins]" />
+      <item index="3" class="java.lang.String" itemvalue="Gradle.Tests in 'fermat-dmp-android-core'" />
     </list>
     <recent_temporary>
       <list size="3">
@@ -20300,12 +21189,19 @@
       <option name="number" value="Default" />
       <updated>1434271125916</updated>
       <workItem from="1434274420173" duration="105000" />
-      <workItem from="1434274551035" duration="666000" />
+      <workItem from="1434274551035" duration="2498000" />
     </task>
+    <task id="LOCAL-00001" summary="Compiling and Running the APP all without sub-modules">
+      <created>1434275293906</created>
+      <option name="number" value="00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1434275293906</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="771000" />
+    <option name="totallyTimeSpent" value="2603000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="24" width="1855" height="1056" extended-state="6" />
@@ -20320,18 +21216,18 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.328125" sideWeight="0.5041459" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.328125" sideWeight="0.5041459" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.32916668" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290461" sideWeight="0.49143174" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.328125" sideWeight="0.49585405" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.328125" sideWeight="0.49143174" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.328125" sideWeight="0.49585405" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32946378" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="PlantUML" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.34051964" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.36594805" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.328125" sideWeight="0.49143174" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Memory Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -20343,6 +21239,39 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
+    <layout-to-restore>
+      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.328125" sideWeight="0.5041459" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="true" content_ui="tabs" />
+      <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32946378" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.34051964" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.328125" sideWeight="0.49143174" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Memory Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="true" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290461" sideWeight="0.49143174" order="13" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.328125" sideWeight="0.49585405" order="14" side_tool="false" content_ui="tabs" />
+      <window_info id="PlantUML" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+    </layout-to-restore>
   </component>
   <component name="Vcs.Log.UiProperties">
     <option name="RECENTLY_FILTERED_USER_GROUPS">
@@ -20354,6 +21283,10 @@
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Compiling and Running the APP all without sub-modules" />
+    <option name="LAST_COMMIT_MESSAGE" value="Compiling and Running the APP all without sub-modules" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -20473,8 +21406,32 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.14634146">
+        <state vertical-scroll-proportion="0.09677419">
           <caret line="6" column="18" selection-start-line="6" selection-start-column="18" selection-end-line="6" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-pip-core/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-7.5">
+          <caret line="15" column="26" selection-start-line="15" selection-start-column="26" selection-end-line="15" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/settings.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-4.137931">
+          <caret line="8" column="14" selection-start-line="8" selection-start-column="14" selection-end-line="8" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-dmp-android-core/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.35958904">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
