@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="fermat-cry-plugin-crypto-vault-bitcoin-bitdubai.fermat-cry-plugin-crypto-vault-bitcoin-bitdubai-1.0">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/build/libs/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai-1.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

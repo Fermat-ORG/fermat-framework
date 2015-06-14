@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="fermat-dmp-plugin-middleware-app-runtime-bitdubai.fermat-dmp-plugin-middleware-app-runtime-bitdubai-1.0">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/fermat-dmp-plugin-middleware-app-runtime-bitdubai/build/libs/fermat-dmp-plugin-middleware-app-runtime-bitdubai-1.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

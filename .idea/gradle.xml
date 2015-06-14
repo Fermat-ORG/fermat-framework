@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="gradleJvm" value="1.7" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-android-core" />
+            <option value="$PROJECT_DIR$/fermat-dmp-android-shop-manager-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-factory-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-manager-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-publisher-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-argentina-bank-notes-wallet-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-argentina-bitcoin-wallet-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-argentina-discount-wallet-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-argentina-multi-account-wallet-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-argetina-loss-protected-wallet-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-bitcoin-loss-protected-wallet-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-bitcoin-wallet-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-store-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-license-wallet-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-middleware-app-runtime-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-middleware-money-request-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-middleware-wallet-contacts-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-module-wallet-factory-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-module-wallet-manager-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-module-wallet-publisher-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-module-wallet-runtime-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-module-wallet-store-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-network-service-bank-notes-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-network-service-crypto-addresses-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-network-service-intra-user-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-network-service-money-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-network-service-money-request-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-network-service-wallet-community-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-network-service-wallet-resources-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-network-service-wallet-store-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-niche-wallet-type-bank-notes-wallet-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-niche-wallet-type-crypto-loss-protected-wallet-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-niche-wallet-type-discount-wallet-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-transaction-incoming-crypto-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-transaction-incoming-device-user-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-transaction-inter-wallet-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-transaction-outgoing-device-user-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-world-blockchain-info-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-world-coinapult-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-world-coinbase-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-world-crypto-index-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-world-location-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-dmp-plugin-world-shape-shift-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-osa-addon-android-database-system-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-pip-addon-hardware-local-device-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-pip-addon-hardware-remote-device-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-pip-addon-platform-service-error-manager-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-pip-addon-platform-service-event-manager-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-pip-addon-platform-service-location-subsystem-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-pip-addon-user-device-user-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-pip-addon-user-extra-user-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-pip-addon-user-intra-user-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-pip-android-addon-os-device-connectivity-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-pip-android-addon-os-device-location-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-pip-android-addon-os-device-power-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-pip-android-addon-os-file-system-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-pip-android-addon-os-logger-bitdubai" />
+            <option value="$PROJECT_DIR$/fermat-pip-api" />
+            <option value="$PROJECT_DIR$/fermat-pip-core" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>

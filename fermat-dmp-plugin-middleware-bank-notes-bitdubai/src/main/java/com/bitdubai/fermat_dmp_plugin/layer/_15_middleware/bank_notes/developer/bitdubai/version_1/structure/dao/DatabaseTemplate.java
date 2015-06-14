@@ -13,11 +13,11 @@ import java.util.UUID;
 // Packages and classes to import of bitDubai API.
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer._2_os.database_system.DealsWithPluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer._2_os.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer._2_os.database_system.Database;
-import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTransaction;
-import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.DatabaseTransactionFailedException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import static com.bitdubai.fermat_api.layer._3_platform_service.error_manager.UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN;
 import static com.bitdubai.fermat_api.layer._1_definition.enums.Plugins.BITDUBAI_BANK_NOTES_MIDDLEWARE;
 
@@ -39,7 +39,7 @@ import com.bitdubai.fermat_dmp_plugin.layer._15_middleware.bank_notes.developer.
  *  @since   jdk 1.7
  *  @since   05/16/2015
  *  @see     {@link com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors}
- *  @see     {@link com.bitdubai.fermat_api.layer._2_os.database_system.DealsWithPluginDatabaseSystem}
+ *  @see     {@link com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem}
  * */
 public class DatabaseTemplate implements DealsWithErrors, DealsWithPluginDatabaseSystem {
 
@@ -115,10 +115,10 @@ public class DatabaseTemplate implements DealsWithErrors, DealsWithPluginDatabas
             DatabaseTransaction tx = this.database.newTransaction ();
 
             // 2) Get the record.
-            Record record = callBack.doExecute (this.database);
+           // Record record = callBack.doExecute (this.database);
 
             // 3) Insert the new value.
-            tx.addRecordToInsert (record.getTable (), record.getRecord ());
+            //tx.addRecordToInsert (record.getTable (), record.getRecord ());
             this.database.executeTransaction (tx);
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
@@ -164,10 +164,10 @@ public class DatabaseTemplate implements DealsWithErrors, DealsWithPluginDatabas
             DatabaseTransaction tx = this.database.newTransaction ();
 
             // 2) Get the record.
-            Record record = callBack.doExecute (this.database);
+            //Record record = callBack.doExecute (this.database);
 
             // 3) Update the value.
-            tx.addRecordToUpdate (record.getTable (), record.getRecord ());
+            //tx.addRecordToUpdate (record.getTable(), record.getRecord());
             this.database.executeTransaction (tx);
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="fermat-pip-api.fermat-pip-api-2.0.1">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/fermat-pip-api/build/libs/fermat-pip-api-2.0.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
