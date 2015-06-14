@@ -13,7 +13,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="002dcb19-6857-46a5-8dce-b1b1a0984b49" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-core/fermat-dmp-android-core.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-core/fermat-dmp-android-core.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="bitDubai-system.iws" />
@@ -21406,7 +21405,7 @@
       <workItem from="1434274551035" duration="2765000" />
       <workItem from="1434281424303" duration="11168000" />
       <workItem from="1434294465717" duration="1455000" />
-      <workItem from="1434301369938" duration="1969000" />
+      <workItem from="1434301369938" duration="2013000" />
     </task>
     <task id="LOCAL-00001" summary="Compiling and Running the APP all without sub-modules">
       <created>1434275293906</created>
@@ -21492,11 +21491,17 @@
       <option name="project" value="LOCAL" />
       <updated>1434293848282</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="Compiling &amp; Running">
+      <created>1434303476377</created>
+      <option name="number" value="00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1434303476377</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="17462000" />
+    <option name="totallyTimeSpent" value="17506000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="-4" width="1855" height="1084" extended-state="6" />
@@ -21560,7 +21565,8 @@
     <MESSAGE value="osa android mdolules all refactored Part 2" />
     <MESSAGE value="folder _others created and other stuff moved there" />
     <MESSAGE value="pip error manager  &amp; event manager refactored" />
-    <option name="LAST_COMMIT_MESSAGE" value="pip error manager  &amp; event manager refactored" />
+    <MESSAGE value="Compiling &amp; Running" />
+    <option name="LAST_COMMIT_MESSAGE" value="Compiling &amp; Running" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
