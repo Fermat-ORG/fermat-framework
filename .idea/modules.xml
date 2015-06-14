@@ -2,11 +2,11 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/fermat.iml" filepath="$PROJECT_DIR$/fermat.iml" />
       <module fileurl="file://$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/cry_fermat-cry-plugin-crypto-module-actor-address-book-bitdubai.iml" filepath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/cry_fermat-cry-plugin-crypto-module-actor-address-book-bitdubai.iml" />
       <module fileurl="file://$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/cry_fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai.iml" filepath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/cry_fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai.iml" />
       <module fileurl="file://$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/cry_fermat-cry-plugin-crypto-network-bitcoin-bitdubai.iml" filepath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/cry_fermat-cry-plugin-crypto-network-bitcoin-bitdubai.iml" />
       <module fileurl="file://$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/cry_fermat-cry-plugin-crypto-vault-bitcoin-bitdubai.iml" filepath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/cry_fermat-cry-plugin-crypto-vault-bitcoin-bitdubai.iml" />
+      <module fileurl="file://$PROJECT_DIR$/fermat.iml" filepath="$PROJECT_DIR$/fermat.iml" />
       <module fileurl="file://$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai.iml" filepath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai.iml" />
       <module fileurl="file://$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai.iml" filepath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai.iml" />
       <module fileurl="file://$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/fermat-cry-plugin-crypto-network-bitcoin-bitdubai.iml" filepath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/fermat-cry-plugin-crypto-network-bitcoin-bitdubai.iml" />

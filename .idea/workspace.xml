@@ -13,126 +13,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="002dcb19-6857-46a5-8dce-b1b1a0984b49" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/.gitignore" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/.gitignore" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/.gitignore" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/.gitignore" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/actor_address_book/developer/bitdubai/version_1/structure/ActorAddressBook.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/actor_address_book/developer/bitdubai/version_1/structure/ActorAddressBookDatabaseConstants.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/actor_address_book/developer/bitdubai/version_1/structure/ActorAddressBookDatabaseFactory.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/actor_address_book/developer/bitdubai/version_1/ActorAddressBookPluginRoot.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_1_crypto_network/bitcoin/developer/bitdubai/version_1/structure/BitcoinCryptoNetworkMonitoringAgent.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_1_crypto_network/bitcoin/developer/bitdubai/version_1/BitcoinCryptoNetworkPluginRoot.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_2_crypto_vault/developer/bitdubai/version_1/structure/BitcoinCryptoVault.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_2_crypto_vault/developer/bitdubai/version_1/BitcoinCryptoVaultPluginRoot.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_1_crypto_network/bitcoin/developer/bitdubai/version_1/structure/BitcoinEventListeners.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_1_crypto_network/bitcoin/developer/bitdubai/version_1/structure/BitcoinNetworkConfiguration.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_2_crypto_vault/developer/bitdubai/version_1/structure/BitcoinNetworkConfiguration.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/test/java/BitcoinNetworkConnectionTest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/test/java/BitcoinNetworkResumeConnectionTest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_1_crypto_network/bitcoin/developer/bitdubai/version_1/exceptions/CantCreateBlockStoreFileException.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/actor_address_book/developer/bitdubai/version_1/exceptions/CantInitializeActorAddressBookException.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/wallet_address_book/developer/bitdubai/version_1/exceptions/CantInitializeWalletAddressBookException.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_1_crypto_network/bitcoin/developer/bitdubai/version_1/exceptions/CantStartPeerServiceException.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/test/java/ConnectVaultToNetworkTest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/test/java/CreateNewVaultTest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_2_crypto_vault/developer/bitdubai/version_1/structure/CryptoVaultDatabaseConstants.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_2_crypto_vault/developer/bitdubai/version_1/structure/CryptoVaultDatabaseFactory.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/actor_address_book/developer/bitdubai/DeveloperBitDubai.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/wallet_address_book/developer/bitdubai/DeveloperBitDubai.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_1_crypto_network/bitcoin/developer/bitdubai/DeveloperBitDubai.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_2_crypto_vault/developer/bitdubai/DeveloperBitDubai.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/README.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/README.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/README.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/README.md" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_1_crypto_network/bitcoin/developer/bitdubai/version_1/structure/StoredBlockChain.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_2_crypto_vault/developer/bitdubai/version_1/structure/VaultEventListeners.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/wallet_address_book/developer/bitdubai/version_1/structure/WalletAddressBook.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/wallet_address_book/developer/bitdubai/version_1/WalletAddressBookCryptoPluginRoot.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/wallet_address_book/developer/bitdubai/version_1/structure/WalletAddressBookDataBaseConstants.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/wallet_address_book/developer/bitdubai/version_1/structure/WalletAddressBookDataBaseFactory.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/build.gradle" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/build.gradle" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/build.gradle" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/build.gradle" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/config/checkstyle/checkstyle.xml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/cry_fermat-cry-plugin-crypto-module-actor-address-book-bitdubai.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/cry_fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/cry_fermat-cry-plugin-crypto-network-bitcoin-bitdubai.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/cry_fermat-cry-plugin-crypto-vault-bitcoin-bitdubai.iml" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/cry/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai.iml" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/mockito_all_2_0_2_beta.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/.gitignore" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/README.md" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/build.gradle" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai.iml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/actor_address_book/developer/bitdubai/DeveloperBitDubai.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/actor_address_book/developer/bitdubai/version_1/ActorAddressBookPluginRoot.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/actor_address_book/developer/bitdubai/version_1/exceptions/CantInitializeActorAddressBookException.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/actor_address_book/developer/bitdubai/version_1/structure/ActorAddressBook.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/actor_address_book/developer/bitdubai/version_1/structure/ActorAddressBookDatabaseConstants.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/actor_address_book/developer/bitdubai/version_1/structure/ActorAddressBookDatabaseFactory.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/.gitignore" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/README.md" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/build.gradle" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai.iml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/wallet_address_book/developer/bitdubai/DeveloperBitDubai.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/wallet_address_book/developer/bitdubai/version_1/WalletAddressBookCryptoPluginRoot.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/wallet_address_book/developer/bitdubai/version_1/exceptions/CantInitializeWalletAddressBookException.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/wallet_address_book/developer/bitdubai/version_1/structure/WalletAddressBook.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/wallet_address_book/developer/bitdubai/version_1/structure/WalletAddressBookDataBaseConstants.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_3_crypto_module/wallet_address_book/developer/bitdubai/version_1/structure/WalletAddressBookDataBaseFactory.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/.gitignore" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/README.md" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/build.gradle" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/config/checkstyle/checkstyle.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/fermat-cry-plugin-crypto-network-bitcoin-bitdubai.iml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_1_crypto_network/bitcoin/developer/bitdubai/DeveloperBitDubai.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_1_crypto_network/bitcoin/developer/bitdubai/version_1/BitcoinCryptoNetworkPluginRoot.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_1_crypto_network/bitcoin/developer/bitdubai/version_1/exceptions/CantCreateBlockStoreFileException.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_1_crypto_network/bitcoin/developer/bitdubai/version_1/exceptions/CantStartPeerServiceException.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_1_crypto_network/bitcoin/developer/bitdubai/version_1/structure/BitcoinCryptoNetworkMonitoringAgent.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_1_crypto_network/bitcoin/developer/bitdubai/version_1/structure/BitcoinEventListeners.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_1_crypto_network/bitcoin/developer/bitdubai/version_1/structure/BitcoinNetworkConfiguration.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_1_crypto_network/bitcoin/developer/bitdubai/version_1/structure/StoredBlockChain.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/test/java/BitcoinNetworkConnectionTest.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/test/java/BitcoinNetworkResumeConnectionTest.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/.gitignore" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/README.md" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/build.gradle" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai.iml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_2_crypto_vault/developer/bitdubai/DeveloperBitDubai.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_2_crypto_vault/developer/bitdubai/version_1/BitcoinCryptoVaultPluginRoot.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_2_crypto_vault/developer/bitdubai/version_1/structure/BitcoinCryptoVault.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_2_crypto_vault/developer/bitdubai/version_1/structure/BitcoinNetworkConfiguration.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_2_crypto_vault/developer/bitdubai/version_1/structure/CryptoVaultDatabaseConstants.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_2_crypto_vault/developer/bitdubai/version_1/structure/CryptoVaultDatabaseFactory.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/cry_2_crypto_vault/developer/bitdubai/version_1/structure/VaultEventListeners.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/test/java/ConnectVaultToNetworkTest.java" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/test/java/CreateNewVaultTest.java" afterPath="" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-core/build.gradle" afterPath="$PROJECT_DIR$/fermat-pip-core/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-core/fermat-dmp-android-core.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-core/fermat-dmp-android-core.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-shop-manager-bitdubai/fermat-dmp-android-shop-manager-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-shop-manager-bitdubai/fermat-dmp-android-shop-manager-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-wallet-factory-bitdubai/fermat-dmp-android-wallet-factory-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-wallet-factory-bitdubai/fermat-dmp-android-wallet-factory-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-wallet-manager-bitdubai/fermat-dmp-android-wallet-manager-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-wallet-manager-bitdubai/fermat-dmp-android-wallet-manager-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-wallet-publisher-bitdubai/fermat-dmp-android-wallet-publisher-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-wallet-publisher-bitdubai/fermat-dmp-android-wallet-publisher-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai/fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai/fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-argentina-bank-notes-wallet-bitdubai/fermat-dmp-android-wallet-runtime-argentina-bank-notes-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-argentina-bank-notes-wallet-bitdubai/fermat-dmp-android-wallet-runtime-argentina-bank-notes-wallet-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-argentina-bitcoin-wallet-bitdubai/fermat-dmp-android-wallet-runtime-argentina-bitcoin-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-argentina-bitcoin-wallet-bitdubai/fermat-dmp-android-wallet-runtime-argentina-bitcoin-wallet-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-argentina-discount-wallet-bitdubai/fermat-dmp-android-wallet-runtime-argentina-discount-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-argentina-discount-wallet-bitdubai/fermat-dmp-android-wallet-runtime-argentina-discount-wallet-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-argentina-multi-account-wallet-bitdubai/fermat-dmp-android-wallet-runtime-argentina-multi-account-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-argentina-multi-account-wallet-bitdubai/fermat-dmp-android-wallet-runtime-argentina-multi-account-wallet-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-argetina-loss-protected-wallet-bitdubai/fermat-dmp-android-wallet-runtime-argetina-loss-protected-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-argetina-loss-protected-wallet-bitdubai/fermat-dmp-android-wallet-runtime-argetina-loss-protected-wallet-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-bitcoin-loss-protected-wallet-bitdubai/fermat-dmp-android-wallet-runtime-bitcoin-loss-protected-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-bitcoin-loss-protected-wallet-bitdubai/fermat-dmp-android-wallet-runtime-bitcoin-loss-protected-wallet-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-bitcoin-wallet-bitdubai/fermat-dmp-android-wallet-runtime-bitcoin-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-wallet-runtime-bitcoin-wallet-bitdubai/fermat-dmp-android-wallet-runtime-bitcoin-wallet-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-dmp-android-wallet-store-bitdubai/fermat-dmp-android-wallet-store-bitdubai.iml" afterPath="$PROJECT_DIR$/fermat-dmp-android-wallet-store-bitdubai/fermat-dmp-android-wallet-store-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-core/fermat-pip-core.iml" afterPath="$PROJECT_DIR$/fermat-pip-core/fermat-pip-core.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/gradle.xml" afterPath="$PROJECT_DIR$/.idea/gradle.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/settings.gradle" afterPath="$PROJECT_DIR$/settings.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/support_v13_21_0_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/support_v13_21_0_2.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/support_v13_21_0_3.xml" afterPath="$PROJECT_DIR$/.idea/libraries/support_v13_21_0_3.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/support_v4_21_0_3.xml" afterPath="$PROJECT_DIR$/.idea/libraries/support_v4_21_0_3.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/bitDubai-system.iml" afterPath="$PROJECT_DIR$/fermat.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="bitDubai-system.iws" />
@@ -20601,74 +20482,6 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bitDubai-system" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bitDubai-system" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="cry" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bitDubai-system" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bitDubai-system" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="cry" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bitDubai-system" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bitDubai-system" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="cry" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bitDubai-system" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bitDubai-system" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="cry" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat-cry-plugin-crypto-module-actor-address-book-bitdubai" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
       <pane id="PackagesPane" />
@@ -21189,7 +21002,7 @@
       <option name="number" value="Default" />
       <updated>1434271125916</updated>
       <workItem from="1434274420173" duration="105000" />
-      <workItem from="1434274551035" duration="2498000" />
+      <workItem from="1434274551035" duration="2765000" />
     </task>
     <task id="LOCAL-00001" summary="Compiling and Running the APP all without sub-modules">
       <created>1434275293906</created>
@@ -21197,11 +21010,23 @@
       <option name="project" value="LOCAL" />
       <updated>1434275293906</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="cry folder created and projects moved">
+      <created>1434281213348</created>
+      <option name="number" value="00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1434281213348</updated>
+    </task>
+    <task id="LOCAL-00003" summary="cry folder created and projects moved">
+      <created>1434281235094</created>
+      <option name="number" value="00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1434281235094</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="2603000" />
+    <option name="totallyTimeSpent" value="2870000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="24" width="1855" height="1056" extended-state="6" />
@@ -21286,7 +21111,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Compiling and Running the APP all without sub-modules" />
-    <option name="LAST_COMMIT_MESSAGE" value="Compiling and Running the APP all without sub-modules" />
+    <MESSAGE value="cry folder created and projects moved" />
+    <option name="LAST_COMMIT_MESSAGE" value="cry folder created and projects moved" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
