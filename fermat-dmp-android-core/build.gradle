@@ -51,9 +51,9 @@ dependencies {
 
 // OSA Projects
 
-    compile project(':osa/addon/android/fermat-osa-addon-android-database-system-bitdubai')
-    compile project(':osa/addon/android/fermat-osa-addon-android-file-system-bitdubai')
-    compile project(':osa/addon/android/fermat-osa-addon-android-device-location-bitdubai')
+    compile project(':osa:addon:android:fermat-osa-addon-android-database-system-bitdubai')
+    compile project(':osa:addon:android:fermat-osa-addon-android-file-system-bitdubai')
+    compile project(':osa:addon:android:fermat-osa-addon-android-device-location-bitdubai')
 
     
     compile project(':fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai')

@@ -12,24 +12,24 @@ dependencies {
 
 // CRY Projects
 
-    compile project(':cry/plugin/crypto_network/fermat-cry-plugin-crypto-network-bitcoin-bitdubai')
-    compile project(':cry/plugin/crypto_module/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai')
-    compile project(':cry/plugin/crypto_module/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai')
-    compile project(':cry/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai')
+    compile project(':cry:plugin:crypto_network:fermat-cry-plugin-crypto-network-bitcoin-bitdubai')
+    compile project(':cry:plugin:crypto_module:fermat-cry-plugin-crypto-module-actor-address-book-bitdubai')
+    compile project(':cry:plugin:crypto_module:fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai')
+    compile project(':cry:plugin:crypto_vault:fermat-cry-plugin-crypto-vault-bitcoin-bitdubai')
 
 // OSA Projects   --- Hace falta esto aca??
 
-    compile project(':osa/addon/android/fermat-osa-addon-android-database-system-bitdubai')
+    compile project(':osa:addon:android:fermat-osa-addon-android-database-system-bitdubai')
 
 // PIP Projects
 
-    compile project(':pip/addon/platform_service/fermat-pip-addon-platform-service-event-manager-bitdubai')
-    compile project(':pip/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai')
+    compile project(':pip:addon:platform_service:fermat-pip-addon-platform-service-event-manager-bitdubai')
+    compile project(':pip:addon:platform_service:fermat-pip-addon-platform-service-error-manager-bitdubai')
 
 // P2P Projects
 
-    compile project(':p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai')
-    compile project(':p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai')
+    compile project(':p2p:plugin:communication:fermat-p2p-plugin-communication-cloud-client-bitdubai')
+    compile project(':p2p:plugin:communication:fermat-p2p-plugin-communication-cloud-server-bitdubai')
 
 
 
