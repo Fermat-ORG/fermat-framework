@@ -36,49 +36,49 @@ include ':P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-server-
 
 // DMP Projects (Plugins)
 
-include ':dmp/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai'
-include ':dmp/plugin/identity/fermat-dmp-plugin-identity-extra-user-bitdubai'
+include ':DMP/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai'
+include ':DMP/plugin/identity/fermat-dmp-plugin-identity-extra-user-bitdubai'
 
-include ':dmp/plugin/world/fermat-dmp-plugin-world-blockchain-info-bitdubai'
-include ':dmp/plugin/world/fermat-dmp-plugin-world-coinapult-bitdubai'
-include ':dmp/plugin/world/fermat-dmp-plugin-world-crypto-index-bitdubai'
-include ':dmp/plugin/world/fermat-dmp-plugin-world-location-bitdubai'
-include ':dmp/plugin/world/fermat-dmp-plugin-world-shape-shift-bitdubai'
-include ':dmp/plugin/world/fermat-dmp-plugin-world-coinbase-bitdubai'
+include ':DMP/plugin/world/fermat-dmp-plugin-world-blockchain-info-bitdubai'
+include ':DMP/plugin/world/fermat-dmp-plugin-world-coinapult-bitdubai'
+include ':DMP/plugin/world/fermat-dmp-plugin-world-crypto-index-bitdubai'
+include ':DMP/plugin/world/fermat-dmp-plugin-world-location-bitdubai'
+include ':DMP/plugin/world/fermat-dmp-plugin-world-shape-shift-bitdubai'
+include ':DMP/plugin/world/fermat-dmp-plugin-world-coinbase-bitdubai'
 
-include ':dmp/plugin/transaction/fermat-dmp-plugin-transaction-incoming-device-user-bitdubai'
-include ':dmp/plugin/transaction/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai'
-include ':dmp/plugin/transaction/fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai'
-include ':dmp/plugin/transaction/fermat-dmp-plugin-transaction-inter-wallet-bitdubai'
-include ':dmp/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-device-user-bitdubai'
-include ':dmp/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai'
-include ':dmp/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai'
+include ':DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-device-user-bitdubai'
+include ':DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai'
+include ':DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai'
+include ':DMP/plugin/transaction/fermat-dmp-plugin-transaction-inter-wallet-bitdubai'
+include ':DMP/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-device-user-bitdubai'
+include ':DMP/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai'
+include ':DMP/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai'
 
 // DMP Projects (Wallets)
 
-include ':dmp/android/niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-wallet-bitdubai'
-include ':dmp/android/niche_wallet/fermat-dmp-android-niche-wallet-age-kids-boys-bitdubai'
+include ':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-wallet-bitdubai'
+include ':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-age-kids-boys-bitdubai'
 
 /*
 
 Wallets on the pipeline:
 
-include ':dmp/android/niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-loss-protected-wallet-bitdubai'
-include ':dmp/android/niche_wallet/fermat-dmp-android-niche-wallet-argetina-loss-protected-wallet-bitdubai'
-include ':dmp/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-multi-account-wallet-bitdubai'
-include ':dmp/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-discount-wallet-bitdubai'
-include ':dmp/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-bitcoin-wallet-bitdubai'
-include ':dmp/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-bank-notes-wallet-bitdubai'
+include ':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-loss-protected-wallet-bitdubai'
+include ':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argetina-loss-protected-wallet-bitdubai'
+include ':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-multi-account-wallet-bitdubai'
+include ':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-discount-wallet-bitdubai'
+include ':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-bitcoin-wallet-bitdubai'
+include ':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-bank-notes-wallet-bitdubai'
 
 */
 
 // DMP Projects (Sub APPs)
 
-include ':dmp/android/sub_app/fermat-dmp-android-wallet-manager-bitdubai'
-include ':dmp/android/sub_app/fermat-dmp-android-wallet-store-bitdubai'
-include ':dmp/android/sub_app/fermat-dmp-android-wallet-factory-bitdubai'
-include ':dmp/android/sub_app/fermat-dmp-android-wallet-publisher-bitdubai'
-include ':dmp/android/sub_app/fermat-dmp-android-shop-manager-bitdubai'
+include ':DMP/android/sub_app/fermat-dmp-android-wallet-manager-bitdubai'
+include ':DMP/android/sub_app/fermat-dmp-android-wallet-store-bitdubai'
+include ':DMP/android/sub_app/fermat-dmp-android-wallet-factory-bitdubai'
+include ':DMP/android/sub_app/fermat-dmp-android-wallet-publisher-bitdubai'
+include ':DMP/android/sub_app/fermat-dmp-android-shop-manager-bitdubai'
 
 //--------------------------
 

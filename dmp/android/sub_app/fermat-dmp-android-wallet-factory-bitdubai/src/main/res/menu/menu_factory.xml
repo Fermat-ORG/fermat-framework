@@ -1,7 +1,0 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.bitdubai.sub_app.wallet_factory.fragment.version_3.fragment.CommunityFragment">
-    <item android:id="@+id/action_settings" android:title="Enable / Disable"
-        android:orderInCategory="100" app:showAsAction="never" />
-</menu>

@@ -40,23 +40,23 @@ dependencies {
 
 // DMP Projects
 
-    compile project(':dmp/plugin/identity/fermat-dmp-plugin-identity-extra-user-bitdubai')
-    compile project(':dmp/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai')
+    compile project(':DMP/plugin/identity/fermat-dmp-plugin-identity-extra-user-bitdubai')
+    compile project(':DMP/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai')
 
-    compile project(':dmp/plugin/world/fermat-dmp-plugin-world-blockchain-info-bitdubai')
-    compile project(':dmp/plugin/world/fermat-dmp-plugin-world-coinapult-bitdubai')
-    compile project(':dmp/plugin/world/fermat-dmp-plugin-world-crypto-index-bitdubai')
-    compile project(':dmp/plugin/world/fermat-dmp-plugin-world-shape-shift-bitdubai')
-    compile project(':dmp/plugin/world/fermat-dmp-plugin-world-coinbase-bitdubai')
-    compile project(':dmp/plugin/world/fermat-dmp-plugin-world-location-bitdubai')
+    compile project(':DMP/plugin/world/fermat-dmp-plugin-world-blockchain-info-bitdubai')
+    compile project(':DMP/plugin/world/fermat-dmp-plugin-world-coinapult-bitdubai')
+    compile project(':DMP/plugin/world/fermat-dmp-plugin-world-crypto-index-bitdubai')
+    compile project(':DMP/plugin/world/fermat-dmp-plugin-world-shape-shift-bitdubai')
+    compile project(':DMP/plugin/world/fermat-dmp-plugin-world-coinbase-bitdubai')
+    compile project(':DMP/plugin/world/fermat-dmp-plugin-world-location-bitdubai')
 
-    compile project(':dmp/plugin/transaction/fermat-dmp-plugin-transaction-incoming-device-user-bitdubai')
-    compile project(':dmp/plugin/transaction/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai')
-    compile project(':dmp/plugin/transaction/fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai')
-    compile project(':dmp/plugin/transaction/fermat-dmp-plugin-transaction-inter-wallet-bitdubai')
-    compile project(':dmp/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-device-user-bitdubai')
-    compile project(':dmp/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai')
-    compile project(':dmp/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai')
+    compile project(':DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-device-user-bitdubai')
+    compile project(':DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai')
+    compile project(':DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai')
+    compile project(':DMP/plugin/transaction/fermat-dmp-plugin-transaction-inter-wallet-bitdubai')
+    compile project(':DMP/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-device-user-bitdubai')
+    compile project(':DMP/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai')
+    compile project(':DMP/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai')
 
 // -----------------------
 

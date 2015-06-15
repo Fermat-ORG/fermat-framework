@@ -1,7 +1,0 @@
-<resources>
-    <string name="app_name">fermat-dmp-android-wallet-store-bitdubai</string>
-
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
-    <string name="description_search">Search</string>
-</resources>

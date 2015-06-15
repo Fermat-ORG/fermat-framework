@@ -57,30 +57,30 @@ dependencies {
 
 // DMP Projects (Wallets)
 
-    compile project(':dmp/android/niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-wallet-bitdubai')
-    compile project(':dmp/android/niche_wallet/fermat-dmp-android-niche-wallet-age-kids-boys-bitdubai')
+    compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-wallet-bitdubai')
+    compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-age-kids-boys-bitdubai')
 
 /*
 
 Wallets on the pipeline:
 
-    compile project(':dmp/android/niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-loss-protected-wallet-bitdubai')
-    compile project(':dmp/android/niche_wallet/fermat-dmp-android-niche-wallet-argetina-loss-protected-wallet-bitdubai')
-    compile project(':dmp/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-multi-account-wallet-bitdubai')
-    compile project(':dmp/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-discount-wallet-bitdubai')
-    compile project(':dmp/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-bitcoin-wallet-bitdubai')
-    compile project(':dmp/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-bank-notes-wallet-bitdubai')
+    compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-loss-protected-wallet-bitdubai')
+    compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argetina-loss-protected-wallet-bitdubai')
+    compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-multi-account-wallet-bitdubai')
+    compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-discount-wallet-bitdubai')
+    compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-bitcoin-wallet-bitdubai')
+    compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-bank-notes-wallet-bitdubai')
 
 
 */
 
 // DMP Projects (Sub APPs)
 
-    compile project(':dmp/android/sub_app/fermat-dmp-android-wallet-manager-bitdubai')
-    compile project(':dmp/android/sub_app/fermat-dmp-android-wallet-factory-bitdubai')
-    compile project(':dmp/android/sub_app/fermat-dmp-android-wallet-store-bitdubai')
-    compile project(':dmp/android/sub_app/fermat-dmp-android-wallet-publisher-bitdubai')
-    compile project(':dmp/android/sub_app/fermat-dmp-android-shop-manager-bitdubai')
+    compile project(':DMP/android/sub_app/fermat-dmp-android-wallet-manager-bitdubai')
+    compile project(':DMP/android/sub_app/fermat-dmp-android-wallet-factory-bitdubai')
+    compile project(':DMP/android/sub_app/fermat-dmp-android-wallet-store-bitdubai')
+    compile project(':DMP/android/sub_app/fermat-dmp-android-wallet-publisher-bitdubai')
+    compile project(':DMP/android/sub_app/fermat-dmp-android-shop-manager-bitdubai')
 
 
 
