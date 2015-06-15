@@ -23,6 +23,13 @@
             <option value="$PROJECT_DIR$/dmp/android/sub_app/fermat-dmp-android-wallet-store-bitdubai" />
             <option value="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-extra-user-bitdubai" />
             <option value="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai" />
+            <option value="$PROJECT_DIR$/dmp/plugin/transaction/fermat-dmp-plugin-transaction-incoming-device-user-bitdubai" />
+            <option value="$PROJECT_DIR$/dmp/plugin/transaction/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai" />
+            <option value="$PROJECT_DIR$/dmp/plugin/transaction/fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai" />
+            <option value="$PROJECT_DIR$/dmp/plugin/transaction/fermat-dmp-plugin-transaction-inter-wallet-bitdubai" />
+            <option value="$PROJECT_DIR$/dmp/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-device-user-bitdubai" />
+            <option value="$PROJECT_DIR$/dmp/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai" />
+            <option value="$PROJECT_DIR$/dmp/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai" />
             <option value="$PROJECT_DIR$/dmp/plugin/world/fermat-dmp-plugin-world-blockchain-info-bitdubai" />
             <option value="$PROJECT_DIR$/dmp/plugin/world/fermat-dmp-plugin-world-coinapult-bitdubai" />
             <option value="$PROJECT_DIR$/dmp/plugin/world/fermat-dmp-plugin-world-coinbase-bitdubai" />
@@ -59,13 +66,6 @@
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-dmp-plugin-transaction-incoming-device-user-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-dmp-plugin-transaction-inter-wallet-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-dmp-plugin-transaction-outgoing-device-user-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-api" />
             <option value="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-database-system-bitdubai" />
             <option value="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai" />

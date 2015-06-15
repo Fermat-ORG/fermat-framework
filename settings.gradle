@@ -46,6 +46,13 @@ include ':dmp/plugin/world/fermat-dmp-plugin-world-location-bitdubai'
 include ':dmp/plugin/world/fermat-dmp-plugin-world-shape-shift-bitdubai'
 include ':dmp/plugin/world/fermat-dmp-plugin-world-coinbase-bitdubai'
 
+include ':dmp/plugin/transaction/fermat-dmp-plugin-transaction-incoming-device-user-bitdubai'
+include ':dmp/plugin/transaction/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai'
+include ':dmp/plugin/transaction/fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai'
+include ':dmp/plugin/transaction/fermat-dmp-plugin-transaction-inter-wallet-bitdubai'
+include ':dmp/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-device-user-bitdubai'
+include ':dmp/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai'
+include ':dmp/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai'
 
 // DMP Projects (Wallets)
 
@@ -120,13 +127,6 @@ include ':fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai'
 
 
 
-include ':fermat-dmp-plugin-transaction-incoming-device-user-bitdubai'
-include ':fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai'
-include ':fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai'
-include ':fermat-dmp-plugin-transaction-inter-wallet-bitdubai'
-include ':fermat-dmp-plugin-transaction-outgoing-device-user-bitdubai'
-include ':fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai'
-include ':fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai'
 
 include ':fermat-dmp-plugin-license-wallet-bitdubai'
 
