@@ -54,6 +54,14 @@ include ':DMP/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-device-u
 include ':DMP/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai'
 include ':DMP/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai'
 
+include ':DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-bank-notes-wallet-bitdubai'
+include ':DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-crypto-loss-protected-wallet-bitdubai'
+include ':DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai'
+include ':DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-discount-wallet-bitdubai'
+include ':DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-bitdubai'
+include ':DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai'
+include ':DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai'
+
 // DMP Projects (Wallets)
 
 include ':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-wallet-bitdubai'
@@ -116,13 +124,7 @@ include ':fermat-dmp-plugin-network-service-wallet-community-bitdubai'
 include ':fermat-dmp-plugin-network-service-wallet-resources-bitdubai'
 include ':fermat-dmp-plugin-network-service-wallet-store-bitdubai'
 
-include ':fermat-dmp-plugin-niche-wallet-type-bank-notes-wallet-bitdubai'
-include ':fermat-dmp-plugin-niche-wallet-type-crypto-loss-protected-wallet-bitdubai'
-include ':fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai'
-include ':fermat-dmp-plugin-niche-wallet-type-discount-wallet-bitdubai'
-include ':fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-bitdubai'
-include ':fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai'
-include ':fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai'
+
 
 
 

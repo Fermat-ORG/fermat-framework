@@ -23,6 +23,13 @@
             <option value="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-wallet-store-bitdubai" />
             <option value="$PROJECT_DIR$/DMP/plugin/identity/fermat-dmp-plugin-identity-extra-user-bitdubai" />
             <option value="$PROJECT_DIR$/DMP/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai" />
+            <option value="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-bank-notes-wallet-bitdubai" />
+            <option value="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-crypto-loss-protected-wallet-bitdubai" />
+            <option value="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai" />
+            <option value="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-discount-wallet-bitdubai" />
+            <option value="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-bitdubai" />
+            <option value="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai" />
+            <option value="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai" />
             <option value="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-device-user-bitdubai" />
             <option value="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai" />
             <option value="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai" />
@@ -73,13 +80,6 @@
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-network-service-wallet-community-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-network-service-wallet-resources-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-network-service-wallet-store-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-dmp-plugin-niche-wallet-type-bank-notes-wallet-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-dmp-plugin-niche-wallet-type-crypto-loss-protected-wallet-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-dmp-plugin-niche-wallet-type-discount-wallet-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-api" />
           </set>
         </option>

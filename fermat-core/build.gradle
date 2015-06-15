@@ -58,6 +58,16 @@ dependencies {
     compile project(':DMP/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai')
     compile project(':DMP/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai')
 
+    compile project(':DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-bank-notes-wallet-bitdubai')
+    compile project(':DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-crypto-loss-protected-wallet-bitdubai')
+    compile project(':DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai')
+    compile project(':DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-discount-wallet-bitdubai')
+    compile project(':DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai')
+    compile project(':DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai')
+    compile project(':DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-bitdubai')
+
+
+
 // -----------------------
 
 
@@ -93,13 +103,7 @@ dependencies {
 
 
     compile project(':fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai')
-    compile project(':fermat-dmp-plugin-niche-wallet-type-bank-notes-wallet-bitdubai')
-    compile project(':fermat-dmp-plugin-niche-wallet-type-crypto-loss-protected-wallet-bitdubai')
-    compile project(':fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai')
-    compile project(':fermat-dmp-plugin-niche-wallet-type-discount-wallet-bitdubai')
-    compile project(':fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai')
-    compile project(':fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai')
-    compile project(':fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-bitdubai')
+
 
 
 

@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * The interface <code>com.bitdubai.fermat_dmp_plugin.layer._19_niche_wallet_type.crypto_wallet.NicheWalletTypeCryptoWalletManager</code>
+ * The interface <code>com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.crypto_wallet.NicheWalletTypeCryptoWalletManager</code>
  * haves all consumable methods from the plugin
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 10/06/15.
