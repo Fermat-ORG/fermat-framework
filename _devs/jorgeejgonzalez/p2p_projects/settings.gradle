@@ -1,0 +1,24 @@
+
+//projects
+String pipApi = ':fermat-pip-api'
+String cloudClient = ':fermat-p2p-plugin-communication-cloud-client-bitdubai'
+String cloudServer = ':fermat-p2p-plugin-communication-cloud-server-bitdubai'
+
+//buildfiles
+String builderDir = '_devs/jorgeejgonzalez/p2p_projects/builders/'
+String pipApiBuildFile = '../' + builderDir + 'pipapi.gradle'
+String cloudServerBuildFile = '../../../../' + builderDir + 'cloudserver.gradle'
+String cloudClientBuildFile = '../../../../' + builderDir + 'cloudclient.gradle'
+
+//includes
+include pipApi
+project(pipApi).projectDir = new File('../../../fermat-pip-api')
+project(pipApi).buildFileName = pipApiBuildFile
+
+include cloudServer
+project(cloudServer).projectDir = new File('../../../P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai')
+project(cloudServer).buildFileName  = cloudServerBuildFile
+
+include cloudClient
+project(cloudClient).projectDir = new File('../../../P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai')
+project(cloudClient ).buildFileName = cloudClientBuildFile
