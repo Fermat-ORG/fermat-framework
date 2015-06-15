@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$/cry/plugin/crypto_module/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai" />
             <option value="$PROJECT_DIR$/cry/plugin/crypto_module/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai" />
             <option value="$PROJECT_DIR$/cry/plugin/crypto_network/fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
+            <option value="$PROJECT_DIR$/cry/plugin/crypto_router/fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai" />
             <option value="$PROJECT_DIR$/cry/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" />
             <option value="$PROJECT_DIR$/dmp/android/niche_wallet/fermat-dmp-android-niche-wallet-age-kids-boys-bitdubai" />
             <option value="$PROJECT_DIR$/dmp/android/niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-wallet-bitdubai" />
@@ -58,7 +59,6 @@
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-dmp-plugin-transaction-incoming-crypto-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-transaction-incoming-device-user-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai" />

@@ -9,6 +9,7 @@ include ':cry/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitduba
 include ':cry/plugin/crypto_network/fermat-cry-plugin-crypto-network-bitcoin-bitdubai'
 include ':cry/plugin/crypto_module/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai'
 include ':cry/plugin/crypto_module/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai'
+include ':cry/plugin/crypto_router/fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai'
 
 // OSA Projects
 
@@ -115,7 +116,7 @@ include ':fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai'
 
 
 
-include ':fermat-dmp-plugin-transaction-incoming-crypto-bitdubai'
+
 include ':fermat-dmp-plugin-transaction-incoming-device-user-bitdubai'
 include ':fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai'
 include ':fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai'

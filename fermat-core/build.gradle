@@ -16,6 +16,7 @@ dependencies {
     compile project(':cry/plugin/crypto_module/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai')
     compile project(':cry/plugin/crypto_module/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai')
     compile project(':cry/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai')
+    compile project(':cry/plugin/crypto_router/fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai')
 
 // OSA Projects   --- Hace falta esto aca??
 
@@ -70,7 +71,7 @@ dependencies {
     compile project(':fermat-dmp-plugin-network-service-wallet-store-bitdubai')
 
     compile project(':fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai')
-    compile project(':fermat-dmp-plugin-transaction-incoming-crypto-bitdubai')
+
     compile project(':fermat-dmp-plugin-transaction-incoming-device-user-bitdubai')
     compile project(':fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai')
     compile project(':fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai')

@@ -166,7 +166,6 @@
     <orderEntry type="module" module-name="fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-user-device-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-niche-wallet-type-crypto-loss-protected-wallet-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-dmp-plugin-transaction-incoming-crypto-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-wallet-community-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-module-wallet-store-bitdubai" exported="" />
