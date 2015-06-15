@@ -38,7 +38,7 @@ import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.TitleBar;
 import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.enums.Fragments;
 import com.bitdubai.fermat_api.layer._16_module.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.fermat_core.CorePlatformContext;
-import com.bitdubai.fermat_dmp_plugin.layer._17_module.wallet_runtime.developer.bitdubai.version_1.structure.RuntimeFragment;
+import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_runtime.developer.bitdubai.version_1.structure.RuntimeFragment;
 import com.bitdubai.smartwallet.R;
 
 import java.util.Iterator;

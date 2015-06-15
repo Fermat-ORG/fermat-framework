@@ -62,6 +62,21 @@ include ':DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-fiat-
 include ':DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai'
 include ':DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai'
 
+include ':DMP/plugin/network_service/fermat-dmp-plugin-network-service-bank-notes-bitdubai'
+include ':DMP/plugin/network_service/fermat-dmp-plugin-network-service-crypto-addresses-bitdubai'
+include ':DMP/plugin/network_service/fermat-dmp-plugin-network-service-money-bitdubai'
+include ':DMP/plugin/network_service/fermat-dmp-plugin-network-service-intra-user-bitdubai'
+include ':DMP/plugin/network_service/fermat-dmp-plugin-network-service-money-request-bitdubai'
+include ':DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-community-bitdubai'
+include ':DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-resources-bitdubai'
+include ':DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai'
+
+include ':DMP/plugin/module/fermat-dmp-plugin-module-wallet-factory-bitdubai'
+include ':DMP/plugin/module/fermat-dmp-plugin-module-wallet-manager-bitdubai'
+include ':DMP/plugin/module/fermat-dmp-plugin-module-wallet-publisher-bitdubai'
+include ':DMP/plugin/module/fermat-dmp-plugin-module-wallet-runtime-bitdubai'
+include ':DMP/plugin/module/fermat-dmp-plugin-module-wallet-store-bitdubai'
+
 // DMP Projects (Wallets)
 
 include ':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-wallet-bitdubai'
@@ -98,11 +113,6 @@ include ':DMP/android/sub_app/fermat-dmp-android-shop-manager-bitdubai'
 
 
 
-include ':fermat-dmp-plugin-module-wallet-factory-bitdubai'
-include ':fermat-dmp-plugin-module-wallet-manager-bitdubai'
-include ':fermat-dmp-plugin-module-wallet-publisher-bitdubai'
-include ':fermat-dmp-plugin-module-wallet-runtime-bitdubai'
-include ':fermat-dmp-plugin-module-wallet-store-bitdubai'
 
 include ':fermat-dmp-plugin-middleware-app-runtime-bitdubai'
 include ':fermat-dmp-plugin-middleware-bank-notes-bitdubai'
@@ -115,14 +125,6 @@ include ':fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai'
 include ':fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai'
 
 
-include ':fermat-dmp-plugin-network-service-bank-notes-bitdubai'
-include ':fermat-dmp-plugin-network-service-crypto-addresses-bitdubai'
-include ':fermat-dmp-plugin-network-service-money-bitdubai'
-include ':fermat-dmp-plugin-network-service-intra-user-bitdubai'
-include ':fermat-dmp-plugin-network-service-money-request-bitdubai'
-include ':fermat-dmp-plugin-network-service-wallet-community-bitdubai'
-include ':fermat-dmp-plugin-network-service-wallet-resources-bitdubai'
-include ':fermat-dmp-plugin-network-service-wallet-store-bitdubai'
 
 
 

@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.enums.Wallets;
 
 /**
  *
- *  <p>The abstract class <code>com.bitdubai.fermat_api.layer._11_network_service.wallet_resources.WalletResourcesManager/code> is a interface
+ *  <p>The abstract class <code>com.bitdubai.fermat_api.layer.network_service.wallet_resources.WalletResourcesManager/code> is a interface
  *     that define the methods to retrieve wallets resource files.
  *
  *

@@ -11,7 +11,7 @@ import java.util.UUID;
 
 
 /**
- * The interface <code>com.bitdubai.fermat_api.layer._11_network_service.intra_user.IntraUser</code>
+ * The interface <code>com.bitdubai.fermat_api.layer.network_service.intra_user.IntraUser</code>
  * expose the basic method of a Network Intra User
  * <p/>
  *

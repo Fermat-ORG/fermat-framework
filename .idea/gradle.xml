@@ -23,6 +23,19 @@
             <option value="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-wallet-store-bitdubai" />
             <option value="$PROJECT_DIR$/DMP/plugin/identity/fermat-dmp-plugin-identity-extra-user-bitdubai" />
             <option value="$PROJECT_DIR$/DMP/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai" />
+            <option value="$PROJECT_DIR$/DMP/plugin/module/fermat-dmp-plugin-module-wallet-factory-bitdubai" />
+            <option value="$PROJECT_DIR$/DMP/plugin/module/fermat-dmp-plugin-module-wallet-manager-bitdubai" />
+            <option value="$PROJECT_DIR$/DMP/plugin/module/fermat-dmp-plugin-module-wallet-publisher-bitdubai" />
+            <option value="$PROJECT_DIR$/DMP/plugin/module/fermat-dmp-plugin-module-wallet-runtime-bitdubai" />
+            <option value="$PROJECT_DIR$/DMP/plugin/module/fermat-dmp-plugin-module-wallet-store-bitdubai" />
+            <option value="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-bank-notes-bitdubai" />
+            <option value="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-crypto-addresses-bitdubai" />
+            <option value="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-intra-user-bitdubai" />
+            <option value="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-money-bitdubai" />
+            <option value="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-money-request-bitdubai" />
+            <option value="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-community-bitdubai" />
+            <option value="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-resources-bitdubai" />
+            <option value="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai" />
             <option value="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-bank-notes-wallet-bitdubai" />
             <option value="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-crypto-loss-protected-wallet-bitdubai" />
             <option value="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai" />
@@ -67,19 +80,6 @@
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-middleware-bank-notes-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-middleware-money-request-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-middleware-wallet-contacts-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-dmp-plugin-module-wallet-factory-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-dmp-plugin-module-wallet-manager-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-dmp-plugin-module-wallet-publisher-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-dmp-plugin-module-wallet-runtime-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-dmp-plugin-module-wallet-store-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-dmp-plugin-network-service-bank-notes-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-dmp-plugin-network-service-crypto-addresses-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-dmp-plugin-network-service-intra-user-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-dmp-plugin-network-service-money-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-dmp-plugin-network-service-money-request-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-dmp-plugin-network-service-wallet-community-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-dmp-plugin-network-service-wallet-resources-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-dmp-plugin-network-service-wallet-store-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-api" />
           </set>
         </option>
