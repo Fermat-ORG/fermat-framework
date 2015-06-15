@@ -12,11 +12,11 @@ dependencies {
 
 // CRY Projects
 
-    compile project(':cry/plugin/crypto_network/fermat-cry-plugin-crypto-network-bitcoin-bitdubai')
-    compile project(':cry/plugin/crypto_module/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai')
-    compile project(':cry/plugin/crypto_module/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai')
-    compile project(':cry/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai')
-    compile project(':cry/plugin/crypto_router/fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai')
+    compile project(':CRY/plugin/crypto_network/fermat-cry-plugin-crypto-network-bitcoin-bitdubai')
+    compile project(':CRY/plugin/crypto_module/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai')
+    compile project(':CRY/plugin/crypto_module/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai')
+    compile project(':CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai')
+    compile project(':CRY/plugin/crypto_router/fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai')
 
 // OSA Projects   --- Hace falta esto aca??
 
@@ -24,19 +24,19 @@ dependencies {
 
 // PIP Projects
 
-    compile project(':pip/addon/platform_service/fermat-pip-addon-platform-service-event-manager-bitdubai')
-    compile project(':pip/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai')
-    compile project(':pip/addon/platform_service/fermat-pip-addon-platform-service-location-subsystem-bitdubai')
-    compile project(':pip/addon/hardware/fermat-pip-addon-hardware-local-device-bitdubai')
-    compile project(':pip/addon/hardware/fermat-pip-addon-hardware-remote-device-bitdubai')
-    compile project(':pip/addon/user/fermat-pip-addon-user-device-user-bitdubai')
+    compile project(':PIP/addon/platform_service/fermat-pip-addon-platform-service-event-manager-bitdubai')
+    compile project(':PIP/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai')
+    compile project(':PIP/addon/platform_service/fermat-pip-addon-platform-service-location-subsystem-bitdubai')
+    compile project(':PIP/addon/hardware/fermat-pip-addon-hardware-local-device-bitdubai')
+    compile project(':PIP/addon/hardware/fermat-pip-addon-hardware-remote-device-bitdubai')
+    compile project(':PIP/addon/user/fermat-pip-addon-user-device-user-bitdubai')
 
 
 
 // P2P Projects
 
-    compile project(':p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai')
-    compile project(':p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai')
+    compile project(':P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai')
+    compile project(':P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai')
 
 // DMP Projects
 

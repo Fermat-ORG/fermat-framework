@@ -5,11 +5,11 @@ include ':fermat-pip-api'
 
 // CRY Projects
 
-include ':cry/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai'
-include ':cry/plugin/crypto_network/fermat-cry-plugin-crypto-network-bitcoin-bitdubai'
-include ':cry/plugin/crypto_module/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai'
-include ':cry/plugin/crypto_module/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai'
-include ':cry/plugin/crypto_router/fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai'
+include ':CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai'
+include ':CRY/plugin/crypto_network/fermat-cry-plugin-crypto-network-bitcoin-bitdubai'
+include ':CRY/plugin/crypto_module/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai'
+include ':CRY/plugin/crypto_module/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai'
+include ':CRY/plugin/crypto_router/fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai'
 
 // OSA Projects
 
@@ -22,17 +22,17 @@ include ':osa/addon/android/fermat-osa-addon-android-logger-bitdubai'
 
 // PIP Projects
 
-include ':pip/addon/platform_service/fermat-pip-addon-platform-service-event-manager-bitdubai'
-include ':pip/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai'
-include ':pip/addon/platform_service/fermat-pip-addon-platform-service-location-subsystem-bitdubai'
-include ':pip/addon/hardware/fermat-pip-addon-hardware-local-device-bitdubai'
-include ':pip/addon/hardware/fermat-pip-addon-hardware-remote-device-bitdubai'
-include ':pip/addon/user/fermat-pip-addon-user-device-user-bitdubai'
+include ':PIP/addon/platform_service/fermat-pip-addon-platform-service-event-manager-bitdubai'
+include ':PIP/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai'
+include ':PIP/addon/platform_service/fermat-pip-addon-platform-service-location-subsystem-bitdubai'
+include ':PIP/addon/hardware/fermat-pip-addon-hardware-local-device-bitdubai'
+include ':PIP/addon/hardware/fermat-pip-addon-hardware-remote-device-bitdubai'
+include ':PIP/addon/user/fermat-pip-addon-user-device-user-bitdubai'
 
 // P2P Projects
 
-include ':p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai'
-include ':p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai'
+include ':P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai'
+include ':P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai'
 
 // DMP Projects (Plugins)
 

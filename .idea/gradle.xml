@@ -9,11 +9,19 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/cry/plugin/crypto_module/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai" />
-            <option value="$PROJECT_DIR$/cry/plugin/crypto_module/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai" />
-            <option value="$PROJECT_DIR$/cry/plugin/crypto_network/fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
-            <option value="$PROJECT_DIR$/cry/plugin/crypto_router/fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai" />
-            <option value="$PROJECT_DIR$/cry/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" />
+            <option value="$PROJECT_DIR$/CRY/plugin/crypto_module/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai" />
+            <option value="$PROJECT_DIR$/CRY/plugin/crypto_module/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai" />
+            <option value="$PROJECT_DIR$/CRY/plugin/crypto_network/fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
+            <option value="$PROJECT_DIR$/CRY/plugin/crypto_router/fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai" />
+            <option value="$PROJECT_DIR$/CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" />
+            <option value="$PROJECT_DIR$/P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
+            <option value="$PROJECT_DIR$/P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
+            <option value="$PROJECT_DIR$/PIP/addon/hardware/fermat-pip-addon-hardware-local-device-bitdubai" />
+            <option value="$PROJECT_DIR$/PIP/addon/hardware/fermat-pip-addon-hardware-remote-device-bitdubai" />
+            <option value="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai" />
+            <option value="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-event-manager-bitdubai" />
+            <option value="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-location-subsystem-bitdubai" />
+            <option value="$PROJECT_DIR$/PIP/addon/user/fermat-pip-addon-user-device-user-bitdubai" />
             <option value="$PROJECT_DIR$/dmp/android/niche_wallet/fermat-dmp-android-niche-wallet-age-kids-boys-bitdubai" />
             <option value="$PROJECT_DIR$/dmp/android/niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-wallet-bitdubai" />
             <option value="$PROJECT_DIR$/dmp/android/sub_app/fermat-dmp-android-shop-manager-bitdubai" />
@@ -73,14 +81,6 @@
             <option value="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-power-bitdubai" />
             <option value="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-file-system-bitdubai" />
             <option value="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-logger-bitdubai" />
-            <option value="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-            <option value="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
-            <option value="$PROJECT_DIR$/pip/addon/hardware/fermat-pip-addon-hardware-local-device-bitdubai" />
-            <option value="$PROJECT_DIR$/pip/addon/hardware/fermat-pip-addon-hardware-remote-device-bitdubai" />
-            <option value="$PROJECT_DIR$/pip/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai" />
-            <option value="$PROJECT_DIR$/pip/addon/platform_service/fermat-pip-addon-platform-service-event-manager-bitdubai" />
-            <option value="$PROJECT_DIR$/pip/addon/platform_service/fermat-pip-addon-platform-service-location-subsystem-bitdubai" />
-            <option value="$PROJECT_DIR$/pip/addon/user/fermat-pip-addon-user-device-user-bitdubai" />
           </set>
         </option>
       </GradleProjectSettings>
