@@ -127,17 +127,18 @@
     <orderEntry type="library" exported="" name="google-http-client-jackson2-1.18.0-rc" level="project" />
     <orderEntry type="library" exported="" name="commons-collections-3.2" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-21.0.3" level="project" />
+    <orderEntry type="library" exported="" name="dmp/android/niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-wallet-bitdubai-unspecified" level="project" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-wallet-resources-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-money-request-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-module-wallet-manager-bitdubai" exported="" />
+    <orderEntry type="library" exported="" name="dmp/android/niche_wallet/fermat-dmp-android-niche-wallet-age-kids-boys-bitdubai-unspecified" level="project" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-app-runtime-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-transaction-inter-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-wallet-store-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-intra-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-android-wallet-publisher-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-core" exported="" />
-    <orderEntry type="library" exported="" name="dmp/android/wallet_runtime/fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai-unspecified" level="project" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-wallet-contacts-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-transaction-outgoing-device-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-android-shop-manager-bitdubai" exported="" />
@@ -150,7 +151,6 @@
     <orderEntry type="module" module-name="fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-hardware-remote-device-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-bank-notes-bitdubai" exported="" />
-    <orderEntry type="library" exported="" name="dmp/android/wallet_runtime/fermat-dmp-android-wallet-runtime-bitcoin-wallet-bitdubai-unspecified" level="project" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-transaction-incoming-device-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-android-wallet-store-bitdubai" exported="" />

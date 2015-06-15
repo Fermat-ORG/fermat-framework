@@ -45,19 +45,19 @@ include ':dmp/plugin/world/fermat-dmp-plugin-world-coinbase-bitdubai'
 
 // DMP Projects (Wallets)
 
-include ':dmp/android/wallet_runtime/fermat-dmp-android-wallet-runtime-bitcoin-wallet-bitdubai'
-include ':dmp/android/wallet_runtime/fermat-dmp-android-wallet-runtime-age-kids-boys-bitdubai'
+include ':dmp/android/niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-wallet-bitdubai'
+include ':dmp/android/niche_wallet/fermat-dmp-android-niche-wallet-age-kids-boys-bitdubai'
 
 /*
 
 Wallets on the pipeline:
 
-include ':dmp/android/wallet_runtime/fermat-dmp-android-wallet-runtime-bitcoin-loss-protected-wallet-bitdubai'
-include ':dmp/android/wallet_runtime/fermat-dmp-android-wallet-runtime-argetina-loss-protected-wallet-bitdubai'
-include ':dmp/android/wallet_runtime/fermat-dmp-android-wallet-runtime-argentina-multi-account-wallet-bitdubai'
-include ':dmp/android/wallet_runtime/fermat-dmp-android-wallet-runtime-argentina-discount-wallet-bitdubai'
-include ':dmp/android/wallet_runtime/fermat-dmp-android-wallet-runtime-argentina-bitcoin-wallet-bitdubai'
-include ':dmp/android/wallet_runtime/fermat-dmp-android-wallet-runtime-argentina-bank-notes-wallet-bitdubai'
+include ':dmp/android/niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-loss-protected-wallet-bitdubai'
+include ':dmp/android/niche_wallet/fermat-dmp-android-niche-wallet-argetina-loss-protected-wallet-bitdubai'
+include ':dmp/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-multi-account-wallet-bitdubai'
+include ':dmp/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-discount-wallet-bitdubai'
+include ':dmp/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-bitcoin-wallet-bitdubai'
+include ':dmp/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-bank-notes-wallet-bitdubai'
 
 */
 
