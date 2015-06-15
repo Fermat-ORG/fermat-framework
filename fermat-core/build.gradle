@@ -20,7 +20,7 @@ dependencies {
 
 // OSA Projects   --- Hace falta esto aca??
 
-    compile project(':osa/addon/android/fermat-osa-addon-android-database-system-bitdubai')
+    compile project(':OSA/addon/android/fermat-osa-addon-android-database-system-bitdubai')
 
 // PIP Projects
 

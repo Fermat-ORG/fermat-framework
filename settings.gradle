@@ -13,12 +13,12 @@ include ':CRY/plugin/crypto_router/fermat-cry-plugin-crypto-router-incoming-cryp
 
 // OSA Projects
 
-include ':osa/addon/android/fermat-osa-addon-android-database-system-bitdubai'
-include ':osa/addon/android/fermat-osa-addon-android-file-system-bitdubai'
-include ':osa/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai'
-include ':osa/addon/android/fermat-osa-addon-android-device-location-bitdubai'
-include ':osa/addon/android/fermat-osa-addon-android-device-power-bitdubai'
-include ':osa/addon/android/fermat-osa-addon-android-logger-bitdubai'
+include ':OSA/addon/android/fermat-osa-addon-android-database-system-bitdubai'
+include ':OSA/addon/android/fermat-osa-addon-android-file-system-bitdubai'
+include ':OSA/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai'
+include ':OSA/addon/android/fermat-osa-addon-android-device-location-bitdubai'
+include ':OSA/addon/android/fermat-osa-addon-android-device-power-bitdubai'
+include ':OSA/addon/android/fermat-osa-addon-android-logger-bitdubai'
 
 // PIP Projects
 

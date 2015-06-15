@@ -36,6 +36,12 @@
             <option value="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-crypto-index-bitdubai" />
             <option value="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-location-bitdubai" />
             <option value="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-shape-shift-bitdubai" />
+            <option value="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-database-system-bitdubai" />
+            <option value="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai" />
+            <option value="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-device-location-bitdubai" />
+            <option value="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-device-power-bitdubai" />
+            <option value="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-file-system-bitdubai" />
+            <option value="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-logger-bitdubai" />
             <option value="$PROJECT_DIR$/P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
             <option value="$PROJECT_DIR$/P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
             <option value="$PROJECT_DIR$/PIP/addon/hardware/fermat-pip-addon-hardware-local-device-bitdubai" />
@@ -75,12 +81,6 @@
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-api" />
-            <option value="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-database-system-bitdubai" />
-            <option value="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai" />
-            <option value="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-location-bitdubai" />
-            <option value="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-power-bitdubai" />
-            <option value="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-file-system-bitdubai" />
-            <option value="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-logger-bitdubai" />
           </set>
         </option>
       </GradleProjectSettings>
