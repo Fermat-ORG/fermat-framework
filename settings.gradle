@@ -25,6 +25,9 @@ include ':osa/addon/android/fermat-osa-addon-android-logger-bitdubai'
 include ':pip/addon/platform_service/fermat-pip-addon-platform-service-event-manager-bitdubai'
 include ':pip/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai'
 include ':pip/addon/platform_service/fermat-pip-addon-platform-service-location-subsystem-bitdubai'
+include ':pip/addon/hardware/fermat-pip-addon-hardware-local-device-bitdubai'
+include ':pip/addon/hardware/fermat-pip-addon-hardware-remote-device-bitdubai'
+include ':pip/addon/user/fermat-pip-addon-user-device-user-bitdubai'
 
 // P2P Projects
 
@@ -131,11 +134,7 @@ include ':fermat-dmp-plugin-license-wallet-bitdubai'
 
 
 
-include ':fermat-pip-addon-hardware-local-device-bitdubai'
 
-include ':fermat-pip-addon-hardware-remote-device-bitdubai'
-
-include ':fermat-pip-addon-user-device-user-bitdubai'
 
 
 

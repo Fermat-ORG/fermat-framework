@@ -27,6 +27,11 @@ dependencies {
     compile project(':pip/addon/platform_service/fermat-pip-addon-platform-service-event-manager-bitdubai')
     compile project(':pip/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai')
     compile project(':pip/addon/platform_service/fermat-pip-addon-platform-service-location-subsystem-bitdubai')
+    compile project(':pip/addon/hardware/fermat-pip-addon-hardware-local-device-bitdubai')
+    compile project(':pip/addon/hardware/fermat-pip-addon-hardware-remote-device-bitdubai')
+    compile project(':pip/addon/user/fermat-pip-addon-user-device-user-bitdubai')
+
+
 
 // P2P Projects
 
@@ -58,9 +63,7 @@ dependencies {
     compile project(':fermat-dmp-plugin-module-wallet-runtime-bitdubai')
     compile project(':fermat-dmp-plugin-module-wallet-store-bitdubai')
 
-    compile project(':fermat-pip-addon-hardware-local-device-bitdubai')
-    compile project(':fermat-pip-addon-hardware-remote-device-bitdubai')
-    compile project(':fermat-pip-addon-user-device-user-bitdubai')
+
 
     compile project(':fermat-dmp-plugin-network-service-bank-notes-bitdubai')
     compile project(':fermat-dmp-plugin-network-service-crypto-addresses-bitdubai')

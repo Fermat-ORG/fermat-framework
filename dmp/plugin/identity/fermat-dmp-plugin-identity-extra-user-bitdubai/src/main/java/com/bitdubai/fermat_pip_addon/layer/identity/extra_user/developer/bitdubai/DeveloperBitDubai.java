@@ -1,8 +1,8 @@
-package com.bitdubai.fermat_pip_addon.layer.identity.extra_user.developer.bitdubai;
+package com.bitdubai.fermat_pip_addon.layer.user.extra_user.developer.bitdubai;
 
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.AddonDeveloper;
-import com.bitdubai.fermat_pip_addon.layer.identity.extra_user.developer.bitdubai.version_1.ExtraUserUserAddonRoot;
+import com.bitdubai.fermat_pip_addon.layer.user.extra_user.developer.bitdubai.version_1.ExtraUserUserAddonRoot;
 
 /**
  * Created by loui on 22/02/15.

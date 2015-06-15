@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_pip_addon.layer.identity.extra_user.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_pip_addon.layer.user.extra_user.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer._1_definition.enums.Addons;
 

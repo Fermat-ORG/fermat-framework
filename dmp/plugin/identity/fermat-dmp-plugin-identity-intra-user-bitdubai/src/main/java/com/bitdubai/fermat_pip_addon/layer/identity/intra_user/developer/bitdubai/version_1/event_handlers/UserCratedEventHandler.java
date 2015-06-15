@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_pip_addon.layer.identity.intra_user.developer.bitdubai.version_1.event_handlers;
+package com.bitdubai.fermat_pip_addon.layer.user.intra_user.developer.bitdubai.version_1.event_handlers;
 
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;

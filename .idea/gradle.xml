@@ -66,9 +66,6 @@
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-transaction-outgoing-device-user-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-pip-addon-hardware-local-device-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-pip-addon-hardware-remote-device-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-pip-addon-user-device-user-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-api" />
             <option value="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-database-system-bitdubai" />
             <option value="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai" />
@@ -78,9 +75,12 @@
             <option value="$PROJECT_DIR$/osa/addon/android/fermat-osa-addon-android-logger-bitdubai" />
             <option value="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
             <option value="$PROJECT_DIR$/p2p/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
+            <option value="$PROJECT_DIR$/pip/addon/hardware/fermat-pip-addon-hardware-local-device-bitdubai" />
+            <option value="$PROJECT_DIR$/pip/addon/hardware/fermat-pip-addon-hardware-remote-device-bitdubai" />
             <option value="$PROJECT_DIR$/pip/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai" />
             <option value="$PROJECT_DIR$/pip/addon/platform_service/fermat-pip-addon-platform-service-event-manager-bitdubai" />
             <option value="$PROJECT_DIR$/pip/addon/platform_service/fermat-pip-addon-platform-service-location-subsystem-bitdubai" />
+            <option value="$PROJECT_DIR$/pip/addon/user/fermat-pip-addon-user-device-user-bitdubai" />
           </set>
         </option>
       </GradleProjectSettings>
