@@ -14,6 +14,7 @@
             <option value="$PROJECT_DIR$/CRY/plugin/crypto_network/fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
             <option value="$PROJECT_DIR$/CRY/plugin/crypto_router/fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai" />
             <option value="$PROJECT_DIR$/CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" />
+            <option value="$PROJECT_DIR$/DMP/addon/license/fermat-dmp-addon-license-wallet-bitdubai" />
             <option value="$PROJECT_DIR$/DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-age-kids-boys-bitdubai" />
             <option value="$PROJECT_DIR$/DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-wallet-bitdubai" />
             <option value="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-shop-manager-bitdubai" />
@@ -79,7 +80,6 @@
             <option value="$PROJECT_DIR$/PIP/addon/user/fermat-pip-addon-user-device-user-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-android-core" />
             <option value="$PROJECT_DIR$/fermat-core" />
-            <option value="$PROJECT_DIR$/fermat-dmp-plugin-license-wallet-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-pip-api" />
           </set>
         </option>

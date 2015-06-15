@@ -136,6 +136,5 @@
     <orderEntry type="library" exported="" name="DMP/android/sub_app/fermat-dmp-android-shop-manager-bitdubai-unspecified" level="project" />
     <orderEntry type="library" exported="" name="DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-age-kids-boys-bitdubai-unspecified" level="project" />
     <orderEntry type="library" exported="" name="DMP/android/sub_app/fermat-dmp-android-wallet-store-bitdubai-unspecified" level="project" />
-    <orderEntry type="module" module-name="fermat-dmp-plugin-license-wallet-bitdubai" exported="" />
   </component>
 </module>

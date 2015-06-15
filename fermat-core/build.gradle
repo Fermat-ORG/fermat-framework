@@ -38,7 +38,7 @@ dependencies {
     compile project(':P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai')
     compile project(':P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai')
 
-// DMP Projects
+// DMP Projects (Plugins)
 
     compile project(':DMP/plugin/identity/fermat-dmp-plugin-identity-extra-user-bitdubai')
     compile project(':DMP/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai')
@@ -91,27 +91,9 @@ dependencies {
 
     compile project(':DMP/plugin/composite_wallet/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai')
 
-// -----------------------
+// DMP Projects (Addons)
 
-
-
-
-
-
-
-
-
-    compile project(':fermat-dmp-plugin-license-wallet-bitdubai')
-
-
-
-
-
-
-
-
-
-
+    compile project(':DMP/addon/license/fermat-dmp-addon-license-wallet-bitdubai')
 
 
 

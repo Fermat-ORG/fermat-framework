@@ -87,6 +87,9 @@ include ':DMP/plugin/composite_wallet/fermat-dmp-plugin-composite-wallet-multi-a
 include ':DMP/plugin/basic_wallet/fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai'
 include ':DMP/plugin/basic_wallet/fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai'
 
+// DMP Projects (Addons)
+
+include ':DMP/addon/license/fermat-dmp-addon-license-wallet-bitdubai'
 
 // DMP Projects (Wallets)
 
@@ -113,38 +116,5 @@ include ':DMP/android/sub_app/fermat-dmp-android-wallet-store-bitdubai'
 include ':DMP/android/sub_app/fermat-dmp-android-wallet-factory-bitdubai'
 include ':DMP/android/sub_app/fermat-dmp-android-wallet-publisher-bitdubai'
 include ':DMP/android/sub_app/fermat-dmp-android-shop-manager-bitdubai'
-
-//--------------------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-include ':fermat-dmp-plugin-license-wallet-bitdubai'
-
-
-
-
-
-
-
-
-
-
 
 
