@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer._5_user.UserTypes;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_api.layer._15_middleware.wallet_contacts.WalletContact</code>
+ * The Class <code>com.bitdubai.fermat_api.layer.middleware.wallet_contacts.WalletContact</code>
  * indicates the functionality of a WalletContact and its attributes
  * <p/>
  *

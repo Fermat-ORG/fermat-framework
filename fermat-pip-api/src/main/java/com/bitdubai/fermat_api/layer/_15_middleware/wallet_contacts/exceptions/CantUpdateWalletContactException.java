@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_api.layer._15_middleware.wallet_contacts.exceptions;
 
 /**
- * The Class <code>com.bitdubai.fermat_api.layer._15_middleware.wallet_contacts.exceptions.CantUpdateWalletContactException</code>
+ * The Class <code>com.bitdubai.fermat_api.layer.middleware.wallet_contacts.exceptions.CantUpdateWalletContactException</code>
  * is thrown when an error occurs trying to update any contact from a wallet
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 09/06/15.

@@ -77,6 +77,17 @@ include ':DMP/plugin/module/fermat-dmp-plugin-module-wallet-publisher-bitdubai'
 include ':DMP/plugin/module/fermat-dmp-plugin-module-wallet-runtime-bitdubai'
 include ':DMP/plugin/module/fermat-dmp-plugin-module-wallet-store-bitdubai'
 
+include ':DMP/plugin/middleware/fermat-dmp-plugin-middleware-app-runtime-bitdubai'
+include ':DMP/plugin/middleware/fermat-dmp-plugin-middleware-bank-notes-bitdubai'
+include ':DMP/plugin/middleware/fermat-dmp-plugin-middleware-money-request-bitdubai'
+include ':DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-contacts-bitdubai'
+
+include ':DMP/plugin/composite_wallet/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai'
+
+include ':DMP/plugin/basic_wallet/fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai'
+include ':DMP/plugin/basic_wallet/fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai'
+
+
 // DMP Projects (Wallets)
 
 include ':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-wallet-bitdubai'
@@ -114,15 +125,7 @@ include ':DMP/android/sub_app/fermat-dmp-android-shop-manager-bitdubai'
 
 
 
-include ':fermat-dmp-plugin-middleware-app-runtime-bitdubai'
-include ':fermat-dmp-plugin-middleware-bank-notes-bitdubai'
-include ':fermat-dmp-plugin-middleware-money-request-bitdubai'
-include ':fermat-dmp-plugin-middleware-wallet-contacts-bitdubai'
 
-include ':fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai'
-
-include ':fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai'
-include ':fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai'
 
 
 

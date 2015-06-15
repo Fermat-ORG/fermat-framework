@@ -81,21 +81,24 @@ dependencies {
     compile project(':DMP/plugin/module/fermat-dmp-plugin-module-wallet-store-bitdubai')
     compile project(':DMP/plugin/module/fermat-dmp-plugin-module-wallet-factory-bitdubai')
 
+    compile project(':DMP/plugin/middleware/fermat-dmp-plugin-middleware-app-runtime-bitdubai')
+    compile project(':DMP/plugin/middleware/fermat-dmp-plugin-middleware-bank-notes-bitdubai')
+    compile project(':DMP/plugin/middleware/fermat-dmp-plugin-middleware-money-request-bitdubai')
+    compile project(':DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-contacts-bitdubai')
+
+    compile project(':DMP/plugin/basic_wallet/fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai')
+    compile project(':DMP/plugin/basic_wallet/fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai')
+
+    compile project(':DMP/plugin/composite_wallet/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai')
 
 // -----------------------
 
 
-    compile project(':fermat-dmp-plugin-middleware-app-runtime-bitdubai')
-    compile project(':fermat-dmp-plugin-middleware-bank-notes-bitdubai')
-    compile project(':fermat-dmp-plugin-middleware-money-request-bitdubai')
-    compile project(':fermat-dmp-plugin-middleware-wallet-contacts-bitdubai')
 
 
 
 
 
-
-    compile project(':fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai')
 
 
     compile project(':fermat-dmp-plugin-license-wallet-bitdubai')
@@ -103,11 +106,11 @@ dependencies {
 
 
 
-    compile project(':fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai')
 
 
 
-    compile project(':fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai')
+
+
 
 
 

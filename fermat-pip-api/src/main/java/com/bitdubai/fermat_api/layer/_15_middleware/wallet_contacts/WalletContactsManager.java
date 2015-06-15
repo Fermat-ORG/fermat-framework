@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_api.layer._15_middleware.wallet_contacts.WalletContactsManager</code>
+ * The Class <code>com.bitdubai.fermat_api.layer.middleware.wallet_contacts.WalletContactsManager</code>
  * indicates the functionality of a WalletContactsManager
  * <p/>
  *

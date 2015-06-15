@@ -127,22 +127,15 @@
     <orderEntry type="library" exported="" name="google-http-client-jackson2-1.18.0-rc" level="project" />
     <orderEntry type="library" exported="" name="commons-collections-3.2" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-21.0.3" level="project" />
-    <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-app-runtime-bitdubai" exported="" />
     <orderEntry type="library" exported="" name="DMP/android/sub_app/fermat-dmp-android-wallet-factory-bitdubai-unspecified" level="project" />
     <orderEntry type="module" module-name="fermat-core" exported="" />
     <orderEntry type="library" exported="" name="DMP/android/sub_app/fermat-dmp-android-wallet-manager-bitdubai-unspecified" level="project" />
     <orderEntry type="library" exported="" name="DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-wallet-bitdubai-unspecified" level="project" />
     <orderEntry type="library" exported="" name="DMP/android/sub_app/fermat-dmp-android-wallet-publisher-bitdubai-unspecified" level="project" />
-    <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-wallet-contacts-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-api" exported="" />
-    <orderEntry type="module" module-name="fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai" exported="" />
     <orderEntry type="library" exported="" name="DMP/android/sub_app/fermat-dmp-android-shop-manager-bitdubai-unspecified" level="project" />
-    <orderEntry type="module" module-name="fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-money-request-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-bank-notes-bitdubai" exported="" />
     <orderEntry type="library" exported="" name="DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-age-kids-boys-bitdubai-unspecified" level="project" />
     <orderEntry type="library" exported="" name="DMP/android/sub_app/fermat-dmp-android-wallet-store-bitdubai-unspecified" level="project" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-license-wallet-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai" exported="" />
   </component>
 </module>

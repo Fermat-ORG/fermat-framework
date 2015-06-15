@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_api.layer._15_middleware.wallet_contacts;
 
 /**
- * The Class <code>com.bitdubai.fermat_api.layer._15_middleware.wallet_contacts.DealsWithWalletContacts</code>
+ * The Class <code>com.bitdubai.fermat_api.layer.middleware.wallet_contacts.DealsWithWalletContacts</code>
  * indicates that the plugin needs the functionality of a WalletContactsManager
  * <p/>
  *
