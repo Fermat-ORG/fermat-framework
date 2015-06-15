@@ -18,7 +18,7 @@ import com.bitdubai.android_core.app.subapp.shop.version_1.activity.ShopActivity
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 
-import com.bitdubai.wallet_manager.wallet.manager.fragment.WalletDesktopFragment;
+import com.bitdubai.sub_app.wallet_manager.fragment.WalletDesktopFragment;
 //import com.bitdubai.android_core.app.subapp.shop_manager.version_1.fragment.ShopDesktopFragment;
 //import com.bitdubai.android_core.app.subapp.wallet_store.version_1.activity.StoreFrontActivity;
 

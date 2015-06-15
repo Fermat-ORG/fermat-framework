@@ -1,4 +1,4 @@
-package com.bitdubai.android_fermat_dmp_subapp;
+package com.bitdubai.sub_app;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

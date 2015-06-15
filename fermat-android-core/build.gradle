@@ -74,17 +74,13 @@ Wallets on the pipeline:
 
 */
 
-//-----------------------------
+// DMP Projects (Sub APPs)
 
-
-
-
-    compile project(':fermat-dmp-android-wallet-manager-bitdubai')
-    compile project(':fermat-dmp-android-wallet-factory-bitdubai')
-    compile project(':fermat-dmp-android-wallet-store-bitdubai')
-    compile project(':fermat-dmp-android-wallet-publisher-bitdubai')
-
-    compile project(':fermat-dmp-android-shop-manager-bitdubai')
+    compile project(':dmp/android/sub_app/fermat-dmp-android-wallet-manager-bitdubai')
+    compile project(':dmp/android/sub_app/fermat-dmp-android-wallet-factory-bitdubai')
+    compile project(':dmp/android/sub_app/fermat-dmp-android-wallet-store-bitdubai')
+    compile project(':dmp/android/sub_app/fermat-dmp-android-wallet-publisher-bitdubai')
+    compile project(':dmp/android/sub_app/fermat-dmp-android-shop-manager-bitdubai')
 
 
 

@@ -39,17 +39,17 @@ import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopShopFrag
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.fragments.BitcoinReceiveFragment;
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.fragments.BitcoinSendFragment;
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.fragments.BitcoinBalanceFragment;
-import com.bitdubai.shop_manager.fragment.ShopDesktopFragment;
+import com.bitdubai.sub_app.shop_manager.fragment.ShopDesktopFragment;
 
 import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsDataBaseSystem;
 import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsFileSystem;
 import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsLocationSystem;
-import com.bitdubai.android_fermat_dmp_subapp.bitdubai.wallet.store.fragment.AllFragment;
-import com.bitdubai.android_fermat_dmp_subapp.bitdubai.wallet.store.fragment.FreeFragment;
+import com.bitdubai.sub_app.wallet_store.fragment.AllFragment;
+import com.bitdubai.sub_app.wallet_store.fragment.FreeFragment;
 
 import com.bitdubai.fermat_api.layer._16_module.wallet_runtime.WalletRuntimeManager;
 
-import com.bitdubai.wallet_manager.wallet.manager.fragment.WalletDesktopFragment;
+import com.bitdubai.sub_app.wallet_manager.fragment.WalletDesktopFragment;
 
 import com.bitdubai.fermat_api.layer._11_network_service.wallet_resources.WalletResourcesManager;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Addons;

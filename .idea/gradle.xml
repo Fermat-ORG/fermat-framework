@@ -15,6 +15,11 @@
             <option value="$PROJECT_DIR$/cry/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" />
             <option value="$PROJECT_DIR$/dmp/android/niche_wallet/fermat-dmp-android-niche-wallet-age-kids-boys-bitdubai" />
             <option value="$PROJECT_DIR$/dmp/android/niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-wallet-bitdubai" />
+            <option value="$PROJECT_DIR$/dmp/android/sub_app/fermat-dmp-android-shop-manager-bitdubai" />
+            <option value="$PROJECT_DIR$/dmp/android/sub_app/fermat-dmp-android-wallet-factory-bitdubai" />
+            <option value="$PROJECT_DIR$/dmp/android/sub_app/fermat-dmp-android-wallet-manager-bitdubai" />
+            <option value="$PROJECT_DIR$/dmp/android/sub_app/fermat-dmp-android-wallet-publisher-bitdubai" />
+            <option value="$PROJECT_DIR$/dmp/android/sub_app/fermat-dmp-android-wallet-store-bitdubai" />
             <option value="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-extra-user-bitdubai" />
             <option value="$PROJECT_DIR$/dmp/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai" />
             <option value="$PROJECT_DIR$/dmp/plugin/world/fermat-dmp-plugin-world-blockchain-info-bitdubai" />
@@ -25,11 +30,6 @@
             <option value="$PROJECT_DIR$/dmp/plugin/world/fermat-dmp-plugin-world-shape-shift-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-android-core" />
             <option value="$PROJECT_DIR$/fermat-core" />
-            <option value="$PROJECT_DIR$/fermat-dmp-android-shop-manager-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-factory-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-manager-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-publisher-bitdubai" />
-            <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-store-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai" />

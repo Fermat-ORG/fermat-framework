@@ -61,16 +61,20 @@ include ':dmp/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-ban
 
 */
 
+// DMP Projects (Sub APPs)
+
+include ':dmp/android/sub_app/fermat-dmp-android-wallet-manager-bitdubai'
+include ':dmp/android/sub_app/fermat-dmp-android-wallet-store-bitdubai'
+include ':dmp/android/sub_app/fermat-dmp-android-wallet-factory-bitdubai'
+include ':dmp/android/sub_app/fermat-dmp-android-wallet-publisher-bitdubai'
+include ':dmp/android/sub_app/fermat-dmp-android-shop-manager-bitdubai'
+
 //--------------------------
 
 
 
 
-include ':fermat-dmp-android-wallet-manager-bitdubai'
-include ':fermat-dmp-android-wallet-store-bitdubai'
-include ':fermat-dmp-android-wallet-factory-bitdubai'
-include ':fermat-dmp-android-wallet-publisher-bitdubai'
-include ':fermat-dmp-android-shop-manager-bitdubai'
+
 
 
 
