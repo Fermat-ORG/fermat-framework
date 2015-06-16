@@ -15,5 +15,5 @@ dependencies {
     testCompile 'junit:junit:4.11'
     compile project(':DMP/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai')
     compile project(':DMP/plugin/identity/fermat-dmp-plugin-identity-extra-user-bitdubai')
-    compile project(':PIP/addon/user/fermat-pip-addon-user-device-user-bitdubai')
+    compile project(':fermat-pip-addon-user-device-user-bitdubai')
 }

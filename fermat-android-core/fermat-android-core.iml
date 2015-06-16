@@ -136,9 +136,15 @@
     <orderEntry type="library" exported="" name="DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-wallet-bitdubai-unspecified" level="project" />
     <orderEntry type="library" exported="" name="DMP/android/sub_app/fermat-dmp-android-wallet-publisher-bitdubai-unspecified" level="project" />
     <orderEntry type="module" module-name="fermat-pip-api" exported="" />
+    <orderEntry type="module" module-name="fermat-pip-addon-hardware-remote-device-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-pip-addon-platform-service-location-subsystem-bitdubai" exported="" />
     <orderEntry type="library" exported="" name="DMP/android/sub_app/fermat-dmp-android-shop-manager-bitdubai-unspecified" level="project" />
+    <orderEntry type="module" module-name="fermat-pip-addon-platform-service-error-manager-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-pip-addon-hardware-local-device-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-pip-addon-platform-service-event-manager-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-pip-addon-user-device-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai" exported="" />
     <orderEntry type="library" exported="" name="DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-age-kids-boys-bitdubai-unspecified" level="project" />
     <orderEntry type="library" exported="" name="DMP/android/sub_app/fermat-dmp-android-wallet-store-bitdubai-unspecified" level="project" />

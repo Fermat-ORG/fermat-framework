@@ -3,20 +3,27 @@ include ':fermat-android-core'
 include ':fermat-core'
 include ':fermat-pip-api'
 
+
 // CRY Projects
 
 include ':fermat-cry-plugin-crypto-vault-bitcoin-bitdubai'
 project(':fermat-cry-plugin-crypto-vault-bitcoin-bitdubai').projectDir = new File('CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai')
+
 include ':fermat-cry-plugin-crypto-network-bitcoin-bitdubai'
 project(':fermat-cry-plugin-crypto-network-bitcoin-bitdubai').projectDir = new File('CRY/plugin/crypto_network/fermat-cry-plugin-crypto-network-bitcoin-bitdubai')
+
 include ':fermat-cry-plugin-crypto-module-actor-address-book-bitdubai'
 project(':fermat-cry-plugin-crypto-module-actor-address-book-bitdubai').projectDir = new File('CRY/plugin/crypto_module/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai')
+
 include ':fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai'
 project(':fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai').projectDir = new File('CRY/plugin/crypto_module/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai')
+
 include ':fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai'
 project(':fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai').projectDir = new File('CRY/plugin/crypto_router/fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai')
 
+
 // OSA Projects
+
 
 include ':OSA/addon/android/fermat-osa-addon-android-database-system-bitdubai'
 include ':OSA/addon/android/fermat-osa-addon-android-file-system-bitdubai'
@@ -25,19 +32,33 @@ include ':OSA/addon/android/fermat-osa-addon-android-device-location-bitdubai'
 include ':OSA/addon/android/fermat-osa-addon-android-device-power-bitdubai'
 include ':OSA/addon/android/fermat-osa-addon-android-logger-bitdubai'
 
+
 // PIP Projects
 
-include ':PIP/addon/platform_service/fermat-pip-addon-platform-service-event-manager-bitdubai'
-include ':PIP/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai'
-include ':PIP/addon/platform_service/fermat-pip-addon-platform-service-location-subsystem-bitdubai'
-include ':PIP/addon/hardware/fermat-pip-addon-hardware-local-device-bitdubai'
-include ':PIP/addon/hardware/fermat-pip-addon-hardware-remote-device-bitdubai'
-include ':PIP/addon/user/fermat-pip-addon-user-device-user-bitdubai'
+include ':fermat-pip-addon-platform-service-event-manager-bitdubai'
+project(':fermat-pip-addon-platform-service-event-manager-bitdubai').projectDir = new File('PIP/addon/platform_service/fermat-pip-addon-platform-service-event-manager-bitdubai')
+
+include ':fermat-pip-addon-platform-service-error-manager-bitdubai'
+project(':fermat-pip-addon-platform-service-error-manager-bitdubai').projectDir = new File('PIP/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai')
+
+include ':fermat-pip-addon-platform-service-location-subsystem-bitdubai'
+project(':fermat-pip-addon-platform-service-location-subsystem-bitdubai').projectDir = new File('PIP/addon/platform_service/fermat-pip-addon-platform-service-location-subsystem-bitdubai')
+
+include ':fermat-pip-addon-hardware-local-device-bitdubai'
+project(':fermat-pip-addon-hardware-local-device-bitdubai').projectDir = new File('PIP/addon/hardware/fermat-pip-addon-hardware-local-device-bitdubai')
+
+include ':fermat-pip-addon-hardware-remote-device-bitdubai'
+project(':fermat-pip-addon-hardware-remote-device-bitdubai').projectDir = new File('PIP/addon/hardware/fermat-pip-addon-hardware-remote-device-bitdubai')
+
+include ':fermat-pip-addon-user-device-user-bitdubai'
+project(':fermat-pip-addon-user-device-user-bitdubai').projectDir = new File('PIP/addon/user/fermat-pip-addon-user-device-user-bitdubai')
+
 
 // P2P Projects
 
 include ':fermat-p2p-plugin-communication-cloud-client-bitdubai'
 project(':fermat-p2p-plugin-communication-cloud-client-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai')
+
 include ':fermat-p2p-plugin-communication-cloud-server-bitdubai'
 project(':fermat-p2p-plugin-communication-cloud-server-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai')
 
@@ -95,9 +116,11 @@ include ':DMP/plugin/composite_wallet/fermat-dmp-plugin-composite-wallet-multi-a
 include ':DMP/plugin/basic_wallet/fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai'
 include ':DMP/plugin/basic_wallet/fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai'
 
+
 // DMP Projects (Addons)
 
 include ':DMP/addon/license/fermat-dmp-addon-license-wallet-bitdubai'
+
 
 // DMP Projects (Wallets)
 
