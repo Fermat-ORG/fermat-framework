@@ -2,8 +2,8 @@ package com.bitdubai.fermat_api.layer.osa_android;
 
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSystem;
-import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.PlatformDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 

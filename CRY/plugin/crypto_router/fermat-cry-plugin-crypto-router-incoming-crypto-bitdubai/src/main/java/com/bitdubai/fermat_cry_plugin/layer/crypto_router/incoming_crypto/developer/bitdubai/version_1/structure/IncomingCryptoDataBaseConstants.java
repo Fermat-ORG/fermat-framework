@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.DatabaseDataType;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 
 /**
  * Created by Arturo Vallone 25/04/2015

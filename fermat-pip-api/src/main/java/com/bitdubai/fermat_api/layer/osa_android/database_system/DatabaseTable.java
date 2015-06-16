@@ -1,12 +1,12 @@
-package com.bitdubai.fermat_api.layer.osa_android_xxx.database_system;
+package com.bitdubai.fermat_api.layer.osa_android.database_system;
 
 import java.util.List;
 import java.util.UUID;
 
 
-import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.exceptions.CantInsertRecord;
-import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.exceptions.CantLoadTableToMemory;
-import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.exceptions.CantUpdateRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemory;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecord;
 
 /**
  *

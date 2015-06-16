@@ -4,12 +4,12 @@ import com.bitdubai.fermat_api.layer._12_world.Agent;
 import com.bitdubai.fermat_api.layer._12_world.wallet.exceptions.CantInitializeMonitorAgentException;
 
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.DealsWithPluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 
-import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;

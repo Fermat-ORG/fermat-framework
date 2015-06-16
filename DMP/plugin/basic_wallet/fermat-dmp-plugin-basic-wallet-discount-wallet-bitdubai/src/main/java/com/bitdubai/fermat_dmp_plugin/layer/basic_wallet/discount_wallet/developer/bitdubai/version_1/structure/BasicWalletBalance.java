@@ -2,11 +2,11 @@ package com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.discount_wallet.develo
 
 import com.bitdubai.fermat_api.layer._13_basic_wallet.discount_wallet.enums.CryptoValueChunkStatus;
 import com.bitdubai.fermat_api.layer._13_basic_wallet.discount_wallet.exceptions.CantCalculateBalanceException;
-import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.DatabaseFilterType;
-import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.DatabaseTable;
-import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.exceptions.CantLoadTableToMemory;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemory;
 
 /**
  * Created by eze on 28/04/15.

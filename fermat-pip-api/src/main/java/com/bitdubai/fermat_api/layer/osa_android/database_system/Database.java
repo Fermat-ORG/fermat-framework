@@ -1,6 +1,6 @@
-package com.bitdubai.fermat_api.layer.osa_android_xxx.database_system;
+package com.bitdubai.fermat_api.layer.osa_android.database_system;
 
-import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.exceptions.DatabaseTransactionFailedException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 
 /**
  *

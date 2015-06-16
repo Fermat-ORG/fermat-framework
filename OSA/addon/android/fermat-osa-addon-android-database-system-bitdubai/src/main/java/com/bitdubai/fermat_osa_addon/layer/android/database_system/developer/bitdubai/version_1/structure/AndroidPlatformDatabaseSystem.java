@@ -3,10 +3,10 @@ package com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bi
 import android.content.Context;
 import android.util.Base64;
 
-import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.PlatformDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.exceptions.CantCreateDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
 
 import java.nio.charset.Charset;

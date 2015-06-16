@@ -2,18 +2,18 @@ package com.bitdubai.fermat_pip_addon.layer.user.extra_user.developer.bitdubai.v
 
 import com.bitdubai.fermat_api.layer._1_definition.enums.Addons;
 
-import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.DatabaseFilterType;
-import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.DatabaseTable;
-import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.DealsWithPlatformDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlatformDatabaseSystem;
 
-import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.PlatformDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabaseSystem;
 
-import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.exceptions.CantCreateDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.exceptions.CantInsertRecord;
-import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.exceptions.CantLoadTableToMemory;
-import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemory;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;

@@ -8,7 +8,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.middleware.bank_notes.developer.bit
 
 
 // Packages and classes to import of bitDubai API.
-import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 
 // Packages and classes to import of Middleware Bank Notes API.
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.beans.dto.Record;

@@ -5,11 +5,11 @@ import com.bitdubai.fermat_api.layer._13_basic_wallet.discount_wallet.enums.Cred
 import com.bitdubai.fermat_api.layer._13_basic_wallet.discount_wallet.enums.CryptoValueChunkStatus;
 import com.bitdubai.fermat_api.layer._13_basic_wallet.discount_wallet.exceptions.CreditFailedException;
 
-import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.DatabaseTable;
-import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.DatabaseTransaction;
-import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.exceptions.DatabaseTransactionFailedException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 
 import java.util.UUID;
 

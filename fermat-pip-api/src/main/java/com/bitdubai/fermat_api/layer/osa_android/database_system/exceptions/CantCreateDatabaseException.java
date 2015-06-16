@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.exceptions;
+package com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions;
 
 /**
  * Created by toshiba on 23/03/2015.
