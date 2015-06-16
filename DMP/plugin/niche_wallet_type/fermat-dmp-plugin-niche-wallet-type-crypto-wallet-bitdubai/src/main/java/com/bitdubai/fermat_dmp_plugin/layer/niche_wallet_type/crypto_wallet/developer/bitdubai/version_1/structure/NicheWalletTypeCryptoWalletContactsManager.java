@@ -19,8 +19,8 @@ import com.bitdubai.fermat_api.layer._5_user.UserTypes;
 import com.bitdubai.fermat_api.layer._5_user.extra_user.DealsWithExtraUsers;
 import com.bitdubai.fermat_api.layer._5_user.extra_user.ExtraUserManager;
 import com.bitdubai.fermat_api.layer._5_user.extra_user.exceptions.CantCreateExtraUserRegistry;
-import com.bitdubai.fermat_api.layer._9_crypto_module.user_address_book.DealsWithUserAddressBook;
-import com.bitdubai.fermat_api.layer._9_crypto_module.user_address_book.UserCryptoAddressBook;
+import com.bitdubai.fermat_api.layer.cry_3_crypto_module.actor_address_book.DealsWithActorAddressBook;
+import com.bitdubai.fermat_api.layer.cry_3_crypto_module.actor_address_book.ActorAddressBook;
 
 import java.util.List;
 import java.util.UUID;
@@ -35,7 +35,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class NicheWalletTypeCryptoWalletContactsManager implements DealsWithErrors, DealsWithExtraUsers, DealsWithUserAddressBook, DealsWithWalletContacts, NicheWalletTypeCryptoWalletManager {
+public class NicheWalletTypeCryptoWalletContactsManager implements DealsWithErrors, DealsWithExtraUsers, DealsWithActorAddressBook, DealsWithWalletContacts, NicheWalletTypeCryptoWalletManager {
 
     /**
      * DealsWithErrors Interface member variables.
@@ -48,9 +48,9 @@ public class NicheWalletTypeCryptoWalletContactsManager implements DealsWithErro
     ExtraUserManager extraUserManager;
 
     /**
-     * DealsWithUserAddressBook Interface member variable
+     * DealsWithActorAddressBook Interface member variable
      */
-    private UserCryptoAddressBook userCryptoAddressBook;
+    private ActorAddressBook ActorAddressBook;
 
     /**
      * DealsWithWalletContacts Interface member variable
@@ -99,7 +99,7 @@ public class NicheWalletTypeCryptoWalletContactsManager implements DealsWithErro
         try {
             user = extraUserManager.createUser(userName);
             try {
-                userCryptoAddressBook.registerUserCryptoAddress(userType, user.getId(), cryptoAddress);
+                ActorAddressBook.registerActorCryptoAddress(userType, user.getId(), cryptoAddress);
             } catch (Exception e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantCreateExtraUserRegistry();
@@ -138,11 +138,11 @@ public class NicheWalletTypeCryptoWalletContactsManager implements DealsWithErro
     }
 
     /**
-     * DealsWithUserAddressBook Interface implementation.
+     * DealsWithActorAddressBook Interface implementation.
      */
     @Override
-    public void setUserAddressBookManager(UserCryptoAddressBook userCryptoAddressBook) {
-        this.userCryptoAddressBook = userCryptoAddressBook;
+    public void setUserAddressBookManager(ActorAddressBook ActorAddressBook) {
+        this.ActorAddressBook = ActorAddressBook;
     }
 
     /**
