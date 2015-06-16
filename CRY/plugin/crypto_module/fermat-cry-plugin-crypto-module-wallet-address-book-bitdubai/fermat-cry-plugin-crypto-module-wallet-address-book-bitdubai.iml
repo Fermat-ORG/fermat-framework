@@ -26,7 +26,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="fermat-pip-api" exported="" />
+    <orderEntry type="module" module-name="fermat-api" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-identity-intra-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-identity-extra-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-user-device-user-bitdubai" exported="" />

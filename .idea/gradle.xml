@@ -79,8 +79,8 @@
             <option value="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-location-subsystem-bitdubai" />
             <option value="$PROJECT_DIR$/PIP/addon/user/fermat-pip-addon-user-device-user-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-android-core" />
+            <option value="$PROJECT_DIR$/fermat-api" />
             <option value="$PROJECT_DIR$/fermat-core" />
-            <option value="$PROJECT_DIR$/fermat-pip-api" />
           </set>
         </option>
       </GradleProjectSettings>

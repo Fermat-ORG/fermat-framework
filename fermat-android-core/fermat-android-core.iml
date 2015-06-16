@@ -147,12 +147,12 @@
     <orderEntry type="module" module-name="fermat-dmp-plugin-world-shape-shift-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-p2p-plugin-communication-cloud-server-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-android-niche-wallet-bitcoin-wallet-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-api" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-world-coinbase-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-wallet-contacts-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-android-shop-manager-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-transaction-outgoing-device-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-android-wallet-factory-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-pip-api" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-niche-wallet-type-discount-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-crypto-addresses-bitdubai" exported="" />

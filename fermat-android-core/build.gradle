@@ -46,7 +46,7 @@ android {
 
 
 dependencies {
-    compile project(':fermat-pip-api')
+    compile project(':fermat-api')
     compile project(':fermat-core')
 
 

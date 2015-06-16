@@ -11,7 +11,7 @@ repositories {
 
 dependencies {
 
-    compile project(':fermat-pip-api')
+    compile project(':fermat-api')
     compile 'org.bouncycastle:bcpkix-jdk15on:1.51'
     compile 'org.bouncycastle:bcprov-jdk15on:1.51'
     compile 'com.google.api-client:google-api-client:1.18.0-rc'

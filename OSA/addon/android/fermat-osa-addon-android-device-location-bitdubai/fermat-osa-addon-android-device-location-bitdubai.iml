@@ -26,7 +26,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="fermat-pip-api" exported="" />
+    <orderEntry type="module" module-name="fermat-api" exported="" />
     <orderEntry type="library" exported="" name="android-4.1.1.4" level="project" />
     <orderEntry type="library" exported="" name="commons-logging-1.1.1" level="project" />
     <orderEntry type="library" exported="" name="httpclient-4.0.1" level="project" />

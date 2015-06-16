@@ -8,7 +8,7 @@ repositories {
 
 
 dependencies {
-    compile project(':fermat-pip-api')
+    compile project(':fermat-api')
 
 
 // CRY Projects
