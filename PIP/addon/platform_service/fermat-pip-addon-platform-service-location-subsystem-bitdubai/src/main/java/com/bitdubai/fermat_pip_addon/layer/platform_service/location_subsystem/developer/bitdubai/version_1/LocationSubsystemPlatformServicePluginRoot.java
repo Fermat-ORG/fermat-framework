@@ -9,8 +9,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 //TODO se movio la interface
-//import com.bitdubai.fermat_api.layer._2_os.device_location.DealsWithDeviceLocation;
-//import com.bitdubai.fermat_api.layer._2_os.device_location.LocationManager;
+//import com.bitdubai.fermat_api.layer.osa_android.device_location.DealsWithDeviceLocation;
+//import com.bitdubai.fermat_api.layer.osa_android.device_location.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.DealsWithDeviceLocation;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;

@@ -7,7 +7,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.world.coinapult.developer.bitdubai.version_1.enums;
 
 /**
- * The enum <code>com.bitdubai.fermat_api.layer._1_definition.enums.</code> holds the different types
+ * The enum <code>com.bitdubai.fermat_api.layer.all_definition.enums.</code> holds the different types
  * of the components of the system
  * <p/>
  * Created by Roberto Requena - (rrequena) on 04/05/15.

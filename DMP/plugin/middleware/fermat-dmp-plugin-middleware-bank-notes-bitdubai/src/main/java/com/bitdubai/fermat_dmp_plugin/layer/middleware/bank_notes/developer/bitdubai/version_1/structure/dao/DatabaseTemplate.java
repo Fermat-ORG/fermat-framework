@@ -196,7 +196,7 @@ public class DatabaseTemplate implements DealsWithErrors, DealsWithPluginDatabas
     }
 
 
-    // Public instance methods declarations extends of com.bitdubai.fermat_api.layer._2_os.database_system.DealsWithPluginDatabaseSystem interface.
+    // Public instance methods declarations extends of com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem interface.
     /**
      *
      *  <p>Method that set the plugin database.

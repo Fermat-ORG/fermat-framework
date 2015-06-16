@@ -205,7 +205,7 @@ public final class BankNotesDatabaseFactory implements DealsWithPluginDatabaseSy
     }
 
 
-    // Public instance method declarations extends of com.bitdubai.fermat_api.layer._2_os.database_system.DealsWithPluginDatabaseSystem
+    // Public instance method declarations extends of com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem
     /**
      *
      *  <p>Method that set the database plugin.

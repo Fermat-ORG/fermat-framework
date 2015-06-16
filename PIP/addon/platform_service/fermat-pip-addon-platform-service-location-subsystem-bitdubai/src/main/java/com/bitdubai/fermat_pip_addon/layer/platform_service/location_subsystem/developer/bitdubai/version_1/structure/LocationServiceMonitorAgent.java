@@ -16,9 +16,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecord;
 //TODO se movio la interface
-//import com.bitdubai.fermat_api.layer._2_os.device_location.DealsWithDeviceLocation;
-//import com.bitdubai.fermat_api.layer._2_os.device_location.Location;
-//import com.bitdubai.fermat_api.layer._2_os.device_location.LocationManager;
+//import com.bitdubai.fermat_api.layer.osa_android.device_location.DealsWithDeviceLocation;
+//import com.bitdubai.fermat_api.layer.osa_android.device_location.Location;
+//import com.bitdubai.fermat_api.layer.osa_android.device_location.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;

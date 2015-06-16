@@ -6,7 +6,7 @@ import java.util.UUID;
 
 /**
  *
- *  <p>The abstract class <code>com.bitdubai.fermat_api.layer._2_os.database_syste.DatabaseTableRecord</code> is a interface
+ *  <p>The abstract class <code>com.bitdubai.fermat_api.layer.osa_android.database_syste.DatabaseTableRecord</code> is a interface
  *     that define the methods to get and set database table record values.
  *
  *
