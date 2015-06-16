@@ -17,10 +17,10 @@ import com.bitdubai.fermat_api.layer._12_world.coinapult.wallet.CryptoWalletBala
 import com.bitdubai.fermat_api.layer._12_world.coinapult.wallet.CryptoWalletTransaction;
 import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer._2_os.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer._2_os.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer._2_os.file_system.PluginFileSystem;

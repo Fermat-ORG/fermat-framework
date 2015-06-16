@@ -1,14 +1,14 @@
 package com.bitdubai.fermat_pip_addon.layer.user.extra_user.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlatformDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.DatabaseDataType;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.DatabaseFactory;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.DatabaseTableFactory;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.DealsWithPlatformDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.PlatformDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.exceptions.CantCreateTableException;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.UnexpectedPluginExceptionSeverity;

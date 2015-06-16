@@ -8,19 +8,19 @@ import java.util.UUID;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 
-import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableColumn;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerId;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.DatabaseDataType;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.DatabaseFactory;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.DatabaseTableColumn;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.DatabaseTableFactory;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.DatabaseTransaction;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.exceptions.CantCreateTableException;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.exceptions.DatabaseTransactionFailedException;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.exceptions.InvalidOwnerId;
 import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantOpenDatabaseException;
 
 /**

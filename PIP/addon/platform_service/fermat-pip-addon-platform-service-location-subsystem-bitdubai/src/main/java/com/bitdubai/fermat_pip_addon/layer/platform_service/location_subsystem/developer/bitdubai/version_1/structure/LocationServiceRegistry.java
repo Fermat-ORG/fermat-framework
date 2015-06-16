@@ -5,8 +5,8 @@ import com.bitdubai.fermat_api.layer._2_os.location_system.Location;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer._3_platform_service.location_subsystem.LocationSubsystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.*;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.*;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.*;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.exceptions.*;
 
 import java.util.ArrayList;
 import java.util.List;

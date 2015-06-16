@@ -10,11 +10,11 @@ import com.bitdubai.fermat_api.layer._13_basic_wallet.discount_wallet.exceptions
 import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer._1_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer._1_definition.util.Converter;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemory;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.DatabaseFilterType;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.exceptions.CantLoadTableToMemory;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
 

@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableColumn;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.DatabaseDataType;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.DatabaseTableColumn;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.DatabaseTableFactory;
 
 import java.util.ArrayList;
 

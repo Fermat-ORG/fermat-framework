@@ -10,15 +10,15 @@ package com.bitdubai.fermat_dmp_plugin.layer.middleware.bank_notes.developer.bit
 // Packages and classes to import of jdk 1.7
 
 // Packages and classes to import of Middleware Bank Notes API.
-import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerId;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.DatabaseDataType;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.DatabaseFactory;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.DatabaseTableFactory;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.exceptions.CantCreateTableException;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.exceptions.InvalidOwnerId;
 
 
 /**
@@ -33,7 +33,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Inva
  *  @version 1.0.0
  *  @since   jdk 1.7
  *  @since   05/10/2015
- *  @see     {@link com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem}
+ *  @see     {@link com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.DealsWithPluginDatabaseSystem}
  * */
 public final class BankNotesDatabaseFactory implements DealsWithPluginDatabaseSystem {
 

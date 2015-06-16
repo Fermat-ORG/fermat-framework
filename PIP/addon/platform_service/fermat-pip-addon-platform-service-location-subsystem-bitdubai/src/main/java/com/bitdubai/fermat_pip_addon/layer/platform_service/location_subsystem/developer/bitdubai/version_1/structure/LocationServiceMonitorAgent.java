@@ -10,11 +10,11 @@ import com.bitdubai.fermat_api.layer._11_world.Agent;
 import com.bitdubai.fermat_api.layer._11_world.blockchain_info.exceptions.CantStartAgentException;
 */
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecord;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.exceptions.CantCreateTableException;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.exceptions.CantInsertRecord;
 //TODO se movio la interface
 //import com.bitdubai.fermat_api.layer._2_os.device_location.DealsWithDeviceLocation;
 //import com.bitdubai.fermat_api.layer._2_os.device_location.Location;

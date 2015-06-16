@@ -4,7 +4,7 @@ package com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bi
  * Created by Natalia on 25/03/2015.
  */
 
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
+import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.DatabaseRecord;
 
 /**
  * This class define methods to access the properties of the object Database Record
