@@ -1,4 +1,4 @@
-package com.bitdubai.runtime_wallet;
+package com.bitdubai.niche_wallet.age.kids.boys;
 
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.DealsWithWalletResources;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesManager;

@@ -1,4 +1,4 @@
-package com.bitdubai.runtime_wallet.age.kids.boys.fragments;
+package com.bitdubai.niche_wallet.age.kids.boys.fragments;
 
 /**
  * Created by ciencias on 25.11.14.

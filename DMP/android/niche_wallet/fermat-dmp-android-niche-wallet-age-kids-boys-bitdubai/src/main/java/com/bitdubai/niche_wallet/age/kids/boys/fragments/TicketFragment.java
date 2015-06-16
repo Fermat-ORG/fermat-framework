@@ -1,4 +1,4 @@
-package com.bitdubai.runtime_wallet.age.kids.boys.fragments;
+package com.bitdubai.niche_wallet.age.kids.boys.fragments;
 
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -22,7 +22,7 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.Wallet
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_dmp.wallet_runtime.R;
-import com.bitdubai.runtime_wallet.Platform;
+import com.bitdubai.niche_wallet.age.kids.boys.Platform;
 //import com.bitdubai.runtime_wallet.age.kids.boys.MyApplication;
 
 import android.view.GestureDetector;

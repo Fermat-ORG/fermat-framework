@@ -1,4 +1,4 @@
-package com.bitdubai.runtime_wallet.age.kids.boys.fragments;
+package com.bitdubai.niche_wallet.age.kids.boys.fragments;
 
 /**
  * Created by ciencias on 25.11.14.
@@ -17,7 +17,7 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesExcepti
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Wallets;
 import com.bitdubai.fermat_dmp.wallet_runtime.R;
-import com.bitdubai.runtime_wallet.Platform;
+import com.bitdubai.niche_wallet.age.kids.boys.Platform;
 
 
 public class ProfileCardFrontFragment extends Fragment {
