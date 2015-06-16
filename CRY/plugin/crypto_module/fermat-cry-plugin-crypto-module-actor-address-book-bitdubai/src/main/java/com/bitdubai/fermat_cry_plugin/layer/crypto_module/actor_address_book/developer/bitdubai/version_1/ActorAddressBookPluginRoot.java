@@ -3,6 +3,9 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.de
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book.exceptions.CantGetActorCryptoAddress;
+import com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book.exceptions.CantRegisterActorCryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
@@ -13,6 +16,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventLis
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.pip_user.UserTypes;
 import com.bitdubai.fermat_api.layer.pip_user.device_user.DealsWithDeviceUsers;
 import com.bitdubai.fermat_api.layer.pip_user.device_user.DeviceUserManager;
 import com.bitdubai.fermat_api.layer.pip_user.extra_user.DealsWithExtraUsers;
@@ -23,6 +27,7 @@ import com.bitdubai.fermat_api.layer.cry_crypto_module.Crypto;
 import com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book.ActorAddressBookManager;
 import com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book.exceptions.ExampleException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.structure.ActorAddressBook;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.structure.ActorAddressBookDao;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,41 +43,19 @@ import java.util.UUID;
  * * * * * *
  */
 
-public class ActorAddressBookPluginRoot implements ActorAddressBookManager, Crypto,DealsWithDeviceUsers,DealsWithExtraUsers,DealsWithIntraUsers, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, DealsWithErrors, DealsWithEvents, Plugin, Service {
+public class ActorAddressBookPluginRoot implements ActorAddressBookManager, Crypto,DealsWithPluginDatabaseSystem,DealsWithErrors,DealsWithEvents, Plugin, Service {
 
     /**
-     * AddressBookManager Interface member variables.
+     * ActorAddressBookManager Interface member variables.
      */
-    private ActorAddressBook addressBook;
-
-    /**
-     * DealsWithDeviceUsers Interface member variables.
-     */
-
-    DeviceUserManager deviceUserManager;
+    private ActorAddressBookDao actorAddressBook;
 
 
-    /**
-     * DealsWithExtraUsers Interface member variables.
-     */
-
-    ExtraUserManager extraUserManager;
-
-    /**
-     * DealsWithIntraUsers Interface member variables.
-     */
-
-
-    IntraUserManager intraUserManager;
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
     PluginDatabaseSystem pluginDatabaseSystem;
 
-    /**
-     * DealsWithPluginFileSystem Interface member variables.
-     */
-    PluginFileSystem pluginFileSystem;
 
     /**
      * DealsWithErrors Interface member variables.
@@ -96,46 +79,6 @@ public class ActorAddressBookPluginRoot implements ActorAddressBookManager, Cryp
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
     List<EventListener> listenersAdded = new ArrayList<>();
 
-
-
-
-
-
-    /**
-     * Address Book Manager implementation. 
-     */
-    @Override
-    public void exampleMethod() throws ExampleException {
-
-    }
-
-    /**
-     * DealsWithDeviceUsers interface implementation.
-     */
-
-    @Override
-    public void setDeviceUserManager(DeviceUserManager deviceUserManager){
-        this.deviceUserManager = deviceUserManager;
-    }
-
-    /**
-     * DealsWithExtraUsers interface implementation.
-     */
-
-    @Override
-    public void setExtraUserManager(ExtraUserManager extraUserManager){
-        this.extraUserManager = extraUserManager;
-    }
-
-    /**
-     * DealsWithIntraUsers interface implementation.
-     */
-
-    @Override
-    public void setIntraUserManager(IntraUserManager intraUserManager){
-        this.intraUserManager = intraUserManager;
-    }
-
     /**
      * DealsWithPluginDatabaseSystem interface implementation.
      */
@@ -144,14 +87,7 @@ public class ActorAddressBookPluginRoot implements ActorAddressBookManager, Cryp
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
-    /**
-     * DealsWithPluginFileSystem Interface implementation.
-     */
 
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
 
     /**
      *DealWithErrors Interface implementation.
@@ -159,7 +95,7 @@ public class ActorAddressBookPluginRoot implements ActorAddressBookManager, Cryp
 
     @Override
     public void setErrorManager(ErrorManager errorManager) {
-            this.errorManager = errorManager;
+        this.errorManager = errorManager;
     }
 
     /**
@@ -191,12 +127,9 @@ public class ActorAddressBookPluginRoot implements ActorAddressBookManager, Cryp
          * I will initialize the handling of com.bitdubai.platform events.
          */
 
-        this.addressBook = new ActorAddressBook(this.pluginId,this.errorManager);
+        this.actorAddressBook = new ActorAddressBookDao(this.pluginId,this.errorManager);
 
-        this.addressBook.setDeviceUserManager(this.deviceUserManager);
-        this.addressBook.setExtraUserManager(this.extraUserManager);
-        this.addressBook.setIntraUserManager(this.intraUserManager);
-        this.addressBook.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+        this.actorAddressBook.setPluginDatabaseSystem(this.pluginDatabaseSystem);
 
 
         EventListener eventListener;
@@ -243,6 +176,31 @@ public class ActorAddressBookPluginRoot implements ActorAddressBookManager, Cryp
     }
 
 
+    /**
+     * Address Book Manager implementation.
+     */
+
+    @Override
+
+    public com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book.ActorAddressBook getActorAddressBookByCryptoAddress(CryptoAddress cryptoAddress) throws CantGetActorCryptoAddress {
+        return actorAddressBook.getActorAddressBookByCryptoAddress(cryptoAddress);
+    }
+
+    @Override
+    public List<com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book.ActorAddressBook>  getAllActorAddressBookByUserId(UUID userId) throws CantGetActorCryptoAddress {
+        return actorAddressBook.getAllActorAddressBookByUserId(userId);
+    }
+
+
+    @Override
+    public void registerActorCryptoAddress (UserTypes userType, UUID userId,CryptoAddress cryptoAddress)throws CantRegisterActorCryptoAddress {
+
+        /**
+         * Here I create the Address book record for new user.
+         */
+        actorAddressBook.registerActorCryptoAddress( userType, userId, cryptoAddress);
+
+    }
 
 
 }

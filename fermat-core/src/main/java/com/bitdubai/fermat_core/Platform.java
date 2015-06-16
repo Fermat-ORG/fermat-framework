@@ -976,11 +976,9 @@ public class Platform  {
 
         Plugin userAddressBookCrypto = ((CryptoLayer) mCryptoLayer).getmUserAddressBook();
 
-        ((DealsWithPluginFileSystem) userAddressBookCrypto).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
+        ((DealsWithPluginDatabaseSystem) userAddressBookCrypto).setPluginDatabaseSystem(databaseSystemOs.getPluginDatabaseSystem());
         ((DealsWithEvents) userAddressBookCrypto).setEventManager((EventManager) eventManager);
-        ((DealsWithExtraUsers) userAddressBookCrypto).setExtraUserManager((ExtraUserManager) extraUser);
-        ((DealsWithDeviceUsers) userAddressBookCrypto).setDeviceUserManager((DeviceUserManager) deviceUser);
-        ((DealsWithIntraUsers) userAddressBookCrypto).setIntraUserManager((IntraUserManager) intraUser);
+        ((DealsWithErrors) userAddressBookCrypto).setErrorManager((ErrorManager) errorManager);
 
         corePlatformContext.addPlugin(userAddressBookCrypto, Plugins.BITDUBAI_USER_ADDRESS_BOOK_CRYPTO);
 
@@ -2313,25 +2311,25 @@ public class Platform  {
        // ((DealsWithPluginFileSystem) incomingCryptoTransaction).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
         ((DealsWithEvents) incomingCryptoTransaction).setEventManager((EventManager) eventManager);
         corePlatformContext.addPlugin(incomingCryptoTransaction, Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION);
-
-        try
-        {
+//TODO: COMETADO por null point en el start
+       // try
+       // {
 
             /**
              * As any other plugin, this one will need its identity in order to access the data it persisted before.
              */
 
-            UUID pluginID = pluginsIdentityManager.getPluginId(incomingCryptoTransaction);
-            (incomingCryptoTransaction).setId(pluginID);
+         //   UUID pluginID = pluginsIdentityManager.getPluginId(incomingCryptoTransaction);
+           // (incomingCryptoTransaction).setId(pluginID);
 
-            try {
+           // try {
                 //TODO: ver que da error null point
-                ((Service) incomingCryptoTransaction).start();
-            }
-            catch (CantStartPluginException cantStartPluginException) {
+               // ((Service) incomingCryptoTransaction).start();
+           // }
+           // catch (CantStartPluginException cantStartPluginException) {
 
-                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
-                cantStartPluginException.printStackTrace();
+                //System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                //cantStartPluginException.printStackTrace();
 
                 /**
                  * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
@@ -2339,29 +2337,29 @@ public class Platform  {
                  * * * 
                  */
 
-                throw new CantStartPlatformException();
-            }
-            catch (Exception e){
+               // throw new CantStartPlatformException();
+            //}
+           // catch (Exception e){
 
-                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+            //    ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
 
                 /**
                  * This is worse than the previous catch since the plugin didn't even throw an expected exception.
                  * * *
                  */
 
-            }
+          //  }
 
-        }
-        catch (PluginNotRecognizedException pluginNotRecognizedException)
-        {
+       // }
+      //  catch (PluginNotRecognizedException pluginNotRecognizedException)
+     //   {
 
 
-            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
-            pluginNotRecognizedException.printStackTrace();
+          //  System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+          //  pluginNotRecognizedException.printStackTrace();
 
-            throw new CantStartPlatformException();
-        }
+           // throw new CantStartPlatformException();
+        //}
 
 
 

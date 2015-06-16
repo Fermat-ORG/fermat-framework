@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.crypto_wallet.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book.ActorAddressBookManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.DealsWithWalletContacts;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.WalletContact;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.WalletContactsManager;
@@ -50,7 +51,7 @@ public class NicheWalletTypeCryptoWalletContactsManager implements DealsWithErro
     /**
      * DealsWithActorAddressBook Interface member variable
      */
-    private ActorAddressBook ActorAddressBook;
+    private ActorAddressBookManager ActorAddressBook;
 
     /**
      * DealsWithWalletContacts Interface member variable
@@ -141,7 +142,7 @@ public class NicheWalletTypeCryptoWalletContactsManager implements DealsWithErro
      * DealsWithActorAddressBook Interface implementation.
      */
     @Override
-    public void setUserAddressBookManager(ActorAddressBook ActorAddressBook) {
+    public void setUserAddressBookManager(ActorAddressBookManager actorAddressBook) {
         this.ActorAddressBook = ActorAddressBook;
     }
 

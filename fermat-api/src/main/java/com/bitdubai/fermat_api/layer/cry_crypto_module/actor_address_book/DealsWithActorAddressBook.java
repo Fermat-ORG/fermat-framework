@@ -9,5 +9,5 @@ package com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book;
  */
 public interface DealsWithActorAddressBook {
 
-    public void setUserAddressBookManager(ActorAddressBook actorAddressBook);
+    public void setUserAddressBookManager(ActorAddressBookManager actorAddressBook);
 }

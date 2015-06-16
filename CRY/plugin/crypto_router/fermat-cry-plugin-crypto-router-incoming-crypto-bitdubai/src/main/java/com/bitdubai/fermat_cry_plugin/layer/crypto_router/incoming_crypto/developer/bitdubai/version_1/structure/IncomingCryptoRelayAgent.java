@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.devel
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
+import com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book.ActorAddressBookManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -58,7 +59,7 @@ public class IncomingCryptoRelayAgent implements DealsWithErrors, DealsWithEvent
      */
     //private UUID pluginId;
     private IncomingCryptoRegistry registry;
-    private ActorAddressBook actorAddressBook;
+    private ActorAddressBookManager actorAddressBook;
 
 
     /**
@@ -125,7 +126,7 @@ public class IncomingCryptoRelayAgent implements DealsWithErrors, DealsWithEvent
     }
 
     @Override
-    public void setUserAddressBookManager(ActorAddressBook actorAddressBook) {
+    public void setUserAddressBookManager(ActorAddressBookManager actorAddressBook) {
         this.actorAddressBook = actorAddressBook;
     }
     /*
@@ -224,7 +225,7 @@ public class IncomingCryptoRelayAgent implements DealsWithErrors, DealsWithEvent
         /**
          * MonitorAgent interface implementation.
          */
-        private void initialize (IncomingCryptoRegistry registry,ActorAddressBook actorAddressBook) {
+        private void initialize (IncomingCryptoRegistry registry,ActorAddressBookManager actorAddressBook) {
             //this.pluginId = pluginId;
             this.registry = registry;
             this.specialistSelector = new SpecialistSelector();
