@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book.ActorAddressBookManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
@@ -56,7 +57,7 @@ public class IncomingCryptoTransactionPluginRoot implements DealsWithErrors, Dea
     /*
      * DealsWithUserAddressBook member variables
      */
-     private ActorAddressBook actorAddressBook;
+     private ActorAddressBookManager actorAddressBook;
 
 
     /**
@@ -254,7 +255,7 @@ public class IncomingCryptoTransactionPluginRoot implements DealsWithErrors, Dea
     }
 
     @Override
-    public void setUserAddressBookManager(ActorAddressBook actorAddressBook) {
+    public void setUserAddressBookManager(ActorAddressBookManager actorAddressBook) {
         this.actorAddressBook = actorAddressBook;
     }
 

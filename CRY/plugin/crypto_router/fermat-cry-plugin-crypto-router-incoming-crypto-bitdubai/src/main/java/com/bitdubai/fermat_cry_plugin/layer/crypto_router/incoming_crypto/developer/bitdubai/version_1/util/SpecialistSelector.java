@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.devel
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
+import com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book.ActorAddressBookManager;
 import com.bitdubai.fermat_api.layer.pip_user.User;
 import com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book.ActorAddressBook;
 import com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book.DealsWithActorAddressBook;
@@ -19,7 +20,7 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.develo
  */
 public class SpecialistSelector implements DealsWithActorAddressBook {
 
-    private ActorAddressBook actorAddressBook;
+    private ActorAddressBookManager actorAddressBook;
 
     public Specialist getSpecialist(CryptoTransaction cryptoTransaction) throws CantSelectSpecialistException {
 
@@ -27,15 +28,15 @@ public class SpecialistSelector implements DealsWithActorAddressBook {
         cryptoAddress.setAddress(cryptoTransaction.getAddressFrom());
         cryptoAddress.setCryptoCurrency(cryptoTransaction.getCryptoCurrency());
 
-        User user = null;
+        ActorAddressBook user = null;
         try {
-            user = this.actorAddressBook.getActorByCryptoAddress(cryptoAddress);
+            user = this.actorAddressBook.getActorAddressBookByCryptoAddress(cryptoAddress);
         } catch (CantGetActorCryptoAddress cantGetActorCryptoAddress) {
             cantGetActorCryptoAddress.printStackTrace();
         }
 
         if (user != null) {
-            switch (user.getType()) {
+            switch (user.getActorType()) {
                 case DEVICE_USER:
                     return Specialist.DEVICE_USER;
                 case INTRA_USER:
@@ -50,7 +51,7 @@ public class SpecialistSelector implements DealsWithActorAddressBook {
     }
 
     @Override
-    public void setUserAddressBookManager(ActorAddressBook actorAddressBook) {
+    public void setUserAddressBookManager(ActorAddressBookManager actorAddressBook) {
         this.actorAddressBook = actorAddressBook;
     }
 
