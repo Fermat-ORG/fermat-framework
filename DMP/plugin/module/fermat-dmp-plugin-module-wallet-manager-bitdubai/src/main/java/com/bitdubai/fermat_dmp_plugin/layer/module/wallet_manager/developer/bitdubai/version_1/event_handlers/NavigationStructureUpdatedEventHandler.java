@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer._16_module.wallet_manager.exceptions.CantEn
 import com.bitdubai.fermat_api.layer._16_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer._1_definition.event.PlatformEvent;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventHandler;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventHandler;
 
 /**
  * Created by loui on 19/02/15.

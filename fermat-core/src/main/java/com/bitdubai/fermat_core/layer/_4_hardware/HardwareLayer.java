@@ -3,8 +3,8 @@ package com.bitdubai.fermat_core.layer._4_hardware;
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
-import com.bitdubai.fermat_api.layer._4_hardware.CantStartSubsystemException;
-import com.bitdubai.fermat_api.layer._4_hardware.HardwareSubsystem;
+import com.bitdubai.fermat_api.layer.pip_hardware.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer.pip_hardware.HardwareSubsystem;
 import com.bitdubai.fermat_core.layer._4_hardware.local_device.LocalDeviceHardwareSubsystem;
 import com.bitdubai.fermat_core.layer._4_hardware.remote_device.RemoteDeviceHardwareSubsystem;
 

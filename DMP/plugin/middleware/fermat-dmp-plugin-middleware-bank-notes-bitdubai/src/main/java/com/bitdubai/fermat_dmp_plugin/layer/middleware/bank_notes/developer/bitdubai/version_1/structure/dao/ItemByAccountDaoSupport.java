@@ -12,7 +12,7 @@ import java.util.List;
 
 // Packages and classes to import of bitDubai API.
 import com.bitdubai.fermat_api.layer.osa_android.database_system.*;
-import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 // Packages and classes to import of Middleware Bank Notes API.
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.beans.dto.ItemByAccount;

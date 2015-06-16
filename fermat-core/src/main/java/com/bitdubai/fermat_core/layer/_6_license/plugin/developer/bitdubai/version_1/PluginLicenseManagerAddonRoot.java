@@ -3,7 +3,7 @@ package com.bitdubai.fermat_core.layer._6_license.plugin.developer.bitdubai.vers
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer._6_license.License;
+import com.bitdubai.fermat_api.layer.pip_license.License;
 
 
 /**

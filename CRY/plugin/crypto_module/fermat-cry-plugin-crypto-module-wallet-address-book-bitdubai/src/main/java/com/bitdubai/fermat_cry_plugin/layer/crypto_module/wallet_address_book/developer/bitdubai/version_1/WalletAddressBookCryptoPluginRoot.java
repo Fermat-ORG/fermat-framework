@@ -7,13 +7,13 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlugin
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.DealsWithEvents;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventHandler;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventListener;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventManager;
-import com.bitdubai.fermat_api.layer.cry_3_crypto_module.Crypto;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventHandler;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_api.layer.cry_crypto_module.Crypto;
 
 import java.util.ArrayList;
 import java.util.List;

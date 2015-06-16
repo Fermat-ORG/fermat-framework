@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_api.layer._15_middleware.app_runtime;
 
 import com.bitdubai.fermat_api.layer._1_definition.enums.Languages;
-import com.bitdubai.fermat_api.layer._5_user.device_user.DeviceUser;
+import com.bitdubai.fermat_api.layer.pip_user.device_user.DeviceUser;
 
 import java.util.Map;
 

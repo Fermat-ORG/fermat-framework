@@ -16,20 +16,20 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
 
-import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer._5_user.UserTypes;
-import com.bitdubai.fermat_api.layer._5_user.device_user.DealsWithDeviceUsers;
-import com.bitdubai.fermat_api.layer._5_user.device_user.DeviceUserManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.pip_user.UserTypes;
+import com.bitdubai.fermat_api.layer.pip_user.device_user.DealsWithDeviceUsers;
+import com.bitdubai.fermat_api.layer.pip_user.device_user.DeviceUserManager;
 
-import com.bitdubai.fermat_api.layer._5_user.extra_user.DealsWithExtraUsers;
-import com.bitdubai.fermat_api.layer._5_user.extra_user.ExtraUserManager;
-import com.bitdubai.fermat_api.layer._5_user.intra_user.DealsWithIntraUsers;
-import com.bitdubai.fermat_api.layer._5_user.intra_user.IntraUserManager;
-import com.bitdubai.fermat_api.layer.cry_3_crypto_module.actor_address_book.exceptions.CantGetActorCryptoAddress;
-import com.bitdubai.fermat_api.layer.cry_3_crypto_module.actor_address_book.exceptions.CantRegisterActorCryptoAddress;
+import com.bitdubai.fermat_api.layer.pip_user.extra_user.DealsWithExtraUsers;
+import com.bitdubai.fermat_api.layer.pip_user.extra_user.ExtraUserManager;
+import com.bitdubai.fermat_api.layer.pip_user.intra_user.DealsWithIntraUsers;
+import com.bitdubai.fermat_api.layer.pip_user.intra_user.IntraUserManager;
+import com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book.exceptions.CantGetActorCryptoAddress;
+import com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book.exceptions.CantRegisterActorCryptoAddress;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.exceptions.CantInitializeActorAddressBookException;
-import com.bitdubai.fermat_api.layer._5_user.User;
+import com.bitdubai.fermat_api.layer.pip_user.User;
 import java.util.UUID;
 
 /**
@@ -40,7 +40,7 @@ import java.util.UUID;
  * This class manages the relationship between users and crypto addresses by storing them on a Database Table.
  */
 
-public class ActorAddressBook implements com.bitdubai.fermat_api.layer.cry_3_crypto_module.actor_address_book.ActorAddressBook,DealsWithDeviceUsers,DealsWithExtraUsers,DealsWithIntraUsers, DealsWithPluginDatabaseSystem {
+public class ActorAddressBook implements com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book.ActorAddressBook,DealsWithDeviceUsers,DealsWithExtraUsers,DealsWithIntraUsers, DealsWithPluginDatabaseSystem {
 
 
     /**

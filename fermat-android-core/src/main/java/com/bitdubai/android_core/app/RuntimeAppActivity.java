@@ -53,7 +53,7 @@ import com.bitdubai.sub_app.wallet_manager.fragment.WalletDesktopFragment;
 
 import com.bitdubai.fermat_api.layer._11_network_service.wallet_resources.WalletResourcesManager;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.app_runtime.developer.bitdubai.version_1.structure.RuntimeFragment;
 import com.bitdubai.runtime_wallet.age.kids.boys.fragments.CommunityFragment;
 import com.bitdubai.runtime_wallet.age.kids.boys.fragments.ContactsFragment;

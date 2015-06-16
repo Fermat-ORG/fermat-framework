@@ -15,16 +15,16 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.UnexpectedAddonsExceptionSeverity;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedAddonsExceptionSeverity;
 
-import com.bitdubai.fermat_api.layer._5_user.User;
+import com.bitdubai.fermat_api.layer.pip_user.User;
 
-import com.bitdubai.fermat_api.layer._5_user.extra_user.UserRegistry;
-import com.bitdubai.fermat_api.layer._5_user.extra_user.exceptions.CantCreateExtraUserRegistry;
-import com.bitdubai.fermat_api.layer._5_user.extra_user.exceptions.CantGetExtraUserRegistry;
-import com.bitdubai.fermat_api.layer._5_user.extra_user.exceptions.CantInitializeExtraUserRegistryException;
+import com.bitdubai.fermat_api.layer.pip_user.extra_user.UserRegistry;
+import com.bitdubai.fermat_api.layer.pip_user.extra_user.exceptions.CantCreateExtraUserRegistry;
+import com.bitdubai.fermat_api.layer.pip_user.extra_user.exceptions.CantGetExtraUserRegistry;
+import com.bitdubai.fermat_api.layer.pip_user.extra_user.exceptions.CantInitializeExtraUserRegistryException;
 
 import java.util.UUID;
 

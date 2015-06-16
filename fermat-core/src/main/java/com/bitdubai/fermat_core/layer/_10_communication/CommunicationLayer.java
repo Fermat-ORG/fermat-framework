@@ -5,8 +5,8 @@ import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
 
 import com.bitdubai.fermat_api.layer._1_definition.enums.NetworkServices;
-import com.bitdubai.fermat_api.layer._10_communication.*;
-import com.bitdubai.fermat_api.layer._10_communication.cloud.RejectConnectionRequestReasons;
+import com.bitdubai.fermat_api.layer.p2p_communication.*;
+import com.bitdubai.fermat_api.layer.p2p_communication.cloud.RejectConnectionRequestReasons;
 import com.bitdubai.fermat_core.layer._10_communication.cloud.CloudSubsystem;
 import com.bitdubai.fermat_core.layer._10_communication.cloud_server.CloudServerSubsystem;
 
@@ -114,7 +114,7 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
     }
 
     @Override
-    public ServiceToServiceOnlineConnection acceptIncomingNetworkServiceConnectionRequest(CommunicationChannels communicationChannel, NetworkServices networkService, UUID localNetworkService, UUID remoteNetworkService) throws  CommunicationChannelNotImplemented {
+    public ServiceToServiceOnlineConnection acceptIncomingNetworkServiceConnectionRequest(CommunicationChannels communicationChannel, NetworkServices networkService, UUID localNetworkService, UUID remoteNetworkService) throws CommunicationChannelNotImplemented {
 
         switch (communicationChannel) {
 

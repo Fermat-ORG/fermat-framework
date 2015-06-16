@@ -4,29 +4,34 @@ import com.bitdubai.fermat_api.layer._1_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer._1_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.*;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
-import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.UnexpectedAddonsExceptionSeverity;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.*;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedAddonsExceptionSeverity;
+
 import com.bitdubai.fermat_api.layer._1_definition.event.PlatformEvent;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.DeviceUserCreatedEvent;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.DeviceUserLoggedInEvent;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventSource;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventType;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.DeviceUserCreatedEvent;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.DeviceUserLoggedInEvent;
 
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_api.layer._5_user.device_user.DeviceUser;
-import com.bitdubai.fermat_api.layer._5_user.device_user.*;
-import com.bitdubai.fermat_api.layer._5_user.device_user.exceptions.CantCreateDeviceUserException;
-import com.bitdubai.fermat_api.layer._5_user.device_user.exceptions.CantLoadDeviceUserException;
-import com.bitdubai.fermat_api.layer._5_user.device_user.exceptions.CantPersistDeviceUserException;
-import com.bitdubai.fermat_api.layer._5_user.device_user.exceptions.LoginFailedException;
+import com.bitdubai.fermat_api.layer.pip_user.device_user.DeviceUser;
+
+import com.bitdubai.fermat_api.layer.pip_user.device_user.DeviceUserStatus;
+import com.bitdubai.fermat_api.layer.pip_user.device_user.exceptions.CantCreateDeviceUserException;
+import com.bitdubai.fermat_api.layer.pip_user.device_user.exceptions.CantLoadDeviceUserException;
+import com.bitdubai.fermat_api.layer.pip_user.device_user.exceptions.CantPersistDeviceUserException;
+import com.bitdubai.fermat_api.layer.pip_user.device_user.exceptions.LoginFailedException;
 
 import java.util.UUID;
 
 /**
  * Created by ciencias on 22.01.15.
  */
-public class PlatformDeviceUser implements  DealsWithEvents, DealsWithErrors,DealsWithPlatformFileSystem,DeviceUser {
+public class PlatformDeviceUser implements DealsWithEvents, DealsWithErrors,DealsWithPlatformFileSystem,DeviceUser {
 
     /**
      * DealsWithErrors Interface member variables.

@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventListener;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
 
 import java.util.ArrayList;
 import java.util.Collection;

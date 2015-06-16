@@ -15,11 +15,12 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.*;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.*;
 import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.event_handlers.BegunWalletInstallationEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.event_handlers.WalletUninstalledEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.exceptions.CantInitializeWalletException;

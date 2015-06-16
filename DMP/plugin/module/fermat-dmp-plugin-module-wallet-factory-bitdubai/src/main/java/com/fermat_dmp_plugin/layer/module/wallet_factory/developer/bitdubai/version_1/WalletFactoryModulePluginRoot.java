@@ -5,12 +5,12 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.DealsWithEvents;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventHandler;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventListener;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventHandler;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 
 import java.util.ArrayList;
 import java.util.List;

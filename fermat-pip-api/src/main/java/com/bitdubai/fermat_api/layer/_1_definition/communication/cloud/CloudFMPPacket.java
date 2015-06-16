@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_api.layer._1_definition.communication.cloud;
 
-import com.bitdubai.fermat_api.layer._10_communication.fmp.FMPException;
-import com.bitdubai.fermat_api.layer._10_communication.fmp.FMPPacket;
-import com.bitdubai.fermat_api.layer._10_communication.fmp.MalformedFMPPacketException;
+import com.bitdubai.fermat_api.layer.p2p_communication.fmp.FMPException;
+import com.bitdubai.fermat_api.layer.p2p_communication.fmp.FMPPacket;
+import com.bitdubai.fermat_api.layer.p2p_communication.fmp.MalformedFMPPacketException;
 
 public class CloudFMPPacket implements FMPPacket {
 	

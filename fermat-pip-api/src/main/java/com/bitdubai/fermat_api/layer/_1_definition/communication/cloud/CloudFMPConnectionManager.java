@@ -1,11 +1,11 @@
 package com.bitdubai.fermat_api.layer._1_definition.communication.cloud;
 
-import com.bitdubai.fermat_api.layer._10_communication.CommunicationChannelAddress;
-import com.bitdubai.fermat_api.layer._10_communication.cloud.CloudConnectionException;
-import com.bitdubai.fermat_api.layer._10_communication.cloud.CloudConnectionManager;
-import com.bitdubai.fermat_api.layer._10_communication.fmp.FMPException;
-import com.bitdubai.fermat_api.layer._10_communication.fmp.FMPPacket;
-import com.bitdubai.fermat_api.layer._10_communication.fmp.FMPPacketHandler;
+import com.bitdubai.fermat_api.layer.p2p_communication.CommunicationChannelAddress;
+import com.bitdubai.fermat_api.layer.p2p_communication.cloud.CloudConnectionException;
+import com.bitdubai.fermat_api.layer.p2p_communication.cloud.CloudConnectionManager;
+import com.bitdubai.fermat_api.layer.p2p_communication.fmp.FMPException;
+import com.bitdubai.fermat_api.layer.p2p_communication.fmp.FMPPacket;
+import com.bitdubai.fermat_api.layer.p2p_communication.fmp.FMPPacketHandler;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;

@@ -6,8 +6,9 @@ import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer._16_module.wallet_manager.exceptions.CantLoadWalletsException;
 import com.bitdubai.fermat_api.layer._16_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_api.layer._1_definition.event.PlatformEvent;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.*;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.DeviceUserLoggedInEvent;
+
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventHandler;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.DeviceUserLoggedInEvent;
 
 import java.util.UUID;
 

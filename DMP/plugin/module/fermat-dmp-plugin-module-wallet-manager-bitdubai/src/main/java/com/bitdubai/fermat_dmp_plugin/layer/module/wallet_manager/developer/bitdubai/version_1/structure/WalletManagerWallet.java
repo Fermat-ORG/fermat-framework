@@ -8,11 +8,15 @@ import com.bitdubai.fermat_api.layer._16_module.wallet_manager.exceptions.CantLo
 import com.bitdubai.fermat_api.layer._16_module.wallet_manager.exceptions.CantPersistWalletException;
 import com.bitdubai.fermat_api.layer._16_module.wallet_manager.exceptions.OpenFailedException;
 import com.bitdubai.fermat_api.layer._1_definition.event.PlatformEvent;
-import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.*;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.WalletCreatedEvent;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.WalletWentOnlineEvent;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventSource;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventType;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.WalletCreatedEvent;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.WalletWentOnlineEvent;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 

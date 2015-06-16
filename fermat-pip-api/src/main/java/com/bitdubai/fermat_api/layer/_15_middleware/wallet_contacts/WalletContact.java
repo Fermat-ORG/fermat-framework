@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_api.layer._15_middleware.wallet_contacts;
 
 import com.bitdubai.fermat_api.layer._1_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer._5_user.UserTypes;
+import com.bitdubai.fermat_api.layer.pip_user.UserTypes;
 
 import java.util.UUID;
 

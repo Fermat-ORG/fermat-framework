@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_core.layer.cry_1_crypto_network.bitcoin;
 
 import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.layer.cry_1_crypto_network.CantStartSubsystemException;
-import com.bitdubai.fermat_api.layer.cry_1_crypto_network.CryptoNetworkSubsystem;
+import com.bitdubai.fermat_api.layer.cry_crypto_network.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer.cry_crypto_network.CryptoNetworkSubsystem;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.DeveloperBitDubai;
 
 /**

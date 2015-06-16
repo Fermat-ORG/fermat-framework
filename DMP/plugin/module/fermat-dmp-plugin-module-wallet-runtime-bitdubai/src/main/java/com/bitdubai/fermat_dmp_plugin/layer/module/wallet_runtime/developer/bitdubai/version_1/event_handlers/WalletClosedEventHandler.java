@@ -5,15 +5,16 @@ import com.bitdubai.fermat_api.layer._16_module.wallet_runtime.exceptions.CantRe
 import com.bitdubai.fermat_api.layer._16_module.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer._1_definition.event.PlatformEvent;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.*;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.WalletClosedEvent;
+
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventHandler;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.WalletClosedEvent;
 
 import java.util.UUID;
 
 /**
  * Created by loui on 05/02/15.
  */
-public class WalletClosedEventHandler implements EventHandler{
+public class WalletClosedEventHandler implements EventHandler {
     WalletRuntimeManager walletRuntimeManager;
 
     public void setWalletRuntimeManager(WalletRuntimeManager walletRuntimeManager) {

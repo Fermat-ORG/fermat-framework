@@ -7,9 +7,11 @@ import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer._1_definition.event.DealWithEventMonitor;
 import com.bitdubai.fermat_api.layer._1_definition.event.EventMonitor;
 import com.bitdubai.fermat_api.layer._1_definition.event.PlatformEvent;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.*;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.*;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.listeners.*;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventType;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.*;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.listeners.*;
 
 import java.util.ArrayList;
 import java.util.List;

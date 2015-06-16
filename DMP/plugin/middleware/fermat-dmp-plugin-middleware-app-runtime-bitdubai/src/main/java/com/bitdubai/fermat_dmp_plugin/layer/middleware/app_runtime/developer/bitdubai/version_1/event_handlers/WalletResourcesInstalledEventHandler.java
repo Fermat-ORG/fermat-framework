@@ -2,7 +2,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.middleware.app_runtime.developer.bi
 
 import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.AppRuntimeManager;
 import com.bitdubai.fermat_api.layer._1_definition.event.PlatformEvent;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventHandler;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventHandler;
 
 /**
  * Created by loui on 18/02/15.

@@ -2,7 +2,7 @@ package com.bitdubai.fermat_api.layer._1_definition.communication.cloud;
 
 import java.net.InetSocketAddress;
 
-import com.bitdubai.fermat_api.layer._10_communication.CommunicationChannelAddress;
+import com.bitdubai.fermat_api.layer.p2p_communication.CommunicationChannelAddress;
 
 /**
  * Created by jorgeejgonzalez

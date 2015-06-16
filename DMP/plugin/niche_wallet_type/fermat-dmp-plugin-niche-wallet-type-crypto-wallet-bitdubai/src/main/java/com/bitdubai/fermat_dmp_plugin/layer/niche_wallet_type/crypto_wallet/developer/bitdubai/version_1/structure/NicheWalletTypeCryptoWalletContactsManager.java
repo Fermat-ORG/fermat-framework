@@ -11,16 +11,16 @@ import com.bitdubai.fermat_api.layer._15_middleware.wallet_contacts.exceptions.C
 import com.bitdubai.fermat_api.layer._19_niche_wallet_type.crypto_wallet.NicheWalletTypeCryptoWalletManager;
 import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer._1_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer._5_user.User;
-import com.bitdubai.fermat_api.layer._5_user.UserTypes;
-import com.bitdubai.fermat_api.layer._5_user.extra_user.DealsWithExtraUsers;
-import com.bitdubai.fermat_api.layer._5_user.extra_user.ExtraUserManager;
-import com.bitdubai.fermat_api.layer._5_user.extra_user.exceptions.CantCreateExtraUserRegistry;
-import com.bitdubai.fermat_api.layer.cry_3_crypto_module.actor_address_book.DealsWithActorAddressBook;
-import com.bitdubai.fermat_api.layer.cry_3_crypto_module.actor_address_book.ActorAddressBook;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.pip_user.User;
+import com.bitdubai.fermat_api.layer.pip_user.UserTypes;
+import com.bitdubai.fermat_api.layer.pip_user.extra_user.DealsWithExtraUsers;
+import com.bitdubai.fermat_api.layer.pip_user.extra_user.ExtraUserManager;
+import com.bitdubai.fermat_api.layer.pip_user.extra_user.exceptions.CantCreateExtraUserRegistry;
+import com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book.DealsWithActorAddressBook;
+import com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book.ActorAddressBook;
 
 import java.util.List;
 import java.util.UUID;

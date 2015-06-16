@@ -3,8 +3,8 @@ package com.bitdubai.fermat_core.layer._6_license;
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
-import com.bitdubai.fermat_api.layer._6_license.CantStartSubsystemException;
-import com.bitdubai.fermat_api.layer._6_license.LicenseSubsystem;
+import com.bitdubai.fermat_api.layer.pip_license.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer.pip_license.LicenseSubsystem;
 import com.bitdubai.fermat_core.layer._6_license.plugin.PluginLicenseSubsystem;
 import com.bitdubai.fermat_core.layer._6_license.wallet.WalletLicenseSubsystem;
 

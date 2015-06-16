@@ -6,8 +6,8 @@ import com.bitdubai.fermat_api.layer._16_module.wallet_store.exceptions.CantReco
 import com.bitdubai.fermat_api.layer._16_module.wallet_store.WalletStoreManager;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer._1_definition.event.PlatformEvent;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.BegunWalletInstallationEvent;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventHandler;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.BegunWalletInstallationEvent;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventHandler;
 
 import java.util.UUID;
 

@@ -5,9 +5,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecord;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.DealsWithEvents;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventListener;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 
 import org.bitcoinj.core.AbstractWalletEventListener;
 import org.bitcoinj.core.Coin;

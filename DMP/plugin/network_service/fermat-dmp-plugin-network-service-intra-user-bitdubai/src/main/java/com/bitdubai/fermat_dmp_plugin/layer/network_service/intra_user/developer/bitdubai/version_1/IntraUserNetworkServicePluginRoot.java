@@ -3,14 +3,14 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.develope
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer._10_communication.CantConnectToRemoteServiceException;
-import com.bitdubai.fermat_api.layer._10_communication.CantSendMessageException;
-import com.bitdubai.fermat_api.layer._10_communication.CommunicationChannelNotImplemented;
-import com.bitdubai.fermat_api.layer._10_communication.CommunicationChannels;
-import com.bitdubai.fermat_api.layer._10_communication.CommunicationLayerManager;
-import com.bitdubai.fermat_api.layer._10_communication.ConnectionStatus;
-import com.bitdubai.fermat_api.layer._10_communication.DealsWithCommunicationLayerManager;
-import com.bitdubai.fermat_api.layer._10_communication.ServiceToServiceOnlineConnection;
+import com.bitdubai.fermat_api.layer.p2p_communication.CantConnectToRemoteServiceException;
+import com.bitdubai.fermat_api.layer.p2p_communication.CantSendMessageException;
+import com.bitdubai.fermat_api.layer.p2p_communication.CommunicationChannelNotImplemented;
+import com.bitdubai.fermat_api.layer.p2p_communication.CommunicationChannels;
+import com.bitdubai.fermat_api.layer.p2p_communication.CommunicationLayerManager;
+import com.bitdubai.fermat_api.layer.p2p_communication.ConnectionStatus;
+import com.bitdubai.fermat_api.layer.p2p_communication.DealsWithCommunicationLayerManager;
+import com.bitdubai.fermat_api.layer.p2p_communication.ServiceToServiceOnlineConnection;
 import com.bitdubai.fermat_api.layer._11_network_service.intra_user.IntraUserManager;
 import com.bitdubai.fermat_api.layer._1_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer._1_definition.crypto.asymmetric.AsymmetricKeyCreator;
@@ -20,12 +20,12 @@ import com.bitdubai.fermat_api.layer._1_definition.enums.NetworkServices;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.DealsWithEvents;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventListener;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventManager;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventType;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventType;
 import com.bitdubai.fermat_api.layer._11_network_service.NetworkService;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.IntraUserIncomingNetworkServiceConnectionRequestHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.UserLoggedInEventHandler;
@@ -45,7 +45,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import static com.bitdubai.fermat_api.layer._1_definition.enums.Plugins.BITDUBAI_USER_NETWORK_SERVICE;
-import static com.bitdubai.fermat_api.layer._3_platform_service.error_manager.UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN;
+import static com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN;
 
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.IntraUserNetworkServicePluginRoot</code> is

@@ -5,7 +5,7 @@ import static com.googlecode.catchexception.CatchException.*;
 
 import org.junit.Test;
 
-import com.bitdubai.fermat_api.layer._10_communication.cloud.CloudConnectionException;
+import com.bitdubai.fermat_api.layer.p2p_communication.cloud.CloudConnectionException;
 
 public class StartTest extends CloudClientManagerUnitTest{
 	private static final int TCP_PORT_PADDING = 100;

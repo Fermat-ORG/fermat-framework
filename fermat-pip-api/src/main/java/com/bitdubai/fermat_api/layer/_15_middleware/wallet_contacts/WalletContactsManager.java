@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer._15_middleware.wallet_contacts.exceptions.C
 import com.bitdubai.fermat_api.layer._15_middleware.wallet_contacts.exceptions.CantGetWalletContactException;
 import com.bitdubai.fermat_api.layer._15_middleware.wallet_contacts.exceptions.CantUpdateWalletContactException;
 import com.bitdubai.fermat_api.layer._1_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer._5_user.UserTypes;
+import com.bitdubai.fermat_api.layer.pip_user.UserTypes;
 
 import java.util.List;
 import java.util.UUID;

@@ -20,7 +20,7 @@ import java.io.IOException;
 import com.bitdubai.fermat_api.layer._11_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer._11_network_service.wallet_resources.WalletResourcesManager;
 import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.enums.Wallets;
-import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_dmp.wallet_runtime.R;
 import com.bitdubai.runtime_wallet.Platform;
 //import com.bitdubai.runtime_wallet.age.kids.boys.MyApplication;

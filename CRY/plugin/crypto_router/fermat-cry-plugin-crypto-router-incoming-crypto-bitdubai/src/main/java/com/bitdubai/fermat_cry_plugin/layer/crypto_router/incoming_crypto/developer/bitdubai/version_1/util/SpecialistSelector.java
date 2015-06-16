@@ -3,10 +3,10 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.devel
 import com.bitdubai.fermat_api.layer._1_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer._1_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer._1_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
-import com.bitdubai.fermat_api.layer._5_user.User;
-import com.bitdubai.fermat_api.layer.cry_3_crypto_module.actor_address_book.ActorAddressBook;
-import com.bitdubai.fermat_api.layer.cry_3_crypto_module.actor_address_book.DealsWithActorAddressBook;
-import com.bitdubai.fermat_api.layer.cry_3_crypto_module.actor_address_book.exceptions.CantGetActorCryptoAddress;
+import com.bitdubai.fermat_api.layer.pip_user.User;
+import com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book.ActorAddressBook;
+import com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book.DealsWithActorAddressBook;
+import com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book.exceptions.CantGetActorCryptoAddress;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantSelectSpecialistException;
 
 /**

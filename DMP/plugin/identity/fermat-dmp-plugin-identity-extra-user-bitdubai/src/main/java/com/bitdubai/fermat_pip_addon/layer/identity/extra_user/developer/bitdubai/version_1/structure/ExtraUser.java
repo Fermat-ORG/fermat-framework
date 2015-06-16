@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_pip_addon.layer.user.extra_user.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer._5_user.User;
-import com.bitdubai.fermat_api.layer._5_user.UserTypes;
+import com.bitdubai.fermat_api.layer.pip_user.User;
+import com.bitdubai.fermat_api.layer.pip_user.UserTypes;
 
 import java.util.UUID;
 

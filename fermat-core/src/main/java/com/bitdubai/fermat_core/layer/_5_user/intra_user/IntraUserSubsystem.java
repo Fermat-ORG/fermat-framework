@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_core.layer._5_user.intra_user;
 
 import com.bitdubai.fermat_api.Addon;
-import com.bitdubai.fermat_api.layer._5_user.CantStartSubsystemException;
-import com.bitdubai.fermat_api.layer._5_user.UserSubsystem;
+import com.bitdubai.fermat_api.layer.pip_user.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer.pip_user.UserSubsystem;
 import com.bitdubai.fermat_pip_addon.layer.user.intra_user.developer.bitdubai.DeveloperBitDubai;
 
 /**

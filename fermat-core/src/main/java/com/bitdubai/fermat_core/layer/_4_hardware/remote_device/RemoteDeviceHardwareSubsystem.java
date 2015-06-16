@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_core.layer._4_hardware.remote_device;
 
 import com.bitdubai.fermat_api.Addon;
-import com.bitdubai.fermat_api.layer._4_hardware.CantStartSubsystemException;
-import com.bitdubai.fermat_api.layer._4_hardware.HardwareSubsystem;
+import com.bitdubai.fermat_api.layer.pip_hardware.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer.pip_hardware.HardwareSubsystem;
 import com.bitdubai.fermat_pip_addon.layer.hardware.remote_device.remote_device.developer.bitdubai.DeveloperBitDubai;
 
 /**

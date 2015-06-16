@@ -2,7 +2,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.crypto_addresses.de
 
 import com.bitdubai.fermat_api.layer._11_network_service.crypto_addressees.CryptoAddressesManager;
 import com.bitdubai.fermat_api.layer._1_definition.event.PlatformEvent;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventHandler;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventHandler;
 
 /**
  * Created by loui on 20/02/15.

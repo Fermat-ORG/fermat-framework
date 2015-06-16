@@ -6,8 +6,8 @@
  */
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer._10_communication.Message;
-import com.bitdubai.fermat_api.layer._10_communication.MessagesStatus;
+import com.bitdubai.fermat_api.layer.p2p_communication.Message;
+import com.bitdubai.fermat_api.layer.p2p_communication.MessagesStatus;
 
 import java.io.Serializable;
 

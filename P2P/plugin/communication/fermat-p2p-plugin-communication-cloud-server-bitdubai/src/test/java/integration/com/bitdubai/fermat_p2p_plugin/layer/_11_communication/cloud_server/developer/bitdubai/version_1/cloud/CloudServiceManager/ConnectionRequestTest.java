@@ -6,8 +6,8 @@ import integration.com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud_
 import org.junit.Before;
 import org.junit.Test;
 
-import com.bitdubai.fermat_api.layer._10_communication.fmp.FMPPacket;
-import com.bitdubai.fermat_api.layer._10_communication.fmp.FMPPacket.FMPPacketType;
+import com.bitdubai.fermat_api.layer.p2p_communication.fmp.FMPPacket;
+import com.bitdubai.fermat_api.layer.p2p_communication.fmp.FMPPacket.FMPPacketType;
 import com.bitdubai.fermat_api.layer._1_definition.crypto.asymmetric.AsymmectricCryptography;
 
 

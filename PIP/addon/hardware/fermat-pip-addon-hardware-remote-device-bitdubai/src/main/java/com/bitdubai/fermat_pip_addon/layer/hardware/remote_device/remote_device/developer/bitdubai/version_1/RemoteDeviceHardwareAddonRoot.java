@@ -3,15 +3,15 @@ package com.bitdubai.fermat_pip_addon.layer.hardware.remote_device.remote_device
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.DealsWithEvents;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventListener;
-import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPlatformFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
-import com.bitdubai.fermat_api.layer._4_hardware.Hardware;
-import com.bitdubai.fermat_api.layer._4_hardware.remote_device.RemoteDeviceHardwareManager;
+import com.bitdubai.fermat_api.layer.pip_hardware.Hardware;
+import com.bitdubai.fermat_api.layer.pip_hardware.remote_device.RemoteDeviceHardwareManager;
 
 import java.util.ArrayList;
 import java.util.List;

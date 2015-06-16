@@ -5,7 +5,7 @@ import static org.fest.assertions.api.Assertions.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.bitdubai.fermat_api.layer._10_communication.CommunicationChannelAddress;
+import com.bitdubai.fermat_api.layer.p2p_communication.CommunicationChannelAddress;
 import com.bitdubai.fermat_api.layer._1_definition.communication.CommunicationChannelAddressFactory;
 import com.bitdubai.fermat_api.layer._1_definition.enums.NetworkServices;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.CloudNetworkServiceManager;
