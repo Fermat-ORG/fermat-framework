@@ -75,23 +75,53 @@ project(':fermat-p2p-plugin-communication-cloud-server-bitdubai').projectDir = n
 
 // DMP Projects (Plugins)
 
-include ':DMP/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai'
-include ':DMP/plugin/identity/fermat-dmp-plugin-identity-extra-user-bitdubai'
+include ':fermat-dmp-plugin-identity-intra-user-bitdubai'
+project(':fermat-dmp-plugin-identity-intra-user-bitdubai').projectDir = new File('DMP/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai')
 
-include ':DMP/plugin/world/fermat-dmp-plugin-world-blockchain-info-bitdubai'
-include ':DMP/plugin/world/fermat-dmp-plugin-world-coinapult-bitdubai'
-include ':DMP/plugin/world/fermat-dmp-plugin-world-crypto-index-bitdubai'
-include ':DMP/plugin/world/fermat-dmp-plugin-world-location-bitdubai'
-include ':DMP/plugin/world/fermat-dmp-plugin-world-shape-shift-bitdubai'
-include ':DMP/plugin/world/fermat-dmp-plugin-world-coinbase-bitdubai'
+include ':fermat-dmp-plugin-identity-extra-user-bitdubai'
+project(':fermat-dmp-plugin-identity-extra-user-bitdubai').projectDir = new File('DMP/plugin/identity/fermat-dmp-plugin-identity-extra-user-bitdubai')
 
-include ':DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-device-user-bitdubai'
-include ':DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai'
-include ':DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai'
-include ':DMP/plugin/transaction/fermat-dmp-plugin-transaction-inter-wallet-bitdubai'
-include ':DMP/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-device-user-bitdubai'
-include ':DMP/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai'
-include ':DMP/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai'
+
+include ':fermat-dmp-plugin-world-blockchain-info-bitdubai'
+project(':fermat-dmp-plugin-world-blockchain-info-bitdubai').projectDir = new File('DMP/plugin/world/fermat-dmp-plugin-world-blockchain-info-bitdubai')
+
+include ':fermat-dmp-plugin-world-coinapult-bitdubai'
+project(':fermat-dmp-plugin-world-coinapult-bitdubai').projectDir = new File('DMP/plugin/world/fermat-dmp-plugin-world-coinapult-bitdubai')
+
+include ':fermat-dmp-plugin-world-crypto-index-bitdubai'
+project(':fermat-dmp-plugin-world-crypto-index-bitdubai').projectDir = new File('DMP/plugin/world/fermat-dmp-plugin-world-crypto-index-bitdubai')
+
+include ':fermat-dmp-plugin-world-location-bitdubai'
+project(':fermat-dmp-plugin-world-location-bitdubai').projectDir = new File('DMP/plugin/world/fermat-dmp-plugin-world-location-bitdubai')
+
+include ':fermat-dmp-plugin-world-shape-shift-bitdubai'
+project(':fermat-dmp-plugin-world-shape-shift-bitdubai').projectDir = new File('DMP/plugin/world/fermat-dmp-plugin-world-shape-shift-bitdubai')
+
+include ':fermat-dmp-plugin-world-coinbase-bitdubai'
+project(':fermat-dmp-plugin-world-coinbase-bitdubai').projectDir = new File('DMP/plugin/world/fermat-dmp-plugin-world-coinbase-bitdubai')
+
+
+include ':fermat-dmp-plugin-transaction-incoming-device-user-bitdubai'
+project(':fermat-dmp-plugin-transaction-incoming-device-user-bitdubai').projectDir = new File('DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-device-user-bitdubai')
+
+include ':fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai'
+project(':fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai').projectDir = new File('DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai')
+
+include ':fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai'
+project(':fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai').projectDir = new File('DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai')
+
+include ':fermat-dmp-plugin-transaction-inter-wallet-bitdubai'
+project(':fermat-dmp-plugin-transaction-inter-wallet-bitdubai').projectDir = new File('DMP/plugin/transaction/fermat-dmp-plugin-transaction-inter-wallet-bitdubai')
+
+include ':fermat-dmp-plugin-transaction-outgoing-device-user-bitdubai'
+project(':fermat-dmp-plugin-transaction-outgoing-device-user-bitdubai').projectDir = new File('DMP/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-device-user-bitdubai')
+
+include ':fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai'
+project(':fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai').projectDir = new File('DMP/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai')
+
+include ':fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai'
+project(':fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai').projectDir = new File('DMP/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai')
+
 
 include ':DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-bank-notes-wallet-bitdubai'
 include ':DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-crypto-loss-protected-wallet-bitdubai'
