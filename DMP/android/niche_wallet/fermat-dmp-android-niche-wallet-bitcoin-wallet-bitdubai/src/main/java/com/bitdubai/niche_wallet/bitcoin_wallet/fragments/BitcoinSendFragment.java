@@ -1,4 +1,4 @@
-package com.bitdubai.android_fermat_dmp_wallet_bitcoin.fragments;
+package com.bitdubai.niche_wallet.bitcoin_wallet.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
-import com.bitdubai.android_fermat_dmp_wallet_bitcoin.Platform;
+import com.bitdubai.niche_wallet.bitcoin_wallet.Platform;
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.NicheWalletTypeCryptoWalletManager;
 

@@ -23,10 +23,10 @@ import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.su
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.SendToContactFragment;
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.SendToNewContactFragment;
 
-import com.bitdubai.android_fermat_dmp_wallet_bitcoin.fragments.BitcoinReceiveFromContactFragment;
-import com.bitdubai.android_fermat_dmp_wallet_bitcoin.fragments.BitcoinReceiveFromNewContactFragment;
-import com.bitdubai.android_fermat_dmp_wallet_bitcoin.fragments.BitcoinSendToContactFragment;
-import com.bitdubai.android_fermat_dmp_wallet_bitcoin.fragments.BitcoinSendToNewContactFragment;
+import com.bitdubai.niche_wallet.bitcoin_wallet.fragments.BitcoinReceiveFromContactFragment;
+import com.bitdubai.niche_wallet.bitcoin_wallet.fragments.BitcoinReceiveFromNewContactFragment;
+import com.bitdubai.niche_wallet.bitcoin_wallet.fragments.BitcoinSendToContactFragment;
+import com.bitdubai.niche_wallet.bitcoin_wallet.fragments.BitcoinSendToNewContactFragment;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.App;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.AppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.Fragment;

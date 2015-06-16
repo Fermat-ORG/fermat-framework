@@ -1,4 +1,4 @@
-package com.bitdubai.android_fermat_dmp_wallet_bitcoin.fragments;
+package com.bitdubai.niche_wallet.bitcoin_wallet.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,8 +12,6 @@ import android.widget.TextView;
 
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
 
 /**

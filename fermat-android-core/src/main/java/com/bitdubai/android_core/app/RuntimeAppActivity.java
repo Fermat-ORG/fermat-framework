@@ -36,9 +36,9 @@ import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopMapFragm
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopProductsFragment;
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopReviewsFragment;
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopShopFragment;
-import com.bitdubai.android_fermat_dmp_wallet_bitcoin.fragments.BitcoinReceiveFragment;
-import com.bitdubai.android_fermat_dmp_wallet_bitcoin.fragments.BitcoinSendFragment;
-import com.bitdubai.android_fermat_dmp_wallet_bitcoin.fragments.BitcoinBalanceFragment;
+import com.bitdubai.niche_wallet.bitcoin_wallet.fragments.BitcoinReceiveFragment;
+import com.bitdubai.niche_wallet.bitcoin_wallet.fragments.BitcoinSendFragment;
+import com.bitdubai.niche_wallet.bitcoin_wallet.fragments.BitcoinBalanceFragment;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.*;
 import com.bitdubai.sub_app.shop_manager.fragment.ShopDesktopFragment;
 

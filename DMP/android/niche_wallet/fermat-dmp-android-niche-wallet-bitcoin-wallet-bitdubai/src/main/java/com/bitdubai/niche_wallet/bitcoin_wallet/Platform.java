@@ -1,4 +1,4 @@
-package com.bitdubai.android_fermat_dmp_wallet_bitcoin;
+package com.bitdubai.niche_wallet.bitcoin_wallet;
 
 /**
  * Created by Natalia on 4/4/15.
