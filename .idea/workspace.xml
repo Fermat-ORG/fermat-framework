@@ -18,7 +18,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="002dcb19-6857-46a5-8dce-b1b1a0984b49" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-location-subsystem-bitdubai/PIP_addon_platform_service_fermat-pip-addon-platform-service-location-subsystem-bitdubai.iml" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-database-system-bitdubai/fermat-osa-addon-android-database-system-bitdubai.iml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai/fermat-osa-addon-android-device-connectivity-bitdubai.iml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-device-location-bitdubai/fermat-osa-addon-android-device-location-bitdubai.iml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-device-power-bitdubai/fermat-osa-addon-android-device-power-bitdubai.iml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-file-system-bitdubai/fermat-osa-addon-android-file-system-bitdubai.iml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-logger-bitdubai/fermat-osa-addon-android-logger-bitdubai.iml" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-database-system-bitdubai/OSA_addon_android_fermat-osa-addon-android-database-system-bitdubai.iml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai/OSA_addon_android_fermat-osa-addon-android-device-connectivity-bitdubai.iml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-device-location-bitdubai/OSA_addon_android_fermat-osa-addon-android-device-location-bitdubai.iml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-device-power-bitdubai/OSA_addon_android_fermat-osa-addon-android-device-power-bitdubai.iml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-file-system-bitdubai/OSA_addon_android_fermat-osa-addon-android-file-system-bitdubai.iml" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-logger-bitdubai/OSA_addon_android_fermat-osa-addon-android-logger-bitdubai.iml" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/build.gradle" afterPath="$PROJECT_DIR$/fermat-android-core/build.gradle" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-core/build.gradle" afterPath="$PROJECT_DIR$/fermat-core/build.gradle" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/fermat-android-core.iml" afterPath="$PROJECT_DIR$/fermat-android-core/fermat-android-core.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-core/fermat-core.iml" afterPath="$PROJECT_DIR$/fermat-core/fermat-core.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/settings.gradle" afterPath="$PROJECT_DIR$/settings.gradle" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="bitDubai-system.iws" />
@@ -70,8 +87,8 @@
       <file leaf-file-name="settings.gradle" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/settings.gradle">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.1904048">
-              <caret line="26" column="0" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.33486238">
+              <caret line="76" column="0" selection-start-line="76" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -80,8 +97,8 @@
       <file leaf-file-name="build.gradle" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/fermat-core/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="27" column="15" selection-start-line="27" selection-start-column="15" selection-end-line="27" selection-end-column="15" />
+            <state vertical-scroll-proportion="-4.0333333">
+              <caret line="24" column="22" selection-start-line="24" selection-start-column="22" selection-end-line="24" selection-end-column="22" />
               <folding />
             </state>
           </provider>
@@ -90,8 +107,8 @@
       <file leaf-file-name="build.gradle" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/fermat-android-core/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="55" column="25" selection-start-line="55" selection-start-column="25" selection-end-line="55" selection-end-column="25" />
+            <state vertical-scroll-proportion="-15.233334">
+              <caret line="88" column="0" selection-start-line="88" selection-start-column="0" selection-end-line="88" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -135,10 +152,6 @@
                 <option name="path" value="$PROJECT_DIR$/P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
               </ExternalProjectPojo>
               <ExternalProjectPojo>
-                <option name="name" value=":OSA/addon/android/fermat-osa-addon-android-logger-bitdubai" />
-                <option name="path" value="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-logger-bitdubai" />
-              </ExternalProjectPojo>
-              <ExternalProjectPojo>
                 <option name="name" value=":DMP/android/sub_app/fermat-dmp-android-wallet-publisher-bitdubai" />
                 <option name="path" value="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-wallet-publisher-bitdubai" />
               </ExternalProjectPojo>
@@ -171,12 +184,8 @@
                 <option name="path" value="$PROJECT_DIR$/fermat-pip-api" />
               </ExternalProjectPojo>
               <ExternalProjectPojo>
-                <option name="name" value=":OSA/addon/android/fermat-osa-addon-android-file-system-bitdubai" />
+                <option name="name" value=":fermat-osa-addon-android-file-system-bitdubai" />
                 <option name="path" value="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-file-system-bitdubai" />
-              </ExternalProjectPojo>
-              <ExternalProjectPojo>
-                <option name="name" value=":OSA/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai" />
-                <option name="path" value="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai" />
               </ExternalProjectPojo>
               <ExternalProjectPojo>
                 <option name="name" value=":DMP/plugin/module/fermat-dmp-plugin-module-wallet-manager-bitdubai" />
@@ -189,10 +198,6 @@
               <ExternalProjectPojo>
                 <option name="name" value=":DMP/android/sub_app/fermat-dmp-android-wallet-store-bitdubai" />
                 <option name="path" value="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-wallet-store-bitdubai" />
-              </ExternalProjectPojo>
-              <ExternalProjectPojo>
-                <option name="name" value=":OSA/addon/android/fermat-osa-addon-android-device-power-bitdubai" />
-                <option name="path" value="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-device-power-bitdubai" />
               </ExternalProjectPojo>
               <ExternalProjectPojo>
                 <option name="name" value=":DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai" />
@@ -233,6 +238,10 @@
               <ExternalProjectPojo>
                 <option name="name" value=":DMP/plugin/world/fermat-dmp-plugin-world-crypto-index-bitdubai" />
                 <option name="path" value="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-crypto-index-bitdubai" />
+              </ExternalProjectPojo>
+              <ExternalProjectPojo>
+                <option name="name" value=":fermat-osa-addon-android-device-connectivity-bitdubai" />
+                <option name="path" value="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai" />
               </ExternalProjectPojo>
               <ExternalProjectPojo>
                 <option name="name" value=":DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai" />
@@ -283,6 +292,10 @@
                 <option name="path" value="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai" />
               </ExternalProjectPojo>
               <ExternalProjectPojo>
+                <option name="name" value=":fermat-osa-addon-android-database-system-bitdubai" />
+                <option name="path" value="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-database-system-bitdubai" />
+              </ExternalProjectPojo>
+              <ExternalProjectPojo>
                 <option name="name" value=":DMP/plugin/module/fermat-dmp-plugin-module-wallet-store-bitdubai" />
                 <option name="path" value="$PROJECT_DIR$/DMP/plugin/module/fermat-dmp-plugin-module-wallet-store-bitdubai" />
               </ExternalProjectPojo>
@@ -303,16 +316,16 @@
                 <option name="path" value="$PROJECT_DIR$/CRY/plugin/crypto_module/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai" />
               </ExternalProjectPojo>
               <ExternalProjectPojo>
-                <option name="name" value=":OSA/addon/android/fermat-osa-addon-android-database-system-bitdubai" />
-                <option name="path" value="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-database-system-bitdubai" />
-              </ExternalProjectPojo>
-              <ExternalProjectPojo>
                 <option name="name" value=":DMP/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai" />
                 <option name="path" value="$PROJECT_DIR$/DMP/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai" />
               </ExternalProjectPojo>
               <ExternalProjectPojo>
                 <option name="name" value=":fermat-pip-addon-platform-service-event-manager-bitdubai" />
                 <option name="path" value="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-event-manager-bitdubai" />
+              </ExternalProjectPojo>
+              <ExternalProjectPojo>
+                <option name="name" value=":fermat-osa-addon-android-device-location-bitdubai" />
+                <option name="path" value="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-device-location-bitdubai" />
               </ExternalProjectPojo>
               <ExternalProjectPojo>
                 <option name="name" value=":fermat-android-core" />
@@ -343,10 +356,6 @@
                 <option name="path" value="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-bank-notes-wallet-bitdubai" />
               </ExternalProjectPojo>
               <ExternalProjectPojo>
-                <option name="name" value=":OSA/addon/android/fermat-osa-addon-android-device-location-bitdubai" />
-                <option name="path" value="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-device-location-bitdubai" />
-              </ExternalProjectPojo>
-              <ExternalProjectPojo>
                 <option name="name" value=":DMP/android/sub_app/fermat-dmp-android-wallet-factory-bitdubai" />
                 <option name="path" value="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-wallet-factory-bitdubai" />
               </ExternalProjectPojo>
@@ -361,6 +370,14 @@
               <ExternalProjectPojo>
                 <option name="name" value=":fermat-pip-addon-hardware-remote-device-bitdubai" />
                 <option name="path" value="$PROJECT_DIR$/PIP/addon/hardware/fermat-pip-addon-hardware-remote-device-bitdubai" />
+              </ExternalProjectPojo>
+              <ExternalProjectPojo>
+                <option name="name" value=":fermat-osa-addon-android-logger-bitdubai" />
+                <option name="path" value="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-logger-bitdubai" />
+              </ExternalProjectPojo>
+              <ExternalProjectPojo>
+                <option name="name" value=":fermat-osa-addon-android-device-power-bitdubai" />
+                <option name="path" value="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-device-power-bitdubai" />
               </ExternalProjectPojo>
               <ExternalProjectPojo>
                 <option name="name" value=":DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-device-user-bitdubai" />
@@ -946,43 +963,6 @@
                 <option name="name" value="uploadArchives" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Cleans all Eclipse files." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="cleanEclipse" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="cleanEclipseClasspath" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="cleanEclipseJdt" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="cleanEclipseProject" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Generates all Eclipse files." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="eclipse" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Generates the Eclipse classpath file." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="eclipseClasspath" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Generates the Eclipse JDT settings file." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="eclipseJdt" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Generates the Eclipse project file." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
-                <option name="name" value="eclipseProject" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="collectDebugMultiDexComponents" />
               </ExternalTaskPojo>
@@ -1098,6 +1078,43 @@
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
                 <option name="name" value="zipalignDebug" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Cleans all Eclipse files." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="cleanEclipse" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="cleanEclipseClasspath" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="cleanEclipseJdt" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="cleanEclipseProject" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Generates all Eclipse files." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="eclipse" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Generates the Eclipse classpath file." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="eclipseClasspath" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Generates the Eclipse JDT settings file." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="eclipseJdt" />
+              </ExternalTaskPojo>
+              <ExternalTaskPojo>
+                <option name="description" value="Generates the Eclipse project file." />
+                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
+                <option name="name" value="eclipseProject" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$" />
@@ -8445,7 +8462,7 @@
                 <option name="name" value="testClasses" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Uploads all artifacts belonging to configuration ':OSA/addon/android/fermat-osa-addon-android-database-system-bitdubai:archives'" />
+                <option name="description" value="Uploads all artifacts belonging to configuration ':fermat-osa-addon-android-database-system-bitdubai:archives'" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-database-system-bitdubai" />
                 <option name="name" value="uploadArchives" />
               </ExternalTaskPojo>
@@ -8603,7 +8620,7 @@
                 <option name="name" value="testClasses" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Uploads all artifacts belonging to configuration ':OSA/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai:archives'" />
+                <option name="description" value="Uploads all artifacts belonging to configuration ':fermat-osa-addon-android-device-connectivity-bitdubai:archives'" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai" />
                 <option name="name" value="uploadArchives" />
               </ExternalTaskPojo>
@@ -8761,7 +8778,7 @@
                 <option name="name" value="testClasses" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Uploads all artifacts belonging to configuration ':OSA/addon/android/fermat-osa-addon-android-device-location-bitdubai:archives'" />
+                <option name="description" value="Uploads all artifacts belonging to configuration ':fermat-osa-addon-android-device-location-bitdubai:archives'" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-device-location-bitdubai" />
                 <option name="name" value="uploadArchives" />
               </ExternalTaskPojo>
@@ -8919,7 +8936,7 @@
                 <option name="name" value="testClasses" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Uploads all artifacts belonging to configuration ':OSA/addon/android/fermat-osa-addon-android-device-power-bitdubai:archives'" />
+                <option name="description" value="Uploads all artifacts belonging to configuration ':fermat-osa-addon-android-device-power-bitdubai:archives'" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-device-power-bitdubai" />
                 <option name="name" value="uploadArchives" />
               </ExternalTaskPojo>
@@ -9077,7 +9094,7 @@
                 <option name="name" value="testClasses" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Uploads all artifacts belonging to configuration ':OSA/addon/android/fermat-osa-addon-android-file-system-bitdubai:archives'" />
+                <option name="description" value="Uploads all artifacts belonging to configuration ':fermat-osa-addon-android-file-system-bitdubai:archives'" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-file-system-bitdubai" />
                 <option name="name" value="uploadArchives" />
               </ExternalTaskPojo>
@@ -9235,7 +9252,7 @@
                 <option name="name" value="testClasses" />
               </ExternalTaskPojo>
               <ExternalTaskPojo>
-                <option name="description" value="Uploads all artifacts belonging to configuration ':OSA/addon/android/fermat-osa-addon-android-logger-bitdubai:archives'" />
+                <option name="description" value="Uploads all artifacts belonging to configuration ':fermat-osa-addon-android-logger-bitdubai:archives'" />
                 <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-logger-bitdubai" />
                 <option name="name" value="uploadArchives" />
               </ExternalTaskPojo>
@@ -10777,7 +10794,7 @@
     </option>
     <option name="modificationStamps">
       <map>
-        <entry key="$PROJECT_DIR$" value="106148105007734" />
+        <entry key="$PROJECT_DIR$" value="106148107926922" />
       </map>
     </option>
     <option name="projectBuildClasspath">
@@ -26606,10 +26623,10 @@
         <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-store-bitdubai/build.gradle" />
         <option value="$PROJECT_DIR$/fermat-dmp-android-wallet-publisher-bitdubai/build.gradle" />
         <option value="$PROJECT_DIR$/cry/plugin/crypto_module/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/build.gradle" />
-        <option value="$PROJECT_DIR$/fermat-android-core/build.gradle" />
         <option value="$PROJECT_DIR$/P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/build.gradle" />
-        <option value="$PROJECT_DIR$/fermat-core/build.gradle" />
         <option value="$PROJECT_DIR$/CRY/plugin/crypto_module/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/build.gradle" />
+        <option value="$PROJECT_DIR$/fermat-core/build.gradle" />
+        <option value="$PROJECT_DIR$/fermat-android-core/build.gradle" />
         <option value="$PROJECT_DIR$/settings.gradle" />
       </list>
     </option>
@@ -27112,7 +27129,7 @@
       <workItem from="1434312230827" duration="4615000" />
       <workItem from="1434352653882" duration="10375000" />
       <workItem from="1434365913476" duration="463000" />
-      <workItem from="1434433799908" duration="1736000" />
+      <workItem from="1434433799908" duration="2292000" />
     </task>
     <task id="LOCAL-00001" summary="Compiling and Running the APP all without sub-modules">
       <created>1434275293906</created>
@@ -27336,15 +27353,21 @@
       <option name="project" value="LOCAL" />
       <updated>1434435507590</updated>
     </task>
-    <option name="localTasksCounter" value="38" />
+    <task id="LOCAL-00038" summary="PIP Graddle Settings Changed- Compiling">
+      <created>1434435564962</created>
+      <option name="number" value="00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1434435564962</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="41091000" />
+    <option name="totallyTimeSpent" value="41647000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="-4" width="1855" height="1084" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -27353,29 +27376,29 @@
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24270834" sideWeight="0.498618" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25625" sideWeight="0.5395246" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32916668" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24270834" sideWeight="0.501382" order="12" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25625" sideWeight="0.46268657" order="13" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24270834" sideWeight="0.501382" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25625" sideWeight="0.46047541" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32946378" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="PlantUML" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19624102" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2498618" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.28958333" sideWeight="0.45605308" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Memory Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="true" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.328125" sideWeight="0.45826423" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32916668" sideWeight="0.48258707" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
     </layout>
@@ -27773,14 +27796,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/fermat-android-core/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="55" column="25" selection-start-line="55" selection-start-column="25" selection-end-line="55" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.6319218">
@@ -27799,16 +27814,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/fermat-core/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="27" column="15" selection-start-line="27" selection-start-column="15" selection-end-line="27" selection-end-column="15" />
+        <state vertical-scroll-proportion="-4.0333333">
+          <caret line="24" column="22" selection-start-line="24" selection-start-column="22" selection-end-line="24" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-android-core/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-15.233334">
+          <caret line="88" column="0" selection-start-line="88" selection-start-column="0" selection-end-line="88" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/settings.gradle">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.1904048">
-          <caret line="26" column="0" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.33486238">
+          <caret line="76" column="0" selection-start-line="76" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
           <folding />
         </state>
       </provider>

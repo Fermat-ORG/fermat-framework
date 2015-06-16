@@ -127,6 +127,8 @@
     <orderEntry type="library" exported="" name="google-http-client-jackson2-1.18.0-rc" level="project" />
     <orderEntry type="library" exported="" name="commons-collections-3.2" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-21.0.3" level="project" />
+    <orderEntry type="module" module-name="fermat-osa-addon-android-device-location-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-osa-addon-android-database-system-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-p2p-plugin-communication-cloud-client-bitdubai" exported="" />
     <orderEntry type="library" exported="" name="DMP/android/sub_app/fermat-dmp-android-wallet-factory-bitdubai-unspecified" level="project" />
     <orderEntry type="module" module-name="fermat-cry-plugin-crypto-module-actor-address-book-bitdubai" exported="" />
@@ -140,6 +142,7 @@
     <orderEntry type="module" module-name="fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-platform-service-location-subsystem-bitdubai" exported="" />
     <orderEntry type="library" exported="" name="DMP/android/sub_app/fermat-dmp-android-shop-manager-bitdubai-unspecified" level="project" />
+    <orderEntry type="module" module-name="fermat-osa-addon-android-file-system-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-platform-service-error-manager-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-hardware-local-device-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-platform-service-event-manager-bitdubai" exported="" />

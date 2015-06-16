@@ -24,13 +24,23 @@ project(':fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai').projectDir 
 
 // OSA Projects
 
+include ':fermat-osa-addon-android-database-system-bitdubai'
+project(':fermat-osa-addon-android-database-system-bitdubai').projectDir = new File('OSA/addon/android/fermat-osa-addon-android-database-system-bitdubai')
 
-include ':OSA/addon/android/fermat-osa-addon-android-database-system-bitdubai'
-include ':OSA/addon/android/fermat-osa-addon-android-file-system-bitdubai'
-include ':OSA/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai'
-include ':OSA/addon/android/fermat-osa-addon-android-device-location-bitdubai'
-include ':OSA/addon/android/fermat-osa-addon-android-device-power-bitdubai'
-include ':OSA/addon/android/fermat-osa-addon-android-logger-bitdubai'
+include ':fermat-osa-addon-android-file-system-bitdubai'
+project(':fermat-osa-addon-android-file-system-bitdubai').projectDir = new File('OSA/addon/android/fermat-osa-addon-android-file-system-bitdubai')
+
+include ':fermat-osa-addon-android-device-connectivity-bitdubai'
+project(':fermat-osa-addon-android-device-connectivity-bitdubai').projectDir = new File('OSA/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai')
+
+include ':fermat-osa-addon-android-device-location-bitdubai'
+project(':fermat-osa-addon-android-device-location-bitdubai').projectDir = new File('OSA/addon/android/fermat-osa-addon-android-device-location-bitdubai')
+
+include ':fermat-osa-addon-android-device-power-bitdubai'
+project(':fermat-osa-addon-android-device-power-bitdubai').projectDir = new File('OSA/addon/android/fermat-osa-addon-android-device-power-bitdubai')
+
+include ':fermat-osa-addon-android-logger-bitdubai'
+project(':fermat-osa-addon-android-logger-bitdubai').projectDir = new File('OSA/addon/android/fermat-osa-addon-android-logger-bitdubai')
 
 
 // PIP Projects

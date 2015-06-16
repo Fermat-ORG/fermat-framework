@@ -49,11 +49,13 @@ dependencies {
     compile project(':fermat-pip-api')
     compile project(':fermat-core')
 
+
 // OSA Projects
 
-    compile project(':OSA/addon/android/fermat-osa-addon-android-database-system-bitdubai')
-    compile project(':OSA/addon/android/fermat-osa-addon-android-file-system-bitdubai')
-    compile project(':OSA/addon/android/fermat-osa-addon-android-device-location-bitdubai')
+    compile project(':fermat-osa-addon-android-database-system-bitdubai')
+    compile project(':fermat-osa-addon-android-file-system-bitdubai')
+    compile project(':fermat-osa-addon-android-device-location-bitdubai')
+
 
 // DMP Projects (Wallets)
 
@@ -74,6 +76,7 @@ Wallets on the pipeline:
 
 */
 
+
 // DMP Projects (Sub APPs)
 
     compile project(':DMP/android/sub_app/fermat-dmp-android-wallet-manager-bitdubai')
@@ -81,7 +84,6 @@ Wallets on the pipeline:
     compile project(':DMP/android/sub_app/fermat-dmp-android-wallet-store-bitdubai')
     compile project(':DMP/android/sub_app/fermat-dmp-android-wallet-publisher-bitdubai')
     compile project(':DMP/android/sub_app/fermat-dmp-android-shop-manager-bitdubai')
-
 
 
 
