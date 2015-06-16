@@ -29,9 +29,9 @@ import com.bitdubai.fermat_api.layer.pip_user.extra_user.DealsWithExtraUsers;
 import com.bitdubai.fermat_api.layer.pip_user.extra_user.ExtraUserManager;
 import com.bitdubai.fermat_api.layer.pip_user.intra_user.DealsWithIntraUsers;
 import com.bitdubai.fermat_api.layer.pip_user.intra_user.IntraUserManager;
-import com.bitdubai.fermat_core.layer._13_basic_wallet.BasicWalletLayer;
-import com.bitdubai.fermat_core.layer._16_transaction.TransactionLayer;
-import com.bitdubai.fermat_core.layer._19_niche_wallet_type.NicheWalletTypeLayer;
+import com.bitdubai.fermat_core.layer.dmp_basic_wallet.BasicWalletLayer;
+import com.bitdubai.fermat_core.layer.dmp_transaction.TransactionLayer;
+import com.bitdubai.fermat_core.layer.dmp_niche_wallet_type.NicheWalletTypeLayer;
 import com.bitdubai.fermat_core.layer.pip_platform_service.PlatformServiceLayer;
 
 import com.bitdubai.fermat_core.layer.all_definition.DefinitionLayer;
@@ -39,16 +39,16 @@ import com.bitdubai.fermat_core.layer.osa_android.OsLayer;
 import com.bitdubai.fermat_core.layer.pip_hardware.HardwareLayer;
 import com.bitdubai.fermat_core.layer.pip_user.UserLayer;
 import com.bitdubai.fermat_core.layer.pip_license.LicenseLayer;
-import com.bitdubai.fermat_core.layer._12_world.WorldLayer;
+import com.bitdubai.fermat_core.layer.dmp_world.WorldLayer;
 import com.bitdubai.fermat_core.layer.cry_crypto_network.CryptoNetworkLayer;
 import com.bitdubai.fermat_api.layer.cry_crypto_network.CryptoNetworks;
 import com.bitdubai.fermat_core.layer.cry_cypto_vault.CryptoVaultLayer;
 import com.bitdubai.fermat_core.layer.cry_crypto_module.CryptoLayer;
 import com.bitdubai.fermat_core.layer.p2p_communication.CommunicationLayer;
-import com.bitdubai.fermat_core.layer._11_network_service.NetworkServiceLayer;
-import com.bitdubai.fermat_core.layer._15_middleware.MiddlewareLayer;
-import com.bitdubai.fermat_core.layer._18_module.ModuleLayer;
-import com.bitdubai.fermat_core.layer._17_agent.AgentLayer;
+import com.bitdubai.fermat_core.layer.dmp_network_service.NetworkServiceLayer;
+import com.bitdubai.fermat_core.layer.dmp_middleware.MiddlewareLayer;
+import com.bitdubai.fermat_core.layer.dmp_module.ModuleLayer;
+import com.bitdubai.fermat_core.layer.dmp_agent.AgentLayer;
 
 import java.util.UUID;
 

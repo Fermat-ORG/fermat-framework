@@ -18,46 +18,57 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="002dcb19-6857-46a5-8dce-b1b1a0984b49" name="Default" comment="">
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_10_communication/CommunicationLayer.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/p2p_communication/CommunicationLayer.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_10_communication/LayerServiceToServiceOnlineConnection.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/p2p_communication/LayerServiceToServiceOnlineConnection.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_10_communication/cloud/CloudSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/p2p_communication/cloud/CloudSubsystem.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_10_communication/cloud_server/CloudServerSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/p2p_communication/cloud_server/CloudServerSubsystem.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_1_definition/DefinitionLayer.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/all_definition/DefinitionLayer.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_2_os/OsLayer.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/osa_android/OsLayer.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_2_os/android/AndroidOsSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/osa_android/android/AndroidOsSubsystem.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_2_os/android/device_location/DeviceLocationSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/osa_android/android/device_location/DeviceLocationSubsystem.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_3_platform_service/PlatformServiceLayer.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/pip_platform_service/PlatformServiceLayer.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_3_platform_service/error_manager/ErrorManagerSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/pip_platform_service/error_manager/ErrorManagerSubsystem.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_3_platform_service/event_manager/EventManagerSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/pip_platform_service/event_manager/EventManagerSubsystem.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_3_platform_service/location_subsystem/LocationSubsystemSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/pip_platform_service/location_subsystem/LocationSubsystemSubsystem.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_4_hardware/HardwareLayer.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/pip_hardware/HardwareLayer.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_4_hardware/local_device/LocalDeviceHardwareSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/pip_hardware/local_device/LocalDeviceHardwareSubsystem.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_4_hardware/remote_device/RemoteDeviceHardwareSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/pip_hardware/remote_device/RemoteDeviceHardwareSubsystem.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_5_user/UserLayer.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/pip_user/UserLayer.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_5_user/device_user/DeviceUserSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/pip_user/device_user/DeviceUserSubsystem.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_5_user/extra_user/ExtraUserSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/pip_user/extra_user/ExtraUserSubsystem.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_5_user/intra_user/IntraUserSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/pip_user/intra_user/IntraUserSubsystem.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_6_license/LicenseLayer.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/pip_license/LicenseLayer.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_6_license/plugin/PluginLicenseSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/pip_license/plugin/PluginLicenseSubsystem.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_6_license/plugin/developer/DeveloperBitDubai.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/pip_license/plugin/developer/DeveloperBitDubai.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_6_license/plugin/developer/bitdubai/version_1/PluginLicenseManagerAddonRoot.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/pip_license/plugin/developer/bitdubai/version_1/PluginLicenseManagerAddonRoot.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_6_license/wallet/WalletLicenseSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/pip_license/wallet/WalletLicenseSubsystem.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/cry_1_crypto_network/CryptoNetworkLayer.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/cry_crypto_network/CryptoNetworkLayer.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/cry_1_crypto_network/bitcoin/BitcoinSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/cry_crypto_network/bitcoin/BitcoinSubsystem.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/cry_2_cypto_vault/CryptoVaultLayer.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/cry_cypto_vault/CryptoVaultLayer.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/cry_2_cypto_vault/bitcoin/BitcoinSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/cry_cypto_vault/bitcoin/BitcoinSubsystem.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/cry_3_crypto_module/CryptoLayer.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/cry_crypto_module/CryptoLayer.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/cry_3_crypto_module/actor_crypto_address_book/UserAddressBookSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/cry_crypto_module/actor_crypto_address_book/UserAddressBookSubsystem.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/cry_3_crypto_module/wallet_address_book/WalletAddressBookSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/cry_crypto_module/wallet_address_book/WalletAddressBookSubsystem.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/middleware/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/middleware/bank_notes/developer/bitdubai/version_1/structure/BankNotesDatabaseFactory.java" afterPath="$PROJECT_DIR$/DMP/plugin/middleware/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/middleware/bank_notes/developer/bitdubai/version_1/structure/BankNotesDatabaseFactory.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-api/src/main/java/com/bitdubai/fermat_api/layer/osa_android/database_system/DatabaseFactory.java" afterPath="$PROJECT_DIR$/fermat-pip-api/src/main/java/com/bitdubai/fermat_api/layer/osa_android/database_system/DatabaseFactory.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-pip-api/src/main/java/com/bitdubai/fermat_api/layer/osa_android/database_system/DatabaseTableRecord.java" afterPath="$PROJECT_DIR$/fermat-pip-api/src/main/java/com/bitdubai/fermat_api/layer/osa_android/database_system/DatabaseTableRecord.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/middleware/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/middleware/bank_notes/developer/bitdubai/version_1/structure/dao/DatabaseTemplate.java" afterPath="$PROJECT_DIR$/DMP/plugin/middleware/fermat-dmp-plugin-middleware-bank-notes-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/middleware/bank_notes/developer/bitdubai/version_1/structure/dao/DatabaseTemplate.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-location-subsystem-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/platform_service/location_subsystem/developer/bitdubai/version_1/structure/LocationServiceMonitorAgent.java" afterPath="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-location-subsystem-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/platform_service/location_subsystem/developer/bitdubai/version_1/structure/LocationServiceMonitorAgent.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-location-subsystem-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/platform_service/location_subsystem/developer/bitdubai/version_1/LocationSubsystemPlatformServicePluginRoot.java" afterPath="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-location-subsystem-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/platform_service/location_subsystem/developer/bitdubai/version_1/LocationSubsystemPlatformServicePluginRoot.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_11_network_service/NetworkServiceLayer.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_network_service/NetworkServiceLayer.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_11_network_service/bank_notes/BankNotesSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_network_service/bank_notes/BankNotesSubsystem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_11_network_service/crypto_addresses/CryptoAddressesSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_network_service/crypto_addresses/CryptoAddressesSubsystem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_11_network_service/intra_user/IntraUserSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_network_service/intra_user/IntraUserSubsystem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_11_network_service/money/MoneySubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_network_service/money/MoneySubsystem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_11_network_service/money_request/MoneyRequestSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_network_service/money_request/MoneyRequestSubsystem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_11_network_service/wallet_community/WalletCommunitySubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_network_service/wallet_community/WalletCommunitySubsystem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_11_network_service/wallet_resources/WalletResourcesSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_network_service/wallet_resources/WalletResourcesSubsystem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_11_network_service/wallet_store/WalletStoreSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_network_service/wallet_store/WalletStoreSubsystem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_12_world/WorldLayer.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_world/WorldLayer.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_12_world/blockchain_info/BlockchainInfoWorldSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_world/blockchain_info/BlockchainInfoWorldSubsystem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_12_world/coinapult/CoinapultWorldSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_world/coinapult/CoinapultWorldSubsystem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_12_world/coinbase/CoinbaseWorldSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_world/coinbase/CoinbaseWorldSubsystem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_12_world/crypto_index/CryptoIndexWorldSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_world/crypto_index/CryptoIndexWorldSubsystem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_12_world/location/LocationWorldSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_world/location/LocationWorldSubsystem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_12_world/shape_shift/ShapeShiftWorldSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_world/shape_shift/ShapeShiftWorldSubsystem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_13_basic_wallet/BasicWalletLayer.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_basic_wallet/BasicWalletLayer.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_13_basic_wallet/bitcoin_wallet/BitcoinWalletSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_basic_wallet/bitcoin_wallet/BitcoinWalletSubsystem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_13_basic_wallet/discount_wallet/DiscountWalletSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_basic_wallet/discount_wallet/DiscountWalletSubsystem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_14_composite_wallet/CompositeWalletLayer.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_composite_wallet/CompositeWalletLayer.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_15_middleware/MiddlewareLayer.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_middleware/MiddlewareLayer.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_15_middleware/app_runtime/AppRuntimeSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_middleware/app_runtime/AppRuntimeSubsystem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_15_middleware/bank_notes/BankNotesSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_middleware/bank_notes/BankNotesSubsystem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_15_middleware/money_request/MoneyRequestSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_middleware/money_request/MoneyRequestSubsystem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_15_middleware/wallet_contacts/WalletContactsSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_middleware/wallet_contacts/WalletContactsSubsystem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_16_transaction/TransactionLayer.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_transaction/TransactionLayer.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_16_transaction/incoming_crypto/IncomingCryptoSubsysten.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_transaction/incoming_crypto/IncomingCryptoSubsysten.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_16_transaction/incoming_device_user/IncomingdeviceUserSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_transaction/incoming_device_user/IncomingdeviceUserSubsystem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_16_transaction/incoming_extra_user/IncomingExtraUserSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_transaction/incoming_extra_user/IncomingExtraUserSubsystem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_16_transaction/incoming_intra_user/IncomingIntraUserSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_transaction/incoming_intra_user/IncomingIntraUserSubsystem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_16_transaction/inter_wallet/InterWalletSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_transaction/inter_wallet/InterWalletSubsystem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_16_transaction/outgoing_device_user/OutgoingDeviceUserSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_transaction/outgoing_device_user/OutgoingDeviceUserSubsystem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_16_transaction/outgoing_extra_user/OutgoingExtrauserSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_transaction/outgoing_extra_user/OutgoingExtrauserSubsystem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_16_transaction/outgoing_intra_user/OutgoingIntraUserSubsytem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_transaction/outgoing_intra_user/OutgoingIntraUserSubsytem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_17_agent/AgentLayer.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_agent/AgentLayer.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_18_module/ModuleLayer.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_module/ModuleLayer.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_18_module/wallet_factory/WalletFactorySubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_module/wallet_factory/WalletFactorySubsystem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_18_module/wallet_manager/WalletManagerSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_module/wallet_manager/WalletManagerSubsystem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_18_module/wallet_publisher/WalletPublisherSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_module/wallet_publisher/WalletPublisherSubsystem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_18_module/wallet_runtime/WalletRuntimeSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_module/wallet_runtime/WalletRuntimeSubsystem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_18_module/wallet_store/WalletStoreSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_module/wallet_store/WalletStoreSubsystem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_19_niche_wallet_type/NicheWalletTypeLayer.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_niche_wallet_type/NicheWalletTypeLayer.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_19_niche_wallet_type/bank_notes_wallet/BankNotesWalletNicheWalletTypeSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_niche_wallet_type/bank_notes_wallet/BankNotesWalletNicheWalletTypeSubsystem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_19_niche_wallet_type/crypto_loss_protected_wallet/CryptoLossProtectedWalletNicheWalletTypeSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_niche_wallet_type/crypto_loss_protected_wallet/CryptoLossProtectedWalletNicheWalletTypeSubsystem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_19_niche_wallet_type/crypto_wallet/CryptoWalletNicheWalletTypeSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_niche_wallet_type/crypto_wallet/CryptoWalletNicheWalletTypeSubsystem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_19_niche_wallet_type/discount_wallet/DiscountWalletNicheWalletTypeSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_niche_wallet_type/discount_wallet/DiscountWalletNicheWalletTypeSubsystem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_19_niche_wallet_type/fiat_over_crypto_loss_protected_wallet/FiatOverCryptoLossProtectedWalletNicheWalletTypeSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_niche_wallet_type/fiat_over_crypto_loss_protected_wallet/FiatOverCryptoLossProtectedWalletNicheWalletTypeSubsystem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_19_niche_wallet_type/fiat_over_crypto_wallet/FiatOverCryptoWalletNicheWalletTypeSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_niche_wallet_type/fiat_over_crypto_wallet/FiatOverCryptoWalletNicheWalletTypeSubsystem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_19_niche_wallet_type/multi_account_wallet/MultiAccountWalletNicheWalletTypeSubsystem.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_niche_wallet_type/multi_account_wallet/MultiAccountWalletNicheWalletTypeSubsystem.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/_20_engine/EngineLayer.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_engine/EngineLayer.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/Platform.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/Platform.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-coinapult-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/world/coinapult/developer/bitdubai/version_1/enums/States.java" afterPath="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-coinapult-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/world/coinapult/developer/bitdubai/version_1/enums/States.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-coinapult-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/world/coinapult/developer/bitdubai/version_1/enums/Types.java" afterPath="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-coinapult-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/world/coinapult/developer/bitdubai/version_1/enums/Types.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="bitDubai-system.iws" />
@@ -105,96 +116,7 @@
     <favorites_list name="bitDubai-system" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="DiscountWallet.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/fermat-pip-api/src/main/java/com/bitdubai/fermat_api/layer/dmp_basic_wallet/discount_wallet/interfaces/DiscountWallet.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BasicWalletDiscountWallet.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/DMP/plugin/basic_wallet/fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/basic_wallet/discount_wallet/developer/bitdubai/version_1/structure/BasicWalletDiscountWallet.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="4" column="81" selection-start-line="4" selection-start-column="81" selection-end-line="4" selection-end-column="81" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AppRuntimeMiddlewarePluginRoot.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/DMP/plugin/middleware/fermat-dmp-plugin-middleware-app-runtime-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/middleware/app_runtime/developer/bitdubai/version_1/AppRuntimeMiddlewarePluginRoot.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="7" column="39" selection-start-line="7" selection-start-column="39" selection-end-line="7" selection-end-column="39" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RuntimeSubApp.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/DMP/plugin/middleware/fermat-dmp-plugin-middleware-app-runtime-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/middleware/app_runtime/developer/bitdubai/version_1/structure/RuntimeSubApp.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RuntimeActivity.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/DMP/plugin/middleware/fermat-dmp-plugin-middleware-app-runtime-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/middleware/app_runtime/developer/bitdubai/version_1/structure/RuntimeActivity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="WalletManagerModulePluginRoot.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/DMP/plugin/module/fermat-dmp-plugin-module-wallet-manager-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/module/wallet_manager/developer/bitdubai/version_1/WalletManagerModulePluginRoot.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="5" column="38" selection-start-line="5" selection-start-column="38" selection-end-line="5" selection-end-column="38" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="WalletManagerWallet.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/DMP/plugin/module/fermat-dmp-plugin-module-wallet-manager-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/module/wallet_manager/developer/bitdubai/version_1/structure/WalletManagerWallet.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="3" column="55" selection-start-line="3" selection-start-column="55" selection-end-line="3" selection-end-column="55" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RuntimeAppActivity.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/RuntimeAppActivity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-2.4636075">
-              <caret line="100" column="13" selection-start-line="100" selection-start-column="13" selection-end-line="100" selection-end-column="13" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -27315,13 +27237,7 @@
       <workItem from="1434365913476" duration="463000" />
       <workItem from="1434433799908" duration="6036000" />
       <workItem from="1434439910160" duration="59000" />
-      <workItem from="1434446362326" duration="4680000" />
-    </task>
-    <task id="LOCAL-00002" summary="cry folder created and projects moved">
-      <created>1434281213348</created>
-      <option name="number" value="00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1434281213348</updated>
+      <workItem from="1434446362326" duration="4916000" />
     </task>
     <task id="LOCAL-00003" summary="cry folder created and projects moved">
       <created>1434281235094</created>
@@ -27611,11 +27527,17 @@
       <option name="project" value="LOCAL" />
       <updated>1434450779948</updated>
     </task>
-    <option name="localTasksCounter" value="51" />
+    <task id="LOCAL-00051" summary="Fermat Core refactoring - layer names changed | Part 1 | Compiling">
+      <created>1434451171780</created>
+      <option name="number" value="00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1434451171780</updated>
+    </task>
+    <option name="localTasksCounter" value="52" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="50130000" />
+    <option name="totallyTimeSpent" value="50366000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="24" width="1855" height="1056" extended-state="6" />
@@ -27701,7 +27623,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Wallets Refactored to Niche Wallets - Compiling / And Running" />
     <MESSAGE value="Sub APPs Refactored - Compiling &amp; Running" />
     <MESSAGE value="Incoming Crypto Refactored - Compiling &amp; Running" />
     <MESSAGE value="Device User, Local &amp; Remote Device Refactored - Compiling &amp; Running" />
@@ -27726,7 +27647,8 @@
     <MESSAGE value="Fermat PIP API refactoring - osa_android unified with osa_android | Compiling" />
     <MESSAGE value="Fermat PIP API refactoring - layer names changed | Part 1 | Compiling" />
     <MESSAGE value="Fermat PIP API refactoring - layer names changed | Part 2 | Compiling &amp; Running" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fermat PIP API refactoring - layer names changed | Part 2 | Compiling &amp; Running" />
+    <MESSAGE value="Fermat Core refactoring - layer names changed | Part 1 | Compiling" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fermat Core refactoring - layer names changed | Part 1 | Compiling" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
