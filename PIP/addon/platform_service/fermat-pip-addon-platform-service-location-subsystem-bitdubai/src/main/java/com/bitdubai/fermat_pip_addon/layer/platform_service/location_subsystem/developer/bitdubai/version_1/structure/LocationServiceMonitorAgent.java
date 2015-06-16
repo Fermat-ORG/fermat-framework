@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_pip_addon.layer.platform_service.location_subsystem.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer._2_os.location_system.DealsWithDeviceLocation;
-import com.bitdubai.fermat_api.layer._2_os.location_system.Location;
-import com.bitdubai.fermat_api.layer._2_os.location_system.LocationManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.DealsWithDeviceLocation;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_pip_addon.layer.platform_service.location_subsystem.developer.bitdubai.version_1.exception.CantGetDeviceLocationException;
 import com.bitdubai.fermat_api.Plugin;
 /* No puede implementar una interfaz de un layer superior
@@ -19,7 +19,7 @@ import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.exceptions.
 //import com.bitdubai.fermat_api.layer._2_os.device_location.DealsWithDeviceLocation;
 //import com.bitdubai.fermat_api.layer._2_os.device_location.Location;
 //import com.bitdubai.fermat_api.layer._2_os.device_location.LocationManager;
-import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -98,7 +98,7 @@ public class LocationServiceMonitorAgent implements DealsWithErrors,DealsWithDev
         Location location = null;
         try {
             location = locationManager.getLocation();
-        } catch (com.bitdubai.fermat_api.layer._2_os.location_system.exceptions.CantGetDeviceLocationException e) {
+        } catch (com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException e) {
             errorManager.reportUnexpectedPluginException(plugins, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
 

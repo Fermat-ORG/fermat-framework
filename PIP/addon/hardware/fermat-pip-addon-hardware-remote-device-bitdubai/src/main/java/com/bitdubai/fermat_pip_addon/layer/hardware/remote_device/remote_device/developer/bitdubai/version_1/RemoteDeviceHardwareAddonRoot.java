@@ -8,8 +8,8 @@ import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorMana
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventManager;
-import com.bitdubai.fermat_api.layer._2_os.file_system.DealsWithPlatformFileSystem;
-import com.bitdubai.fermat_api.layer._2_os.file_system.PlatformFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPlatformFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
 import com.bitdubai.fermat_api.layer._4_hardware.Hardware;
 import com.bitdubai.fermat_api.layer._4_hardware.remote_device.RemoteDeviceHardwareManager;
 

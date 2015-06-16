@@ -1,8 +1,8 @@
 package com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.device_power;
 
-import com.bitdubai.fermat_api.layer._2_os.device_power.PlugType;
-import com.bitdubai.fermat_api.layer._2_os.device_power.PowerManager;
-import com.bitdubai.fermat_api.layer._2_os.device_power.PowerStatus;
+import com.bitdubai.fermat_api.layer.osa_android.device_power.PlugType;
+import com.bitdubai.fermat_api.layer.osa_android.device_power.PowerManager;
+import com.bitdubai.fermat_api.layer.osa_android.device_power.PowerStatus;
 
 import android.content.Context;
 import android.os.BatteryManager;

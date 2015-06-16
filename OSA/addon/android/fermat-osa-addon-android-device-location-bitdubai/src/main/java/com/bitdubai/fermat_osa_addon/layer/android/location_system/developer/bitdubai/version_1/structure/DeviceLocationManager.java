@@ -4,10 +4,10 @@ import android.content.Context;
 import android.location.LocationListener;
 import android.os.Bundle;
 
-import com.bitdubai.fermat_api.layer._2_os.location_system.Location;
-import com.bitdubai.fermat_api.layer._2_os.location_system.LocationManager;
-import com.bitdubai.fermat_api.layer._2_os.location_system.LocationProvider;
-import com.bitdubai.fermat_api.layer._2_os.location_system.exceptions.CantGetDeviceLocationException;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationProvider;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 
 /**
  * Created by Natalia on 21/05/2015.

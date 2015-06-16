@@ -3,9 +3,9 @@ package com.bitdubai.fermat_core.layer._2_os;
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
-import com.bitdubai.fermat_api.layer._2_os.Os;
-import com.bitdubai.fermat_api.layer._2_os.OsSubsystem;
-import com.bitdubai.fermat_api.layer._2_os.WrongOsException;
+import com.bitdubai.fermat_api.layer.osa_android.Os;
+import com.bitdubai.fermat_api.layer.osa_android.OsSubsystem;
+import com.bitdubai.fermat_api.layer.osa_android.WrongOsException;
 import com.bitdubai.fermat_core.layer._2_os.android.AndroidOsSubsystem;
 /*
 import com.bitdubai.wallet_platform_core.layer._3_os.ios.IosOsSubsystem;

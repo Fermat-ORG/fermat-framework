@@ -15,8 +15,8 @@ import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventSour
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventType;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.IncomingMoneyRequestApprovedEvent;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.IncomingMoneyRequestRejectedEvent;
-import com.bitdubai.fermat_api.layer._2_os.file_system.DealsWithPluginFileSystem;
-import com.bitdubai.fermat_api.layer._2_os.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.cry_3_crypto_module.actor_address_book.exceptions.ExampleException;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.money_request.developer.bitdubai.version_1.event_handlers.IncomingMoneyRequestReceivedEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.money_request.developer.bitdubai.version_1.event_handlers.IncomingMoneyRequestRejectedEventHandler;

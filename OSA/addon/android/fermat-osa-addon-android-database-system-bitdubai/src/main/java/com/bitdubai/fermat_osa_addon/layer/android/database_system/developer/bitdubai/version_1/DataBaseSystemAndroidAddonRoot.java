@@ -7,7 +7,7 @@ import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bit
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer._2_os.DataBaseSystemOs;
+import com.bitdubai.fermat_api.layer.osa_android.DataBaseSystemOs;
 import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.PlatformDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.PluginDatabaseSystem;
 

@@ -10,7 +10,8 @@ import com.bitdubai.fermat_api.layer._13_basic_wallet.discount_wallet.interfaces
 import com.bitdubai.fermat_api.layer._13_basic_wallet.discount_wallet.exceptions.CantCreateWalletException;
 import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer._1_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.*;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.discount_wallet.developer.bitdubai.version_1.event_handlers.WalletCreatedEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.discount_wallet.developer.bitdubai.version_1.exceptions.CantInitializeWalletException;
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.discount_wallet.developer.bitdubai.version_1.exceptions.CantStartWalletServiceException;
@@ -22,10 +23,10 @@ import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer._1_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer._2_os.file_system.*;
-import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantLoadFileException;
-import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantPersistFileException;
-import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.FileNotFoundException;
+
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.DealsWithEvents;

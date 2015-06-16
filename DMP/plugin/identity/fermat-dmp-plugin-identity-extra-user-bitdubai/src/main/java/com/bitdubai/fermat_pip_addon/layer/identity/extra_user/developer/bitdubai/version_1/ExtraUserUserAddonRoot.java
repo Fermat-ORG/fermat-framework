@@ -15,8 +15,8 @@ import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.Unexpecte
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.EventManager;
-import com.bitdubai.fermat_api.layer._2_os.file_system.DealsWithPlatformFileSystem;
-import com.bitdubai.fermat_api.layer._2_os.file_system.PlatformFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPlatformFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
 import com.bitdubai.fermat_api.layer._5_user.extra_user.ExtraUserManager;
 import com.bitdubai.fermat_api.layer._5_user.User;
 import com.bitdubai.fermat_api.layer._5_user.extra_user.exceptions.CantCreateExtraUserRegistry;

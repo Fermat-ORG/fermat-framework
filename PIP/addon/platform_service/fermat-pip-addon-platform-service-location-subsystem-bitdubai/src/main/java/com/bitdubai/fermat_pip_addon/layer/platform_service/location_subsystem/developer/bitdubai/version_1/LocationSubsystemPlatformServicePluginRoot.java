@@ -11,8 +11,8 @@ import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.PluginDatab
 //TODO se movio la interface
 //import com.bitdubai.fermat_api.layer._2_os.device_location.DealsWithDeviceLocation;
 //import com.bitdubai.fermat_api.layer._2_os.device_location.LocationManager;
-import com.bitdubai.fermat_api.layer._2_os.location_system.DealsWithDeviceLocation;
-import com.bitdubai.fermat_api.layer._2_os.location_system.LocationManager;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.DealsWithDeviceLocation;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.UnexpectedPluginExceptionSeverity;

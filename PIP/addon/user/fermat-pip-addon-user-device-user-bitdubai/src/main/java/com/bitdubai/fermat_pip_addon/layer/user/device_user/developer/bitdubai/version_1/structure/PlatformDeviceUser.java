@@ -2,7 +2,8 @@ package com.bitdubai.fermat_pip_addon.layer.user.device_user.developer.bitdubai.
 
 import com.bitdubai.fermat_api.layer._1_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer._1_definition.enums.DeviceDirectory;
-import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.*;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.UnexpectedAddonsExceptionSeverity;
@@ -10,9 +11,9 @@ import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.*;
 import com.bitdubai.fermat_api.layer._1_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.DeviceUserCreatedEvent;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.DeviceUserLoggedInEvent;
-import com.bitdubai.fermat_api.layer._2_os.file_system.*;
-import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantPersistFileException;
-import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.FileNotFoundException;
+
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer._5_user.device_user.DeviceUser;
 import com.bitdubai.fermat_api.layer._5_user.device_user.*;
 import com.bitdubai.fermat_api.layer._5_user.device_user.exceptions.CantCreateDeviceUserException;

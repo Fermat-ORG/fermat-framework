@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_core.layer._2_os.android.device_location;
 
 import com.bitdubai.fermat_api.Addon;
-import com.bitdubai.fermat_api.layer._2_os.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer.osa_android.CantStartSubsystemException;
 //import com.bitdubai.fermat_pip_addon.layer._2_os.device_location.developer.bitdubai.DeveloperBitDubai; (No compilaba LUIS)
 
 /**

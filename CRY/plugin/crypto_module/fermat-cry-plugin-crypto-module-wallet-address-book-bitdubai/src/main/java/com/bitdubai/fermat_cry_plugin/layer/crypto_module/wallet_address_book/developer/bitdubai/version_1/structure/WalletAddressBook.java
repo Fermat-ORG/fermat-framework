@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.DealsWithPl
 import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android_xxx.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 //TODO faltan las clases de exceptions en fermat-api

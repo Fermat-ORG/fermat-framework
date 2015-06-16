@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_osa_addon.layer.android.location_system.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer._2_os.location_system.Location;
-import com.bitdubai.fermat_api.layer._2_os.location_system.LocationProvider;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationProvider;
 
 /**
  * Created by Natalia on 30/04/2015.

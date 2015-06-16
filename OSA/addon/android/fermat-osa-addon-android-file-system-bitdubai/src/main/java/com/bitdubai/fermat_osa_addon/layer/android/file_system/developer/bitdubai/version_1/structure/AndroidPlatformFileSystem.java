@@ -3,13 +3,13 @@ package com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdub
 import android.content.Context;
 import android.util.Base64;
 
-import com.bitdubai.fermat_api.layer._2_os.file_system.FileLifeSpan;
-import com.bitdubai.fermat_api.layer._2_os.file_system.FilePrivacy;
-import com.bitdubai.fermat_api.layer._2_os.file_system.PlatformFileSystem;
-import com.bitdubai.fermat_api.layer._2_os.file_system.PlatformTextFile;
-import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantCreateFileException;
-import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantLoadFileException;
-import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformTextFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 
 import java.nio.charset.Charset;
 import java.security.MessageDigest;

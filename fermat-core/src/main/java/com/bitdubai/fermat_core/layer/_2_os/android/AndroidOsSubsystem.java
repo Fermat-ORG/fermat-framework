@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_core.layer._2_os.android;
 
-import com.bitdubai.fermat_api.layer._2_os.Os;
-import com.bitdubai.fermat_api.layer._2_os.OsSubsystem;
-import com.bitdubai.fermat_api.layer._2_os.WrongOsException;
+import com.bitdubai.fermat_api.layer.osa_android.Os;
+import com.bitdubai.fermat_api.layer.osa_android.OsSubsystem;
+import com.bitdubai.fermat_api.layer.osa_android.WrongOsException;
 
 
 /**

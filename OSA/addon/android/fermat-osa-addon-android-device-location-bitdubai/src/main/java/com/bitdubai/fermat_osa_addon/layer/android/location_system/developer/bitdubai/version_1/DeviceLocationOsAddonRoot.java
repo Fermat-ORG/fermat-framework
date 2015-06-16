@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_osa_addon.layer.android.location_system.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_osa_addon.layer.android.location_system.developer.bitdubai.version_1.structure.DeviceLocationManager;
-import com.bitdubai.fermat_api.layer._2_os.LocationSystemOs;
-import com.bitdubai.fermat_api.layer._2_os.location_system.LocationManager;
+import com.bitdubai.fermat_api.layer.osa_android.LocationSystemOs;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;

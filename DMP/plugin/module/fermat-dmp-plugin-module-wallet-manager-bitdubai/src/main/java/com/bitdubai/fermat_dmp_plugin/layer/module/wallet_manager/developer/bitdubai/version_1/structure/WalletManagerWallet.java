@@ -13,8 +13,8 @@ import com.bitdubai.fermat_api.layer._3_platform_service.error_manager.ErrorMana
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.*;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.WalletCreatedEvent;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.WalletWentOnlineEvent;
-import com.bitdubai.fermat_api.layer._2_os.file_system.DealsWithPluginFileSystem;
-import com.bitdubai.fermat_api.layer._2_os.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 
 
 import java.util.UUID;

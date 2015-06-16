@@ -4,13 +4,13 @@ import android.content.Context;
 import android.os.Environment;
 import android.util.Base64;
 
-import com.bitdubai.fermat_api.layer._2_os.file_system.FileLifeSpan;
-import com.bitdubai.fermat_api.layer._2_os.file_system.FilePrivacy;
-import com.bitdubai.fermat_api.layer._2_os.file_system.PluginTextFile;
-import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantDecryptException;
-import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantEncryptException;
-import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantLoadFileException;
-import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantDecryptException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantEncryptException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

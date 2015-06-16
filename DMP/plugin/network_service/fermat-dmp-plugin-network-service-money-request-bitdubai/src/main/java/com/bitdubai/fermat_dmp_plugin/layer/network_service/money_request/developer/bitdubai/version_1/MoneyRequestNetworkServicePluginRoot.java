@@ -18,8 +18,8 @@ import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.In
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.OutgoingMoneyRequestApprovedEvent;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.OutgoingMoneyRequestDeliveredEvent;
 import com.bitdubai.fermat_api.layer._3_platform_service.event_manager.events.OutgoingMoneyRequestRejectedEvent;
-import com.bitdubai.fermat_api.layer._2_os.file_system.DealsWithPluginFileSystem;
-import com.bitdubai.fermat_api.layer._2_os.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 
 import java.util.ArrayList;
 import java.util.List;
