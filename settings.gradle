@@ -123,22 +123,52 @@ include ':fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai'
 project(':fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai').projectDir = new File('DMP/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai')
 
 
-include ':DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-bank-notes-wallet-bitdubai'
-include ':DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-crypto-loss-protected-wallet-bitdubai'
-include ':DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai'
-include ':DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-discount-wallet-bitdubai'
-include ':DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-bitdubai'
-include ':DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai'
-include ':DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai'
+include ':fermat-dmp-plugin-niche-wallet-type-bank-notes-wallet-bitdubai'
+project(':fermat-dmp-plugin-niche-wallet-type-bank-notes-wallet-bitdubai').projectDir = new File('DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-bank-notes-wallet-bitdubai')
 
-include ':DMP/plugin/network_service/fermat-dmp-plugin-network-service-bank-notes-bitdubai'
-include ':DMP/plugin/network_service/fermat-dmp-plugin-network-service-crypto-addresses-bitdubai'
-include ':DMP/plugin/network_service/fermat-dmp-plugin-network-service-money-bitdubai'
-include ':DMP/plugin/network_service/fermat-dmp-plugin-network-service-intra-user-bitdubai'
-include ':DMP/plugin/network_service/fermat-dmp-plugin-network-service-money-request-bitdubai'
-include ':DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-community-bitdubai'
-include ':DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-resources-bitdubai'
-include ':DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai'
+include ':fermat-dmp-plugin-niche-wallet-type-crypto-loss-protected-wallet-bitdubai'
+project(':fermat-dmp-plugin-niche-wallet-type-crypto-loss-protected-wallet-bitdubai').projectDir = new File('DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-crypto-loss-protected-wallet-bitdubai')
+
+include ':fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai'
+project(':fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai').projectDir = new File('DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai')
+
+include ':fermat-dmp-plugin-niche-wallet-type-discount-wallet-bitdubai'
+project(':fermat-dmp-plugin-niche-wallet-type-discount-wallet-bitdubai').projectDir = new File('DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-discount-wallet-bitdubai')
+
+include ':fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-bitdubai'
+project(':fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-bitdubai').projectDir = new File('DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-bitdubai')
+
+include ':fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai'
+project(':fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai').projectDir = new File('DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai')
+
+include ':fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai'
+project(':fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai').projectDir = new File('DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai')
+
+
+include ':fermat-dmp-plugin-network-service-bank-notes-bitdubai'
+project(':fermat-dmp-plugin-network-service-bank-notes-bitdubai').projectDir = new File('DMP/plugin/network_service/fermat-dmp-plugin-network-service-bank-notes-bitdubai')
+
+include ':fermat-dmp-plugin-network-service-crypto-addresses-bitdubai'
+project(':fermat-dmp-plugin-network-service-crypto-addresses-bitdubai').projectDir = new File('DMP/plugin/network_service/fermat-dmp-plugin-network-service-crypto-addresses-bitdubai')
+
+include ':fermat-dmp-plugin-network-service-money-bitdubai'
+project(':fermat-dmp-plugin-network-service-money-bitdubai').projectDir = new File('DMP/plugin/network_service/fermat-dmp-plugin-network-service-money-bitdubai')
+
+include ':fermat-dmp-plugin-network-service-intra-user-bitdubai'
+project(':fermat-dmp-plugin-network-service-intra-user-bitdubai').projectDir = new File('DMP/plugin/network_service/fermat-dmp-plugin-network-service-intra-user-bitdubai')
+
+include ':fermat-dmp-plugin-network-service-money-request-bitdubai'
+project(':fermat-dmp-plugin-network-service-money-request-bitdubai').projectDir = new File('DMP/plugin/network_service/fermat-dmp-plugin-network-service-money-request-bitdubai')
+
+include ':fermat-dmp-plugin-network-service-wallet-community-bitdubai'
+project(':fermat-dmp-plugin-network-service-wallet-community-bitdubai').projectDir = new File('DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-community-bitdubai')
+
+include ':fermat-dmp-plugin-network-service-wallet-resources-bitdubai'
+project(':fermat-dmp-plugin-network-service-wallet-resources-bitdubai').projectDir = new File('DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-resources-bitdubai')
+
+include ':fermat-dmp-plugin-network-service-wallet-store-bitdubai'
+project(':fermat-dmp-plugin-network-service-wallet-store-bitdubai').projectDir = new File('DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai')
+
 
 include ':DMP/plugin/module/fermat-dmp-plugin-module-wallet-factory-bitdubai'
 include ':DMP/plugin/module/fermat-dmp-plugin-module-wallet-manager-bitdubai'
