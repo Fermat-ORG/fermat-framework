@@ -240,20 +240,20 @@ Wallets on the pipeline:
 
 // DMP Projects (Sub APPs)
 
-include ':fermat-dmp-android-wallet-manager-bitdubai'
-project(':fermat-dmp-android-wallet-manager-bitdubai').projectDir = new File('DMP/android/sub_app/fermat-dmp-android-wallet-manager-bitdubai')
+include ':fermat-dmp-android-sub-app-wallet-manager-bitdubai'
+project(':fermat-dmp-android-sub-app-wallet-manager-bitdubai').projectDir = new File('DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-manager-bitdubai')
 
-include ':fermat-dmp-android-wallet-store-bitdubai'
-project(':fermat-dmp-android-wallet-store-bitdubai').projectDir = new File('DMP/android/sub_app/fermat-dmp-android-wallet-store-bitdubai')
+include ':fermat-dmp-android-sub-app-wallet-store-bitdubai'
+project(':fermat-dmp-android-sub-app-wallet-store-bitdubai').projectDir = new File('DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-store-bitdubai')
 
-include ':fermat-dmp-android-wallet-factory-bitdubai'
-project(':fermat-dmp-android-wallet-factory-bitdubai').projectDir = new File('DMP/android/sub_app/fermat-dmp-android-wallet-factory-bitdubai')
+include ':fermat-dmp-android-sub-app-wallet-factory-bitdubai'
+project(':fermat-dmp-android-sub-app-wallet-factory-bitdubai').projectDir = new File('DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-factory-bitdubai')
 
-include ':fermat-dmp-android-wallet-publisher-bitdubai'
-project(':fermat-dmp-android-wallet-publisher-bitdubai').projectDir = new File('DMP/android/sub_app/fermat-dmp-android-wallet-publisher-bitdubai')
+include ':fermat-dmp-android-sub-app-wallet-publisher-bitdubai'
+project(':fermat-dmp-android-sub-app-wallet-publisher-bitdubai').projectDir = new File('DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-publisher-bitdubai')
 
-include ':fermat-dmp-android-shop-manager-bitdubai'
-project(':fermat-dmp-android-shop-manager-bitdubai').projectDir = new File('DMP/android/sub_app/fermat-dmp-android-shop-manager-bitdubai')
+include ':fermat-dmp-android-sub-app-shop-manager-bitdubai'
+project(':fermat-dmp-android-sub-app-shop-manager-bitdubai').projectDir = new File('DMP/android/sub_app/fermat-dmp-android-sub-app-shop-manager-bitdubai')
 
 
 

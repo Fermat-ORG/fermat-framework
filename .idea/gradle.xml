@@ -17,11 +17,11 @@
             <option value="$PROJECT_DIR$/DMP/addon/license/fermat-dmp-addon-license-wallet-bitdubai" />
             <option value="$PROJECT_DIR$/DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-age-kids-boys-bitdubai" />
             <option value="$PROJECT_DIR$/DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-wallet-bitdubai" />
-            <option value="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-shop-manager-bitdubai" />
-            <option value="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-wallet-factory-bitdubai" />
-            <option value="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-wallet-manager-bitdubai" />
-            <option value="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-wallet-publisher-bitdubai" />
-            <option value="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-wallet-store-bitdubai" />
+            <option value="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-shop-manager-bitdubai" />
+            <option value="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-factory-bitdubai" />
+            <option value="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-manager-bitdubai" />
+            <option value="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-publisher-bitdubai" />
+            <option value="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-store-bitdubai" />
             <option value="$PROJECT_DIR$/DMP/plugin/basic_wallet/fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai" />
             <option value="$PROJECT_DIR$/DMP/plugin/basic_wallet/fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai" />
             <option value="$PROJECT_DIR$/DMP/plugin/composite_wallet/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai" />

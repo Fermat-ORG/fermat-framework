@@ -79,11 +79,11 @@ Wallets on the pipeline:
 
 // DMP Projects (Sub APPs)
 
-    compile project(':fermat-dmp-android-wallet-manager-bitdubai')
-    compile project(':fermat-dmp-android-wallet-factory-bitdubai')
-    compile project(':fermat-dmp-android-wallet-store-bitdubai')
-    compile project(':fermat-dmp-android-wallet-publisher-bitdubai')
-    compile project(':fermat-dmp-android-shop-manager-bitdubai')
+    compile project(':fermat-dmp-android-sub-app-wallet-manager-bitdubai')
+    compile project(':fermat-dmp-android-sub-app-wallet-factory-bitdubai')
+    compile project(':fermat-dmp-android-sub-app-wallet-store-bitdubai')
+    compile project(':fermat-dmp-android-sub-app-wallet-publisher-bitdubai')
+    compile project(':fermat-dmp-android-sub-app-shop-manager-bitdubai')
 
 
 
