@@ -212,33 +212,48 @@ project(':fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai').projectDir =
 
 // DMP Projects (Addons)
 
-include ':DMP/addon/license/fermat-dmp-addon-license-wallet-bitdubai'
+include ':fermat-dmp-addon-license-wallet-bitdubai'
+project(':fermat-dmp-addon-license-wallet-bitdubai').projectDir = new File('DMP/addon/license/fermat-dmp-addon-license-wallet-bitdubai')
 
 
 // DMP Projects (Wallets)
 
-include ':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-wallet-bitdubai'
-include ':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-age-kids-boys-bitdubai'
+include ':fermat-dmp-android-niche-wallet-bitcoin-wallet-bitdubai'
+project(':fermat-dmp-android-niche-wallet-bitcoin-wallet-bitdubai').projectDir = new File('DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-wallet-bitdubai')
+
+include ':fermat-dmp-android-niche-wallet-age-kids-boys-bitdubai'
+project(':fermat-dmp-android-niche-wallet-age-kids-boys-bitdubai').projectDir = new File('DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-age-kids-boys-bitdubai')
+
 
 /*
 
 Wallets on the pipeline:
 
-include ':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-loss-protected-wallet-bitdubai'
-include ':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argetina-loss-protected-wallet-bitdubai'
-include ':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-multi-account-wallet-bitdubai'
-include ':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-discount-wallet-bitdubai'
-include ':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-bitcoin-wallet-bitdubai'
-include ':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-argentina-bank-notes-wallet-bitdubai'
+ ':fermat-dmp-android-niche-wallet-bitcoin-loss-protected-wallet-bitdubai'
+ ':fermat-dmp-android-niche-wallet-argetina-loss-protected-wallet-bitdubai'
+ ':fermat-dmp-android-niche-wallet-argentina-multi-account-wallet-bitdubai'
+ ':fermat-dmp-android-niche-wallet-argentina-discount-wallet-bitdubai'
+ ':fermat-dmp-android-niche-wallet-argentina-bitcoin-wallet-bitdubai'
+ ':fermat-dmp-android-niche-wallet-argentina-bank-notes-wallet-bitdubai'
 
 */
 
 // DMP Projects (Sub APPs)
 
-include ':DMP/android/sub_app/fermat-dmp-android-wallet-manager-bitdubai'
-include ':DMP/android/sub_app/fermat-dmp-android-wallet-store-bitdubai'
-include ':DMP/android/sub_app/fermat-dmp-android-wallet-factory-bitdubai'
-include ':DMP/android/sub_app/fermat-dmp-android-wallet-publisher-bitdubai'
-include ':DMP/android/sub_app/fermat-dmp-android-shop-manager-bitdubai'
+include ':fermat-dmp-android-wallet-manager-bitdubai'
+project(':fermat-dmp-android-wallet-manager-bitdubai').projectDir = new File('DMP/android/sub_app/fermat-dmp-android-wallet-manager-bitdubai')
+
+include ':fermat-dmp-android-wallet-store-bitdubai'
+project(':fermat-dmp-android-wallet-store-bitdubai').projectDir = new File('DMP/android/sub_app/fermat-dmp-android-wallet-store-bitdubai')
+
+include ':fermat-dmp-android-wallet-factory-bitdubai'
+project(':fermat-dmp-android-wallet-factory-bitdubai').projectDir = new File('DMP/android/sub_app/fermat-dmp-android-wallet-factory-bitdubai')
+
+include ':fermat-dmp-android-wallet-publisher-bitdubai'
+project(':fermat-dmp-android-wallet-publisher-bitdubai').projectDir = new File('DMP/android/sub_app/fermat-dmp-android-wallet-publisher-bitdubai')
+
+include ':fermat-dmp-android-shop-manager-bitdubai'
+project(':fermat-dmp-android-shop-manager-bitdubai').projectDir = new File('DMP/android/sub_app/fermat-dmp-android-shop-manager-bitdubai')
+
 
 

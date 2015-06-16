@@ -97,7 +97,7 @@ dependencies {
 
 // DMP Projects (Addons)
 
-    compile project(':DMP/addon/license/fermat-dmp-addon-license-wallet-bitdubai')
+    compile project(':fermat-dmp-addon-license-wallet-bitdubai')
 
 
 

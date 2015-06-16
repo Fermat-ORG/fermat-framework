@@ -83,5 +83,6 @@
     <orderEntry type="module" module-name="fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-addon-license-wallet-bitdubai" exported="" />
   </component>
 </module>

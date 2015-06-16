@@ -59,8 +59,8 @@ dependencies {
 
 // DMP Projects (Wallets)
 
-    compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-wallet-bitdubai')
-    compile project(':DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-age-kids-boys-bitdubai')
+    compile project(':fermat-dmp-android-niche-wallet-bitcoin-wallet-bitdubai')
+    compile project(':fermat-dmp-android-niche-wallet-age-kids-boys-bitdubai')
 
 /*
 
@@ -79,11 +79,11 @@ Wallets on the pipeline:
 
 // DMP Projects (Sub APPs)
 
-    compile project(':DMP/android/sub_app/fermat-dmp-android-wallet-manager-bitdubai')
-    compile project(':DMP/android/sub_app/fermat-dmp-android-wallet-factory-bitdubai')
-    compile project(':DMP/android/sub_app/fermat-dmp-android-wallet-store-bitdubai')
-    compile project(':DMP/android/sub_app/fermat-dmp-android-wallet-publisher-bitdubai')
-    compile project(':DMP/android/sub_app/fermat-dmp-android-shop-manager-bitdubai')
+    compile project(':fermat-dmp-android-wallet-manager-bitdubai')
+    compile project(':fermat-dmp-android-wallet-factory-bitdubai')
+    compile project(':fermat-dmp-android-wallet-store-bitdubai')
+    compile project(':fermat-dmp-android-wallet-publisher-bitdubai')
+    compile project(':fermat-dmp-android-shop-manager-bitdubai')
 
 
 
