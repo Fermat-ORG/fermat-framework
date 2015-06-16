@@ -6,8 +6,8 @@ package com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.de
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer._18_transaction.outgoing_device_user.OutgoingDeviceUserManager;
-import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_device_user.OutgoingDeviceUserManager;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;

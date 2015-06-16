@@ -3,8 +3,8 @@ package com.bitdubai.android_fermat_dmp_wallet_bitcoin;
 /**
  * Created by Natalia on 4/4/15.
  */
-import com.bitdubai.fermat_api.layer._19_niche_wallet_type.crypto_wallet.DealsWithNicheWalletTypeCryptoWallet;
-import com.bitdubai.fermat_api.layer._19_niche_wallet_type.crypto_wallet.NicheWalletTypeCryptoWalletManager;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.DealsWithNicheWalletTypeCryptoWallet;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.NicheWalletTypeCryptoWalletManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;

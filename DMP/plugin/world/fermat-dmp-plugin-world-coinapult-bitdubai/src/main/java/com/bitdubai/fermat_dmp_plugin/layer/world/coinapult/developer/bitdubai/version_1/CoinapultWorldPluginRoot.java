@@ -9,14 +9,14 @@ package com.bitdubai.fermat_dmp_plugin.layer.world.coinapult.developer.bitdubai.
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer._12_world.coinapult.WalletManager;
-import com.bitdubai.fermat_api.layer._12_world.coinapult.exceptions.CantCreateWalletException;
-import com.bitdubai.fermat_api.layer._12_world.coinapult.exceptions.CantInitializeDbWalletException;
-import com.bitdubai.fermat_api.layer._12_world.coinapult.exceptions.CantInitializeFileWalletException;
-import com.bitdubai.fermat_api.layer._12_world.coinapult.exceptions.CantValidateAddressException;
-import com.bitdubai.fermat_api.layer._12_world.coinapult.wallet.CryptoWallet;
-import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.dmp_world.coinapult.WalletManager;
+import com.bitdubai.fermat_api.layer.dmp_world.coinapult.exceptions.CantCreateWalletException;
+import com.bitdubai.fermat_api.layer.dmp_world.coinapult.exceptions.CantInitializeDbWalletException;
+import com.bitdubai.fermat_api.layer.dmp_world.coinapult.exceptions.CantInitializeFileWalletException;
+import com.bitdubai.fermat_api.layer.dmp_world.coinapult.exceptions.CantValidateAddressException;
+import com.bitdubai.fermat_api.layer.dmp_world.coinapult.wallet.CryptoWallet;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
@@ -34,7 +34,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.Unexpect
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
-import com.bitdubai.fermat_api.layer._12_world.World;
+import com.bitdubai.fermat_api.layer.dmp_world.World;
 import com.bitdubai.fermat_dmp_plugin.layer.world.coinapult.developer.bitdubai.version_1.enums.States;
 import com.bitdubai.fermat_dmp_plugin.layer.world.coinapult.developer.bitdubai.version_1.coinapult_http_client.AddressInfo;
 
@@ -123,7 +123,7 @@ public class CoinapultWorldPluginRoot  implements  DealsWithEvents, DealsWithErr
 
     /**
      * (non-Javadoc)
-     * @see com.bitdubai.fermat_api.layer._12_world.coinapult.WalletManager#createNewCoinapultWallet(boolean)
+     * @see WalletManager#createNewCoinapultWallet(boolean)
      */
     public UUID createNewCoinapultWallet(boolean agree) throws CantCreateWalletException {
 
@@ -430,7 +430,7 @@ public class CoinapultWorldPluginRoot  implements  DealsWithEvents, DealsWithErr
 
     /**
      * (non-Javadoc)
-     * @see com.bitdubai.fermat_api.layer._12_world.coinapult.WalletManager#getCoinapultWallet(String)
+     * @see WalletManager#getCoinapultWallet(String)
      */
     public CryptoWallet getCoinapultWallet(String walletId){
 
@@ -448,7 +448,7 @@ public class CoinapultWorldPluginRoot  implements  DealsWithEvents, DealsWithErr
 
     /**
      * (non-Javadoc)
-     * @see com.bitdubai.fermat_api.layer._12_world.coinapult.WalletManager#validateBitcoinAddress(String, String)
+     * @see WalletManager#validateBitcoinAddress(String, String)
      */
     @Override
     public boolean validateBitcoinAddress(String bitcoinAddress, String walletId) throws CantValidateAddressException{

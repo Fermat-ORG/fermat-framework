@@ -2,11 +2,11 @@ package com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.devel
 
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.enums.Wallets;
-import com.bitdubai.fermat_api.layer._1_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer._1_definition.enums.PlatformComponents;
-import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Wallets;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlatformDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabaseSystem;
 

@@ -19,9 +19,9 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bitdubai.fermat_api.layer._11_network_service.CantGetResourcesException;
-import com.bitdubai.fermat_api.layer._11_network_service.wallet_resources.WalletResourcesManager;
-import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.enums.Wallets;
+import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Wallets;
 import com.bitdubai.fermat_dmp.wallet_runtime.R;
 import com.bitdubai.runtime_wallet.Platform;
 

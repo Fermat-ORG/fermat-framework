@@ -2,22 +2,22 @@ package com.bitdubai.fermat_dmp_plugin.layer.world.blockchain_info.developer.bit
 
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
-import com.bitdubai.fermat_api.layer._12_world.Agent;
-import com.bitdubai.fermat_api.layer._12_world.CryptoWallet;
-import com.bitdubai.fermat_api.layer._12_world.DealsWithWalletIdentity;
-import com.bitdubai.fermat_api.layer._12_world.wallet.exceptions.CantStartWallet;
+import com.bitdubai.fermat_api.layer.dmp_world.Agent;
+import com.bitdubai.fermat_api.layer.dmp_world.CryptoWallet;
+import com.bitdubai.fermat_api.layer.dmp_world.DealsWithWalletIdentity;
+import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartWallet;
 import com.bitdubai.fermat_dmp_plugin.layer.world.blockchain_info.developer.bitdubai.version_1.interfaces.DealsWithBlockchainInfoApi;
-import com.bitdubai.fermat_api.layer._12_world.wallet.exceptions.CantGetAddressBalanceException;
-import com.bitdubai.fermat_api.layer._12_world.wallet.exceptions.CantGetAddressesException;
-import com.bitdubai.fermat_api.layer._12_world.wallet.exceptions.CantGetNewAddressException;
-import com.bitdubai.fermat_api.layer._12_world.wallet.exceptions.CantGetWalletBalanceException;
-import com.bitdubai.fermat_api.layer._12_world.wallet.exceptions.CantSendCryptoException;
-import com.bitdubai.fermat_api.layer._12_world.wallet.exceptions.CantStartAgentException;
+import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantGetAddressBalanceException;
+import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantGetAddressesException;
+import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantGetNewAddressException;
+import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantGetWalletBalanceException;
+import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantSendCryptoException;
+import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 
-import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 
-import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer._1_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 

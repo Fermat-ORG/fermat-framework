@@ -4,7 +4,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.bitdubai.fermat_api.layer.p2p_communication.CommunicationChannelAddress;
-import com.bitdubai.fermat_api.layer._1_definition.communication.CommunicationChannelAddressFactory;
+import com.bitdubai.fermat_api.layer.all_definition.communication.CommunicationChannelAddressFactory;
 
 public abstract class CloudFMPConnectionManagerUnitTest {
 	

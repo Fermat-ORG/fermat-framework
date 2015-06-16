@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.app_runtime.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.Fragment;
-import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.enums.Fragments;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.Fragment;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Fragments;
 
 /**
  * Created by ciencias on 2/14/15.

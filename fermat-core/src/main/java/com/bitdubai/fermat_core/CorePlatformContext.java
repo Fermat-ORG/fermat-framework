@@ -3,8 +3,8 @@ package com.bitdubai.fermat_core;
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.PlatformContext;
 import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.layer._1_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 
 
 import java.util.HashMap;

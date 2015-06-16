@@ -6,6 +6,8 @@
  */
 package com.bitdubai.fermat_dmp_plugin.layer.world.coinapult.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.dmp_world.coinapult.wallet.CryptoWalletBalance;
+
 import java.sql.Timestamp;
 
 /**
@@ -15,7 +17,7 @@ import java.sql.Timestamp;
  *
  * @version 1.0
  */
-public class CoinapultBalance implements com.bitdubai.fermat_api.layer._12_world.coinapult.wallet.CryptoWalletBalance {
+public class CoinapultBalance implements CryptoWalletBalance {
 
     /**
      * Represent the amount

@@ -2,16 +2,16 @@ package com.bitdubai.fermat_dmp_plugin.layer.module.wallet_runtime.developer.bit
 
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.Activity;
-import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.Fragment;
-import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.Wallet;
-import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.enums.Activities;
-import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.enums.Fragments;
-import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.enums.Wallets;
-import com.bitdubai.fermat_api.layer._16_module.wallet_runtime.exceptions.CantRecordClosedWalletException;
-import com.bitdubai.fermat_api.layer._16_module.wallet_runtime.exceptions.CantRecordOpenedWalletException;
-import com.bitdubai.fermat_api.layer._16_module.wallet_runtime.WalletRuntimeManager;
-import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.Activity;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.Fragment;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.Wallet;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Activities;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Fragments;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Wallets;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime.exceptions.CantRecordClosedWalletException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime.exceptions.CantRecordOpenedWalletException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime.WalletRuntimeManager;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 

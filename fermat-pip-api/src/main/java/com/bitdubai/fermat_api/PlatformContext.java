@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_api;
 
-import com.bitdubai.fermat_api.layer._1_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 
 /**
  * Created by ciencias on 2/12/15.

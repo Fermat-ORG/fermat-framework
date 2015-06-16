@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_api.layer.p2p_communication;
 
-import com.bitdubai.fermat_api.layer._1_definition.enums.NetworkServices;
+import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_api.layer.p2p_communication.cloud.RejectConnectionRequestReasons;
 
 import java.util.UUID;

@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_core.layer._11_network_service.bank_notes;
 
 import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.layer._11_network_service.CantStartSubsystemException;
-import com.bitdubai.fermat_api.layer._11_network_service.NetworkSubsystem;
+import com.bitdubai.fermat_api.layer.dmp_network_service.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkSubsystem;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.bank_notes.developer.bitdubai.DeveloperBitDubai;
 
 /**

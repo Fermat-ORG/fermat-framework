@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
 import com.bitdubai.fermat_api.layer.p2p_communication.CommunicationChannelAddress;
 import com.bitdubai.fermat_api.layer.p2p_communication.fmp.FMPPacket;
 import com.bitdubai.fermat_api.layer.p2p_communication.fmp.FMPPacket.FMPPacketType;
-import com.bitdubai.fermat_api.layer._1_definition.communication.CommunicationChannelAddressFactory;
+import com.bitdubai.fermat_api.layer.all_definition.communication.CommunicationChannelAddressFactory;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.CloudServiceManager;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.ECCKeyPair;
 

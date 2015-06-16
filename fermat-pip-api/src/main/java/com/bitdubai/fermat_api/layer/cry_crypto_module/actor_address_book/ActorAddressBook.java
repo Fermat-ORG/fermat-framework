@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book;
 
-import com.bitdubai.fermat_api.layer._1_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.pip_user.User;
 import com.bitdubai.fermat_api.layer.pip_user.UserTypes;
 

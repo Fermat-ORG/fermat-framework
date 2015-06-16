@@ -11,10 +11,10 @@ import com.bitdubai.fermat_api.layer.p2p_communication.cloud.CloudConnectionExce
 import com.bitdubai.fermat_api.layer.p2p_communication.fmp.FMPException;
 import com.bitdubai.fermat_api.layer.p2p_communication.fmp.FMPPacket;
 import com.bitdubai.fermat_api.layer.p2p_communication.fmp.FMPPacket.FMPPacketType;
-import com.bitdubai.fermat_api.layer._1_definition.communication.FMPPacketFactory;
-import com.bitdubai.fermat_api.layer._1_definition.communication.cloud.CloudFMPConnectionManager;
-import com.bitdubai.fermat_api.layer._1_definition.crypto.asymmetric.AsymmectricCryptography;
-import com.bitdubai.fermat_api.layer._1_definition.enums.NetworkServices;
+import com.bitdubai.fermat_api.layer.all_definition.communication.FMPPacketFactory;
+import com.bitdubai.fermat_api.layer.all_definition.communication.cloud.CloudFMPConnectionManager;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.exceptions.IncorrectFMPPacketDestinationException;
 
 

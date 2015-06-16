@@ -2,12 +2,12 @@ package com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdu
 
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.layer._16_module.wallet_store.Wallet;
-import com.bitdubai.fermat_api.layer._16_module.wallet_store.exceptions.CantGetWalletsException;
-import com.bitdubai.fermat_api.layer._16_module.wallet_store.exceptions.CantRecordInstalledWalletException;
-import com.bitdubai.fermat_api.layer._16_module.wallet_store.exceptions.CantRecordUninstalledWalletException;
-import com.bitdubai.fermat_api.layer._16_module.wallet_store.WalletStoreManager;
-import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.Wallet;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantGetWalletsException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantRecordInstalledWalletException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.exceptions.CantRecordUninstalledWalletException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.WalletStoreManager;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;

@@ -27,16 +27,16 @@ import com.bitdubai.android_fermat_dmp_wallet_bitcoin.fragments.BitcoinReceiveFr
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.fragments.BitcoinReceiveFromNewContactFragment;
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.fragments.BitcoinSendToContactFragment;
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.fragments.BitcoinSendToNewContactFragment;
-import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.App;
-import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.AppRuntimeManager;
-import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.Fragment;
-import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.MainMenu;
-import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.SideMenu;
-import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.SubApp;
-import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.TabStrip;
-import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.TitleBar;
-import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.enums.Fragments;
-import com.bitdubai.fermat_api.layer._16_module.wallet_runtime.WalletRuntimeManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.App;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.AppRuntimeManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.Fragment;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.MainMenu;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.SideMenu;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.SubApp;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.TabStrip;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.TitleBar;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Fragments;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_runtime.developer.bitdubai.version_1.structure.RuntimeFragment;
 import com.bitdubai.smartwallet.R;
@@ -57,7 +57,7 @@ public class FragmentActivity  extends Activity {
     private PagerSlidingTabStrip tabStrip;
     private App app;
     private SubApp subApp;
-    private com.bitdubai.fermat_api.layer._15_middleware.app_runtime.Activity activity;
+    private com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.Activity activity;
     private Map<Fragments, Fragment> fragments;
 
     private AppRuntimeManager appRuntimeMiddleware;

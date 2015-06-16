@@ -1,13 +1,13 @@
 package com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.discount_wallet.developer.bitdubai.version_1.event_handlers;
 
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer._13_basic_wallet.discount_wallet.interfaces.DiscountWalletManager;
-import com.bitdubai.fermat_api.layer._13_basic_wallet.discount_wallet.exceptions.CantCreateWalletException;
-import com.bitdubai.fermat_api.layer._13_basic_wallet.discount_wallet.exceptions.DiscountWalletManagerServiceNotStartedException;
-import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer._1_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer._1_definition.event.PlatformEvent;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.discount_wallet.interfaces.DiscountWalletManager;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.discount_wallet.exceptions.CantCreateWalletException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.discount_wallet.exceptions.DiscountWalletManagerServiceNotStartedException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventHandler;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventSource;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.WalletCreatedEvent;

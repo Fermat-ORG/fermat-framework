@@ -11,7 +11,7 @@ import java.util.Iterator;
 
 import com.bitdubai.fermat_api.layer.p2p_communication.fmp.FMPException;
 import com.bitdubai.fermat_api.layer.p2p_communication.fmp.FMPPacket;
-import com.bitdubai.fermat_api.layer._1_definition.communication.FMPPacketFactory;
+import com.bitdubai.fermat_api.layer.all_definition.communication.FMPPacketFactory;
 
 /**
  * Created by jorgeejgonzalez on 27/04/15.

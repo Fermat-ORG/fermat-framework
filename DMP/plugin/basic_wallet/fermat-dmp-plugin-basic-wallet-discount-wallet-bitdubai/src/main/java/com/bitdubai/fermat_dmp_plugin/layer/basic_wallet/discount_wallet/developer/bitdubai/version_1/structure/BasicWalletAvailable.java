@@ -1,15 +1,15 @@
 package com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.discount_wallet.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer._12_world.crypto_index.CryptoIndexManager;
-import com.bitdubai.fermat_api.layer._12_world.crypto_index.DealsWithCryptoIndex;
-import com.bitdubai.fermat_api.layer._12_world.crypto_index.exceptions.CryptoCurrencyNotSupportedException;
-import com.bitdubai.fermat_api.layer._12_world.crypto_index.exceptions.FiatCurrencyNotSupportedException;
-import com.bitdubai.fermat_api.layer._13_basic_wallet.discount_wallet.enums.CryptoValueChunkStatus;
+import com.bitdubai.fermat_api.layer.dmp_world.crypto_index.CryptoIndexManager;
+import com.bitdubai.fermat_api.layer.dmp_world.crypto_index.DealsWithCryptoIndex;
+import com.bitdubai.fermat_api.layer.dmp_world.crypto_index.exceptions.CryptoCurrencyNotSupportedException;
+import com.bitdubai.fermat_api.layer.dmp_world.crypto_index.exceptions.FiatCurrencyNotSupportedException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.discount_wallet.enums.CryptoValueChunkStatus;
 //import com.bitdubai.fermat_api.layer.basic_wallet.discount_wallet.exceptions.AvailableFailedException;
-import com.bitdubai.fermat_api.layer._13_basic_wallet.discount_wallet.exceptions.CantCalculateAvailableAmountException;
-import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer._1_definition.enums.FiatCurrency;
-import com.bitdubai.fermat_api.layer._1_definition.util.Converter;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.discount_wallet.exceptions.CantCalculateAvailableAmountException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.util.Converter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;

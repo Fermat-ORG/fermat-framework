@@ -6,9 +6,12 @@ package com.bitdubai.fermat_dmp_plugin.layer.middleware.app_runtime.developer.bi
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.*;
-import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.enums.*;
-import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.*;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Activities;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Apps;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Fragments;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;

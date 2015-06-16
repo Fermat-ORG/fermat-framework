@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_core.layer._16_transaction.incoming_crypto;
 
 import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.layer._18_transaction.CantStartSubsystemException;
-import com.bitdubai.fermat_api.layer._18_transaction.TransactionSubsystem;
+import com.bitdubai.fermat_api.layer.dmp_transaction.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionSubsystem;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.DeveloperBitDubai;
 
 /**

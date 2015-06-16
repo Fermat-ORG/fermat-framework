@@ -3,10 +3,10 @@ package com.bitdubai.fermat_pip_addon.layer.user.device_user.developer.bitdubai.
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.Service;
 
-import com.bitdubai.fermat_api.layer._1_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer._1_definition.enums.DeviceDirectory;
-import com.bitdubai.fermat_api.layer._1_definition.enums.PlatformFileName;
-import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformFileName;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.*;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlatformDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabaseSystem;

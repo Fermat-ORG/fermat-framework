@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_api.layer.pip_platform_service.event_manager;
 
-import com.bitdubai.fermat_api.layer._1_definition.event.PlatformEvent;
+import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
 
 /**
  * Created by ciencias on 24.01.15.

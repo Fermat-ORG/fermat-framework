@@ -17,9 +17,9 @@ import android.text.SpannableString;
 import android.view.Window;
 import android.widget.TextView;
 
-import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.AppRuntimeManager;
-import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.TitleBar;
-import com.bitdubai.fermat_api.layer._16_module.wallet_runtime.WalletRuntimeManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.AppRuntimeManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.TitleBar;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.fermat_core.Platform;
 

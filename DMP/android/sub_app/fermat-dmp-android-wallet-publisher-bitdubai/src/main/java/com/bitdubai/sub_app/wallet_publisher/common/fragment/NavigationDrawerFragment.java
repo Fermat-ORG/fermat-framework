@@ -24,10 +24,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.App;
-import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.AppRuntimeManager;
-import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.SideMenu;
-import com.bitdubai.fermat_api.layer._15_middleware.app_runtime.SubApp;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.App;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.AppRuntimeManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.SideMenu;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.SubApp;
 
 
 import com.bitdubai.sub_app.wallet_publisher.R;
@@ -47,7 +47,7 @@ public class NavigationDrawerFragment extends Fragment {
     private AppRuntimeManager appRuntimeMiddleware;
     private App app;
     private SubApp subApp;
-    private com.bitdubai.fermat_api.layer._15_middleware.app_runtime.Activity activity;
+    private com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.Activity activity;
 
     /**
      * Remember the position of the selected item.
@@ -159,14 +159,14 @@ public class NavigationDrawerFragment extends Fragment {
 
 
         List<String> menuOption = new ArrayList<String>();
-        List<com.bitdubai.fermat_api.layer._15_middleware.app_runtime.MenuItem> menuItem = new ArrayList<>();
+        List<com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.MenuItem> menuItem = new ArrayList<>();
 
         if(sideMenu !=null)
         {
             menuItem = sideMenu.getMenuItems();
             for (int i = 0; i < menuItem.size(); i++) {
 
-                com.bitdubai.fermat_api.layer._15_middleware.app_runtime.MenuItem menu = menuItem.get(i);
+                com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.MenuItem menu = menuItem.get(i);
                 menuOption.add(menu.getLabel());
             }
 

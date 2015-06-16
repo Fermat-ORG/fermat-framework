@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_api.layer.pip_license;
 
-import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer._1_definition.enums.TimeFrequency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 
 /**
  * Created by ciencias on 21.01.15.

@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.layer.p2p_communication.CommunicationChannelAddre
 import com.bitdubai.fermat_api.layer.p2p_communication.cloud.CloudConnectionException;
 import com.bitdubai.fermat_api.layer.p2p_communication.fmp.FMPException;
 import com.bitdubai.fermat_api.layer.p2p_communication.fmp.FMPPacket;
-import com.bitdubai.fermat_api.layer._1_definition.communication.cloud.CloudFMPConnectionManager;
+import com.bitdubai.fermat_api.layer.all_definition.communication.cloud.CloudFMPConnectionManager;
 
 public class MockCloudFMPConnectionManagerClient extends
 		CloudFMPConnectionManager {

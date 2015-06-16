@@ -1,12 +1,12 @@
 package com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.discount_wallet.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer._12_world.crypto_index.CryptoIndexManager;
-import com.bitdubai.fermat_api.layer._12_world.crypto_index.DealsWithCryptoIndex;
-import com.bitdubai.fermat_api.layer._13_basic_wallet.discount_wallet.exceptions.*;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.discount_wallet.exceptions.*;
+import com.bitdubai.fermat_api.layer.dmp_world.crypto_index.CryptoIndexManager;
+import com.bitdubai.fermat_api.layer.dmp_world.crypto_index.DealsWithCryptoIndex;
 
-import com.bitdubai.fermat_api.layer._13_basic_wallet.discount_wallet.interfaces.DiscountWallet;
-import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer._1_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.discount_wallet.interfaces.DiscountWallet;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 
 
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;

@@ -6,17 +6,17 @@
  */
 package com.bitdubai.fermat_dmp_plugin.layer.world.coinapult.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer._12_world.coinapult.exceptions.CantGetAddressesException;
-import com.bitdubai.fermat_api.layer._12_world.coinapult.exceptions.CantGetTransactionsException;
-import com.bitdubai.fermat_api.layer._12_world.coinapult.exceptions.CantGetWalletBalanceException;
-import com.bitdubai.fermat_api.layer._12_world.coinapult.exceptions.CantInitializeDbWalletException;
-import com.bitdubai.fermat_api.layer._12_world.coinapult.exceptions.CantInitializeFileWalletException;
-import com.bitdubai.fermat_api.layer._12_world.coinapult.wallet.CryptoWallet;
-import com.bitdubai.fermat_api.layer._12_world.coinapult.wallet.CryptoWalletAddress;
-import com.bitdubai.fermat_api.layer._12_world.coinapult.wallet.CryptoWalletBalance;
-import com.bitdubai.fermat_api.layer._12_world.coinapult.wallet.CryptoWalletTransaction;
-import com.bitdubai.fermat_api.layer._1_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.dmp_world.coinapult.exceptions.CantGetAddressesException;
+import com.bitdubai.fermat_api.layer.dmp_world.coinapult.exceptions.CantGetTransactionsException;
+import com.bitdubai.fermat_api.layer.dmp_world.coinapult.exceptions.CantGetWalletBalanceException;
+import com.bitdubai.fermat_api.layer.dmp_world.coinapult.exceptions.CantInitializeDbWalletException;
+import com.bitdubai.fermat_api.layer.dmp_world.coinapult.exceptions.CantInitializeFileWalletException;
+import com.bitdubai.fermat_api.layer.dmp_world.coinapult.wallet.CryptoWallet;
+import com.bitdubai.fermat_api.layer.dmp_world.coinapult.wallet.CryptoWalletAddress;
+import com.bitdubai.fermat_api.layer.dmp_world.coinapult.wallet.CryptoWalletBalance;
+import com.bitdubai.fermat_api.layer.dmp_world.coinapult.wallet.CryptoWalletTransaction;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -339,7 +339,7 @@ public class CoinapultWallet implements CryptoWallet {
 
     /**
      * (non-Javadoc)
-     * @see com.bitdubai.fermat_api.layer._12_world.coinapult.wallet.CryptoWallet#convert(Number, String, Number, String)
+     * @see CryptoWallet#convert(Number, String, Number, String)
      */
     @Override
     public CryptoWalletTransaction convert(Number amount, String currency, Number outAmount, String outCurrency) {
@@ -367,7 +367,7 @@ public class CoinapultWallet implements CryptoWallet {
 
     /**
      * (non-Javadoc)
-     * @see com.bitdubai.fermat_api.layer._12_world.coinapult.wallet.CryptoWallet#getAddresses()
+     * @see CryptoWallet#getAddresses()
      */
     @Override
     public List<CryptoWalletAddress> getAddresses() throws CantGetAddressesException{
@@ -401,7 +401,7 @@ public class CoinapultWallet implements CryptoWallet {
 
     /**
      * (non-Javadoc)
-     * @see com.bitdubai.fermat_api.layer._12_world.coinapult.wallet.CryptoWallet#getBalances()
+     * @see CryptoWallet#getBalances()
      */
     @Override
     public List<CryptoWalletBalance> getBalances() throws CantGetWalletBalanceException{
@@ -443,7 +443,7 @@ public class CoinapultWallet implements CryptoWallet {
 
     /**
      * (non-Javadoc)
-     * @see com.bitdubai.fermat_api.layer._12_world.coinapult.wallet.CryptoWallet#generateNewBitCoinAddress()
+     * @see CryptoWallet#generateNewBitCoinAddress()
      */
     @Override
     public CryptoWalletAddress generateNewBitCoinAddress() {
@@ -478,7 +478,7 @@ public class CoinapultWallet implements CryptoWallet {
 
     /**
      * (non-Javadoc)
-     * @see com.bitdubai.fermat_api.layer._12_world.coinapult.wallet.CryptoWallet#lock(Number, Number, String)
+     * @see CryptoWallet#lock(Number, Number, String)
      */
     @Override
     public CryptoWalletTransaction lock(Number amount, Number outAmount, String outCurrency) {
@@ -506,7 +506,7 @@ public class CoinapultWallet implements CryptoWallet {
 
     /**
      * (non-Javadoc)
-     * @see com.bitdubai.fermat_api.layer._12_world.coinapult.wallet.CryptoWallet#unlock(Number, String, Number, String)
+     * @see CryptoWallet#unlock(Number, String, Number, String)
      */
     @Override
     public CryptoWalletTransaction unlock(Number amount, String inCurrency, Number outAmount, String address) {
@@ -534,7 +534,7 @@ public class CoinapultWallet implements CryptoWallet {
 
     /**
      * (non-Javadoc)
-     * @see com.bitdubai.fermat_api.layer._12_world.coinapult.wallet.CryptoWallet#send(Number, String, String, Number)
+     * @see CryptoWallet#send(Number, String, String, Number)
      */
     @Override
     public CryptoWalletTransaction send(Number amount, String currency, String address, Number outAmount) {
@@ -562,7 +562,7 @@ public class CoinapultWallet implements CryptoWallet {
 
     /**
      * (non-Javadoc)
-     * @see com.bitdubai.fermat_api.layer._12_world.coinapult.wallet.CryptoWallet#receive(Number)
+     * @see CryptoWallet#receive(Number)
      */
     @Override
     public CryptoWalletTransaction receive(Number amount) {
@@ -590,7 +590,7 @@ public class CoinapultWallet implements CryptoWallet {
 
     /**
      * (non-Javadoc)
-     * @see com.bitdubai.fermat_api.layer._12_world.coinapult.wallet.CryptoWallet#getTransactions()
+     * @see CryptoWallet#getTransactions()
      */
     @Override
     public List<CryptoWalletTransaction> getTransactions() throws CantGetTransactionsException{

@@ -6,7 +6,7 @@
  */
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer._11_network_service.intra_user.IntraUserStatus;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.IntraUserStatus;
 
 import java.security.KeyPair;
 import java.util.HashMap;

@@ -2,8 +2,8 @@ package com.bitdubai.fermat_core.layer._18_module.wallet_publisher;
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.PluginDeveloper;
-import com.bitdubai.fermat_api.layer._16_module.CantStartSubsystemException;
-import com.bitdubai.fermat_api.layer._16_module.ModuleSubsystem;
+import com.bitdubai.fermat_api.layer.dmp_module.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer.dmp_module.ModuleSubsystem;
 import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_publisher.developer.bitdubai.DeveloperBitDubai;
 
 /**

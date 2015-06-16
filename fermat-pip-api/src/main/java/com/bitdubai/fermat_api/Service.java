@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_api;
 
-import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 
 /**
  * Created by ciencias on 30.12.14.

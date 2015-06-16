@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_core.layer._16_transaction.outgoing_device_user;
 
 import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.layer._18_transaction.CantStartSubsystemException;
-import com.bitdubai.fermat_api.layer._18_transaction.TransactionSubsystem;
+import com.bitdubai.fermat_api.layer.dmp_transaction.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionSubsystem;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.developer.bitsubai.DeveloperBitDubai;
 
 /**

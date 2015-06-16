@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.module.wallet_store.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer._16_module.wallet_store.Wallet;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_store.Wallet;
 
 import java.util.UUID;
 

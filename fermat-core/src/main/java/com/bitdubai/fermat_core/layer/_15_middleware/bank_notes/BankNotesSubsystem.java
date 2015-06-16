@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_core.layer._15_middleware.bank_notes;
 
 import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.layer._15_middleware.CantStartSubsystemException;
-import com.bitdubai.fermat_api.layer._15_middleware.MiddlewareSubsystem;
+import com.bitdubai.fermat_api.layer.dmp_middleware.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.MiddlewareSubsystem;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.bank_notes.developer.bitdubai.DeveloperBitDubai;
 
 /**

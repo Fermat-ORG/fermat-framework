@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_api.layer.cry_crypto_network;
 
-import com.bitdubai.fermat_api.layer._1_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 
 /**
  * Created by ciencias on 23.01.15.

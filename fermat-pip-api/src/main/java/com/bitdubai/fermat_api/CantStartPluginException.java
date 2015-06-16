@@ -2,7 +2,7 @@
 package com.bitdubai.fermat_api;
 
 
-import com.bitdubai.fermat_api.layer._1_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 
 
 public class CantStartPluginException extends Exception{

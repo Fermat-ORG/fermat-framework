@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_core.layer._12_world.blockchain_info;
 
 import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.layer._16_module.CantStartSubsystemException;
-import com.bitdubai.fermat_api.layer._12_world.WorldSubsystem;
+import com.bitdubai.fermat_api.layer.dmp_module.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer.dmp_world.WorldSubsystem;
 import com.bitdubai.fermat_dmp_plugin.layer.world.blockchain_info.developer.bitdubai.DeveloperBitDubai;
 
 /**

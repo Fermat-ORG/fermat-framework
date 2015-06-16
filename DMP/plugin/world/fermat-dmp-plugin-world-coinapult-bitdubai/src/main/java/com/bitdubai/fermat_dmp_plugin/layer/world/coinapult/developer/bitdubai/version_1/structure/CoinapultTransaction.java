@@ -6,6 +6,7 @@
  */
 package com.bitdubai.fermat_dmp_plugin.layer.world.coinapult.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.dmp_world.coinapult.wallet.CryptoWalletTransaction;
 import com.bitdubai.fermat_dmp_plugin.layer.world.coinapult.developer.bitdubai.version_1.coinapult_http_client.Transaction;
 import com.bitdubai.fermat_dmp_plugin.layer.world.coinapult.developer.bitdubai.version_1.enums.Types;
 
@@ -20,7 +21,7 @@ import java.sql.Timestamp;
  *
  * @version 1.0
  */
-public class CoinapultTransaction implements com.bitdubai.fermat_api.layer._12_world.coinapult.wallet.CryptoWalletTransaction {
+public class CoinapultTransaction implements CryptoWalletTransaction {
 
     /**
      * Represent the address
