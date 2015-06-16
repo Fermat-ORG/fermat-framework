@@ -18,7 +18,7 @@
         <option name="ALLOW_USER_CONFIGURATION" value="false" />
         <option name="MANIFEST_FILE_RELATIVE_PATH" value="/src/main/AndroidManifest.xml" />
         <option name="RES_FOLDER_RELATIVE_PATH" value="/src/main/structured_res/app/shell/version_1" />
-        <option name="RES_FOLDERS_RELATIVE_PATH" value="file://$MODULE_DIR$/src/main/res;file://$MODULE_DIR$/src/main/structured_res/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1;file://$MODULE_DIR$/src/main/structured_res/app/subapp/wallet_runtime/wallet_framework/version_1;file://$MODULE_DIR$/src/main/structured_res/app/subapp/shop/version_1;file://$MODULE_DIR$/src/main/structured_res/app/shell/version_1" />
+        <option name="RES_FOLDERS_RELATIVE_PATH" value="file://$MODULE_DIR$/src/main/structured_res/app/subapp/wallet_runtime/wallet_framework/version_1;file://$MODULE_DIR$/src/main/structured_res/app/shell/version_1;file://$MODULE_DIR$/src/main/structured_res/app/subapp/shop/version_1;file://$MODULE_DIR$/src/main/structured_res/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1;file://$MODULE_DIR$/src/main/res" />
         <option name="ASSETS_FOLDER_RELATIVE_PATH" value="/src/main/assets" />
       </configuration>
     </facet>
@@ -93,6 +93,7 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/rs" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/symbols" />
       <excludeFolder url="file://$MODULE_DIR$/build/outputs" />
+      <excludeFolder url="file://$MODULE_DIR$/build/tmp" />
     </content>
     <orderEntry type="jdk" jdkName="Android API 21 Platform (1)" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
@@ -126,14 +127,21 @@
     <orderEntry type="library" exported="" name="google-http-client-jackson2-1.18.0-rc" level="project" />
     <orderEntry type="library" exported="" name="commons-collections-3.2" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-21.0.3" level="project" />
+    <orderEntry type="module" module-name="fermat-p2p-plugin-communication-cloud-client-bitdubai" exported="" />
     <orderEntry type="library" exported="" name="DMP/android/sub_app/fermat-dmp-android-wallet-factory-bitdubai-unspecified" level="project" />
+    <orderEntry type="module" module-name="fermat-cry-plugin-crypto-module-actor-address-book-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-core" exported="" />
     <orderEntry type="library" exported="" name="DMP/android/sub_app/fermat-dmp-android-wallet-manager-bitdubai-unspecified" level="project" />
+    <orderEntry type="module" module-name="fermat-p2p-plugin-communication-cloud-server-bitdubai" exported="" />
     <orderEntry type="library" exported="" name="DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-wallet-bitdubai-unspecified" level="project" />
     <orderEntry type="library" exported="" name="DMP/android/sub_app/fermat-dmp-android-wallet-publisher-bitdubai-unspecified" level="project" />
     <orderEntry type="module" module-name="fermat-pip-api" exported="" />
+    <orderEntry type="module" module-name="fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai" exported="" />
     <orderEntry type="library" exported="" name="DMP/android/sub_app/fermat-dmp-android-shop-manager-bitdubai-unspecified" level="project" />
+    <orderEntry type="module" module-name="fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai" exported="" />
     <orderEntry type="library" exported="" name="DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-age-kids-boys-bitdubai-unspecified" level="project" />
     <orderEntry type="library" exported="" name="DMP/android/sub_app/fermat-dmp-android-wallet-store-bitdubai-unspecified" level="project" />
+    <orderEntry type="module" module-name="fermat-cry-plugin-crypto-network-bitcoin-bitdubai" exported="" />
   </component>
 </module>

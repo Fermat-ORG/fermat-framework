@@ -12,11 +12,11 @@ dependencies {
 
 // CRY Projects
 
-    compile project(':CRY/plugin/crypto_network/fermat-cry-plugin-crypto-network-bitcoin-bitdubai')
-    compile project(':CRY/plugin/crypto_module/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai')
-    compile project(':CRY/plugin/crypto_module/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai')
-    compile project(':CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai')
-    compile project(':CRY/plugin/crypto_router/fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai')
+    compile project(':fermat-cry-plugin-crypto-network-bitcoin-bitdubai')
+    compile project(':fermat-cry-plugin-crypto-module-actor-address-book-bitdubai')
+    compile project(':fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai')
+    compile project(':fermat-cry-plugin-crypto-vault-bitcoin-bitdubai')
+    compile project(':fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai')
 
 // OSA Projects   --- Hace falta esto aca??
 
@@ -35,8 +35,8 @@ dependencies {
 
 // P2P Projects
 
-    compile project(':P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai')
-    compile project(':P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai')
+    compile project(':fermat-p2p-plugin-communication-cloud-client-bitdubai')
+    compile project(':fermat-p2p-plugin-communication-cloud-server-bitdubai')
 
 // DMP Projects (Plugins)
 

@@ -5,11 +5,16 @@ include ':fermat-pip-api'
 
 // CRY Projects
 
-include ':CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai'
-include ':CRY/plugin/crypto_network/fermat-cry-plugin-crypto-network-bitcoin-bitdubai'
-include ':CRY/plugin/crypto_module/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai'
-include ':CRY/plugin/crypto_module/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai'
-include ':CRY/plugin/crypto_router/fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai'
+include ':fermat-cry-plugin-crypto-vault-bitcoin-bitdubai'
+project(':fermat-cry-plugin-crypto-vault-bitcoin-bitdubai').projectDir = new File('CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai')
+include ':fermat-cry-plugin-crypto-network-bitcoin-bitdubai'
+project(':fermat-cry-plugin-crypto-network-bitcoin-bitdubai').projectDir = new File('CRY/plugin/crypto_network/fermat-cry-plugin-crypto-network-bitcoin-bitdubai')
+include ':fermat-cry-plugin-crypto-module-actor-address-book-bitdubai'
+project(':fermat-cry-plugin-crypto-module-actor-address-book-bitdubai').projectDir = new File('CRY/plugin/crypto_module/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai')
+include ':fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai'
+project(':fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai').projectDir = new File('CRY/plugin/crypto_module/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai')
+include ':fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai'
+project(':fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai').projectDir = new File('CRY/plugin/crypto_router/fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai')
 
 // OSA Projects
 
@@ -31,8 +36,11 @@ include ':PIP/addon/user/fermat-pip-addon-user-device-user-bitdubai'
 
 // P2P Projects
 
-include ':P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai'
-include ':P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai'
+include ':fermat-p2p-plugin-communication-cloud-client-bitdubai'
+project(':fermat-p2p-plugin-communication-cloud-client-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai')
+include ':fermat-p2p-plugin-communication-cloud-server-bitdubai'
+project(':fermat-p2p-plugin-communication-cloud-server-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai')
+
 
 // DMP Projects (Plugins)
 
