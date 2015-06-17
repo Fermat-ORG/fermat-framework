@@ -26,6 +26,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="fermat-api" exported="" />
     <orderEntry type="library" exported="" name="bcprov-jdk15on-1.52" level="project" />
     <orderEntry type="library" exported="" name="commons-collections-3.2" level="project" />
     <orderEntry type="library" exported="" scope="TEST" name="junit-4.11" level="project" />
