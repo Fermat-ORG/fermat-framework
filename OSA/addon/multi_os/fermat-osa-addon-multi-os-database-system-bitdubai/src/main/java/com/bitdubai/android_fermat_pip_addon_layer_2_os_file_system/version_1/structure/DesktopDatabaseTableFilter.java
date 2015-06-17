@@ -1,7 +1,8 @@
-package com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_osa_addon.layer.desktop.database_system.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseFilterType;
-import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableFilter;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
+
 
 /**
  * Created by Natalia on 09/02/2015.

@@ -1,13 +1,13 @@
-package com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_osa_addon.layer.desktop.database_system.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseDataType;
-import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableColumn;
-import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableFactory;
 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableColumn;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
 import java.util.ArrayList;
 
 /**
- * Created by ciencias on 3/23/15. Migrated by Matias
+ * Created by ciencias on 3/23/15.
  */
 
 /**

@@ -1,19 +1,19 @@
-package com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1.structure;
+package com.bitdubai.android_fermat_pip_addon_layer_2_os_file_system.version_1.structure;
 
 
-import com.bitdubai.fermat_api.layer._2_os.file_system.FileLifeSpan;
-import com.bitdubai.fermat_api.layer._2_os.file_system.FilePrivacy;
-import com.bitdubai.fermat_api.layer._2_os.file_system.PluginBinaryFile;
-import com.bitdubai.fermat_api.layer._2_os.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer._2_os.file_system.PluginTextFile;
-import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantCreateFileException;
-import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantLoadFileException;
-import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.FileNotFoundException;
-import com.sun.xml.messaging.saaj.util.Base64;
 
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.UUID;
 
 /**
@@ -51,7 +51,7 @@ public class DesktopPluginFileSystem implements PluginFileSystem {
      * @throws CantCreateFileException
      */
     @Override
-    public PluginTextFile getTextFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException,CantCreateFileException {
+    public PluginTextFile getTextFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException,CantCreateFileException {
 
         DesktopPluginTextFile newFile = null;
         try {
@@ -70,6 +70,7 @@ public class DesktopPluginFileSystem implements PluginFileSystem {
             throw new FileNotFoundException();
         }
     }
+
 
     /**
      *<p>This method create a new PluginTextFile object.
@@ -105,7 +106,7 @@ public class DesktopPluginFileSystem implements PluginFileSystem {
      * @throws CantCreateFileException
      */
     @Override
-    public PluginBinaryFile getBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException,CantCreateFileException{
+    public PluginBinaryFile getBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException,CantCreateFileException{
 
         DesktopPluginBinaryFile newFile = null;
         try {
@@ -173,7 +174,7 @@ public class DesktopPluginFileSystem implements PluginFileSystem {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             md.update(fileName.getBytes(Charset.forName("UTF-8")));
             byte[] digest = md.digest();
-            byte[] encoded = Base64.encode(digest);
+            byte[] encoded = Base64.getEncoder().encode(digest);
             
             try {
                 encryptedString = new String(encoded, "UTF-8");
@@ -186,4 +187,6 @@ public class DesktopPluginFileSystem implements PluginFileSystem {
         }
         return encryptedString.replace("/","");
     }
+
+    
 }

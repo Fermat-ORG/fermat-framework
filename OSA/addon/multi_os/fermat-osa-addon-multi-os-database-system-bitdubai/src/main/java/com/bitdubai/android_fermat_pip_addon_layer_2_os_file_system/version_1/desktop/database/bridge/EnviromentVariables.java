@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1.desktop.database.bridge;
+package com.bitdubai.fermat_osa_addon.layer.desktop.database_system.developer.bitdubai.version_1.desktop.database.bridge;
 
 import java.io.File;
 import javax.swing.JOptionPane;
@@ -22,48 +22,50 @@ public class EnviromentVariables {
     /**
      * Get the path to databases folder
      * @return String path to databases folder
-     **/
+    **/
     public static Object getExternalStorageDirectory() {
-
+        
         //User home directory
         String home = System.getProperty("user.home");
         File dir = new File(home+"/externalStorage/databases/");
         FileObject myfolder = FileUtil.toFileObject(dir);
-        if(myfolder == null){
+        dir.mkdir();
+        /*if(myfolder == null){
             //Testing
             //displayMessage("Creating folder "+dir.getPath());
+            
             return null;
-        }
-
-        return myfolder;
-
+        }*/
+        
+        return dir.getAbsolutePath();
+     
     }
-
+    
     /**
      * Method only for testing purpose
-     * @param message
+     * @param message 
      */
     public static void displayMessage(String message){
         JOptionPane.showInputDialog(message);
     }
-
-
+    
+    
     /**
      * Get the path to private internal folders
      * @return String path to private internal folder
-     **/
-    // this method is for the private internal databases if we have to hidden in the future
+    **/
+    // this method is for the private internal databases if we have to hidden in the future 
     public static Object getInternalStorageDirectory() {
 
         FileObject root = Repository.getDefault().getDefaultFileSystem().getRoot();
 
-        FileObject dir = root.getFileObject("Storage");
-
-        return dir;
-
+        //FileObject dir = root.getFileObject("Storage");
+        
+        //return dir;
+        return null;
     }
-
-
+    
+    
 
 
 }
