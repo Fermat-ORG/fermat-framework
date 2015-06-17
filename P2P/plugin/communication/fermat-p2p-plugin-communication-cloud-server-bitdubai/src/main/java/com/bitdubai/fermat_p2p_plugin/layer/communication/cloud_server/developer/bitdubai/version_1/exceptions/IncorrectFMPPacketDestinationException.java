@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.exceptions;
 
-import com.bitdubai.fermat_api.layer.p2p_communication.fmp.FMPException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
 
 @SuppressWarnings("serial")
 public class IncorrectFMPPacketDestinationException extends FMPException {

@@ -5,8 +5,8 @@ import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
-import com.bitdubai.fermat_api.layer.p2p_communication.*;
-import com.bitdubai.fermat_api.layer.p2p_communication.cloud.RejectConnectionRequestReasons;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.*;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.enums.RejectConnectionRequestReasons;
 import com.bitdubai.fermat_core.layer.p2p_communication.cloud.CloudSubsystem;
 import com.bitdubai.fermat_core.layer.p2p_communication.cloud_server.CloudServerSubsystem;
 

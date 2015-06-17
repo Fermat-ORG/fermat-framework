@@ -6,7 +6,7 @@ import static com.googlecode.catchexception.CatchException.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.bitdubai.fermat_api.layer.p2p_communication.cloud.CloudConnectionException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.CloudConnectionException;
 import com.bitdubai.fermat_api.layer.all_definition.communication.cloud.CloudFMPConnectionManager;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 

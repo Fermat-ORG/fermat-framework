@@ -5,9 +5,9 @@ import static org.fest.assertions.api.Assertions.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.bitdubai.fermat_api.layer.p2p_communication.fmp.FMPPacket;
-import com.bitdubai.fermat_api.layer.p2p_communication.fmp.FMPException;
-import com.bitdubai.fermat_api.layer.p2p_communication.fmp.FMPPacket.FMPPacketType;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket.FMPPacketType;
 import com.bitdubai.fermat_api.layer.all_definition.communication.FMPPacketFactory;
 
 

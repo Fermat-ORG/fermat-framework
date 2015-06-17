@@ -12,10 +12,10 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWit
 //import com.bitdubai.fermat_api.layer.platform_service.event_manager.EventHandler;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
-import com.bitdubai.fermat_api.layer.p2p_communication.CommunicationChannel;
-import com.bitdubai.fermat_api.layer.p2p_communication.OnlineChannel;
-import com.bitdubai.fermat_api.layer.p2p_communication.ServiceToServiceOnlineConnection;
-import com.bitdubai.fermat_api.layer.p2p_communication.cloud.RejectConnectionRequestReasons;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannel;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.OnlineChannel;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.ServiceToServiceOnlineConnection;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.enums.RejectConnectionRequestReasons;
 
 import java.util.ArrayList;
 import java.util.List;

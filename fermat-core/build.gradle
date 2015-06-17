@@ -9,7 +9,7 @@ repositories {
 
 dependencies {
     compile project(':fermat-api')
-
+    compile project(':fermat-p2p-api')
 
 // CRY Projects
 

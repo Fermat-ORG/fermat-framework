@@ -11,7 +11,7 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.IntraUserMan
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventHandler;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingNetworkServiceConnectionRequestEvent;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.events.IncomingNetworkServiceConnectionRequestEvent;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.IntraUserNetworkServicePluginRoot;
 
 /**

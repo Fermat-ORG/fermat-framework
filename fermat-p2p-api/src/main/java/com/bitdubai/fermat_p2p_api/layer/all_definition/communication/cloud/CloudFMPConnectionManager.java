@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud;
 
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.CloudConnectionException;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.CloudConnectionManager;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.exceptions.CloudConnectionException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.CloudConnectionManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacketHandler;

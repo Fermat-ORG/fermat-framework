@@ -30,6 +30,9 @@ pmd {
 }
 
 dependencies {
+
+    compile project(':fermat-api')
+
     compile group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.52'
     compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
     

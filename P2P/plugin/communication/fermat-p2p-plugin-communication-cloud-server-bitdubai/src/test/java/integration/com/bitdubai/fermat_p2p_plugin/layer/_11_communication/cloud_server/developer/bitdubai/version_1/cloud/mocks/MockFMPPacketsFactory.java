@@ -1,8 +1,8 @@
 package integration.com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud_server.developer.bitdubai.version_1.cloud.mocks;
 
-import com.bitdubai.fermat_api.layer.p2p_communication.fmp.FMPPacket;
-import com.bitdubai.fermat_api.layer.p2p_communication.fmp.FMPPacket.FMPPacketType;
-import com.bitdubai.fermat_api.layer.p2p_communication.fmp.FMPException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket.FMPPacketType;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
 import com.bitdubai.fermat_api.layer.all_definition.communication.FMPPacketFactory;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
