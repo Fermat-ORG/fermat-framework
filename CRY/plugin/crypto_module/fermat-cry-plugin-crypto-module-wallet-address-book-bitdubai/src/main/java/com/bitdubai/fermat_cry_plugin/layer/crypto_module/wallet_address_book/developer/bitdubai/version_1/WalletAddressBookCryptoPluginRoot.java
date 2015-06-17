@@ -13,7 +13,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWit
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventHandler;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
-import com.bitdubai.fermat_api.layer.cry_crypto_module.Crypto;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.Crypto;
 
 import java.util.ArrayList;
 import java.util.List;

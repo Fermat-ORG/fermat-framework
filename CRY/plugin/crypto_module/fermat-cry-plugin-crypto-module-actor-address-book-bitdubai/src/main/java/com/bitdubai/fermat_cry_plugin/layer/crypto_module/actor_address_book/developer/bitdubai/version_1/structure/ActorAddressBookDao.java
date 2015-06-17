@@ -6,8 +6,8 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.de
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book.exceptions.CantGetActorCryptoAddress;
-import com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book.exceptions.CantRegisterActorCryptoAddress;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantGetActorCryptoAddress;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantRegisterActorCryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -165,7 +165,7 @@ public class ActorAddressBookDao implements DealsWithPluginDatabaseSystem {
 
     }
 
-    public com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book.ActorAddressBook getActorAddressBookByCryptoAddress(CryptoAddress cryptoAddress) throws CantGetActorCryptoAddress {
+    public com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.ActorAddressBook getActorAddressBookByCryptoAddress(CryptoAddress cryptoAddress) throws CantGetActorCryptoAddress {
 
         DatabaseTable table;
 
@@ -200,11 +200,11 @@ public class ActorAddressBookDao implements DealsWithPluginDatabaseSystem {
         return new com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.structure.ActorAddressBook(user_id, userTypes, userCryptoAddress);
     }
 
-    public List<com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book.ActorAddressBook> getAllActorAddressBookByUserId(UUID userId) throws CantGetActorCryptoAddress {
+    public List<com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.ActorAddressBook> getAllActorAddressBookByUserId(UUID userId) throws CantGetActorCryptoAddress {
 
         DatabaseTable table;
 
-        List<com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book.ActorAddressBook> actorsAddressBooks = new ArrayList<com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book.ActorAddressBook>();
+        List<com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.ActorAddressBook> actorsAddressBooks = new ArrayList<com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.ActorAddressBook>();
 
         /**
          *  I will load the information of table into a memory structure, filter by crypto address .
@@ -233,7 +233,7 @@ public class ActorAddressBookDao implements DealsWithPluginDatabaseSystem {
             user_id = record.getUUIDValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ID_USER);
             userCryptoAddress.setAddress(record.getStringValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS));
 
-            com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book.ActorAddressBook addressBook = new com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.structure.ActorAddressBook(user_id, userTypes, userCryptoAddress);
+            com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.ActorAddressBook addressBook = new com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.structure.ActorAddressBook(user_id, userTypes, userCryptoAddress);
             actorsAddressBooks.add(addressBook);
 
         }

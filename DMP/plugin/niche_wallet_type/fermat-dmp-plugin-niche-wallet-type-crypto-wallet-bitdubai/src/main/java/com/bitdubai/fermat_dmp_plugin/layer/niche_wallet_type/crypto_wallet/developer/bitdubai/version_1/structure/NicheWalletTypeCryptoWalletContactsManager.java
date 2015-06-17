@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.crypto_wallet.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book.ActorAddressBookManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.ActorAddressBookManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.DealsWithWalletContacts;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.WalletContact;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.WalletContactsManager;
@@ -20,8 +20,7 @@ import com.bitdubai.fermat_api.layer.pip_user.UserTypes;
 import com.bitdubai.fermat_api.layer.pip_user.extra_user.DealsWithExtraUsers;
 import com.bitdubai.fermat_api.layer.pip_user.extra_user.ExtraUserManager;
 import com.bitdubai.fermat_api.layer.pip_user.extra_user.exceptions.CantCreateExtraUserRegistry;
-import com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book.DealsWithActorAddressBook;
-import com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book.ActorAddressBook;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.DealsWithActorAddressBook;
 
 import java.util.List;
 import java.util.UUID;

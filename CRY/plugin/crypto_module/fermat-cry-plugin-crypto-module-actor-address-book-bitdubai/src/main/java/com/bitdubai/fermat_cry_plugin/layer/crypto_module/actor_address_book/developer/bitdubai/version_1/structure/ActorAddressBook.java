@@ -19,7 +19,7 @@ import java.util.UUID;
  */
 
 
-public class ActorAddressBook implements com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book.ActorAddressBook{
+public class ActorAddressBook implements com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.ActorAddressBook {
 
 
 

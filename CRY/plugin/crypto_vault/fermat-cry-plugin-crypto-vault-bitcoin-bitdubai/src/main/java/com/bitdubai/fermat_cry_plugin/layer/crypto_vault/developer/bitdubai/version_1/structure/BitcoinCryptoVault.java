@@ -17,11 +17,11 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpen
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.cry_crypto_network.bitcoin.BitcoinCryptoNetworkManager;
-import com.bitdubai.fermat_api.layer.cry_crypto_network.bitcoin.BitcoinManager;
-import com.bitdubai.fermat_api.layer.cry_crypto_network.bitcoin.DealsWithBitcoinCryptoNetwork;
-import com.bitdubai.fermat_api.layer.cry_crypto_network.bitcoin.exceptions.CantCreateCryptoWalletException;
-import com.bitdubai.fermat_api.layer.cry_crypto_vault.CryptoVault;
+import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.DealsWithBitcoinCryptoNetwork;
+import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantCreateCryptoWalletException;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVault;
 
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.Wallet;

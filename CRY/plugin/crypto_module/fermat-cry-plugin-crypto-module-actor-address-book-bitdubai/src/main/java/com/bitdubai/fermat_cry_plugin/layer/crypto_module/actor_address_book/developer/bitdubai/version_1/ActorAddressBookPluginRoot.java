@@ -4,8 +4,8 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book.exceptions.CantGetActorCryptoAddress;
-import com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book.exceptions.CantRegisterActorCryptoAddress;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantGetActorCryptoAddress;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantRegisterActorCryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
@@ -14,19 +14,9 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWit
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventHandler;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.pip_user.UserTypes;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.DealsWithDeviceUsers;
-import com.bitdubai.fermat_api.layer.pip_user.device_user.DeviceUserManager;
-import com.bitdubai.fermat_api.layer.pip_user.extra_user.DealsWithExtraUsers;
-import com.bitdubai.fermat_api.layer.pip_user.extra_user.ExtraUserManager;
-import com.bitdubai.fermat_api.layer.pip_user.intra_user.DealsWithIntraUsers;
-import com.bitdubai.fermat_api.layer.pip_user.intra_user.IntraUserManager;
-import com.bitdubai.fermat_api.layer.cry_crypto_module.Crypto;
-import com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book.ActorAddressBookManager;
-import com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book.exceptions.ExampleException;
-import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.structure.ActorAddressBook;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.Crypto;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.ActorAddressBookManager;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.structure.ActorAddressBookDao;
 
 import java.util.ArrayList;
@@ -182,12 +172,12 @@ public class ActorAddressBookPluginRoot implements ActorAddressBookManager, Cryp
 
     @Override
 
-    public com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book.ActorAddressBook getActorAddressBookByCryptoAddress(CryptoAddress cryptoAddress) throws CantGetActorCryptoAddress {
+    public com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.ActorAddressBook getActorAddressBookByCryptoAddress(CryptoAddress cryptoAddress) throws CantGetActorCryptoAddress {
         return actorAddressBook.getActorAddressBookByCryptoAddress(cryptoAddress);
     }
 
     @Override
-    public List<com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book.ActorAddressBook>  getAllActorAddressBookByUserId(UUID userId) throws CantGetActorCryptoAddress {
+    public List<com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.ActorAddressBook>  getAllActorAddressBookByUserId(UUID userId) throws CantGetActorCryptoAddress {
         return actorAddressBook.getAllActorAddressBookByUserId(userId);
     }
 

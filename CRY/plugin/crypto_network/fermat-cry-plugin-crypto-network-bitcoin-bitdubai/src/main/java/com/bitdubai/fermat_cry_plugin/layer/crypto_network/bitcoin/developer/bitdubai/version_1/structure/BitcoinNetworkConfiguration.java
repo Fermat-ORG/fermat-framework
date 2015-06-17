@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.cry_crypto_network.bitcoin.BitcoinManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinManager;
 
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.params.MainNetParams;

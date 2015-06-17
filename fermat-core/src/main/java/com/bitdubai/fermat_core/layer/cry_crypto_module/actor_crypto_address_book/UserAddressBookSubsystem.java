@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_core.layer.cry_crypto_module.actor_crypto_address_book;
 
 import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.layer.cry_crypto_module.CantStartSubsystemException;
-import com.bitdubai.fermat_api.layer.cry_crypto_module.CryptoSubsystem;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.CantStartSubsystemException;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.CryptoSubsystem;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.DeveloperBitDubai;
 
 /**
