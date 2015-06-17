@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.OutgoingExtraUserManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.TransactionManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
@@ -134,5 +135,9 @@ public class OutgoingExtraUserTransactionPluginRoot implements Service, Outgoing
     }
 
 
-
+    @Override
+    public TransactionManager getTransactionManager() {
+        // TODO: ADD CORRESPONDING MODULE
+        return null;
+    }
 }
