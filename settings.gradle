@@ -2,6 +2,7 @@ include ':fermat-android-core'
 
 include ':fermat-core'
 include ':fermat-api'
+include ':fermat-p2p-api'
 
 
 // CRY Projects
