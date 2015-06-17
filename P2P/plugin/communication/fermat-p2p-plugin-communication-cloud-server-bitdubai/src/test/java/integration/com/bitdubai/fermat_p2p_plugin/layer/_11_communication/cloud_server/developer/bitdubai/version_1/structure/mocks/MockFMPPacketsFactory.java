@@ -77,5 +77,12 @@ public class MockFMPPacketsFactory {
 		mockType = FMPPacketType.CONNECTION_REGISTER;
 		return FMPPacketFactory.constructCloudPacket(mockSender, destination, mockType, mockMessage, mockSignature);
 	}
+	
+	public static FMPPacket mockDataTransmitVPNPacket(final String sender, final String destination, final String message) throws FMPException {
+		mockType = FMPPacketType.DATA_TRANSMIT;
+		String messageHash = AsymmectricCryptography.encryptMessagePublicKey(message, destination);
+		String signature = AsymmectricCryptography.createMessageSignature(messageHash, MOCK_PRIVATE_KEY);
+		return FMPPacketFactory.constructCloudPacket(mockSender, destination, mockType, messageHash, signature);
+	}
 
 }
