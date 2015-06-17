@@ -291,7 +291,7 @@ public class BitcoinSendFragment extends Fragment {
 
                 //assign the event to go Send New Contact Fragment
                 ImageView  send_profile_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
-                send_profile_picture.setTag("BasicSendToNewContactActivity");
+                send_profile_picture.setTag("BitcoincSendToNewContactActivity");
 
             }
             else
@@ -311,7 +311,7 @@ public class BitcoinSendFragment extends Fragment {
 
                         //asigned tagId at icons action
                         ImageView  send_profile_picture = (ImageView) convertView.findViewById(R.id.icon_send_to_contact);
-                        send_profile_picture.setTag("BasicSendToContactActivity|" + groupPosition + "|-1");
+                        send_profile_picture.setTag("BitcoinSendToContactActivity|" + groupPosition + "|-1");
 
 
                         holder = new ViewHolder();

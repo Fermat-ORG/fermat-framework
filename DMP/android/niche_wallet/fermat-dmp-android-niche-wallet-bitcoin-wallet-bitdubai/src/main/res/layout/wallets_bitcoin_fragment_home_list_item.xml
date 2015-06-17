@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="210dp"
-    android:background="@drawable/background_tabs_diagonal_rotated"
+    android:layout_height="410dp"
+    android:background="#f3e4c4"
     android:orientation="vertical"
     android:paddingLeft="7dip"
     android:paddingRight="7dip"
@@ -18,15 +18,19 @@
         android:gravity="center"
         >
 
-        <ImageView
-            android:id="@+id/account_picture1"
-            android:layout_width="94dp"
-            android:layout_height="94dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/account_type_current_small"
-            android:layout_gravity="center"
+        <TextView
+            android:id="@+id/labelbalance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingLeft="7dip"
+            android:paddingRight="7dip"
+            android:paddingTop="3dip"
+            android:paddingBottom="3dip"
+            android:textColor="#FF666666"
+            android:textSize="30sp"
+             android:text="Actual Balance"
             />
-
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
