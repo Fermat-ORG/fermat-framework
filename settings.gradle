@@ -3,6 +3,7 @@ include ':fermat-android-core'
 include ':fermat-core'
 include ':fermat-api'
 include ':fermat-p2p-api'
+include ':fermat-cry-api'
 
 
 // CRY Projects
@@ -255,6 +256,5 @@ project(':fermat-dmp-android-sub-app-wallet-publisher-bitdubai').projectDir = ne
 
 include ':fermat-dmp-android-sub-app-shop-manager-bitdubai'
 project(':fermat-dmp-android-sub-app-shop-manager-bitdubai').projectDir = new File('DMP/android/sub_app/fermat-dmp-android-sub-app-shop-manager-bitdubai')
-
-
+include 'fermat-cry-api'
 

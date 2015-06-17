@@ -81,6 +81,7 @@
             <option value="$PROJECT_DIR$/fermat-android-core" />
             <option value="$PROJECT_DIR$/fermat-api" />
             <option value="$PROJECT_DIR$/fermat-core" />
+            <option value="$PROJECT_DIR$/fermat-cry-api" />
             <option value="$PROJECT_DIR$/fermat-p2p-api" />
           </set>
         </option>

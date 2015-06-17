@@ -11,6 +11,7 @@ repositories {
 
 dependencies {
     compile project(':fermat-api')
+    compile project(':fermat-cry-api')
 
     testCompile 'junit:junit:4.11'
     compile project(':fermat-dmp-plugin-identity-intra-user-bitdubai')

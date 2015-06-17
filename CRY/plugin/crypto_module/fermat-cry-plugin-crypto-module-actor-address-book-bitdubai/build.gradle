@@ -10,7 +10,9 @@ repositories {
 
 
 dependencies {
+
     compile project(':fermat-api')
+    compile project(':fermat-cry-api')
 
     testCompile 'junit:junit:4.11'
 
