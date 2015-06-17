@@ -207,7 +207,7 @@ public class MyApplication extends android.support.multidex.MultiDexApplication 
                 break;
 
             case 4:
-                color = "#1EE635";
+                color = "#d07b62";
                 actionBar.setIcon(context.getDrawable(R.drawable.wallet_3));
                 wallpaper = context.getDrawable(R.drawable.background_tiled_diagonal_light);
                 abTitle.setTextColor(Color.BLACK);
