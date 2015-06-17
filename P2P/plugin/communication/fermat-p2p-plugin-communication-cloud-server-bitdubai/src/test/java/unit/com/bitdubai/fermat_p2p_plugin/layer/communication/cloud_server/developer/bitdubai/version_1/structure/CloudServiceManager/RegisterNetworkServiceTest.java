@@ -1,4 +1,4 @@
-package unit.com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud_server.developer.bitdubai.version_1.structure.CloudServiceManager;
+package unit.com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.CloudServiceManager;
 
 import static org.fest.assertions.api.Assertions.*;
 import static com.googlecode.catchexception.CatchException.*;

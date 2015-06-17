@@ -19,3 +19,5 @@ dependencies {
 	testCompile group: 'com.googlecode.catch-exception', name: 'catch-exception', version: '1.2.0'
 	testCompile project(':fermat-p2p-plugin-communication-cloud-server-bitdubai')
 }
+check.mustRunAfter clean
+jacocoTestReport.mustRunAfter check

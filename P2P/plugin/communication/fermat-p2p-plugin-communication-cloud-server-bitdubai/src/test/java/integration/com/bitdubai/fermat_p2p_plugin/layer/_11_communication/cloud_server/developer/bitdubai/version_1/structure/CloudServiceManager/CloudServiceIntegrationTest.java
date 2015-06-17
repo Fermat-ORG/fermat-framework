@@ -1,25 +1,22 @@
-package integration.com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud_server.developer.bitdubai.version_1.cloud.CloudNetworkServiceManager;
+package integration.com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud_server.developer.bitdubai.version_1.structure.CloudServiceManager;
 
 import static org.junit.Assert.assertEquals;
-import integration.com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud_server.developer.bitdubai.version_1.cloud.mocks.MockFMPPacketsFactory;
-import integration.com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud_server.developer.bitdubai.version_1.cloud.mocks.MockNIOClient;
+import integration.com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud_server.developer.bitdubai.version_1.structure.mocks.MockFMPPacketsFactory;
+import integration.com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud_server.developer.bitdubai.version_1.structure.mocks.MockNIOClient;
 
-import java.util.HashSet;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.CommunicationChannelAddressFactory;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket.FMPPacketType;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.CommunicationChannelAddressFactory;
-import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
+import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.CloudServiceManager;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.ECCKeyPair;
-import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.CloudNetworkServiceManager;
 
-public abstract class CloudNetworkServiceManagerIntegrationTest {
+public abstract class CloudServiceIntegrationTest {
 	
-	protected CloudNetworkServiceManager testManager;
+	protected CloudServiceManager testManager;
 	protected String testHost;
 	protected Integer testPort;
 	protected CommunicationChannelAddress testAddress;
@@ -27,13 +24,11 @@ public abstract class CloudNetworkServiceManagerIntegrationTest {
 	protected String testPrivateKey;
 	protected String testPublicKey;
 	protected ECCKeyPair testKeyPair;
-	protected NetworkServices testNetworkService;
-	protected Set<Integer> testVPNPorts;
 	protected MockNIOClient testClient;
 	
 	protected static final int RESPONSE_READ_ATTEMPTS = 50;
 	
-	protected static final int TCP_BASE_TEST_PORT = 50000;
+	protected static final int TCP_BASE_TEST_PORT = 51000;
 	
 	protected void setUpAddressInfo(int port) throws Exception{
 		testHost = "localhost";
@@ -52,18 +47,13 @@ public abstract class CloudNetworkServiceManagerIntegrationTest {
 	
 	protected void setUpConnections(int portPadding) throws Exception{
 		testAddress = CommunicationChannelAddressFactory.constructCloudAddress(testHost, testPort+portPadding);
-		testNetworkService = NetworkServices.INTRA_USER;
-		testVPNPorts = new HashSet<Integer>();
-		testVPNPorts.add(testPort+(portPadding*100)+1);
-		testVPNPorts.add(testPort+(portPadding*100)+2);
-		testVPNPorts.add(testPort+(portPadding*100)+3);
-		testManager = new CloudNetworkServiceManager(testAddress, testExecutor, testKeyPair, testNetworkService, testVPNPorts);
+		testManager = new CloudServiceManager(testAddress, testExecutor, testKeyPair);
 		testManager.start();
 		testClient = new MockNIOClient(testHost, testPort+portPadding);
 	}
 	
 	protected void requestConnection() throws Exception{
-		FMPPacket request = MockFMPPacketsFactory.mockRequestIntraUserNetworkServicePacket(testManager.getPublicKey());
+		FMPPacket request = MockFMPPacketsFactory.mockRequestPacket(testManager.getPublicKey());
 		testClient.sendMessage(request);
 		FMPPacket response = getResponse();
 		assertEquals(FMPPacketType.CONNECTION_ACCEPT, response.getType());
