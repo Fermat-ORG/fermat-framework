@@ -28,7 +28,7 @@ public abstract class CloudNetworkServiceVPNIntegrationTest {
 	protected Set<String> testParticipants;
 	protected MockNIOClient testClient;
 	
-	protected static final int RESPONSE_READ_ATTEMPTS = 50;
+	protected static final int RESPONSE_READ_ATTEMPTS = 10;
 	
 	protected static final int TCP_BASE_TEST_PORT = 51000;
 	
@@ -58,6 +58,12 @@ public abstract class CloudNetworkServiceVPNIntegrationTest {
 	protected FMPPacket requestConnection() throws Exception{
 		FMPPacket request = MockFMPPacketsFactory.mockRequestIntraUserNetworkServicePacket(testVPN.getPublicKey());
 		testClient.sendMessage(request);
+		return getResponse();
+	}
+	
+	protected FMPPacket registerConnection() throws Exception{
+		FMPPacket register = MockFMPPacketsFactory.mockRegisterPacket(testVPN.getPublicKey());
+		testClient.sendMessage(register);
 		return getResponse();
 	}
 	

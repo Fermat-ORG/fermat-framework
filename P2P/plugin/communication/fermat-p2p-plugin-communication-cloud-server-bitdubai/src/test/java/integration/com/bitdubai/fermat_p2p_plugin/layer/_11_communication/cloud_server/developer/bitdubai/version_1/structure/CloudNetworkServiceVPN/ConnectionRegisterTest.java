@@ -1,6 +1,9 @@
-package integration.com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud_server.developer.bitdubai.version_1.structure.CloudNetworkServiceManager;
+package integration.com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud_server.developer.bitdubai.version_1.structure.CloudNetworkServiceVPN;
 
 import static org.fest.assertions.api.Assertions.*;
+
+import java.util.HashSet;
+
 import integration.com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud_server.developer.bitdubai.version_1.structure.mocks.MockFMPPacketsFactory;
 
 import org.junit.Before;
@@ -13,13 +16,15 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.Asymmectri
 /**
  * Created by jorgeejgonzalez on 27/04/15.
  */
-public class ConnectionRegisterTest extends CloudNetworkServiceManagerIntegrationTest{
+public class ConnectionRegisterTest extends CloudNetworkServiceVPNIntegrationTest{
 	
 	@Before
 	public void setUpParameters() throws Exception{
 		setUpAddressInfo(TCP_BASE_TEST_PORT+100);
 		setUpKeyPair();
-		setUpExecutor(2);		
+		setUpExecutor(2);
+		testParticipants = new HashSet<String>();
+		testParticipants.add(MockFMPPacketsFactory.MOCK_PUBLIC_KEY);
 	}
 	
 	@Test
@@ -62,4 +67,5 @@ public class ConnectionRegisterTest extends CloudNetworkServiceManagerIntegratio
 		FMPPacket response = registerConnection();
 		assertThat(response).isNull();
 	}
+	
 }

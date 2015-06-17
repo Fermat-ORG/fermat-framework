@@ -9,6 +9,7 @@ import javax.crypto.Cipher;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.PrivateKey;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.PublicKey;
+
 import org.bouncycastle.jcajce.provider.asymmetric.ec.IESCipher;
 import org.bouncycastle.jce.interfaces.ECPrivateKey;
 import org.bouncycastle.jce.interfaces.ECPublicKey;
@@ -57,7 +58,7 @@ public class AsymmetricCipher {
 			byte[] decryptedBytes = cipher.engineDoFinal(encryptedBytes, 0, encryptedBytes.length);
 			decrypted = new String(decryptedBytes, Charset.forName("UTF-8"));
 		} catch(Exception ex){
-			ex.printStackTrace();
+			throw new IllegalArgumentException(ex.getMessage());
 		}
 		return decrypted;
 	}
