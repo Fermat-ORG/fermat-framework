@@ -272,7 +272,7 @@ public class WalletDesktopFragment extends Fragment {
                     break;
                 case "wallet_store_cover_photo_young":
                     holder.imageView.setImageResource(R.drawable.wallet_2);
-                    holder.imageView.setTag("WalletBasicActivity|4");
+                    holder.imageView.setTag("WalletBitcoinActivity|4");
                     break;
                 case "wallet_store_cover_photo_boca_juniors":
                     holder.imageView.setImageResource(R.drawable.icono_club_1);
