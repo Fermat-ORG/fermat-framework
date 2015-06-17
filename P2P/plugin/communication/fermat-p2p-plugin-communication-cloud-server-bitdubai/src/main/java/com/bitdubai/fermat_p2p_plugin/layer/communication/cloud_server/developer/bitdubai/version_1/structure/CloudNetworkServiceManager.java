@@ -227,7 +227,7 @@ public class CloudNetworkServiceManager extends CloudFMPConnectionManager {
 	private void acceptConnectionRequest(FMPPacket packet)  throws FMPException {
 		String sender = getPublicKey();
 		String destination = packet.getSender();
-		String message = networkService.toString();;
+		String message = networkService.toString();
 		FMPPacketType type = FMPPacketType.CONNECTION_ACCEPT;
 		String messageHash = AsymmectricCryptography.encryptMessagePublicKey(message, destination);
 		String signature = AsymmectricCryptography.createMessageSignature(messageHash, eccPrivateKey);
