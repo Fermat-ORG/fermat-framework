@@ -9,9 +9,9 @@ import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.FMPPacketFactory;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
-import com.bitdubai.fermat_api.layer.all_definition.communication.FMPPacketFactory;
 
 /**
  * Created by jorgeejgonzalez on 27/04/15.

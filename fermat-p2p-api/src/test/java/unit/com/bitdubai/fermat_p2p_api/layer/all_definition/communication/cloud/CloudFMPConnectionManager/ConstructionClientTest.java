@@ -1,13 +1,14 @@
-package unit.com.bitdubai.fermat_api.layer._1_definition.communication.cloud.CloudFMPConnectionManager;
+package unit.com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CloudFMPConnectionManager;
 
 import static org.fest.assertions.api.Assertions.*;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import com.bitdubai.fermat_api.layer.all_definition.communication.cloud.CloudFMPConnectionManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CloudFMPConnectionManager;
 
-public class ConstructionServerTest extends
+
+public class ConstructionClientTest extends
 		CloudFMPConnectionManagerUnitTest {
 	
 	private CloudFMPConnectionManager testManager;
@@ -19,38 +20,38 @@ public class ConstructionServerTest extends
 	
 	@Test
 	public void Construction_ValidParameter_NotNull() throws Exception{
-		testManager = new MockCloudFMPConnectionManagerServer(testAddress, testExecutor, testPrivateKey, testPublicKey);
+		testManager = new MockCloudFMPConnectionManagerClient(testAddress, testExecutor, testPrivateKey, testPublicKey);
 		assertThat(testManager).isNotNull();
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void Construction_NullAddress_InvalidParameterException() throws Exception{
-		testManager = new MockCloudFMPConnectionManagerServer(null, testExecutor, testPrivateKey, testPublicKey);
+		testManager = new MockCloudFMPConnectionManagerClient(null, testExecutor, testPrivateKey, testPublicKey);
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void Construction_NullExecutor_InvalidParameterException() throws Exception{
-		testManager = new MockCloudFMPConnectionManagerServer(testAddress, null, testPrivateKey, testPublicKey);
+		testManager = new MockCloudFMPConnectionManagerClient(testAddress, null, testPrivateKey, testPublicKey);
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void Construction_NullPrivateKey_InvalidParameterException() throws Exception{
-		testManager = new MockCloudFMPConnectionManagerServer(testAddress, testExecutor, null, testPublicKey);
+		testManager = new MockCloudFMPConnectionManagerClient(testAddress, testExecutor, null, testPublicKey);
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void Construction_EmptyPrivateKey_InvalidParameterException() throws Exception{
-		testManager = new MockCloudFMPConnectionManagerServer(testAddress, testExecutor, "", testPublicKey);
+		testManager = new MockCloudFMPConnectionManagerClient(testAddress, testExecutor, "", testPublicKey);
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void Construction_NullPublicKey_InvalidParameterException() throws Exception{
-		testManager = new MockCloudFMPConnectionManagerServer(testAddress, testExecutor, testPrivateKey, null);
+		testManager = new MockCloudFMPConnectionManagerClient(testAddress, testExecutor, testPrivateKey, null);
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void Construction_EmptyPublicKey_InvalidParameterException() throws Exception{
-		testManager = new MockCloudFMPConnectionManagerServer(testAddress, testExecutor, testPrivateKey, null);
+		testManager = new MockCloudFMPConnectionManagerClient(testAddress, testExecutor, testPrivateKey, null);
 	}
 
 }

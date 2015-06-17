@@ -1,4 +1,4 @@
-package unit.com.bitdubai.fermat_api.layer._1_definition.communication.cloud.CloudFMPConnectionManager;
+package unit.com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CloudFMPConnectionManager;
 
 import static org.fest.assertions.api.Assertions.*;
 import static com.googlecode.catchexception.CatchException.*;
@@ -6,9 +6,9 @@ import static com.googlecode.catchexception.CatchException.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.CloudConnectionException;
-import com.bitdubai.fermat_api.layer.all_definition.communication.cloud.CloudFMPConnectionManager;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CloudFMPConnectionManager;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.exceptions.CloudConnectionException;
 
 public class StartClientTest extends CloudFMPConnectionManagerUnitTest {
 	
