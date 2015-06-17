@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
-import com.bitdubai.fermat_api.layer.cry_crypto_network.bitcoin.BitcoinManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinManager;
 
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.PeerGroup;
