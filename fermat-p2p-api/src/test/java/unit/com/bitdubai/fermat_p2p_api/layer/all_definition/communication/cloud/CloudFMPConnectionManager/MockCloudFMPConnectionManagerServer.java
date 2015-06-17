@@ -1,22 +1,22 @@
-package unit.com.bitdubai.fermat_api.layer._1_definition.communication.cloud.CloudFMPConnectionManager;
+package unit.com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CloudFMPConnectionManager;
 
 import java.nio.channels.SelectionKey;
 import java.util.concurrent.ExecutorService;
 
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CloudFMPConnectionManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.CloudConnectionException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.exceptions.CloudConnectionException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
-import com.bitdubai.fermat_api.layer.all_definition.communication.cloud.CloudFMPConnectionManager;
 
-public class MockCloudFMPConnectionManagerClient extends
+public class MockCloudFMPConnectionManagerServer extends
 		CloudFMPConnectionManager {
 	
-	public MockCloudFMPConnectionManagerClient(
+	public MockCloudFMPConnectionManagerServer(
 			CommunicationChannelAddress address, ExecutorService executor,
 			String privateKey, String publicKey)
-			throws IllegalArgumentException{
-		super(address, executor, privateKey, publicKey, CloudFMPConnectionManagerMode.FMP_CLIENT);
+			throws IllegalArgumentException {
+		super(address, executor, privateKey, publicKey, CloudFMPConnectionManagerMode.FMP_SERVER);
 	}
 
 	@Override
