@@ -2,48 +2,40 @@ package com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.develope
 
 import java.nio.channels.SelectionKey;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Queue;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.FMPPacketFactory;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CloudFMPConnectionManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.exceptions.CloudConnectionException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket.FMPPacketType;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.CommunicationChannelAddressFactory;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.FMPPacketFactory;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CloudFMPConnectionManager;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
-import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.exceptions.IncorrectFMPPacketDestinationException;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.exceptions.WrongFMPPacketEncryptionException;
 
+public class CloudNetworkServiceVPN extends CloudFMPConnectionManager {
 
-public class CloudNetworkServiceManager extends CloudFMPConnectionManager {
-	
-	private static final int HASH_PRIME_NUMBER_PRODUCT = 5651;
-	private static final int HASH_PRIME_NUMBER_ADD = 3191 ;
+	private static final int HASH_PRIME_NUMBER_PRODUCT = 2999;
+	private static final int HASH_PRIME_NUMBER_ADD = 4013;
 	
 	private NetworkServices networkService;
-	private Queue<Integer> availableVPNPorts = new ConcurrentLinkedQueue<Integer>();
-	private Map<String, CloudNetworkServiceVPN> activeVPNConnections = new ConcurrentHashMap<String, CloudNetworkServiceVPN>();
+	private Set<String> participants = new ConcurrentSkipListSet<String>();
 	
-	public CloudNetworkServiceManager(final CommunicationChannelAddress address, final ExecutorService executor, final ECCKeyPair keyPair, final NetworkServices networkService, final Collection<Integer> availableVPNPorts) throws IllegalArgumentException{
+	public CloudNetworkServiceVPN(final CommunicationChannelAddress address, final ExecutorService executor, final ECCKeyPair keyPair, final NetworkServices networkService, final Collection<String> participants) throws IllegalArgumentException{
 		super(address, executor, keyPair.getPrivateKey(), keyPair.getPublicKey(), CloudFMPConnectionManagerMode.FMP_SERVER);
 		if(networkService == null)
 			throw new IllegalArgumentException();
 		this.networkService = networkService;
 		
-		if(availableVPNPorts == null || availableVPNPorts.isEmpty())
+		if(participants == null || participants.isEmpty())
 			throw new IllegalArgumentException();
-		for(Integer vpnPort: availableVPNPorts)
-			this.availableVPNPorts.add(vpnPort);
+		for(String participant: participants)
+			this.participants.add(participant);
 	}
 	
 	@Override
@@ -80,17 +72,14 @@ public class CloudNetworkServiceManager extends CloudFMPConnectionManager {
 
 	@Override
 	public void handleConnectionRequest(final FMPPacket packet) throws FMPException{
-		if(registeredConnections.containsKey(packet.getSender()))
-			requestRegisteredConnection(packet);
-		else
+		if(participants.contains(packet.getSender()))
 			requestUnregisteredConnection(packet);
+		else
+			denyConnectionRequest(packet);
 	}	
 	
 	@Override
 	public void handleConnectionAccept(final FMPPacket packet) throws FMPException{
-		String vpnParticipants = AsymmectricCryptography.decryptMessagePrivateKey(packet.getMessage(), eccPrivateKey);
-		CloudNetworkServiceVPN vpn = activeVPNConnections.get(vpnParticipants);
-		processVPNAccept(packet.getSender(), vpn);
 	}
 
 	@Override
@@ -113,8 +102,7 @@ public class CloudNetworkServiceManager extends CloudFMPConnectionManager {
 		String signature = AsymmectricCryptography.createMessageSignature(messageHash, eccPrivateKey);
 		
 		FMPPacket responsePacket = FMPPacketFactory.constructCloudPacket(sender, destination, type, messageHash, signature);		
-		connection.attach(responsePacket);
-		connection.interestOps(SelectionKey.OP_WRITE);		
+		writeToRegisteredConnection(responsePacket);
 	}
 
 	@Override
@@ -133,13 +121,17 @@ public class CloudNetworkServiceManager extends CloudFMPConnectionManager {
 		return networkService;
 	}
 	
+	private Set<String> getParticipants() {
+		return participants;
+	}
+	
 	@Override
 	public boolean equals(Object o){
-		if(!(o instanceof CloudNetworkServiceManager))
+		if(!(o instanceof CloudNetworkServiceVPN))
 			return false;
 		
-		CloudNetworkServiceManager compare = (CloudNetworkServiceManager) o;
-		return address.equals(compare.getAddress()) && networkService == compare.getNetworkService();
+		CloudNetworkServiceVPN compare = (CloudNetworkServiceVPN) o;
+		return address.equals(compare.getAddress()) && networkService == compare.getNetworkService() && participants.equals(compare.getParticipants());
 	}
 	
 	@Override
@@ -147,22 +139,8 @@ public class CloudNetworkServiceManager extends CloudFMPConnectionManager {
 		int c = 0;
 		c += address.hashCode();
 		c += networkService.hashCode();
+		c += participants.hashCode();
 		return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
-	}
-	
-	private void requestRegisteredConnection(FMPPacket packet) throws FMPException {
-		String decryptedMessage;
-		try{
-			decryptedMessage = AsymmectricCryptography.decryptMessagePrivateKey(packet.getMessage(), eccPrivateKey);
-		} catch(Exception ex){
-			throw new WrongFMPPacketEncryptionException(ex.getMessage());
-		}
-		if(decryptedMessage.equals("VPN"))
-			try{
-				processVPNRequest(packet);
-			} catch(CloudConnectionException ex){
-				ex.printStackTrace();
-			}
 	}
 	
 	private void requestUnregisteredConnection(final FMPPacket packet) throws FMPException {
@@ -180,48 +158,6 @@ public class CloudNetworkServiceManager extends CloudFMPConnectionManager {
 			acceptConnectionRequest(packet);
 		else
 			denyConnectionRequest(packet);
-		
-	}
-	
-	private void processVPNRequest(final FMPPacket packet) throws FMPException, CloudConnectionException {
-		Integer vpnPort = availableVPNPorts.remove();
-		CommunicationChannelAddress vpnAddress = CommunicationChannelAddressFactory.constructCloudAddress(address.getHost(), vpnPort);
-		Set<String> vpnParticipants = new HashSet<String>();
-		vpnParticipants.add(packet.getSender());
-		vpnParticipants.add(packet.getDestination());
-		
-		StringBuilder messageBuilder = new StringBuilder();
-		for(String participant : vpnParticipants)
-			messageBuilder.append(participant + " ");
-		String message = messageBuilder.toString().trim();
-		
-		
-		CloudNetworkServiceVPN vpn = new CloudNetworkServiceVPN(vpnAddress, Executors.newFixedThreadPool(4), new ECCKeyPair(), networkService, vpnParticipants);
-		vpn.start();
-		activeVPNConnections.put(message, vpn);
-		
-		String sender = getPublicKey();
-		FMPPacketType type;
-		
-		type = FMPPacketType.CONNECTION_REQUEST;
-		
-		for(String destination : vpnParticipants){
-			String messageHash = AsymmectricCryptography.encryptMessagePublicKey(message, destination);
-			String signature = AsymmectricCryptography.createMessageSignature(messageHash, eccPrivateKey);
-			FMPPacket responsePacket = FMPPacketFactory.constructCloudPacket(sender, destination, type, messageHash, signature);
-			writeToRegisteredConnection(responsePacket);
-		}
-	}
-	
-	private void processVPNAccept(final String participant, final CloudNetworkServiceVPN vpn) throws FMPException{
-		String sender = getPublicKey();
-		String destination = participant;
-		String message = vpn.getAddress().getHost() + " " + vpn.getAddress().getPort();
-		FMPPacketType type = FMPPacketType.CONNECTION_ACCEPT_FORWARD;
-		String messageHash = AsymmectricCryptography.encryptMessagePublicKey(message, destination);
-		String signature = AsymmectricCryptography.createMessageSignature(messageHash, eccPrivateKey);
-		FMPPacket responsePacket = FMPPacketFactory.constructCloudPacket(sender, destination, type, messageHash, signature);
-		writeToRegisteredConnection(responsePacket);
 	}
 	
 	private void acceptConnectionRequest(FMPPacket packet)  throws FMPException {
@@ -260,4 +196,5 @@ public class CloudNetworkServiceManager extends CloudFMPConnectionManager {
 		connection.attach(packet);
 		connection.interestOps(SelectionKey.OP_WRITE);
 	}
+
 }
