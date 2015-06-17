@@ -26,7 +26,7 @@ public abstract class CloudServiceIntegrationTest {
 	protected ECCKeyPair testKeyPair;
 	protected MockNIOClient testClient;
 	
-	protected static final int RESPONSE_READ_ATTEMPTS = 50;
+	protected static final int RESPONSE_READ_ATTEMPTS = 10;
 	
 	protected static final int TCP_BASE_TEST_PORT = 52000;
 	

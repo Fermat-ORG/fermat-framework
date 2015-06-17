@@ -1,6 +1,5 @@
 package integration.com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud_server.developer.bitdubai.version_1.structure.CloudNetworkServiceManager;
 
-import static org.junit.Assert.assertEquals;
 import integration.com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud_server.developer.bitdubai.version_1.structure.mocks.MockFMPPacketsFactory;
 import integration.com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud_server.developer.bitdubai.version_1.structure.mocks.MockNIOClient;
 
@@ -11,7 +10,6 @@ import java.util.concurrent.Executors;
 
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket.FMPPacketType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.CommunicationChannelAddressFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.ECCKeyPair;
@@ -31,7 +29,7 @@ public abstract class CloudNetworkServiceManagerIntegrationTest {
 	protected Set<Integer> testVPNPorts;
 	protected MockNIOClient testClient;
 	
-	protected static final int RESPONSE_READ_ATTEMPTS = 50;
+	protected static final int RESPONSE_READ_ATTEMPTS = 10;
 	
 	protected static final int TCP_BASE_TEST_PORT = 50000;
 	
@@ -54,17 +52,22 @@ public abstract class CloudNetworkServiceManagerIntegrationTest {
 		testAddress = CommunicationChannelAddressFactory.constructCloudAddress(testHost, testPort+portPadding);
 		testNetworkService = NetworkServices.INTRA_USER;
 		testVPNPorts = new HashSet<Integer>();
-		testVPNPorts.add(testPort+portPadding*100);
+		testVPNPorts.add(testPort+portPadding+1);
 		testManager = new CloudNetworkServiceManager(testAddress, testExecutor, testKeyPair, testNetworkService, testVPNPorts);
 		testManager.start();
 		testClient = new MockNIOClient(testHost, testPort+portPadding);
 	}
 	
-	protected void requestConnection() throws Exception{
+	protected FMPPacket requestConnection() throws Exception{
 		FMPPacket request = MockFMPPacketsFactory.mockRequestIntraUserNetworkServicePacket(testManager.getPublicKey());
 		testClient.sendMessage(request);
-		FMPPacket response = getResponse();
-		assertEquals(FMPPacketType.CONNECTION_ACCEPT, response.getType());
+		return getResponse();
+	}
+	
+	protected FMPPacket registerConnection() throws Exception{
+		FMPPacket register = MockFMPPacketsFactory.mockRegisterPacket(testManager.getPublicKey());
+		testClient.sendMessage(register);
+		return getResponse();
 	}
 	
 	protected synchronized FMPPacket getResponse() throws Exception {

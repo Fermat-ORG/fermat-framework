@@ -16,6 +16,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket.FMPPacketType;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.exceptions.IncorrectFMPPacketDestinationException;
+import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.exceptions.RegisteringAddressHasNotRequestedConnectionException;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.exceptions.WrongFMPPacketEncryptionException;
 
 public class CloudNetworkServiceVPN extends CloudFMPConnectionManager {
@@ -44,8 +45,7 @@ public class CloudNetworkServiceVPN extends CloudFMPConnectionManager {
 			FMPPacket dataPacket = FMPPacketFactory.constructCloudPacket(data);
 			key.attach(dataPacket);
 			if(dataPacket.getType() == FMPPacketType.CONNECTION_REQUEST){
-				if(registeredConnections.isEmpty() 
-						|| !registeredConnections.containsKey(dataPacket.getSender()) 
+				if(!registeredConnections.containsKey(dataPacket.getSender()) 
 						&& !unregisteredConnections.containsKey(dataPacket.getSender()))
 					unregisteredConnections.put(dataPacket.getSender(), key);
 				handleConnectionRequest(dataPacket);
@@ -75,7 +75,7 @@ public class CloudNetworkServiceVPN extends CloudFMPConnectionManager {
 		if(participants.contains(packet.getSender()))
 			requestUnregisteredConnection(packet);
 		else
-			denyConnectionRequest(packet);
+			denyConnectionRequest(packet, "Client Address Is Not A Participant Of This VPN");
 	}	
 	
 	@Override
@@ -92,18 +92,13 @@ public class CloudNetworkServiceVPN extends CloudFMPConnectionManager {
 
 	@Override
 	public void handleConnectionRegister(final FMPPacket packet) throws FMPException{
-		SelectionKey connection = unregisteredConnections.get(packet.getSender());
-		registeredConnections.put(packet.getSender(), connection);
-		
-		String sender = getPublicKey();
-		String destination = packet.getSender();
-		String messageHash = AsymmectricCryptography.encryptMessagePublicKey("REGISTERED", destination);		
-		FMPPacketType type = FMPPacketType.DATA_TRANSMIT;
-		String signature = AsymmectricCryptography.createMessageSignature(messageHash, eccPrivateKey);
-		
-		FMPPacket responsePacket = FMPPacketFactory.constructCloudPacket(sender, destination, type, messageHash, signature);		
-		writeToRegisteredConnection(responsePacket);
+		if(unregisteredConnections.containsKey(packet.getSender()))
+			registerConnection(packet);
+		else
+			throw new RegisteringAddressHasNotRequestedConnectionException();
 	}
+
+	
 
 	@Override
 	public void handleConnectionDeregister(final FMPPacket packet) throws FMPException{
@@ -151,13 +146,15 @@ public class CloudNetworkServiceVPN extends CloudFMPConnectionManager {
 		try{
 			networkService = NetworkServices.valueOf(AsymmectricCryptography.decryptMessagePrivateKey(packet.getMessage(), eccPrivateKey));
 		} catch(Exception ex){
-			throw new WrongFMPPacketEncryptionException(ex.getMessage());
+			FMPException exception = new WrongFMPPacketEncryptionException(ex.getMessage());
+			denyConnectionRequest(packet, exception.getMessage());
+			return;
 		}
 		
 		if(this.networkService.equals(networkService))
 			acceptConnectionRequest(packet);
 		else
-			denyConnectionRequest(packet);
+			denyConnectionRequest(packet, "NETWORK SERVICE " + networkService + " IS NOT SUPPORTED BY THE SERVER");
 	}
 	
 	private void acceptConnectionRequest(FMPPacket packet)  throws FMPException {
@@ -171,15 +168,29 @@ public class CloudNetworkServiceVPN extends CloudFMPConnectionManager {
 		writeToUnregisteredConnection(responsePacket);
 	}
 	
-	private void denyConnectionRequest(FMPPacket packet) throws FMPException{
+	private void denyConnectionRequest(FMPPacket packet, final String reason) throws FMPException{
 		String sender = getPublicKey();
 		String destination = packet.getSender();
-		String message = "NETWORK SERVICE " + networkService + " IS NOT SUPPORTED BY THE SERVER";
+		String message = reason;
 		FMPPacketType type = FMPPacketType.CONNECTION_DENY;
 		String messageHash = AsymmectricCryptography.encryptMessagePublicKey(message, destination);
 		String signature = AsymmectricCryptography.createMessageSignature(messageHash, eccPrivateKey);
 		FMPPacket responsePacket = FMPPacketFactory.constructCloudPacket(sender, destination, type, messageHash, signature);
 		writeToUnregisteredConnection(responsePacket);
+	}
+	
+	private void registerConnection(final FMPPacket packet) throws FMPException {
+		SelectionKey connection = unregisteredConnections.get(packet.getSender());
+		registeredConnections.put(packet.getSender(), connection);
+		unregisteredConnections.remove(packet.getSender());
+		String sender = getPublicKey();
+		String destination = packet.getSender();
+		String messageHash = AsymmectricCryptography.encryptMessagePublicKey("REGISTERED", destination);		
+		FMPPacketType type = FMPPacketType.DATA_TRANSMIT;
+		String signature = AsymmectricCryptography.createMessageSignature(messageHash, eccPrivateKey);
+		
+		FMPPacket responsePacket = FMPPacketFactory.constructCloudPacket(sender, destination, type, messageHash, signature);		
+		writeToRegisteredConnection(responsePacket);
 	}
 	
 	private void writeToUnregisteredConnection(final FMPPacket packet) {

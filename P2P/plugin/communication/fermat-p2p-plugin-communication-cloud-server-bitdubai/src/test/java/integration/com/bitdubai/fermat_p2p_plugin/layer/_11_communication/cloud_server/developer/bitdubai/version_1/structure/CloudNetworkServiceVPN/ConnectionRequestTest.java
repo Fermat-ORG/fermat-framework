@@ -38,21 +38,21 @@ public class ConnectionRequestTest extends CloudNetworkServiceVPNIntegrationTest
 	
 	@Test
 	public void ConnectionRequest_SendValidRequest_ResponseTypeConnectionAccept() throws Exception{
-		setUpConnections(1);
+		setUpConnections(2);
 		FMPPacket response = requestConnection();
 		assertThat(response.getType()).isEqualTo(FMPPacketType.CONNECTION_ACCEPT);
 	}
 	
 	@Test
 	public void ConnectionRequest_SendValidRequest_ResponseDestinationEqualsRequestSender() throws Exception{
-		setUpConnections(2);
+		setUpConnections(4);
 		FMPPacket response = requestConnection();
 		assertThat(response.getDestination()).isEqualTo(MockFMPPacketsFactory.MOCK_PUBLIC_KEY);
 	}
 	
 	@Test
 	public void ConnectionRequest_SendValidRequest_ResponseSignatureVerified() throws Exception{
-		setUpConnections(3);
+		setUpConnections(6);
 		FMPPacket response = requestConnection();		
 		boolean signatureVerification = AsymmectricCryptography.verifyMessageSignature(response.getSignature(), response.getMessage(), response.getSender());
 		assertThat(signatureVerification).isTrue();	
@@ -60,7 +60,7 @@ public class ConnectionRequestTest extends CloudNetworkServiceVPNIntegrationTest
 	
 	@Test
 	public void ConnectionRequest_SendRequestForDifferentNetworkService_ResponseConnectionDeny() throws Exception{
-		setUpConnections(4);
+		setUpConnections(8);
 		FMPPacket request = MockFMPPacketsFactory.mockRequestMoneyNetworkServicePacket(testVPN.getPublicKey());
 		testClient.sendMessage(request);
 		FMPPacket response = getResponse();		
@@ -69,7 +69,7 @@ public class ConnectionRequestTest extends CloudNetworkServiceVPNIntegrationTest
 	
 	@Test
 	public void ConnectionRequest_SenderIsNotParticipant_ResponseConnectionDeny() throws Exception{
-		setUpConnections(5);
+		setUpConnections(10);
 		FMPPacket request = MockFMPPacketsFactory.mockRequestIntraUserNetworkServicePacket(new ECCKeyPair().getPublicKey(), testVPN.getPublicKey());
 		testClient.sendMessage(request);
 		FMPPacket response = getResponse();
@@ -78,11 +78,20 @@ public class ConnectionRequestTest extends CloudNetworkServiceVPNIntegrationTest
 	
 	@Test
 	public void ConnectionRequest_RequestDestinationInvalid_NoResponse() throws Exception{
-		setUpConnections(6);
+		setUpConnections(12);
 		FMPPacket request = MockFMPPacketsFactory.mockRequestIntraUserNetworkServicePacket();
 		testClient.sendMessage(request);
 		FMPPacket response = getResponse();
 		assertThat(response).isNull();
+	}
+	
+	@Test
+	public void ConnectionRequest_RequestDoesNotIDentifyNetworkService_ResponseTypeConnectionDeny() throws Exception{
+		setUpConnections(14);
+		FMPPacket request = MockFMPPacketsFactory.mockRequestPacket(testVPN.getPublicKey());
+		testClient.sendMessage(request);
+		FMPPacket response = getResponse();
+		assertThat(response.getType()).isEqualTo(FMPPacketType.CONNECTION_DENY);
 	}
 
 }

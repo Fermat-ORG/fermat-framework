@@ -34,7 +34,7 @@ public class ConnectionRegisterTest extends CloudServiceIntegrationTest{
 	
 	@Test
 	public void ConnectionRegister_SendValidRequest_ResponsePacketTypeDataTransmit() throws Exception{
-		setUpConnections(1);
+		setUpConnections(2);
 		requestConnection();
 		FMPPacket register = MockFMPPacketsFactory.mockRegisterPacket(testManager.getPublicKey());
 		testClient.sendMessage(register);
@@ -44,7 +44,7 @@ public class ConnectionRegisterTest extends CloudServiceIntegrationTest{
 	
 	@Test
 	public void ConnectionRegister_SendValidRequest_ResponseMessageDecrypted() throws Exception{
-		setUpConnections(2);
+		setUpConnections(4);
 		requestConnection();
 		FMPPacket register = MockFMPPacketsFactory.mockRegisterPacket(testManager.getPublicKey());
 		testClient.sendMessage(register);
@@ -55,7 +55,7 @@ public class ConnectionRegisterTest extends CloudServiceIntegrationTest{
 	
 	@Test
 	public void ConnectionRegister_SendValidRequest_ResponseSignatureIsValid() throws Exception{
-		setUpConnections(3);
+		setUpConnections(6);
 		requestConnection();
 		FMPPacket register = MockFMPPacketsFactory.mockRegisterPacket(testManager.getPublicKey());
 		testClient.sendMessage(register);

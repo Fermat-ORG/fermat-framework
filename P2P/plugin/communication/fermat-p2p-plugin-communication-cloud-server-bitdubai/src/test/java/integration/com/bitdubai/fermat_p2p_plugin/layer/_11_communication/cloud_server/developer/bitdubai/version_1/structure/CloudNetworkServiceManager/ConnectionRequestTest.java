@@ -26,43 +26,35 @@ public class ConnectionRequestTest extends CloudNetworkServiceManagerIntegration
 	@Test
 	public void ConnectionRequest_SendValidRequest_ClientGetsResponse() throws Exception{
 		setUpConnections(0);
-		FMPPacket request = MockFMPPacketsFactory.mockRequestIntraUserNetworkServicePacket(testManager.getPublicKey());
-		testClient.sendMessage(request);
-		FMPPacket response = getResponse();
+		FMPPacket response = requestConnection();
 		assertThat(response).isNotNull();
 	}
 	
 	@Test
 	public void ConnectionRequest_SendValidRequest_ResponseTypeConnectionAccept() throws Exception{
-		setUpConnections(1);
-		FMPPacket request = MockFMPPacketsFactory.mockRequestIntraUserNetworkServicePacket(testManager.getPublicKey());
-		testClient.sendMessage(request);				
-		FMPPacket response = getResponse();
+		setUpConnections(2);
+		FMPPacket response = requestConnection();
 		assertThat(response.getType()).isEqualTo(FMPPacketType.CONNECTION_ACCEPT);
 	}
 	
 	@Test
 	public void ConnectionRequest_SendValidRequest_ResponseDestinationEqualsRequestSender() throws Exception{
-		setUpConnections(2);
-		FMPPacket request = MockFMPPacketsFactory.mockRequestIntraUserNetworkServicePacket(testManager.getPublicKey());
-		testClient.sendMessage(request);
-		FMPPacket response = getResponse();
-		assertThat(response.getDestination()).isEqualTo(request.getSender());
+		setUpConnections(4);
+		FMPPacket response = requestConnection();
+		assertThat(response.getDestination()).isEqualTo(MockFMPPacketsFactory.MOCK_PUBLIC_KEY);
 	}
 	
 	@Test
 	public void ConnectionRequest_SendValidRequest_ResponseSignatureVerified() throws Exception{
-		setUpConnections(3);
-		FMPPacket request = MockFMPPacketsFactory.mockRequestIntraUserNetworkServicePacket(testManager.getPublicKey());
-		testClient.sendMessage(request);		
-		FMPPacket response = getResponse();		
+		setUpConnections(6);
+		FMPPacket response = requestConnection();	
 		boolean signatureVerification = AsymmectricCryptography.verifyMessageSignature(response.getSignature(), response.getMessage(), response.getSender());
 		assertThat(signatureVerification).isTrue();	
 	}
 	
 	@Test
-	public void ConnectionRequest_SendRequestForDifferentNetworkService_ResponseSignatureVerified() throws Exception{
-		setUpConnections(4);
+	public void ConnectionRequest_SendRequestForDifferentNetworkService_ResponseTypeConnectionDeny() throws Exception{
+		setUpConnections(8);
 		FMPPacket request = MockFMPPacketsFactory.mockRequestMoneyNetworkServicePacket(testManager.getPublicKey());
 		testClient.sendMessage(request);		
 		FMPPacket response = getResponse();		
@@ -71,11 +63,20 @@ public class ConnectionRequestTest extends CloudNetworkServiceManagerIntegration
 	
 	@Test
 	public void ConnectionRequest_RequestDestinationInvalid_NoResponse() throws Exception{
-		setUpConnections(5);
+		setUpConnections(10);
 		FMPPacket request = MockFMPPacketsFactory.mockRequestIntraUserNetworkServicePacket();
 		testClient.sendMessage(request);
 		FMPPacket response = getResponse();
 		assertThat(response).isNull();
+	}
+	
+	@Test
+	public void ConnectionRequest_RequestMessageIsNotNetworkService_ResponseTypeConnectionDeny() throws Exception{
+		setUpConnections(12);
+		FMPPacket request = MockFMPPacketsFactory.mockRequestPacket(testManager.getPublicKey());
+		testClient.sendMessage(request);
+		FMPPacket response = getResponse();
+		assertThat(response.getType()).isEqualTo(FMPPacketType.CONNECTION_DENY);
 	}
 
 }

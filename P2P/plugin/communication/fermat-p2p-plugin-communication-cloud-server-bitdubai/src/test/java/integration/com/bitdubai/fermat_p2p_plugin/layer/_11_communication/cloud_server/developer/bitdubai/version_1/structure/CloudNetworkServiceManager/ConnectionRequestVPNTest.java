@@ -22,15 +22,14 @@ public class ConnectionRequestVPNTest extends
 	
 	@Test
 	public void ConnectionRequestToVPN_SendValidRequest_ClientGetsConnectionRequest() throws Exception{
-		setUpConnections(1);
+		setUpConnections(0);
 		assertThat(requestAndRegisterClient()).isNotNull();
-		
 		FMPPacket requestVPNResponse = requestVPN();
 		assertThat(requestVPNResponse.getType()).isEqualTo(FMPPacketType.CONNECTION_REQUEST);
 	}
 	
 	@Test
-	public void ConnectionRequestToVPN_SendValidRequest_responsePackageMessageContainsParticipants() throws Exception{
+	public void ConnectionRequestToVPN_SendValidRequest_ResponsePackageMessageContainsParticipants() throws Exception{
 		setUpConnections(2);
 		assertThat(requestAndRegisterClient()).isNotNull();
 		
@@ -40,8 +39,8 @@ public class ConnectionRequestVPNTest extends
 	}
 	
 	@Test
-	public void ConnectionRequestToVPN_AcceptVPNRequest_ClientGetsAcceptForward() throws Exception{
-		setUpConnections(3);
+	public void ConnectionRequestToVPN_AcceptVPNRequest_ResponseTypeIsAcceptForward() throws Exception{
+		setUpConnections(4);
 		assertThat(requestAndRegisterClient()).isNotNull();
 		
 		FMPPacket requestVPNResponse = requestVPN();
@@ -51,13 +50,39 @@ public class ConnectionRequestVPNTest extends
 		assertThat(acceptVPNResponse.getType()).isEqualTo(FMPPacketType.CONNECTION_ACCEPT_FORWARD);
 	}
 	
-	private FMPPacket requestAndRegisterClient() throws Exception {
-		FMPPacket request = MockFMPPacketsFactory.mockRequestIntraUserNetworkServicePacket(testManager.getPublicKey());
+	@Test
+	public void ConnectionRequestToVPN_RequestMessageIsNotEncrypted_ResponseTypeIsConnectionDeny() throws Exception{
+		setUpConnections(6);
+		assertThat(requestAndRegisterClient()).isNotNull();
+		FMPPacket request = MockFMPPacketsFactory.mockRequestPacket(testManager.getPublicKey());
 		testClient.sendMessage(request);
-		FMPPacket requestResponse = getResponse();
-		FMPPacket register = MockFMPPacketsFactory.mockRegisterPacket(requestResponse.getSender());
-		testClient.sendMessage(register);
-		return getResponse();
+		FMPPacket requestResponse= getResponse();
+		assertThat(requestResponse.getType()).isEqualTo(FMPPacketType.CONNECTION_DENY);
+	}
+	
+	@Test
+	public void ConnectionRequestToVPN_RequestMessageIsNotVPNRequest_ResponseTypeIsConnectionDeny() throws Exception{
+		setUpConnections(8);
+		assertThat(requestAndRegisterClient()).isNotNull();
+		FMPPacket requestResponse = requestConnection();
+		assertThat(requestResponse.getType()).isEqualTo(FMPPacketType.CONNECTION_DENY);
+	}
+	
+	@Test
+	public void ConnectionRequestToVPN_NoMoreAvailablePorts_ResponseTypeIsConnectionDeny() throws Exception{
+		setUpConnections(10);
+		assertThat(requestAndRegisterClient()).isNotNull();
+		FMPPacket requestResponse = requestVPN();
+		assertThat(requestResponse.getType()).isEqualTo(FMPPacketType.CONNECTION_REQUEST);
+		FMPPacket requestResponse2 = requestVPN();
+		assertThat(requestResponse2.getType()).isEqualTo(FMPPacketType.CONNECTION_DENY);
+	}
+	
+	private FMPPacket requestAndRegisterClient() throws Exception {
+		FMPPacket request = requestConnection();
+		assertThat(request).isNotNull();
+		FMPPacket register = registerConnection();
+		return register;
 	}
 	
 	private FMPPacket requestVPN() throws Exception {
