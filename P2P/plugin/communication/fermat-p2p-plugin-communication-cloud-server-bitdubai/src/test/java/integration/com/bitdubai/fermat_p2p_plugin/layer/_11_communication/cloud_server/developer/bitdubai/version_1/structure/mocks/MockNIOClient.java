@@ -1,4 +1,4 @@
-package integration.com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud_server.developer.bitdubai.version_1.cloud.mocks;
+package integration.com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud_server.developer.bitdubai.version_1.structure.mocks;
 
 import java.io.IOException;
 import java.net.ConnectException;

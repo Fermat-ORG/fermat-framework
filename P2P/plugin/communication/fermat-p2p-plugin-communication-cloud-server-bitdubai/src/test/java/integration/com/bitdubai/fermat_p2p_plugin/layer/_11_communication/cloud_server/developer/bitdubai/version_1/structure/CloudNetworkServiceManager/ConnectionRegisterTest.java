@@ -1,8 +1,7 @@
-package integration.com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud_server.developer.bitdubai.version_1.cloud.CloudServiceManager;
+package integration.com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud_server.developer.bitdubai.version_1.structure.CloudNetworkServiceManager;
 
 import static org.fest.assertions.api.Assertions.*;
-
-import integration.com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud_server.developer.bitdubai.version_1.cloud.mocks.MockFMPPacketsFactory;
+import integration.com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud_server.developer.bitdubai.version_1.structure.mocks.MockFMPPacketsFactory;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,8 +13,8 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.Asymmectri
 /**
  * Created by jorgeejgonzalez on 27/04/15.
  */
-public class ConnectionRegisterTest extends CloudServiceIntegrationTest{
-
+public class ConnectionRegisterTest extends CloudNetworkServiceManagerIntegrationTest{
+	
 	@Before
 	public void setUpParameters() throws Exception{
 		setUpAddressInfo(TCP_BASE_TEST_PORT+100);
