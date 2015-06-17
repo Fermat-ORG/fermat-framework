@@ -3,10 +3,12 @@ apply plugin: 'maven'
 apply plugin: 'findbugs'
 apply plugin: 'checkstyle'
 apply plugin: 'pmd'
+apply plugin: 'eclipse'
+
 
 group = "com.bitdubai.fermat.cry"
-version = '1.0.1'
 sourceCompatibility = 1.7
+version = '1.0.0'
 
 configurations {
     deployerJars
@@ -14,58 +16,54 @@ configurations {
 
 jar {
     manifest {
-        attributes 'Implementation-Title': 'fermat-cry-plugin-crypto-network-bitcoin-bitdubai',
-                'Implementation-Version': '1.0.1'
+        attributes 'Implementation-Title': 'fermat-cry-api',
+                   'Implementation-Version': '1.0.0'
     }
 }
-
 
 repositories {
     mavenCentral ()
-    maven {
-        url "https://repository-fermat.forge.cloudbees.com/release/"
-        credentials {
-            username 'bitdubai.repo'
-            password 'bud@pestdcd16c'
-        }
-    }
 }
 
 pmd {
-    toolVersion = '5.1.3'
+	toolVersion = '5.1.3'
 }
 
 dependencies {
-    //compile 'com.bitdubai.fermat.pip:fermat-pip-api:2.0.1'
-    compile project(':fermat-api')
-    compile project(':fermat-cry-api')
 
+    compile project(':fermat-api')
+
+    compile group: 'org.bouncycastle', name: 'bcprov-jdk15on', version: '1.52'
+    compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
+    
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+	testCompile group: 'org.easytesting', name: 'fest-assert-core', version: '2.0M10'
+	testCompile group: 'com.googlecode.catch-exception', name: 'catch-exception', version: '1.2.0'
     deployerJars "org.apache.maven.wagon:wagon-webdav:1.0-beta-2"
-    testCompile 'junit:junit:4.11'
-    testCompile 'org.mockito:mockito-all:2.0.2-beta'
-    compile('org.bitcoinj:bitcoinj-core:0.12.3') {
-        exclude module: 'scrypt'
-    }
 }
 
 test {
     systemProperties 'property': 'value'
 }
 
+
 uploadArchives {
+                
     repositories {
+   
         flatDir {
+            
             dirs 'repos'
         }
-        mavenDeployer {
+
+	mavenDeployer {
             configuration = configurations.deployerJars
             repository (url: "dav:https://repository-fermat.forge.cloudbees.com/release/") {
-                authentication(userName: 'bitdubai.repo', password: 'bud@pestdcd16c')
+                authentication(userName: 'raul-pena', password: 'bAvE19G77_')
             }
         }
     }
 }
-
 
 tasks.withType(FindBugs) {
     reports {

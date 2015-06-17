@@ -17,7 +17,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventMan
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventType;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.cry_crypto_module.actor_address_book.exceptions.ExampleException;
+
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoIdentifiedFromIntraUserEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoReceivedFromIntraUserEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_intra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoReceptionConfirmedFromIntraUserEventHandler;
@@ -162,11 +162,7 @@ public class IncomingIntraUserTransactionPluginRoot implements Service, Incoming
      * Incoming Intra User Manager Interface implementation.
      */
     
-    @Override
-    public void exampleMethod() throws ExampleException {
 
-    }
-    
     /**
      * UsesFileSystem Interface implementation.
      */
