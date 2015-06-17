@@ -1,22 +1,22 @@
-package integration.com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud_server.developer.bitdubai.version_1.structure.CloudServiceManager;
+package integration.com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud_server.developer.bitdubai.version_1.structure.CloudNetworkServiceVPN;
 
-import static org.junit.Assert.assertEquals;
 import integration.com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud_server.developer.bitdubai.version_1.structure.mocks.MockFMPPacketsFactory;
 import integration.com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud_server.developer.bitdubai.version_1.structure.mocks.MockNIOClient;
 
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.CommunicationChannelAddressFactory;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket.FMPPacketType;
-import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.CloudServiceManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.CommunicationChannelAddressFactory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
+import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.CloudNetworkServiceVPN;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.ECCKeyPair;
 
-public abstract class CloudServiceIntegrationTest {
+public abstract class CloudNetworkServiceVPNIntegrationTest {
 	
-	protected CloudServiceManager testManager;
+	protected CloudNetworkServiceVPN testVPN;
 	protected String testHost;
 	protected Integer testPort;
 	protected CommunicationChannelAddress testAddress;
@@ -24,11 +24,13 @@ public abstract class CloudServiceIntegrationTest {
 	protected String testPrivateKey;
 	protected String testPublicKey;
 	protected ECCKeyPair testKeyPair;
+	protected NetworkServices testNetworkService;
+	protected Set<String> testParticipants;
 	protected MockNIOClient testClient;
 	
 	protected static final int RESPONSE_READ_ATTEMPTS = 50;
 	
-	protected static final int TCP_BASE_TEST_PORT = 52000;
+	protected static final int TCP_BASE_TEST_PORT = 51000;
 	
 	protected void setUpAddressInfo(int port) throws Exception{
 		testHost = "localhost";
@@ -41,22 +43,22 @@ public abstract class CloudServiceIntegrationTest {
 		testKeyPair = new ECCKeyPair(testPrivateKey, testPublicKey);			
 	}
 	
-	protected void setUpExecutor(int threads) throws Exception{
+	protected void setUpExecutor(final int threads) throws Exception{
 		testExecutor = Executors.newFixedThreadPool(threads);
 	}
 	
-	protected void setUpConnections(int portPadding) throws Exception{
+	protected void setUpConnections(final int portPadding) throws Exception{
 		testAddress = CommunicationChannelAddressFactory.constructCloudAddress(testHost, testPort+portPadding);
-		testManager = new CloudServiceManager(testAddress, testExecutor, testKeyPair);
-		testManager.start();
+		testNetworkService = NetworkServices.INTRA_USER;
+		testVPN = new CloudNetworkServiceVPN(testAddress, testExecutor, testKeyPair, testNetworkService, testParticipants);
+		testVPN.start();
 		testClient = new MockNIOClient(testHost, testPort+portPadding);
 	}
 	
-	protected void requestConnection() throws Exception{
-		FMPPacket request = MockFMPPacketsFactory.mockRequestPacket(testManager.getPublicKey());
+	protected FMPPacket requestConnection() throws Exception{
+		FMPPacket request = MockFMPPacketsFactory.mockRequestIntraUserNetworkServicePacket(testVPN.getPublicKey());
 		testClient.sendMessage(request);
-		FMPPacket response = getResponse();
-		assertEquals(FMPPacketType.CONNECTION_ACCEPT, response.getType());
+		return getResponse();
 	}
 	
 	protected synchronized FMPPacket getResponse() throws Exception {
