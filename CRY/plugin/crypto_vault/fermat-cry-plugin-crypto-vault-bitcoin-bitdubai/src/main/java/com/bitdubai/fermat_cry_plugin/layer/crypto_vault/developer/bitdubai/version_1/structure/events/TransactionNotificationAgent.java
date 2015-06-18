@@ -2,14 +2,17 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.ver
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.dmp_world.Agent;
+import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantInitializeMonitorAgentException;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
 /**
  * Created by rodrigo on 2015.06.18..
@@ -39,6 +42,14 @@ public class TransactionNotificationAgent implements Agent, DealsWithErrors, Dea
 
 
     /**
+     * Constructor
+     */
+    public void TransactionNotificationAgent(PluginDatabaseSystem pluginDatabaseSystem, ErrorManager errorManager){
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+        this.errorManager = errorManager;
+    }
+
+    /**
      * Agent interface implementation
      * @throws CantStartAgentException
      */
@@ -48,6 +59,18 @@ public class TransactionNotificationAgent implements Agent, DealsWithErrors, Dea
 
         ((DealsWithPluginDatabaseSystem) this.monitorAgent).setPluginDatabaseSystem(this.pluginDatabaseSystem);
         ((DealsWithErrors) this.monitorAgent).setErrorManager(this.errorManager);
+
+        try {
+            ((MonitorAgent) this.monitorAgent).Initialize();
+        }
+        catch (CantInitializeMonitorAgentException cantInitializeCryptoRegistryException) {
+            /**
+             * I cant continue if this happens.
+             */
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BLOCKCHAIN_INFO_WORLD, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantInitializeCryptoRegistryException);
+
+            throw new CantStartAgentException();
+        }
 
         this.agentThread = new Thread(monitorAgent);
         this.agentThread.start();
@@ -106,6 +129,13 @@ public class TransactionNotificationAgent implements Agent, DealsWithErrors, Dea
         @Override
         public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
             this.pluginDatabaseSystem = pluginDatabaseSystem;
+        }
+
+        public void Initialize() throws CantInitializeMonitorAgentException {
+            /**
+             * I open the database
+             */
+
         }
 
         @Override
