@@ -3,7 +3,7 @@ package com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.excep
 /**
  * Created by toshiba on 30/03/2015.
  */
-public class CantRegisterActorCryptoAddress extends Exception {
+public class CantRegisterActorAddressBook extends Exception {
 
 	/**
 	 * 
