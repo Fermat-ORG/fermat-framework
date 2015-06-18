@@ -101,7 +101,21 @@ class CryptoVaultDatabaseActions {
      * @param newState
      */
     public void updateCryptoTransactionStatus(String txHash, CryptoStatus newState){
-        //todo update this
+        DatabaseTable cryptoTxTable;
+        cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
+        cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, txHash, DatabaseFilterType.EQUAL);
+        DatabaseTableRecord toUpdate = cryptoTxTable.getRecords().get(0); //todo add validation that only one record exists
+
+        /**
+         * I set the Protocol status to the new value
+         */
+        toUpdate.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME, newState.toString());
+        try {
+            cryptoTxTable.updateRecord(toUpdate);
+        } catch (CantUpdateRecord cantUpdateRecord) {
+            //todo deals with this error
+            cantUpdateRecord.printStackTrace();
+        }
 
     }
 
@@ -110,7 +124,7 @@ class CryptoVaultDatabaseActions {
      * @param txId
      * @param newStatus
      */
-    public void updateTransactionProtocolStatus(UUID txId, ProtocolStatus newStatus){
+    public void updateTransactionProtocolStatus(UUID  txId, ProtocolStatus newStatus){
         DatabaseTable cryptoTxTable;
         cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
         cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, txId.toString(), DatabaseFilterType.EQUAL);

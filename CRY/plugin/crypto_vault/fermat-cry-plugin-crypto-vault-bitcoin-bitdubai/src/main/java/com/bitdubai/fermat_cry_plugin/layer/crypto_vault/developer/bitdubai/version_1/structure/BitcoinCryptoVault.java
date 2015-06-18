@@ -315,6 +315,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
          * if the transaction was requested before but resend my mistake, Im not going to send it again
          */
         CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database);
+
         if (!db.isNewFermatTransaction(FermatTxId))
             return "";
 

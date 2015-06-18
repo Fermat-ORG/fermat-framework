@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
@@ -8,6 +9,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_cry_api.layer.definition.DepthInBlocksThreshold;
 
 import org.bitcoinj.core.AbstractWalletEventListener;
 import org.bitcoinj.core.Coin;
@@ -62,7 +64,7 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
         /**
          * once saved, I notify the platform event that we have recieved money
          */
-        //todo add platforn event of coins received event
+        //todo add platforn event of coins received event. This should be done when saving.
     }
 
     @Override
@@ -73,7 +75,27 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
     @Override
     public void onTransactionConfidenceChanged(Wallet wallet, Transaction tx) {
         TransactionConfidence txConfidence = tx.getConfidence();
-//todo completar
+        /**
+         * Confidence type building is that it is in the main blockchain and increasing
+         */
+        if (txConfidence.getConfidenceType() == TransactionConfidence.ConfidenceType.BUILDING){
+            if (DepthInBlocksThreshold.DEPTH == txConfidence.getDepthInBlocks()){
+                /**
+                 * The transaction height in the blockchain has reached our threshold.
+                 */
+
+                dbActions.updateCryptoTransactionStatus(tx.getHashAsString(), CryptoStatus.RECEIVED);
+            }
+
+            if (1 == txConfidence.getDepthInBlocks()){
+                /**
+                 * The transactions has one block already.
+                 */
+
+                dbActions.updateCryptoTransactionStatus(tx.getHashAsString(), CryptoStatus.CONFIRMED);
+            }
+        }
+
 
     }
 }
