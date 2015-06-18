@@ -30,7 +30,7 @@ public interface BitcoinWallet {
 
     public void credit(BitcoinTransaction cryptoTransaction) throws CantRegisterCreditException;
 
-    public List<BitcoinTransaction> getTransactions(int offset, int amount) throws CantGetTransactionsException;
+    public List<BitcoinTransaction> getTransactions(int max, int offset) throws CantGetTransactionsException;
 
     public void setDescription(UUID transactionID, String memo) throws CabtStoreMemoException, CantFindTransactionException;
 }
