@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.ActorAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.ActorAddressBook;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.DealsWithActorAddressBook;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantGetActorCryptoAddress;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantGetActorAddressBook;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantSelectSpecialistException;
 
 /**
@@ -30,7 +30,7 @@ public class SpecialistSelector implements DealsWithActorAddressBook {
         ActorAddressBook user = null;
         try {
             user = this.actorAddressBook.getActorAddressBookByCryptoAddress(cryptoAddress);
-        } catch (CantGetActorCryptoAddress cantGetActorCryptoAddress) {
+        } catch (CantGetActorAddressBook cantGetActorCryptoAddress) {
             cantGetActorCryptoAddress.printStackTrace();
         }
 

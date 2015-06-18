@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.WalletContact;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantCreateWalletContactException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantDeleteWalletContactException;
@@ -22,7 +23,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpen
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.pip_user.UserTypes;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantInitializeCryptoWalletContactsDatabaseException;
 
 import java.util.ArrayList;
@@ -134,23 +134,15 @@ public class CryptoWalletContactsDao implements DealsWithErrors, DealsWithPlugin
             for (DatabaseTableRecord record : records){
 
                 UUID contactId = record.getUUIDValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_CONTACT_ID_COLUMN_NAME);
-                UUID userId = record.getUUIDValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_USER_ID_COLUMN_NAME);
-                String userName = record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_USER_NAME_COLUMN_NAME);
-                UserTypes userType = UserTypes.getByCode(record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_USER_TYPE_COLUMN_NAME));
+                UUID actorId = record.getUUIDValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_ID_COLUMN_NAME);
+                String actorName = record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_NAME_COLUMN_NAME);
+                Actors actorType = Actors.getByCode(record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_TYPE_COLUMN_NAME));
 
-                String deliveredAddress = record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_DELIVERED_USER_CRYPTO_ADDRESS_COLUMN_NAME);
-                String deliveredCurrency = record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_DELIVERED_ADDRESS_CRYPTO_CURRENCY_COLUMN_NAME);
-                CryptoAddress deliveredCryptoAddress = new CryptoAddress();
-                deliveredCryptoAddress.setAddress(deliveredAddress);
-                deliveredCryptoAddress.setCryptoCurrency(CryptoCurrency.getByCode(deliveredCurrency));
+                String receivedAddress = record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_RECEIVED_CRYPTO_ADDRESS_COLUMN_NAME);
+                String receivedCurrency = record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_RECEIVED_ADDRESS_CRYPTO_CURRENCY_COLUMN_NAME);
+                CryptoAddress receivedCryptoAddress = new CryptoAddress(receivedAddress, CryptoCurrency.getByCode(receivedCurrency));
 
-                String receivedAddress = record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_DELIVERED_USER_CRYPTO_ADDRESS_COLUMN_NAME);
-                String receivedCurrency = record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_DELIVERED_ADDRESS_CRYPTO_CURRENCY_COLUMN_NAME);
-                CryptoAddress receivedCryptoAddress = new CryptoAddress();
-                receivedCryptoAddress.setAddress(receivedAddress);
-                receivedCryptoAddress.setCryptoCurrency(CryptoCurrency.getByCode(receivedCurrency));
-
-                CryptoWalletContact walletContact = new CryptoWalletContact(contactId, deliveredCryptoAddress, receivedCryptoAddress, userId, userName, userType, walletId);
+                CryptoWalletContact walletContact = new CryptoWalletContact(actorId, actorName, actorType, contactId, receivedCryptoAddress, walletId);
 
                 walletContactsList.add(walletContact);
             }
@@ -187,23 +179,17 @@ public class CryptoWalletContactsDao implements DealsWithErrors, DealsWithPlugin
             for (DatabaseTableRecord record : records){
 
                 UUID contactId = record.getUUIDValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_CONTACT_ID_COLUMN_NAME);
-                UUID userId = record.getUUIDValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_USER_ID_COLUMN_NAME);
-                String userName = record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_USER_NAME_COLUMN_NAME);
-                UserTypes userType = UserTypes.getByCode(record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_USER_TYPE_COLUMN_NAME));
+                UUID actorId = record.getUUIDValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_ID_COLUMN_NAME);
+                String actorName = record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_NAME_COLUMN_NAME);
+                Actors actorType = Actors.getByCode(record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_TYPE_COLUMN_NAME));
 
-                String deliveredAddress = record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_DELIVERED_USER_CRYPTO_ADDRESS_COLUMN_NAME);
-                String deliveredCurrency = record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_DELIVERED_ADDRESS_CRYPTO_CURRENCY_COLUMN_NAME);
-                CryptoAddress deliveredCryptoAddress = new CryptoAddress();
-                deliveredCryptoAddress.setAddress(deliveredAddress);
-                deliveredCryptoAddress.setCryptoCurrency(CryptoCurrency.getByCode(deliveredCurrency));
-
-                String receivedAddress = record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_DELIVERED_USER_CRYPTO_ADDRESS_COLUMN_NAME);
-                String receivedCurrency = record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_DELIVERED_ADDRESS_CRYPTO_CURRENCY_COLUMN_NAME);
+                String receivedAddress = record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_RECEIVED_CRYPTO_ADDRESS_COLUMN_NAME);
+                String receivedCurrency = record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_RECEIVED_ADDRESS_CRYPTO_CURRENCY_COLUMN_NAME);
                 CryptoAddress receivedCryptoAddress = new CryptoAddress();
                 receivedCryptoAddress.setAddress(receivedAddress);
                 receivedCryptoAddress.setCryptoCurrency(CryptoCurrency.getByCode(receivedCurrency));
 
-                CryptoWalletContact walletContact = new CryptoWalletContact(contactId, deliveredCryptoAddress, receivedCryptoAddress, userId, userName, userType, walletId);
+                CryptoWalletContact walletContact = new CryptoWalletContact(actorId, actorName, actorType, contactId, receivedCryptoAddress, walletId);
 
                 walletContactsList.add(walletContact);
             }
@@ -234,15 +220,13 @@ public class CryptoWalletContactsDao implements DealsWithErrors, DealsWithPlugin
 
             entityRecord.setUUIDValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_CONTACT_ID_COLUMN_NAME, walletContact.getContactId());
             entityRecord.setUUIDValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_WALLET_ID_COLUMN_NAME, walletContact.getWalletId());
-            entityRecord.setUUIDValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_USER_ID_COLUMN_NAME, walletContact.getUserId());
-            entityRecord.setStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_USER_NAME_COLUMN_NAME, walletContact.getUserName());
-            entityRecord.setStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_USER_TYPE_COLUMN_NAME, walletContact.getUserType().getCode());
-            entityRecord.setStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_DELIVERED_USER_CRYPTO_ADDRESS_COLUMN_NAME, walletContact.getDeliveredCryptoAddress().getAddress());
-            entityRecord.setStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_DELIVERED_ADDRESS_CRYPTO_CURRENCY_COLUMN_NAME, walletContact.getDeliveredCryptoAddress().getCryptoCurrency().getCode());
+            entityRecord.setUUIDValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_ID_COLUMN_NAME, walletContact.getActorId());
+            entityRecord.setStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_NAME_COLUMN_NAME, walletContact.getActorName());
+            entityRecord.setStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_TYPE_COLUMN_NAME, walletContact.getActorType().getCode());
 
             if (walletContact.getReceivedCryptoAddress() != null) {
-                entityRecord.setStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_RECEIVED_USER_CRYPTO_ADDRESS_COLUMN_NAME, walletContact.getDeliveredCryptoAddress().getAddress());
-                entityRecord.setStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_RECEIVED_ADDRESS_CRYPTO_CURRENCY_COLUMN_NAME, walletContact.getDeliveredCryptoAddress().getCryptoCurrency().getCode());
+                entityRecord.setStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_RECEIVED_CRYPTO_ADDRESS_COLUMN_NAME, walletContact.getReceivedCryptoAddress().getAddress());
+                entityRecord.setStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_RECEIVED_ADDRESS_CRYPTO_CURRENCY_COLUMN_NAME, walletContact.getReceivedCryptoAddress().getCryptoCurrency().getCode());
             }
 
             DatabaseTransaction transaction = database.newTransaction();
@@ -274,12 +258,10 @@ public class CryptoWalletContactsDao implements DealsWithErrors, DealsWithPlugin
 
             DatabaseTableRecord record = walletContactAddressBookTable.getRecords().get(0);
 
-            //record.setUUIDValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_USER_ID_COLUMN_NAME, walletContact.getUserId());
-            if (walletContact.getUserName() != null)
-                record.setStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_USER_NAME_COLUMN_NAME, walletContact.getUserName());
-            //record.setStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_USER_TYPE_COLUMN_NAME, walletContact.getUserType().getCode());
+            if (walletContact.getActorName() != null)
+                record.setStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_NAME_COLUMN_NAME, walletContact.getActorName());
             if (walletContact.getReceivedCryptoAddress() != null) {
-                record.setStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_RECEIVED_USER_CRYPTO_ADDRESS_COLUMN_NAME, walletContact.getReceivedCryptoAddress().getAddress());
+                record.setStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_RECEIVED_CRYPTO_ADDRESS_COLUMN_NAME, walletContact.getReceivedCryptoAddress().getAddress());
                 record.setStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_RECEIVED_ADDRESS_CRYPTO_CURRENCY_COLUMN_NAME, walletContact.getReceivedCryptoAddress().getCryptoCurrency().getCode());
             }
 
@@ -326,43 +308,75 @@ public class CryptoWalletContactsDao implements DealsWithErrors, DealsWithPlugin
     }
 
     /**
-     * Method that find a WalletContact in database by userName and walletId.
+     * Method that find a WalletContact in database by actorName and walletId.
      *
-     *  @param userName String userName.
+     *  @param actorName String actorName.
      *  @param walletId UUID wallet id
      * */
-    public WalletContact findByNameAndWalletId(String userName, UUID walletId) throws CantGetWalletContactException {
+    public WalletContact findByNameAndWalletId(String actorName, UUID walletId) throws CantGetWalletContactException {
 
         WalletContact walletContact;
 
-        if (userName == null || walletId == null) {
-            throw new CantGetWalletContactException("The name and the username are required, can not be null");
+        if (actorName == null || walletId == null) {
+            throw new CantGetWalletContactException("The name and the actorName is required, can not be null");
         }
 
         try {
             DatabaseTable walletContactAddressBookTable = database.getTable(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_NAME);
-            walletContactAddressBookTable.setStringFilter(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_USER_NAME_COLUMN_NAME, userName, DatabaseFilterType.EQUAL);
+            walletContactAddressBookTable.setStringFilter(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_NAME_COLUMN_NAME, actorName, DatabaseFilterType.EQUAL);
             walletContactAddressBookTable.setUUIDFilter(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_WALLET_ID_COLUMN_NAME, walletId, DatabaseFilterType.EQUAL);
             walletContactAddressBookTable.loadToMemory();
             DatabaseTableRecord record = walletContactAddressBookTable.getRecords().get(0);
 
             UUID contactId = record.getUUIDValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_CONTACT_ID_COLUMN_NAME);
-            UUID userId = record.getUUIDValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_USER_ID_COLUMN_NAME);
-            UserTypes userType = UserTypes.getByCode(record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_USER_TYPE_COLUMN_NAME));
+            UUID actorId = record.getUUIDValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_ID_COLUMN_NAME);
+            Actors actorType = Actors.getByCode(record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_TYPE_COLUMN_NAME));
 
-            String deliveredAddress = record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_DELIVERED_USER_CRYPTO_ADDRESS_COLUMN_NAME);
-            String deliveredCurrency = record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_DELIVERED_ADDRESS_CRYPTO_CURRENCY_COLUMN_NAME);
-            CryptoAddress deliveredCryptoAddress = new CryptoAddress();
-            deliveredCryptoAddress.setAddress(deliveredAddress);
-            deliveredCryptoAddress.setCryptoCurrency(CryptoCurrency.getByCode(deliveredCurrency));
-
-            String receivedAddress = record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_DELIVERED_USER_CRYPTO_ADDRESS_COLUMN_NAME);
-            String receivedCurrency = record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_DELIVERED_ADDRESS_CRYPTO_CURRENCY_COLUMN_NAME);
+            String receivedAddress = record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_RECEIVED_CRYPTO_ADDRESS_COLUMN_NAME);
+            String receivedCurrency = record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_RECEIVED_ADDRESS_CRYPTO_CURRENCY_COLUMN_NAME);
             CryptoAddress receivedCryptoAddress = new CryptoAddress();
             receivedCryptoAddress.setAddress(receivedAddress);
             receivedCryptoAddress.setCryptoCurrency(CryptoCurrency.getByCode(receivedCurrency));
 
-            walletContact = new CryptoWalletContact(contactId, deliveredCryptoAddress, receivedCryptoAddress, userId, userName, userType, walletId);
+            walletContact = new CryptoWalletContact(actorId, actorName, actorType, contactId, receivedCryptoAddress, walletId);
+        } catch (Exception e) {
+            // Register the failure.
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetWalletContactException(e.getMessage());
+        }
+        return walletContact;
+    }
+
+    /**
+     * Method that find a WalletContact in database by actorName contains (string) and walletId.
+     *
+     *  @param actorName String actorName.
+     *  @param walletId UUID wallet id
+     * */
+    public WalletContact findByNameContainsAndWalletId(String actorName, UUID walletId) throws CantGetWalletContactException {
+
+        WalletContact walletContact;
+
+        if (actorName == null || walletId == null) {
+            throw new CantGetWalletContactException("The name and the actorName is required, can not be null");
+        }
+
+        try {
+            DatabaseTable walletContactAddressBookTable = database.getTable(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_NAME);
+            walletContactAddressBookTable.setStringFilter(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_NAME_COLUMN_NAME, actorName, DatabaseFilterType.LIKE);
+            walletContactAddressBookTable.setUUIDFilter(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_WALLET_ID_COLUMN_NAME, walletId, DatabaseFilterType.EQUAL);
+            walletContactAddressBookTable.loadToMemory();
+            DatabaseTableRecord record = walletContactAddressBookTable.getRecords().get(0);
+
+            UUID contactId = record.getUUIDValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_CONTACT_ID_COLUMN_NAME);
+            UUID actorId = record.getUUIDValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_ID_COLUMN_NAME);
+            Actors actorType = Actors.getByCode(record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_TYPE_COLUMN_NAME));
+
+            String receivedAddress = record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_RECEIVED_CRYPTO_ADDRESS_COLUMN_NAME);
+            String receivedCurrency = record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_RECEIVED_ADDRESS_CRYPTO_CURRENCY_COLUMN_NAME);
+            CryptoAddress receivedCryptoAddress = new CryptoAddress(receivedAddress, CryptoCurrency.getByCode(receivedCurrency));
+
+            walletContact = new CryptoWalletContact(actorId, actorName, actorType, contactId, receivedCryptoAddress, walletId);
         } catch (Exception e) {
             // Register the failure.
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -381,7 +395,7 @@ public class CryptoWalletContactsDao implements DealsWithErrors, DealsWithPlugin
         WalletContact walletContact;
 
         if (contactId == null) {
-            throw new CantGetWalletContactException("The name and the username are required, can not be null");
+            throw new CantGetWalletContactException("The name and the contactId is required, can not be null");
         }
 
         try {
@@ -391,23 +405,15 @@ public class CryptoWalletContactsDao implements DealsWithErrors, DealsWithPlugin
             DatabaseTableRecord record = walletContactAddressBookTable.getRecords().get(0);
 
             UUID walletId = record.getUUIDValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_WALLET_ID_COLUMN_NAME);
-            UUID userId = record.getUUIDValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_USER_ID_COLUMN_NAME);
-            String userName = record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_USER_NAME_COLUMN_NAME);
-            UserTypes userType = UserTypes.getByCode(record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_USER_TYPE_COLUMN_NAME));
+            UUID actorId = record.getUUIDValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_ID_COLUMN_NAME);
+            String actorName = record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_NAME_COLUMN_NAME);
+            Actors actorType = Actors.getByCode(record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_TYPE_COLUMN_NAME));
 
-            String deliveredAddress = record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_DELIVERED_USER_CRYPTO_ADDRESS_COLUMN_NAME);
-            String deliveredCurrency = record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_DELIVERED_ADDRESS_CRYPTO_CURRENCY_COLUMN_NAME);
-            CryptoAddress deliveredCryptoAddress = new CryptoAddress();
-            deliveredCryptoAddress.setAddress(deliveredAddress);
-            deliveredCryptoAddress.setCryptoCurrency(CryptoCurrency.getByCode(deliveredCurrency));
+            String receivedAddress = record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_RECEIVED_CRYPTO_ADDRESS_COLUMN_NAME);
+            String receivedCurrency = record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_RECEIVED_ADDRESS_CRYPTO_CURRENCY_COLUMN_NAME);
+            CryptoAddress receivedCryptoAddress = new CryptoAddress(receivedAddress, CryptoCurrency.getByCode(receivedCurrency));
 
-            String receivedAddress = record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_DELIVERED_USER_CRYPTO_ADDRESS_COLUMN_NAME);
-            String receivedCurrency = record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_DELIVERED_ADDRESS_CRYPTO_CURRENCY_COLUMN_NAME);
-            CryptoAddress receivedCryptoAddress = new CryptoAddress();
-            receivedCryptoAddress.setAddress(receivedAddress);
-            receivedCryptoAddress.setCryptoCurrency(CryptoCurrency.getByCode(receivedCurrency));
-
-            walletContact = new CryptoWalletContact(contactId, deliveredCryptoAddress, receivedCryptoAddress, userId, userName, userType, walletId);
+            walletContact = new CryptoWalletContact(actorId, actorName, actorType, contactId, receivedCryptoAddress, walletId);
         } catch (Exception e) {
             // Register the failure.
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);

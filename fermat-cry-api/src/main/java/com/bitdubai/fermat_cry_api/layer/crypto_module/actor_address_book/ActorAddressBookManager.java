@@ -1,17 +1,16 @@
 package com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.pip_user.UserTypes;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantGetActorCryptoAddress;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantRegisterActorCryptoAddress;
-
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantGetActorAddressBook;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantRegisterActorAddressBook;
 
 import java.util.List;
 import java.util.UUID;
 
 /**
- * The interface <code>com.bitdubai.fermat_api.layer._9_crypto_module.user_address_book.UserAddressBookManager</code>
- * haves all consumable methods from the plugin User Address Book
+ * The interface <code>com.bitdubai.fermat_api.layer._9_crypto_module.user_address_book.ActorAddressBookManager</code>
+ * haves all consumable methods from the plugin Actor Address Book
  *
  * Created by Natalia on 12/06/15.
  * @version 1.0
@@ -19,10 +18,10 @@ import java.util.UUID;
 
 public interface ActorAddressBookManager {
 
-    public ActorAddressBook getActorAddressBookByCryptoAddress(CryptoAddress cryptoAddress) throws CantGetActorCryptoAddress;
+    public ActorAddressBook getActorAddressBookByCryptoAddress(CryptoAddress cryptoAddress) throws CantGetActorAddressBook;
 
-    public List<ActorAddressBook> getAllActorAddressBookByUserId(UUID userId) throws CantGetActorCryptoAddress;
+    public List<ActorAddressBook> getAllActorAddressBookByActorId(UUID actorId) throws CantGetActorAddressBook;
 
-    public void registerActorCryptoAddress (UserTypes userType, UUID userId,CryptoAddress cryptoAddress) throws CantRegisterActorCryptoAddress;
+    public void registerActorAddressBook(UUID actorId, Actors actorType, CryptoAddress cryptoAddress) throws CantRegisterActorAddressBook;
 
 }
