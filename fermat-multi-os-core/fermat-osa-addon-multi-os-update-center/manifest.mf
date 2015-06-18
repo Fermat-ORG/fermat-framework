@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: true
+OpenIDE-Module: fermat.osa.addon.multi.os.update.center
+OpenIDE-Module-Localizing-Bundle: fermat/osa/addon/multi/os/update/center/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+
