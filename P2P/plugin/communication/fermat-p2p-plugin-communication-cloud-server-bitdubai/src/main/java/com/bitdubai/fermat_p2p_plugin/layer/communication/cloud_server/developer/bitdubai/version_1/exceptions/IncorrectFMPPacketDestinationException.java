@@ -12,7 +12,7 @@ public class IncorrectFMPPacketDestinationException extends FMPException {
 	private static final String DEFAULT_MESSAGE = "Incorrect FMPPacket Destination";
 	
 	public IncorrectFMPPacketDestinationException(){
-		super(DEFAULT_MESSAGE);	
+		this("");	
 	}
 	
 	public IncorrectFMPPacketDestinationException(final String message){

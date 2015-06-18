@@ -12,7 +12,7 @@ public class NetworkServiceAlreadyRegisteredException extends
 	private static final String DEFAULT_MESSAGE = "NETWORK SERVICE ALREADY REGISTERED";
 	
 	public NetworkServiceAlreadyRegisteredException() {
-		super(DEFAULT_MESSAGE);
+		this("");
 	}
 	
 	public NetworkServiceAlreadyRegisteredException(final String message) {
