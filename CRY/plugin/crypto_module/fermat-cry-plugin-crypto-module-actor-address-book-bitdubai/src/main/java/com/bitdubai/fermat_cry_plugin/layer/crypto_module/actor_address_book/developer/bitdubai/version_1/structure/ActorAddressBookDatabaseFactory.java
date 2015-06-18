@@ -68,9 +68,10 @@ import java.util.UUID;
              */
             table = ((DatabaseFactory) database).newTableFactory(ownerId, ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME);
             table.addColumn(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ID, DatabaseDataType.STRING, 36,true);
-            table.addColumn(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ID_USER, DatabaseDataType.STRING, 36,false);
-            table.addColumn(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_USER_TYPE, DatabaseDataType.STRING, 3,false);
+            table.addColumn(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ACTOR_ID, DatabaseDataType.STRING, 36,false);
+            table.addColumn(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ACTOR_TYPE, DatabaseDataType.STRING, 3,false);
             table.addColumn(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS, DatabaseDataType.STRING, 33,false);
+            table.addColumn(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_CRYPTO_CURRENCY, DatabaseDataType.STRING, 33,false);
             table.addColumn(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_TIME_STAMP, DatabaseDataType.LONG_INTEGER, 0,false);
             table.addIndex(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESSES_FIRST_KEY_COLUMN_NAME);
 

@@ -63,6 +63,7 @@ allprojects {
     task fullCheck(dependsOn: ['clean', 'check', 'jacocoTestReport']) << {
         println 'Hace un clean, ejecuta los chequeos y reportes junto con la cobertura de codigo'
 	}
-	check.mustRunAfter clean
-	jacocoTestReport.mustRunAfter check
+	
 }
+check.mustRunAfter clean
+jacocoTestReport.mustRunAfter check

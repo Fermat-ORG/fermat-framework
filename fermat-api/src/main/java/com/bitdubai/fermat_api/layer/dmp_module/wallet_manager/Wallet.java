@@ -12,7 +12,7 @@ import java.util.UUID;
  */
 public interface Wallet {
 
-    public void createWallet(WalletType walletType)  throws CantCreateWalletException;
+    public void createWallet(NicheWalletType nicheWalletType)  throws CantCreateWalletException;
 
     public void loadWallet  (UUID id) throws CantLoadWalletException;
 
@@ -20,7 +20,7 @@ public interface Wallet {
 
     public String getWalletName();
 
-    public WalletType getWalletType();
+    public NicheWalletType getNicheWalletType();
 
     public WalletStatus getStatus();
 

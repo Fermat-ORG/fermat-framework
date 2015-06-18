@@ -1,16 +1,20 @@
-package com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1.structure;
-import com.bitdubai.fermat_api.layer._2_os.database_system.Database;
-import com.bitdubai.fermat_api.layer._2_os.database_system.PlatformDatabaseSystem;
-import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.CantCreateDatabaseException;
-import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantOpenDatabaseException;
-import com.sun.xml.messaging.saaj.util.Base64;
+package com.bitdubai.fermat_osa_addon.layer.desktop.database_system.developer.bitdubai.version_1.structure;
 
 
 
+
+
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
+
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 
 
 /**
@@ -106,7 +110,7 @@ public class DesktopPlatformDatabaseSystem implements PlatformDatabaseSystem {
 
     // This method is only for android OS
     @Override
-    public void setContext (Object context){
+    public void setContext (Object context){   
         //this.context = (Context)context;
     }
 
@@ -124,15 +128,14 @@ public class DesktopPlatformDatabaseSystem implements PlatformDatabaseSystem {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             md.update(databaseName.getBytes(Charset.forName("UTF-8")));
             byte[] digest = md.digest();
-            byte[] encoded = Base64.encode(digest);
+            //Base64 base64 = new Base64();
+            byte[] encoded = Base64.getEncoder().encode(digest);
 
             try {
-                encryptedString = new String(encoded, "UTF-8");
+            	encryptedString = new String(encoded, "UTF-8");	
             } catch (Exception e) {
-                throw new NoSuchAlgorithmException (e);
+            	throw new NoSuchAlgorithmException (e);
             }
-
-
         }catch(NoSuchAlgorithmException e){
             throw e;
         }

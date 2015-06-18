@@ -262,7 +262,7 @@ public class BitcoinReceiveFragment extends Fragment {
 
                 //assign the event to go Receive from New Contact Fragment
                 ImageView  send_profile_picture = (ImageView) convertView.findViewById(R.id.profile_picture);
-                send_profile_picture.setTag("BasicReceiveFromNewContactActivity");
+                send_profile_picture.setTag("BitcoincReceiveFromNewContactActivity");
             }
             else
             {
@@ -280,7 +280,7 @@ public class BitcoinReceiveFragment extends Fragment {
 
                         //asigned tagId at icons action
                         ImageView  send_profile_picture = (ImageView) convertView.findViewById(R.id.icon_receive_profile);
-                        send_profile_picture.setTag("BasicReceiveFromContactActivity|" +groupPosition + "|-1");
+                        send_profile_picture.setTag("BitcoincReceiveFromContactActivity|" +groupPosition + "|-1");
 
 
                         holder = new ViewHolder();

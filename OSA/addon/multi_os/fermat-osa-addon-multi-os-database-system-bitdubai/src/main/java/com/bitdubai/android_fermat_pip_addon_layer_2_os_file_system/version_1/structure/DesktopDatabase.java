@@ -1,28 +1,27 @@
-package com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_osa_addon.layer.desktop.database_system.developer.bitdubai.version_1.structure;
 
-
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableColumn;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerId;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_osa_addon.layer.desktop.database_system.developer.bitdubai.version_1.desktop.database.bridge.DesktopDatabaseBridge;
+import com.bitdubai.fermat_osa_addon.layer.desktop.database_system.developer.bitdubai.version_1.desktop.database.bridge.EnviromentVariables;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 
-import com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1.desktop.database.bridge.DesktopDatabaseBridge;
-import com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1.desktop.database.bridge.EnviromentVariables;
-import com.bitdubai.fermat_api.layer._2_os.database_system.Database;
-import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseDataType;
-import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseFactory;
-import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTable;
-import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableColumn;
-import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableFactory;
-import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTransaction;
-import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.CantCreateDatabaseException;
-import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.CantCreateTableException;
-import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.DatabaseTransactionFailedException;
-import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.InvalidOwnerId;
-import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantOpenDatabaseException;
 
 /**
  * Created by Matias
@@ -35,26 +34,27 @@ import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantOpenDataba
  */
 
 public class DesktopDatabase  implements Database, DatabaseFactory {
+    
 
-
+  
     /**
      * Database Interface member variables.
      */
 
     public String getDatabaseName() {
-        return databaseName;
+	return databaseName;
     }
 
     public void setDatabaseName(String databaseName) {
-        this.databaseName = databaseName;
+            this.databaseName = databaseName;
     }
 
     public DatabaseTransaction getDatabaseTransaction() {
-        return databaseTransaction;
+            return databaseTransaction;
     }
 
     public void setDatabaseTransaction(DatabaseTransaction databaseTransaction) {
-        this.databaseTransaction = databaseTransaction;
+            this.databaseTransaction = databaseTransaction;
     }
 
     private String databaseName;
@@ -69,6 +69,7 @@ public class DesktopDatabase  implements Database, DatabaseFactory {
     /**
      * <p>Plugin implementation constructor
      *
+     * @param context Android Context Object
      * @param ownerId PlugIn owner id
      * @param databaseName name database using
      */
@@ -185,7 +186,7 @@ public class DesktopDatabase  implements Database, DatabaseFactory {
 
     public void openDatabase(String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException {
 
-        /**
+   /**
          * First I try to open the database.
          */
         try {
@@ -196,21 +197,19 @@ public class DesktopDatabase  implements Database, DatabaseFactory {
              */
             if(ownerId != null)
                 //databasePath =  this.context.getFilesDir().getPath() +  "/databases/" +  ownerId.toString();
-                //acá iria el path a la base de datos
-                databasePath = null;
+                databasePath = EnviromentVariables.getExternalStorageDirectory()+ownerId.toString();
             else
                 //databasePath =  this.context.getFilesDir().getPath() + "/databases/";
-                //path a la base de datos
-                databasePath = null;
-
+                databasePath = String.valueOf(EnviromentVariables.getExternalStorageDirectory());
+                
             databasePath += "/" + databaseName.replace("-","") + ".db";
-
+            
 
             this.Database = DesktopDatabaseBridge.openDatabase(databasePath,null,0,null);
 
-        }
+          }
         catch (Exception exception) {
-
+        
             /**
              * Probably there is no distinctions between a database that it can not be opened and a one that doesn't not exist.
              * We will assume that if it didn't open it was because it didn't exist.
@@ -248,12 +247,12 @@ public class DesktopDatabase  implements Database, DatabaseFactory {
                 //databasePath =  this.context.getFilesDir().getPath() +  "/databases/" +  ownerId.toString();
             else
                 databasePath =String.valueOf(EnviromentVariables.getExternalStorageDirectory());
-            //databasePath =  this.context.getFilesDir().getPath() + "/databases/";
+                //databasePath =  this.context.getFilesDir().getPath() + "/databases/";
 
             databasePath += "/" + databaseName.replace("-","") + ".db";
             File databaseFile = new File(databasePath);
 
-            DesktopDatabaseBridge.deleteDatabase(databaseFile);
+             DesktopDatabaseBridge.deleteDatabase(databaseFile);
 
         }
         catch (Exception exception) {
@@ -298,18 +297,19 @@ public class DesktopDatabase  implements Database, DatabaseFactory {
              * if owner id if null
              * because it comes from platformdatabase
              */
-
-            //preguntar si conviene más centralizar la carpeta de base de datos o hacer un contexto individual
+            
+             //preguntar si conviene más centralizar la carpeta de base de datos o hacer un contexto individual
 
             if(ownerId != null)
                 databasePath = EnviromentVariables.getExternalStorageDirectory()+ownerId.toString();
                 //databasePath =  this.context.getFilesDir().getPath() +   "/databases/" +   ownerId.toString();
             else
                 databasePath =String.valueOf(EnviromentVariables.getExternalStorageDirectory());
-            //databasePath =  this.context.getFilesDir().getPath() +  "/databases/" ;
+                //databasePath = "mati";
+                //databasePath =  this.context.getFilesDir().getPath() +  "/databases/" ;
             File storagePath = new File(databasePath);
             if (!storagePath.exists() && storagePath.mkdirs()){
-                storagePath = null;
+                	storagePath = null;
             }
 
             /**
@@ -354,8 +354,8 @@ public class DesktopDatabase  implements Database, DatabaseFactory {
         if (this.ownerId != ownerId) {
             throw new InvalidOwnerId();
         }
-
-        /**
+        
+         /**
          * Get the columns of the table and write the query to create it
          */
         try
@@ -390,7 +390,7 @@ public class DesktopDatabase  implements Database, DatabaseFactory {
         }catch (Exception e)
         {
             e.printStackTrace();
-            throw new CantCreateTableException();
+        	throw new CantCreateTableException();
         }
 
 
@@ -407,7 +407,7 @@ public class DesktopDatabase  implements Database, DatabaseFactory {
     @Override
     public void createTable(DatabaseTableFactory table) throws CantCreateTableException {
 
-        /**
+         /**
          * Get the columns of the table and write the query to create it
          */
         try
@@ -452,7 +452,7 @@ public class DesktopDatabase  implements Database, DatabaseFactory {
         }catch (Exception e)
         {
             e.printStackTrace();
-            throw new CantCreateTableException();
+        	throw new CantCreateTableException();
         }
 
 
@@ -491,9 +491,8 @@ public class DesktopDatabase  implements Database, DatabaseFactory {
     @Override
     public DatabaseTableFactory newTableFactory(String tableName) {
 
-        return new DesktopDatabaseTableFactory(tableName);
+             return new DesktopDatabaseTableFactory(tableName);
     }
 
 
 }
-

@@ -36,10 +36,12 @@ import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopMapFragm
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopProductsFragment;
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopReviewsFragment;
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopShopFragment;
+import com.bitdubai.niche_wallet.bitcoin_wallet.fragments.BitcoinContactsFragment;
 import com.bitdubai.niche_wallet.bitcoin_wallet.fragments.BitcoinReceiveFragment;
 import com.bitdubai.niche_wallet.bitcoin_wallet.fragments.BitcoinSendFragment;
 import com.bitdubai.niche_wallet.bitcoin_wallet.fragments.BitcoinBalanceFragment;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.*;
+import com.bitdubai.niche_wallet.bitcoin_wallet.fragments.BitcoinTransactionsFragment;
 import com.bitdubai.sub_app.shop_manager.fragment.ShopDesktopFragment;
 
 import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsDataBaseSystem;
@@ -424,6 +426,10 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                     R.id.navigation_drawer,
                     (DrawerLayout) findViewById(R.id.drawer_layout),sidemenu);
         }
+        else
+        {
+            //((DrawerLayout) findViewById(R.id.drawer_layout)).setVisibility(View.INVISIBLE);
+        }
 
 
         if(tabs == null && fragments.size() > 1){
@@ -454,13 +460,16 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
     public boolean onCreateOptionsMenu(Menu menu) {
 
         MenuInflater inflater = getMenuInflater();
+
+
         switch ( this.activity.getType()) {
 
             case CWP_SHELL_LOGIN:
                 break;
             case CWP_SHOP_MANAGER_MAIN:
                 MenuItem searchItem = menu.findItem(com.wallet_store.bitdubai.R.id.action_search);
-                MenuItemCompat.setShowAsAction(searchItem, MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_ALWAYS);
+                searchItem.setVisible(true);
+                 MenuItemCompat.setShowAsAction(searchItem, MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_ALWAYS);
                 //mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 
                 //mSearchView.setIconifiedByDefault(false);
@@ -644,7 +653,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                 NavigateWallet();
 
                 break;
-            //basic wallet fragments
+            //Bitcoin wallet fragments
             case CWP_WALLET_RUNTIME_BITCOIN_ALL_CONTACTS_SEND:
                 MyApplication.setChildId(paramId);
                 this.walletRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_BITCOIN_ALL_CONTACTS_SEND);
@@ -653,6 +662,15 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                 startActivity(intent);
 
                 break;
+            case CWP_WALLET_RUNTIME_BITCOIN_ALL_CONTACTS:
+
+                MyApplication.setChildId(paramId);
+                this.walletRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_BITCOIN_ALL_CONTACTS);
+                intent = new Intent(this, com.bitdubai.android_core.app.FragmentActivity.class);
+
+                startActivity(intent);
+                break;
+
 
             case CWP_WALLET_RUNTIME_BITCOIN_ALL_CONTACTS_NEW_SEND:
 
@@ -923,129 +941,144 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                 }
 
             }
-//execute current activity fragments
+            //execute current activity fragments
+            try {
+                switch (fragmentType) {
+                    case CWP_SHELL_LOGIN:
 
-            switch (fragmentType) {
-                case CWP_SHELL_LOGIN:
+                        break;
+                    case CWP_WALLET_MANAGER_MAIN:
+                        currentFragment =  WalletDesktopFragment.newInstance(position);
+                        break;
+                    case CWP_WALLET_MANAGER_SHOP:
+                        currentFragment =  ShopDesktopFragment.newInstance(position);
+                        break;
+                    case CWP_SHOP_MANAGER_MAIN:
+                        currentFragment =  AllFragment.newInstance(0);
+                        break;
+                    case CWP_SHOP_MANAGER_FREE:
+                        currentFragment =  FreeFragment.newInstance(1);
+                        break;
 
-                    break;
-                case CWP_WALLET_MANAGER_MAIN:
-                    currentFragment =  WalletDesktopFragment.newInstance(position);
-                    break;
-                case CWP_WALLET_MANAGER_SHOP:
-                    currentFragment =  ShopDesktopFragment.newInstance(position);
-                    break;
-                case CWP_SHOP_MANAGER_MAIN:
-                    currentFragment =  AllFragment.newInstance(0);
-                    break;
-                case CWP_SHOP_MANAGER_FREE:
-                    currentFragment =  FreeFragment.newInstance(1);
-                    break;
+                    case CWP_SHOP_MANAGER_PAID:
+                        currentFragment =  AllFragment.newInstance(2);
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE:
 
-                case CWP_SHOP_MANAGER_PAID:
-                    currentFragment =  AllFragment.newInstance(2);
-                    break;
-                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE:
+                        currentFragment =  BitcoinBalanceFragment.newInstance(0);
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE:
+                        currentFragment = BitcoinReceiveFragment.newInstance(0);
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND:
+                        currentFragment =  BitcoinSendFragment.newInstance(0);
 
-                    currentFragment =  BitcoinBalanceFragment.newInstance(0);
-                    break;
-                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE:
-                    currentFragment = BitcoinReceiveFragment.newInstance(0);
-                    break;
-                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND:
-                    currentFragment =  BitcoinSendFragment.newInstance(0);
+                        break;
 
-                    break;
+                    case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS:
+                        currentFragment =  BitcoinTransactionsFragment.newInstance(0);
 
-                case CWP_SHOP_MANAGER_ACCEPTED_NEARBY:
-                    currentFragment =  AllFragment.newInstance(3);
-                    break;
-                case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_PROFILE:
-                    platform = new com.bitdubai.niche_wallet.age.kids.boys.Platform();
-                    platform.setWalletResourcesManager((WalletResourcesManager) platformContext.getPlugin(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE));
-                    platform.setErrorManager((ErrorManager)platformContext.getAddon(Addons.ERROR_MANAGER));
-                    ProfileCardFrontFragment.setPlatform(platform);
-                    currentFragment =  ProfileCardFrontFragment.newInstance(position);
-                    break;
-                case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_DESKTOP:
-                    platform = new com.bitdubai.niche_wallet.age.kids.boys.Platform();
-                    platform.setWalletResourcesManager((WalletResourcesManager) platformContext.getPlugin(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE));
-                    platform.setErrorManager((ErrorManager)platformContext.getAddon(Addons.ERROR_MANAGER));
-                    UsdBalanceFragment.setPlatform(platform);
-                    currentFragment =  UsdBalanceFragment.newInstance(position);
-                    break;
-                case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_CONTACTS:
-                    platform = new com.bitdubai.niche_wallet.age.kids.boys.Platform();
-                    platform.setWalletResourcesManager((WalletResourcesManager) platformContext.getPlugin(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE));
-                    platform.setErrorManager((ErrorManager)platformContext.getAddon(Addons.ERROR_MANAGER));
-                    ContactsFragment.setPlatform(platform);
-                    currentFragment =  ContactsFragment.newInstance(position);
-                    break;
-                case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_COMMUNITY:
-                    platform = new com.bitdubai.niche_wallet.age.kids.boys.Platform();
-                    platform.setWalletResourcesManager((WalletResourcesManager) platformContext.getPlugin(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE));
-                    platform.setErrorManager((ErrorManager)platformContext.getAddon(Addons.ERROR_MANAGER));
-                    CommunityFragment.setPlatform(platform);
-                    currentFragment =  CommunityFragment.newInstance(position);
-                    break;
-                case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_HOME:
-                    currentFragment =   HomeFragment.newInstance(position);
-                    break;
-                case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_BALANCE:
-                    currentFragment =  BalanceFragment.newInstance(position);
-                    break;
-                case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SEND:
-                    currentFragment =  SendFragment.newInstance(position);
-                    break;
-                case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_RECEIVE:
-                    currentFragment =  ReceiveFragment.newInstance(position);
-                    break;
-                case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOPS:
-                    currentFragment =  ShopFragment.newInstance(position);
-                    break;
-                case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_REFFIL:
-                    currentFragment =  RefillFragment.newInstance(position);
-                    break;
-                case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_DISCOUNTS:
-                    currentFragment =   DiscountsFragment.newInstance(position);
-                    break;
-                case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_SHOP:
-                    currentFragment =   ShopShopFragment.newInstance(position);
-                    break;
-                case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_PRODUCTS:
-                    currentFragment =   ShopProductsFragment.newInstance(position);
-                    break;
-                case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_REVIEWS:
-                    currentFragment =   ShopReviewsFragment.newInstance(position);
-                    break;
-                case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_CHAT:
-                    currentFragment = ShopChatFragment.newInstance(position);
-                    break;
-                case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_HISTORY:
-                    currentFragment =  ShopHistoryFragment.newInstance(position);
-                    break;
-                case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_MAP:
-                    currentFragment =  ShopMapFragment.newInstance(position);
-                    break;
-                case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_DEBITS:
-                    currentFragment = AccountDetailAllFragment.newInstance(2);
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS:
+                        currentFragment =  BitcoinContactsFragment.newInstance(0);
 
-                    break;
-                case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNT_CREDITS:
-                    currentFragment =  AccountDetailCreditsFragment.newInstance(1);
-                    break;
-                case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_ALL:
-                    currentFragment =   AccountDetailAllFragment.newInstance(0);
-                    break;
-                case CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED:
-                    break;
-                case CWP_WALLET_ADULTS_ALL_REQUEST_SEND:
-                    break;
-                case CWP_WALLET_STORE_MAIN:
-                    break;
-                case CWP_WALLET_FACTORY_MAIN:
-                    break;
+                        break;
+
+                    case CWP_SHOP_MANAGER_ACCEPTED_NEARBY:
+                        currentFragment =  AllFragment.newInstance(3);
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_PROFILE:
+                        platform = new com.bitdubai.niche_wallet.age.kids.boys.Platform();
+                        platform.setWalletResourcesManager((WalletResourcesManager) platformContext.getPlugin(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE));
+                        platform.setErrorManager((ErrorManager)platformContext.getAddon(Addons.ERROR_MANAGER));
+                        ProfileCardFrontFragment.setPlatform(platform);
+                        currentFragment =  ProfileCardFrontFragment.newInstance(position);
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_DESKTOP:
+                        platform = new com.bitdubai.niche_wallet.age.kids.boys.Platform();
+                        platform.setWalletResourcesManager((WalletResourcesManager) platformContext.getPlugin(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE));
+                        platform.setErrorManager((ErrorManager)platformContext.getAddon(Addons.ERROR_MANAGER));
+                        UsdBalanceFragment.setPlatform(platform);
+                        currentFragment =  UsdBalanceFragment.newInstance(position);
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_CONTACTS:
+                        platform = new com.bitdubai.niche_wallet.age.kids.boys.Platform();
+                        platform.setWalletResourcesManager((WalletResourcesManager) platformContext.getPlugin(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE));
+                        platform.setErrorManager((ErrorManager)platformContext.getAddon(Addons.ERROR_MANAGER));
+                        ContactsFragment.setPlatform(platform);
+                        currentFragment =  ContactsFragment.newInstance(position);
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_COMMUNITY:
+                        platform = new com.bitdubai.niche_wallet.age.kids.boys.Platform();
+                        platform.setWalletResourcesManager((WalletResourcesManager) platformContext.getPlugin(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE));
+                        platform.setErrorManager((ErrorManager)platformContext.getAddon(Addons.ERROR_MANAGER));
+                        CommunityFragment.setPlatform(platform);
+                        currentFragment =  CommunityFragment.newInstance(position);
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_HOME:
+                        currentFragment =   HomeFragment.newInstance(position);
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_BALANCE:
+                        currentFragment =  BalanceFragment.newInstance(position);
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SEND:
+                        currentFragment =  SendFragment.newInstance(position);
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_RECEIVE:
+                        currentFragment =  ReceiveFragment.newInstance(position);
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOPS:
+                        currentFragment =  ShopFragment.newInstance(position);
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_REFFIL:
+                        currentFragment =  RefillFragment.newInstance(position);
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_DISCOUNTS:
+                        currentFragment =   DiscountsFragment.newInstance(position);
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_SHOP:
+                        currentFragment =   ShopShopFragment.newInstance(position);
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_PRODUCTS:
+                        currentFragment =   ShopProductsFragment.newInstance(position);
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_REVIEWS:
+                        currentFragment =   ShopReviewsFragment.newInstance(position);
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_CHAT:
+                        currentFragment = ShopChatFragment.newInstance(position);
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_HISTORY:
+                        currentFragment =  ShopHistoryFragment.newInstance(position);
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_MAP:
+                        currentFragment =  ShopMapFragment.newInstance(position);
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_DEBITS:
+                        currentFragment = AccountDetailAllFragment.newInstance(2);
+
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNT_CREDITS:
+                        currentFragment =  AccountDetailCreditsFragment.newInstance(1);
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_ALL:
+                        currentFragment =   AccountDetailAllFragment.newInstance(0);
+                        break;
+                    case CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED:
+                        break;
+                    case CWP_WALLET_ADULTS_ALL_REQUEST_SEND:
+                        break;
+                    case CWP_WALLET_STORE_MAIN:
+                        break;
+                    case CWP_WALLET_FACTORY_MAIN:
+                        break;
+                }
+
             }
+            catch(Exception ex)
+                        {
+                            String strError = ex.getMessage();
+                        }
 
             return currentFragment;
         }

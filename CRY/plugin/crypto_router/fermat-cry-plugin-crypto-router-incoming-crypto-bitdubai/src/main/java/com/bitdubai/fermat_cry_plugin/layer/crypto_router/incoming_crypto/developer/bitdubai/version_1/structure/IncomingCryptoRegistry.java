@@ -138,7 +138,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
             DatabaseTableRecord eventRecord = eventsTable.getEmptyRecord();
 
             UUID eventRecordID = UUID.randomUUID();
-            long unixTime = System.currentTimeMillis() / 1000L;
+            long unixTime = System.currentTimeMillis();
             eventRecord.setUUIDValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_ID_COLUMN.columnName, eventRecordID);
             eventRecord.setStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_EVENT_COLUMN.columnName, eventType);
             eventRecord.setStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_SOURCE_COLUMN.columnName, eventSource);

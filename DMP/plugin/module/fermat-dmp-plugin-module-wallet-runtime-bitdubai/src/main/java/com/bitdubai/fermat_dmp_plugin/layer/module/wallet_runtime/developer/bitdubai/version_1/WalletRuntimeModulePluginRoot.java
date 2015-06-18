@@ -354,7 +354,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
         runtimeWallet = new RuntimeWallet();
         runtimeWallet.setType(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI);
-        listWallets.put(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,runtimeWallet);
+        listWallets.put(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, runtimeWallet);
 
         runtimeActivity= new RuntimeActivity();
         runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
@@ -362,34 +362,37 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         listActivities.put(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN, runtimeActivity);
 
         runtimeTitleBar = new RuntimeTitleBar();
-        runtimeTitleBar.setLabel("Basic Wallet");
+        runtimeTitleBar.setLabel("Fermat Bitcoin Wallet");
         runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#84DCF5");
+        runtimeActivity.setColor("#8bba9e");
 
-        runtimeSideMenu = new RuntimeSideMenu();
 
-        runtimeMenuItem = new RuntimeMenuItem();
-        runtimeMenuItem.setLabel("Menu item 1");
-        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN); // Solo es un ej.
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
-        runtimeActivity.setSideMenu(runtimeSideMenu);
 
         runtimeTabStrip = new RuntimeTabStrip();
 
         runtimeTab = new RuntimeTab();
-        runtimeTab.setLabel("SEND");
-        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND);
-        runtimeTabStrip.addTab(runtimeTab);
-
-        runtimeTab = new RuntimeTab();
-        runtimeTab.setLabel("BALANCE");
+        runtimeTab.setLabel("Balance");
         runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE);
         runtimeTabStrip.addTab(runtimeTab);
 
         runtimeTab = new RuntimeTab();
-        runtimeTab.setLabel("RECEIVE");
+        runtimeTab.setLabel("Send");
+        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND);
+        runtimeTabStrip.addTab(runtimeTab);
+
+        runtimeTab = new RuntimeTab();
+        runtimeTab.setLabel("Receive");
         runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE);
+        runtimeTabStrip.addTab(runtimeTab);
+
+        runtimeTab = new RuntimeTab();
+        runtimeTab.setLabel("Transactions");
+        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS);
+        runtimeTabStrip.addTab(runtimeTab);
+
+        runtimeTab = new RuntimeTab();
+        runtimeTab.setLabel("Contacts");
+        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS);
         runtimeTabStrip.addTab(runtimeTab);
 
 
@@ -399,19 +402,31 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeActivity.setTabStrip(runtimeTabStrip);
 
         runtimeFragment = new RuntimeFragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE);
+        runtimeActivity.addFragment(runtimeFragment);
+        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE, runtimeFragment);
+
+
+        runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND);
         runtimeActivity.addFragment(runtimeFragment);
         listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND,runtimeFragment);
 
-        runtimeFragment = new RuntimeFragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE);
-        runtimeActivity.addFragment(runtimeFragment);
-        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE,runtimeFragment);
 
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE);
         runtimeActivity.addFragment(runtimeFragment);
         listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE,runtimeFragment);
+
+        runtimeFragment = new RuntimeFragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS);
+        runtimeActivity.addFragment(runtimeFragment);
+        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS,runtimeFragment);
+
+        runtimeFragment = new RuntimeFragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS);
+        runtimeActivity.addFragment(runtimeFragment);
+        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS,runtimeFragment);
 
         //define fragment activities
 
@@ -424,7 +439,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeTitleBar = new RuntimeTitleBar();
         runtimeTitleBar.setLabel("Send To Contact");
         runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#F0E173");
+        runtimeActivity.setColor("#8bba9e");
 
         runtimeTabStrip = new RuntimeTabStrip();
         runtimeTab = new RuntimeTab();
@@ -445,7 +460,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeTitleBar = new RuntimeTitleBar();
         runtimeTitleBar.setLabel("Send to New Contact");
         runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#F0E173");
+        runtimeActivity.setColor("#8bba9e");
 
         runtimeTabStrip = new RuntimeTabStrip();
         runtimeTab = new RuntimeTab();
@@ -467,7 +482,75 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeTitleBar = new RuntimeTitleBar();
         runtimeTitleBar.setLabel("Actual Balance");
         runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#F0E173");
+        runtimeActivity.setColor("#8bba9e");
+
+        runtimeTabStrip = new RuntimeTabStrip();
+        runtimeTab = new RuntimeTab();
+        runtimeTab.setLabel("");
+        runtimeTabStrip.addTab(runtimeTab);
+        runtimeActivity.setTabStrip(runtimeTabStrip);
+
+        runtimeFragment = new RuntimeFragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE);
+        runtimeActivity.addFragment(runtimeFragment);
+        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE,runtimeFragment);
+
+        //transactions tab
+
+        runtimeActivity= new RuntimeActivity();
+        runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_BITCOIN_ALL_TRANSACTIONS);
+        runtimeWallet.addActivity(runtimeActivity);
+        listActivities.put(Activities.CWP_WALLET_RUNTIME_BITCOIN_ALL_TRANSACTIONS, runtimeActivity);
+
+        runtimeTitleBar = new RuntimeTitleBar();
+        runtimeTitleBar.setLabel("Transactions");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+        runtimeActivity.setColor("#d07b62");
+
+        runtimeTabStrip = new RuntimeTabStrip();
+        runtimeTab = new RuntimeTab();
+        runtimeTab.setLabel("");
+        runtimeTabStrip.addTab(runtimeTab);
+        runtimeActivity.setTabStrip(runtimeTabStrip);
+
+        runtimeFragment = new RuntimeFragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS);
+        runtimeActivity.addFragment(runtimeFragment);
+        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS,runtimeFragment);
+
+        //contacts tab
+
+        runtimeActivity= new RuntimeActivity();
+        runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_BITCOIN_ALL_CONTACTS);
+        runtimeWallet.addActivity(runtimeActivity);
+        listActivities.put(Activities.CWP_WALLET_RUNTIME_BITCOIN_ALL_CONTACTS, runtimeActivity);
+
+        runtimeTitleBar = new RuntimeTitleBar();
+        runtimeTitleBar.setLabel("Transactions");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+        runtimeActivity.setColor("#d07b62");
+
+        runtimeTabStrip = new RuntimeTabStrip();
+        runtimeTab = new RuntimeTab();
+        runtimeTab.setLabel("");
+        runtimeTabStrip.addTab(runtimeTab);
+        runtimeActivity.setTabStrip(runtimeTabStrip);
+
+        runtimeFragment = new RuntimeFragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS);
+        runtimeActivity.addFragment(runtimeFragment);
+        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS,runtimeFragment);
+
+        //balance tab
+        runtimeActivity= new RuntimeActivity();
+        runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_BITCOIN_ALL_AVAILABLE_BALANCE);
+        runtimeWallet.addActivity(runtimeActivity);
+        listActivities.put(Activities.CWP_WALLET_RUNTIME_BITCOIN_ALL_AVAILABLE_BALANCE, runtimeActivity);
+
+        runtimeTitleBar = new RuntimeTitleBar();
+        runtimeTitleBar.setLabel("Actual Balance");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+        runtimeActivity.setColor("#8bba9e");
 
         runtimeTabStrip = new RuntimeTabStrip();
         runtimeTab = new RuntimeTab();
@@ -489,7 +572,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeTitleBar = new RuntimeTitleBar();
         runtimeTitleBar.setLabel("Receive from Contact");
         runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#F0E173");
+        runtimeActivity.setColor("#8bba9e");
 
         runtimeTabStrip = new RuntimeTabStrip();
         runtimeTab = new RuntimeTab();
@@ -510,7 +593,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeTitleBar = new RuntimeTitleBar();
         runtimeTitleBar.setLabel("Receive form New Contact");
         runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#F0E173");
+        runtimeActivity.setColor("#8bba9e");
 
         runtimeTabStrip = new RuntimeTabStrip();
         runtimeTab = new RuntimeTab();
