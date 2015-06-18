@@ -20,6 +20,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket.FMPPack
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.FMPPacketFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CloudFMPConnectionManager;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.ConnectionAlreadyRegisteredException;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.ConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.IllegalPacketSenderException;
@@ -33,15 +34,16 @@ public class NetworkServiceClientManager extends CloudFMPConnectionManager {
 	private Map<String, SelectionKey> requestedConnections = new ConcurrentHashMap<String, SelectionKey>();
 	
 	private final String serverPublicKey;
-	
+	private final NetworkServices networkService;
 
-	public NetworkServiceClientManager(final CommunicationChannelAddress serverAddress, final ExecutorService executor, final String clientPrivateKey, final String serverPublicKey) throws IllegalArgumentException {
+	public NetworkServiceClientManager(final CommunicationChannelAddress serverAddress, final ExecutorService executor, final String clientPrivateKey, final String serverPublicKey, final NetworkServices networkService) throws IllegalArgumentException {
 		super(serverAddress, executor, clientPrivateKey, AsymmectricCryptography.derivePublicKey(clientPrivateKey), CloudFMPConnectionManagerMode.FMP_CLIENT);
 		this.serverPublicKey = serverPublicKey;
+		this.networkService = networkService;
 	}
 	
 	@Override
-	public void writeToKey(final SelectionKey key) throws CloudConnectionException{
+	public synchronized void writeToKey(final SelectionKey key) throws CloudConnectionException{
 		try{
 			SocketChannel channel = (SocketChannel) key.channel();
 			FMPPacket dataPacket = pendingMessages.remove();
@@ -57,33 +59,7 @@ public class NetworkServiceClientManager extends CloudFMPConnectionManager {
 		}
 	}
 
-	@Override
-	public void processDataPacket(final String data, final SelectionKey key)
-			throws CloudConnectionException {
-		try {
-			FMPPacket dataPacket = FMPPacketFactory.constructCloudPacket(data);
-			key.attach(dataPacket);
-			if(dataPacket.getType() == FMPPacketType.CONNECTION_REQUEST)
-				handleConnectionRequest(dataPacket);
-			if(dataPacket.getType() == FMPPacketType.CONNECTION_ACCEPT)
-				handleConnectionAccept(dataPacket);
-			if(dataPacket.getType() == FMPPacketType.CONNECTION_ACCEPT_FORWARD)
-				handleConnectionAcceptForward(dataPacket);
-			if(dataPacket.getType() == FMPPacketType.CONNECTION_DENY)
-				handleConnectionDeny(dataPacket);
-			if(dataPacket.getType() == FMPPacketType.CONNECTION_REGISTER)
-				handleConnectionRegister(dataPacket);
-			if(dataPacket.getType() == FMPPacketType.CONNECTION_DEREGISTER)
-				handleConnectionDeregister(dataPacket);
-			if(dataPacket.getType() == FMPPacketType.CONNECTION_END)
-				handleConnectionEnd(dataPacket);
-			if(dataPacket.getType() == FMPPacketType.DATA_TRANSMIT)
-				handleDataTransmit(dataPacket);
-		} catch(FMPException ex){
-			throw new CloudConnectionException(ex.getMessage());
-		}
-
-	}
+	
 	
 	@Override
 	public void handleConnectionAccept(final FMPPacket dataPacket) throws FMPException {

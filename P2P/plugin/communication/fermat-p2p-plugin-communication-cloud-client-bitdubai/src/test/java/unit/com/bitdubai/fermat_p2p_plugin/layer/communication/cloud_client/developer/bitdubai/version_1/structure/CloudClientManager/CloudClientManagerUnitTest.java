@@ -1,4 +1,4 @@
-package unit.com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud_client.developer.bitdubai.version_1.structure.CloudClientManager;
+package unit.com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.structure.CloudClientManager;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

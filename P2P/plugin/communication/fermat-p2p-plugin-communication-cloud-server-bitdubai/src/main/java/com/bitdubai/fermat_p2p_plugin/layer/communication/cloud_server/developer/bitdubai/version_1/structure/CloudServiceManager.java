@@ -105,7 +105,9 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
 					+ FMPPacket.MESSAGE_SEPARATOR
 					+ networkServicesRegistry.get(networkService).getAddress().getHost() 
 					+ FMPPacket.MESSAGE_SEPARATOR
-					+ networkServicesRegistry.get(networkService).getAddress().getPort();
+					+ networkServicesRegistry.get(networkService).getAddress().getPort()
+					+ FMPPacket.MESSAGE_SEPARATOR
+					+ networkServicesRegistry.get(networkService).getPublicKey();
 			
 		} else {
 			type = FMPPacketType.CONNECTION_DENY;
