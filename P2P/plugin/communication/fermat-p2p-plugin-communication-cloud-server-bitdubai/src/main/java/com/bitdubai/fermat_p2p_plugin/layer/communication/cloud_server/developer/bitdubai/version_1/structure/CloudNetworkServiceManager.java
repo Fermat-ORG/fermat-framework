@@ -160,7 +160,7 @@ public class CloudNetworkServiceManager extends CloudFMPConnectionManager {
 		
 		StringBuilder messageBuilder = new StringBuilder();
 		for(String participant : vpnParticipants)
-			messageBuilder.append(participant + " ");
+			messageBuilder.append(participant + FMPPacket.MESSAGE_SEPARATOR);
 		String message = messageBuilder.toString().trim();
 		
 		
@@ -184,7 +184,10 @@ public class CloudNetworkServiceManager extends CloudFMPConnectionManager {
 	private void processVPNAccept(final String participant, final CloudNetworkServiceVPN vpn) throws FMPException{
 		String sender = getPublicKey();
 		String destination = participant;
-		String message = vpn.getAddress().getHost() + " " + vpn.getAddress().getPort();
+		StringBuilder messageBuilder = new StringBuilder();
+		for(String participantString : vpn.getParticipants())
+			messageBuilder.append(participantString + FMPPacket.MESSAGE_SEPARATOR);
+		String message = vpn.getAddress().getHost() + FMPPacket.MESSAGE_SEPARATOR + vpn.getAddress().getPort() + FMPPacket.MESSAGE_SEPARATOR + messageBuilder.toString().trim();
 		FMPPacketType type = FMPPacketType.CONNECTION_ACCEPT_FORWARD;
 		String messageHash = AsymmectricCryptography.encryptMessagePublicKey(message, destination);
 		String signature = AsymmectricCryptography.createMessageSignature(messageHash, eccPrivateKey);

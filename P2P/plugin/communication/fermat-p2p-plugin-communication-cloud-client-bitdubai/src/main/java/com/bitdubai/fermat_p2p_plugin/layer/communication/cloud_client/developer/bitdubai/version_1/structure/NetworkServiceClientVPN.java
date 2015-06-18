@@ -26,7 +26,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.IllegalPacketSenderException;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.IllegalSignatureException;
 
-public class NetworkServiceClientManager extends CloudFMPConnectionManager {
+public class NetworkServiceClientVPN extends CloudFMPConnectionManager {
 	
 	private static final String CHARSET_NAME = "UTF-8";
 	
@@ -35,10 +35,8 @@ public class NetworkServiceClientManager extends CloudFMPConnectionManager {
 	
 	private final String serverPublicKey;
 	private final NetworkServices networkService;
-	
-	private final Map<String, NetworkServiceClientVPN> activeVPNRegistry = new ConcurrentHashMap<String, NetworkServiceClientVPN>();
 
-	public NetworkServiceClientManager(final CommunicationChannelAddress serverAddress, final ExecutorService executor, final String clientPrivateKey, final String serverPublicKey, final NetworkServices networkService) throws IllegalArgumentException {
+	public NetworkServiceClientVPN(final CommunicationChannelAddress serverAddress, final ExecutorService executor, final String clientPrivateKey, final String serverPublicKey, final NetworkServices networkService) throws IllegalArgumentException {
 		super(serverAddress, executor, clientPrivateKey, AsymmectricCryptography.derivePublicKey(clientPrivateKey), CloudFMPConnectionManagerMode.FMP_CLIENT);
 		this.serverPublicKey = serverPublicKey;
 		this.networkService = networkService;
@@ -60,6 +58,8 @@ public class NetworkServiceClientManager extends CloudFMPConnectionManager {
 			throw new CloudConnectionException(ex.getMessage());
 		}
 	}
+
+	
 	
 	@Override
 	public void handleConnectionAccept(final FMPPacket dataPacket) throws FMPException {
@@ -84,9 +84,9 @@ public class NetworkServiceClientManager extends CloudFMPConnectionManager {
 	}
 
 	@Override
-	public void handleConnectionAcceptForward(final FMPPacket dataPacket) throws FMPException {
-		String decryptedMessage = AsymmectricCryptography.decryptMessagePrivateKey(dataPacket.getMessage(), eccPrivateKey);
-		System.out.println(decryptedMessage);
+	public void handleConnectionAcceptForward(final FMPPacket dataPacket)
+			throws FMPException {
+		System.out.println(dataPacket.toString());
 	}
 
 	@Override
@@ -111,15 +111,7 @@ public class NetworkServiceClientManager extends CloudFMPConnectionManager {
 
 	@Override
 	public void handleConnectionRequest(final FMPPacket dataPacket) throws FMPException {
-		String decryptedMessage = AsymmectricCryptography.decryptMessagePrivateKey(dataPacket.getMessage(), eccPrivateKey);
-		String sender = eccPublicKey;
-		String destination = dataPacket.getSender();
-		FMPPacketType type = FMPPacketType.CONNECTION_ACCEPT;
-		String messageHash = AsymmectricCryptography.encryptMessagePublicKey(decryptedMessage, serverPublicKey);
-		String signature = AsymmectricCryptography.createMessageSignature(messageHash, eccPrivateKey);
-		FMPPacket packet = FMPPacketFactory.constructCloudPacket(sender, destination, type, messageHash, signature);
-		pendingMessages.add(packet);
-		registeredConnections.get(serverPublicKey).interestOps(SelectionKey.OP_WRITE);
+		System.out.println(dataPacket.toString());
 	}
 
 	@Override
@@ -155,25 +147,6 @@ public class NetworkServiceClientManager extends CloudFMPConnectionManager {
 		}
 	}
 	
-	public boolean isRegistered() {
-		return registeredConnections.containsKey(serverPublicKey);
-	}
-	
-	public void requestVPNConnection(final String peer) throws CloudConnectionException {
-		String sender = eccPublicKey;
-		String destination = peer;
-		FMPPacketType type = FMPPacketType.CONNECTION_REQUEST;
-		String messageHash = AsymmectricCryptography.encryptMessagePublicKey("VPN", serverPublicKey);
-		String signature = AsymmectricCryptography.createMessageSignature(messageHash, eccPrivateKey);
-		try{
-			FMPPacket packet = FMPPacketFactory.constructCloudPacket(sender, destination, type, messageHash, signature);
-			pendingMessages.add(packet);
-			registeredConnections.get(serverPublicKey).interestOps(SelectionKey.OP_WRITE);
-		}catch(FMPException ex){
-			throw new CloudConnectionException(ex.getMessage());
-		}
-	}
-	
 	private void requestConnectionToServer() throws CloudConnectionException{
 		if(isRegistered())
 			throw new ConnectionAlreadyRegisteredException();
@@ -194,6 +167,10 @@ public class NetworkServiceClientManager extends CloudFMPConnectionManager {
 		} catch(FMPException ex){
 			throw new CloudConnectionException(ex.getMessage());
 		}
+	}
+
+	public boolean isRegistered() {
+		return registeredConnections.containsKey(serverPublicKey);
 	}
 	
 	private boolean validatePacketSignature(final FMPPacket dataPacket){

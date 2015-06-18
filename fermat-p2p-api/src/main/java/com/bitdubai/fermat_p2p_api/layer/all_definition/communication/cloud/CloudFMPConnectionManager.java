@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.FMPPacketFactory;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.util.DataCompressor;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.exceptions.CloudConnectionException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.CloudConnectionManager;
@@ -154,9 +155,10 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 		}
 		
 		readBuffer.flip();
-		byte[] data = new byte[FMPPacket.PACKET_MAX_BYTE_SIZE];
+		byte[] data = new byte[read];
 		readBuffer.get(data, 0, read);
 		try{
+			System.out.println(data.length);
 			StringBuffer stringBuffer = new StringBuffer(new String(data, CHARSET_NAME));
 			if(!stringBuffer.toString().trim().isEmpty())
 				processIncomingPacket(FMPPacketFactory.constructCloudPacket(stringBuffer.toString().trim()), key);

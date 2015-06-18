@@ -37,7 +37,7 @@ public class CloudNetworkServiceVPN extends CloudFMPConnectionManager {
 		for(String participant: participants)
 			this.participants.add(participant);
 	}
-
+	
 	@Override
 	public void handleConnectionRequest(final FMPPacket packet) throws FMPException{
 		if(participants.contains(packet.getSender()))
@@ -94,7 +94,7 @@ public class CloudNetworkServiceVPN extends CloudFMPConnectionManager {
 		return networkService;
 	}
 	
-	private Set<String> getParticipants() {
+	public Set<String> getParticipants() {
 		return participants;
 	}
 	
