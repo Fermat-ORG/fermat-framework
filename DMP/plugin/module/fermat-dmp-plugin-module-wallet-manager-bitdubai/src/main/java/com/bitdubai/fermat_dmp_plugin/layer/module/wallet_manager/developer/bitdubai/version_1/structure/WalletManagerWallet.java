@@ -2,9 +2,9 @@ package com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bit
 
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.NicheWalletType;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.Wallet;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletStatus;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletType;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantCreateWalletException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantPersistWalletException;
@@ -32,7 +32,7 @@ public class WalletManagerWallet implements Wallet, DealsWithEvents, DealsWithPl
 
     UUID walletId;
     String walletName = "";
-    WalletType walletType;
+    NicheWalletType nicheWalletType;
     WalletStatus status;
 
     /**
@@ -55,10 +55,10 @@ public class WalletManagerWallet implements Wallet, DealsWithEvents, DealsWithPl
      * This method is to be used for creating a new wallet.
      */
 
-    public void createWallet(WalletType walletType) throws CantCreateWalletException {
+    public void createWallet(NicheWalletType nicheWalletType) throws CantCreateWalletException {
         this.walletId = UUID.randomUUID();
         this.status = WalletStatus.CLOSED;
-        this.walletType = walletType;
+        this.nicheWalletType = nicheWalletType;
 
         try {
             persist();
@@ -120,8 +120,8 @@ public class WalletManagerWallet implements Wallet, DealsWithEvents, DealsWithPl
     }
 
     @Override
-    public WalletType getWalletType() {
-        return this.walletType;
+    public NicheWalletType getNicheWalletType() {
+        return this.nicheWalletType;
     }
 
     @Override
@@ -200,7 +200,7 @@ public class WalletManagerWallet implements Wallet, DealsWithEvents, DealsWithPl
                 FileLifeSpan.PERMANENT
         );
 
-        file.setContent(this.walletName + ";" + this.walletType.getTypeName());
+        file.setContent(this.walletName + ";" + this.nicheWalletType.getTypeName());
 
         try {
             file.persistToMedia();
@@ -234,7 +234,7 @@ public class WalletManagerWallet implements Wallet, DealsWithEvents, DealsWithPl
             String[] values = file.getContent().split(";", -1);
 
             this.walletName = values[0];
-            this.walletType = WalletType.getTypeByName(values[1]);
+            this.nicheWalletType = NicheWalletType.getTypeByName(values[1]);
 
         }
         catch (FileNotFoundException |CantLoadFileException ex)

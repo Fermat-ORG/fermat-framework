@@ -191,7 +191,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
      */
 
     @Override
-    public void checkResources(/*WalletType, Developer, version, publisher*/) throws CantCheckResourcesException {
+    public void checkResources(/*NicheWalletType, Developer, version, publisher*/) throws CantCheckResourcesException {
 
         //get repo name to wallet type
         String reponame = Repositories.getValueFromType (walletType);

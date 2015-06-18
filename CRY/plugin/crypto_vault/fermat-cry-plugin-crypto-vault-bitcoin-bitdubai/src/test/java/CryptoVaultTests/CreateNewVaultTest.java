@@ -1,3 +1,5 @@
+package CryptoVaultTests;
+
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -18,12 +20,9 @@ import java.util.UUID;
 public class CreateNewVaultTest {
     UUID userId;
 
-    @Mock
-    PluginFileSystem pluginFileSystem;
-    @Mock
-    ErrorManager errorManager;
-    @Mock
-    PluginDatabaseSystem pluginDatabaseSystem;
+    @Mock PluginFileSystem pluginFileSystem;
+    @Mock ErrorManager errorManager;
+    @Mock PluginDatabaseSystem pluginDatabaseSystem;
 
     @Test
     public void createNewVault() throws CantCreateCryptoWalletException {
@@ -36,6 +35,7 @@ public class CreateNewVaultTest {
 
         vault.loadOrCreateVault();
 
+        System.out.println(vault.getAddress().getAddress() + " len: " + vault.getAddress().getAddress().length());
     }
 
     public void loadExistingVault(){
