@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.de
 
 /**
  * Created by natalia on 16/06/15.
+ * asdasda
  */
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
@@ -193,13 +194,13 @@ public class ActorAddressBookDao implements DealsWithErrors, DealsWithPluginData
 
         DatabaseTable table;
 
-        List<ActorAddressBook> actorsAddressBooks = new ArrayList<com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.ActorAddressBook>();
+        List<ActorAddressBook> actorsAddressBooks = new ArrayList<>();
 
         /**
          *  I will load the information of table into a memory structure, filter by crypto address .
          */
         table = this.database.getTable(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME);
-        table.setUUIDFilter(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ID, actorId, DatabaseFilterType.EQUAL);
+        table.setUUIDFilter(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ACTOR_ID, actorId, DatabaseFilterType.EQUAL);
         try {
             table.loadToMemory();
         }
@@ -223,7 +224,6 @@ public class ActorAddressBookDao implements DealsWithErrors, DealsWithPluginData
 
         for (DatabaseTableRecord record : table.getRecords()) {
             actorType = Actors.getByCode(record.getStringValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ACTOR_TYPE));
-            actorId = record.getUUIDValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ACTOR_ID);
             address = record.getStringValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS);
             cryptoCurrency = CryptoCurrency.getByCode(record.getStringValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_CRYPTO_CURRENCY));
             cryptoAddress = new CryptoAddress(address, cryptoCurrency);
