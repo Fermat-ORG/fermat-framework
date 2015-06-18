@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet;
+package com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces;
 
 /**
  * The interface <code>com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.crypto_wallet.DealsWithNicheWalletTypeCryptoWallet</code>
