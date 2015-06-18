@@ -209,7 +209,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
     private void loadExistingVaultFromFile() throws CantCreateCryptoWalletException {
         try {
             vault = Wallet.loadFromFile(vaultFile);
-            /**s
+            /**
              * If I couldn't load it I can't go on.
              */
         } catch (UnreadableWalletException unreadableWalletException) {
@@ -311,11 +311,16 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
 
 
     public String sendBitcoins(UUID FermatTxId, CryptoAddress addressTo, long amount){
-        // todo add the validation if the transaction was already sent before or not.
-        //if transaction ID was never sent then add it to the database
-        //if it was already sent, then dont execute anything else
+        /**
+         * if the transaction was requested before but resend my mistake, Im not going to send it again
+         */
+        CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database);
 
-        //todo add the insert in the database of the transaction with the correct status
+        if (!db.isNewFermatTransaction(FermatTxId))
+            return "";
+
+
+
         Address address = null;
         /**
          * I generate the address in the BitcoinJ format
@@ -337,6 +342,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         try {
             vault.completeTx(request);
         } catch (InsufficientMoneyException e) {
+            //todo handle this
             e.printStackTrace();
         }
 
@@ -350,15 +356,25 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
          * I broadcast and wait for the confirmation of the network
          */
         ListenableFuture<Transaction> future = peers.broadcastTransaction(request.tx);
+        UUID txID = null;
         try {
             future.get();
+            /**
+             * the transaction was broadcasted and accepted by the nwetwork
+             * I will persist it to inform it when the confidence level changes
+             */
+            Transaction tx = request.tx;
+
+            txID = db.persistNewTransaction(tx.getHash().toString());
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
 
-        //todo needs to return the new transaction id if it was created.
-        return null;
+        /**
+         * returns the created transaction id
+         */
+        return txID.toString();
     }
 }
