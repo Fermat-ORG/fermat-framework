@@ -9,7 +9,15 @@ public class CryptoAddress {
 
     CryptoCurrency cryptoCurrency;
     String address;
-    
+
+    public CryptoAddress(String address, CryptoCurrency cryptoCurrency) {
+        this.address = address;
+        this.cryptoCurrency = cryptoCurrency;
+    }
+
+    public CryptoAddress() {
+    }
+
     public void setCryptoCurrency (CryptoCurrency cryptoCurrency){
         this.cryptoCurrency = cryptoCurrency;
     }
