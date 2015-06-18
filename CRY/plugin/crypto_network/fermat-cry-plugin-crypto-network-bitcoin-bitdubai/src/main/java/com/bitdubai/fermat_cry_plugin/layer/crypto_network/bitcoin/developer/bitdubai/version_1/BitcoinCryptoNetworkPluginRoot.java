@@ -1,9 +1,14 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVault;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure.BitcoinCryptoNetworkMonitoringAgent;
@@ -26,7 +31,7 @@ import java.util.UUID;
  * * * * * * * *
  */
 
-public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManager, Service, Plugin{
+public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManager, DealsWithErrors, DealsWithPluginIdentity, DealsWithPluginFileSystem, Service, Plugin{
 
     /**
      * BitcoinCryptoNetworkManager interface member variables
@@ -35,9 +40,52 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManag
     BitcoinCryptoNetworkMonitoringAgent bitcoinCryptoNetworkMonitoringAgent;
 
     /**
+     * DealsWithErrors interface member variables
+     */
+    ErrorManager errorManager;
+
+    /**
+     * DealsWithPluginIdentity interface member variable
+     */
+    UUID pluginId;
+
+    /**
+     * DealswithPluginFileSystem interface member variable
+     */
+    PluginFileSystem pluginFileSystem;
+
+    /**
      * Service Interface member variables.
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
+
+
+    /**
+     * DealsWithError interface implementation
+     * @param errorManager
+     */
+    @Override
+    public void setErrorManager(ErrorManager errorManager) {
+        this.errorManager = errorManager;
+    }
+
+    /**
+     * DealsWithPluginIdentity interface implementation
+     * @param pluginId
+     */
+    @Override
+    public void setPluginId(UUID pluginId) {
+        this.pluginId = pluginId;
+    }
+
+    /**
+     * DealsWithPluginFileSystem interface implementation
+      * @param pluginFileSystem
+     */
+    @Override
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem = pluginFileSystem;
+    }
 
     /**
      * PlatformService Interface implementation.
@@ -89,6 +137,10 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManag
     @Override
     public void connectToBitcoinNetwork() {
         bitcoinCryptoNetworkMonitoringAgent = new BitcoinCryptoNetworkMonitoringAgent((Wallet) cryptoVault.getWallet(), cryptoVault.getUserId());
+        bitcoinCryptoNetworkMonitoringAgent.setPluginFileSystem(pluginFileSystem);
+        bitcoinCryptoNetworkMonitoringAgent.setErrorManager(errorManager);
+        bitcoinCryptoNetworkMonitoringAgent.setPluginId(pluginId);
+
         try {
             bitcoinCryptoNetworkMonitoringAgent.start();
         } catch (CantStartAgentException e) {
