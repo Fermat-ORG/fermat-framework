@@ -1,20 +1,27 @@
-package com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_osa_addon.layer.desktop.database_system.developer.bitdubai.version_1.structure;
 
-
-import com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1.desktop.database.bridge.DesktopDatabaseBridge;
-import com.bitdubai.fermat_api.layer._2_os.database_system.DataBaseTableOrder;
-import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseFilterOperator;
-import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseFilterOrder;
-import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseFilterType;
-import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseRecord;
-import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTable;
-import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableColumn;
-import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableFilter;
-import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableFilterGroup;
-import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.CantInsertRecord;
-import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.CantLoadTableToMemory;
-import com.bitdubai.fermat_api.layer._2_os.database_system.exceptions.CantUpdateRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DataBaseTableOrder;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
+import static com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator.AND;
+import static com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator.OR;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
+import static com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder.ASCENDING;
+import static com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder.DESCENDING;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
+import static com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType.EQUAL;
+import static com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType.GRATER_THAN;
+import static com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType.LESS_THAN;
+import static com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType.LIKE;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableColumn;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilterGroup;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemory;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecord;
+import com.bitdubai.fermat_osa_addon.layer.desktop.database_system.developer.bitdubai.version_1.desktop.database.bridge.DesktopDatabaseBridge;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 
@@ -55,7 +62,8 @@ public class DesktopDatabaseTable implements  DatabaseTable {
     /**
      * <p>DatabaseTable implementation constructor
      *
-     *  @param database name database to use
+     * @param context Android Context Object
+     * @param database name database to use
      * @param tableName name table to use
      */
 
@@ -77,7 +85,7 @@ public class DesktopDatabaseTable implements  DatabaseTable {
     @Override
     public DatabaseTableColumn newColumn(){
         return new DesktopDatabaseTableColumn();
-    }
+        }
 
     /**
      * <p>This method return a list of table columns names
@@ -114,7 +122,7 @@ public class DesktopDatabaseTable implements  DatabaseTable {
         }
         return columns;
     }
-
+        
 
     /**
      * <p>This method return a list of Database Table Record objects
@@ -157,7 +165,7 @@ public class DesktopDatabaseTable implements  DatabaseTable {
     @Override
     public List<DatabaseTableFilter> getFilters()
     {
-        return this.tableFilter;
+       return this.tableFilter;
     }
 
     /**
@@ -184,7 +192,7 @@ public class DesktopDatabaseTable implements  DatabaseTable {
 
         try
         {
-            List<DatabaseRecord> records =  record.getValues();
+             List<DatabaseRecord> records =  record.getValues();
 
             //ContentValues recordUpdateList = new ContentValues();
             Map<String, Object> recordUpdateList = new HashMap<String, Object>();
@@ -194,20 +202,20 @@ public class DesktopDatabaseTable implements  DatabaseTable {
              *
              */
 
-            for (int i = 0; i < records.size(); ++i) {
+        for (int i = 0; i < records.size(); ++i) {
 
-                if(records.get(i).getChange())
-
-                    recordUpdateList.put(records.get(i).getName(), records.get(i).getValue());
-            }
-
-
-            this.database.update(tableName, recordUpdateList, makeFilter().replace("WHERE",""), null);
+            if(records.get(i).getChange())
+                
+               recordUpdateList.put(records.get(i).getName(), records.get(i).getValue());
+        }
 
 
+        this.database.update(tableName, recordUpdateList, makeFilter().replace("WHERE",""), null);
+
+       
         }catch (Exception exception)
         {
-            throw new CantUpdateRecord();
+           throw new CantUpdateRecord();
         }
     }
 
@@ -225,10 +233,10 @@ public class DesktopDatabaseTable implements  DatabaseTable {
          * and construct de ContentValues array for SqlLite
          */
         try{
-            StringBuffer strRecords = new StringBuffer ("");
+        	StringBuffer strRecords = new StringBuffer ("");
             StringBuffer strValues  = new StringBuffer ("");
 
-            List<DatabaseRecord> records =  record.getValues();
+             List<DatabaseRecord> records =  record.getValues();
 
             Map<String, Object> initialValues = new HashMap<String, Object>();
             //ContentValues initialValues = new ContentValues();
@@ -246,13 +254,13 @@ public class DesktopDatabaseTable implements  DatabaseTable {
                 strValues.append ("'" + records.get(i).getValue() + "'");
             }
 
-            // this.database.insert(tableName, null, initialValues);
+           // this.database.insert(tableName, null, initialValues);
 
             this.database.execSQL("INSERT INTO " + tableName + "(" + strRecords + ")" + " VALUES (" +  strValues + ")");
         }
         catch (Exception exception) {
             throw new CantInsertRecord();
-        }
+          }
 
 
     }
@@ -277,8 +285,8 @@ public class DesktopDatabaseTable implements  DatabaseTable {
         try {
 
 
-            if(!this.top.isEmpty())
-                topSentence = " LIMIT " + this.top ;
+        if(!this.top.isEmpty())
+            topSentence = " LIMIT " + this.top ;
 
             ResultSet rs = this.database.rawQuery("SELECT  * FROM " + tableName + makeFilter() + makeOrder() + topSentence , null);
 
@@ -309,7 +317,7 @@ public class DesktopDatabaseTable implements  DatabaseTable {
         }
 
         tableRecord.setValues(recordValues);
-        this.records.add(this.tableRecord);
+          this.records.add(this.tableRecord);
 
     }
 
@@ -438,7 +446,7 @@ public class DesktopDatabaseTable implements  DatabaseTable {
 
     /**
      * Sets the context for access to the device memory
-
+     * @param context Android Context Object
      */
 
     private String makeFilter(){
@@ -507,8 +515,8 @@ public class DesktopDatabaseTable implements  DatabaseTable {
                         break;
 
                 }
-                if(i < tableOrder.size()-1)
-                    strOrder.append(" , ");
+                    if(i < tableOrder.size()-1)
+                        strOrder.append(" , ");
 
             }
         }
@@ -524,7 +532,7 @@ public class DesktopDatabaseTable implements  DatabaseTable {
 
         StringBuffer strFilter = new StringBuffer();
 
-        strFilter.append(filter.getColumn());
+       strFilter.append(filter.getColumn());
 
         switch (filter.getType()) {
             case EQUAL:
@@ -577,29 +585,29 @@ public class DesktopDatabaseTable implements  DatabaseTable {
         String filter = "";
 
         if(databaseTableFilterGroup != null && (databaseTableFilterGroup.getFilters().size() > 0 || databaseTableFilterGroup.getSubGroups().size() > 0)) {
-            strFilter.append("(");
-            strFilter.append(makeInternalConditionGroup(databaseTableFilterGroup.getFilters(), databaseTableFilterGroup.getOperator()));
-
-            int ix = 0;
-            for(DatabaseTableFilterGroup subGroup : databaseTableFilterGroup.getSubGroups()){
-                if (subGroup.getFilters().size() > 0 || ix > 0){
-                    switch (databaseTableFilterGroup.getOperator()) {
-                        case AND:
-                            strFilter.append(" AND ");
-                            break;
-                        case OR:
-                            strFilter.append(" OR ");
-                            break;
-                        default:
-                            strFilter.append(" ");
-                    }
-                }
                 strFilter.append("(");
-                strFilter.append(makeGroupFilters(subGroup));
+                strFilter.append(makeInternalConditionGroup(databaseTableFilterGroup.getFilters(), databaseTableFilterGroup.getOperator()));
+
+                int ix = 0;
+                for(DatabaseTableFilterGroup subGroup : databaseTableFilterGroup.getSubGroups()){
+                    if (subGroup.getFilters().size() > 0 || ix > 0){
+                        switch (databaseTableFilterGroup.getOperator()) {
+                            case AND:
+                                strFilter.append(" AND ");
+                                break;
+                            case OR:
+                                strFilter.append(" OR ");
+                                break;
+                            default:
+                                strFilter.append(" ");
+                        }
+                    }
+                    strFilter.append("(");
+                    strFilter.append(makeGroupFilters(subGroup));
+                    strFilter.append(")");
+                    ix++;
+                }
                 strFilter.append(")");
-                ix++;
-            }
-            strFilter.append(")");
         }
 
         filter = strFilter.toString();

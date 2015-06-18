@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1.desktop.database.bridge;
+package com.bitdubai.fermat_osa_addon.layer.desktop.database_system.developer.bitdubai.version_1.desktop.database.bridge;
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;

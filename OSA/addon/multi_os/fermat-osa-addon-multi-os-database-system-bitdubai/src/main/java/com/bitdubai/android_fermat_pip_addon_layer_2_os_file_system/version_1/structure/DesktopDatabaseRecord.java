@@ -1,14 +1,15 @@
-package com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_osa_addon.layer.desktop.database_system.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseRecord;
-import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableRecord;
 
+
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 /**
- * Created by Natalia on 09/02/2015.Migrated by Matias
+ * Created by Natalia on 09/02/2015.
  */
 
 /**
@@ -22,7 +23,7 @@ public class DesktopDatabaseRecord implements DatabaseTableRecord {
     /**
      * DatabaseTableRecord Interface member variables.
      */
-    private List<DatabaseRecord> values;
+     private List<DatabaseRecord> values;
 
     public DesktopDatabaseRecord (){
 
@@ -144,7 +145,7 @@ public class DesktopDatabaseRecord implements DatabaseTableRecord {
         record.setName(columnName);
         record.setValue(value);
 
-        // Set the field as modified to take in method after update
+         // Set the field as modified to take in method after update
         record.setChange(true);
         values.add(record);
     }
@@ -217,7 +218,7 @@ public class DesktopDatabaseRecord implements DatabaseTableRecord {
      * @param value
      */
     @Override
-    public void setFloatValue(String columnName, float value){
+     public void setFloatValue(String columnName, float value){
 
         if(values == null)
             values = new ArrayList<DatabaseRecord>();
@@ -251,12 +252,12 @@ public class DesktopDatabaseRecord implements DatabaseTableRecord {
 
     @Override
     public List<DatabaseRecord> getValues(){
-        return this.values;
-    }
+       return this.values;
+   }
 
     @Override
     public void setValues( List<DatabaseRecord> values ){
-        this.values = values;
+       this.values = values;
     }
 
 

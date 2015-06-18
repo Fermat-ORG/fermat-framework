@@ -1,9 +1,9 @@
-package com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_osa_addon.layer.desktop.database_system.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTable;
-import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTransaction;
 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,7 +77,7 @@ public class DesktopDatabaseTransaction implements DatabaseTransaction {
      */
     @Override
     public List<DatabaseTableRecord> getRecordsToUpdate(){
-        return updateRecords;
+       return updateRecords;
     }
 
     /**

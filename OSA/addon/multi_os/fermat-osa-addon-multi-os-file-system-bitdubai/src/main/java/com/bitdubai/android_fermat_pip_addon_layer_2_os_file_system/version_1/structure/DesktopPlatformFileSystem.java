@@ -1,19 +1,20 @@
-package com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1.structure;
-
-import com.bitdubai.fermat_api.layer._2_os.file_system.FileLifeSpan;
-import com.bitdubai.fermat_api.layer._2_os.file_system.FilePrivacy;
-import com.bitdubai.fermat_api.layer._2_os.file_system.PlatformFileSystem;
-import com.bitdubai.fermat_api.layer._2_os.file_system.PlatformTextFile;
-import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantCreateFileException;
-import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.CantLoadFileException;
-import com.bitdubai.fermat_api.layer._2_os.file_system.exceptions.FileNotFoundException;
-import com.sun.xml.messaging.saaj.util.Base64;
+package com.bitdubai.android_fermat_pip_addon_layer_2_os_file_system.version_1.structure;
 
 
 
+
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformTextFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
+
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 
 /**
  * Created by ciencias on 02.02.15. Migrated to desktop by Matias
@@ -117,7 +118,7 @@ public class DesktopPlatformFileSystem implements PlatformFileSystem {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
             md.update(fileName.getBytes(Charset.forName("UTF-8")));
             byte[] digest = md.digest();
-            byte[] encoded = Base64.encode(digest);
+            byte[] encoded = Base64.getEncoder().encode(digest);
 
             try {
                 encryptedString = new String(encoded, "UTF-8");
