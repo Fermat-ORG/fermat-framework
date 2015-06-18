@@ -48,37 +48,6 @@ public class CloudNetworkServiceManager extends CloudFMPConnectionManager {
 	}
 	
 	@Override
-	public void processDataPacket(final String data, final SelectionKey key) throws CloudConnectionException{
-		try {
-			FMPPacket dataPacket = FMPPacketFactory.constructCloudPacket(data);
-			key.attach(dataPacket);
-			if(dataPacket.getType() == FMPPacketType.CONNECTION_REQUEST){
-				if(!registeredConnections.containsKey(dataPacket.getSender()) 
-						&& !unregisteredConnections.containsKey(dataPacket.getSender()))
-					unregisteredConnections.put(dataPacket.getSender(), key);
-				handleConnectionRequest(dataPacket);
-			}
-			if(dataPacket.getType() == FMPPacketType.CONNECTION_ACCEPT)
-				handleConnectionAccept(dataPacket);
-			if(dataPacket.getType() == FMPPacketType.CONNECTION_ACCEPT_FORWARD)
-				handleConnectionAcceptForward(dataPacket);
-			if(dataPacket.getType() == FMPPacketType.CONNECTION_DENY)
-				handleConnectionDeny(dataPacket);
-			if(dataPacket.getType() == FMPPacketType.CONNECTION_REGISTER)
-				handleConnectionRegister(dataPacket);
-			if(dataPacket.getType() == FMPPacketType.CONNECTION_DEREGISTER)
-				handleConnectionDeregister(dataPacket);
-			if(dataPacket.getType() == FMPPacketType.CONNECTION_END)
-				handleConnectionEnd(dataPacket);
-			if(dataPacket.getType() == FMPPacketType.DATA_TRANSMIT)
-				handleDataTransmit(dataPacket);
-		} catch(FMPException ex){
-			throw new CloudConnectionException(ex.getMessage());
-		}
-	}
-
-
-	@Override
 	public void handleConnectionRequest(final FMPPacket packet) throws FMPException{
 		if(registeredConnections.containsKey(packet.getSender()))
 			requestRegisteredConnection(packet);

@@ -2,17 +2,21 @@ package com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.develope
 
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
 
-@SuppressWarnings("serial")
 public class IncorrectFMPPacketDestinationException extends FMPException {
 	
-	private static final String EXCEPTION_PREFIX = "Incorrect FMPPacket Destination";
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1518260429938607463L;
+	
+	private static final String DEFAULT_MESSAGE = "Incorrect FMPPacket Destination";
 	
 	public IncorrectFMPPacketDestinationException(){
-		super(EXCEPTION_PREFIX);	
+		this("");	
 	}
 	
 	public IncorrectFMPPacketDestinationException(final String message){
-		super(EXCEPTION_PREFIX + ": " + message);
+		super(DEFAULT_MESSAGE + ": " + message);
 	}
 
 }

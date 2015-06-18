@@ -1,4 +1,4 @@
-package integration.com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud_client.developer.bitdubai.version_1.structure.CloudClientManager;
+package integration.com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.structure.CloudClientManager;
 
 import static org.fest.assertions.api.Assertions.*;
 import static com.googlecode.catchexception.CatchException.*;
@@ -23,16 +23,17 @@ public class RequestConnectionTest extends CloudClientManagerIntegrationTest {
 	
 	@Test
 	public void RequestConnection_ConnectionIsAlreadyRequested_ThrowsCloudConnectionException() throws Exception{
-		setUp(TCP_PORT_PADDING + 2);
+		setUp(TCP_PORT_PADDING + 3);
 		testClient.requestConnectionToServer();
 		catchException(testClient).requestConnectionToServer();
 		assertThat(caughtException()).isInstanceOf(CloudConnectionException.class);
+		System.out.println(caughtException().getMessage());
 	}
 	
 	//TODO improve this test, it's flaky
 	@Test
 	public void RequestConnection_ConnectionIsAlreadyRegistered_ThrowsCloudConnectionException() throws Exception{
-		setUp(TCP_PORT_PADDING + 3);
+		setUp(TCP_PORT_PADDING + 5);
 		testClient.requestConnectionToServer();
 		Thread.sleep(getThreadSleepMillis());
 		assertThat(testClient.isRegistered()).isTrue();

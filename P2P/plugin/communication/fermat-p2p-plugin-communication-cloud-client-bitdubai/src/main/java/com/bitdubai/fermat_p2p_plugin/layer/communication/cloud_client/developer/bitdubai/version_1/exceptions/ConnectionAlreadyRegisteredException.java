@@ -10,7 +10,7 @@ public class ConnectionAlreadyRegisteredException extends
 	 */
 	private static final long serialVersionUID = -7916961691657131265L;
 	
-	public static final String DEFAULT_MESSAGE = "CONNECTION IS ALREADY REQUESTED";
+	public static final String DEFAULT_MESSAGE = "CONNECTION IS ALREADY REGISTERED";
 	
 	public ConnectionAlreadyRegisteredException(){
 		super(DEFAULT_MESSAGE);

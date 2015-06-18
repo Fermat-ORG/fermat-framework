@@ -7,8 +7,10 @@ package com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp;
 public interface FMPPacket {
 
 	public static final int PACKET_MAX_BYTE_SIZE = 1000;
-        public static final String PACKET_SEPARATOR = "\n";
-        public static final int PACKET_SEPARATOR_PARTS = 5;
+	public static final String PACKET_SEPARATOR = "\n";
+	public static final String MESSAGE_SEPARATOR = " ";
+	public static final String SIGNATURE_SEPARATOR = " ";
+	public static final int PACKET_SEPARATOR_PARTS = 5;
 
 	public String getSender();
 	public String getDestination();
