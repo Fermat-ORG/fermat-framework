@@ -82,7 +82,7 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
 
 
 
-    public void addToNavigationStructure(/*String NavigationStructure, WalletType*/) {
+    public void addToNavigationStructure(/*String NavigationStructure, NicheWalletType*/) {
 
         /*
         PlatformEvent platformEvent = eventManager.getNewEvent(EventType.NAVIGATION_STRUCTURE_UPDATED);
