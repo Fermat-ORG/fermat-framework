@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.apisupport.project</type>
+    <configuration>
+        <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
+            <code-name-base>fermat.osa.addon.multi.os.file.system.bitdubai</code-name-base>
+            <suite-component/>
+            <module-dependencies>
+                <dependency>
+                    <code-name-base>fermat.full</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.0</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>org.openide.filesystems</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>8.12.1</specification-version>
+                    </run-dependency>
+                </dependency>
+            </module-dependencies>
+            <public-packages>
+                <package>com.bitdubai.android_fermat_pip_addon_layer_2_os_file_system</package>
+                <package>com.bitdubai.android_fermat_pip_addon_layer_2_os_file_system.version_1</package>
+                <package>com.bitdubai.android_fermat_pip_addon_layer_2_os_file_system.version_1.structure</package>
+            </public-packages>
+            <class-path-extension>
+                <runtime-relative-path>ext/saaj-impl-1.3.4.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/saaj-impl-1.3.4.jar</binary-origin>
+            </class-path-extension>
+        </data>
+    </configuration>
+</project>
