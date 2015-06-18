@@ -98,8 +98,6 @@ public class CloudNetworkServiceVPN extends CloudFMPConnectionManager {
 			throw new RegisteringAddressHasNotRequestedConnectionException();
 	}
 
-	
-
 	@Override
 	public void handleConnectionDeregister(final FMPPacket packet) throws FMPException{
 	}
@@ -110,8 +108,20 @@ public class CloudNetworkServiceVPN extends CloudFMPConnectionManager {
 
 	@Override
 	public void handleDataTransmit(final FMPPacket packet) throws FMPException{
+		if(participants.contains(packet.getSender()) && participants.contains(packet.getDestination()))
+				sendPacketToRecipient(packet);
 	}
 	
+	private void sendPacketToRecipient(final FMPPacket packet) throws FMPException{
+		String sender = packet.getDestination();
+		String destination = packet.getSender();
+		FMPPacketType type = FMPPacketType.DATA_TRANSMIT;
+		String message = packet.getMessage();
+		String signature = packet.getSignature();
+		FMPPacket dataPacket = FMPPacketFactory.constructCloudPacket(sender, destination, type, message, signature);
+		writeToRegisteredConnection(dataPacket);
+	}
+
 	public NetworkServices getNetworkService(){
 		return networkService;
 	}
