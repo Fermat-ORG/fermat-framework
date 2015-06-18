@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.bitdubai.niche_wallet.bitcoin_wallet.Platform;
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
-import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.NicheWalletTypeCryptoWalletManager;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.NicheWalletTypeCryptoWalletManager;
 
 /**
  * Created by Natalia on 02/06/2015.
