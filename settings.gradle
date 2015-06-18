@@ -24,7 +24,7 @@ include ':fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai'
 project(':fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai').projectDir = new File('CRY/plugin/crypto_router/fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai')
 
 
-// OSA Projects
+// OSA Projects (Android)
 
 include ':fermat-osa-addon-android-database-system-bitdubai'
 project(':fermat-osa-addon-android-database-system-bitdubai').projectDir = new File('OSA/addon/android/fermat-osa-addon-android-database-system-bitdubai')
@@ -43,6 +43,14 @@ project(':fermat-osa-addon-android-device-power-bitdubai').projectDir = new File
 
 include ':fermat-osa-addon-android-logger-bitdubai'
 project(':fermat-osa-addon-android-logger-bitdubai').projectDir = new File('OSA/addon/android/fermat-osa-addon-android-logger-bitdubai')
+
+// OSA Projects (Android)
+
+include ':fermat-osa-addon-multi-os-database-system-bitdubai'
+project(':fermat-osa-addon-multi-os-database-system-bitdubai').projectDir = new File('OSA/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai')
+
+include ':fermat-osa-addon-multi-os-file-system-bitdubai'
+project(':fermat-osa-addon-multi-os-file-system-bitdubai').projectDir = new File('OSA/addon/multi_os/fermat-osa-addon-multi-os-file-system-bitdubai')
 
 
 // PIP Projects
