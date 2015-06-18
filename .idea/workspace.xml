@@ -68,14 +68,24 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="IncomingCryptoReceivedFromExtraUserEventHandler.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="IncomingCryptoReceivedFromExtraUserEventHandler.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/transaction/incoming_extra_user/developer/bitdubai/version_1/event_handlers/IncomingCryptoReceivedFromExtraUserEventHandler.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.48172757">
+            <state vertical-scroll-proportion="0.0">
               <caret line="34" column="0" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="false" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="workspace.xml" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -27562,7 +27572,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/RuntimeAppActivity.java" />
         <option value="$PROJECT_DIR$/fermat-api/build.gradle" />
         <option value="$PROJECT_DIR$/fermat-p2p-api/build.gradle" />
         <option value="$PROJECT_DIR$/fermat-core/build.gradle" />
@@ -27613,6 +27622,7 @@
         <option value="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/transaction/incoming_intra_user/developer/bitdubai/version_1/event_handlers/IncomingCryptoReceptionConfirmedFromIntraUserEventHandler.java" />
         <option value="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/transaction/incoming_intra_user/developer/bitdubai/version_1/event_handlers/IncomingCryptoIdentifiedFromIntraUserEventHandler.java" />
         <option value="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/transaction/incoming_intra_user/developer/bitdubai/version_1/event_handlers/IncomingCryptoReversedFromIntraUserEventHandler.java" />
+        <option value="$PROJECT_DIR$/.idea/workspace.xml" />
       </list>
     </option>
   </component>
@@ -27684,6 +27694,20 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="fermat" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value=".idea" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -28007,12 +28031,6 @@
       <workItem from="1434452426274" duration="799000" />
       <workItem from="1434461815229" duration="9497000" />
     </task>
-    <task id="LOCAL-00011" summary="osa android mdolules all refactored">
-      <created>1434289494865</created>
-      <option name="number" value="00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1434289494865</updated>
-    </task>
     <task id="LOCAL-00012" summary="osa android mdolules all refactored Part 2">
       <created>1434290318476</created>
       <option name="number" value="00012" />
@@ -28301,7 +28319,13 @@
       <option name="project" value="LOCAL" />
       <updated>1434529413621</updated>
     </task>
-    <option name="localTasksCounter" value="60" />
+    <task id="LOCAL-00060" summary="minor changes&#10;">
+      <created>1434622486699</created>
+      <option name="number" value="00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1434622486700</updated>
+    </task>
+    <option name="localTasksCounter" value="61" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -28393,7 +28417,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="NDMP Module layer Refactored - Compiling" />
     <MESSAGE value="Basic Wallet | Composite Wallet |  Middleware layers Refactored - Compiling &amp; Running" />
     <MESSAGE value="P2P &amp; CRY Graddle Settings Changed- Compiling" />
     <MESSAGE value="PIP Graddle Settings Changed- Compiling" />
@@ -28418,7 +28441,8 @@
     <MESSAGE value="Fermat p2p API Refactored | Compiling &amp; Running" />
     <MESSAGE value="Fermat cry API created and referenced | Compiling" />
     <MESSAGE value="Fermat cry API Refactored Part 1 | Compiling" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fermat cry API Refactored Part 1 | Compiling" />
+    <MESSAGE value="minor changes&#10;" />
+    <option name="LAST_COMMIT_MESSAGE" value="minor changes&#10;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -28429,13 +28453,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-intra-user-bitdubai/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="32" column="38" selection-start-line="32" selection-start-column="38" selection-end-line="32" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-intra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/intra_user/developer/bitdubai/version_1/event_handlers/IntraUserIncomingNetworkServiceConnectionRequestHandler.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -28719,7 +28736,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/transaction/incoming_extra_user/developer/bitdubai/version_1/event_handlers/IncomingCryptoReceivedFromExtraUserEventHandler.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.48172757">
+        <state vertical-scroll-proportion="0.0">
           <caret line="34" column="0" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="false" />
@@ -28816,6 +28833,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
