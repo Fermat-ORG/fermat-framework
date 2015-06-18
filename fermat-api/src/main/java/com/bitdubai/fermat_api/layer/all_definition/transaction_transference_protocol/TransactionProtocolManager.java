@@ -10,8 +10,7 @@ import java.util.UUID;
  * Created by eze on 09/06/15.
  */
 public interface TransactionProtocolManager <E> {
-
-    public void confirmTransaction(UUID transactionID) throws CantConfirmTransactionException;
+    public void confirmReception(UUID transactionID) throws CantConfirmTransactionException;
     public List<Transaction<E>> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException;
 
 }

@@ -14,6 +14,8 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.Unexpect
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.DealsWithActorAddressBook;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantInitializeCryptoRegistryException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantStartServiceException;
@@ -30,7 +32,17 @@ import java.util.UUID;
  * Created by loui on 18/03/15.
  * Modified by Arturo Vallone 25/04/2015
  */
-public class IncomingCryptoTransactionPluginRoot implements DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem,DealsWithActorAddressBook, Plugin, Service {
+public class IncomingCryptoTransactionPluginRoot implements DealsWithActorAddressBook,DealsWithCryptoVault,DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem, Plugin, Service {
+
+    /*
+     * DealsWithActorAddressBook member variables
+     */
+    private ActorAddressBookManager actorAddressBook;
+
+    /*
+     * DealsWithCryptoVault member variables
+     */
+    private CryptoVaultManager cryptoVaultManager;
 
     /**
      * DealsWithErrors Interface member variables.
@@ -52,12 +64,6 @@ public class IncomingCryptoTransactionPluginRoot implements DealsWithErrors, Dea
      * IncomingCryptoManager Interface member variables.
      */
     private IncomingCryptoRegistry registry;
-
-    /*
-     * DealsWithUserAddressBook member variables
-     */
-     private ActorAddressBookManager actorAddressBook;
-
 
     /**
      * Plugin Interface member variables.
@@ -256,6 +262,11 @@ public class IncomingCryptoTransactionPluginRoot implements DealsWithErrors, Dea
     @Override
     public void setUserAddressBookManager(ActorAddressBookManager actorAddressBook) {
         this.actorAddressBook = actorAddressBook;
+    }
+
+    @Override
+    public void setCryptoVaultManager(CryptoVaultManager cryptoVaultManager) {
+        this.cryptoVaultManager = cryptoVaultManager;
     }
 
 
