@@ -9,7 +9,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantDecr
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantEncryptException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
-import com.sun.xml.messaging.saaj.util.Base64;
+import java.util.Base64;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
