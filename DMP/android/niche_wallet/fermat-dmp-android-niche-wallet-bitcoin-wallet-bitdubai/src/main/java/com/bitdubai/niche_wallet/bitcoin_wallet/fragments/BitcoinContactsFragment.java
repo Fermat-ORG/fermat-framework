@@ -8,9 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
-import com.bitdubai.niche_wallet.bitcoin_wallet.Platform;
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
-import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.NicheWalletTypeCryptoWalletManager;
 
 /**
  * Created by natalia on 17/06/15.
