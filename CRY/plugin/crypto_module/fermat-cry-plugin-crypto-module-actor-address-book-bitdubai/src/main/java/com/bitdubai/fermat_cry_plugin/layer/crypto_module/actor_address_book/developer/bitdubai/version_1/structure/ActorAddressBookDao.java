@@ -4,10 +4,15 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.de
  * Created by natalia on 16/06/15.
  */
 
+import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantGetActorCryptoAddress;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantRegisterActorCryptoAddress;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.ActorAddressBook;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantGetActorAddressBook;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantRegisterActorAddressBook;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -21,7 +26,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecord;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_api.layer.pip_user.UserTypes;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.exceptions.CantInitializeActorAddressBookException;
 
 import java.util.ArrayList;
@@ -32,48 +36,41 @@ import java.util.UUID;
  * This class manages the relationship between users and crypto addresses by storing them on a Database Table.
  */
 
-public class ActorAddressBookDao implements DealsWithPluginDatabaseSystem {
-
-
+public class ActorAddressBookDao implements DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
 
     /**
      * CryptoAddressBook Interface member variables.
      */
-
-    private UUID ownerId;
     private Database database;
-
-    private UserTypes userTypes;
-    private UUID user_id ;
-    private CryptoAddress userCryptoAddress;
-
-
 
     /**
      * DealsWithErrors Interface member variables.
      */
     ErrorManager errorManager;
 
-
     /**
-     * UsesDatabaseSystem Interface member variables.
+     * DealsWithDatabaseSystem Interface member variables.
      */
     PluginDatabaseSystem pluginDatabaseSystem;
+
+    /**
+     * DealsWithPluginIdentity Interface member variables.
+     */
+    private UUID pluginId;
 
 
     /**
      * Constructor.
      */
-    public ActorAddressBookDao(UUID ownerId, ErrorManager errorManager){
-
+    public ActorAddressBookDao(ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId){
         /**
-         * The only one who can set the ownerId is the Plugin Root.
+         * The only one who can set the pluginId is the Plugin Root.
          */
-        this.ownerId = ownerId;
         this.errorManager = errorManager;
+        this.pluginId = pluginId;
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
 
     }
-
 
     /**
      * CryptoAddressBook Interface implementation.
@@ -85,7 +82,7 @@ public class ActorAddressBookDao implements DealsWithPluginDatabaseSystem {
          * I will try to open the wallets' database..
          */
         try {
-            this.database = this.pluginDatabaseSystem.openDatabase(this.ownerId, this.ownerId.toString());
+            this.database = this.pluginDatabaseSystem.openDatabase(this.pluginId, this.pluginId.toString());
         }
         catch (CantOpenDatabaseException cantOpenDatabaseException){
 
@@ -105,7 +102,7 @@ public class ActorAddressBookDao implements DealsWithPluginDatabaseSystem {
              */
             try {
 
-                this.database =  databaseFactory.createDatabase(this.ownerId, this.ownerId);
+                this.database =  databaseFactory.createDatabase(this.pluginId, this.pluginId);
 
             }
             catch (CantCreateDatabaseException cantCreateDatabaseException){
@@ -117,10 +114,136 @@ public class ActorAddressBookDao implements DealsWithPluginDatabaseSystem {
                 throw new CantInitializeActorAddressBookException();
             }
         }
-
-
     }
 
+    public void registerActorAddressBook(UUID actorId, Actors actorType, CryptoAddress cryptoAddress) throws CantRegisterActorAddressBook {
+
+        /**
+         * Here I create the Address book record for new Actor.
+         */
+        long unixTime = System.currentTimeMillis() / 1000L;
+
+        DatabaseTable addressBookTable = database.getTable(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME);
+        DatabaseTableRecord addressBookRecord = addressBookTable.getEmptyRecord();
+
+        UUID creditRecordId = UUID.randomUUID();
+
+        addressBookRecord.setUUIDValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ID , creditRecordId);
+        addressBookRecord.setUUIDValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ACTOR_ID, actorId);
+        addressBookRecord.setStringValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ACTOR_TYPE, actorType.getCode());
+        addressBookRecord.setStringValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS, cryptoAddress.getAddress());
+        addressBookRecord.setStringValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_CRYPTO_CURRENCY, cryptoAddress.getCryptoCurrency().getCode());
+        addressBookRecord.setLongValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_TIME_STAMP, unixTime);
+
+        try{
+            addressBookTable.insertRecord(addressBookRecord);
+        } catch(CantInsertRecord cantInsertRecord) {
+            /**
+             * I can not solve this situation.
+             */
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_ADDRESS_BOOK_CRYPTO, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantInsertRecord);
+            throw new CantRegisterActorAddressBook();
+        }
+    }
+
+    public ActorAddressBook getActorAddressBookByCryptoAddress(CryptoAddress cryptoAddress) throws CantGetActorAddressBook {
+
+        DatabaseTable table;
+
+        /**
+         *  I will load the information of table into a memory structure, filter by crypto address .
+         */
+        table = this.database.getTable(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME);
+        table.setStringFilter(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS,cryptoAddress.getAddress(), DatabaseFilterType.EQUAL);
+        table.setStringFilter(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_CRYPTO_CURRENCY,cryptoAddress.getCryptoCurrency().getCode(), DatabaseFilterType.EQUAL);
+        try {
+            table.loadToMemory();
+        }
+        catch (CantLoadTableToMemory cantLoadTableToMemory) {
+            /**
+             * I can not solve this situation.
+             */
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_ADDRESS_BOOK_CRYPTO, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantLoadTableToMemory);
+            throw new CantGetActorAddressBook();
+        }
+
+
+        /**
+         * Will go through the records getting each Actor address.
+         */
+
+        List<DatabaseTableRecord> records = table.getRecords();
+        DatabaseTableRecord record;
+
+        UUID actorId;
+        Actors actorType;
+
+        if (records.size() > 0) {
+            record = records.get(0);
+            actorId = record.getUUIDValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ACTOR_ID);
+            actorType = Actors.getByCode(record.getStringValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ACTOR_TYPE));
+        } else {
+            return null;
+        }
+
+        return new ActorAddressBookRegistry(actorId, actorType, cryptoAddress);
+    }
+
+    public List<ActorAddressBook> getAllActorAddressBookByActorId(UUID actorId) throws CantGetActorAddressBook {
+
+        DatabaseTable table;
+
+        List<ActorAddressBook> actorsAddressBooks = new ArrayList<com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.ActorAddressBook>();
+
+        /**
+         *  I will load the information of table into a memory structure, filter by crypto address .
+         */
+        table = this.database.getTable(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME);
+        table.setUUIDFilter(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ID, actorId, DatabaseFilterType.EQUAL);
+        try {
+            table.loadToMemory();
+        }
+        catch (CantLoadTableToMemory cantLoadTableToMemory) {
+            /**
+             * I can not solve this situation.
+             */
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_ADDRESS_BOOK_CRYPTO, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantLoadTableToMemory);
+            throw new CantGetActorAddressBook();
+        }
+
+
+        /**
+         * Will go through the records getting each Actor address.
+         */
+
+        Actors actorType;
+        String address;
+        CryptoCurrency cryptoCurrency;
+        CryptoAddress cryptoAddress;
+
+        for (DatabaseTableRecord record : table.getRecords()) {
+            actorType = Actors.getByCode(record.getStringValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ACTOR_TYPE));
+            actorId = record.getUUIDValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ACTOR_ID);
+            address = record.getStringValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS);
+            cryptoCurrency = CryptoCurrency.getByCode(record.getStringValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_CRYPTO_CURRENCY));
+            cryptoAddress = new CryptoAddress(address, cryptoCurrency);
+            ActorAddressBook addressBook = new ActorAddressBookRegistry(actorId, actorType, cryptoAddress);
+            actorsAddressBooks.add(addressBook);
+
+        }
+
+        return actorsAddressBooks;
+    }
+
+
+    /**
+     * DealsWithErrors interface implementation.
+     */
+
+    @Override
+    public void setErrorManager(ErrorManager errorManager) {
+        this.errorManager = errorManager;
+    }
 
     /**
      * DealsWithPluginDatabaseSystem interface implementation.
@@ -131,114 +254,12 @@ public class ActorAddressBookDao implements DealsWithPluginDatabaseSystem {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
+    /**
+     * DealsWithPluginIdentity interface implementation.
+     */
 
-
-    public void registerActorCryptoAddress (UserTypes userType, UUID userId,CryptoAddress cryptoAddress)throws CantRegisterActorCryptoAddress {
-
-        /**
-         * Here I create the Address book record for new Actor.
-         */
-        long unixTime = System.currentTimeMillis() / 1000L;
-
-        DatabaseTable addressbookTable = database.getTable(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME);
-        DatabaseTableRecord addressbookRecord = addressbookTable.getEmptyRecord();
-
-        UUID creditRecordId = UUID.randomUUID();
-
-        addressbookRecord.setUUIDValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ID , creditRecordId);
-        addressbookRecord.setUUIDValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ID_USER, userId);
-        addressbookRecord.setStringValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_USER_TYPE, userType.getCode());
-        addressbookRecord.setStringValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS, cryptoAddress.getAddress());
-        addressbookRecord.setLongValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_TIME_STAMP, unixTime);
-
-        try{
-            addressbookTable.insertRecord(addressbookRecord);
-        }catch(CantInsertRecord CantInsertRecord)
-        {
-            /**
-             * I can not solve this situation.
-             */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_ADDRESS_BOOK_CRYPTO, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, CantInsertRecord);
-            throw new CantRegisterActorCryptoAddress();
-        }
-
-
+    @Override
+    public void setPluginId(UUID pluginId) {
+        this.pluginId = pluginId;
     }
-
-    public com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.ActorAddressBook getActorAddressBookByCryptoAddress(CryptoAddress cryptoAddress) throws CantGetActorCryptoAddress {
-
-        DatabaseTable table;
-
-        /**
-         *  I will load the information of table into a memory structure, filter by crypto address .
-         */
-        table = this.database.getTable(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME);
-        table.setStringFilter(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS,cryptoAddress.getAddress(), DatabaseFilterType.EQUAL);
-        try {
-            table.loadToMemory();
-        }
-        catch (CantLoadTableToMemory cantLoadTableToMemory) {
-            /**
-             * I can not solve this situation.
-             */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_ADDRESS_BOOK_CRYPTO, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantLoadTableToMemory);
-            throw new CantGetActorCryptoAddress();
-        }
-
-
-        /**
-         * Will go through the records getting each Actor address.
-         */
-
-
-        for (DatabaseTableRecord record : table.getRecords()) {
-            userTypes = UserTypes.getByCode(record.getStringValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_USER_TYPE));
-            user_id = record.getUUIDValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ID_USER);
-            userCryptoAddress.setAddress(record.getStringValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS));
-        }
-
-        return new com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.structure.ActorAddressBook(user_id, userTypes, userCryptoAddress);
-    }
-
-    public List<com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.ActorAddressBook> getAllActorAddressBookByUserId(UUID userId) throws CantGetActorCryptoAddress {
-
-        DatabaseTable table;
-
-        List<com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.ActorAddressBook> actorsAddressBooks = new ArrayList<com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.ActorAddressBook>();
-
-        /**
-         *  I will load the information of table into a memory structure, filter by crypto address .
-         */
-        table = this.database.getTable(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME);
-        table.setUUIDFilter(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ID,userId, DatabaseFilterType.EQUAL);
-        try {
-            table.loadToMemory();
-        }
-        catch (CantLoadTableToMemory cantLoadTableToMemory) {
-            /**
-             * I can not solve this situation.
-             */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_ADDRESS_BOOK_CRYPTO, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantLoadTableToMemory);
-            throw new CantGetActorCryptoAddress();
-        }
-
-
-        /**
-         * Will go through the records getting each Actor address.
-         */
-
-
-        for (DatabaseTableRecord record : table.getRecords()) {
-            userTypes = UserTypes.getByCode(record.getStringValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_USER_TYPE));
-            user_id = record.getUUIDValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ID_USER);
-            userCryptoAddress.setAddress(record.getStringValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS));
-
-            com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.ActorAddressBook addressBook = new com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.structure.ActorAddressBook(user_id, userTypes, userCryptoAddress);
-            actorsAddressBooks.add(addressBook);
-
-        }
-
-        return actorsAddressBooks;
-    }
-
 }

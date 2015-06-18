@@ -14,4 +14,5 @@ public interface CryptoVaultManager {
     public void disconnectFromBitcoin();
     public CryptoAddress getAddress();
     public List<CryptoAddress> getAddresses(int amount);
+    public void sendBitcoins (UUID walletId, UUID FermatTrId,  CryptoAddress addressTo, long satothis);
 }

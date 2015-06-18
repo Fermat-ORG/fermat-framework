@@ -4,9 +4,9 @@ package com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bit
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.Plugin;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.NicheWalletType;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.Wallet;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletType;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantCreateDefaultWalletsException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantCreateWalletException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantLoadWalletsException;
@@ -281,7 +281,7 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
         
         try
         {
-            wallet.createWallet(WalletType.DEFAULT);
+            wallet.createWallet(NicheWalletType.DEFAULT);
         }
         catch (CantCreateWalletException cantCreateWalletException)
         {

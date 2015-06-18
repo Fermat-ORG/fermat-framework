@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.pip_user.UserTypes;
 
 import java.util.UUID;
 
@@ -16,7 +16,6 @@ import java.util.UUID;
  */
 public interface WalletContact {
 
-
     /**
      * Return the contactId
      *
@@ -25,53 +24,19 @@ public interface WalletContact {
     public UUID getContactId();
 
     /**
-     * Set the contactId
-     *
-     * @param contactId contact's id
-     */
-    public void setContactId(UUID contactId);
-
-    /**
      * Return the walletId
      *
      * @return UUID
      */
     public UUID getWalletId();
 
-    /**
-     * Set the walletId
-     *
-     * @param walletId wallet's id
-     */
-    public void setWalletId(UUID walletId);
 
     /**
-     * Return the userType
+     * Return the actorType
      *
-     * @return UserTypes
+     * @return Actors
      */
-    public UserTypes getUserType();
-
-    /**
-     * Set the userType
-     *
-     * @param userType user's type
-     */
-    public void setUserType(UserTypes userType);
-
-    /**
-     * Return the deliveredCryptoAddress
-     *
-     * @return CryptoAddress
-     */
-    public CryptoAddress getDeliveredCryptoAddress();
-
-    /**
-     * Set the deliveredCryptoAddress
-     *
-     * @param deliveredCryptoAddress delivered cryptoAddress
-     */
-    public void setDeliveredCryptoAddress(CryptoAddress deliveredCryptoAddress);
+    public Actors getActorType();
 
     /**
      * Return the deliveredCryptoAddress
@@ -81,39 +46,17 @@ public interface WalletContact {
     public CryptoAddress getReceivedCryptoAddress();
 
     /**
-     * Set the receivedCryptoAddress
-     *
-     * @param receivedCryptoAddress received cryptoAddress
-     */
-    public void setReceivedCryptoAddress(CryptoAddress receivedCryptoAddress);
-
-
-    /**
-     * Return the userId
+     * Return the actorId
      *
      * @return UUID
      */
-    public UUID getUserId();
+    public UUID getActorId();
 
     /**
-     * Set the userId
-     *
-     * @param userId user's id
-     */
-    public void setUserId(UUID userId);
-
-
-    /**
-     * Return the userName
+     * Return the actorName
      *
      * @return String
      */
-    public String getUserName();
+    public String getActorName();
 
-    /**
-     * Set the userName
-     *
-     * @param userName user's name
-     */
-    public void setUserName(String userName);
 }

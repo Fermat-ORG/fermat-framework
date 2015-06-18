@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventMan
 import org.bitcoinj.core.AbstractWalletEventListener;
 import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionConfidence;
 import org.bitcoinj.core.Wallet;
 
 /**
@@ -30,10 +31,12 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
      * VaultEventListeners member variables
      */
     Database database;
+    CryptoVaultDatabaseActions dbActions;
 
 
     VaultEventListeners (Database database){
         this.database = database;
+        dbActions = new CryptoVaultDatabaseActions(this.database);
     }
 
     /**
@@ -47,17 +50,25 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
 
     @Override
     public void onCoinsReceived(Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance) {
-        DatabaseTable incomingTxTable;
-        incomingTxTable = database.getTable(CryptoVaultDatabaseConstants.INCOMING_CRYPTO_TABLE_NAME);
-        DatabaseTableRecord incomingTxRecord =  incomingTxTable.getEmptyRecord();
-        incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.INCOMING_CRYPTO_TABLE_TRX_HASH_COLUMN_NAME, tx.getHash().toString());
-        incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.INCOMING_CRYPTO_TABLE_NOTIFICATION_STS_COLUMN_NAME, "new");
-        try {
-            incomingTxTable.insertRecord(incomingTxRecord);
-        } catch (CantInsertRecord cantInsertRecord) {
-            //todo see how I will handle this
-            cantInsertRecord.printStackTrace();
-        }
+        /**
+         * I save this transaction in the database
+         */
+            dbActions.saveIncomingTransaction(tx.getHashAsString());
+
+        /**
+         * once saved, I notify the platform event
+         */
+        //todo add platforn event of coins received event
+    }
+
+    @Override
+    public void onCoinsSent(Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance) {
+
+    }
+
+    @Override
+    public void onTransactionConfidenceChanged(Wallet wallet, Transaction tx) {
+        TransactionConfidence txConfidence = tx.getConfidence();
 
 
     }

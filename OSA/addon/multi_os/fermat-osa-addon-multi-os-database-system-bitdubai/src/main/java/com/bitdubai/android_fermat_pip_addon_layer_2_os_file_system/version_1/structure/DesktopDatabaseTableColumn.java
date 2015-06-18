@@ -1,10 +1,11 @@
-package com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_osa_addon.layer.desktop.database_system.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseDataType;
-import com.bitdubai.fermat_api.layer._2_os.database_system.DatabaseTableColumn;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableColumn;
+
 
 /**
- * Created by Natalia on 10/02/2015. Migrates to desktop by Matias
+ * Created by Natalia on 10/02/2015.
  */
 
 /**
