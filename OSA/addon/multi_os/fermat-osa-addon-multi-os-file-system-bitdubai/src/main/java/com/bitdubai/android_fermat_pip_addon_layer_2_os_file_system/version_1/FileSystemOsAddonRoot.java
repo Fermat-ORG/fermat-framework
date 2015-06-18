@@ -1,14 +1,15 @@
-package com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1;
+package com.bitdubai.android_fermat_pip_addon_layer_2_os_file_system.version_1;
 
-import com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1.structure.DesktopPlatformFileSystem;
-import com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1.structure.DesktopPluginFileSystem;
+import com.bitdubai.android_fermat_pip_addon_layer_2_os_file_system.version_1.structure.DesktopPlatformFileSystem;
+import com.bitdubai.android_fermat_pip_addon_layer_2_os_file_system.version_1.structure.DesktopPluginFileSystem;
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer._1_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.osa_android.FileSystemOs;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 
-import com.bitdubai.fermat_api.layer._2_os.FileSystemOs;
-import com.bitdubai.fermat_api.layer._2_os.file_system.PlatformFileSystem;
-import com.bitdubai.fermat_api.layer._2_os.file_system.PluginFileSystem;
+
 
 
 

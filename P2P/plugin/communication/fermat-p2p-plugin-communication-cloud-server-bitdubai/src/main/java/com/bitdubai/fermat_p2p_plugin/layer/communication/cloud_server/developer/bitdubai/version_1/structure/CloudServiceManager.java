@@ -35,8 +35,7 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
 			FMPPacket dataPacket = FMPPacketFactory.constructCloudPacket(data);
 			key.attach(dataPacket);
 			if(dataPacket.getType() == FMPPacketType.CONNECTION_REQUEST){
-				if(registeredConnections.isEmpty() 
-						|| !registeredConnections.containsKey(dataPacket.getSender()) 
+				if(!registeredConnections.containsKey(dataPacket.getSender()) 
 						&& !unregisteredConnections.containsKey(dataPacket.getSender()))
 					unregisteredConnections.put(dataPacket.getSender(), key);
 				handleConnectionRequest(dataPacket);
@@ -89,7 +88,7 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
 	public void handleConnectionRegister(final FMPPacket packet) throws FMPException{
 		SelectionKey connection = unregisteredConnections.get(packet.getSender());
 		registeredConnections.put(packet.getSender(), connection);
-		
+		unregisteredConnections.remove(packet.getSender());
 		String sender = getPublicKey();
 		String destination = packet.getSender();
 		String messageHash = AsymmectricCryptography.encryptMessagePublicKey("REGISTERED", destination);		

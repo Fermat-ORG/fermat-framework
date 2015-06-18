@@ -2,6 +2,8 @@ package com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric;
 
 import java.math.BigInteger;
 
+import javax.crypto.BadPaddingException;
+
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.PrivateKey;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.PublicKey;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.Signature;
@@ -42,7 +44,11 @@ public class AsymmectricCryptography {
 		checkStringArgument(hexPrivateKey);
 		AsymmetricCipher cipher = new AsymmetricCipher();
 		AsymmetricPrivateKey privateKey = new AsymmetricPrivateKey(new BigInteger(hexPrivateKey,16));
-		return cipher.decryptWithPrivateKey(encryptedMessage, privateKey);
+		try{
+			return cipher.decryptWithPrivateKey(encryptedMessage, privateKey);
+		} catch(Exception ex){
+			throw new IllegalArgumentException(ex.getMessage());
+		}
 	}
 	
 	public static String createPrivateKey(){

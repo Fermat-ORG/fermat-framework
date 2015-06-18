@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane id="topNode" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="Controller.DemoController">    
+    <top>
+        <HBox fx:id="topHBox" spacing="10">
+                <Label fx:id="myLabel1"
+                       textFill="#0076a3"            
+                       style="-fx-font: Bold 20 papyrus"/>
+                <Label fx:id="myLabel2"
+                       textFill="#0076a3"
+                       wrapText="true"/>
+        </HBox>       
+        
+    </top>
+                     
+</BorderPane>
