@@ -17,6 +17,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.exceptio
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket.FMPPacketType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.CommunicationChannelAddressFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.FMPPacketFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CloudFMPConnectionManager;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
@@ -30,7 +31,7 @@ public class CloudClientManager extends CloudFMPConnectionManager {
 	
 	private static final String CHARSET_NAME = "UTF-8";
 	
-	private final Queue<FMPPacket> pendingMessages = new ConcurrentLinkedQueue<FMPPacket>();
+	private final Queue<FMPPacket> pendingOutgoingMessages = new ConcurrentLinkedQueue<FMPPacket>();
 	private Map<String, SelectionKey> requestedConnections = new ConcurrentHashMap<String, SelectionKey>();
 	
 	private Map<NetworkServices, NetworkServiceClientManager> networkServiceRegistry;
@@ -48,10 +49,10 @@ public class CloudClientManager extends CloudFMPConnectionManager {
 	public void writeToKey(final SelectionKey key) throws CloudConnectionException{
 		try{
 			SocketChannel channel = (SocketChannel) key.channel();
-			FMPPacket dataPacket = pendingMessages.remove();
+			FMPPacket dataPacket = pendingOutgoingMessages.remove();
 			byte[] data = dataPacket.toString().getBytes(CHARSET_NAME);
 			channel.write(ByteBuffer.wrap(data));
-			if(!pendingMessages.isEmpty())
+			if(!pendingOutgoingMessages.isEmpty())
 				writeToKey(key);
 			key.interestOps(SelectionKey.OP_READ);
 		}catch(NoSuchElementException ex){
@@ -59,34 +60,6 @@ public class CloudClientManager extends CloudFMPConnectionManager {
 		}catch(IOException ex){
 			throw new CloudConnectionException(ex.getMessage());
 		}
-	}
-
-	@Override
-	public void processDataPacket(final String data, final SelectionKey key)
-			throws CloudConnectionException {
-		try {
-			FMPPacket dataPacket = FMPPacketFactory.constructCloudPacket(data);
-			key.attach(dataPacket);
-			if(dataPacket.getType() == FMPPacketType.CONNECTION_REQUEST)
-				handleConnectionRequest(dataPacket);
-			if(dataPacket.getType() == FMPPacketType.CONNECTION_ACCEPT)
-				handleConnectionAccept(dataPacket);
-			if(dataPacket.getType() == FMPPacketType.CONNECTION_ACCEPT_FORWARD)
-				handleConnectionAcceptForward(dataPacket);
-			if(dataPacket.getType() == FMPPacketType.CONNECTION_DENY)
-				handleConnectionDeny(dataPacket);
-			if(dataPacket.getType() == FMPPacketType.CONNECTION_REGISTER)
-				handleConnectionRegister(dataPacket);
-			if(dataPacket.getType() == FMPPacketType.CONNECTION_DEREGISTER)
-				handleConnectionDeregister(dataPacket);
-			if(dataPacket.getType() == FMPPacketType.CONNECTION_END)
-				handleConnectionEnd(dataPacket);
-			if(dataPacket.getType() == FMPPacketType.DATA_TRANSMIT)
-				handleDataTransmit(dataPacket);
-		} catch(FMPException ex){
-			throw new CloudConnectionException(ex.getMessage());
-		}
-
 	}
 	
 	@Override
@@ -107,14 +80,31 @@ public class CloudClientManager extends CloudFMPConnectionManager {
 		String signature = AsymmectricCryptography.createMessageSignature(message, eccPrivateKey);
 			
 		FMPPacket packet = FMPPacketFactory.constructCloudPacket(sender, destination, type, message, signature);
-		pendingMessages.add(packet);
+		pendingOutgoingMessages.add(packet);
 		serverConnection.interestOps(SelectionKey.OP_WRITE);
 	}
 
 	@Override
-	public void handleConnectionAcceptForward(final FMPPacket dataPacket)
-			throws FMPException {
-		System.out.println(dataPacket.toString());
+	public void handleConnectionAcceptForward(final FMPPacket dataPacket) throws FMPException {
+		String decryptedMessage;
+		try{
+			decryptedMessage = AsymmectricCryptography.decryptMessagePrivateKey(dataPacket.getMessage(), eccPrivateKey);
+			
+		}catch(Exception ex){
+			ex.printStackTrace();
+			return;
+		}
+		String[] messageComponents = decryptedMessage.split(FMPPacket.MESSAGE_SEPARATOR);
+		NetworkServices networkService = NetworkServices.valueOf(messageComponents[0]);
+		if(networkServiceRegistry.containsKey(networkService))
+			return;
+		String host = messageComponents[1];
+		Integer port = Integer.valueOf(messageComponents[2]);
+		CommunicationChannelAddress networkServiceServerAddress = CommunicationChannelAddressFactory.constructCloudAddress(host, port);
+		String networkServiceServerPublicKey = messageComponents[3];
+		
+		NetworkServiceClientManager networkServiceClient = new NetworkServiceClientManager(networkServiceServerAddress, executor, AsymmectricCryptography.createPrivateKey(), networkServiceServerPublicKey, networkService);
+		networkServiceRegistry.put(networkService, networkServiceClient);
 	}
 
 	@Override
@@ -186,7 +176,7 @@ public class CloudClientManager extends CloudFMPConnectionManager {
 		String signature = AsymmectricCryptography.createMessageSignature(message, eccPrivateKey);
 		try{
 			FMPPacket packet = FMPPacketFactory.constructCloudPacket(sender, destination, type, message, signature);
-			pendingMessages.add(packet);
+			pendingOutgoingMessages.add(packet);
 			SelectionKey serverConnection = unregisteredConnections.get(serverPublicKey);
 			serverConnection.interestOps(SelectionKey.OP_WRITE);
 			unregisteredConnections.remove(serverPublicKey);
@@ -194,6 +184,26 @@ public class CloudClientManager extends CloudFMPConnectionManager {
 		} catch(FMPException ex){
 			throw new CloudConnectionException(ex.getMessage());
 		}
+	}
+	
+	public void registerNetworkService(final NetworkServices networkService) throws CloudConnectionException {
+		String sender = eccPublicKey;
+		String destination = serverPublicKey;
+		FMPPacketType type = FMPPacketType.CONNECTION_REQUEST;
+		String messageHash = AsymmectricCryptography.encryptMessagePublicKey(networkService.toString(), serverPublicKey);
+		String signature = AsymmectricCryptography.createMessageSignature(messageHash, eccPrivateKey);
+		try{
+			FMPPacket packet = FMPPacketFactory.constructCloudPacket(sender, destination, type, messageHash, signature);
+			pendingOutgoingMessages.add(packet);
+			SelectionKey serverConnection = registeredConnections.get(serverPublicKey);
+			serverConnection.interestOps(SelectionKey.OP_WRITE);
+		} catch(FMPException ex){
+			throw new CloudConnectionException(ex.getMessage());
+		}
+	}
+	
+	public NetworkServiceClientManager getNetworkServiceClient(final NetworkServices networkService) throws CloudConnectionException {
+		return networkServiceRegistry.get(networkService);
 	}
 
 	public boolean isRegistered() {
@@ -204,7 +214,6 @@ public class CloudClientManager extends CloudFMPConnectionManager {
 		String message = dataPacket.getMessage();
 		String signature = dataPacket.getSignature();
 		String sender = dataPacket.getSender();
-		
 		return AsymmectricCryptography.verifyMessageSignature(signature, message, sender);
 	}
 	

@@ -20,58 +20,13 @@ import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer
 
 public class CloudServiceManager extends CloudFMPConnectionManager {
 	
-	private static String UNENCRYPTED_MESSAGE_SEPARATOR = " ";
-	
 	private Map<NetworkServices, CloudNetworkServiceManager> networkServicesRegistry = new ConcurrentHashMap<NetworkServices, CloudNetworkServiceManager>();
 
 	public CloudServiceManager(final CommunicationChannelAddress address, final ExecutorService executor, final ECCKeyPair keyPair) throws IllegalArgumentException{
 		super(address, executor, keyPair.getPrivateKey(), keyPair.getPublicKey(), CloudFMPConnectionManagerMode.FMP_SERVER);
 		networkServicesRegistry.clear();
 	}
-	
-	@Override
-	public void processDataPacket(final String data, final SelectionKey key) throws CloudConnectionException{
-		try {
-			FMPPacket dataPacket = FMPPacketFactory.constructCloudPacket(data);
-			key.attach(dataPacket);
-			if(dataPacket.getType() == FMPPacketType.CONNECTION_REQUEST){
-				if(!registeredConnections.containsKey(dataPacket.getSender()) 
-						&& !unregisteredConnections.containsKey(dataPacket.getSender()))
-					unregisteredConnections.put(dataPacket.getSender(), key);
-				handleConnectionRequest(dataPacket);
-			}
-			if(dataPacket.getType() == FMPPacketType.CONNECTION_ACCEPT)
-				handleConnectionAccept(dataPacket);
-			if(dataPacket.getType() == FMPPacketType.CONNECTION_ACCEPT_FORWARD)
-				handleConnectionAcceptForward(dataPacket);
-			if(dataPacket.getType() == FMPPacketType.CONNECTION_DENY)
-				handleConnectionDeny(dataPacket);
-			if(dataPacket.getType() == FMPPacketType.CONNECTION_REGISTER)
-				handleConnectionRegister(dataPacket);
-			if(dataPacket.getType() == FMPPacketType.CONNECTION_DEREGISTER)
-				handleConnectionDeregister(dataPacket);
-			if(dataPacket.getType() == FMPPacketType.CONNECTION_END)
-				handleConnectionEnd(dataPacket);
-			if(dataPacket.getType() == FMPPacketType.DATA_TRANSMIT)
-				handleDataTransmit(dataPacket);
-		} catch(FMPException ex){
-			throw new CloudConnectionException(ex.getMessage());
-		}
-	}
 
-
-	@Override
-	public void handleConnectionRequest(final FMPPacket packet) throws FMPException{
-		if(!packet.getDestination().equals(getPublicKey()))
-			throw new IncorrectFMPPacketDestinationException();
-		
-		if(registeredConnections.containsKey(packet.getSender()))
-			processNetworkServiceConnectionRequest(registeredConnections.get(packet.getSender()), packet);
-		else
-			processConnectionRequest(unregisteredConnections.get(packet.getSender()), packet);
-		
-	}	
-	
 	@Override
 	public void handleConnectionAccept(final FMPPacket packet) throws FMPException{
 	}
@@ -83,7 +38,19 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
 	@Override
 	public void handleConnectionDeny(final FMPPacket packet) throws FMPException{
 	}
-
+	
+	@Override
+	public void handleConnectionRequest(final FMPPacket packet) throws FMPException{
+		if(!packet.getDestination().equals(getPublicKey()))
+			throw new IncorrectFMPPacketDestinationException();
+		System.out.println(packet);
+		if(registeredConnections.containsKey(packet.getSender()))
+			processNetworkServiceConnectionRequest(registeredConnections.get(packet.getSender()), packet);
+		else
+			processConnectionRequest(unregisteredConnections.get(packet.getSender()), packet);
+		
+	}	
+	
 	@Override
 	public void handleConnectionRegister(final FMPPacket packet) throws FMPException{
 		SelectionKey connection = unregisteredConnections.get(packet.getSender());
@@ -134,9 +101,13 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
 		
 		if(networkServicesRegistry.containsKey(networkService)){
 			type = FMPPacketType.CONNECTION_ACCEPT_FORWARD;
-			message = networkServicesRegistry.get(networkService).getAddress().getHost() 
-					+ UNENCRYPTED_MESSAGE_SEPARATOR 
-					+ networkServicesRegistry.get(networkService).getAddress().getPort();
+			message = networkService.toString()
+					+ FMPPacket.MESSAGE_SEPARATOR
+					+ networkServicesRegistry.get(networkService).getAddress().getHost() 
+					+ FMPPacket.MESSAGE_SEPARATOR
+					+ networkServicesRegistry.get(networkService).getAddress().getPort()
+					+ FMPPacket.MESSAGE_SEPARATOR
+					+ networkServicesRegistry.get(networkService).getPublicKey();
 			
 		} else {
 			type = FMPPacketType.CONNECTION_DENY;

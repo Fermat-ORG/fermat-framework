@@ -9,27 +9,24 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerId;
+
 import java.util.UUID;
 
 /**
- * Created by armando on 27/05/15.
+ * The interface <code>com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.structure.WalletAddressBookDataBaseFactory</code>
+ * create all the wallet crypto address book tables.
+ *
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/06/15.
+ * @version 1.0
  */
-class WalletAddressBookDataBaseFactory implements DealsWithPluginDatabaseSystem
-{
+class WalletAddressBookDataBaseFactory implements DealsWithPluginDatabaseSystem {
+
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
     private PluginDatabaseSystem pluginDatabaseSystem;
 
-    /**
-     * DealsWithPluginDatabaseSystem Interface implementation.
-     */
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    Database createDatabase(UUID walletId) throws CantCreateDatabaseException {
+    Database createDatabase(UUID pluginId) throws CantCreateDatabaseException {
 
         Database database;
 
@@ -39,7 +36,7 @@ class WalletAddressBookDataBaseFactory implements DealsWithPluginDatabaseSystem
          */
         try {
 
-            database = this.pluginDatabaseSystem.createDatabase(walletId,WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_NAME);
+            database = this.pluginDatabaseSystem.createDatabase(pluginId, pluginId.toString());
 
         }
         catch (CantCreateDatabaseException cantCreateDatabaseException){
@@ -62,20 +59,24 @@ class WalletAddressBookDataBaseFactory implements DealsWithPluginDatabaseSystem
             /**
              * First the Address book table.
              */
-            table = ((DatabaseFactory) database).newTableFactory(walletId,WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_NAME);
+            table = ((DatabaseFactory) database).newTableFactory(pluginId, WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_NAME);
 
             table.addColumn(WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_ID, DatabaseDataType.STRING, 36,true);
 
-            table.addColumn(WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_ID_WALLET, DatabaseDataType.STRING, 36,false);
+            table.addColumn(WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_ID, DatabaseDataType.STRING, 36,false);
 
-            table.addColumn(WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS, DatabaseDataType.STRING,33,false);
+            table.addColumn(WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_TYPE, DatabaseDataType.STRING, 3,false);
+
+            table.addColumn(WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS, DatabaseDataType.STRING, 34 ,false);
+
+            table.addColumn(WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_CURRENCY, DatabaseDataType.STRING, 3,false);
 
             table.addColumn(WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_TIME_STAMP, DatabaseDataType.LONG_INTEGER,0,false);
 
-            table.addIndex(WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESSES_FIRST_KEY_COLUMN_NAME);
+            table.addIndex(WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESS_FIRST_KEY_COLUMN_NAME);
 
             try {
-                ((DatabaseFactory) database).createTable(walletId, table);
+                ((DatabaseFactory) database).createTable(pluginId, table);
             }
             catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException();
@@ -94,5 +95,14 @@ class WalletAddressBookDataBaseFactory implements DealsWithPluginDatabaseSystem
         }
 
         return database;
+    }
+
+
+    /**
+     * DealsWithPluginDatabaseSystem Interface implementation.
+     */
+    @Override
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 }
