@@ -5,6 +5,9 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
+import com.bitdubai.fermat_api.layer.dmp_transaction.incoming_crypto.Registry;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.ActorAddressBookManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -14,11 +17,13 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.Unexpect
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.DealsWithActorAddressBook;
+import com.bitdubai.fermat_cry_api.layer.crypto_router.CryptoRouterManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantInitializeCryptoRegistryException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantStartServiceException;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.interfaces.DealsWithRegistry;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.interfaces.TransactionAgent;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.interfaces.TransactionService;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.structure.IncomingCryptoEventRecorderService;
@@ -32,7 +37,7 @@ import java.util.UUID;
  * Created by loui on 18/03/15.
  * Modified by Arturo Vallone 25/04/2015
  */
-public class IncomingCryptoTransactionPluginRoot implements DealsWithActorAddressBook,DealsWithCryptoVault,DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem, Plugin, Service {
+public class IncomingCryptoTransactionPluginRoot implements CryptoRouterManager, DealsWithActorAddressBook,DealsWithCryptoVault,DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem, Plugin, Service {
 
     /*
      * DealsWithActorAddressBook member variables
@@ -57,7 +62,7 @@ public class IncomingCryptoTransactionPluginRoot implements DealsWithActorAddres
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
-    PluginDatabaseSystem pluginDatabaseSystem;
+    private PluginDatabaseSystem pluginDatabaseSystem;
 
 
     /**
@@ -106,19 +111,12 @@ public class IncomingCryptoTransactionPluginRoot implements DealsWithActorAddres
     }
 
     /**
-     * IncomingCryptoManager interface implementation.
-
+     * CryptoRouterManager interface implementation.
+     */
     @Override
-    public Registry getRegistry() {
+    public TransactionProtocolManager<CryptoTransaction> getTransactionManager(){
         return this.registry;
     }
-
-
-    @Override
-    public TransactionManager getTransactionManager() {
-        return (TransactionManager) this.registry;
-    }
-     */
 
     /**
      * Plugin interface implementation.
@@ -141,9 +139,9 @@ public class IncomingCryptoTransactionPluginRoot implements DealsWithActorAddres
         this.registry = new IncomingCryptoRegistry();
 
         try {
-            this.registry.initialize(this.pluginId);
             this.registry.setErrorManager(this.errorManager);
             this.registry.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+            this.registry.initialize(this.pluginId);
         }
         catch (CantInitializeCryptoRegistryException cantInitializeCryptoRegistryException) {
 
@@ -158,7 +156,9 @@ public class IncomingCryptoTransactionPluginRoot implements DealsWithActorAddres
         /**
          * I will start the Event Recorder.
          */
-        this.eventRecorder = new IncomingCryptoEventRecorderService(this.eventManager,this.registry);
+        this.eventRecorder = new IncomingCryptoEventRecorderService();
+        ((DealsWithEvents) this.eventRecorder).setEventManager(this.eventManager);
+        ((DealsWithRegistry) this.eventRecorder).setRegistry(this.registry);
 
         try {
             this.eventRecorder.start();
@@ -178,10 +178,10 @@ public class IncomingCryptoTransactionPluginRoot implements DealsWithActorAddres
         this.relay = new IncomingCryptoRelayAgent();
 
         try {
-            //((IncomingCryptoRelayAgent) this.relay).setPluginId(this.pluginId);
-            ((IncomingCryptoRelayAgent) this.relay).setRegistry(this.registry);
-            ((DealsWithErrors) this.relay).setErrorManager(this.errorManager);
             ((DealsWithActorAddressBook) this.relay).setUserAddressBookManager(this.actorAddressBook);
+            ((DealsWithErrors) this.relay).setErrorManager(this.errorManager);
+            ((DealsWithEvents) this.relay).setEventManager(this.eventManager);
+            ((DealsWithRegistry) this.relay).setRegistry(this.registry);
             this.relay.start();
         }
         catch (CantStartAgentException cantStartAgentException) {
@@ -204,10 +204,9 @@ public class IncomingCryptoTransactionPluginRoot implements DealsWithActorAddres
          */
         this.monitor = new IncomingCryptoMonitorAgent();
         try {
-            //((IncomingCryptoMonitorAgent) this.monitor).setPluginId(this.pluginId);
-            ((IncomingCryptoMonitorAgent) this.monitor).setRegistry(this.registry);
+            ((DealsWithCryptoVault) this.monitor).setCryptoVaultManager(this.cryptoVaultManager);
             ((DealsWithErrors) this.monitor).setErrorManager(this.errorManager);
-            // TODO: give this class the reference for the CryptoVault
+            ((DealsWithRegistry) this.monitor).setRegistry(this.registry);
             this.monitor.start();
         }
         catch (CantStartAgentException cantStartAgentException) {

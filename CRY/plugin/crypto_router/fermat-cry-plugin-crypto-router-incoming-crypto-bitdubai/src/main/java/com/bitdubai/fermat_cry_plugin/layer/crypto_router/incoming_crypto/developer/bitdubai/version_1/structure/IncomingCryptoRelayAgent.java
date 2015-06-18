@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.ActorAddressBookManager;
@@ -10,6 +12,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.Unexpect
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.DealsWithActorAddressBook;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.interfaces.DealsWithRegistry;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.interfaces.TransactionAgent;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.util.SpecialistSelector;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantSelectSpecialistException;
@@ -41,7 +44,13 @@ import java.util.List;
  */
 
 
-public class IncomingCryptoRelayAgent implements DealsWithErrors, DealsWithEvents, TransactionAgent, DealsWithActorAddressBook {
+public class IncomingCryptoRelayAgent implements DealsWithActorAddressBook , DealsWithErrors, DealsWithEvents, DealsWithRegistry , TransactionAgent {
+
+
+    /**
+     * DealsWithActorAddressBook Interface member variables.
+     */
+    private ActorAddressBookManager actorAddressBook;
 
     /**
      * DealsWithErrors Interface member variables.
@@ -51,14 +60,12 @@ public class IncomingCryptoRelayAgent implements DealsWithErrors, DealsWithEvent
     /**
      * DealsWithEvents Interface member variables.
      */
-    //private EventManager eventManager;
+    private EventManager eventManager;
 
     /**
-     * IncomingCryptoRelayAgent member variables.
+     * DealsWithRegistry Interface member variables.
      */
-    //private UUID pluginId;
     private IncomingCryptoRegistry registry;
-    private ActorAddressBookManager actorAddressBook;
 
 
     /**
@@ -66,6 +73,14 @@ public class IncomingCryptoRelayAgent implements DealsWithErrors, DealsWithEvent
      */
     private Thread agentThread;
     private RelayAgent relayAgent;
+
+    /**
+     * DealsWithActorAddressBook Interface implementation.
+     */
+    @Override
+    public void setUserAddressBookManager(ActorAddressBookManager actorAddressBook) {
+        this.actorAddressBook = actorAddressBook;
+    }
 
     /**
      *DealsWithErrors Interface implementation.
@@ -81,17 +96,14 @@ public class IncomingCryptoRelayAgent implements DealsWithErrors, DealsWithEvent
      */
     @Override
     public void setEventManager(EventManager eventManager) {
-        //this.eventManager = eventManager;
+        this.eventManager = eventManager;
     }
 
 
     /**
-     * IncomingCryptoRelayAgent methods.
-
-    public void setPluginId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }*/
-
+     * DealWithRegistry Interface implementation.
+     */
+    @Override
     public void setRegistry(IncomingCryptoRegistry registry) {
         this.registry = registry;
     }
@@ -105,8 +117,11 @@ public class IncomingCryptoRelayAgent implements DealsWithErrors, DealsWithEvent
 
         this.relayAgent = new RelayAgent ();
         try {
-            this.relayAgent.initialize(this.registry, this.actorAddressBook);
+            this.relayAgent.setUserAddressBookManager(this.actorAddressBook);
             this.relayAgent.setErrorManager(this.errorManager);
+            this.relayAgent.setEventManager(this.eventManager);
+            this.relayAgent.setRegistry(this.registry);
+            this.relayAgent.initialize();
 
             this.agentThread = new Thread(this.relayAgent);
             this.agentThread.start();
@@ -124,10 +139,6 @@ public class IncomingCryptoRelayAgent implements DealsWithErrors, DealsWithEvent
 
     }
 
-    @Override
-    public void setUserAddressBookManager(ActorAddressBookManager actorAddressBook) {
-        this.actorAddressBook = actorAddressBook;
-    }
     /*
       ¿Qué quizo hacer arturo acá?!
 
@@ -184,25 +195,45 @@ public class IncomingCryptoRelayAgent implements DealsWithErrors, DealsWithEvent
     }
     */
 
-    private static class RelayAgent implements DealsWithEvents, DealsWithErrors, Runnable  {
+    private static class RelayAgent implements DealsWithActorAddressBook , DealsWithErrors, DealsWithEvents, DealsWithRegistry , Runnable  {
 
-        /*
-         * DealsWithEvents Interface member variables
+        /**
+         * DealsWithActorAddressBook Interface member variables.
          */
-        private EventManager eventManager;
+        private ActorAddressBookManager actorAddressBook;
+
         /**
          * DealsWithErrors Interface member variables.
          */
         private ErrorManager errorManager;
 
         /**
-         * MonitorAgent member variables.
+         * DealsWithEvents Interface member variables.
          */
-        //private UUID pluginId;
+        private EventManager eventManager;
+
+        /**
+         * DealsWithRegistry Interface member variables.
+         */
         private IncomingCryptoRegistry registry;
+
+
+
+
         private SpecialistSelector specialistSelector;
+        private EventsLauncher eventsLauncher;
 
         private static final int SLEEP_TIME = 5000;
+
+
+
+        /**
+         * DealsWithActorAddressBook Interface implementation.
+         */
+        @Override
+        public void setUserAddressBookManager(ActorAddressBookManager actorAddressBook) {
+            this.actorAddressBook = actorAddressBook;
+        }
 
         /**
          *DealsWithErrors Interface implementation.
@@ -212,9 +243,10 @@ public class IncomingCryptoRelayAgent implements DealsWithErrors, DealsWithEvent
             this.errorManager = errorManager;
         }
 
-        /*
-        * DealsWithEvents interface implementation
-        */
+
+        /**
+         * DealWithEvents Interface implementation.
+         */
         @Override
         public void setEventManager(EventManager eventManager) {
             this.eventManager = eventManager;
@@ -222,11 +254,21 @@ public class IncomingCryptoRelayAgent implements DealsWithErrors, DealsWithEvent
 
 
         /**
+         * DealWithRegistry Interface implementation.
+         */
+        @Override
+        public void setRegistry(IncomingCryptoRegistry registry) {
+            this.registry = registry;
+        }
+
+
+        /**
          * MonitorAgent interface implementation.
          */
-        private void initialize (IncomingCryptoRegistry registry,ActorAddressBookManager actorAddressBook) {
-            //this.pluginId = pluginId;
-            this.registry = registry;
+        private void initialize () {
+            this.eventsLauncher = new EventsLauncher();
+            this.eventsLauncher.setEventManager(this.eventManager);
+
             this.specialistSelector = new SpecialistSelector();
             this.specialistSelector.setUserAddressBookManager(actorAddressBook);
         }
@@ -293,8 +335,15 @@ public class IncomingCryptoRelayAgent implements DealsWithErrors, DealsWithEvent
             Por cada Specialist registrado en el recorrido anterior lanza el evento correspondiente (IncomingCryptTransactionsWaitingTransferenceSpecalistEvent)
             */
             //
-            List<String> specialistList = this.registry.getSpecialists();
-            EventsLauncher.sendEvents(specialistList, this.eventManager);
+            List<Specialist> specialistList = null;
+            try {
+                specialistList = this.registry.getSpecialists();
+            } catch (InvalidParameterException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                return;
+            }
+
+            this.eventsLauncher.sendEvents(specialistList);
 
             //  Pasa cada transacción con ProtocolStatus TO_BE_NOTIFIED a SENDING_NOTIFED.
             this.registry.setToSendingNotified();

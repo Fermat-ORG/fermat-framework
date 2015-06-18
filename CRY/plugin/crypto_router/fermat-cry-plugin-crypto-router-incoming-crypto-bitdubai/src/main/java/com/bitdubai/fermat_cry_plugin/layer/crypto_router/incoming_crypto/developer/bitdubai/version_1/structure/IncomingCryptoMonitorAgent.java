@@ -7,12 +7,26 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.devel
 
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionSender;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventSource;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantReadEvent;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.interfaces.DealsWithRegistry;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.interfaces.TransactionAgent;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.util.SourceAdministrator;
+
+import java.util.List;
 
 /**
  * Este agente corre en su propio Thread.
@@ -30,27 +44,41 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.develo
  */
 
 
-public class IncomingCryptoMonitorAgent implements DealsWithErrors, TransactionAgent {
+public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsWithErrors, DealsWithRegistry, TransactionAgent {
+
+
+    /**
+     * DealsWithCryptoVault Interface member variables.
+     */
+    private CryptoVaultManager cryptoVaultManager;
 
     /**
      * DealsWithErrors Interface member variables.
      */
     ErrorManager errorManager;
 
-    /**
-     * IncomingCryptoMonitorAgent member variables.
-     */
-    //private UUID pluginId;
 
-    //TODO: Uncomment
-    //private IncomingCryptoRegistry registry;
-    //private SourceAdministrator sourceAdministrator = new SourceAdministrator();
-    
+    /**
+     * DealsWithRegistry Interface member variables.
+     */
+    private IncomingCryptoRegistry registry;
+
+
     /**
      * TransactionAgent Member Variables.
      */
     private Thread agentThread;
     private MonitorAgent monitorAgent;
+
+
+
+    /**
+     *DealsWithCryptoVault Interface implementation.
+     */
+    @Override
+    public void setCryptoVaultManager(CryptoVaultManager cryptoVaultManager) {
+        this.cryptoVaultManager = cryptoVaultManager;
+    }
 
     /**
      *DealsWithErrors Interface implementation.
@@ -60,18 +88,12 @@ public class IncomingCryptoMonitorAgent implements DealsWithErrors, TransactionA
         this.errorManager = errorManager;
     }
 
-
     /**
-     * IncomingCryptoMonitorAgent methods.
-
-    public void setPluginId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }*/
-
-
-     //TODO: uncomment
-      public void setRegistry(IncomingCryptoRegistry registry) {
-      //  this.registry = registry;
+     *DealsWithRegistry Interface implementation.
+     */
+    @Override
+    public void setRegistry(IncomingCryptoRegistry registry) {
+        this.registry = registry;
     }
 
 
@@ -85,9 +107,10 @@ public class IncomingCryptoMonitorAgent implements DealsWithErrors, TransactionA
 
         this.monitorAgent = new MonitorAgent ();
         try {
-            // TODO: Descomentar al tener la referencia a la vault
-            //this.monitorAgent.initialize(this.registry, this.sourceAdministrator);
             this.monitorAgent.setErrorManager(this.errorManager);
+            this.monitorAgent.setRegistry(this.registry);
+            this.monitorAgent.setCryptoVaultManager(this.cryptoVaultManager);
+            this.monitorAgent.initialize();
 
             this.agentThread = new Thread(this.monitorAgent);
             this.agentThread.start();
@@ -105,38 +128,45 @@ public class IncomingCryptoMonitorAgent implements DealsWithErrors, TransactionA
         this.agentThread.interrupt();
         
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    private static class MonitorAgent implements DealsWithErrors, Runnable  {
+
+
+
+
+    private static class MonitorAgent implements DealsWithCryptoVault, DealsWithErrors, DealsWithRegistry, Runnable  {
+
+        /**
+         * DealsWithCryptoVault Interface member variables.
+         */
+        private CryptoVaultManager cryptoVaultManager;
 
         /**
          * DealsWithErrors Interface member variables.
          */
         private ErrorManager errorManager;
 
-        /**
-         * MonitorAgent member variables.
-         */
-        // private UUID pluginId;
 
-        //private IncomingCryptoRegistry registry;
-        //private SourceAdministrator sourceAdministrator;
+        /**
+         * DealsWithRegistry Interface member variables.
+         */
+        private IncomingCryptoRegistry registry;
+
+
+        /*
+         * MonitorAgent member variables
+         */
+        private SourceAdministrator sourceAdministrator;
+
+
 
         private static final int SLEEP_TIME = 5000;
+
+        /**
+         *DealsWithCryptoVault Interface implementation.
+         */
+        @Override
+        public void setCryptoVaultManager(CryptoVaultManager cryptoVaultManager) {
+            this.cryptoVaultManager = cryptoVaultManager;
+        }
 
         /**
          *DealsWithErrors Interface implementation.
@@ -146,14 +176,20 @@ public class IncomingCryptoMonitorAgent implements DealsWithErrors, TransactionA
             this.errorManager = errorManager;
         }
 
+        /**
+         *DealsWithRegistry Interface implementation.
+         */
+        @Override
+        public void setRegistry(IncomingCryptoRegistry registry){
+            this.registry = registry;
+        }
 
         /**
          * MonitorAgent methods.
          */
-        private void initialize (IncomingCryptoRegistry registry, SourceAdministrator sourceAdministrator) {
-            //this.pluginId = pluginId;
-            //this.registry = registry;
-            //this.sourceAdministrator = sourceAdministrator;
+        private void initialize () {
+            this.sourceAdministrator = new SourceAdministrator();
+            this.sourceAdministrator.setCryptoVaultManager(this.cryptoVaultManager);
         }
 
         /**
@@ -193,11 +229,6 @@ public class IncomingCryptoMonitorAgent implements DealsWithErrors, TransactionA
         }
 
         private void doTheMainTask() {
-          // TODO: Borrar cuando tenga la referencia a la Bault...
-          errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception());
-
-          /*
-                TODO: We need the reference to crypto Vault in the SourceAdministrator class before uncommenting this
 
             IncomingCryptoRegistry.EventWrapper eventWrapper = null;
             try {
@@ -207,22 +238,24 @@ public class IncomingCryptoMonitorAgent implements DealsWithErrors, TransactionA
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantReadEvent);
             }
             if(eventWrapper != null){
+
                 // We have here new pending transactions, we will check the source and ask for the right
                 // TransactionSender
-
-
-
-                TransactionSender<CryptoTransaction> source = this.sourceAdministrator.getSourceAdministrator(eventWrapper.eventSource);
+              // TODO: UNCOMMENT
+              //  TransactionProtocolManager<CryptoTransaction> source = this.sourceAdministrator.getSourceAdministrator(EventSource.getByCode(eventWrapper.eventSource));
 
                 // Now we ask for the pending transactions
                 List<Transaction<CryptoTransaction>> transactionList = null;
+
+                /* TODO: UNCOMENT
                 try {
-                    transactionList = source.getPendingTransactions(Specialist.CRYPTO_ROUTER);
+                    transactionList = source.getPendingTransactions(Specialist.CRYPTO_ROUTER_SPECIALIST);
                 } catch (CantDeliverPendingTransactionsException e) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                     //if somethig wrong happenned we try in the next round
                     return;
                 }
+                 */
 
                 // Now we save the list in the registry
                 if(transactionList != null){
@@ -241,8 +274,11 @@ public class IncomingCryptoMonitorAgent implements DealsWithErrors, TransactionA
 
                 // An finally, for each transaction we confirm it and then register responsibility.
                 for(Transaction<CryptoTransaction> transaction : acknowledgedTransactions){
+
+                    /*
+                    TODO: UNCOMENT
                     try {
-                        source.confirmTransaction(transaction.getTransactionID());
+                        source.confirmReception(transaction.getTransactionID());
                         this.registry.acquireResponsibility(transaction);
                     } catch (CantConfirmTransactionException e) {
                         // TODO: Consultar si esto hace lo que pienso, si falla no registra en base de datos
@@ -250,6 +286,7 @@ public class IncomingCryptoMonitorAgent implements DealsWithErrors, TransactionA
                         // We will inform the exception and try again in the next round
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                     }
+                    */
                 }
                 // After finishing all the steps we mark the event as seen.
                 try {
@@ -258,7 +295,7 @@ public class IncomingCryptoMonitorAgent implements DealsWithErrors, TransactionA
                     // We will inform the exception and try again in the next round
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 }
-            }*/
+            }
         }
 
         

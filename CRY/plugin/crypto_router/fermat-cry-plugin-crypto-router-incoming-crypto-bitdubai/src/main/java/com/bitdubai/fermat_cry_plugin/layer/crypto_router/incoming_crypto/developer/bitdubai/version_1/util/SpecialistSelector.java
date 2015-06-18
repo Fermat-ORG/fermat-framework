@@ -19,7 +19,18 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.develo
  */
 public class SpecialistSelector implements DealsWithActorAddressBook {
 
+    /*
+     * DealsWithActorAddressBook Interface member variables
+     */
     private ActorAddressBookManager actorAddressBook;
+
+    /*
+     * DealsWithActorAddressBook Interface method implementation
+     */
+    @Override
+    public void setUserAddressBookManager(ActorAddressBookManager actorAddressBook) {
+        this.actorAddressBook = actorAddressBook;
+    }
 
     public Specialist getSpecialist(CryptoTransaction cryptoTransaction) throws CantSelectSpecialistException {
 
@@ -48,10 +59,4 @@ public class SpecialistSelector implements DealsWithActorAddressBook {
         throw new CantSelectSpecialistException();
 
     }
-
-    @Override
-    public void setUserAddressBookManager(ActorAddressBookManager actorAddressBook) {
-        this.actorAddressBook = actorAddressBook;
-    }
-
 }
