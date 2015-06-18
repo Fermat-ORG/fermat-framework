@@ -37,11 +37,11 @@ public class SpecialistSelector implements DealsWithActorAddressBook {
         if (user != null) {
             switch (user.getActorType()) {
                 case DEVICE_USER:
-                    return Specialist.DEVICE_USER;
+                    return Specialist.DEVICE_USER_SPECIALIST;
                 case INTRA_USER:
-                    return Specialist.INTRA_USER;
+                    return Specialist.INTRA_USER_SPECIALIST;
                 case EXTRA_USER:
-                    return Specialist.EXTRA_USER;
+                    return Specialist.EXTRA_USER_SPECIALIST;
             }
         }
         // Here we have a serious problem
