@@ -1,0 +1,6 @@
+Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: true
+OpenIDE-Module: fermat_jars
+OpenIDE-Module-Localizing-Bundle: fermat_jars/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+
