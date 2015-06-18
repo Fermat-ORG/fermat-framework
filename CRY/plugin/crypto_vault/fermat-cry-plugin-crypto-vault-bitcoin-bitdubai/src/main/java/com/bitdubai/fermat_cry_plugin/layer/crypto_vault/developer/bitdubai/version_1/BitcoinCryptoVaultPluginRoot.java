@@ -7,6 +7,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
@@ -16,8 +18,10 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWit
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventHandler;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventType;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantCreateCryptoWalletException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.event_handlers.BitcoinCoinsReceivedEventHandler;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.BitcoinCryptoVault;
 
 import org.bitcoinj.core.Wallet;
@@ -29,7 +33,7 @@ import java.util.UUID;
 /**
  * Created by loui on 08/06/15.
  */
-public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Service, DealsWithEvents, DealsWithErrors, Plugin {
+public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Service, DealsWithEvents, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Plugin {
 
     /**
      * BitcoinCryptoVaultPluginRoot member variables
@@ -59,15 +63,84 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Service
      */
     ErrorManager errorManager;
 
+    /**
+     * DealsWithPluginDatabaseSystem interface member variable
+     */
+    PluginDatabaseSystem pluginDatabaseSystem;
+
+    /**
+     * DealsWithPluginFileSystem interface member variable
+     */
+    PluginFileSystem pluginFileSystem;
+
+    /**
+     * Service interface implementation
+     * @return
+     */
+    @Override
+    public ServiceStatus getStatus() {
+        return this.serviceStatus;
+    }
+
+
+    /**
+     * DealWithEvents Interface implementation.
+     */
+
+    @Override
+    public void setEventManager(EventManager eventManager) {
+        this.eventManager = eventManager;
+    }
+
+    /**
+     *DealWithErrors Interface implementation.
+     */
+    @Override
+    public void setErrorManager(ErrorManager errorManager) {
+        this.errorManager = errorManager;
+    }
+
+    /**
+     * DealsWithPlugIndatabaseSystem interace implementation
+     * @param pluginDatabaseSystem
+     */
+    @Override
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+    }
+
+    /**
+     * DealsWithPluginIdentity methods implementation.
+     */
+
+    @Override
+    public void setId(UUID pluginId) {
+        this.pluginId = pluginId;
+    }
+
+    /**
+     * DealsWithPluginFileSystem interface implementation
+     * @param pluginFileSystem
+     */
+    @Override
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem = pluginFileSystem;
+    }
+
     @Override
     public void start() throws CantStartPluginException {
         /**
          * I will initialize the handling of com.bitdubai.platform events.
          */
-
         EventListener eventListener;
         EventHandler eventHandler;
 
+        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_IDENTIFIED);
+        eventHandler = new BitcoinCoinsReceivedEventHandler();
+        ((BitcoinCoinsReceivedEventHandler) eventHandler).setCryptoVaultManager(this);
+        eventListener.setEventHandler(eventHandler);
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);
 
         this.serviceStatus = ServiceStatus.STARTED;
 
@@ -76,6 +149,11 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Service
          */
         try {
             vault = new BitcoinCryptoVault(this.userId);
+            vault.setErrorManager(errorManager);
+            vault.setPluginDatabaseSystem(pluginDatabaseSystem);
+            vault.setPluginFileSystem(pluginFileSystem);
+            vault.setPluginId(pluginId);
+
             vault.loadOrCreateVault();
         } catch (CantCreateCryptoWalletException e) {
             /**
@@ -121,42 +199,6 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Service
         }
 
         listenersAdded.clear();
-    }
-
-    /**
-     * Service interface implementation
-     * @return
-     */
-    @Override
-    public ServiceStatus getStatus() {
-        return this.serviceStatus;
-    }
-
-
-    /**
-     * DealWithEvents Interface implementation.
-     */
-
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-    /**
-     *DealWithErrors Interface implementation.
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /**
-     * DealsWithPluginIdentity methods implementation.
-     */
-
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
     }
 
 
