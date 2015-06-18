@@ -28031,12 +28031,6 @@
       <workItem from="1434452426274" duration="799000" />
       <workItem from="1434461815229" duration="9497000" />
     </task>
-    <task id="LOCAL-00012" summary="osa android mdolules all refactored Part 2">
-      <created>1434290318476</created>
-      <option name="number" value="00012" />
-      <option name="project" value="LOCAL" />
-      <updated>1434290318476</updated>
-    </task>
     <task id="LOCAL-00013" summary="folder _others created and other stuff moved there">
       <created>1434290579351</created>
       <option name="number" value="00013" />
@@ -28325,7 +28319,13 @@
       <option name="project" value="LOCAL" />
       <updated>1434622486700</updated>
     </task>
-    <option name="localTasksCounter" value="61" />
+    <task id="LOCAL-00061" summary="minor changes&#10;">
+      <created>1434622773665</created>
+      <option name="number" value="00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1434622773665</updated>
+    </task>
+    <option name="localTasksCounter" value="62" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
