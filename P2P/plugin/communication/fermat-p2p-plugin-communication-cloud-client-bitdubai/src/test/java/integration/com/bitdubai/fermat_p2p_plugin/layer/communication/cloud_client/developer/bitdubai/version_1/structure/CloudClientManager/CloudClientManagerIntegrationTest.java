@@ -4,7 +4,6 @@ import static org.fest.assertions.api.Assertions.*;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
@@ -25,7 +24,6 @@ public abstract class CloudClientManagerIntegrationTest {
 	protected String testHost = "localhost";
 	protected Integer testBasePort = 10000;
 	protected CommunicationChannelAddress testAddress;
-	protected ExecutorService testExecutor = Executors.newFixedThreadPool(30);
 	
 	protected CloudServiceManager testServer;
 	protected CloudClientManager testClient;
@@ -56,7 +54,7 @@ public abstract class CloudClientManagerIntegrationTest {
 	}
 	
 	protected int getThreadSleepMillis(){
-		return 500;
+		return 1000;
 	}
 
 }
