@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 
 /**
  * Created by eze on 11/06/15.
@@ -8,16 +9,16 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 
 public class CryptoTransaction{
     private String transactionHash;
-    private String addressFrom;
-    private String addressTo;
+    private CryptoAddress addressFrom;
+    private CryptoAddress addressTo;
     private CryptoCurrency cryptoCurrency;
     private long cryptoAmount;
     private String cryptoStatus;
 
 
     public CryptoTransaction(String transactionHash,
-                             String addressFrom,
-                             String addressTo,
+                             CryptoAddress addressFrom,
+                             CryptoAddress addressTo,
                              CryptoCurrency cryptoCurrency,
                              long cryptoAmount,
                              String cryptoStatus) {
@@ -34,17 +35,15 @@ public class CryptoTransaction{
         return transactionHash;
     }
 
-    public String getAddressFrom() {
+    public CryptoAddress getAddressFrom() {
         return addressFrom;
     }
 
-    public String getAddressTo() {
+    public CryptoAddress getAddressTo() {
         return addressTo;
     }
 
-    public CryptoCurrency getCryptoCurrency() {
-        return cryptoCurrency;
-    }
+    public CryptoCurrency getCryptoCurrency() {return cryptoCurrency;}
 
     public long getCryptoAmount() {
         return cryptoAmount;

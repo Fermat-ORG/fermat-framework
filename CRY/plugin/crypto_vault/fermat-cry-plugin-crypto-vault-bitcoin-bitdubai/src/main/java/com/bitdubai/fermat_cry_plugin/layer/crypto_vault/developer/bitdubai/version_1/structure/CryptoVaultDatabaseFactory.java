@@ -41,8 +41,7 @@ class CryptoVaultDatabaseFactory implements DealsWithPluginDatabaseSystem{
 
             database = this.pluginDatabaseSystem.createDatabase(ownerId, walletId.toString());
 
-        }
-        catch (CantCreateDatabaseException cantCreateDatabaseException){
+        } catch (CantCreateDatabaseException cantCreateDatabaseException) {
 
             /**
              * I can not handle this situation.
@@ -56,41 +55,47 @@ class CryptoVaultDatabaseFactory implements DealsWithPluginDatabaseSystem{
         /**
          * Next, I will add the needed tables.
          */
-        try {
+        DatabaseTableFactory table;
 
-            DatabaseTableFactory table;
+        /**
+         * First the incoming crypto table.
+         */
+        table = ((DatabaseFactory) database).newTableFactory(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
+        table.addColumn(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, true);
+        table.addColumn(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, DatabaseDataType.STRING, 36, true);
+        table.addColumn(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME, DatabaseDataType.STRING, 40, false);
+        table.addColumn(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME, DatabaseDataType.STRING, 40, false);
+
+        try {
+            ((DatabaseFactory) database).createTable(table);
+        } catch (CantCreateTableException cantCreateTableException) {
+            System.err.println("CantCreateTableException: " + cantCreateTableException.getMessage());
+            cantCreateTableException.printStackTrace();
+            throw new CantCreateDatabaseException();
+        }
+
+        /**
+         * Next, I will add the needed tables.
+         */
+
+
+            DatabaseTableFactory table2;
 
             /**
              * First the incoming crypto table.
              */
-            table = ((DatabaseFactory) database).newTableFactory(ownerId, CryptoVaultDatabaseConstants.INCOMING_CRYPTO_TABLE_NAME);
-            table.addColumn(CryptoVaultDatabaseConstants.INCOMING_CRYPTO_TABLE_TRX_HASH_COLUMN_NAME, DatabaseDataType.STRING, 36,true);
-            table.addColumn(CryptoVaultDatabaseConstants.INCOMING_CRYPTO_TABLE_NOTIFICATION_STS_COLUMN_NAME, DatabaseDataType.STRING, 40,false);
+            table2 = ((DatabaseFactory) database).newTableFactory(CryptoVaultDatabaseConstants.FERMAT_TRANSACTIONS_TABLE_NAME);
+            table2.addColumn(CryptoVaultDatabaseConstants.FERMAT_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, true);
+
 
             try {
-                ((DatabaseFactory) database).createTable(ownerId, table);
-            }
-            catch (CantCreateTableException cantCreateTableException) {
+                ((DatabaseFactory) database).createTable(table);
+            } catch (CantCreateTableException cantCreateTableException) {
                 System.err.println("CantCreateTableException: " + cantCreateTableException.getMessage());
                 cantCreateTableException.printStackTrace();
                 throw new CantCreateDatabaseException();
             }
 
-
-
-
-        }
-        catch (InvalidOwnerId invalidOwnerId) {
-            /**
-             * This shouldn't happen here because I was the one who gave the owner id to the database file system,
-             * but anyway, if this happens, I can not continue.
-             * * *
-             */
-            System.err.println("InvalidOwnerId: " + invalidOwnerId.getMessage());
-            invalidOwnerId.printStackTrace();
-            throw new CantCreateDatabaseException();
-        }
-
         return database;
+        }
     }
-}

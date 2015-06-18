@@ -24,7 +24,7 @@ public class SpecialistSelector implements DealsWithActorAddressBook {
     public Specialist getSpecialist(CryptoTransaction cryptoTransaction) throws CantSelectSpecialistException {
 
         CryptoAddress cryptoAddress = new CryptoAddress();
-        cryptoAddress.setAddress(cryptoTransaction.getAddressFrom());
+        cryptoAddress.setAddress(cryptoTransaction.getAddressFrom().getAddress());
         cryptoAddress.setCryptoCurrency(cryptoTransaction.getCryptoCurrency());
 
         ActorAddressBook user = null;
