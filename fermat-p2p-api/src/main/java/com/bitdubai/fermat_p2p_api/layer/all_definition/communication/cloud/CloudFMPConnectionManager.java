@@ -1,10 +1,12 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud;
 
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.FMPPacketFactory;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.exceptions.CloudConnectionException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.CloudConnectionManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket.FMPPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacketHandler;
 
 import java.io.IOException;
@@ -16,7 +18,10 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Queue;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -38,10 +43,11 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 	protected ServerSocketChannel serverChannel;
 	protected SocketChannel clientChannel;
 	
-	protected Map<String, SelectionKey> unregisteredConnections = new ConcurrentHashMap<String, SelectionKey>();
-	protected Map<String, SelectionKey> registeredConnections = new ConcurrentHashMap<String, SelectionKey>();
+	protected final Map<String, SelectionKey> unregisteredConnections = new ConcurrentHashMap<String, SelectionKey>();
+	protected final Map<String, SelectionKey> registeredConnections = new ConcurrentHashMap<String, SelectionKey>();
+	protected final Queue<FMPPacket> pendingIncomingMessages = new ConcurrentLinkedQueue<FMPPacket>();
 	
-	private static final int SELECTOR_SELECT_TIMEOUT = 50;
+	private static final int SELECTOR_SELECT_TIMEOUT = 30;
 	private static final String CHARSET_NAME = "UTF-8";
 
 	public CloudFMPConnectionManager(final CommunicationChannelAddress address, final ExecutorService executor, final String privateKey, final String publicKey, final CloudFMPConnectionManagerMode mode) throws IllegalArgumentException{
@@ -153,11 +159,16 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 		try{
 			StringBuffer stringBuffer = new StringBuffer(new String(data, CHARSET_NAME));
 			if(!stringBuffer.toString().trim().isEmpty())
-				processDataPacket(stringBuffer.toString().trim(), key);			
+				processIncomingPacket(FMPPacketFactory.constructCloudPacket(stringBuffer.toString().trim()), key);
+							
 		} catch(UnsupportedEncodingException ex){
 			ex.printStackTrace();
+		} catch (FMPException e) {
+			e.printStackTrace();
 		}		
 	}
+	
+	
 
 	@Override
 	public void writeToKey(final SelectionKey key) throws CloudConnectionException{
@@ -197,7 +208,31 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 		return running.get();
 	}
 
-	public abstract void processDataPacket(final String data, final SelectionKey key) throws CloudConnectionException;
+	public void processDataPackets() throws CloudConnectionException {
+		try {
+			FMPPacket dataPacket = pendingIncomingMessages.remove();
+			if(dataPacket.getType() == FMPPacketType.CONNECTION_REQUEST)
+				handleConnectionRequest(dataPacket);
+			if(dataPacket.getType() == FMPPacketType.CONNECTION_ACCEPT)
+				handleConnectionAccept(dataPacket);
+			if(dataPacket.getType() == FMPPacketType.CONNECTION_ACCEPT_FORWARD)
+				handleConnectionAcceptForward(dataPacket);
+			if(dataPacket.getType() == FMPPacketType.CONNECTION_DENY)
+				handleConnectionDeny(dataPacket);
+			if(dataPacket.getType() == FMPPacketType.CONNECTION_REGISTER)
+				handleConnectionRegister(dataPacket);
+			if(dataPacket.getType() == FMPPacketType.CONNECTION_DEREGISTER)
+				handleConnectionDeregister(dataPacket);
+			if(dataPacket.getType() == FMPPacketType.CONNECTION_END)
+				handleConnectionEnd(dataPacket);
+			if(dataPacket.getType() == FMPPacketType.DATA_TRANSMIT)
+				handleDataTransmit(dataPacket);
+		}catch(FMPException ex){
+			throw new CloudConnectionException(ex.getMessage());
+		}catch(NoSuchElementException ex){
+			System.out.println(ex.getMessage());
+		}
+	}
 
 	@Override
 	public abstract void handleConnectionRequest(final FMPPacket packet) throws FMPException;
@@ -228,6 +263,7 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 		while(running.get()){
 			try{
 				iterateSelectedKeys(selector);
+				processDataPackets();
 			} catch(CloudConnectionException ex){
 				System.err.println(ex.getMessage());
 				//ex.printStackTrace();
@@ -280,6 +316,12 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 		} catch(IOException ex) {
 			throw new CloudConnectionException();
 		}
+	}
+	
+	private void processIncomingPacket(final FMPPacket packet, SelectionKey connection){
+		if(!registeredConnections.containsKey(packet.getSender()) && !unregisteredConnections.containsKey(packet.getSender()) && packet.getType() == FMPPacketType.CONNECTION_REQUEST)
+			unregisteredConnections.put(packet.getSender(), connection);
+		pendingIncomingMessages.add(packet);
 	}
 	
 	protected enum CloudFMPConnectionManagerMode{

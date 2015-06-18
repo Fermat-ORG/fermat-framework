@@ -1,6 +1,5 @@
 package unit.com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CloudFMPConnectionManager;
 
-import java.nio.channels.SelectionKey;
 import java.util.concurrent.ExecutorService;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CloudFMPConnectionManager;
@@ -70,10 +69,8 @@ public class MockCloudFMPConnectionManagerClient extends
 	}
 
 	@Override
-	public void processDataPacket(String data, SelectionKey key)
-			throws CloudConnectionException {
+	public void processDataPackets() throws CloudConnectionException {
 		// TODO Auto-generated method stub
-		
 	}
 
 }
