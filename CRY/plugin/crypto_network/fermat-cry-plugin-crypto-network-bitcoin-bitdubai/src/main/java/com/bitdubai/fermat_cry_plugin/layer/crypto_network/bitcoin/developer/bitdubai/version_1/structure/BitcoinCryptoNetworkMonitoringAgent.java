@@ -60,6 +60,33 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
     UUID pluginId;
 
     /**
+     * DealsWithErrors interface impplementation
+     * @param errorManager
+     */
+    @Override
+    public void setErrorManager(ErrorManager errorManager) {
+        this.errorManager = errorManager;
+    }
+
+    /**
+     * DealsWithPlugInFileSystem interface implementation
+     * @param pluginFileSystem
+     */
+    @Override
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem = pluginFileSystem;
+    }
+
+    /**
+     * DealsWithPluginIdentity interface implementation
+     * @param pluginId
+     */
+    @Override
+    public void setPluginId(UUID pluginId) {
+        this.pluginId = pluginId;
+    }
+
+    /**
      * constructor
      * @param wallet the BitcoinJ wallet that will be used to store the transactions and specify which
      *               addresses to monitore
@@ -71,7 +98,6 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
         this.networkParameters = BitcoinNetworkConfiguration.getNetworkConfiguration();
         peers = null;
     }
-
 
     /**
      * Agent interface implementation
@@ -146,6 +172,14 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
     }
 
     /**
+     * Used by the Vault when we want to send bitcoins.
+     * @return
+     */
+    public PeerGroup getPeers(){
+        return peers;
+    }
+
+    /**
      * return true if the service is running. It doest't mean we are connected. We might be without
      * internet access but the service still running.
      * @return
@@ -155,33 +189,6 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
             return false;
         else
          return peers.isRunning();
-    }
-
-    /**
-     * DealsWithErrors interface impplementation
-     * @param errorManager
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    /**
-     * DealsWithPlugInFileSystem interface implementation
-     * @param pluginFileSystem
-     */
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
-
-    /**
-     * DealsWithPluginIdentity interface implementation
-     * @param pluginId
-     */
-    @Override
-    public void setPluginId(UUID pluginId) {
-        this.pluginId = pluginId;
     }
 
 

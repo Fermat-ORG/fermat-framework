@@ -13,7 +13,7 @@ public class RegisteringAddressHasNotRequestedConnectionException extends
 	private static final String DEFAULT_MESSAGE = "Client Address Has Not Requested a Connection To This Service";
 	
 	public RegisteringAddressHasNotRequestedConnectionException(){
-		super(DEFAULT_MESSAGE);
+		this("");
 	}
 	
 	public RegisteringAddressHasNotRequestedConnectionException(final String message){

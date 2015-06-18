@@ -95,16 +95,11 @@ public class CloudFMPPacket implements FMPPacket {
 	@Override
 	public int hashCode() {
 		int c = 0;
-		if(sender != null)
-			c += sender.hashCode();
-		if(destination != null)
-			c+= destination.hashCode();
-		if(type != null)
-			c+= type.hashCode();
-		if(message != null)
-			c+= message.hashCode();
-		if(signature != null)
-			c+= signature.hashCode();
+		c += sender.hashCode();
+		c+= destination.hashCode();
+		c+= type.hashCode();
+		c+= message.hashCode();
+		c+= signature.hashCode();
 		return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
 	}
 

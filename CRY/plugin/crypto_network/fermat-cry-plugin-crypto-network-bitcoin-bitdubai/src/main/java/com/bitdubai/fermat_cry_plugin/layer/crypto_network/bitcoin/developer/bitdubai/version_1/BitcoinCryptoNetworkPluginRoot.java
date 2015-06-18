@@ -103,6 +103,6 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManag
 
     @Override
     public Object getBroadcasters() {
-        return null; // TODO Rodrigo: Agregue esto para que me compile -- Luis
+        return bitcoinCryptoNetworkMonitoringAgent.getPeers();
     }
 }

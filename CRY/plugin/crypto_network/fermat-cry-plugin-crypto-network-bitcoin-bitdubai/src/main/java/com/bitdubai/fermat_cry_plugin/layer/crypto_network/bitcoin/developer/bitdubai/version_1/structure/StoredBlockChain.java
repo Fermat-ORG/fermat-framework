@@ -58,6 +58,32 @@ class StoredBlockChain implements BitcoinManager, DealsWithErrors, DealsWithPlug
      */
     UUID pluginId;
 
+    /**
+     * ErrorManager interface implementation
+     * @param errorManager
+     */
+    @Override
+    public void setErrorManager(ErrorManager errorManager) {
+        this.errorManager = errorManager;
+    }
+
+    /**
+     * DealsWithPluginFileSystem interface implementation
+     * @param pluginFileSystem
+     */
+    @Override
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem = pluginFileSystem;
+    }
+
+    /**
+     * DealsWithPluginIdentity interface implementation
+     * @param pluginId
+     */
+    @Override
+    public void setPluginId(UUID pluginId) {
+        this.pluginId = pluginId;
+    }
 
     /**
      * constructor
@@ -65,7 +91,6 @@ class StoredBlockChain implements BitcoinManager, DealsWithErrors, DealsWithPlug
      * @param UserID The if of the user requesting the syncronization
      * @throws CantInitializeMonitorAgentException
      */
-
     public StoredBlockChain (Wallet wallet, UUID UserID) throws CantInitializeMonitorAgentException {
         this.networkParameters = getNetworkConfiguration();
         this.wallet = wallet;
@@ -105,32 +130,7 @@ class StoredBlockChain implements BitcoinManager, DealsWithErrors, DealsWithPlug
 
     }
 
-    /**
-     * ErrorManager interface implementation
-     * @param errorManager
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
 
-    /**
-     * DealsWithPluginFileSystem interface implementation
-      * @param pluginFileSystem
-     */
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-     this.pluginFileSystem = pluginFileSystem;
-    }
-
-    /**
-     * DealsWithPluginIdentity interface implementation
-     * @param pluginId
-     */
-    @Override
-    public void setPluginId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
 
     /**
      * StoredBlockChain getter

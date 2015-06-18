@@ -33,12 +33,6 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
     Database database;
     CryptoVaultDatabaseActions dbActions;
 
-
-    VaultEventListeners (Database database){
-        this.database = database;
-        dbActions = new CryptoVaultDatabaseActions(this.database);
-    }
-
     /**
      * DealsWithEvents interface implmentation
      * @param eventManager
@@ -48,6 +42,16 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
         this.eventManager = eventManager;
     }
 
+    /**
+     * Constructor
+     * @param database
+     */
+    VaultEventListeners (Database database){
+        this.database = database;
+        dbActions = new CryptoVaultDatabaseActions(this.database);
+    }
+
+
     @Override
     public void onCoinsReceived(Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance) {
         /**
@@ -56,20 +60,20 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
             dbActions.saveIncomingTransaction(tx.getHashAsString());
 
         /**
-         * once saved, I notify the platform event
+         * once saved, I notify the platform event that we have recieved money
          */
         //todo add platforn event of coins received event
     }
 
     @Override
     public void onCoinsSent(Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance) {
-
+//todo completar
     }
 
     @Override
     public void onTransactionConfidenceChanged(Wallet wallet, Transaction tx) {
         TransactionConfidence txConfidence = tx.getConfidence();
-
+//todo completar
 
     }
 }

@@ -12,7 +12,7 @@ public class WrongFMPPacketEncryptionException extends FMPException {
 	
 	
 	public WrongFMPPacketEncryptionException(){
-		super(DEFAULT_MESSAGE);
+		this("");
 	}
 	
 	public WrongFMPPacketEncryptionException(final String message){
