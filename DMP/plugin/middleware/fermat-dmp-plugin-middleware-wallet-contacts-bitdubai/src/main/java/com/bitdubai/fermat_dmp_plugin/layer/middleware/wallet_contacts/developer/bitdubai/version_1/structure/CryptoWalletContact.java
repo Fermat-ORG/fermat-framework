@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.WalletContact;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.pip_user.UserTypes;
 
 import java.util.UUID;
 
@@ -24,14 +24,8 @@ public class CryptoWalletContact implements WalletContact {
     UUID contactId;
 
     /**
-     * Represent the deliveredCryptoAddress
-     * address that the system gives to another user to send this wallet money
-     */
-    CryptoAddress deliveredCryptoAddress;
-
-    /**
      * Represent the receivedCryptoAddress
-     * address that the system gives to another user to send this wallet money
+     * address that the system gives to another actor to send this wallet money
      */
     CryptoAddress receivedCryptoAddress;
 
@@ -41,19 +35,19 @@ public class CryptoWalletContact implements WalletContact {
     UUID walletId;
 
     /**
-     * Represent the userId
+     * Represent the actorId
      */
-    UUID userId;
+    UUID actorId;
 
     /**
-     * Represent the userName
+     * Represent the actorName
      */
-    String userName;
+    String actorName;
 
     /**
-     * Represent the userType
+     * Represent the actorType
      */
-    UserTypes userType;
+    Actors actorType;
 
 
     /**
@@ -61,32 +55,30 @@ public class CryptoWalletContact implements WalletContact {
      *
      * @param contactId contact's id
      * @param receivedCryptoAddress contact's cryptoAddress (address + cryptoCurrency)
-     * @param userName user's id
+     * @param actorName actor's id
      */
-    public CryptoWalletContact(UUID contactId, CryptoAddress receivedCryptoAddress, String userName) {
+    public CryptoWalletContact(UUID contactId, CryptoAddress receivedCryptoAddress, String actorName) {
         this.contactId = contactId;
         this.receivedCryptoAddress = receivedCryptoAddress;
-        this.userName = userName;
+        this.actorName = actorName;
     }
 
     /**
      * Constructor with parameters
      *
      * @param contactId contact's id
-     * @param deliveredCryptoAddress contact's cryptoAddress (address + cryptoCurrency)
      * @param receivedCryptoAddress contact's cryptoAddress (address + cryptoCurrency)
-     * @param userId user's id
-     * @param userName user's id
-     * @param userType user's type
+     * @param actorId actor's id
+     * @param actorName actor's id
+     * @param actorType actor's type
      * @param walletId wallet's id
      */
-    public CryptoWalletContact(UUID contactId, CryptoAddress deliveredCryptoAddress, CryptoAddress receivedCryptoAddress, UUID userId, String userName, UserTypes userType, UUID walletId) {
+    public CryptoWalletContact(UUID actorId, String actorName, Actors actorType, UUID contactId, CryptoAddress receivedCryptoAddress, UUID walletId) {
+        this.actorId = actorId;
+        this.actorName = actorName;
+        this.actorType = actorType;
         this.contactId = contactId;
-        this.deliveredCryptoAddress = deliveredCryptoAddress;
         this.receivedCryptoAddress = receivedCryptoAddress;
-        this.userId = userId;
-        this.userName = userName;
-        this.userType = userType;
         this.walletId = walletId;
 
     }
@@ -102,16 +94,6 @@ public class CryptoWalletContact implements WalletContact {
     }
 
     /**
-     * Set the contactId
-     *
-     * @param contactId contact's id
-     */
-    @Override
-    public void setContactId(UUID contactId) {
-        this.contactId = contactId;
-    }
-
-    /**
      * Return the walletId
      *
      * @return UUID
@@ -122,53 +104,13 @@ public class CryptoWalletContact implements WalletContact {
     }
 
     /**
-     * Set the walletId
+     * Return the actorType
      *
-     * @param walletId wallet's id
+     * @return Actors
      */
     @Override
-    public void setWalletId(UUID walletId) {
-        this.walletId = walletId;
-    }
-
-    /**
-     * Return the userType
-     *
-     * @return UserTypes
-     */
-    @Override
-    public UserTypes getUserType() {
-        return userType;
-    }
-
-    /**
-     * Set the userType
-     *
-     * @param userType user's type
-     */
-    @Override
-    public void setUserType(UserTypes userType) {
-        this.userType = userType;
-    }
-
-    /**
-     * Return the deliveredCryptoAddress
-     *
-     * @return CryptoAddress
-     */
-    @Override
-    public CryptoAddress getDeliveredCryptoAddress() {
-        return deliveredCryptoAddress;
-    }
-
-    /**
-     * Set the deliveredCryptoAddress
-     *
-     * @param deliveredCryptoAddress contact's cryptoAddress (address + cryptoCurrency)
-     */
-    @Override
-    public void setDeliveredCryptoAddress(CryptoAddress deliveredCryptoAddress) {
-        this.deliveredCryptoAddress = deliveredCryptoAddress;
+    public Actors getActorType() {
+        return actorType;
     }
 
     /**
@@ -182,52 +124,22 @@ public class CryptoWalletContact implements WalletContact {
     }
 
     /**
-     * Set the receivedCryptoAddress
-     *
-     * @param receivedCryptoAddress contact's cryptoAddress (address + cryptoCurrency)
-     */
-    @Override
-    public void setReceivedCryptoAddress(CryptoAddress receivedCryptoAddress) {
-        this.receivedCryptoAddress = receivedCryptoAddress;
-    }
-
-    /**
-     * Return the userId
+     * Return the actorId
      *
      * @return UUID
      */
     @Override
-    public UUID getUserId() {
-        return userId;
+    public UUID getActorId() {
+        return actorId;
     }
 
     /**
-     * Set the userId
-     *
-     * @param userId user's id
-     */
-    @Override
-    public void setUserId(UUID userId) {
-        this.userId = userId;
-    }
-
-    /**
-     * Return the userName
+     * Return the actorName
      *
      * @return String
      */
     @Override
-    public String getUserName() {
-        return userName;
-    }
-
-    /**
-     * Set the userName
-     *
-     * @param userName user's name
-     */
-    @Override
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public String getActorName() {
+        return actorName;
     }
 }
