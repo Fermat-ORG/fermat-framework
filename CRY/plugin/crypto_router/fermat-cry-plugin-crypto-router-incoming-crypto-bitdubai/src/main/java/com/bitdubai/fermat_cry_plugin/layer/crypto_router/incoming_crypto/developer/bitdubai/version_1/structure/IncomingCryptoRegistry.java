@@ -6,9 +6,12 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -65,7 +68,7 @@ import java.util.UUID;
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  */
 
-public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginDatabaseSystem {
+public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginDatabaseSystem, TransactionProtocolManager<CryptoTransaction> {
 
     /**
      * DealsWithErrors Interface member variables.
@@ -303,7 +306,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
                 // if it is empty this is a new transaction
                 // If it is a new transaction we save it as usual
                 DatabaseTableRecord transactionRecord = registryTable.getEmptyRecord();
-                fillRegistryTableRecord(transactionRecord, transaction, TransactionStatus.ACKNOWLEDGED, ProtocolStatus.TO_BE_NOTIFIED, Specialist.UNKNOWN);
+                fillRegistryTableRecord(transactionRecord, transaction, TransactionStatus.ACKNOWLEDGED, ProtocolStatus.TO_BE_NOTIFIED, Specialist.UNKNOWN_SPECIALIST);
                 try {
                     registryTable.insertRecord(transactionRecord);
                 } catch (CantInsertRecord cantInsertRecord) {
@@ -532,13 +535,13 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
     }
 
     /*
-     * TransactionSender interface implementation
+     * TransactionProtocolManager interface implementation
      */
 
     /*
      * El método confirmedReception marca la transacción marcada como argumento como (DELIVERED,RECEPTION_NOTIFIED).
      */
-    public void confirmReception(UUID transactionId){
+    public void confirmReception(UUID transactionId) throws CantConfirmTransactionException {
 
         DatabaseTable registryTable = this.database.getTable(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NAME);
         registryTable.setUUIDFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ID_COLUMN.columnName, transactionId, DatabaseFilterType.EQUAL);
@@ -573,6 +576,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
                 registryTable.updateRecord(recordToUpdate);
             } catch (CantUpdateRecord cantUpdateRecord) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantUpdateRecord);
+                throw new CantConfirmTransactionException();
                 // TODO: MANAGE EXCEPTION.
             }
 
@@ -584,7 +588,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
     /*
      *  El método getPendingTransactions retorna la lista de todas las transacciones con ProtocolStatus SENDING_NOTIFIED que tienen como Specialist al pasado como argumento. Notar que no camba el estado de ninguna transacción.
      */
-    public List<Transaction<CryptoTransaction>> getPendingTransactions(Specialist specialist){
+    public List<Transaction<CryptoTransaction>> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
 
         DatabaseTable registryTable = this.database.getTable(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NAME);
         registryTable.setStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName,ProtocolStatus.SENDING_NOTIFIED.name(),DatabaseFilterType.EQUAL);
@@ -594,7 +598,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
             registryTable.loadToMemory();
         } catch (CantLoadTableToMemory cantLoadTableToMemory) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
-            //TODO: MANAGE EXCEPTION
+            throw new CantDeliverPendingTransactionsException();//TODO: MANAGE EXCEPTION
         }
 
 
@@ -638,7 +642,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
     private Transaction<CryptoTransaction> getTransactionFromRecord(DatabaseTableRecord databaseTableRecord){
         CryptoAddress cryptoAddressFrom = new CryptoAddress();
         cryptoAddressFrom.setAddress(databaseTableRecord.getStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ADDRESS_FROM_COLUMN.columnName));
-        cryptoAddressFrom.setCryptoCurrency(CryptoCurrency.BITCOIN);
+        cryptoAddressFrom.setCryptoCurrency(CryptoCurrency.getByCode(databaseTableRecord.getStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_CRYPTO_CURRENCY_COLUMN.columnName)));
         CryptoAddress cryptoAddressTo = new CryptoAddress();
         cryptoAddressTo.setAddress(databaseTableRecord.getStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ADDRESS_TO_COLUMN.columnName));
         cryptoAddressTo.setCryptoCurrency(CryptoCurrency.BITCOIN);
