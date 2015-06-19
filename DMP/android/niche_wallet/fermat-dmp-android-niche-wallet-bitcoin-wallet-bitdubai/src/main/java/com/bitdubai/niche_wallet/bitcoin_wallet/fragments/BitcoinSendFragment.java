@@ -11,9 +11,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.niche_wallet.bitcoin_wallet.Platform;
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
-import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.NicheWalletTypeCryptoWalletManager;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
 
 /**
  * Created by Natalia on 02/06/2015.
@@ -50,7 +51,7 @@ public class BitcoinSendFragment extends Fragment {
     /**
      * DealsWithNicheWalletTypeCryptoWallet Interface member variables.
      */
-    private static NicheWalletTypeCryptoWalletManager cryptoWalletManager;
+    private static CryptoWalletManager cryptoWalletManager;
     private static Platform platform = new Platform();
 
 
