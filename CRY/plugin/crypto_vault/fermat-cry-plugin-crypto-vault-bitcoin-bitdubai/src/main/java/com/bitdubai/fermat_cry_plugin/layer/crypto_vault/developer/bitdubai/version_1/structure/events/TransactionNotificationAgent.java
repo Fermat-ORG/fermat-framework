@@ -234,7 +234,7 @@ public class TransactionNotificationAgent implements Agent, DealsWithErrors, Dea
 
         private boolean isTransactionToBeNotified() {
             CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database);
-            
+            //todo llamar al evento que verifica si existen datos a reportar.
             return false;
         }
     }
