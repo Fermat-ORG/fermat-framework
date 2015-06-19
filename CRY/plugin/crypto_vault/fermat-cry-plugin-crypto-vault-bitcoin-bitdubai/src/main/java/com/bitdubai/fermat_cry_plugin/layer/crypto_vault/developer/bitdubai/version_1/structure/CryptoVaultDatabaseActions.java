@@ -157,5 +157,5 @@ public class CryptoVaultDatabaseActions {
         return ProtocolStatus.valueOf(currentStatus.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME));
     }
 
-    public
+    
 }
