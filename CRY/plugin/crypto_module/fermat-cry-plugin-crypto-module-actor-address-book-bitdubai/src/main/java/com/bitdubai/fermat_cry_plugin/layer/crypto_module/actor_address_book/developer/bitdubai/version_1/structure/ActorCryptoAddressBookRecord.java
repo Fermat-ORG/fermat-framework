@@ -2,7 +2,7 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.de
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.ActorAddressBook;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookRecord;
 
 import java.util.UUID;
 
@@ -13,10 +13,10 @@ import java.util.UUID;
 /**
  * This class manages the relationship between actors and crypto addresses by storing them on a Database Table.
  */
-public class ActorAddressBookRegistry implements ActorAddressBook {
+public class ActorCryptoAddressBookRecord implements ActorAddressBookRecord {
 
     /**
-     * ActorAddressBook Interface member variables.
+     * ActorAddressBookRecord Interface member variables.
      */
     private UUID actorId ;
     private Actors actorType;
@@ -26,7 +26,7 @@ public class ActorAddressBookRegistry implements ActorAddressBook {
     /**
      * Constructor.
      */
-    public ActorAddressBookRegistry(UUID actorId, Actors actorType, CryptoAddress cryptoAddress){
+    public ActorCryptoAddressBookRecord(UUID actorId, Actors actorType, CryptoAddress cryptoAddress){
         /**
          * Set actor settings.
          */

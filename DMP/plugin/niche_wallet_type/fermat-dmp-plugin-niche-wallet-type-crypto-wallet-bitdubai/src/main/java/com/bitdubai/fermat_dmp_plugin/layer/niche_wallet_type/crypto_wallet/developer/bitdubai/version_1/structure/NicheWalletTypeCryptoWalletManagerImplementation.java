@@ -14,7 +14,8 @@ import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.excepti
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantSendCryptoException;
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.DealsWithOutgoingExtraUser;
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.OutgoingExtraUserManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.ActorAddressBookManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookRegistry;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.DealsWithWalletContacts;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.WalletContact;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.WalletContactsManager;
@@ -32,7 +33,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.Unexpect
 import com.bitdubai.fermat_api.layer.pip_user.User;
 import com.bitdubai.fermat_api.layer.pip_user.extra_user.DealsWithExtraUsers;
 import com.bitdubai.fermat_api.layer.pip_user.extra_user.ExtraUserManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.DealsWithActorAddressBook;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.DealsWithActorAddressBook;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.DealsWithWalletAddressBook;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookRegistry;
@@ -173,7 +174,8 @@ public class NicheWalletTypeCryptoWalletManagerImplementation implements DealsWi
             }
 
             try {
-                actorAddressBookManager.registerActorAddressBook(actorId, actorType, cryptoAddress);
+                ActorAddressBookRegistry actorAddressBookRegistry = actorAddressBookManager.getActorAddressBookRegistry();
+                actorAddressBookRegistry.registerActorAddressBook(actorId, actorType, cryptoAddress);
             } catch (Exception e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantCreateOrRegisterActorException();
@@ -265,7 +267,7 @@ public class NicheWalletTypeCryptoWalletManagerImplementation implements DealsWi
      * DealsWithActorAddressBook Interface implementation.
      */
     @Override
-    public void setUserAddressBookManager(ActorAddressBookManager actorAddressBookManager) {
+    public void setActorAddressBookManager(ActorAddressBookManager actorAddressBookManager) {
         this.actorAddressBookManager = actorAddressBookManager;
     }
 
