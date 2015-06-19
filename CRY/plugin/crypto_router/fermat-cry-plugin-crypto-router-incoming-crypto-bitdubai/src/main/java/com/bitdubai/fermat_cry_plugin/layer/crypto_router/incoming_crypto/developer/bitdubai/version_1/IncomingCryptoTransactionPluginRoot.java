@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.dmp_transaction.incoming_crypto.Registry;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.ActorAddressBookManager;
+//import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.ActorAddressBookManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
@@ -16,7 +16,8 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorMan
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.DealsWithActorAddressBook;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.DealsWithActorAddressBook;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_router.CryptoRouterManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
@@ -178,7 +179,7 @@ public class IncomingCryptoTransactionPluginRoot implements CryptoRouterManager,
         this.relay = new IncomingCryptoRelayAgent();
 
         try {
-            ((DealsWithActorAddressBook) this.relay).setUserAddressBookManager(this.actorAddressBook);
+            ((DealsWithActorAddressBook) this.relay).setActorAddressBookManager(this.actorAddressBook);
             ((DealsWithErrors) this.relay).setErrorManager(this.errorManager);
             ((DealsWithEvents) this.relay).setEventManager(this.eventManager);
             ((DealsWithRegistry) this.relay).setRegistry(this.registry);
@@ -259,7 +260,7 @@ public class IncomingCryptoTransactionPluginRoot implements CryptoRouterManager,
     }
 
     @Override
-    public void setUserAddressBookManager(ActorAddressBookManager actorAddressBook) {
+    public void setActorAddressBookManager(ActorAddressBookManager actorAddressBook) {
         this.actorAddressBook = actorAddressBook;
     }
 
