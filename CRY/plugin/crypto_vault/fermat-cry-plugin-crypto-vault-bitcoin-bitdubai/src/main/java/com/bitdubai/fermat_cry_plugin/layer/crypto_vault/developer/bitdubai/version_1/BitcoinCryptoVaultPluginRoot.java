@@ -24,6 +24,7 @@ import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.event_handlers.BitcoinCoinsReceivedEventHandler;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.BitcoinCryptoVault;
 
+import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.Wallet;
 
 import java.util.ArrayList;
@@ -253,7 +254,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Service
     }
 
     @Override
-    public void sendBitcoins(UUID walletId, UUID FermatTrId, CryptoAddress addressTo, long satothis) {
+    public void sendBitcoins(UUID walletId, UUID FermatTrId, CryptoAddress addressTo, long satothis) throws com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException{
         vault.sendBitcoins(FermatTrId, addressTo, satothis);
     }
 }

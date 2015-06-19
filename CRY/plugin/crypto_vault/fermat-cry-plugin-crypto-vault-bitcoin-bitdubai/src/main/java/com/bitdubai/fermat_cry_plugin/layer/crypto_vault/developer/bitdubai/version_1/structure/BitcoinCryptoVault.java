@@ -310,7 +310,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
     }
 
 
-    public String sendBitcoins(UUID FermatTxId, CryptoAddress addressTo, long amount){
+    public String sendBitcoins(UUID FermatTxId, CryptoAddress addressTo, long amount) throws com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException{
         /**
          * if the transaction was requested before but resend my mistake, Im not going to send it again
          */
@@ -342,9 +342,13 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         try {
             vault.completeTx(request);
         } catch (InsufficientMoneyException e) {
-            //todo handle this
-            e.printStackTrace();
+            /**
+             * this shouldn't happen because the money is checked by previois modules, but if it does...
+             */
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException();
         }
+
 
         /**
          * I commit the transaction locally and save the vault

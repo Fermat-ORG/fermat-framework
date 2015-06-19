@@ -157,5 +157,20 @@ public class CryptoVaultDatabaseActions {
         return ProtocolStatus.valueOf(currentStatus.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME));
     }
 
-    
+    /**
+     * will return true if there are transactions in NO_BE_NOTIFIED status
+     * @return
+     */
+    public boolean isPendingTransactions(){
+        DatabaseTable cryptoTxTable;
+        cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
+        cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME,ProtocolStatus.TO_BE_NOTIFIED.toString() ,DatabaseFilterType.EQUAL);
+
+        if (!cryptoTxTable.getRecords().isEmpty())
+            return false;
+        else
+            return true;
+
+    }
+
 }
