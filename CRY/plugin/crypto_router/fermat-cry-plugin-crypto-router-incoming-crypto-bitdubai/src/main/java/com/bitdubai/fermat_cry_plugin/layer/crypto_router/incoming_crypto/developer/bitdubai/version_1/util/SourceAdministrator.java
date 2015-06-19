@@ -25,9 +25,8 @@ public class SourceAdministrator implements DealsWithCryptoVault {
     this.cryptoVaultManager = cryptoVaultManager;
   }
 
-  /*
   public TransactionProtocolManager<CryptoTransaction> getSourceAdministrator(EventSource eventSource){
         // This method will select the correct sender according to the specified source,
         return cryptoVaultManager.getTransactionManager();
-    }*/
+  }
 }

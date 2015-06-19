@@ -1,60 +1,188 @@
 package com.bitdubai.fermat_api.layer.pip_platform_service.event_manager;
 
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+
 /**
  * Created by ciencias on 24.01.15.
  */
 public enum EventType {
 
-    DEVICE_USER_CREATED,
-    DEVICE_USER_LOGGED_IN,
-    DEVICE_USER_LOGGED_OUT,
-    INTRA_USER_LOGGED_IN,
-    INTRA_USER_LOGGED_OUT,
-    INTRA_USER_CONTACT_CREATED,
-    INCOMING_NETWORK_SERVICE_CONNECTION_REQUEST,
+    DEVICE_USER_CREATED("DUC"),
+    DEVICE_USER_LOGGED_IN ("DLI"),
+    DEVICE_USER_LOGGED_OUT ("DLO"),
+    INTRA_USER_LOGGED_IN ("ILI"),
+    INTRA_USER_LOGGED_OUT ("ILO"),
+    INTRA_USER_CONTACT_CREATED ("ICC"),
+    INCOMING_NETWORK_SERVICE_CONNECTION_REQUEST ("NCR"),
 
-    WALLET_CREATED, 
-    WALLET_WENT_ONLINE, 
-    WALLET_INSTALLED, 
-    BEGUN_WALLET_INSTALLATION, 
-    WALLET_UNINSTALLED, 
-    WALLET_CLOSED, 
-    WALLET_OPENED,
-    WALLET_RESOURCES_INSTALLED,
-    NAVIGATION_STRUCTURE_UPDATED,
-    MONEY_RECEIVED, 
-    FINISHED_WALLET_INSTALLATION,
+    WALLET_CREATED ("WC1"),
+    WALLET_WENT_ONLINE ("WWO"),
+    WALLET_INSTALLED ("WI1"),
+    BEGUN_WALLET_INSTALLATION ("BWI"),
+    WALLET_UNINSTALLED ("WU1"),
+    WALLET_CLOSED ("WC2"),
+    WALLET_OPENED ("WO1"),
+    WALLET_RESOURCES_INSTALLED ("WRI"),
+    NAVIGATION_STRUCTURE_UPDATED ("NSU"),
+    MONEY_RECEIVED ("MR1"),
+    FINISHED_WALLET_INSTALLATION ("FWI"),
 
-    INCOMING_CRYPTO_RECEIVED,
-    INCOMING_CRYPTO_RECEPTION_CONFIRMED,
-    INCOMING_CRYPTO_REVERSED,
-    INCOMING_CRYPTO_IDENTIFIED,
-    INCOMING_CRYPTO_IDENTIFIED_FROM_EXTRA_USER,
-    INCOMING_CRYPTO_IDENTIFIED_FROM_INTRA_USER,
-    INCOMING_CRYPTO_IDENTIFIED_FROM_DEVICE_USER,
-    INCOMING_CRYPTO_RECEIVED_FROM_EXTRA_USER,
-    INCOMING_CRYPTO_RECEIVED_FROM_INTRA_USER,
-    INCOMING_CRYPTO_RECEIVED_FROM_DEVICE_USER,
-    INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_EXTRA_USER,
-    INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_INTRA_USER,
-    INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_DEVICE_USER,
-    INCOMING_CRYPTO_REVERSED_FROM_EXTRA_USER,
-    INCOMING_CRYPTO_REVERSED_FROM_INTRA_USER,
-    INCOMING_CRYPTO_REVERSED_FROM_DEVICE_USER,
+    INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE ("TWT"),
+    INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE_EXTRA_USER ("TWE"),
 
-    INCOMING_MONEY_REQUEST_RECEIVED,
-    OUTGOING_MONEY_REQUEST_DELIVERED,
-    OUTGOING_MONEY_REQUEST_APPROVED,
-    OUTGOING_MONEY_REQUEST_REJECTED,
-    INCOMING_MONEY_REQUEST_APPROVED,
-    INCOMING_MONEY_REQUEST_REJECTED,
 
-    DEVICE_CONNECTIVITY_NETWORK_CHANGE,
+    INCOMING_CRYPTO_RECEIVED ("ICR"),
+    INCOMING_CRYPTO_RECEPTION_CONFIRMED ("IIRC"),
+    INCOMING_CRYPTO_REVERSED ("ICREV"),
+    INCOMING_CRYPTO_IDENTIFIED ("ICI"),
+    INCOMING_CRYPTO_IDENTIFIED_FROM_EXTRA_USER ("ICIEU"),
+    INCOMING_CRYPTO_IDENTIFIED_FROM_INTRA_USER ("ICIIU"),
+    INCOMING_CRYPTO_IDENTIFIED_FROM_DEVICE_USER ("ICIDU"),
+    INCOMING_CRYPTO_RECEIVED_FROM_EXTRA_USER ("ICREU"),
+    INCOMING_CRYPTO_RECEIVED_FROM_INTRA_USER ("ICRIU"),
+    INCOMING_CRYPTO_RECEIVED_FROM_DEVICE_USER ("ICRDU"),
+    INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_EXTRA_USER ("ICCEU"),
+    INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_INTRA_USER ("ICCIU"),
+    INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_DEVICE_USER ("ICCDU"),
+    INCOMING_CRYPTO_REVERSED_FROM_EXTRA_USER ("REVEU"),
+    INCOMING_CRYPTO_REVERSED_FROM_INTRA_USER ("REVIU"),
+    INCOMING_CRYPTO_REVERSED_FROM_DEVICE_USER ("REVDU"),
 
-    BITCOIN_NEW_PEER_CONNECTED,
-    BITCOIN_NEW_CRYPTO_WALLET_CREATED,
-    BITCOIN_CRYPTO_WALLET_LOADED,
-    BITCOIN_BLOCKCHAIN_DOWNLOADED,
-    BITCOIN_NEW_PEER_CONNECTED_INTRA_USER;
+    INCOMING_MONEY_REQUEST_RECEIVED ("IMRR"),
+    OUTGOING_MONEY_REQUEST_DELIVERED ("OMRD"),
+    OUTGOING_MONEY_REQUEST_APPROVED ("OMRA"),
+    OUTGOING_MONEY_REQUEST_REJECTED ("OMRRJ"),
+    INCOMING_MONEY_REQUEST_APPROVED ("IMRA"),
+    INCOMING_MONEY_REQUEST_REJECTED ("IMRRJ"),
 
+    DEVICE_CONNECTIVITY_NETWORK_CHANGE ("DCNC"),
+
+    BITCOIN_NEW_PEER_CONNECTED ("BNPC"),
+    BITCOIN_NEW_CRYPTO_WALLET_CREATED ("BNCWC"),
+    BITCOIN_CRYPTO_WALLET_LOADED ("BCWL"),
+    BITCOIN_BLOCKCHAIN_DOWNLOADED ("BBD"),
+    BITCOIN_NEW_PEER_CONNECTED_INTRA_USER ("BNPCIU");
+
+
+    private final String code;
+
+    EventType (String Code) {
+        this.code = Code;
     }
+
+    public String getCode()   { return this.code ; }
+
+    public static EventType getByCode(String code) throws InvalidParameterException {
+
+        switch (code) {
+            case "DUC":
+                return EventType.DEVICE_USER_CREATED;
+            case "DLI":
+                return EventType.DEVICE_USER_LOGGED_IN;
+            case "DLO":
+                return EventType.DEVICE_USER_LOGGED_OUT;
+            case "ILI":
+                return EventType.INTRA_USER_LOGGED_IN;
+            case "ILO":
+                return EventType.INTRA_USER_LOGGED_OUT;
+            case "ICC":
+                return EventType.INTRA_USER_CONTACT_CREATED;
+            case "NCR":
+                return EventType.INCOMING_NETWORK_SERVICE_CONNECTION_REQUEST;
+
+            case "WC1":
+                return EventType.WALLET_CREATED;
+            case "WWO":
+                return EventType.WALLET_WENT_ONLINE;
+            case "WI1":
+                return EventType.WALLET_INSTALLED;
+            case "BWI":
+                return EventType.BEGUN_WALLET_INSTALLATION;
+            case "WU1":
+                return EventType.WALLET_UNINSTALLED;
+            case "WC2":
+                return EventType.WALLET_CLOSED;
+            case "WO1":
+                return EventType.WALLET_OPENED;
+            case "WRI":
+                return EventType.WALLET_RESOURCES_INSTALLED;
+            case "NSU":
+                return EventType.NAVIGATION_STRUCTURE_UPDATED;
+            case "MR1":
+                return EventType.MONEY_RECEIVED;
+            case "FWI":
+                return EventType.FINISHED_WALLET_INSTALLATION;
+
+            case "TWT":
+                return EventType.INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE;
+            case "TWE":
+                return EventType.INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE_EXTRA_USER;
+
+
+            case "ICR":
+                return EventType.INCOMING_CRYPTO_RECEIVED;
+            case "IIRC":
+                return EventType.INCOMING_CRYPTO_RECEPTION_CONFIRMED;
+            case "ICREV":
+                return EventType.INCOMING_CRYPTO_REVERSED;
+            case "ICI":
+                return EventType.INCOMING_CRYPTO_IDENTIFIED;
+            case "ICIEU":
+                return EventType.INCOMING_CRYPTO_IDENTIFIED_FROM_EXTRA_USER;
+            case "ICIIU":
+                return EventType.INCOMING_CRYPTO_IDENTIFIED_FROM_INTRA_USER;
+            case "ICIDU":
+                return EventType.INCOMING_CRYPTO_IDENTIFIED_FROM_DEVICE_USER;
+            case "ICREU":
+                return EventType.INCOMING_CRYPTO_RECEIVED_FROM_EXTRA_USER;
+            case "ICRIU":
+                return EventType.INCOMING_CRYPTO_RECEIVED_FROM_INTRA_USER;
+            case "ICRDU":
+                return EventType.INCOMING_CRYPTO_RECEIVED_FROM_DEVICE_USER;
+            case "ICCEU":
+                return EventType.INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_EXTRA_USER;
+            case "ICCIU":
+                return EventType.INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_INTRA_USER;
+            case "ICCDU":
+                return EventType.INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_DEVICE_USER;
+            case "REVEU":
+                return EventType.INCOMING_CRYPTO_REVERSED_FROM_EXTRA_USER;
+            case "REVIU":
+                return EventType.INCOMING_CRYPTO_REVERSED_FROM_INTRA_USER;
+            case "REVDU":
+                return EventType.INCOMING_CRYPTO_REVERSED_FROM_DEVICE_USER;
+
+            case "IMRR":
+                return EventType.INCOMING_MONEY_REQUEST_RECEIVED;
+            case "OMRD":
+                return EventType.OUTGOING_MONEY_REQUEST_DELIVERED;
+            case "OMRA":
+                return EventType.OUTGOING_MONEY_REQUEST_APPROVED;
+            case "OMRRJ":
+                return EventType.OUTGOING_MONEY_REQUEST_REJECTED;
+            case "IMRA":
+                return EventType.INCOMING_MONEY_REQUEST_APPROVED;
+            case "IMRRJ":
+                return EventType.INCOMING_MONEY_REQUEST_REJECTED;
+
+            case "DCNC":
+                return EventType.DEVICE_CONNECTIVITY_NETWORK_CHANGE;
+
+            case "BNPC":
+                return EventType.BITCOIN_NEW_PEER_CONNECTED;
+            case "BNCWC":
+                return EventType.BITCOIN_NEW_CRYPTO_WALLET_CREATED;
+            case "BCWL":
+                return EventType.BITCOIN_CRYPTO_WALLET_LOADED;
+            case "BBD":
+                return EventType.BITCOIN_BLOCKCHAIN_DOWNLOADED;
+            case "BNPCIU":
+                return EventType.BITCOIN_NEW_PEER_CONNECTED_INTRA_USER;
+        }
+
+        /**
+         * If we try to cpmvert am invalid string.
+         */
+        throw new InvalidParameterException(code);
+    };
+}

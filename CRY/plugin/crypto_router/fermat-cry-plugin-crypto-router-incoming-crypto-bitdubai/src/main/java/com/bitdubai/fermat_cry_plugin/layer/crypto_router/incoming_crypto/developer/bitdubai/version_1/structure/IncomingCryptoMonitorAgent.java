@@ -7,6 +7,7 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.devel
 
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
@@ -241,13 +242,18 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
 
                 // We have here new pending transactions, we will check the source and ask for the right
                 // TransactionSender
-              // TODO: UNCOMMENT
-              //  TransactionProtocolManager<CryptoTransaction> source = this.sourceAdministrator.getSourceAdministrator(EventSource.getByCode(eventWrapper.eventSource));
+
+                TransactionProtocolManager<CryptoTransaction> source = null;
+                try {
+                    source = this.sourceAdministrator.getSourceAdministrator(EventSource.getByCode(eventWrapper.eventSource));
+                } catch (InvalidParameterException e) {
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    return;
+                }
 
                 // Now we ask for the pending transactions
                 List<Transaction<CryptoTransaction>> transactionList = null;
 
-                /* TODO: UNCOMENT
                 try {
                     transactionList = source.getPendingTransactions(Specialist.CRYPTO_ROUTER_SPECIALIST);
                 } catch (CantDeliverPendingTransactionsException e) {
@@ -255,7 +261,6 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
                     //if somethig wrong happenned we try in the next round
                     return;
                 }
-                 */
 
                 // Now we save the list in the registry
                 if(transactionList != null){
@@ -274,9 +279,6 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
 
                 // An finally, for each transaction we confirm it and then register responsibility.
                 for(Transaction<CryptoTransaction> transaction : acknowledgedTransactions){
-
-                    /*
-                    TODO: UNCOMENT
                     try {
                         source.confirmReception(transaction.getTransactionID());
                         this.registry.acquireResponsibility(transaction);
@@ -286,7 +288,6 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
                         // We will inform the exception and try again in the next round
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                     }
-                    */
                 }
                 // After finishing all the steps we mark the event as seen.
                 try {

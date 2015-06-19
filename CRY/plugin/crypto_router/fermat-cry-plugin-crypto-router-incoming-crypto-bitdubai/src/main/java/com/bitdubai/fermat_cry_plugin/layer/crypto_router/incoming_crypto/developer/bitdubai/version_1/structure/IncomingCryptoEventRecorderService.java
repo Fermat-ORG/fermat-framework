@@ -80,19 +80,19 @@ public class IncomingCryptoEventRecorderService implements DealsWithEvents, Deal
      * IncomingCryptoEventRecorder Interface implementation.
      */
     public void incomingCryptoIdentified(IncomingCryptoIdentifiedEvent event) throws CantSaveEvent {
-        this.registry.saveNewEvent(event.getEventType().name(), event.getSource().name());
+        this.registry.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
     }
 
     public void incomingCryptoReceived(IncomingCryptoReceivedEvent event)  throws CantSaveEvent {
-        this.registry.saveNewEvent(event.getEventType().name(), event.getSource().name());
+        this.registry.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
     }
 
     public void incomingCryptoReceptionConfirmed(IncomingCryptoReceptionConfirmedEvent event)  throws CantSaveEvent {
-        this.registry.saveNewEvent(event.getEventType().name(), event.getSource().name());
+        this.registry.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
     }
 
     public void incomingCryptoReversed(IncomingCryptoReversedEvent event) throws CantSaveEvent {
-        this.registry.saveNewEvent(event.getEventType().name(), event.getSource().name());
+        this.registry.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
     }
 
     
