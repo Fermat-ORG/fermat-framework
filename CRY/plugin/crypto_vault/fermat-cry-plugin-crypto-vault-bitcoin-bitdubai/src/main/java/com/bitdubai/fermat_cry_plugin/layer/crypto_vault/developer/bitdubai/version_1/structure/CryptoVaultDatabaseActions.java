@@ -2,20 +2,16 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.ver
 
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilterGroup;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecord;
 
 import org.bitcoinj.core.Wallet;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -41,8 +37,11 @@ public class CryptoVaultDatabaseActions {
         try {
             cryptoTxTable.insertRecord(incomingTxRecord);
         } catch (CantInsertRecord cantInsertRecord) {
-            //todo see how I will handle this
-            cantInsertRecord.printStackTrace();
+            /**
+             * If there was an error trying to insert the transaction, I will try to get all transactions from wallet and see what's missing
+             *
+             */
+            //todo handle this
         }
     }
 
@@ -197,6 +196,7 @@ public class CryptoVaultDatabaseActions {
                      * if this transaction hash is not in the database, I will insert it.
                      */
                     this.persistNewTransaction(transaction.getHashAsString());
+                    //todo this needs to be corrected in order to verify confidence value before inserting.
                 }
         }
 
