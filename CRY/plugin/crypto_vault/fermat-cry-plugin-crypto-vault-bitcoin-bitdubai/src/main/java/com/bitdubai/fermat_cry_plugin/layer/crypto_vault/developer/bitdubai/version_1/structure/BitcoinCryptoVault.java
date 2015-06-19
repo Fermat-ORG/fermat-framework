@@ -424,7 +424,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
             CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database);
             List<com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction> txs = db.getPendingTransactionsToBeNotified();
             /**
-             * before sending the transaction, Im updating the protocol status
+             * before sending the transaction back, Im updating the protocol status
              */
 
             for (com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction tx : txs){

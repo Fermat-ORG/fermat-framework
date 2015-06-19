@@ -7,6 +7,8 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilterGroup;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecord;
@@ -95,7 +97,36 @@ public class CryptoVaultDatabaseActions {
      * @return
      */
     public List<com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction>  getPendingTransactionsToBeNotified(){
-        //todo complete this
+        /**
+         * I need to obtain all the transactions ids with protocol status SENDING_NOTIFIED y TO_BE_NOTIFIED
+         */
+        DatabaseTable cryptoTxTable;
+        cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
+
+        /*
+        DatabaseTableFilter filterSendingNotified;
+        filterSendingNotified.setColumn(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME);
+        filterSendingNotified.setType(DatabaseFilterType.EQUAL);
+        filterSendingNotified.setValue(ProtocolStatus.SENDING_NOTIFIED.toString());
+
+        DatabaseTableFilter filterToBeNotified;
+        filterToBeNotified.setColumn(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME);
+        filterToBeNotified.setType(DatabaseFilterType.EQUAL);
+        filterToBeNotified.setValue(ProtocolStatus.TO_BE_NOTIFIED.toString());
+
+        List<DatabaseTableFilter> filters;
+        filters.add(filterSendingNotified);
+        filters.add(filterToBeNotified);
+        //cryptoTxTable.setFilterGroup(filters,);
+*/
+        cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.toString(), DatabaseFilterType.EQUAL);
+
+        for (DatabaseTableRecord record : cryptoTxTable.getRecords()){
+            /**
+             * I get the transaction IDs and Hashes for the TO_BE_NOTIFIED
+             */
+            //record.
+        }
 
         return null;
     }
