@@ -31,4 +31,7 @@ public class EventsLauncher implements DealsWithEvents {
     public void setEventManager(EventManager eventManager) {
         this.eventManager = eventManager;
     }
+    public EventManager getEventManager(){
+        return eventManager;
+    }
 }
