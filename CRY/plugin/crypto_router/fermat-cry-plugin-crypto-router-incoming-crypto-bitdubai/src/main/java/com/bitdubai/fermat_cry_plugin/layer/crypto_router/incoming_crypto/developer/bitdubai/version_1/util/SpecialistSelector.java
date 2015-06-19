@@ -1,11 +1,14 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.util;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.ActorAddressBookManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.ActorAddressBook;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.DealsWithActorAddressBook;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantGetActorAddressBookRegistryException;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookRecord;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookRegistry;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.DealsWithActorAddressBook;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantGetActorAddressBook;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantSelectSpecialistException;
 
@@ -19,7 +22,18 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.develo
  */
 public class SpecialistSelector implements DealsWithActorAddressBook {
 
+    /*
+     * DealsWithActorAddressBook Interface member variables
+     */
     private ActorAddressBookManager actorAddressBook;
+
+    /*
+     * DealsWithActorAddressBook Interface method implementation
+     */
+    @Override
+    public void setActorAddressBookManager(ActorAddressBookManager actorAddressBook) {
+        this.actorAddressBook = actorAddressBook;
+    }
 
     public Specialist getSpecialist(CryptoTransaction cryptoTransaction) throws CantSelectSpecialistException {
 
@@ -27,31 +41,35 @@ public class SpecialistSelector implements DealsWithActorAddressBook {
         cryptoAddress.setAddress(cryptoTransaction.getAddressFrom().getAddress());
         cryptoAddress.setCryptoCurrency(cryptoTransaction.getCryptoCurrency());
 
-        ActorAddressBook user = null;
+        ActorAddressBookRegistry actorsRegistry = null;
+
         try {
-            user = this.actorAddressBook.getActorAddressBookByCryptoAddress(cryptoAddress);
-        } catch (CantGetActorAddressBook cantGetActorCryptoAddress) {
-            cantGetActorCryptoAddress.printStackTrace();
+            actorsRegistry = this.actorAddressBook.getActorAddressBookRegistry();
+        } catch (CantGetActorAddressBookRegistryException e) {
+            //TODO: Manage Exception
+            e.printStackTrace();
         }
 
-        if (user != null) {
-            switch (user.getActorType()) {
-                case DEVICE_USER:
-                    return Specialist.DEVICE_USER_SPECIALIST;
-                case INTRA_USER:
-                    return Specialist.INTRA_USER_SPECIALIST;
-                case EXTRA_USER:
-                    return Specialist.EXTRA_USER_SPECIALIST;
+        if (actorsRegistry != null) {
+            try {
+                ActorAddressBookRecord actor = actorsRegistry.getActorAddressBookByCryptoAddress(cryptoAddress);
+                switch (actor.getActorType()) {
+                    case DEVICE_USER:
+                        return Specialist.DEVICE_USER_SPECIALIST;
+                    case INTRA_USER:
+                        return Specialist.INTRA_USER_SPECIALIST;
+                    case EXTRA_USER:
+                        return Specialist.EXTRA_USER_SPECIALIST;
+                }
+            } catch (CantGetActorAddressBook cantGetActorAddressBook) {
+                //TODO: Manage Exception
+                cantGetActorAddressBook.printStackTrace();
             }
         }
+
+
         // Here we have a serious problem
         throw new CantSelectSpecialistException();
 
     }
-
-    @Override
-    public void setUserAddressBookManager(ActorAddressBookManager actorAddressBook) {
-        this.actorAddressBook = actorAddressBook;
-    }
-
 }

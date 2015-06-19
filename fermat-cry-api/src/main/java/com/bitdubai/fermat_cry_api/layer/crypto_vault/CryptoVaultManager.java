@@ -9,7 +9,7 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 11/06/15.
  */
-public interface CryptoVaultManager {
+public interface CryptoVaultManager extends TransactionSender<CryptoTransaction> {
     public void setUserId (UUID UserId);
     public void connectToBitcoin();
     public void disconnectFromBitcoin();
