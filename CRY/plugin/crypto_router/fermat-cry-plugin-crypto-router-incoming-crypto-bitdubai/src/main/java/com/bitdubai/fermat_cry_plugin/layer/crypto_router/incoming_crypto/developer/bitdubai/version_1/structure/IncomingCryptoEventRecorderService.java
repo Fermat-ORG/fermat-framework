@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.devel
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 
+import com.bitdubai.fermat_api.layer.dmp_transaction.incoming_crypto.Registry;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.*;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoIdentifiedEvent;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoReceivedEvent;
@@ -14,6 +15,7 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.develo
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoIdentifiedEventHandler;
 
+import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.interfaces.DealsWithRegistry;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.interfaces.TransactionService;
 
 import java.util.ArrayList;
@@ -36,11 +38,7 @@ import java.util.List;
  * * * * * * * *
  */
 
-public class IncomingCryptoEventRecorderService implements DealsWithEvents, TransactionService {
-    /**
-     * IncomingCryptoEventRecorderService member variables.
-     */
-    private IncomingCryptoRegistry registry;
+public class IncomingCryptoEventRecorderService implements DealsWithEvents, DealsWithRegistry, TransactionService {
 
     /**
      * DealsWithEvents Interface member variables.
@@ -48,21 +46,18 @@ public class IncomingCryptoEventRecorderService implements DealsWithEvents, Tran
     private EventManager eventManager;
     private List<EventListener> listenersAdded = new ArrayList<>();
 
+    /*
+     * DealsWithRegistry Interface member variables.
+     */
+    private IncomingCryptoRegistry registry;
+
+
+
     /**
      * TransactionService Interface member variables.
      */
     private ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
-
-    /**
-     * Constructor.
-     * I will ask for the references I need to do my job since my creation
-     */
-    public IncomingCryptoEventRecorderService(EventManager eventManager, IncomingCryptoRegistry registry) {
-        // TODO: CHECK NULL POINTER EXCEPTIONS
-        this.eventManager = eventManager;
-        this.registry = registry;
-    }
 
     /**
      * DealWithEvents Interface implementation.
@@ -73,22 +68,31 @@ public class IncomingCryptoEventRecorderService implements DealsWithEvents, Tran
     }
 
     /**
+     * DealWithEvents Interface implementation.
+     */
+    @Override
+    public void setRegistry(IncomingCryptoRegistry registry) {
+        this.registry = registry;
+    }
+
+
+    /**
      * IncomingCryptoEventRecorder Interface implementation.
      */
     public void incomingCryptoIdentified(IncomingCryptoIdentifiedEvent event) throws CantSaveEvent {
-        this.registry.saveNewEvent(event.getEventType().name(), event.getSource().name());
+        this.registry.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
     }
 
     public void incomingCryptoReceived(IncomingCryptoReceivedEvent event)  throws CantSaveEvent {
-        this.registry.saveNewEvent(event.getEventType().name(), event.getSource().name());
+        this.registry.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
     }
 
     public void incomingCryptoReceptionConfirmed(IncomingCryptoReceptionConfirmedEvent event)  throws CantSaveEvent {
-        this.registry.saveNewEvent(event.getEventType().name(), event.getSource().name());
+        this.registry.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
     }
 
     public void incomingCryptoReversed(IncomingCryptoReversedEvent event) throws CantSaveEvent {
-        this.registry.saveNewEvent(event.getEventType().name(), event.getSource().name());
+        this.registry.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
     }
 
     

@@ -6,6 +6,8 @@ import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -255,5 +257,10 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Service
     @Override
     public void sendBitcoins(UUID walletId, UUID FermatTrId, CryptoAddress addressTo, long satothis) {
         vault.sendBitcoins(FermatTrId, addressTo, satothis);
+    }
+
+    @Override
+    public TransactionProtocolManager<CryptoTransaction> getTransactionManager() {
+        return null;
     }
 }

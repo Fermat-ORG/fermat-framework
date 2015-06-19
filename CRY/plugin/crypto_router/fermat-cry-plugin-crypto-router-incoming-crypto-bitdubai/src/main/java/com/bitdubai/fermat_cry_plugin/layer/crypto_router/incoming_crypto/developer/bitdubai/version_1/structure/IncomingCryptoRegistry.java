@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.devel
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
@@ -86,6 +87,26 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
      */
     private Database database;
 
+    /**
+     * DealsWithErrors Interface implementation.
+     */
+    @Override
+    public void setErrorManager(ErrorManager errorManager) {
+        this.errorManager = errorManager;
+    }
+
+    /**
+     * DealsWithPluginDatabaseSystem interface implementation.
+     */
+    @Override
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+    }
+
+
+    /**
+     * IncomingCryptoRegistry member methods.
+     */
     public void initialize(UUID pluginId) throws CantInitializeCryptoRegistryException {
         try {
             this.database = this.pluginDatabaseSystem.openDatabase(pluginId, IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_DATABASE);
@@ -106,18 +127,6 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
     }
 
 
-    /**
-     * DealsWithErrors Interface implementation.
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-
-    /**
-     * IncomingCryptoRegistry member methods.
-     */
     static class EventWrapper {
         final UUID eventId;
         final String eventType;
@@ -214,13 +223,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
         }
     }
 
-    /**
-     * DealsWithPluginDatabaseSystem interface implementation.
-     */
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
+
 
 
     /**
@@ -326,11 +329,11 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
 
         DatabaseTable registryTable = this.database.getTable(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NAME);
         registryTable.setStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_TRANSACTION_STATUS_COLUMN.columnName ,
-                                      TransactionStatus.ACKNOWLEDGED.name(),
+                                      TransactionStatus.ACKNOWLEDGED.getCode(),
                                       DatabaseFilterType.EQUAL
                                      );
         registryTable.setStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName ,
-                ProtocolStatus.TO_BE_NOTIFIED.name(),
+                ProtocolStatus.TO_BE_NOTIFIED.getCode(),
                 DatabaseFilterType.EQUAL
         );
 
@@ -374,12 +377,12 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
             DatabaseTableRecord recordToUpdate = records.get(0);
             recordToUpdate.setStringValue(
                     IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_TRANSACTION_STATUS_COLUMN.columnName,
-                    TransactionStatus.RESPONSIBLE.name()
+                    TransactionStatus.RESPONSIBLE.getCode()
                                          );
 
             recordToUpdate.setStringValue(
                     IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName,
-                    ProtocolStatus.NO_ACTION_REQUIRED.name()
+                    ProtocolStatus.NO_ACTION_REQUIRED.getCode()
                                          );
             try {
                 registryTable.updateRecord(recordToUpdate);
@@ -399,11 +402,11 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
         DatabaseTable registryTable = this.database.getTable(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NAME);
 
         registryTable.setStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_TRANSACTION_STATUS_COLUMN.columnName ,
-                TransactionStatus.RESPONSIBLE.name(),
+                TransactionStatus.RESPONSIBLE.getCode(),
                 DatabaseFilterType.EQUAL
         );
         registryTable.setStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName ,
-                ProtocolStatus.NO_ACTION_REQUIRED.name(),
+                ProtocolStatus.NO_ACTION_REQUIRED.getCode(),
                 DatabaseFilterType.EQUAL
         );
 
@@ -448,12 +451,12 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
 
             recordToUpdate.setStringValue(
                     IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName,
-                    ProtocolStatus.TO_BE_NOTIFIED.name()
+                    ProtocolStatus.TO_BE_NOTIFIED.getCode()
             );
 
             recordToUpdate.setStringValue(
                     IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_SPECIALIST_COLUMN.columnName,
-                    specialist.name()
+                    specialist.getCode()
             );
 
             try {
@@ -476,14 +479,14 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
     }
 
     // Da los Specialist de las que están en TBN y SN
-    public List<String> getSpecialists() {//throws CantReadSpecialistsException
+    public List<Specialist> getSpecialists() throws InvalidParameterException {//throws CantReadSpecialistsException
 
         DatabaseTable registryTable = this.database.getTable(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NAME);
         DatabaseTableRecord r;
 
         List<Transaction<CryptoTransaction>> transactionList = getResponsibleTransactionsPendingAction();
 
-        List<String> specialistList = new ArrayList<>();
+        List<Specialist> specialistList = new ArrayList<>();
 
 
         for(Transaction<CryptoTransaction> transaction : transactionList) {
@@ -505,7 +508,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
                 //TODO: MANAGE EXCEPTION
             } else {
                 r = records.get(0);
-                specialistList.add(r.getStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_SPECIALIST_COLUMN.columnName));
+                specialistList.add(Specialist.getByCode(r.getStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_SPECIALIST_COLUMN.columnName)));
             }
 
             registryTable.clearAllFilters();
@@ -524,7 +527,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
 
         for(DatabaseTableRecord recordToUpdate: tbnList) {
             recordToUpdate.setStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName,
-                                          ProtocolStatus.SENDING_NOTIFIED.name());
+                                          ProtocolStatus.SENDING_NOTIFIED.getCode());
             try {
                 registryTable.updateRecord(recordToUpdate);
             } catch (CantUpdateRecord cantUpdateRecord) {
@@ -565,11 +568,11 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
             // that he had notified the reception.
             recordToUpdate.setStringValue(
                     IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_TRANSACTION_STATUS_COLUMN.columnName,
-                    TransactionStatus.DELIVERED.name()
+                    TransactionStatus.DELIVERED.getCode()
             );
             recordToUpdate.setStringValue(
                     IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName,
-                    ProtocolStatus.RECEPTION_NOTIFIED.name()
+                    ProtocolStatus.RECEPTION_NOTIFIED.getCode()
             );
 
             try {
@@ -591,8 +594,8 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
     public List<Transaction<CryptoTransaction>> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
 
         DatabaseTable registryTable = this.database.getTable(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NAME);
-        registryTable.setStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName,ProtocolStatus.SENDING_NOTIFIED.name(),DatabaseFilterType.EQUAL);
-        registryTable.setStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_SPECIALIST_COLUMN.columnName,specialist.name(),DatabaseFilterType.EQUAL);
+        registryTable.setStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName,ProtocolStatus.SENDING_NOTIFIED.getCode(),DatabaseFilterType.EQUAL);
+        registryTable.setStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_SPECIALIST_COLUMN.columnName,specialist.getCode(),DatabaseFilterType.EQUAL);
 
         try {
             registryTable.loadToMemory();
@@ -630,10 +633,10 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
 
         databaseTableRecord.setStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ACTION_COLUMN.columnName,transaction.getAction());
         // We set the specialist as a parameter
-        databaseTableRecord.setStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_SPECIALIST_COLUMN.columnName,specialist.name());
+        databaseTableRecord.setStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_SPECIALIST_COLUMN.columnName,specialist.getCode());
         databaseTableRecord.setStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_CRYPTO_STATUS_COLUMN.columnName, transaction.getInformation().getCryptoStatus().toString());
-        databaseTableRecord.setStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_TRANSACTION_STATUS_COLUMN.columnName, transactionStatus.name());
-        databaseTableRecord.setStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName, protocolStatus.name());
+        databaseTableRecord.setStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_TRANSACTION_STATUS_COLUMN.columnName, transactionStatus.getCode());
+        databaseTableRecord.setStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName, protocolStatus.getCode());
 
         databaseTableRecord.setLongValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_TIMESTAMP_COLUMN.columnName, transaction.getTimestamp());
 
@@ -669,12 +672,12 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
         DatabaseTable registryTable = this.database.getTable(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NAME);
 
         registryTable.setStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_TRANSACTION_STATUS_COLUMN.columnName ,
-                transactionStatus.name(),
+                transactionStatus.getCode(),
                 DatabaseFilterType.EQUAL
         );
 
         registryTable.setStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName ,
-                protocolStatus.name(),
+                protocolStatus.getCode(),
                 DatabaseFilterType.EQUAL
         );
 
