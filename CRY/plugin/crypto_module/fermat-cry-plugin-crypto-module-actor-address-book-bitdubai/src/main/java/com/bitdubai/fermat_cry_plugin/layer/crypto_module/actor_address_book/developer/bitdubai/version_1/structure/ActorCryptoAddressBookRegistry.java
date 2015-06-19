@@ -7,8 +7,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlugin
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.ActorAddressBook;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.ActorAddressBookManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookRecord;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookRegistry;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantGetActorAddressBook;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantRegisterActorAddressBook;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.exceptions.CantInitializeActorAddressBookException;
@@ -17,16 +17,16 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * The class <code>com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.structure.ActorAddressBookManagerImplementation</code>
+ * The class <code>com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.structure.ActorCryptoAddressBookRegistry</code>
  * haves all consumable methods from the plugin Actor Address Book
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 17/06/15.
  * @version 1.0
  */
-public class ActorAddressBookManagerImplementation implements ActorAddressBookManager, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class ActorCryptoAddressBookRegistry implements ActorAddressBookRegistry, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
 
     /**
-     * ActorAddressBookManager Interface member variables.
+     * ActorCryptoAddressBookRecord Interface member variables.
      */
     private ActorAddressBookDao actorAddressBookDao;
 
@@ -60,12 +60,12 @@ public class ActorAddressBookManagerImplementation implements ActorAddressBookMa
 
     @Override
 
-    public ActorAddressBook getActorAddressBookByCryptoAddress(CryptoAddress cryptoAddress) throws CantGetActorAddressBook {
+    public ActorAddressBookRecord getActorAddressBookByCryptoAddress(CryptoAddress cryptoAddress) throws CantGetActorAddressBook {
         return actorAddressBookDao.getActorAddressBookByCryptoAddress(cryptoAddress);
     }
 
     @Override
-    public List<ActorAddressBook> getAllActorAddressBookByActorId(UUID actorId) throws CantGetActorAddressBook {
+    public List<ActorAddressBookRecord> getAllActorAddressBookByActorId(UUID actorId) throws CantGetActorAddressBook {
         return actorAddressBookDao.getAllActorAddressBookByActorId(actorId);
     }
 
