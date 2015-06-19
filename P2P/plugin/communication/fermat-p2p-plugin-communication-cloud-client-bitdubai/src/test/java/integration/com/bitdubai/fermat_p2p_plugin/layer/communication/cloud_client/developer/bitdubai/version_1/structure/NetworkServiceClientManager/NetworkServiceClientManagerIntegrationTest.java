@@ -4,6 +4,7 @@ import static org.fest.assertions.api.Assertions.*;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
@@ -29,14 +30,13 @@ public abstract class NetworkServiceClientManagerIntegrationTest {
 	protected CloudNetworkServiceManager testServer;
 	protected NetworkServices testNetworkService;
 	
-	
 	protected void setUpServer(final int tcpPadding) throws Exception {
 		testAddress = CommunicationChannelAddressFactory.constructCloudAddress(testHost, testBasePort+tcpPadding);
 		ECCKeyPair testKeyPair = new ECCKeyPair(serverPrivateKey);
 		testNetworkService = NetworkServices.INTRA_USER;
 		Set<Integer> networkServiceVNPorts = new HashSet<Integer>();
 		networkServiceVNPorts.add(testBasePort+tcpPadding+1);
-		testServer = new CloudNetworkServiceManager(testAddress, Executors.newFixedThreadPool(3), testKeyPair, testNetworkService, networkServiceVNPorts);
+		testServer = new CloudNetworkServiceManager(testAddress, getExecutor(), testKeyPair, testNetworkService, networkServiceVNPorts);
 		testServer.start();
 		
 		assertThat(testServer.isRunning()).isTrue();
@@ -44,12 +44,16 @@ public abstract class NetworkServiceClientManagerIntegrationTest {
 	
 	protected void setUp(final int tcpPadding) throws Exception{
 		setUpServer(tcpPadding);
-		testClient = new NetworkServiceClientManager(testAddress, Executors.newFixedThreadPool(3), clientPrivateKey, serverPublicKey, testNetworkService);
+		testClient = new NetworkServiceClientManager(testAddress, getExecutor(), clientPrivateKey, serverPublicKey, testNetworkService);
 		testClient.start();
 	}
 	
 	protected int getThreadSleepMillis(){
 		return 1000;
+	}
+	
+	private ExecutorService getExecutor(){
+		return Executors.newFixedThreadPool(2);
 	}
 
 }

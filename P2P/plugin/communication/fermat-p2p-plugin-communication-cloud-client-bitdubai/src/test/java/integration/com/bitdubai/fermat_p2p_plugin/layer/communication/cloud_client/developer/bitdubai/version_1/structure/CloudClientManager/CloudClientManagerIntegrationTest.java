@@ -4,6 +4,7 @@ import static org.fest.assertions.api.Assertions.*;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
@@ -31,30 +32,33 @@ public abstract class CloudClientManagerIntegrationTest {
 	protected CloudNetworkServiceManager testNetworkServiceServer;
 	protected NetworkServices testNetworkService;
 	
-	
 	protected void setUpServer(final int tcpPadding) throws Exception {
 		testAddress = CommunicationChannelAddressFactory.constructCloudAddress(testHost, testBasePort+tcpPadding);
 		ECCKeyPair testKeyPair = new ECCKeyPair(serverPrivateKey);
-		testServer = new CloudServiceManager(testAddress, Executors.newFixedThreadPool(3), testKeyPair);
+		testServer = new CloudServiceManager(testAddress, getExecutor(), testKeyPair);
 		testServer.start();
 		
 		CommunicationChannelAddress networkServiceServerAddress = CommunicationChannelAddressFactory.constructCloudAddress(testHost, testBasePort+tcpPadding+1);
 		Set<Integer> networkServiceVNPorts = new HashSet<Integer>();
 		networkServiceVNPorts.add(testBasePort+tcpPadding+2);
 		testNetworkService = NetworkServices.INTRA_USER;
-		testNetworkServiceServer = new CloudNetworkServiceManager(networkServiceServerAddress, Executors.newFixedThreadPool(3), new ECCKeyPair(), testNetworkService, networkServiceVNPorts);
+		testNetworkServiceServer = new CloudNetworkServiceManager(networkServiceServerAddress, getExecutor(), new ECCKeyPair(), testNetworkService, networkServiceVNPorts);
 		testServer.registerNetworkServiceManager(testNetworkServiceServer);
 		assertThat(testServer.isRunning()).isTrue();
 	}
 	
 	protected void setUp(final int tcpPadding) throws Exception{
 		setUpServer(tcpPadding);
-		testClient = new CloudClientManager(testAddress, Executors.newFixedThreadPool(3), clientPrivateKey, serverPublicKey);
+		testClient = new CloudClientManager(testAddress, getExecutor(), clientPrivateKey, serverPublicKey);
 		testClient.start();
 	}
 	
 	protected int getThreadSleepMillis(){
 		return 1000;
+	}
+	
+	private ExecutorService getExecutor(){
+		return Executors.newFixedThreadPool(2);
 	}
 
 }

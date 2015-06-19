@@ -27,6 +27,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.ConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.IllegalPacketSenderException;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.IllegalSignatureException;
+import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.VPNInitializationException;
 
 public class NetworkServiceClientManager extends CloudFMPConnectionManager {
 	
@@ -95,15 +96,19 @@ public class NetworkServiceClientManager extends CloudFMPConnectionManager {
 		String vpnPublicKey = messageComponents[2];
 		
 		CommunicationChannelAddress vpnAddress = CommunicationChannelAddressFactory.constructCloudAddress(host, port);
-		
-		NetworkServiceClientVPN vpnClient = new NetworkServiceClientVPN(vpnAddress, Executors.newFixedThreadPool(2), AsymmectricCryptography.createPrivateKey(), vpnPublicKey, networkService);
-		activeVPNRegistry.put(dataPacket.getSender(), vpnClient);
-		pendingVPNRequests.remove(dataPacket.getSender());
+		try{
+			NetworkServiceClientVPN vpnClient = new NetworkServiceClientVPN(vpnAddress, Executors.newFixedThreadPool(2), eccPrivateKey, vpnPublicKey, networkService);
+			vpnClient.start();
+			activeVPNRegistry.put(dataPacket.getSender(), vpnClient);
+			pendingVPNRequests.remove(dataPacket.getSender());
+		}catch(CloudConnectionException ex){
+			throw new VPNInitializationException(ex.getMessage());
+		}
 	}
 
 	@Override
 	public void handleConnectionDeny(final FMPPacket dataPacket) throws FMPException {
-		System.out.println(dataPacket.toString());
+		System.out.println(AsymmectricCryptography.decryptMessagePrivateKey(dataPacket.getMessage(), eccPrivateKey));
 	}
 
 	@Override

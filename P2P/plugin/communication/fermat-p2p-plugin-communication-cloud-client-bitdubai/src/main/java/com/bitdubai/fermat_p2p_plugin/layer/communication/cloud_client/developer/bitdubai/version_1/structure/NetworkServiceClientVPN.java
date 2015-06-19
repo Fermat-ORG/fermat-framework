@@ -91,7 +91,7 @@ public class NetworkServiceClientVPN extends CloudFMPConnectionManager {
 
 	@Override
 	public void handleConnectionDeny(final FMPPacket dataPacket) throws FMPException {
-		System.out.println(dataPacket.toString());
+		System.out.println(AsymmectricCryptography.decryptMessagePrivateKey(dataPacket.getMessage(), eccPrivateKey));
 	}
 
 	@Override
