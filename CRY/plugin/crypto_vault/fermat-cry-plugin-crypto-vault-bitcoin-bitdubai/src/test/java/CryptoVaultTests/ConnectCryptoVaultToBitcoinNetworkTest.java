@@ -25,7 +25,7 @@ public class ConnectCryptoVaultToBitcoinNetworkTest implements DealsWithBitcoinC
     @Mock PluginFileSystem pluginFileSystem;
     @Mock ErrorManager errorManager;
     @Mock PluginDatabaseSystem pluginDatabaseSystem;
-    BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager;
+    @Mock BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager;
     UUID userId;
 
 

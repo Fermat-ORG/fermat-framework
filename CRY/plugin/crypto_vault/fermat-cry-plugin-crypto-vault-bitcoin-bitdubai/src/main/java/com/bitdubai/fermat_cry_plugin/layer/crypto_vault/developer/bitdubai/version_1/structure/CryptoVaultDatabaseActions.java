@@ -2,17 +2,18 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.ver
 
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecord;
 
+import org.bitcoinj.core.Wallet;
+
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -36,8 +37,11 @@ public class CryptoVaultDatabaseActions {
         try {
             cryptoTxTable.insertRecord(incomingTxRecord);
         } catch (CantInsertRecord cantInsertRecord) {
-            //todo see how I will handle this
-            cantInsertRecord.printStackTrace();
+            /**
+             * If there was an error trying to insert the transaction, I will try to get all transactions from wallet and see what's missing
+             *
+             */
+            //todo handle this
         }
     }
 
@@ -156,4 +160,46 @@ public class CryptoVaultDatabaseActions {
 
         return ProtocolStatus.valueOf(currentStatus.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME));
     }
+
+    /**
+     * will return true if there are transactions in NO_BE_NOTIFIED status
+     * @return
+     */
+    public boolean isPendingTransactions(){
+        DatabaseTable cryptoTxTable;
+        cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
+        cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME,ProtocolStatus.TO_BE_NOTIFIED.toString() ,DatabaseFilterType.EQUAL);
+
+        if (!cryptoTxTable.getRecords().isEmpty())
+            return false;
+        else
+            return true;
+
+    }
+
+    /**
+     * I Will check in the vault all transactions that are not included in the database and insert them.
+     * @param vault
+     */
+    public void persistMissingTransactionsFromWallet(Wallet vault){
+        /**
+         * get all transactions from the vault
+         */
+        Set<org.bitcoinj.core.Transaction> transactions;
+        transactions = vault.getTransactions(false);
+        DatabaseTable txTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
+
+        for (org.bitcoinj.core.Transaction transaction : transactions){
+                txTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, transaction.getHashAsString(), DatabaseFilterType.EQUAL);
+                if (txTable.getRecords().isEmpty()){
+                    /**
+                     * if this transaction hash is not in the database, I will insert it.
+                     */
+                    this.persistNewTransaction(transaction.getHashAsString());
+                    //todo this needs to be corrected in order to verify confidence value before inserting.
+                }
+        }
+
+    }
+
 }

@@ -1,10 +1,7 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.events;
 
-import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
-import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.dmp_world.Agent;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantInitializeMonitorAgentException;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
@@ -71,11 +68,17 @@ public class TransactionNotificationAgent implements Agent, DealsWithErrors, Dea
      */
     @Override
     public void start() throws CantStartAgentException {
+        /**
+         * I initialize the monitor agent private class that will run in a new thread
+         */
         monitorAgent = new MonitorAgent();
 
         ((DealsWithPluginDatabaseSystem) this.monitorAgent).setPluginDatabaseSystem(this.pluginDatabaseSystem);
         ((DealsWithErrors) this.monitorAgent).setErrorManager(this.errorManager);
 
+        /**
+         * I will create or load the DB if it already exists.
+         */
         try {
             ((MonitorAgent) this.monitorAgent).Initialize();
         }
@@ -87,6 +90,10 @@ public class TransactionNotificationAgent implements Agent, DealsWithErrors, Dea
             throw new CantStartAgentException();
         }
 
+        /**
+         * I start the thread that will get from the DB the confirmation
+         * that there are or not pending transactions to notify
+         */
         this.agentThread = new Thread(monitorAgent);
         this.agentThread.start();
     }
@@ -232,13 +239,14 @@ public class TransactionNotificationAgent implements Agent, DealsWithErrors, Dea
 
         }
 
+
         private boolean isTransactionToBeNotified() {
             CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database);
-            
-            return false;
+            if (db.isPendingTransactions())
+                return  true;
+            else
+                return  false;
+
         }
     }
-
-
-
 }
