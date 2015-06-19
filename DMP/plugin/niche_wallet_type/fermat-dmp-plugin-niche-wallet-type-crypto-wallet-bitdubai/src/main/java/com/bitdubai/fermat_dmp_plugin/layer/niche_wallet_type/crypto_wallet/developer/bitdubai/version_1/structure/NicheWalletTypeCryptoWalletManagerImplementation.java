@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.BitcoinTran
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWallet;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsManager;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantRequestCryptoAddressException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantSendCryptoException;
@@ -16,9 +17,9 @@ import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.DealsWit
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.OutgoingExtraUserManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookRegistry;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.DealsWithWalletContacts;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.WalletContact;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.WalletContactsManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.DealsWithWalletContacts;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsRegistry;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantCreateWalletContactException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantDeleteWalletContactException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetAllWalletContactsException;
@@ -99,24 +100,39 @@ public class NicheWalletTypeCryptoWalletManagerImplementation implements DealsWi
 
 
     @Override
-    public List<WalletContact> listWalletContacts(UUID walletId) throws CantGetAllWalletContactsException {
-        return walletContactsManager.listWalletContacts(walletId);
-    }
-
-    @Override
-    public List<WalletContact> listWalletContactsScrolling(UUID walletId, Integer max, Integer offset) throws CantGetAllWalletContactsException {
-        return walletContactsManager.listWalletContactsScrolling(walletId, max, offset);
-    }
-
-    @Override
-    public WalletContact createWalletContact(CryptoAddress receivedCryptoAddress, String actorName, Actors actorType, PlatformWalletType platformWalletType, UUID walletId) throws CantCreateWalletContactException {
-        WalletContact walletContact;
+    public List<WalletContactRecord> listWalletContacts(UUID walletId) throws CantGetAllWalletContactsException {
+        List<WalletContactRecord> walletContactRecords;
         try {
-            walletContact = walletContactsManager.getWalletContactByNameAndWalletId(actorName, walletId);
-        } catch (CantGetWalletContactException cantGetWalletContactException) {
-            throw new CantCreateWalletContactException(cantGetWalletContactException.getMessage());
+            WalletContactsRegistry walletContactsRegistry = walletContactsManager.getWalletContactsRegistry();
+            walletContactRecords = walletContactsRegistry.listWalletContacts(walletId);
+        } catch (Exception e){
+            throw new CantGetAllWalletContactsException();
         }
-        if (walletContact == null) {
+        return walletContactRecords;
+    }
+
+    @Override
+    public List<WalletContactRecord> listWalletContactsScrolling(UUID walletId, Integer max, Integer offset) throws CantGetAllWalletContactsException {
+        List<WalletContactRecord> walletContactRecords;
+        try {
+            WalletContactsRegistry walletContactsRegistry = walletContactsManager.getWalletContactsRegistry();
+            walletContactRecords = walletContactsRegistry.listWalletContactsScrolling(walletId, max, offset);
+        } catch (Exception e){
+            throw new CantGetAllWalletContactsException();
+        }
+        return walletContactRecords;
+    }
+
+    @Override
+    public WalletContactRecord createWalletContact(CryptoAddress receivedCryptoAddress, String actorName, Actors actorType, PlatformWalletType platformWalletType, UUID walletId) throws CantCreateWalletContactException {
+        WalletContactRecord walletContactRecord;
+        try {
+            WalletContactsRegistry walletContactsRegistry = walletContactsManager.getWalletContactsRegistry();
+            walletContactRecord = walletContactsRegistry.getWalletContactByNameAndWalletId(actorName, walletId);
+        } catch (Exception e){
+            throw new CantCreateWalletContactException(e.getMessage());
+        }
+        if (walletContactRecord == null) {
 
             CryptoAddress deliveredCryptoAddress;
             UUID actorId;
@@ -133,12 +149,16 @@ public class NicheWalletTypeCryptoWalletManagerImplementation implements DealsWi
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantCreateWalletContactException(e.getMessage());
             }
-
-            walletContact = walletContactsManager.createWalletContact(actorId, actorName, actorType, receivedCryptoAddress, walletId);
+            try {
+                WalletContactsRegistry walletContactsRegistry = walletContactsManager.getWalletContactsRegistry();
+                walletContactRecord = walletContactsRegistry.createWalletContact(actorId, actorName, actorType, receivedCryptoAddress, walletId);
+            } catch (Exception e) {
+                throw new CantCreateWalletContactException(e.getMessage());
+            }
         } else {
             throw new CantCreateWalletContactException("Contact already exists.");
         }
-        return walletContact;
+        return walletContactRecord;
     }
 
     @Override
@@ -215,17 +235,34 @@ public class NicheWalletTypeCryptoWalletManagerImplementation implements DealsWi
 
     @Override
     public void updateWalletContact(UUID contactId, CryptoAddress receivedCryptoAddress, String actorName) throws CantUpdateWalletContactException {
-        walletContactsManager.updateWalletContact(contactId, receivedCryptoAddress, actorName);
+        try {
+            WalletContactsRegistry walletContactsRegistry = walletContactsManager.getWalletContactsRegistry();
+            walletContactsRegistry.updateWalletContact(contactId, receivedCryptoAddress, actorName);
+        } catch (Exception e){
+            throw new CantUpdateWalletContactException();
+        }
     }
 
     @Override
     public void deleteWalletContact(UUID contactId) throws CantDeleteWalletContactException {
-        walletContactsManager.deleteWalletContact(contactId);
+        try {
+            WalletContactsRegistry walletContactsRegistry = walletContactsManager.getWalletContactsRegistry();
+            walletContactsRegistry.deleteWalletContact(contactId);
+        } catch (Exception e){
+            throw new CantDeleteWalletContactException();
+        }
     }
 
     @Override
-    public WalletContact getWalletContactByContainsLikeAndWalletId(String actorName, UUID walletId) throws CantGetWalletContactException {
-        return walletContactsManager.getWalletContactByNameContainsAndWalletId(actorName, walletId);
+    public WalletContactRecord getWalletContactByContainsLikeAndWalletId(String actorName, UUID walletId) throws CantGetWalletContactException {
+        WalletContactRecord walletContactRecord;
+        try {
+            WalletContactsRegistry walletContactsRegistry = walletContactsManager.getWalletContactsRegistry();
+            walletContactRecord = walletContactsRegistry.getWalletContactByNameContainsAndWalletId(actorName, walletId);
+        } catch (Exception e){
+            throw new CantGetWalletContactException();
+        }
+        return walletContactRecord;
     }
 
     @Override
