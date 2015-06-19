@@ -8,11 +8,16 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilterGroup;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecord;
 
+import org.bitcoinj.core.Wallet;
+
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -170,6 +175,30 @@ public class CryptoVaultDatabaseActions {
             return false;
         else
             return true;
+
+    }
+
+    /**
+     * I Will check in the vault all transactions that are not included in the database and insert them.
+     * @param vault
+     */
+    public void persistMissingTransactionsFromWallet(Wallet vault){
+        /**
+         * get all transactions from the vault
+         */
+        Set<org.bitcoinj.core.Transaction> transactions;
+        transactions = vault.getTransactions(false);
+        DatabaseTable txTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
+
+        for (org.bitcoinj.core.Transaction transaction : transactions){
+                txTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, transaction.getHashAsString(), DatabaseFilterType.EQUAL);
+                if (txTable.getRecords().isEmpty()){
+                    /**
+                     * if this transaction hash is not in the database, I will insert it.
+                     */
+                    this.persistNewTransaction(transaction.getHashAsString());
+                }
+        }
 
     }
 
