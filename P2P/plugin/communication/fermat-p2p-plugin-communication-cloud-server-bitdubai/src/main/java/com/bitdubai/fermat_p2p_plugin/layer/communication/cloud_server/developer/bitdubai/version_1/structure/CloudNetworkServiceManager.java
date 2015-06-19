@@ -57,9 +57,8 @@ public class CloudNetworkServiceManager extends CloudFMPConnectionManager {
 	
 	@Override
 	public void handleConnectionAccept(final FMPPacket packet) throws FMPException{
-		String vpnParticipants = AsymmectricCryptography.decryptMessagePrivateKey(packet.getMessage(), eccPrivateKey);
-		CloudNetworkServiceVPN vpn = activeVPNConnections.get(vpnParticipants);
-		processVPNAccept(packet.getSender(), vpn);
+		CloudNetworkServiceVPN vpn = activeVPNConnections.get(packet.getDestination());
+		processVPNAccept(packet.getDestination(), packet.getSender(), vpn);
 	}
 
 	@Override
@@ -115,7 +114,7 @@ public class CloudNetworkServiceManager extends CloudFMPConnectionManager {
 		String decryptedMessage;
 		try{
 			decryptedMessage = AsymmectricCryptography.decryptMessagePrivateKey(packet.getMessage(), eccPrivateKey);
-		} catch(Exception ex){
+		}catch(Exception ex){
 			FMPException exception = new WrongFMPPacketEncryptionException(ex.getMessage());
 			denyConnectionRequest(packet, exception.getMessage()); 
 			return;
@@ -157,22 +156,18 @@ public class CloudNetworkServiceManager extends CloudFMPConnectionManager {
 		Set<String> vpnParticipants = new HashSet<String>();
 		vpnParticipants.add(packet.getSender());
 		vpnParticipants.add(packet.getDestination());
-		
+		String vpnRequestor = packet.getSender();
 		StringBuilder messageBuilder = new StringBuilder();
 		for(String participant : vpnParticipants)
 			messageBuilder.append(participant + FMPPacket.MESSAGE_SEPARATOR);
 		String message = messageBuilder.toString().trim();
 		
-		
 		CloudNetworkServiceVPN vpn = new CloudNetworkServiceVPN(vpnAddress, Executors.newFixedThreadPool(4), new ECCKeyPair(), networkService, vpnParticipants);
 		vpn.start();
-		activeVPNConnections.put(message, vpn);
+		activeVPNConnections.put(vpnRequestor, vpn);
 		
-		String sender = getPublicKey();
-		FMPPacketType type;
-		
-		type = FMPPacketType.CONNECTION_REQUEST;
-		
+		String sender = vpnRequestor;
+		FMPPacketType type = FMPPacketType.CONNECTION_REQUEST;
 		for(String destination : vpnParticipants){
 			String messageHash = AsymmectricCryptography.encryptMessagePublicKey(message, destination);
 			String signature = AsymmectricCryptography.createMessageSignature(messageHash, eccPrivateKey);
@@ -181,13 +176,10 @@ public class CloudNetworkServiceManager extends CloudFMPConnectionManager {
 		}
 	}
 	
-	private void processVPNAccept(final String participant, final CloudNetworkServiceVPN vpn) throws FMPException{
-		String sender = getPublicKey();
+	private void processVPNAccept(final String requestor, final String participant, final CloudNetworkServiceVPN vpn) throws FMPException{
+		String sender = requestor;
 		String destination = participant;
-		StringBuilder messageBuilder = new StringBuilder();
-		for(String participantString : vpn.getParticipants())
-			messageBuilder.append(participantString + FMPPacket.MESSAGE_SEPARATOR);
-		String message = vpn.getAddress().getHost() + FMPPacket.MESSAGE_SEPARATOR + vpn.getAddress().getPort() + FMPPacket.MESSAGE_SEPARATOR + messageBuilder.toString().trim();
+		String message = vpn.getAddress().getHost() + FMPPacket.MESSAGE_SEPARATOR + vpn.getAddress().getPort() + FMPPacket.MESSAGE_SEPARATOR + vpn.getPublicKey();
 		FMPPacketType type = FMPPacketType.CONNECTION_ACCEPT_FORWARD;
 		String messageHash = AsymmectricCryptography.encryptMessagePublicKey(message, destination);
 		String signature = AsymmectricCryptography.createMessageSignature(messageHash, eccPrivateKey);

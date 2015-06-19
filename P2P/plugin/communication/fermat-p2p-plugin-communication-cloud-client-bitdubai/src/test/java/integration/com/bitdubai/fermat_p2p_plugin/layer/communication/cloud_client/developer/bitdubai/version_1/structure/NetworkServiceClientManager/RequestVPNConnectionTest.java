@@ -10,10 +10,12 @@ public class RequestVPNConnectionTest extends NetworkServiceClientManagerIntegra
 	
 	//TODO improve this test, it's flaky
 	@Test
-	public void RequestVPN_PeersAreRegistered_VPNAddedToRegistry() throws Exception{
+	public void RequestVPN_PeersAreRegistered_ReceivePendingVPNRequest() throws Exception{
 		setUp(TCP_PORT_PADDING + 1);
 		Thread.sleep(getThreadSleepMillis());
 		testClient.requestVPNConnection(testClient.getPublicKey());
 		Thread.sleep(getThreadSleepMillis());
+		assertThat(testClient.getPendingVPNRequest()).isNotNull();
+		System.out.println(testClient.getPendingVPNRequest());
 	}
 }
