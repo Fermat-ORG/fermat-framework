@@ -46,7 +46,7 @@ public class CloudClientManager extends CloudFMPConnectionManager {
 	}
 	
 	@Override
-	public void writeToKey(final SelectionKey key) throws CloudConnectionException{
+	public synchronized void writeToKey(final SelectionKey key) throws CloudConnectionException{
 		try{
 			SocketChannel channel = (SocketChannel) key.channel();
 			FMPPacket dataPacket = pendingOutgoingMessages.remove();
@@ -104,6 +104,11 @@ public class CloudClientManager extends CloudFMPConnectionManager {
 		String networkServiceServerPublicKey = messageComponents[3];
 		
 		NetworkServiceClientManager networkServiceClient = new NetworkServiceClientManager(networkServiceServerAddress, executor, AsymmectricCryptography.createPrivateKey(), networkServiceServerPublicKey, networkService);
+		try{
+			networkServiceClient.start();
+		}catch(CloudConnectionException ex){
+			ex.printStackTrace();
+		}
 		networkServiceRegistry.put(networkService, networkServiceClient);
 	}
 

@@ -154,13 +154,12 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 		}
 		
 		readBuffer.flip();
-		byte[] data = new byte[FMPPacket.PACKET_MAX_BYTE_SIZE];
+		byte[] data = new byte[read];
 		readBuffer.get(data, 0, read);
 		try{
 			StringBuffer stringBuffer = new StringBuffer(new String(data, CHARSET_NAME));
 			if(!stringBuffer.toString().trim().isEmpty())
 				processIncomingPacket(FMPPacketFactory.constructCloudPacket(stringBuffer.toString().trim()), key);
-							
 		} catch(UnsupportedEncodingException ex){
 			ex.printStackTrace();
 		} catch (FMPException e) {
@@ -230,7 +229,7 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 		}catch(FMPException ex){
 			throw new CloudConnectionException(ex.getMessage());
 		}catch(NoSuchElementException ex){
-			System.out.println(ex.getMessage());
+			return;
 		}
 	}
 
