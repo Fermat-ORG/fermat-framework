@@ -15,7 +15,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 
 import org.bitcoinj.core.Wallet;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -96,39 +99,32 @@ public class CryptoVaultDatabaseActions {
      * Will retrieve all the transactions that are in status pending ProtocolStatus = TO_BE_NOTIFIED
      * @return
      */
-    public List<com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction>  getPendingTransactionsToBeNotified(){
+    public HashMap<String, String> getPendingTransactionsHeaders(){
         /**
          * I need to obtain all the transactions ids with protocol status SENDING_NOTIFIED y TO_BE_NOTIFIED
          */
         DatabaseTable cryptoTxTable;
+        HashMap<String, String> transactionsIds = new HashMap<String, String>();
         cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
 
-        /*
-        DatabaseTableFilter filterSendingNotified;
-        filterSendingNotified.setColumn(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME);
-        filterSendingNotified.setType(DatabaseFilterType.EQUAL);
-        filterSendingNotified.setValue(ProtocolStatus.SENDING_NOTIFIED.toString());
-
-        DatabaseTableFilter filterToBeNotified;
-        filterToBeNotified.setColumn(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME);
-        filterToBeNotified.setType(DatabaseFilterType.EQUAL);
-        filterToBeNotified.setValue(ProtocolStatus.TO_BE_NOTIFIED.toString());
-
-        List<DatabaseTableFilter> filters;
-        filters.add(filterSendingNotified);
-        filters.add(filterToBeNotified);
-        //cryptoTxTable.setFilterGroup(filters,);
-*/
+        /**
+         * I get the transaction IDs and Hashes for the TO_BE_NOTIFIED
+         */
         cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.toString(), DatabaseFilterType.EQUAL);
-
         for (DatabaseTableRecord record : cryptoTxTable.getRecords()){
-            /**
-             * I get the transaction IDs and Hashes for the TO_BE_NOTIFIED
-             */
-            //record.
+            transactionsIds.put(record.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME), record.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME));
         }
 
-        return null;
+
+        /**
+         * I get the transaction IDs and Hashes for the TO_BE_NOTIFIED
+         */
+        cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME, ProtocolStatus.SENDING_NOTIFIED.toString(), DatabaseFilterType.EQUAL);
+        for (DatabaseTableRecord record : cryptoTxTable.getRecords()){
+            transactionsIds.put(record.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME), record.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME));
+        }
+
+        return transactionsIds;
     }
 
     /**

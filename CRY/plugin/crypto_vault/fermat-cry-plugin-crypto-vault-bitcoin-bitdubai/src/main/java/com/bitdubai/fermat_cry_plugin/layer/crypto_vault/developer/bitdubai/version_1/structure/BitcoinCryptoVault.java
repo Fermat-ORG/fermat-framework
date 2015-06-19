@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
@@ -40,13 +41,16 @@ import org.bitcoinj.core.Coin;
 import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.PeerGroup;
+import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.store.UnreadableWalletException;
 import org.bitcoinj.wallet.DeterministicSeed;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -399,6 +403,9 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         return txID.toString();
     }
 
+
+
+
     /**
      * TransactionProtocolManager interface implementation
      */
@@ -422,21 +429,75 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
          */
         try{
             CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database);
-            List<com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction> txs = db.getPendingTransactionsToBeNotified();
             /**
-             * before sending the transaction back, Im updating the protocol status
+             * Im getting the transaction headers which is a map with transactionID and Transaction Hash. I will use this information to access the vault.
              */
+            HashMap<String, String> transactionHeaders = db.getPendingTransactionsHeaders();
+            for (Map.Entry<String, String> entry : transactionHeaders.entrySet()){
+                String txId = entry.getKey();
+                String txHash = entry.getValue();
 
-            for (com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction tx : txs){
-                db.updateTransactionProtocolStatus(tx.getTransactionID(), ProtocolStatus.SENDING_NOTIFIED);
+                /**
+                 * I get the transaction from the vault
+                 */
+                CryptoAddress addressFrom = new CryptoAddress(getAddressFromVaul(txHash), CryptoCurrency.BITCOIN);
+                CryptoAddress addressTo = new CryptoAddress(getAddressToVaul(txHash), CryptoCurrency.BITCOIN);
+                long amount = getAmountFromVault(txHash);
+                //todo needs to complete the way to get the transaction status from the database.
+                CryptoTransaction cryptoTransaction = new CryptoTransaction(txHash, addressFrom, addressTo,CryptoCurrency.BITCOIN, amount, CryptoStatus.CONFIRMED);
+
+
+                /**
+                 * I update the status of the transaction protocol to SENDING_NOTIFIED
+                 */
+                db.updateTransactionProtocolStatus(UUID.fromString(txId), ProtocolStatus.SENDING_NOTIFIED);
             }
+
 
             /**
              * once the database is updated, I return the transaction
              */
-            return txs;
+            return null;
         } catch (Exception e){
             throw new CantDeliverPendingTransactionsException();
         }
+    }
+
+    /**
+     * gets the amount of satoshis of the transaction
+     * @param txHash
+     * @return satoshis
+     */
+    private long getAmountFromVault(String txHash) {
+        //todo finish this
+        Sha256Hash hash = new Sha256Hash(txHash);
+        Transaction tx = vault.getTransaction(hash);
+        return 0;
+    }
+
+    /**
+     * gets the address To of the transaction
+     * @param txHash
+     * @return the string of the address
+     */
+    private String getAddressToVaul(String txHash) {
+        //todo finish this
+        Sha256Hash hash = new Sha256Hash(txHash);
+        Transaction tx = vault.getTransaction(hash);
+        return null;
+    }
+
+    /**
+     * Access the vault and retrieves the address from if the transaction
+     * @param txHash
+     * @return the string of the address
+     */
+    private String getAddressFromVaul(String txHash) {
+        //todo finish this
+        Sha256Hash hash = new Sha256Hash(txHash);
+        Transaction tx = vault.getTransaction(hash);
+
+
+        return null;
     }
 }
