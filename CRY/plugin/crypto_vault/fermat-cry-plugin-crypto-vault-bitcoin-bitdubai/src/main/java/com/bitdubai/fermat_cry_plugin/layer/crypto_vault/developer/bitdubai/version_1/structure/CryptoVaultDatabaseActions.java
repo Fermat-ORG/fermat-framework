@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.ver
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -93,7 +94,7 @@ public class CryptoVaultDatabaseActions {
      * Will retrieve all the transactions that are in status pending ProtocolStatus = TO_BE_NOTIFIED
      * @return
      */
-    public List<Transaction>  getPendingTransactions(){
+    public List<com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction>  getPendingTransactionsToBeNotified(){
         //todo complete this
 
         return null;

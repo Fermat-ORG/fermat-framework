@@ -262,6 +262,6 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Service
 
     @Override
     public TransactionProtocolManager<CryptoTransaction> getTransactionManager() {
-        return null;
+        return vault;
     }
 }

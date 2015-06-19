@@ -3,9 +3,16 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.ver
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -24,6 +31,7 @@ import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.DealsWithBitcoinCryptoNetwork;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantCreateCryptoWalletException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVault;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.*;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import org.bitcoinj.core.Address;
@@ -38,6 +46,7 @@ import org.bitcoinj.store.UnreadableWalletException;
 import org.bitcoinj.wallet.DeterministicSeed;
 
 import java.io.File;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -45,7 +54,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by rodrigo on 09/06/15.
  */
-public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWithBitcoinCryptoNetwork, DealsWithErrors, DealsWithPluginIdentity, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem{
+public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWithBitcoinCryptoNetwork, DealsWithErrors, DealsWithPluginIdentity, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, TransactionProtocolManager{
 
     /**
      * BitcoinCryptoVault member variables
@@ -310,6 +319,14 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
     }
 
 
+    /**
+     * Sends bitcoins to the specified address
+     * @param FermatTxId the internal txID set for the transfer protocol
+     * @param addressTo the address to
+     * @param amount the amount of satoshis
+     * @return the internal transaction id created.
+     * @throws com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException
+     */
     public String sendBitcoins(UUID FermatTxId, CryptoAddress addressTo, long amount) throws com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException{
         /**
          * if the transaction was requested before but resend my mistake, Im not going to send it again
@@ -380,5 +397,46 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
          * returns the created transaction id
          */
         return txID.toString();
+    }
+
+    /**
+     * TransactionProtocolManager interface implementation
+     */
+    @Override
+    public void confirmReception(UUID transactionID) throws CantConfirmTransactionException {
+        /**
+         * will marked the transaction as notified
+         */
+        try{
+            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database);
+            db.updateTransactionProtocolStatus(transactionID, ProtocolStatus.RECEPTION_NOTIFIED);
+        } catch (Exception e){
+            throw new CantConfirmTransactionException();
+        }
+    }
+
+    @Override
+    public List<com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
+        /**
+         * will return all the pending transactions
+         */
+        try{
+            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database);
+            List<com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction> txs = db.getPendingTransactionsToBeNotified();
+            /**
+             * before sending the transaction, Im updating the protocol status
+             */
+
+            for (com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction tx : txs){
+                db.updateTransactionProtocolStatus(tx.getTransactionID(), ProtocolStatus.SENDING_NOTIFIED);
+            }
+
+            /**
+             * once the database is updated, I return the transaction
+             */
+            return txs;
+        } catch (Exception e){
+            throw new CantDeliverPendingTransactionsException();
+        }
     }
 }
