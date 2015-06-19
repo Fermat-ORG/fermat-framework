@@ -65,6 +65,8 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
     private List<EventListener> listenersOutgoingMoneyRequestApprovedEvent = new ArrayList<>();
     private List<EventListener> listenersOutgoingMoneyRequestRejectedEvent = new ArrayList<>();
 
+    private List<EventListener> listenersTransactopnWaitingTransferenceEvent = new ArrayList<>();
+    private List<EventListener> listenersTransactopnWaitingTransferenceExtraUserEvent = new ArrayList<>();
 
     /**
      * DealsWithEventMonitor member variables
@@ -194,6 +196,12 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
             
             case INCOMING_MONEY_REQUEST_REJECTED:
                 return new IncomingMoneyRequestRejectedEventListener(EventType.INCOMING_MONEY_REQUEST_REJECTED, this.eventMonitor);
+
+            case INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE:
+                return new IncomingCryptoTransactionsWaitingTransferenceEventListener(EventType.INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE,this.eventMonitor);
+
+            case INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE_EXTRA_USER:
+                return new IncomingCryptoTransactionsWaitingTransferenceExtraUserEventListener(EventType.INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE_EXTRA_USER,this.eventMonitor);
         }
         return null;
     }
@@ -316,6 +324,14 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
 
             case INCOMING_MONEY_REQUEST_REJECTED:
                 return new IncomingMoneyRequestRejectedEvent(EventType.INCOMING_MONEY_REQUEST_REJECTED);
+
+            case INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE:
+                return new IncomingCryptoTransactionsWaitingTransferenceEvent(EventType.INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE);
+
+            case INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE_EXTRA_USER:
+                return new IncomingCryptoTransactionsWaitingTransferenceExtraUserEvent(EventType.INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE_EXTRA_USER);
+
+
         }
         return null;
     }
@@ -478,9 +494,16 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
             case INCOMING_MONEY_REQUEST_REJECTED:
                 listenersIncomingMoneyRequestRejectedEvent.add(listener);
                 break;
-            
-            
-            
+
+            case INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE:
+                listenersTransactopnWaitingTransferenceEvent.add(listener);
+                break;
+
+            case INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE_EXTRA_USER:
+                listenersTransactopnWaitingTransferenceExtraUserEvent.add(listener);
+                break;
+
+
         }
     }
 
@@ -641,8 +664,15 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
             
             case OUTGOING_MONEY_REQUEST_REJECTED:
                 listeners = listenersOutgoingMoneyRequestRejectedEvent;
-                break;  
-            
+                break;
+
+            case INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE:
+                listeners = listenersTransactopnWaitingTransferenceEvent;
+                break;
+
+            case INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE_EXTRA_USER:
+                listeners = listenersTransactopnWaitingTransferenceExtraUserEvent;
+                break;
             
         }
 
@@ -810,6 +840,14 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
 
             case OUTGOING_MONEY_REQUEST_REJECTED:
                 listeners = listenersOutgoingMoneyRequestRejectedEvent;
+                break;
+
+            case INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE:
+                listeners = listenersTransactopnWaitingTransferenceEvent;
+                break;
+
+            case INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE_EXTRA_USER:
+                listeners = listenersTransactopnWaitingTransferenceExtraUserEvent;
                 break;
         }
 
