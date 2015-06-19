@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFile
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlatformDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorDeveloper;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
@@ -2127,66 +2128,43 @@ public class Platform  {
          * ----------------------------------
          * Plugin Wallet Contacts Middleware
          * ----------------------------------
-         * * * *
-         */
-
-
-
-        /**
-         * I will give the Wallet Contacts Middleware access to the File System and to the Event Manager
+         *
+         * I will give the Wallet Contacts Middleware access to the Database System and to the Error Manager
          */
 
         Plugin walletContactsMiddleware = ((MiddlewareLayer) mMiddlewareLayer).getWalletContactsPlugin();
 
-        ((DealsWithPluginFileSystem) walletContactsMiddleware).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
-        ((DealsWithEvents) walletContactsMiddleware).setEventManager((EventManager) eventManager);
+        ((DealsWithErrors) walletContactsMiddleware).setErrorManager((ErrorManager) errorManager);
+        ((DealsWithPluginDatabaseSystem) walletContactsMiddleware).setPluginDatabaseSystem(databaseSystemOs.getPluginDatabaseSystem());
         corePlatformContext.addPlugin(walletContactsMiddleware, Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE);
 
-        try
-        {
-
+        try {
             /**
              * As any other plugin, this one will need its identity in order to access the data it persisted before.
              */
-
             UUID pluginID = pluginsIdentityManager.getPluginId(walletContactsMiddleware);
             (walletContactsMiddleware).setId(pluginID);
-
             try {
                 ((Service) walletContactsMiddleware).start();
-            }
-            catch (CantStartPluginException cantStartPluginException) {
-
+            } catch (CantStartPluginException cantStartPluginException) {
                 System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
                 cantStartPluginException.printStackTrace();
-
                 /**
                  * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
                  * start, then the platform wont start either. In the future we will review this policy.
                  * * * 
                  */
-
                 throw new CantStartPlatformException();
-            }
-            catch (Exception e){
-
+            } catch (Exception e){
                 ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
-
                 /**
                  * This is worse than the previous catch since the plugin didn't even throw an expected exception.
                  * * *
                  */
-
             }
-
-        }
-        catch (PluginNotRecognizedException pluginNotRecognizedException)
-        {
-
-
+        } catch (PluginNotRecognizedException pluginNotRecognizedException) {
             System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
             pluginNotRecognizedException.printStackTrace();
-
             throw new CantStartPlatformException();
         }
 
