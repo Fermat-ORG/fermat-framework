@@ -9,7 +9,7 @@ class IncomingCryptoDataBaseConstants {
     static final String INCOMING_CRYPTO_DATABASE = "IncomingCryptoDatabase";
 
     static final String INCOMING_CRYPTO_REGISTRY_TABLE_NAME = "IncomingCryptoRegistry";
-    static final ColumnDefinition INCOMING_CRYPTO_REGISTRY_TABLE_ID_COLUMN = new ColumnDefinition("Id", DatabaseDataType.STRING, 100,true);
+    static final ColumnDefinition INCOMING_CRYPTO_REGISTRY_TABLE_ID_COLUMN = new ColumnDefinition("Id", DatabaseDataType.STRING, 36,true);
     static final ColumnDefinition INCOMING_CRYPTO_REGISTRY_TABLE_TRANSACTION_HASH_COLUMN = new ColumnDefinition("TransactionHash", DatabaseDataType.STRING, 100,false);
     static final ColumnDefinition INCOMING_CRYPTO_REGISTRY_TABLE_ADDRESS_TO_COLUMN = new ColumnDefinition("AddressTo", DatabaseDataType.STRING, 100,false);
     static final ColumnDefinition INCOMING_CRYPTO_REGISTRY_TABLE_CRYPTO_CURRENCY_COLUMN = new ColumnDefinition("CryptoCurrency", DatabaseDataType.STRING, 100,false);

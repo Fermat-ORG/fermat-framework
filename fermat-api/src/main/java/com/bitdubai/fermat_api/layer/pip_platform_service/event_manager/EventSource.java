@@ -24,8 +24,8 @@ public enum EventSource {
     WORLD_BLOCKCHAIN_INFO_PLUGIN ("WBI"),
     DISCOUNT_WALLET_BASIC_WALLET_PLUGIN ("DWB"),
     DEVICE_CONNECTIVITY ("DCO"),
-    CRYPTO_MODULE_CRYPTO_ROUTER ("CCR"),
-    CRYPTO_MODULE_CRYPTO_VAULT ("CCV");
+    CRYPTO_ROUTER ("CCR"),
+    CRYPTO_VAULT ("CCV");
 
 
     private final String code;
@@ -76,9 +76,9 @@ public enum EventSource {
             case "DCO":
                 return EventSource.DEVICE_CONNECTIVITY;
             case "CCR":
-                return EventSource.CRYPTO_MODULE_CRYPTO_ROUTER;
+                return EventSource.CRYPTO_ROUTER;
             case "CCV":
-                return EventSource.CRYPTO_MODULE_CRYPTO_VAULT;
+                return EventSource.CRYPTO_VAULT;
         }
 
         /**

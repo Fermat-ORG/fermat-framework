@@ -8,9 +8,11 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.I
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoReceivedEvent;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoReceptionConfirmedEvent;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoReversedEvent;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoTransactionsWaitingTransferenceEvent;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoReceivedEventHandler;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoReceptionConfirmedEventHandler;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoReversedEventHandler;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoTransactionsWaitingTransferenceEventHandler;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantSaveEvent;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoIdentifiedEventHandler;
@@ -79,6 +81,11 @@ public class IncomingCryptoEventRecorderService implements DealsWithEvents, Deal
     /**
      * IncomingCryptoEventRecorder Interface implementation.
      */
+    public void incomingCryptoWaitingTransference(IncomingCryptoTransactionsWaitingTransferenceEvent event) throws CantSaveEvent {
+        this.registry.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
+    }
+
+    // TODO: Delete this four methods
     public void incomingCryptoIdentified(IncomingCryptoIdentifiedEvent event) throws CantSaveEvent {
         this.registry.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
     }
@@ -108,6 +115,16 @@ public class IncomingCryptoEventRecorderService implements DealsWithEvents, Deal
         EventListener eventListener;
         EventHandler eventHandler;
 
+        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE);
+        eventHandler = new IncomingCryptoTransactionsWaitingTransferenceEventHandler();
+        ((IncomingCryptoTransactionsWaitingTransferenceEventHandler) eventHandler).setIncomingCryptoEventRecorderService(this);
+        eventListener.setEventHandler(eventHandler);
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);
+
+
+
+        // TODO: Delete this four handlers
         eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_IDENTIFIED);
         eventHandler = new IncomingCryptoIdentifiedEventHandler();
         ((IncomingCryptoIdentifiedEventHandler) eventHandler).setIncomingCryptoEventRecorderService(this);
