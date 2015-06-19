@@ -3,8 +3,9 @@ package com.bitdubai.niche_wallet.bitcoin_wallet;
 /**
  * Created by Natalia on 4/4/15.
  */
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.DealsWithNicheWalletTypeCryptoWallet;
-import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.NicheWalletTypeCryptoWalletManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
@@ -15,7 +16,7 @@ public class Platform  implements DealsWithNicheWalletTypeCryptoWallet,DealsWith
     /**
      * DealsWithWalletContacts Interface member variables.
      */
-    private static NicheWalletTypeCryptoWalletManager cryptoWalletManager;
+    private static CryptoWalletManager cryptoWalletManager;
 
     /**
      * DealsWithErrors Interface member variables.
@@ -42,7 +43,7 @@ public class Platform  implements DealsWithNicheWalletTypeCryptoWallet,DealsWith
      * DealsWithWalletContacts Interface implementation.
      */
 
-    public void setNicheWalletTypeCryptoWalletManager(NicheWalletTypeCryptoWalletManager nicheWalletTypeCryptoWalletManager){
+    public void setNicheWalletTypeCryptoWalletManager(CryptoWalletManager nicheWalletTypeCryptoWalletManager){
         this.cryptoWalletManager = nicheWalletTypeCryptoWalletManager;
     }
 
@@ -84,7 +85,7 @@ public class Platform  implements DealsWithNicheWalletTypeCryptoWallet,DealsWith
      * PlatForm Class implementation.
      */
 
-    public NicheWalletTypeCryptoWalletManager getCryptoWalletManager (){
+    public CryptoWalletManager getNicheWalletTypeCryptoWalletManager (){
         return this.cryptoWalletManager;
     }
 }
