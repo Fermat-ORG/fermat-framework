@@ -87,7 +87,8 @@ public class DeviceLocationManager implements LocationManager,LocationListener{
             // getting network status
             boolean isNetworkEnabled = locationManager.isProviderEnabled(android.location.LocationManager.NETWORK_PROVIDER);
 
-            if (isGPSEnabled && !isNetworkEnabled) {
+            //if (isGPSEnabled && !isNetworkEnabled)
+            if (isGPSEnabled) {
                 // no network provider is enabled
             
                 // First get location from Network Provider
