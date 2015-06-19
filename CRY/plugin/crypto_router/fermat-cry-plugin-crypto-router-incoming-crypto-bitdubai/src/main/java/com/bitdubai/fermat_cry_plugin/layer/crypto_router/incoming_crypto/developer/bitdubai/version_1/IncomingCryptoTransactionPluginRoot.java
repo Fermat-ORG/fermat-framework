@@ -5,7 +5,8 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.ActorAddressBookManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookRegistry;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
@@ -13,7 +14,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorMan
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.DealsWithActorAddressBook;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.DealsWithActorAddressBook;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantInitializeCryptoRegistryException;
@@ -37,7 +38,7 @@ public class IncomingCryptoTransactionPluginRoot implements DealsWithActorAddres
     /*
      * DealsWithActorAddressBook member variables
      */
-    private ActorAddressBookManager actorAddressBook;
+    private ActorAddressBookManager actorAddressBookManager;
 
     /*
      * DealsWithCryptoVault member variables
@@ -181,7 +182,7 @@ public class IncomingCryptoTransactionPluginRoot implements DealsWithActorAddres
             //((IncomingCryptoRelayAgent) this.relay).setPluginId(this.pluginId);
             ((IncomingCryptoRelayAgent) this.relay).setRegistry(this.registry);
             ((DealsWithErrors) this.relay).setErrorManager(this.errorManager);
-            ((DealsWithActorAddressBook) this.relay).setUserAddressBookManager(this.actorAddressBook);
+            ((DealsWithActorAddressBook) this.relay).setActorAddressBookManager(this.actorAddressBookManager);
             this.relay.start();
         }
         catch (CantStartAgentException cantStartAgentException) {
@@ -260,8 +261,8 @@ public class IncomingCryptoTransactionPluginRoot implements DealsWithActorAddres
     }
 
     @Override
-    public void setUserAddressBookManager(ActorAddressBookManager actorAddressBook) {
-        this.actorAddressBook = actorAddressBook;
+    public void setActorAddressBookManager(ActorAddressBookManager actorAddressBookManager) {
+        this.actorAddressBookManager = actorAddressBookManager;
     }
 
     @Override

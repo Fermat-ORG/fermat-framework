@@ -3,13 +3,13 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.devel
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.ActorAddressBookManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.DealsWithActorAddressBook;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.DealsWithActorAddressBook;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.interfaces.TransactionAgent;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.util.SpecialistSelector;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantSelectSpecialistException;
@@ -58,7 +58,7 @@ public class IncomingCryptoRelayAgent implements DealsWithErrors, DealsWithEvent
      */
     //private UUID pluginId;
     private IncomingCryptoRegistry registry;
-    private ActorAddressBookManager actorAddressBook;
+    private ActorAddressBookManager actorAddressBookManager;
 
 
     /**
@@ -105,7 +105,7 @@ public class IncomingCryptoRelayAgent implements DealsWithErrors, DealsWithEvent
 
         this.relayAgent = new RelayAgent ();
         try {
-            this.relayAgent.initialize(this.registry, this.actorAddressBook);
+            this.relayAgent.initialize(this.registry, this.actorAddressBookManager);
             this.relayAgent.setErrorManager(this.errorManager);
 
             this.agentThread = new Thread(this.relayAgent);
@@ -125,8 +125,8 @@ public class IncomingCryptoRelayAgent implements DealsWithErrors, DealsWithEvent
     }
 
     @Override
-    public void setUserAddressBookManager(ActorAddressBookManager actorAddressBook) {
-        this.actorAddressBook = actorAddressBook;
+    public void setActorAddressBookManager(ActorAddressBookManager actorAddressBookManager) {
+        this.actorAddressBookManager = actorAddressBookManager;
     }
     /*
       ¿Qué quizo hacer arturo acá?!
@@ -228,7 +228,7 @@ public class IncomingCryptoRelayAgent implements DealsWithErrors, DealsWithEvent
             //this.pluginId = pluginId;
             this.registry = registry;
             this.specialistSelector = new SpecialistSelector();
-            this.specialistSelector.setUserAddressBookManager(actorAddressBook);
+            this.specialistSelector.setActorAddressBookManager(actorAddressBook);
         }
 
         /**
