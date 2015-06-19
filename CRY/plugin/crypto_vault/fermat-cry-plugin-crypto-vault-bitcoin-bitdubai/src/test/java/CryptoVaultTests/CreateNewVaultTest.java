@@ -6,6 +6,13 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorMan
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantCreateCryptoWalletException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.BitcoinCryptoVault;
 
+import org.bitcoinj.core.Address;
+import org.bitcoinj.core.AddressFormatException;
+import org.bitcoinj.core.Coin;
+import org.bitcoinj.core.InsufficientMoneyException;
+import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.Wallet;
+import org.bitcoinj.params.TestNet3Params;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -25,7 +32,7 @@ public class CreateNewVaultTest {
     @Mock PluginDatabaseSystem pluginDatabaseSystem;
 
     @Test
-    public void createNewVault() throws CantCreateCryptoWalletException {
+    public void createNewVault() throws CantCreateCryptoWalletException, AddressFormatException, InsufficientMoneyException {
         userId = UUID.randomUUID();
         BitcoinCryptoVault vault = new BitcoinCryptoVault(userId);
         vault.setErrorManager(errorManager);
@@ -36,6 +43,10 @@ public class CreateNewVaultTest {
         vault.loadOrCreateVault();
 
         System.out.println(vault.getAddress().getAddress() + " len: " + vault.getAddress().getAddress().length());
+        Wallet wallet = new Wallet(TestNet3Params.get());
+        Address address = new Address(TestNet3Params.get(), vault.getAddress().getAddress());
+        Transaction tx = new Transaction(TestNet3Params.get());
+        System.out.println(tx.getHash().toString().length());
     }
 
     public void loadExistingVault(){
