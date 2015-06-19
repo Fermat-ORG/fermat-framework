@@ -914,46 +914,35 @@ public class Platform  {
         }
 
         /**
-         * ------------------------------
-         *  Plugin Wallet Address Book Crypto
-         * ------------------------------
-         * * * * 
-         */
-        /**
-         * I will give the Wallet Address book crypto access to the File System and to the Event Manager
+         * ------------------------------------*
+         *  Plugin Wallet Address Book Crypto  *
+         * ------------------------------------*
+         *
+         * I'm giving the Wallet Address book crypto plugin access to the Database System and to Error Manager
          */
 
         Plugin walletAddressBookCrypto = ((CryptoLayer) mCryptoLayer).getmWalletAddressBook();
 
-        ((DealsWithPluginFileSystem) walletAddressBookCrypto).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
-        ((DealsWithEvents) walletAddressBookCrypto).setEventManager((EventManager) eventManager);
+        ((DealsWithErrors) walletAddressBookCrypto).setErrorManager((ErrorManager) errorManager);
+        ((DealsWithPluginDatabaseSystem) walletAddressBookCrypto).setPluginDatabaseSystem(databaseSystemOs.getPluginDatabaseSystem());
 
         corePlatformContext.addPlugin(walletAddressBookCrypto, Plugins.BITDUBAI_WALLET_ADDRESS_BOOK_CRYPTO);
 
-        try
-        {
-
+        try {
             /**
              * As any other plugin, this one will need its identity in order to access the data it persisted before.
              */
-
             UUID pluginID = pluginsIdentityManager.getPluginId(walletAddressBookCrypto);
             (walletAddressBookCrypto).setId(pluginID);
-
             try {
                 ((Service) walletAddressBookCrypto).start();
-            }
-            catch (Exception e){
+            } catch (Exception e){
                 System.err.println(e.getMessage());
 
             }
-        }
-        catch (PluginNotRecognizedException pluginNotRecognizedException)
-        {
-
+        } catch (PluginNotRecognizedException pluginNotRecognizedException) {
             System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
             pluginNotRecognizedException.printStackTrace();
-
             throw new CantStartPlatformException();
         }
 
@@ -962,44 +951,31 @@ public class Platform  {
          * ------------------------------
          *  Plugin User Address Book Crypto
          * ------------------------------
-         * * * * 
-         */
-        /**
-         * I will give the User Address book crypto access to the File System and to the Event Manager
+         *
+         * I'm giving to the User Address book crypto plugin access to the Database System and to the Error Manager
          */
 
         Plugin userAddressBookCrypto = ((CryptoLayer) mCryptoLayer).getmUserAddressBook();
 
         ((DealsWithPluginDatabaseSystem) userAddressBookCrypto).setPluginDatabaseSystem(databaseSystemOs.getPluginDatabaseSystem());
-        ((DealsWithEvents) userAddressBookCrypto).setEventManager((EventManager) eventManager);
         ((DealsWithErrors) userAddressBookCrypto).setErrorManager((ErrorManager) errorManager);
 
         corePlatformContext.addPlugin(userAddressBookCrypto, Plugins.BITDUBAI_USER_ADDRESS_BOOK_CRYPTO);
 
-        try
-        {
-
+        try {
             /**
              * As any other plugin, this one will need its identity in order to access the data it persisted before.
              */
-
             UUID pluginID = pluginsIdentityManager.getPluginId(userAddressBookCrypto);
             (userAddressBookCrypto).setId(pluginID);
-
             try {
                 ((Service) userAddressBookCrypto).start();
-            }
-            catch (Exception e){
+            } catch (Exception e){
                 System.err.println(e.getMessage());
-
             }
-        }
-        catch (PluginNotRecognizedException pluginNotRecognizedException)
-        {
-
+        } catch (PluginNotRecognizedException pluginNotRecognizedException) {
             System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
             pluginNotRecognizedException.printStackTrace();
-
             throw new CantStartPlatformException();
         }
 
