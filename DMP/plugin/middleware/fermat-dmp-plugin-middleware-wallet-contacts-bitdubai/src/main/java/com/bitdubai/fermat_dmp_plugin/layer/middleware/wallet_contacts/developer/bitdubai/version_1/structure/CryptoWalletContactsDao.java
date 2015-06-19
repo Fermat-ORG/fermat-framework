@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.WalletContact;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantCreateWalletContactException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantDeleteWalletContactException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetAllWalletContactsException;
@@ -119,9 +119,9 @@ public class CryptoWalletContactsDao implements DealsWithErrors, DealsWithPlugin
      *
      *  @return All Wallet Contacts.
      */
-    public List<WalletContact> findAll(UUID walletId) throws CantGetAllWalletContactsException {
+    public List<WalletContactRecord> findAll(UUID walletId) throws CantGetAllWalletContactsException {
 
-        List<WalletContact> walletContactsList = new ArrayList<>();
+        List<WalletContactRecord> walletContactsListRecord = new ArrayList<>();
 
         try {
 
@@ -142,9 +142,9 @@ public class CryptoWalletContactsDao implements DealsWithErrors, DealsWithPlugin
                 String receivedCurrency = record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_RECEIVED_ADDRESS_CRYPTO_CURRENCY_COLUMN_NAME);
                 CryptoAddress receivedCryptoAddress = new CryptoAddress(receivedAddress, CryptoCurrency.getByCode(receivedCurrency));
 
-                CryptoWalletContact walletContact = new CryptoWalletContact(actorId, actorName, actorType, contactId, receivedCryptoAddress, walletId);
+                CryptoWalletContactRecord walletContact = new CryptoWalletContactRecord(actorId, actorName, actorType, contactId, receivedCryptoAddress, walletId);
 
-                walletContactsList.add(walletContact);
+                walletContactsListRecord.add(walletContact);
             }
 
         } catch (Exception e) {
@@ -153,7 +153,7 @@ public class CryptoWalletContactsDao implements DealsWithErrors, DealsWithPlugin
             throw new CantGetAllWalletContactsException(e.getMessage());
         }
 
-        return walletContactsList;
+        return walletContactsListRecord;
     }
 
     /**
@@ -161,9 +161,9 @@ public class CryptoWalletContactsDao implements DealsWithErrors, DealsWithPlugin
      *
      *  @return All Wallet Contacts.
      */
-    public List<WalletContact> findAllScrolling(UUID walletId, Integer max, Integer offset) throws CantGetAllWalletContactsException {
+    public List<WalletContactRecord> findAllScrolling(UUID walletId, Integer max, Integer offset) throws CantGetAllWalletContactsException {
 
-        List<WalletContact> walletContactsList = new ArrayList<>();
+        List<WalletContactRecord> walletContactsListRecord = new ArrayList<>();
 
         try {
 
@@ -189,9 +189,9 @@ public class CryptoWalletContactsDao implements DealsWithErrors, DealsWithPlugin
                 receivedCryptoAddress.setAddress(receivedAddress);
                 receivedCryptoAddress.setCryptoCurrency(CryptoCurrency.getByCode(receivedCurrency));
 
-                CryptoWalletContact walletContact = new CryptoWalletContact(actorId, actorName, actorType, contactId, receivedCryptoAddress, walletId);
+                CryptoWalletContactRecord walletContact = new CryptoWalletContactRecord(actorId, actorName, actorType, contactId, receivedCryptoAddress, walletId);
 
-                walletContactsList.add(walletContact);
+                walletContactsListRecord.add(walletContact);
             }
 
         } catch (Exception e) {
@@ -200,17 +200,17 @@ public class CryptoWalletContactsDao implements DealsWithErrors, DealsWithPlugin
             throw new CantGetAllWalletContactsException(e.getMessage());
         }
 
-        return walletContactsList;
+        return walletContactsListRecord;
     }
 
     /**
      * Method that create a new entity in the data base.
      *
-     *  @param walletContact WalletContact to create.
+     *  @param walletContactRecord WalletContactRecord to create.
      */
-    public void create(WalletContact walletContact) throws CantCreateWalletContactException {
+    public void create(WalletContactRecord walletContactRecord) throws CantCreateWalletContactException {
 
-        if (walletContact == null){
+        if (walletContactRecord == null){
             throw new CantCreateWalletContactException("The entity is required, can not be null");
         }
 
@@ -218,15 +218,15 @@ public class CryptoWalletContactsDao implements DealsWithErrors, DealsWithPlugin
             DatabaseTable walletContactAddressBookTable = database.getTable(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_NAME);
             DatabaseTableRecord entityRecord = walletContactAddressBookTable.getEmptyRecord();
 
-            entityRecord.setUUIDValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_CONTACT_ID_COLUMN_NAME, walletContact.getContactId());
-            entityRecord.setUUIDValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_WALLET_ID_COLUMN_NAME, walletContact.getWalletId());
-            entityRecord.setUUIDValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_ID_COLUMN_NAME, walletContact.getActorId());
-            entityRecord.setStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_NAME_COLUMN_NAME, walletContact.getActorName());
-            entityRecord.setStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_TYPE_COLUMN_NAME, walletContact.getActorType().getCode());
+            entityRecord.setUUIDValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_CONTACT_ID_COLUMN_NAME, walletContactRecord.getContactId());
+            entityRecord.setUUIDValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_WALLET_ID_COLUMN_NAME, walletContactRecord.getWalletId());
+            entityRecord.setUUIDValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_ID_COLUMN_NAME, walletContactRecord.getActorId());
+            entityRecord.setStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_NAME_COLUMN_NAME, walletContactRecord.getActorName());
+            entityRecord.setStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_TYPE_COLUMN_NAME, walletContactRecord.getActorType().getCode());
 
-            if (walletContact.getReceivedCryptoAddress() != null) {
-                entityRecord.setStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_RECEIVED_CRYPTO_ADDRESS_COLUMN_NAME, walletContact.getReceivedCryptoAddress().getAddress());
-                entityRecord.setStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_RECEIVED_ADDRESS_CRYPTO_CURRENCY_COLUMN_NAME, walletContact.getReceivedCryptoAddress().getCryptoCurrency().getCode());
+            if (walletContactRecord.getReceivedCryptoAddress() != null) {
+                entityRecord.setStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_RECEIVED_CRYPTO_ADDRESS_COLUMN_NAME, walletContactRecord.getReceivedCryptoAddress().getAddress());
+                entityRecord.setStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_RECEIVED_ADDRESS_CRYPTO_CURRENCY_COLUMN_NAME, walletContactRecord.getReceivedCryptoAddress().getCryptoCurrency().getCode());
             }
 
             DatabaseTransaction transaction = database.newTransaction();
@@ -243,26 +243,26 @@ public class CryptoWalletContactsDao implements DealsWithErrors, DealsWithPlugin
     /**
      * Method that update a wallet contact in the database.
      *
-     *  @param walletContact WalletContact to update.
+     *  @param walletContactRecord WalletContactRecord to update.
      */
-    public void update(WalletContact walletContact) throws CantUpdateWalletContactException {
+    public void update(WalletContactRecord walletContactRecord) throws CantUpdateWalletContactException {
 
-        if (walletContact == null){
+        if (walletContactRecord == null){
             throw new CantUpdateWalletContactException("The entity is required, can not be null");
         }
 
         try {
             DatabaseTable walletContactAddressBookTable = database.getTable(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_NAME);
-            walletContactAddressBookTable.setUUIDFilter(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_CONTACT_ID_COLUMN_NAME, walletContact.getContactId(), DatabaseFilterType.EQUAL);
+            walletContactAddressBookTable.setUUIDFilter(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_CONTACT_ID_COLUMN_NAME, walletContactRecord.getContactId(), DatabaseFilterType.EQUAL);
             walletContactAddressBookTable.loadToMemory();
 
             DatabaseTableRecord record = walletContactAddressBookTable.getRecords().get(0);
 
-            if (walletContact.getActorName() != null)
-                record.setStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_NAME_COLUMN_NAME, walletContact.getActorName());
-            if (walletContact.getReceivedCryptoAddress() != null) {
-                record.setStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_RECEIVED_CRYPTO_ADDRESS_COLUMN_NAME, walletContact.getReceivedCryptoAddress().getAddress());
-                record.setStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_RECEIVED_ADDRESS_CRYPTO_CURRENCY_COLUMN_NAME, walletContact.getReceivedCryptoAddress().getCryptoCurrency().getCode());
+            if (walletContactRecord.getActorName() != null)
+                record.setStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_ACTOR_NAME_COLUMN_NAME, walletContactRecord.getActorName());
+            if (walletContactRecord.getReceivedCryptoAddress() != null) {
+                record.setStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_RECEIVED_CRYPTO_ADDRESS_COLUMN_NAME, walletContactRecord.getReceivedCryptoAddress().getAddress());
+                record.setStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_RECEIVED_ADDRESS_CRYPTO_CURRENCY_COLUMN_NAME, walletContactRecord.getReceivedCryptoAddress().getCryptoCurrency().getCode());
             }
 
             DatabaseTransaction transaction = database.newTransaction();
@@ -308,14 +308,14 @@ public class CryptoWalletContactsDao implements DealsWithErrors, DealsWithPlugin
     }
 
     /**
-     * Method that find a WalletContact in database by actorName and walletId.
+     * Method that find a WalletContactRecord in database by actorName and walletId.
      *
      *  @param actorName String actorName.
      *  @param walletId UUID wallet id
      * */
-    public WalletContact findByNameAndWalletId(String actorName, UUID walletId) throws CantGetWalletContactException {
+    public WalletContactRecord findByNameAndWalletId(String actorName, UUID walletId) throws CantGetWalletContactException {
 
-        WalletContact walletContact;
+        WalletContactRecord walletContactRecord;
 
         if (actorName == null || walletId == null) {
             throw new CantGetWalletContactException("The name and the actorName is required, can not be null");
@@ -338,24 +338,24 @@ public class CryptoWalletContactsDao implements DealsWithErrors, DealsWithPlugin
             receivedCryptoAddress.setAddress(receivedAddress);
             receivedCryptoAddress.setCryptoCurrency(CryptoCurrency.getByCode(receivedCurrency));
 
-            walletContact = new CryptoWalletContact(actorId, actorName, actorType, contactId, receivedCryptoAddress, walletId);
+            walletContactRecord = new CryptoWalletContactRecord(actorId, actorName, actorType, contactId, receivedCryptoAddress, walletId);
         } catch (Exception e) {
             // Register the failure.
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetWalletContactException(e.getMessage());
         }
-        return walletContact;
+        return walletContactRecord;
     }
 
     /**
-     * Method that find a WalletContact in database by actorName contains (string) and walletId.
+     * Method that find a WalletContactRecord in database by actorName contains (string) and walletId.
      *
      *  @param actorName String actorName.
      *  @param walletId UUID wallet id
      * */
-    public WalletContact findByNameContainsAndWalletId(String actorName, UUID walletId) throws CantGetWalletContactException {
+    public WalletContactRecord findByNameContainsAndWalletId(String actorName, UUID walletId) throws CantGetWalletContactException {
 
-        WalletContact walletContact;
+        WalletContactRecord walletContactRecord;
 
         if (actorName == null || walletId == null) {
             throw new CantGetWalletContactException("The name and the actorName is required, can not be null");
@@ -376,23 +376,23 @@ public class CryptoWalletContactsDao implements DealsWithErrors, DealsWithPlugin
             String receivedCurrency = record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_RECEIVED_ADDRESS_CRYPTO_CURRENCY_COLUMN_NAME);
             CryptoAddress receivedCryptoAddress = new CryptoAddress(receivedAddress, CryptoCurrency.getByCode(receivedCurrency));
 
-            walletContact = new CryptoWalletContact(actorId, actorName, actorType, contactId, receivedCryptoAddress, walletId);
+            walletContactRecord = new CryptoWalletContactRecord(actorId, actorName, actorType, contactId, receivedCryptoAddress, walletId);
         } catch (Exception e) {
             // Register the failure.
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetWalletContactException(e.getMessage());
         }
-        return walletContact;
+        return walletContactRecord;
     }
 
     /**
-     * Method that find a WalletContact in database by contact id.
+     * Method that find a WalletContactRecord in database by contact id.
      *
      *  @param contactId UUID contact id
      * */
-    public WalletContact findById(UUID contactId) throws CantGetWalletContactException {
+    public WalletContactRecord findById(UUID contactId) throws CantGetWalletContactException {
 
-        WalletContact walletContact;
+        WalletContactRecord walletContactRecord;
 
         if (contactId == null) {
             throw new CantGetWalletContactException("The name and the contactId is required, can not be null");
@@ -413,13 +413,13 @@ public class CryptoWalletContactsDao implements DealsWithErrors, DealsWithPlugin
             String receivedCurrency = record.getStringValue(CryptoWalletContactsDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_RECEIVED_ADDRESS_CRYPTO_CURRENCY_COLUMN_NAME);
             CryptoAddress receivedCryptoAddress = new CryptoAddress(receivedAddress, CryptoCurrency.getByCode(receivedCurrency));
 
-            walletContact = new CryptoWalletContact(actorId, actorName, actorType, contactId, receivedCryptoAddress, walletId);
+            walletContactRecord = new CryptoWalletContactRecord(actorId, actorName, actorType, contactId, receivedCryptoAddress, walletId);
         } catch (Exception e) {
             // Register the failure.
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetWalletContactException(e.getMessage());
         }
-        return walletContact;
+        return walletContactRecord;
     }
 
     /**
