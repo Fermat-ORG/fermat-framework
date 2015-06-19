@@ -13,7 +13,7 @@ public class CryptoTransaction{
     private CryptoAddress addressTo;
     private CryptoCurrency cryptoCurrency;
     private long cryptoAmount;
-    private String cryptoStatus;
+    private CryptoStatus cryptoStatus;
 
 
     public CryptoTransaction(String transactionHash,
@@ -21,7 +21,7 @@ public class CryptoTransaction{
                              CryptoAddress addressTo,
                              CryptoCurrency cryptoCurrency,
                              long cryptoAmount,
-                             String cryptoStatus) {
+                             CryptoStatus cryptoStatus) {
 
         this.transactionHash = transactionHash;
         this.addressFrom = addressFrom;
@@ -49,7 +49,7 @@ public class CryptoTransaction{
         return cryptoAmount;
     }
 
-    public String getCryptoStatus() {
+    public CryptoStatus getCryptoStatus() {
         return cryptoStatus;
     }
 }
