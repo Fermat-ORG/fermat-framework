@@ -11,7 +11,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.ActorAddressBook;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantGetActorAddressBook;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantRegisterActorAddressBook;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -27,6 +26,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecord;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookRecord;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.exceptions.CantInitializeActorAddressBookException;
 
 import java.util.ArrayList;
@@ -147,7 +147,7 @@ public class ActorAddressBookDao implements DealsWithErrors, DealsWithPluginData
         }
     }
 
-    public ActorAddressBook getActorAddressBookByCryptoAddress(CryptoAddress cryptoAddress) throws CantGetActorAddressBook {
+    public ActorAddressBookRecord getActorAddressBookByCryptoAddress(CryptoAddress cryptoAddress) throws CantGetActorAddressBook {
 
         DatabaseTable table;
 
@@ -187,14 +187,14 @@ public class ActorAddressBookDao implements DealsWithErrors, DealsWithPluginData
             return null;
         }
 
-        return new ActorAddressBookRegistry(actorId, actorType, cryptoAddress);
+        return new ActorCryptoAddressBookRecord(actorId, actorType, cryptoAddress);
     }
 
-    public List<ActorAddressBook> getAllActorAddressBookByActorId(UUID actorId) throws CantGetActorAddressBook {
+    public List<ActorAddressBookRecord> getAllActorAddressBookByActorId(UUID actorId) throws CantGetActorAddressBook {
 
         DatabaseTable table;
 
-        List<ActorAddressBook> actorsAddressBooks = new ArrayList<>();
+        List<ActorAddressBookRecord> actorsAddressBooks = new ArrayList<>();
 
         /**
          *  I will load the information of table into a memory structure, filter by crypto address .
@@ -227,7 +227,7 @@ public class ActorAddressBookDao implements DealsWithErrors, DealsWithPluginData
             address = record.getStringValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS);
             cryptoCurrency = CryptoCurrency.getByCode(record.getStringValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_CRYPTO_CURRENCY));
             cryptoAddress = new CryptoAddress(address, cryptoCurrency);
-            ActorAddressBook addressBook = new ActorAddressBookRegistry(actorId, actorType, cryptoAddress);
+            ActorAddressBookRecord addressBook = new ActorCryptoAddressBookRecord(actorId, actorType, cryptoAddress);
             actorsAddressBooks.add(addressBook);
 
         }
