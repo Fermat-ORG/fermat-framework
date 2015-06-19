@@ -18,7 +18,7 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 2015.06.17..
  */
-class CryptoVaultDatabaseActions {
+public class CryptoVaultDatabaseActions {
     Database database;
 
     public CryptoVaultDatabaseActions(Database database){
