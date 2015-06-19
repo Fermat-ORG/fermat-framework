@@ -26,11 +26,11 @@ public interface BitcoinWallet {
     */
     public long getBalance() throws CantCalculateBalanceException;
 
-    public void debit(BitcoinTransaction cryptoTransaction) throws CantRegisterDebitDebitException;
+    public void debit(com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.BitcoinTransaction cryptoTransaction) throws CantRegisterDebitDebitException;
 
-    public void credit(BitcoinTransaction cryptoTransaction) throws CantRegisterCreditException;
+    public void credit(com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.BitcoinTransaction cryptoTransaction) throws CantRegisterCreditException;
 
-    public List<BitcoinTransaction> getTransactions(int max, int offset) throws CantGetTransactionsException;
+    public List<com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.BitcoinTransaction> getTransactions(int max, int offset) throws CantGetTransactionsException;
 
     public void setDescription(UUID transactionID, String memo) throws CabtStoreMemoException, CantFindTransactionException;
 }
