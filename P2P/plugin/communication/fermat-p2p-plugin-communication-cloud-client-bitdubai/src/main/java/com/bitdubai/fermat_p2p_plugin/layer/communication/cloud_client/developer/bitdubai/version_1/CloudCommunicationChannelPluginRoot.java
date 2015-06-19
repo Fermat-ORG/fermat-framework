@@ -7,7 +7,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventHandler;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
@@ -35,7 +34,7 @@ public class CloudCommunicationChannelPluginRoot implements CommunicationChannel
     /**
      * CommunicationChannel Interface member variables.
      */
-    private Map<UUID,NetworkServices> networkServices = new HashMap();
+    private Map<UUID,NetworkServices> networkServices = new HashMap<UUID,NetworkServices>();
     
     /**
      * DealWithEvents Interface member variables.
@@ -136,8 +135,8 @@ public class CloudCommunicationChannelPluginRoot implements CommunicationChannel
          * I will initialize the handling of com.bitdubai.platform events.
          */
 
-        EventListener eventListener;
-        EventHandler eventHandler;
+        //EventListener eventListener;
+        //EventHandler eventHandler;
 
         this.serviceStatus = ServiceStatus.STARTED;
 
@@ -179,14 +178,14 @@ public class CloudCommunicationChannelPluginRoot implements CommunicationChannel
         return this.serviceStatus;
     }
 
-
+    /*
     private void incomingConnectionRequestReceived(){
         
         // LOUI TODO: Se debe disparar un evento "IncomingNetworkServiceConnectionRequest" El evento tiene que incluir en el source este modulo, pero ademas el communicationChannel que es del tipo CommunicationChannels, mas networkService del tipo NetworkServices, mas localNetworkServiceId, mas el remoteNetworkServiceId
 
         
     }
-
+     */
 	public Map<UUID, NetworkServices> getNetworkServices() {
 		return networkServices;
 	}
