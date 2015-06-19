@@ -22,7 +22,7 @@ public abstract class CloudClientManagerIntegrationTest {
 	protected String serverPublicKey = "047F9F57BDE5771B4A9DA604B1CA138AA3B593B7EFBC3C890E384CF8B3EB3080E70DDA5130A26768DDEF30379AA6F9B924339407B0D429964503372CB71D3328D0";
 
 	protected String testHost = "localhost";
-	protected Integer testBasePort = 10000;
+	protected Integer testBasePort = 50000;
 	protected CommunicationChannelAddress testAddress;
 	
 	protected CloudServiceManager testServer;

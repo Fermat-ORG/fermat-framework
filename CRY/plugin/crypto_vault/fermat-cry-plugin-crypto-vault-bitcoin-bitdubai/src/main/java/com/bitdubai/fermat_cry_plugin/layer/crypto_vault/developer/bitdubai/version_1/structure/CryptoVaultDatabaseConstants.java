@@ -3,7 +3,7 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.ver
 /**
  * Created by rodrigo on 11/06/15.
  */
-class CryptoVaultDatabaseConstants {
+public class CryptoVaultDatabaseConstants {
 
     /**
      * Crypto Transactions database table definition.

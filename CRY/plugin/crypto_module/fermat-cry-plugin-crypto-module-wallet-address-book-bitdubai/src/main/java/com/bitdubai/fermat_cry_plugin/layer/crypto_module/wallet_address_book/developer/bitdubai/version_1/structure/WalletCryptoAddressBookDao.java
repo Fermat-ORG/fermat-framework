@@ -22,7 +22,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpen
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.WalletCryptoAddressBook;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookRecord;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.CantGetWalletCryptoAddressBookException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.CantRegisterWalletCryptoAddressBookException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.exceptions.CantInitializeWalletCryptoAddressBookException;
@@ -145,7 +145,7 @@ public class WalletCryptoAddressBookDao implements DealsWithErrors, DealsWithPlu
         }
     }
 
-    public WalletCryptoAddressBook getWalletCryptoAddressBookByCryptoAddress(CryptoAddress cryptoAddress) throws CantGetWalletCryptoAddressBookException {
+    public WalletAddressBookRecord getWalletCryptoAddressBookByCryptoAddress(CryptoAddress cryptoAddress) throws CantGetWalletCryptoAddressBookException {
 
         DatabaseTable table;
 
@@ -185,14 +185,14 @@ public class WalletCryptoAddressBookDao implements DealsWithErrors, DealsWithPlu
             return null;
         }
 
-        return new WalletCryptoAddressBookRegistry(cryptoAddress, platformWalletType, walletId);
+        return new WalletCryptoAddressBookRecord(cryptoAddress, platformWalletType, walletId);
     }
 
-    public List<WalletCryptoAddressBook> getAllWalletCryptoAddressBookByActorId(UUID walletId) throws CantGetWalletCryptoAddressBookException {
+    public List<WalletAddressBookRecord> getAllWalletCryptoAddressBookByActorId(UUID walletId) throws CantGetWalletCryptoAddressBookException {
 
         DatabaseTable table;
 
-        List<WalletCryptoAddressBook> walletCryptoAddressBooks = new ArrayList<>();
+        List<WalletAddressBookRecord> walletAddressBookRecords = new ArrayList<>();
 
         /**
          *  I will load the information of table into a memory structure, filter by crypto address .
@@ -225,12 +225,12 @@ public class WalletCryptoAddressBookDao implements DealsWithErrors, DealsWithPlu
             address = record.getStringValue(WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS);
             cryptoCurrency = CryptoCurrency.getByCode(record.getStringValue(WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_CURRENCY));
             cryptoAddress = new CryptoAddress(address, cryptoCurrency);
-            WalletCryptoAddressBook addressBook = new WalletCryptoAddressBookRegistry(cryptoAddress, platformWalletType, walletId);
-            walletCryptoAddressBooks.add(addressBook);
+            WalletAddressBookRecord addressBook = new WalletCryptoAddressBookRecord(cryptoAddress, platformWalletType, walletId);
+            walletAddressBookRecords.add(addressBook);
 
         }
 
-        return walletCryptoAddressBooks;
+        return walletAddressBookRecords;
     }
 
 

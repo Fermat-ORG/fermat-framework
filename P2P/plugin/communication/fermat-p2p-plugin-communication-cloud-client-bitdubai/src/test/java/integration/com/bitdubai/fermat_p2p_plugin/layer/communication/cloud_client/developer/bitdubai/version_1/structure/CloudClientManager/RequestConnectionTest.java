@@ -27,7 +27,6 @@ public class RequestConnectionTest extends CloudClientManagerIntegrationTest {
 		testClient.requestConnectionToServer();
 		catchException(testClient).requestConnectionToServer();
 		assertThat(caughtException()).isInstanceOf(CloudConnectionException.class);
-		System.out.println(caughtException().getMessage());
 	}
 	
 	//TODO improve this test, it's flaky

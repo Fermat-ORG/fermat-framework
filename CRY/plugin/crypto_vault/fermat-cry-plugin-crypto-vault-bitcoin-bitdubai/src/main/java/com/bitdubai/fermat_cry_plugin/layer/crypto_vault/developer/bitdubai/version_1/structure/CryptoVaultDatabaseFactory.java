@@ -15,7 +15,7 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 11/06/15.
  */
-class CryptoVaultDatabaseFactory implements DealsWithPluginDatabaseSystem{
+public class CryptoVaultDatabaseFactory implements DealsWithPluginDatabaseSystem{
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -30,7 +30,7 @@ class CryptoVaultDatabaseFactory implements DealsWithPluginDatabaseSystem{
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
-    Database createDatabase(UUID ownerId, UUID walletId) throws CantCreateDatabaseException {
+    public Database createDatabase(UUID ownerId, UUID walletId) throws CantCreateDatabaseException {
 
         Database database;
 
