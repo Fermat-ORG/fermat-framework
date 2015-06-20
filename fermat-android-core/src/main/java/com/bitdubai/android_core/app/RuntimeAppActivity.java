@@ -420,9 +420,9 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
     private void NavigateWallet() {
 
-        //ACAAAAA
-        getSupportFragmentManager().popBackStack();
-        getSupportFragmentManager().popBackStackImmediate();
+        // TEST
+        //getSupportFragmentManager().popBackStack();
+        //getSupportFragmentManager().popBackStackImmediate();
 
         //CAMBIAR
 
@@ -926,7 +926,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
         this.Title = "";
 
         List<android.support.v4.app.Fragment> fragments = new Vector<android.support.v4.app.Fragment>();
-        getSupportFragmentManager().popBackStackImmediate();
+
         this.PagerAdapter  = new PagerAdapter(getSupportFragmentManager(), fragments);
 
 
