@@ -1,8 +1,8 @@
-package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts;
+package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces;
 
 /**
  * The Class <code>com.bitdubai.fermat_api.layer.middleware.wallet_contacts.DealsWithWalletContacts</code>
- * indicates that the plugin needs the functionality of a WalletContactsManager
+ * indicates that the plugin needs the functionality of a WalletContactsRegistry
  * <p/>
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 08/06/15.
@@ -11,5 +11,5 @@ package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts;
  * @since Java JDK 1.7
  */
 public interface DealsWithWalletContacts {
-    public void setWalletContactsManager (WalletContactsManager walletContactsManager);
+    void setWalletContactsManager(WalletContactsManager walletContactsManager);
 }

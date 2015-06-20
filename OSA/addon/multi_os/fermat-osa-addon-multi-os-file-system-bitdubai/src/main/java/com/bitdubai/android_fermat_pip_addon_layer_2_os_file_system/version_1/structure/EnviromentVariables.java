@@ -1,12 +1,12 @@
 package com.bitdubai.android_fermat_pip_addon_layer_2_os_file_system.version_1.structure;
 
-import org.openide.filesystems.FileUtil;
+//import org.openide.filesystems.FileUtil;
 
 import java.io.File;
 
 import javax.swing.JOptionPane;
-import org.openide.filesystems.FileObject;
-import org.openide.filesystems.Repository;
+//import org.openide.filesystems.FileObject;
+//import org.openide.filesystems.Repository;
 
 /**
  * Created by mati on 12/06/15.
@@ -23,7 +23,7 @@ public class EnviromentVariables {
         //User home directory
         String home = System.getProperty("user.home");
         File dir = new File(home+"/externalStorage/files/");
-        FileObject myfolder = FileUtil.toFileObject(dir);
+        //FileObject myfolder = FileUtil.toFileObject(dir);
         dir.mkdir();
         /*if(myfolder == null){
             //Testing
@@ -55,7 +55,7 @@ public class EnviromentVariables {
         //User home directory
         String home = System.getProperty("user.home");
         File dir = new File(home+"/externalStorage/files/");
-        FileObject myfolder = FileUtil.toFileObject(dir);
+        //FileObject myfolder = FileUtil.toFileObject(dir);
         dir.mkdir();
         /*if(myfolder == null){
             //Testing

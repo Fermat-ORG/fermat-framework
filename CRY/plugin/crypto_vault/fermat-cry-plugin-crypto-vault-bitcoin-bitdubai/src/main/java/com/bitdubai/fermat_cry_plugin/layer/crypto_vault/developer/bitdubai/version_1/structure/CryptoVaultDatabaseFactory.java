@@ -61,10 +61,10 @@ public class CryptoVaultDatabaseFactory implements DealsWithPluginDatabaseSystem
          * First the incoming crypto table.
          */
         table = ((DatabaseFactory) database).newTableFactory(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
-        table.addColumn(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, true);
-        table.addColumn(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, DatabaseDataType.STRING, 36, true);
-        table.addColumn(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME, DatabaseDataType.STRING, 40, false);
-        table.addColumn(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME, DatabaseDataType.STRING, 40, false);
+        table.addColumn(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, DatabaseDataType.STRING, 34, true);
+        table.addColumn(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, DatabaseDataType.STRING, 64, true);
+        table.addColumn(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME, DatabaseDataType.STRING, 10, false);
+        table.addColumn(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME, DatabaseDataType.STRING, 10, false);
 
         try {
             ((DatabaseFactory) database).createTable(table);
@@ -85,7 +85,7 @@ public class CryptoVaultDatabaseFactory implements DealsWithPluginDatabaseSystem
              * First the incoming crypto table.
              */
             table2 = ((DatabaseFactory) database).newTableFactory(CryptoVaultDatabaseConstants.FERMAT_TRANSACTIONS_TABLE_NAME);
-            table2.addColumn(CryptoVaultDatabaseConstants.FERMAT_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, true);
+            table2.addColumn(CryptoVaultDatabaseConstants.FERMAT_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, DatabaseDataType.STRING, 34, true);
 
 
             try {

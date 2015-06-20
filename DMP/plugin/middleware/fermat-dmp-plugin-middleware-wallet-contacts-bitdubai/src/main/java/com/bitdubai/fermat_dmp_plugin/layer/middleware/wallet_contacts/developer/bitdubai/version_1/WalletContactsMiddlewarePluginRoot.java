@@ -2,14 +2,23 @@ package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.develope
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetWalletContactRegistryException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsRegistry;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantInitializeCryptoWalletContactsDatabaseException;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.CryptoWalletContactsRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,33 +35,51 @@ import java.util.UUID;
  * * * * * * 
  */
 
-public class WalletContactsMiddlewarePluginRoot implements Service,  DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
+public class WalletContactsMiddlewarePluginRoot implements DealsWithErrors, DealsWithPluginDatabaseSystem, Plugin, Service, WalletContactsManager {
 
     /**
      * Service Interface member variables.
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
-    List<EventListener> listenersAdded = new ArrayList<>();
-
-    /**
-     * UsesFileSystem Interface member variables.
-     */
-   // PluginFileSystem pluginFileSystem;
-
-    /**
-     * DealWithEvents Interface member variables.
-     */
-   EventManager eventManager;
 
     /**
      * DealWithErrors Interface member variables.
      */
-  //  ErrorManager errorManager;
+    ErrorManager errorManager;
+
+    /**
+     * DealsWithPluginDatabaseSystem Interface member variables.
+     */
+    PluginDatabaseSystem pluginDatabaseSystem;
 
     /**
      * Plugin Interface member variables.
      */
-  //  UUID pluginId;
+    UUID pluginId;
+
+
+    /**
+     * WalletContactsManager Interface implementation.
+     */
+    public WalletContactsRegistry getWalletContactsRegistry() throws CantGetWalletContactRegistryException {
+        /**
+         * I created instance of WalletCryptoAddressBookRegistry
+         */
+        CryptoWalletContactsRegistry walletContactsRegistry = new CryptoWalletContactsRegistry();
+
+        walletContactsRegistry.setErrorManager(this.errorManager);
+        walletContactsRegistry.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+        walletContactsRegistry.setPluginId(this.pluginId);
+
+        try {
+            walletContactsRegistry.initialize();
+        } catch (CantInitializeCryptoWalletContactsDatabaseException cantInitializeActorCryptoAddressBookException) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_ADDRESS_BOOK_CRYPTO, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantInitializeActorCryptoAddressBookException);
+            throw new CantGetWalletContactRegistryException();
+        }
+        return walletContactsRegistry;
+    }
+
 
     /**
      * Service Interface implementation.
@@ -60,13 +87,6 @@ public class WalletContactsMiddlewarePluginRoot implements Service,  DealsWithEv
 
     @Override
     public void start() {
-        /**
-         * I will initialize the handling of com.bitdubai.platform events.
-         */
-
-        //EventListener eventListener;
-        //EventHandler eventHandler;
-
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
@@ -79,26 +99,12 @@ public class WalletContactsMiddlewarePluginRoot implements Service,  DealsWithEv
 
     @Override
     public void resume() {
-
         this.serviceStatus = ServiceStatus.STARTED;
-
     }
 
     @Override
     public void stop() {
-
-        /**
-         * I will remove all the event listeners registered with the event manager.
-         */
-
-        for (EventListener eventListener : listenersAdded) {
-            eventManager.removeListener(eventListener);
-        }
-
-        listenersAdded.clear();
-
         this.serviceStatus = ServiceStatus.STOPPED;
-
     }
 
     @Override
@@ -106,51 +112,27 @@ public class WalletContactsMiddlewarePluginRoot implements Service,  DealsWithEv
         return this.serviceStatus;
     }
 
-
-  /*  public void createContact(){
-
-        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.INTRA_USER_CONTACT_CREATED);
-        ((IntraUserContactCreatedEvent) platformEvent).setSource(EventSource.MIDDLEWARE_WALLET_CONTACTS_PLUGIN);
-        eventManager.raiseEvent(platformEvent);
-
-    }
-*/
-
-    /**
-     * UsesFileSystem Interface implementation.
-     */
-
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-     //   this.pluginFileSystem = pluginFileSystem;
-    }
-
-    /**
-     * DealWithEvents Interface implementation.
-     */
-
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
     /**
      *DealWithErrors Interface implementation.
      */
-
     @Override
     public void setErrorManager(ErrorManager errorManager) {
-  //      this.errorManager = errorManager;
+        this.errorManager = errorManager;
     }
 
     /**
-     * DealsWithPluginIdentity methods implementation.
+     *DealWithPluginDatabaseSystem Interface implementation.
      */
-
     @Override
-    public void setId(UUID pluginId) {
-
-        //this.pluginId = pluginId;
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
+    /**
+     * Plugin methods implementation.
+     */
+    @Override
+    public void setId(UUID pluginId) {
+        this.pluginId = pluginId;
+    }
 }
