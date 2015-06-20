@@ -246,18 +246,25 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
         {
             List<android.support.v4.app.Fragment> fragments = new Vector<android.support.v4.app.Fragment>();
             Iterator<Map.Entry<Fragments, com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.Fragment>>  efragments = this.fragments.entrySet().iterator();
-
+            boolean flag=false;
             while (efragments.hasNext()) {
                 Map.Entry<Fragments, com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.Fragment> fragmentEntry =  efragments.next();
 
                 RuntimeFragment fragment = (RuntimeFragment)fragmentEntry.getValue();
                 Fragments type = fragment.getType();
 
+
                 switch (type) {
                     case CWP_SHELL_LOGIN:
                         break;
                     case CWP_WALLET_MANAGER_MAIN:
-                        fragments.add(android.support.v4.app.Fragment.instantiate(this, WalletDesktopFragment.class.getName()));
+
+                        //Matias this flag is because this fragment appair two times and when press the back button in a fragment
+                        //the application crash
+                        if(!flag) {
+                            fragments.add(android.support.v4.app.Fragment.instantiate(this, WalletDesktopFragment.class.getName()));
+                            flag=true;
+                        }
                         break;
                     case CWP_WALLET_MANAGER_SHOP:
                         fragments.add(android.support.v4.app.Fragment.instantiate(this, ShopDesktopFragment.class.getName()));
@@ -412,6 +419,12 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
     }
 
     private void NavigateWallet() {
+
+        //ACAAAAA
+        getSupportFragmentManager().popBackStack();
+        getSupportFragmentManager().popBackStackImmediate();
+
+        //CAMBIAR
 
         try
         {
@@ -913,6 +926,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
         this.Title = "";
 
         List<android.support.v4.app.Fragment> fragments = new Vector<android.support.v4.app.Fragment>();
+        getSupportFragmentManager().popBackStackImmediate();
         this.PagerAdapter  = new PagerAdapter(getSupportFragmentManager(), fragments);
 
 
@@ -983,6 +997,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                 }
 
             }
+
             //execute current activity fragments
             try {
                 switch (fragmentType) {
@@ -990,6 +1005,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
                         break;
                     case CWP_WALLET_MANAGER_MAIN:
+                        //getFragmentManager().popBackStack();
                         currentFragment =  WalletDesktopFragment.newInstance(position);
                         break;
                     case CWP_WALLET_MANAGER_SHOP:
