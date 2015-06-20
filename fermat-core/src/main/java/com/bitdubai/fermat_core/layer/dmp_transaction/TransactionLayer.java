@@ -33,8 +33,6 @@ public class TransactionLayer implements PlatformLayer {
     
     private Plugin mInterWallet;
 
-    private Plugin mIncomingCrypto;
-    
     public  Plugin getIncomingExtraUserPlugin() {
         return mIncomingExtraUser;
     }
@@ -61,10 +59,6 @@ public class TransactionLayer implements PlatformLayer {
 
     public  Plugin getOutgoingDeviceUserPlugin() {
         return mOutgoingDeviceUser;
-    }
-    
-    public  Plugin getIncomingCrypto(){
-        return mIncomingCrypto;
     }
 
 
@@ -175,8 +169,9 @@ public class TransactionLayer implements PlatformLayer {
         }
 
         /**
+         * TODO: DELETE AFTER CORRECT REUBICATION
          * Let's try to start the Incoming Crypto Subsystem.
-         */
+
 
         TransactionSubsystem incomingCryptoSubsystem = new IncomingCryptoSubsysten();
 
@@ -186,5 +181,6 @@ public class TransactionLayer implements PlatformLayer {
         } catch (CantStartSubsystemException e){
             System.err.println("CantStartSubsystemException: " + e.getMessage());
         }
+         */
     }
 }

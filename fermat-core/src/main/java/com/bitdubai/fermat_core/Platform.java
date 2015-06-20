@@ -2254,11 +2254,12 @@ public class Platform  {
          * I will give the Incoming Crypto Transaction access to the File System and to the Event Manager
          */
 
-        Plugin incomingCryptoTransaction = ((TransactionLayer) mTransactionLayer).getIncomingCrypto();
+       /* Plugin incomingCryptoTransaction = ((TransactionLayer) mTransactionLayer).getIncomingCrypto();
 
        // ((DealsWithPluginFileSystem) incomingCryptoTransaction).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
         ((DealsWithEvents) incomingCryptoTransaction).setEventManager((EventManager) eventManager);
         corePlatformContext.addPlugin(incomingCryptoTransaction, Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION);
+        */
 //TODO: COMETADO por null point en el start
        // try
        // {
