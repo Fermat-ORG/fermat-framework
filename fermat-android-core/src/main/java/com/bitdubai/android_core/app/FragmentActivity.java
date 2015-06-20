@@ -23,11 +23,9 @@ import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.su
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.SendToContactFragment;
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.SendToNewContactFragment;
 
-import com.bitdubai.niche_wallet.bitcoin_wallet.fragments.BitcoinContactsFragment;
 import com.bitdubai.niche_wallet.bitcoin_wallet.fragments.BitcoinReceiveFromContactFragment;
-import com.bitdubai.niche_wallet.bitcoin_wallet.fragments.BitcoinReceiveFromNewContactFragment;
+import com.bitdubai.niche_wallet.bitcoin_wallet.fragments.BitcoinReceiveFragment;
 import com.bitdubai.niche_wallet.bitcoin_wallet.fragments.BitcoinSendToContactFragment;
-import com.bitdubai.niche_wallet.bitcoin_wallet.fragments.BitcoinSendToNewContactFragment;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.App;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.AppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.Fragment;
@@ -40,7 +38,6 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Fragments;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_runtime.developer.bitdubai.version_1.structure.RuntimeFragment;
-import com.bitdubai.niche_wallet.bitcoin_wallet.fragments.BitcoinTransactionsFragment;
 import com.bitdubai.smartwallet.R;
 
 import java.util.Iterator;
@@ -135,13 +132,7 @@ public class FragmentActivity  extends Activity {
                                     .commit();
                         }
                         break;
-                    case   CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS_NEW_SEND:
-                        if (savedInstanceState == null) {
-                            getFragmentManager().beginTransaction()
-                                    .add(R.id.container, new BitcoinSendToNewContactFragment())
-                                    .commit();
-                        }
-                        break;
+
                     case    CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS_RECEIVE:
                         if (savedInstanceState == null) {
 
@@ -156,13 +147,7 @@ public class FragmentActivity  extends Activity {
                                     .commit();
                         }
                         break;
-                    case    CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS_NEW_RECEIVE:
-                        if (savedInstanceState == null) {
-                            getFragmentManager().beginTransaction()
-                                    .add(R.id.container, new BitcoinReceiveFromNewContactFragment())
-                                    .commit();
-                        }
-                        break;
+
                     case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS:
                         if (savedInstanceState == null) {
                             getFragmentManager().beginTransaction()
