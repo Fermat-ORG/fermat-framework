@@ -1,13 +1,13 @@
 package com.bitdubai.niche_wallet.bitcoin_wallet.fragments;
 
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseExpandableListAdapter;
-import android.widget.ExpandableListView;
-import android.widget.ImageView;
+
+
 import android.widget.TextView;
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 /**
@@ -15,15 +15,9 @@ import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
  */
 public class BitcoinBalanceFragment extends  Fragment {
     View rootView;
-    ExpandableListView lv;
-    String[] contacts;
-    String[] amounts;
-    String[] whens;
-    String[] notes;
-    String[] account_types;
+
     String[] balances;
-    String[] balances_available;
-    private String[][] transactions;
+
     private static final String ARG_POSITION = "position";
 
     private int position;
