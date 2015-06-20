@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.devel
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.*;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerId;
 
 import java.util.*;
@@ -66,17 +67,22 @@ class IncomingCryptoDataBaseFactory implements DealsWithPluginDatabaseSystem {
         try {
             for(Map.Entry<String, List<IncomingCryptoDataBaseConstants.ColumnDefinition>> tableDefinition: tablesDefinitions.entrySet()){
                 table = ((DatabaseFactory) database).newTableFactory(ownerId, tableDefinition.getKey());
+                System.err.println("INCOMING CRYPTO REGISTRY: " + tableDefinition.getKey() + " TABLE CREATED");
                 for(IncomingCryptoDataBaseConstants.ColumnDefinition columnDefinition: tableDefinition.getValue()){
                     table.addColumn(columnDefinition.columnName, columnDefinition.columnDataType, columnDefinition.columnDataTypeSize, columnDefinition.columnIsPrimaryKey);
+                    System.err.println("INCOMING CRYPTO REGISTRY: " + tableDefinition.getKey() + " - " + columnDefinition.columnName + " COLUMN ADDED");
                 }
+                ((DatabaseFactory) database).createTable(table);
             }
 
         } catch (InvalidOwnerId invalidOwnerId) {
             System.out.println("InvalidOwnerId: " + invalidOwnerId.getMessage());
             invalidOwnerId.printStackTrace();
             throw new CantCreateDatabaseException();
+        } catch (CantCreateTableException e) {
+            System.out.println("InvalidOwnerId: CantCreateTableException " + e.getMessage());
+            throw new CantCreateDatabaseException();
         }
-
         return database;
     }
 }

@@ -133,6 +133,7 @@ public class IncomingCryptoTransactionPluginRoot implements CryptoRouterManager,
     @Override
     public void start()  throws CantStartPluginException {
 
+
         /**
          * I will initialize the Registry, which in turn will create the database if necessary.
          */
@@ -149,9 +150,12 @@ public class IncomingCryptoTransactionPluginRoot implements CryptoRouterManager,
              * If I can not initialize the Registry then I can not start the service.
              */
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantInitializeCryptoRegistryException);
-            
+            System.err.print("INCOMING CRYPTO: CantInitializeCryptoRegistryException");
             throw new CantStartPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
         }
+
+        System.err.println("INCOMING CRYPTO: REGISTRY INITIALIZED");
+
 
         /**
          * I will start the Event Recorder.

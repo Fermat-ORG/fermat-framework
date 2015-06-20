@@ -112,12 +112,14 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
     public void initialize(UUID pluginId) throws CantInitializeCryptoRegistryException {
         try {
             this.database = this.pluginDatabaseSystem.openDatabase(pluginId, IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_DATABASE);
+            System.err.println("INCOMING CRYPTO REGISTRY: DB OPENED");
         } catch (DatabaseNotFoundException e) {
             IncomingCryptoDataBaseFactory databaseFactory = new IncomingCryptoDataBaseFactory();
             databaseFactory.setPluginDatabaseSystem(this.pluginDatabaseSystem);
 
             try {
                 this.database = databaseFactory.createDatabase(pluginId, IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_DATABASE);
+                System.err.println("INCOMING CRYPTO REGISTRY: DB CREATED");
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantInitializeCryptoRegistryException();
@@ -173,12 +175,18 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
             try {
                 eventsTable.loadToMemory();
             } catch (CantLoadTableToMemory cantLoadTableToMemory) {
+                System.err.println("INCOMING CRYPTO REGISTRY - getNextPendingEvent: CantLoadTableToMemory exception");
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
                 throw new CantReadEvent();
             }
 
+            System.out.println("INCOMING CRYPTO REGISTRY - getNextPendingEvent: loadedToMemery OK");
+
             List<DatabaseTableRecord> events = eventsTable.getRecords();
+            System.out.println("INCOMING CRYPTO REGISTRY - getNextPendingEvent: eventsTable.getRecords OK");
+
             if (events != null && !events.isEmpty()) {
+                System.out.println("INCOMING CRYPTO REGISTRY - getNextPendingEvent: there is a pending event OK");
                 DatabaseTableRecord event = events.get(0);
                 return new EventWrapper(
                         event.getUUIDValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_ID_COLUMN.columnName),
@@ -188,8 +196,10 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
                         event.getLongValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_TIMESTAMP_COLUMN.columnName)
                 );
             }
+            System.out.println("INCOMING CRYPTO REGISTRY - getNextPendingEvent: there is no pending event OK");
             return null;
         } catch (Exception exception) {
+            System.err.println("INCOMING CRYPTO REGISTRY - getNextPendingEvent: getTable tira exception");
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw new CantReadEvent();
         }
@@ -225,67 +235,6 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
         }
     }
 
-
-
-
-    /**
-     * TransactionManager interface implementation.
-     *
-    //@Override
-    public UUID getNextPendingTransactionByDestination(UUID destinationId) throws CantSearchForTransactionsException {
-        try {
-            DatabaseTable registryTable = this.database.getTable(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NAME);
-            registryTable.setUUIDFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_SPECIALIST_COLUMN.columnName, destinationId, DatabaseFilterType.EQUAL);
-            registryTable.setStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_TRANSACTION_STATUS_COLUMN.columnName, "NOTIFICATED", DatabaseFilterType.EQUAL);
-            try {
-                registryTable.loadToMemory();
-            } catch (CantLoadTableToMemory cantLoadTableToMemory) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
-                throw new CantSearchForTransactionsException();
-            }
-
-            for (DatabaseTableRecord record : registryTable.getRecords()) {
-                UUID trxID = record.getUUIDValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ID_COLUMN.columnName);
-                if (trxID != null) return trxID;
-            }
-            return null;
-        } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
-            throw new CantSearchForTransactionsException();
-        }
-    }
-
-    public boolean releaseTransaction(UUID trxID) throws CantReleaseTransactionException {
-        try {
-            DatabaseTransaction dbTrx = this.database.newTransaction();
-            DatabaseTable registryTable = this.database.getTable(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NAME);
-            registryTable.setUUIDFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ID_COLUMN.columnName, trxID, DatabaseFilterType.EQUAL);
-            try {
-                registryTable.loadToMemory();
-            } catch (CantLoadTableToMemory cantLoadTableToMemory) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
-                throw new CantReleaseTransactionException();
-            }
-            List<DatabaseTableRecord> records = registryTable.getRecords();
-            if (records == null || records.isEmpty()) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception(String.format("I could not find the transaction with trxId: %s", trxID)));
-                throw new CantReleaseTransactionException();
-            } else if (records.size() > 1) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception(String.format("More than one transaction with trxId: %s", trxID)));
-                throw new CantReleaseTransactionException();
-            }
-
-            DatabaseTableRecord trxRecord = records.get(0);
-            trxRecord.setStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_TRANSACTION_STATUS_COLUMN.columnName, "FINALIZED");
-            dbTrx.addRecordToUpdate(registryTable, trxRecord);
-            this.database.executeTransaction(dbTrx);
-            return true;
-        } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
-            throw new CantReleaseTransactionException();
-        }
-    }
-*/
 
     // Used by the Monitor Agent
 
