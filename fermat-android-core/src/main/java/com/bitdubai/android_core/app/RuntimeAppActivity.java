@@ -262,6 +262,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                         //Matias this flag is because this fragment appair two times and when press the back button in a fragment
                         //the application crash
                         if(!flag) {
+                            //fragments.add(android.support.v4.app.Fragment.instantiate(this, WalletDesktopFragment.class.getName()));
                             fragments.add(android.support.v4.app.Fragment.instantiate(this, WalletDesktopFragment.class.getName()));
                             flag=true;
                         }
@@ -525,6 +526,13 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_VERSION_1_MAIN:
 
                 break;
+            case CWP_WALLET_BASIC_ALL_MAIN:
+                //inflater.inflate(R.menu.wallet_framework_activity_framework_menu2, menu);
+                /*menu.clear();
+                menu.removeItem(0);
+                menu.removeItem(1);
+                */
+                break;
             case CWP_WALLET_STORE_MAIN:
                 break;
             case CWP_WALLET_ADULTS_ALL_MAIN:
@@ -711,7 +719,9 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                     break;
                 case CWP_WALLET_BASIC_ALL_MAIN: //basic Wallet
                     //go to wallet basic definition
+
                     this.walletRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
+                    //menu.clear();
                     NavigateWallet();
 
                     break;

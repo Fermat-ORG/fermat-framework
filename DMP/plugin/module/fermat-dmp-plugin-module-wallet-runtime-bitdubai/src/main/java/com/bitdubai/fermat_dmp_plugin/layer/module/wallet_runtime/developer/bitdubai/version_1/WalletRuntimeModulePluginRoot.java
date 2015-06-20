@@ -364,7 +364,8 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeTitleBar = new RuntimeTitleBar();
         runtimeTitleBar.setLabel("Fermat Bitcoin Wallet");
         runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#8bba9e");
+        //runtimeActivity.setColor("#8bba9e");
+        runtimeActivity.setColor("#d07b62");
 
 
 
@@ -397,8 +398,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
 
         runtimeTabStrip.setDividerColor(0xFFFFFFFF);
-
-
+        //runtimeTabStrip.setBackgroundColor("#72af9c");
         runtimeActivity.setTabStrip(runtimeTabStrip);
 
         runtimeFragment = new RuntimeFragment();
