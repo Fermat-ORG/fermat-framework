@@ -58,7 +58,7 @@
                 <package>com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet</package>
                 <package>com.bitdubai.fermat_api.layer.dmp_transaction</package>
                 <package>com.bitdubai.fermat_api.layer.dmp_transaction.exceptions</package>
-                <package>com.bitdubai.fermat_api.layer.dmp_transaction.incoming_crypto</package>
+                <package>com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto</package>
                 <package>com.bitdubai.fermat_api.layer.dmp_transaction.incoming_device_user</package>
                 <package>com.bitdubai.fermat_api.layer.dmp_transaction.incoming_extra_user</package>
                 <package>com.bitdubai.fermat_api.layer.dmp_transaction.incoming_intra_user</package>
