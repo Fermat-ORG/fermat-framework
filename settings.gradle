@@ -228,8 +228,8 @@ project(':fermat-dmp-addon-license-wallet-bitdubai').projectDir = new File('DMP/
 
 // DMP Projects (Wallets)
 
-include ':fermat-dmp-android-niche-wallet-bitcoin-wallet-bitdubai'
-project(':fermat-dmp-android-niche-wallet-bitcoin-wallet-bitdubai').projectDir = new File('DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-wallet-bitdubai')
+include ':fermat-dmp-android-niche-wallet-bitcoin-reference-wallet-bitdubai'
+project(':fermat-dmp-android-niche-wallet-bitcoin-reference-wallet-bitdubai').projectDir = new File('DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-reference-wallet-bitdubai')
 
 include ':fermat-dmp-android-niche-wallet-age-kids-boys-bitdubai'
 project(':fermat-dmp-android-niche-wallet-age-kids-boys-bitdubai').projectDir = new File('DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-age-kids-boys-bitdubai')
