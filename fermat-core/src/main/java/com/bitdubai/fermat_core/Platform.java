@@ -10,6 +10,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.event.DealWithEventMonitor;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.DealsWithWalletContacts;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsManager;
+import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.DealsWithOutgoingExtraUser;
+import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.OutgoingExtraUserManager;
 import com.bitdubai.fermat_api.layer.osa_android.DataBaseSystemOs;
 import com.bitdubai.fermat_api.layer.osa_android.FileSystemOs;
 import com.bitdubai.fermat_api.layer.osa_android.LocationSystemOs;
@@ -18,12 +22,13 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFile
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlatformDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorDeveloper;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 
+import com.bitdubai.fermat_api.layer.pip_user.extra_user.DealsWithExtraUsers;
+import com.bitdubai.fermat_api.layer.pip_user.extra_user.ExtraUserManager;
 import com.bitdubai.fermat_core.layer.dmp_basic_wallet.BasicWalletLayer;
 import com.bitdubai.fermat_core.layer.dmp_transaction.TransactionLayer;
 import com.bitdubai.fermat_core.layer.dmp_niche_wallet_type.NicheWalletTypeLayer;
@@ -36,6 +41,10 @@ import com.bitdubai.fermat_core.layer.pip_user.UserLayer;
 import com.bitdubai.fermat_core.layer.pip_license.LicenseLayer;
 import com.bitdubai.fermat_core.layer.dmp_world.WorldLayer;
 import com.bitdubai.fermat_core.layer.cry_crypto_network.CryptoNetworkLayer;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.DealsWithActorAddressBook;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.DealsWithWalletAddressBook;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.CryptoNetworks;
 import com.bitdubai.fermat_core.layer.cry_cypto_vault.CryptoVaultLayer;
 import com.bitdubai.fermat_core.layer.cry_crypto_module.CryptoLayer;
@@ -44,6 +53,8 @@ import com.bitdubai.fermat_core.layer.dmp_network_service.NetworkServiceLayer;
 import com.bitdubai.fermat_core.layer.dmp_middleware.MiddlewareLayer;
 import com.bitdubai.fermat_core.layer.dmp_module.ModuleLayer;
 import com.bitdubai.fermat_core.layer.dmp_agent.AgentLayer;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
 
 import java.util.UUID;
 
@@ -950,27 +961,27 @@ public class Platform  {
 
         /**
          * ------------------------------
-         *  Plugin User Address Book Crypto
+         *  Plugin Actor Address Book Crypto
          * ------------------------------
          *
-         * I'm giving to the User Address book crypto plugin access to the Database System and to the Error Manager
+         * I'm giving to the Actor Address book crypto plugin access to the Database System and to the Error Manager
          */
 
-        Plugin userAddressBookCrypto = ((CryptoLayer) mCryptoLayer).getmUserAddressBook();
+        Plugin actorAddressBookCrypto = ((CryptoLayer) mCryptoLayer).getmUserAddressBook();
 
-        ((DealsWithPluginDatabaseSystem) userAddressBookCrypto).setPluginDatabaseSystem(databaseSystemOs.getPluginDatabaseSystem());
-        ((DealsWithErrors) userAddressBookCrypto).setErrorManager((ErrorManager) errorManager);
+        ((DealsWithPluginDatabaseSystem) actorAddressBookCrypto).setPluginDatabaseSystem(databaseSystemOs.getPluginDatabaseSystem());
+        ((DealsWithErrors) actorAddressBookCrypto).setErrorManager((ErrorManager) errorManager);
 
-        corePlatformContext.addPlugin(userAddressBookCrypto, Plugins.BITDUBAI_USER_ADDRESS_BOOK_CRYPTO);
+        corePlatformContext.addPlugin(actorAddressBookCrypto, Plugins.BITDUBAI_USER_ADDRESS_BOOK_CRYPTO);
 
         try {
             /**
              * As any other plugin, this one will need its identity in order to access the data it persisted before.
              */
-            UUID pluginID = pluginsIdentityManager.getPluginId(userAddressBookCrypto);
-            (userAddressBookCrypto).setId(pluginID);
+            UUID pluginID = pluginsIdentityManager.getPluginId(actorAddressBookCrypto);
+            (actorAddressBookCrypto).setId(pluginID);
             try {
-                ((Service) userAddressBookCrypto).start();
+                ((Service) actorAddressBookCrypto).start();
             } catch (Exception e){
                 System.err.println(e.getMessage());
             }
@@ -1531,481 +1542,7 @@ public class Platform  {
 
 
 
-        /**
-         * ----------------------------------
-         * Plugin Crypto Loss Protected Wallet Niche Type Wallet
-         * ----------------------------------
-         * * * *
-         */
 
-
-
-        /**
-         * I will give the crypto loss protected wallet access to the File System and to the Event Manager
-         */
-
-        //TODO lo comente porque la variable cryptoLossProtectedWalletNicheWalletType es null y da error al inicializar la APP (Natalia)
-       // Plugin cryptoLossProtectedWalletNicheWalletType = ((NicheWalletTypeLayer) mNicheWalletTypeLayer).getmCryptoLossProtectedWallet();
-
-       // ((DealsWithPluginFileSystem) cryptoLossProtectedWalletNicheWalletType).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
-       // ((DealsWithEvents) cryptoLossProtectedWalletNicheWalletType).setEventManager((EventManager) eventManager);
-       // corePlatformContext.addPlugin(cryptoLossProtectedWalletNicheWalletType, Plugins.BITDUBAI_CRYPTO_LOSS_PROTECTED_WALLET_NICHE_WALLET_TYPE);
-
-      //  try
-      //  {
-
-            /**
-             * As any other plugin, this one will need its identity in order to access the data it persisted before.
-             */
-
-         //   UUID pluginID = pluginsIdentityManager.getPluginId(cryptoLossProtectedWalletNicheWalletType);
-         //   (cryptoLossProtectedWalletNicheWalletType).setId(pluginID);
-
-          //  try {
-           //     ((Service) cryptoLossProtectedWalletNicheWalletType).start();
-          //  }
-           // catch (CantStartPluginException cantStartPluginException) {
-
-             //   System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
-            //    cantStartPluginException.printStackTrace();
-
-                /**
-                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
-                 * start, then the platform wont start either. In the future we will review this policy.
-                 * * *
-                 */
-
-               // throw new CantStartPlatformException();
-          //  }
-          //  catch (Exception e){
-
-           //     ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
-
-                /**
-                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
-                 * * *
-                 */
-
-            //}
-
-       // }
-        //catch (PluginNotRecognizedException pluginNotRecognizedException)
-        //{
-
-
-            //System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
-           // pluginNotRecognizedException.printStackTrace();
-
-           // throw new CantStartPlatformException();
-       // }
-
-        /**
-         * ----------------------------------
-         * Plugin crypto Wallet Niche Type Wallet
-         * ----------------------------------
-         * * * *
-         */
-
-
-
-        /**
-         * I will give the crypto wallet access to the File System and to the Event Manager
-         */
-
-        Plugin cryptoWalletNicheWalletType = ((NicheWalletTypeLayer) mNicheWalletTypeLayer).getmCryptoWallet();
-
-        ((DealsWithPluginFileSystem) cryptoWalletNicheWalletType).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
-        ((DealsWithEvents) cryptoWalletNicheWalletType).setEventManager((EventManager) eventManager);
-        corePlatformContext.addPlugin(cryptoWalletNicheWalletType, Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE);
-
-        try
-        {
-
-            /**
-             * As any other plugin, this one will need its identity in order to access the data it persisted before.
-             */
-
-            UUID pluginID = pluginsIdentityManager.getPluginId(cryptoWalletNicheWalletType);
-            (cryptoWalletNicheWalletType).setId(pluginID);
-
-            try {
-                ((Service) cryptoWalletNicheWalletType).start();
-            }
-            catch (CantStartPluginException cantStartPluginException) {
-
-                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
-                cantStartPluginException.printStackTrace();
-
-                /**
-                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
-                 * start, then the platform wont start either. In the future we will review this policy.
-                 * * *
-                 */
-
-                throw new CantStartPlatformException();
-            }
-            catch (Exception e){
-
-                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
-
-                /**
-                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
-                 * * *
-                 */
-
-            }
-
-        }
-        catch (PluginNotRecognizedException pluginNotRecognizedException)
-        {
-
-
-            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
-            pluginNotRecognizedException.printStackTrace();
-
-            throw new CantStartPlatformException();
-        }
-
-
-
-        /**
-         * ----------------------------------
-         * Plugin Discount Wallet Niche Type Wallet
-         * ----------------------------------
-         * * * *
-         */
-
-
-
-        /**
-         * I will give the discount wallet access to the File System and to the Event Manager
-         */
-
-        Plugin discountWalletNicheWalletType = ((NicheWalletTypeLayer) mNicheWalletTypeLayer).getmDiscountWallet();
-
-        ((DealsWithPluginFileSystem) discountWalletNicheWalletType).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
-        ((DealsWithEvents) discountWalletNicheWalletType).setEventManager((EventManager) eventManager);
-        corePlatformContext.addPlugin(discountWalletNicheWalletType, Plugins.BITDUBAI_DISCOUNT_WALLET_NICHE_WALLET_TYPE);
-
-        try
-        {
-
-            /**
-             * As any other plugin, this one will need its identity in order to access the data it persisted before.
-             */
-
-            UUID pluginID = pluginsIdentityManager.getPluginId(discountWalletNicheWalletType);
-            (discountWalletNicheWalletType).setId(pluginID);
-
-            try {
-                ((Service) discountWalletNicheWalletType).start();
-            }
-            catch (CantStartPluginException cantStartPluginException) {
-
-                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
-                cantStartPluginException.printStackTrace();
-
-                /**
-                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
-                 * start, then the platform wont start either. In the future we will review this policy.
-                 * * *
-                 */
-
-                throw new CantStartPlatformException();
-            }
-            catch (Exception e){
-
-                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
-
-                /**
-                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
-                 * * *
-                 */
-
-            }
-
-        }
-        catch (PluginNotRecognizedException pluginNotRecognizedException)
-        {
-
-
-            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
-            pluginNotRecognizedException.printStackTrace();
-
-            throw new CantStartPlatformException();
-        }
-
-
-
-        /**
-         * ----------------------------------
-         * Plugin Fiat Over Crypto Loss Protected Wallet Wallet Niche Type Wallet
-         * ----------------------------------
-         * * * *
-         */
-
-
-
-        /**
-         * I will give the Fiat over crypto loss protected wallet access to the File System and to the Event Manager
-         */
-        //TODO lo comente porque la variable fiatOverCryptoLossProtectedWalletNicheWalletType es null  y da error al levantar la APP (Natalia)
-      //  Plugin fiatOverCryptoLossProtectedWalletNicheWalletType = ((NicheWalletTypeLayer) mNicheWalletTypeLayer).getmFiatOverCryptoLossProtectedWallet();
-
-       // ((DealsWithPluginFileSystem) fiatOverCryptoLossProtectedWalletNicheWalletType).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
-       // ((DealsWithEvents) fiatOverCryptoLossProtectedWalletNicheWalletType).setEventManager((EventManager) eventManager);
-       // corePlatformContext.addPlugin(fiatOverCryptoLossProtectedWalletNicheWalletType, Plugins.BITDUBAI_FIAT_OVER_CRYPTO_LOSS_PROTECTED_WALLET_NICHE_WALLET_TYPE);
-
-       // try
-       // {
-
-            /**
-             * As any other plugin, this one will need its identity in order to access the data it persisted before.
-             */
-
-          //  UUID pluginID = pluginsIdentityManager.getPluginId(fiatOverCryptoLossProtectedWalletNicheWalletType);
-          //  (fiatOverCryptoLossProtectedWalletNicheWalletType).setId(pluginID);
-
-          //  try {
-          //      ((Service) fiatOverCryptoLossProtectedWalletNicheWalletType).start();
-          //  }
-          //  catch (CantStartPluginException cantStartPluginException) {
-
-               // System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
-                //cantStartPluginException.printStackTrace();
-
-                /**
-                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
-                 * start, then the platform wont start either. In the future we will review this policy.
-                 * * *
-                 */
-
-               // throw new CantStartPlatformException();
-           // }
-           // catch (Exception e){
-
-             //   ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
-
-                /**
-                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
-                 * * *
-                 */
-
-            //}
-
-       // }
-       // catch (PluginNotRecognizedException pluginNotRecognizedException)
-       // {
-
-
-          //  System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
-          //  pluginNotRecognizedException.printStackTrace();
-
-           // throw new CantStartPlatformException();
-        //}
-
-
-        /**
-         * ----------------------------------
-         * Plugin Fiat Over Crypto Wallet Niche Type Wallet
-         * ----------------------------------
-         * * * *
-         */
-
-
-
-        /**
-         * I will give the fiat over crypto wallet access to the File System and to the Event Manager
-         */
-
-        Plugin fiatOverCryptoWalletNicheWalletType = ((NicheWalletTypeLayer) mNicheWalletTypeLayer).getmFiatOverCryptoWallet();
-
-        ((DealsWithPluginFileSystem) fiatOverCryptoWalletNicheWalletType).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
-        ((DealsWithEvents) fiatOverCryptoWalletNicheWalletType).setEventManager((EventManager) eventManager);
-        corePlatformContext.addPlugin(fiatOverCryptoWalletNicheWalletType, Plugins.BITDUBAI_FIAT_OVER_CRYPTO_WALLET_NICHE_WALLET_TYPE);
-
-        try
-        {
-
-            /**
-             * As any other plugin, this one will need its identity in order to access the data it persisted before.
-             */
-
-            UUID pluginID = pluginsIdentityManager.getPluginId(fiatOverCryptoWalletNicheWalletType);
-            (fiatOverCryptoWalletNicheWalletType).setId(pluginID);
-
-            try {
-                ((Service) fiatOverCryptoWalletNicheWalletType).start();
-            }
-            catch (CantStartPluginException cantStartPluginException) {
-
-                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
-                cantStartPluginException.printStackTrace();
-
-                /**
-                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
-                 * start, then the platform wont start either. In the future we will review this policy.
-                 * * *
-                 */
-
-                throw new CantStartPlatformException();
-            }
-            catch (Exception e){
-
-                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
-
-                /**
-                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
-                 * * *
-                 */
-
-            }
-
-        }
-        catch (PluginNotRecognizedException pluginNotRecognizedException)
-        {
-
-
-            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
-            pluginNotRecognizedException.printStackTrace();
-
-            throw new CantStartPlatformException();
-        }
-
-        /**
-         * ----------------------------------
-         * Plugin Multi account Wallet Niche Type Wallet
-         * ----------------------------------
-         * * * *
-         */
-
-
-
-        /**
-         * I will give the multi account wallet access to the File System and to the Event Manager
-         */
-
-        Plugin multiAccountWalletNicheWalletType = ((NicheWalletTypeLayer) mNicheWalletTypeLayer).getmMultiAccountWallet();
-
-        ((DealsWithPluginFileSystem) multiAccountWalletNicheWalletType).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
-        ((DealsWithEvents) multiAccountWalletNicheWalletType).setEventManager((EventManager) eventManager);
-        corePlatformContext.addPlugin(multiAccountWalletNicheWalletType, Plugins.BITDUBAI_MULTI_ACCOUNT_WALLET_NICHE_WALLET_TYPE);
-
-        try
-        {
-
-            /**
-             * As any other plugin, this one will need its identity in order to access the data it persisted before.
-             */
-
-            UUID pluginID = pluginsIdentityManager.getPluginId(multiAccountWalletNicheWalletType);
-            (multiAccountWalletNicheWalletType).setId(pluginID);
-
-            try {
-                ((Service) multiAccountWalletNicheWalletType).start();
-            }
-            catch (CantStartPluginException cantStartPluginException) {
-
-                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
-                cantStartPluginException.printStackTrace();
-
-                /**
-                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
-                 * start, then the platform wont start either. In the future we will review this policy.
-                 * * *
-                 */
-
-                throw new CantStartPlatformException();
-            }
-            catch (Exception e){
-
-                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
-
-                /**
-                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
-                 * * *
-                 */
-
-            }
-
-        }
-        catch (PluginNotRecognizedException pluginNotRecognizedException)
-        {
-
-
-            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
-            pluginNotRecognizedException.printStackTrace();
-
-            throw new CantStartPlatformException();
-        }
-
-
-        /**
-         * ----------------------------------
-         * Plugin Bank Notes Wallet Niche Type Wallet
-         * ----------------------------------
-         * * * *
-         */
-
-
-
-        /**
-         * I will give the bank notes wallet access to the File System and to the Event Manager
-         */
-
-        Plugin bankNotesWalletNicheWalletType = ((NicheWalletTypeLayer) mNicheWalletTypeLayer).getmBankNotesWallet();
-
-        ((DealsWithPluginFileSystem) bankNotesWalletNicheWalletType).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
-        ((DealsWithEvents) bankNotesWalletNicheWalletType).setEventManager((EventManager) eventManager);
-        corePlatformContext.addPlugin(bankNotesWalletNicheWalletType, Plugins.BITDUBAI_BANK_NOTES_WALLET_NICHE_WALLET_TYPE);
-
-        try
-        {
-
-            /**
-             * As any other plugin, this one will need its identity in order to access the data it persisted before.
-             */
-
-            UUID pluginID = pluginsIdentityManager.getPluginId(bankNotesWalletNicheWalletType);
-            (bankNotesWalletNicheWalletType).setId(pluginID);
-
-            try {
-                ((Service) bankNotesWalletNicheWalletType).start();
-            }
-            catch (CantStartPluginException cantStartPluginException) {
-
-                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
-                cantStartPluginException.printStackTrace();
-
-                /**
-                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
-                 * start, then the platform wont start either. In the future we will review this policy.
-                 * * *
-                 */
-
-                throw new CantStartPlatformException();
-            }
-            catch (Exception e){
-
-                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
-
-                /**
-                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
-                 * * *
-                 */
-
-            }
-
-        }
-        catch (PluginNotRecognizedException pluginNotRecognizedException)
-        {
-
-
-            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
-            pluginNotRecognizedException.printStackTrace();
-
-            throw new CantStartPlatformException();
-        }
 
 
         /**
@@ -2254,11 +1791,12 @@ public class Platform  {
          * I will give the Incoming Crypto Transaction access to the File System and to the Event Manager
          */
 
-        Plugin incomingCryptoTransaction = ((TransactionLayer) mTransactionLayer).getIncomingCrypto();
+       /* Plugin incomingCryptoTransaction = ((TransactionLayer) mTransactionLayer).getIncomingCrypto();
 
        // ((DealsWithPluginFileSystem) incomingCryptoTransaction).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
         ((DealsWithEvents) incomingCryptoTransaction).setEventManager((EventManager) eventManager);
         corePlatformContext.addPlugin(incomingCryptoTransaction, Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION);
+        */
 //TODO: COMETADO por null point en el start
        // try
        // {
@@ -2774,6 +2312,488 @@ public class Platform  {
                  * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
                  * start, then the platform wont start either. In the future we will review this policy.
                  * * * 
+                 */
+
+                throw new CantStartPlatformException();
+            }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
+
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
+        /**
+         * ----------------------------------
+         * Plugin Crypto Loss Protected Wallet Niche Type Wallet
+         * ----------------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the crypto loss protected wallet access to the File System and to the Event Manager
+         */
+
+        //TODO lo comente porque la variable cryptoLossProtectedWalletNicheWalletType es null y da error al inicializar la APP (Natalia)
+        // Plugin cryptoLossProtectedWalletNicheWalletType = ((NicheWalletTypeLayer) mNicheWalletTypeLayer).getmCryptoLossProtectedWallet();
+
+        // ((DealsWithPluginFileSystem) cryptoLossProtectedWalletNicheWalletType).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
+        // ((DealsWithEvents) cryptoLossProtectedWalletNicheWalletType).setEventManager((EventManager) eventManager);
+        // corePlatformContext.addPlugin(cryptoLossProtectedWalletNicheWalletType, Plugins.BITDUBAI_CRYPTO_LOSS_PROTECTED_WALLET_NICHE_WALLET_TYPE);
+
+        //  try
+        //  {
+
+        /**
+         * As any other plugin, this one will need its identity in order to access the data it persisted before.
+         */
+
+        //   UUID pluginID = pluginsIdentityManager.getPluginId(cryptoLossProtectedWalletNicheWalletType);
+        //   (cryptoLossProtectedWalletNicheWalletType).setId(pluginID);
+
+        //  try {
+        //     ((Service) cryptoLossProtectedWalletNicheWalletType).start();
+        //  }
+        // catch (CantStartPluginException cantStartPluginException) {
+
+        //   System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+        //    cantStartPluginException.printStackTrace();
+
+        /**
+         * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+         * start, then the platform wont start either. In the future we will review this policy.
+         * * *
+         */
+
+        // throw new CantStartPlatformException();
+        //  }
+        //  catch (Exception e){
+
+        //     ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+        /**
+         * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+         * * *
+         */
+
+        //}
+
+        // }
+        //catch (PluginNotRecognizedException pluginNotRecognizedException)
+        //{
+
+
+        //System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+        // pluginNotRecognizedException.printStackTrace();
+
+        // throw new CantStartPlatformException();
+        // }
+
+        /**
+         * ----------------------------------
+         * Plugin crypto Wallet Niche Type Wallet
+         * ----------------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the crypto wallet access to the File System and to the Event Manager
+         */
+
+        Plugin cryptoWalletNicheWalletType = ((NicheWalletTypeLayer) mNicheWalletTypeLayer).getmCryptoWallet();
+
+        ((DealsWithActorAddressBook) cryptoWalletNicheWalletType).setActorAddressBookManager((ActorAddressBookManager) actorAddressBookCrypto);
+        //((DealsWithBitcoinWallet) cryptoWalletNicheWalletType).setBitcoinWalletManager(); TODO agregar referencia
+        ((DealsWithCryptoVault) cryptoWalletNicheWalletType).setCryptoVaultManager((CryptoVaultManager) bitcoinCryptoVault);
+        ((DealsWithErrors) cryptoWalletNicheWalletType).setErrorManager((ErrorManager) errorManager);
+        ((DealsWithExtraUsers) cryptoWalletNicheWalletType).setExtraUserManager((ExtraUserManager) extraUser);
+        ((DealsWithOutgoingExtraUser) cryptoWalletNicheWalletType).setOutgoingExtraUserManager((OutgoingExtraUserManager) outgoingExtraUserTransaction);
+        ((DealsWithWalletAddressBook) cryptoWalletNicheWalletType).setWalletAddressBookManager((WalletAddressBookManager) walletAddressBookCrypto);
+        ((DealsWithWalletContacts) cryptoWalletNicheWalletType).setWalletContactsManager((WalletContactsManager) walletContactsMiddleware);
+        corePlatformContext.addPlugin(cryptoWalletNicheWalletType, Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(cryptoWalletNicheWalletType);
+            (cryptoWalletNicheWalletType).setId(pluginID);
+
+            try {
+                ((Service) cryptoWalletNicheWalletType).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * *
+                 */
+
+                throw new CantStartPlatformException();
+            }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
+
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
+
+
+        /**
+         * ----------------------------------
+         * Plugin Discount Wallet Niche Type Wallet
+         * ----------------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the discount wallet access to the File System and to the Event Manager
+         */
+
+        Plugin discountWalletNicheWalletType = ((NicheWalletTypeLayer) mNicheWalletTypeLayer).getmDiscountWallet();
+
+        ((DealsWithPluginFileSystem) discountWalletNicheWalletType).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
+        ((DealsWithEvents) discountWalletNicheWalletType).setEventManager((EventManager) eventManager);
+        corePlatformContext.addPlugin(discountWalletNicheWalletType, Plugins.BITDUBAI_DISCOUNT_WALLET_NICHE_WALLET_TYPE);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(discountWalletNicheWalletType);
+            (discountWalletNicheWalletType).setId(pluginID);
+
+            try {
+                ((Service) discountWalletNicheWalletType).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * *
+                 */
+
+                throw new CantStartPlatformException();
+            }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
+
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
+
+
+        /**
+         * ----------------------------------
+         * Plugin Fiat Over Crypto Loss Protected Wallet Wallet Niche Type Wallet
+         * ----------------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the Fiat over crypto loss protected wallet access to the File System and to the Event Manager
+         */
+        //TODO lo comente porque la variable fiatOverCryptoLossProtectedWalletNicheWalletType es null  y da error al levantar la APP (Natalia)
+        //  Plugin fiatOverCryptoLossProtectedWalletNicheWalletType = ((NicheWalletTypeLayer) mNicheWalletTypeLayer).getmFiatOverCryptoLossProtectedWallet();
+
+        // ((DealsWithPluginFileSystem) fiatOverCryptoLossProtectedWalletNicheWalletType).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
+        // ((DealsWithEvents) fiatOverCryptoLossProtectedWalletNicheWalletType).setEventManager((EventManager) eventManager);
+        // corePlatformContext.addPlugin(fiatOverCryptoLossProtectedWalletNicheWalletType, Plugins.BITDUBAI_FIAT_OVER_CRYPTO_LOSS_PROTECTED_WALLET_NICHE_WALLET_TYPE);
+
+        // try
+        // {
+
+        /**
+         * As any other plugin, this one will need its identity in order to access the data it persisted before.
+         */
+
+        //  UUID pluginID = pluginsIdentityManager.getPluginId(fiatOverCryptoLossProtectedWalletNicheWalletType);
+        //  (fiatOverCryptoLossProtectedWalletNicheWalletType).setId(pluginID);
+
+        //  try {
+        //      ((Service) fiatOverCryptoLossProtectedWalletNicheWalletType).start();
+        //  }
+        //  catch (CantStartPluginException cantStartPluginException) {
+
+        // System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+        //cantStartPluginException.printStackTrace();
+
+        /**
+         * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+         * start, then the platform wont start either. In the future we will review this policy.
+         * * *
+         */
+
+        // throw new CantStartPlatformException();
+        // }
+        // catch (Exception e){
+
+        //   ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+        /**
+         * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+         * * *
+         */
+
+        //}
+
+        // }
+        // catch (PluginNotRecognizedException pluginNotRecognizedException)
+        // {
+
+
+        //  System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+        //  pluginNotRecognizedException.printStackTrace();
+
+        // throw new CantStartPlatformException();
+        //}
+
+
+        /**
+         * ----------------------------------
+         * Plugin Fiat Over Crypto Wallet Niche Type Wallet
+         * ----------------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the fiat over crypto wallet access to the File System and to the Event Manager
+         */
+
+        Plugin fiatOverCryptoWalletNicheWalletType = ((NicheWalletTypeLayer) mNicheWalletTypeLayer).getmFiatOverCryptoWallet();
+
+        ((DealsWithPluginFileSystem) fiatOverCryptoWalletNicheWalletType).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
+        ((DealsWithEvents) fiatOverCryptoWalletNicheWalletType).setEventManager((EventManager) eventManager);
+        corePlatformContext.addPlugin(fiatOverCryptoWalletNicheWalletType, Plugins.BITDUBAI_FIAT_OVER_CRYPTO_WALLET_NICHE_WALLET_TYPE);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(fiatOverCryptoWalletNicheWalletType);
+            (fiatOverCryptoWalletNicheWalletType).setId(pluginID);
+
+            try {
+                ((Service) fiatOverCryptoWalletNicheWalletType).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * *
+                 */
+
+                throw new CantStartPlatformException();
+            }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
+
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
+        /**
+         * ----------------------------------
+         * Plugin Multi account Wallet Niche Type Wallet
+         * ----------------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the multi account wallet access to the File System and to the Event Manager
+         */
+
+        Plugin multiAccountWalletNicheWalletType = ((NicheWalletTypeLayer) mNicheWalletTypeLayer).getmMultiAccountWallet();
+
+        ((DealsWithPluginFileSystem) multiAccountWalletNicheWalletType).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
+        ((DealsWithEvents) multiAccountWalletNicheWalletType).setEventManager((EventManager) eventManager);
+        corePlatformContext.addPlugin(multiAccountWalletNicheWalletType, Plugins.BITDUBAI_MULTI_ACCOUNT_WALLET_NICHE_WALLET_TYPE);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(multiAccountWalletNicheWalletType);
+            (multiAccountWalletNicheWalletType).setId(pluginID);
+
+            try {
+                ((Service) multiAccountWalletNicheWalletType).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * *
+                 */
+
+                throw new CantStartPlatformException();
+            }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
+
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
+
+        /**
+         * ----------------------------------
+         * Plugin Bank Notes Wallet Niche Type Wallet
+         * ----------------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the bank notes wallet access to the File System and to the Event Manager
+         */
+
+        Plugin bankNotesWalletNicheWalletType = ((NicheWalletTypeLayer) mNicheWalletTypeLayer).getmBankNotesWallet();
+
+        ((DealsWithPluginFileSystem) bankNotesWalletNicheWalletType).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
+        ((DealsWithEvents) bankNotesWalletNicheWalletType).setEventManager((EventManager) eventManager);
+        corePlatformContext.addPlugin(bankNotesWalletNicheWalletType, Plugins.BITDUBAI_BANK_NOTES_WALLET_NICHE_WALLET_TYPE);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(bankNotesWalletNicheWalletType);
+            (bankNotesWalletNicheWalletType).setId(pluginID);
+
+            try {
+                ((Service) bankNotesWalletNicheWalletType).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * *
                  */
 
                 throw new CantStartPlatformException();
