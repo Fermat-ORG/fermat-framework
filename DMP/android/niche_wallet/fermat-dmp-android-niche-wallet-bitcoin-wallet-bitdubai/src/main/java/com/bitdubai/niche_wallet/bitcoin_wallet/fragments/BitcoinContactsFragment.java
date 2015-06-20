@@ -11,9 +11,9 @@ import android.widget.ListView;
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 
 /**
- * Created by natalia on 17/06/15.
+ * Created by natalia on 19/06/15.
  */
-public class BitcoinContactsFragment  extends Fragment {
+public class BitcoinContactsFragment extends Fragment {
 
     private static final String ARG_POSITION = "position";
     View rootView;
@@ -41,15 +41,8 @@ public class BitcoinContactsFragment  extends Fragment {
         ListView listView = (ListView) rootView.findViewById(R.id.transactionlist);
 
         // Defined Array values to show in ListView
-        String[] values = new String[] { "Android List View",
-                "Adapter implementation",
-                "Simple List View In Android",
-                "Create List View Android",
-                "Android Example",
-                "List View Source Code",
-                "List View Array Adapter",
-                "Android Example List View"
-        };
+        String[] contacts = new String[]{"","Lucia Alarcon De Zamacona", "Juan Luis R. Pons", "Karina Rodríguez", "Simon Cushing","Céline Begnis","Taylor Backus","Stephanie Himonidis","Kimberly Brown" };
+
 
         // Define a new Adapter
         // First parameter - Context
@@ -58,7 +51,7 @@ public class BitcoinContactsFragment  extends Fragment {
         // Forth - the Array of data
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, values);
+                android.R.layout.simple_list_item_1, android.R.id.text1, contacts);
 
 
         // Assign adapter to ListView
@@ -86,7 +79,5 @@ public class BitcoinContactsFragment  extends Fragment {
 
         });*/
         return rootView;
-    }
-
-
+           }
 }
