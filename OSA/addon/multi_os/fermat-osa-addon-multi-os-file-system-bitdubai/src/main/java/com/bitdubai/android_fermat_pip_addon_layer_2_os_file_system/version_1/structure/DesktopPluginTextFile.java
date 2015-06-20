@@ -9,7 +9,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantDecr
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantEncryptException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
-import java.util.Base64;
+//import java.util.Base64;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -291,8 +291,8 @@ public class DesktopPluginTextFile implements PluginTextFile {
 
             byte[] plainTextBytes = text.getBytes("utf-8");
             byte[] buf = cipher.doFinal(plainTextBytes);
-            byte[] base64Bytes = Base64.encode(buf);
-            base64EncryptedString = new String(base64Bytes, "UTF-8");
+            //byte[] base64Bytes = Base64.encode(buf);
+            //base64EncryptedString = new String(base64Bytes, "UTF-8");
 
         } catch (Exception e) {
         	e.printStackTrace();
@@ -312,8 +312,8 @@ public class DesktopPluginTextFile implements PluginTextFile {
         String base64EncryptedString = "";
 
         try {
-            Base64 base64 = new Base64();                   
-            byte[] message =base64.decode(encryptedText.getBytes("utf-8"));
+            //Base64 base64 = new Base64();
+            //byte[] message =base64.decode(encryptedText.getBytes("utf-8"));
             MessageDigest md = MessageDigest.getInstance("MD5");
             byte[] digestOfPassword = md.digest(secretKey.getBytes("utf-8"));
             byte[] keyBytes = Arrays.copyOf(digestOfPassword, 24);
@@ -322,11 +322,13 @@ public class DesktopPluginTextFile implements PluginTextFile {
             Cipher decipher = Cipher.getInstance("DESede");
             decipher.init(Cipher.DECRYPT_MODE, key);
 
-            byte[] plainText = decipher.doFinal(message);
+            //byte[] plainText = decipher.doFinal(message);
 
-            base64EncryptedString = new String(plainText, "UTF-8");
-            return base64EncryptedString;
+            //base64EncryptedString = new String(plainText, "UTF-8");
+            //return base64EncryptedString;
 
+            //this is meanwhile i fix the problem with gradle
+            return encryptedText;
         } catch (Exception e) {
         	e.printStackTrace();
             throw  new CantDecryptException();
