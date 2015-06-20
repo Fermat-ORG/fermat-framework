@@ -876,8 +876,10 @@ public class Platform  {
          */
         Plugin cryptoNetwork = ((CryptoNetworkLayer) mCryptoNetworkLayer).getCryptoNetwork(CryptoNetworks.BITCOIN);
 
-       // ((DealsWithPluginFileSystem) cryptoNetwork).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
-        //((DealsWithEvents) cryptoNetwork).setEventManager((EventManager) eventManager);
+        ((DealsWithErrors) cryptoNetwork).setErrorManager((ErrorManager) errorManager);
+        ((DealsWithPluginFileSystem) cryptoNetwork).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
+        ((DealsWithEvents) cryptoNetwork).setEventManager((EventManager) eventManager);
+
 
         corePlatformContext.addPlugin(cryptoNetwork, Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK);
 
@@ -1721,8 +1723,11 @@ public class Platform  {
 
         Plugin bitcoinCryptoVault = ((CryptoVaultLayer) mCryptoVaultLayer).getmBitcoin();
 
+
+        ((DealsWithErrors) bitcoinCryptoVault).setErrorManager((ErrorManager) errorManager);
         ((DealsWithPluginFileSystem) bitcoinCryptoVault).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
         ((DealsWithEvents) bitcoinCryptoVault).setEventManager((EventManager) eventManager);
+        ((DealsWithPluginDatabaseSystem) bitcoinCryptoVault).setPluginDatabaseSystem(databaseSystemOs.getPluginDatabaseSystem());
 
         corePlatformContext.addPlugin(bitcoinCryptoVault, Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT);
 
