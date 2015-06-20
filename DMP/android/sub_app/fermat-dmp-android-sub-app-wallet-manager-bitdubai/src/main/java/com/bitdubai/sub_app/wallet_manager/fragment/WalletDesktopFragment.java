@@ -41,7 +41,7 @@ public class WalletDesktopFragment extends Fragment {
 
     private int position;
 
-    private SearchView mSearchView;
+    //private SearchView mSearchView;
 
     public static WalletDesktopFragment newInstance(int position) {
         WalletDesktopFragment f = new WalletDesktopFragment();
@@ -173,16 +173,16 @@ public class WalletDesktopFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.wallet_manager_desktop_activity_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-        mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        //MenuItem searchItem = menu.findItem(R.id.action_search);
+        //mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         int id = item.getItemId();
-        if(id == R.id.action_search){
-            Toast.makeText(getActivity(), "holaa", Toast.LENGTH_LONG);
-        }
+        //if(id == R.id.action_search){
+        //    Toast.makeText(getActivity(), "holaa", Toast.LENGTH_LONG);
+        //}
 
         return super.onOptionsItemSelected(item);
     }
