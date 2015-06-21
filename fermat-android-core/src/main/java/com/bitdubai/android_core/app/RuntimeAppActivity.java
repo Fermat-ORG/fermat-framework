@@ -725,6 +725,8 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                     //go to wallet basic definition
 
                     this.walletRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
+
+
                     //menu.clear();
                     NavigateWallet();
 
