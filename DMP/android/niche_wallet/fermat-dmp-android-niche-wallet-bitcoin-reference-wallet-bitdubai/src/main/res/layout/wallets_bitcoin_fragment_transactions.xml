@@ -2,7 +2,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#f3e4c4">
+    android:background="#fbf7ed">
 
     <ListView
         android:id="@+id/transactionlist"
