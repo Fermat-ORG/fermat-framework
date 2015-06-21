@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#f3e4c4"
-    android:textColor="#ffffff">
+    android:background="#fbf7ed"
+    android:textColor="#0000000">
 
     <ListView
         android:id="@+id/transactionlist"
@@ -13,7 +13,7 @@
         android:layout_weight="0.14"
         android:headerDividersEnabled="false"
         android:divider="#00000000"
-        android:textColor="#ffffff" >
+        android:textColor="#000000" >
     </ListView>
 
 </LinearLayout>

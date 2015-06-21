@@ -17,6 +17,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 //import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.widget.SearchView;
 import android.util.TypedValue;
 import android.view.Menu;
@@ -421,12 +422,6 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
     private void NavigateWallet() {
 
-        // TEST
-        //getSupportFragmentManager().popBackStack();
-        //getSupportFragmentManager().popBackStackImmediate();
-
-        //CAMBIAR
-
         try
         {
 
@@ -441,6 +436,10 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             this.titleBar = activity.getTitleBar();
 
             this.mainMenumenu= activity.getMainMenu();
+            if (this.mainMenumenu == null)
+            {
+                this.menu.clear();
+            }
             this.sidemenu = activity.getSideMenu();
 
             if(tabs == null)
@@ -458,13 +457,19 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
             if(sidemenu != null)
             {
-                this.NavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
+                //PREGUNTAR A NNATALIA CUAL ES EL CODIGO DE LA BASIC WALLET
+                if (activity.getFragments().containsKey("CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE")) {
+                    Log.d(this.getClass().getSimpleName(), "Holas soy yo desde acáaaaaaaaaa");
+                }else{
+                    this.NavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
 
-                this.NavigationDrawerFragment.setMenuVisibility(true);
-                // Set up the drawer.
-                this.NavigationDrawerFragment.setUp(
-                        R.id.navigation_drawer,
-                        (DrawerLayout) findViewById(R.id.drawer_layout),sidemenu);
+                    this.NavigationDrawerFragment.setMenuVisibility(true);
+                    // Set up the drawer.
+                    this.NavigationDrawerFragment.setUp(
+                            R.id.navigation_drawer,
+                            (DrawerLayout) findViewById(R.id.drawer_layout),sidemenu);
+                }
+
             }
             else
             {
@@ -505,7 +510,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
+        this.menu=menu;
         MenuInflater inflater = getMenuInflater();
 
 
@@ -601,11 +606,10 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
 
-        try{
+        try {
 
 
-
-                int id = item.getItemId();
+            int id = item.getItemId();
 
                 //noinspection SimplifiableIfStatement
                 if (id == R.id.action_settings) {
