@@ -271,6 +271,9 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                     case CWP_WALLET_MANAGER_SHOP:
                         fragments.add(android.support.v4.app.Fragment.instantiate(this, ShopDesktopFragment.class.getName()));
                         break;
+                    case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE :
+                        fragments.add(android.support.v4.app.Fragment.instantiate(this, BitcoinReceiveFragment.class.getName()));
+                        break;
                     case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_PROFILE:
                         break;
                     case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_DESKTOP:
@@ -874,6 +877,14 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
     }
 
 
+    }
+
+
+    //cambio mati test
+    @Override
+    public void onResume(){
+        cleanWindows();
+        NavigateWallet();
     }
 
     @Override
