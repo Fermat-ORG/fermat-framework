@@ -24,7 +24,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.discount_wallet.de
 //import com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.fiat_over_crypto_loss_protected_wallet.developer.bitdubai.version_1.FiatOverCryptoLossProtectedWalletNicheWalletTypePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.fiat_over_crypto_wallet.developer.bitdubai.version_1.FiatOverCryptoWalletNicheWalletTypePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.multi_account_wallet.developer.bitdubai.version_1.MultiAccountWalletNicheWalletTypePluginRoot;
-import com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.WalletAddressBookCryptoPluginRoot;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.WalletAddressBookCryptoModulePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.bank_notes.developer.bitdubai.version_1.BankNotesNetworkServicePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_community.developer.bitdubai.version_1.WalletCommunityNetworkServicePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.WalletResourcesNetworkServicePluginRoot;
@@ -648,8 +648,8 @@ public class PluginsIdentityManager {
 
             if (pluginIndex == 0) {
                 try {
-                    WalletAddressBookCryptoPluginRoot tryType;
-                    tryType = (WalletAddressBookCryptoPluginRoot) plugin;
+                    WalletAddressBookCryptoModulePluginRoot tryType;
+                    tryType = (WalletAddressBookCryptoModulePluginRoot) plugin;
                     pluginIndex = 30;
                 } catch (Exception e) {
                     /**
