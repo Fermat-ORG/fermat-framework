@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.CryptoWalletContactRecord</code>
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.WalletContactsMiddlewareRecord</code>
  * is the implementation of the representation of a Crypto Wallet Contact in the platform
  * <p/>
  *
@@ -16,7 +16,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CryptoWalletContactRecord implements WalletContactRecord {
+public class WalletContactsMiddlewareRecord implements WalletContactRecord {
 
     /**
      * Represent the contactId
@@ -57,7 +57,7 @@ public class CryptoWalletContactRecord implements WalletContactRecord {
      * @param receivedCryptoAddress contact's cryptoAddress (address + cryptoCurrency)
      * @param actorName actor's id
      */
-    public CryptoWalletContactRecord(UUID contactId, CryptoAddress receivedCryptoAddress, String actorName) {
+    public WalletContactsMiddlewareRecord(UUID contactId, CryptoAddress receivedCryptoAddress, String actorName) {
         this.contactId = contactId;
         this.receivedCryptoAddress = receivedCryptoAddress;
         this.actorName = actorName;
@@ -73,7 +73,7 @@ public class CryptoWalletContactRecord implements WalletContactRecord {
      * @param actorType actor's type
      * @param walletId wallet's id
      */
-    public CryptoWalletContactRecord(UUID actorId, String actorName, Actors actorType, UUID contactId, CryptoAddress receivedCryptoAddress, UUID walletId) {
+    public WalletContactsMiddlewareRecord(UUID actorId, String actorName, Actors actorType, UUID contactId, CryptoAddress receivedCryptoAddress, UUID walletId) {
         this.actorId = actorId;
         this.actorName = actorName;
         this.actorType = actorType;
