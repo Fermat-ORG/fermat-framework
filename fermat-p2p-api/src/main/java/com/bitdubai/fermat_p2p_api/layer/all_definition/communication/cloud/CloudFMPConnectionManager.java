@@ -47,7 +47,7 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 	protected final Map<String, SelectionKey> registeredConnections = new ConcurrentHashMap<String, SelectionKey>();
 	protected final Queue<FMPPacket> pendingIncomingMessages = new ConcurrentLinkedQueue<FMPPacket>();
 	
-	private static final int SELECTOR_SELECT_TIMEOUT = 20;
+	private static final int SELECTOR_SELECT_TIMEOUT = 50;
 	private static final String CHARSET_NAME = "UTF-8";
 
 	public CloudFMPConnectionManager(final CommunicationChannelAddress address, final ExecutorService executor, final String privateKey, final String publicKey, final CloudFMPConnectionManagerMode mode) throws IllegalArgumentException{
@@ -158,16 +158,14 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 		readBuffer.get(data, 0, read);
 		try{
 			StringBuffer stringBuffer = new StringBuffer(new String(data, CHARSET_NAME));
-			if(!stringBuffer.toString().trim().isEmpty())
-				processIncomingPacket(FMPPacketFactory.constructCloudPacket(stringBuffer.toString().trim()), key);
+			FMPPacket incomingPacket = FMPPacketFactory.constructCloudPacket(stringBuffer.toString().trim());
+			processIncomingPacket(incomingPacket, key);
 		} catch(UnsupportedEncodingException ex){
 			ex.printStackTrace();
-		} catch (FMPException e) {
-			e.printStackTrace();
+		} catch (FMPException ex) {
+			System.out.println(ex.getMessage());
 		}		
 	}
-	
-	
 
 	@Override
 	public synchronized void writeToKey(final SelectionKey key) throws CloudConnectionException{

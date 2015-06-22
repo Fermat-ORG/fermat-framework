@@ -89,7 +89,6 @@ public class CloudClientManager extends CloudFMPConnectionManager {
 		String decryptedMessage;
 		try{
 			decryptedMessage = AsymmectricCryptography.decryptMessagePrivateKey(dataPacket.getMessage(), eccPrivateKey);
-			
 		}catch(Exception ex){
 			ex.printStackTrace();
 			return;
@@ -102,7 +101,6 @@ public class CloudClientManager extends CloudFMPConnectionManager {
 		Integer port = Integer.valueOf(messageComponents[2]);
 		CommunicationChannelAddress networkServiceServerAddress = CommunicationChannelAddressFactory.constructCloudAddress(host, port);
 		String networkServiceServerPublicKey = messageComponents[3];
-		
 		NetworkServiceClientManager networkServiceClient = new NetworkServiceClientManager(networkServiceServerAddress, executor, AsymmectricCryptography.createPrivateKey(), networkServiceServerPublicKey, networkService);
 		try{
 			networkServiceClient.start();

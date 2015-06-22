@@ -57,9 +57,19 @@ public class CloudNetworkServiceManager extends CloudFMPConnectionManager {
 	
 	@Override
 	public void handleConnectionAccept(final FMPPacket packet) throws FMPException{
-		CloudNetworkServiceVPN vpn = activeVPNConnections.get(packet.getDestination());
-		processVPNAccept(packet.getDestination(), packet.getSender(), vpn);
+		String vpnKey1 = packet.getSender() + packet.getDestination();
+		if(activeVPNConnections.containsKey(vpnKey1)){
+			processVPNAccept(packet.getDestination(), packet.getSender(), activeVPNConnections.get(vpnKey1));
+			return;
+		}
+
+		String vpnKey2 = packet.getDestination() + packet.getSender();
+		if(activeVPNConnections.containsKey(vpnKey2)){
+			processVPNAccept(packet.getDestination(), packet.getSender(), activeVPNConnections.get(vpnKey2));
+			return;
+		}
 	}
+	
 
 	@Override
 	public void handleConnectionAcceptForward(final FMPPacket packet) throws FMPException{
@@ -74,7 +84,7 @@ public class CloudNetworkServiceManager extends CloudFMPConnectionManager {
 		if(unregisteredConnections.containsKey(packet.getSender()))
 			registerConnection(packet);
 		else
-			throw new RegisteringAddressHasNotRequestedConnectionException();
+			throw new RegisteringAddressHasNotRequestedConnectionException(packet.getSender());
 	}
 
 	@Override
@@ -156,7 +166,6 @@ public class CloudNetworkServiceManager extends CloudFMPConnectionManager {
 		Set<String> vpnParticipants = new HashSet<String>();
 		vpnParticipants.add(packet.getSender());
 		vpnParticipants.add(packet.getDestination());
-		String vpnRequestor = packet.getSender();
 		StringBuilder messageBuilder = new StringBuilder();
 		for(String participant : vpnParticipants)
 			messageBuilder.append(participant + FMPPacket.MESSAGE_SEPARATOR);
@@ -164,16 +173,19 @@ public class CloudNetworkServiceManager extends CloudFMPConnectionManager {
 		
 		CloudNetworkServiceVPN vpn = new CloudNetworkServiceVPN(vpnAddress, Executors.newFixedThreadPool(4), new ECCKeyPair(), networkService, vpnParticipants);
 		vpn.start();
-		activeVPNConnections.put(vpnRequestor, vpn);
+		String vpnKey = packet.getSender() + packet.getDestination();
+		activeVPNConnections.put(vpnKey, vpn);
 		
-		String sender = vpnRequestor;
+		sendVPNRequest(packet.getSender(), packet.getDestination(), message);
+		sendVPNRequest(packet.getDestination(), packet.getSender(), message);
+	}
+	
+	private void sendVPNRequest(final String sender, final String destination, final String message) throws FMPException{
 		FMPPacketType type = FMPPacketType.CONNECTION_REQUEST;
-		for(String destination : vpnParticipants){
-			String messageHash = AsymmectricCryptography.encryptMessagePublicKey(message, destination);
-			String signature = AsymmectricCryptography.createMessageSignature(messageHash, eccPrivateKey);
-			FMPPacket responsePacket = FMPPacketFactory.constructCloudPacket(sender, destination, type, messageHash, signature);
-			writeToRegisteredConnection(responsePacket);
-		}
+		String messageHash = AsymmectricCryptography.encryptMessagePublicKey(message, destination);
+		String signature = AsymmectricCryptography.createMessageSignature(messageHash, eccPrivateKey);
+		FMPPacket responsePacket = FMPPacketFactory.constructCloudPacket(sender, destination, type, messageHash, signature);
+		writeToRegisteredConnection(responsePacket);
 	}
 	
 	private void processVPNAccept(final String requestor, final String participant, final CloudNetworkServiceVPN vpn) throws FMPException{
