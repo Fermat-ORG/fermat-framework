@@ -17,6 +17,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 //import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.widget.SearchView;
 import android.util.TypedValue;
 import android.view.Menu;
@@ -246,21 +247,32 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
         {
             List<android.support.v4.app.Fragment> fragments = new Vector<android.support.v4.app.Fragment>();
             Iterator<Map.Entry<Fragments, com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.Fragment>>  efragments = this.fragments.entrySet().iterator();
-
+            boolean flag=false;
             while (efragments.hasNext()) {
                 Map.Entry<Fragments, com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.Fragment> fragmentEntry =  efragments.next();
 
                 RuntimeFragment fragment = (RuntimeFragment)fragmentEntry.getValue();
                 Fragments type = fragment.getType();
 
+
                 switch (type) {
                     case CWP_SHELL_LOGIN:
                         break;
                     case CWP_WALLET_MANAGER_MAIN:
-                        fragments.add(android.support.v4.app.Fragment.instantiate(this, WalletDesktopFragment.class.getName()));
+
+                        //Matias this flag is because this fragment appair two times and when press the back button in a fragment
+                        //the application crash
+                        if(!flag) {
+                            //fragments.add(android.support.v4.app.Fragment.instantiate(this, WalletDesktopFragment.class.getName()));
+                            fragments.add(android.support.v4.app.Fragment.instantiate(this, WalletDesktopFragment.class.getName()));
+                            flag=true;
+                        }
                         break;
                     case CWP_WALLET_MANAGER_SHOP:
                         fragments.add(android.support.v4.app.Fragment.instantiate(this, ShopDesktopFragment.class.getName()));
+                        break;
+                    case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE :
+                        fragments.add(android.support.v4.app.Fragment.instantiate(this, BitcoinReceiveFragment.class.getName()));
                         break;
                     case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_PROFILE:
                         break;
@@ -427,6 +439,10 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             this.titleBar = activity.getTitleBar();
 
             this.mainMenumenu= activity.getMainMenu();
+            if (this.mainMenumenu == null)
+            {
+                this.menu.clear();
+            }
             this.sidemenu = activity.getSideMenu();
 
             if(tabs == null)
@@ -444,13 +460,19 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
             if(sidemenu != null)
             {
-                this.NavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
+                //PREGUNTAR A NNATALIA CUAL ES EL CODIGO DE LA BASIC WALLET
+                if (activity.getFragments().containsKey("CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE")) {
+                    Log.d(this.getClass().getSimpleName(), "Holas soy yo desde acáaaaaaaaaa");
+                }else{
+                    this.NavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
 
-                this.NavigationDrawerFragment.setMenuVisibility(true);
-                // Set up the drawer.
-                this.NavigationDrawerFragment.setUp(
-                        R.id.navigation_drawer,
-                        (DrawerLayout) findViewById(R.id.drawer_layout),sidemenu);
+                    this.NavigationDrawerFragment.setMenuVisibility(true);
+                    // Set up the drawer.
+                    this.NavigationDrawerFragment.setUp(
+                            R.id.navigation_drawer,
+                            (DrawerLayout) findViewById(R.id.drawer_layout),sidemenu);
+                }
+
             }
             else
             {
@@ -491,7 +513,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
+        this.menu=menu;
         MenuInflater inflater = getMenuInflater();
 
 
@@ -511,6 +533,13 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                 break;
             case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_VERSION_1_MAIN:
 
+                break;
+            case CWP_WALLET_BASIC_ALL_MAIN:
+                //inflater.inflate(R.menu.wallet_framework_activity_framework_menu2, menu);
+                /*menu.clear();
+                menu.removeItem(0);
+                menu.removeItem(1);
+                */
                 break;
             case CWP_WALLET_STORE_MAIN:
                 break;
@@ -580,11 +609,10 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
 
-        try{
+        try {
 
 
-
-                int id = item.getItemId();
+            int id = item.getItemId();
 
                 //noinspection SimplifiableIfStatement
                 if (id == R.id.action_settings) {
@@ -698,7 +726,11 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                     break;
                 case CWP_WALLET_BASIC_ALL_MAIN: //basic Wallet
                     //go to wallet basic definition
+
                     this.walletRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
+
+
+                    //menu.clear();
                     NavigateWallet();
 
                     break;
@@ -847,6 +879,14 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
     }
 
+
+    //cambio mati test
+    @Override
+    public void onResume(){
+        cleanWindows();
+        NavigateWallet();
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
@@ -913,6 +953,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
         this.Title = "";
 
         List<android.support.v4.app.Fragment> fragments = new Vector<android.support.v4.app.Fragment>();
+
         this.PagerAdapter  = new PagerAdapter(getSupportFragmentManager(), fragments);
 
 
@@ -983,6 +1024,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                 }
 
             }
+
             //execute current activity fragments
             try {
                 switch (fragmentType) {
@@ -990,6 +1032,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
                         break;
                     case CWP_WALLET_MANAGER_MAIN:
+                        //getFragmentManager().popBackStack();
                         currentFragment =  WalletDesktopFragment.newInstance(position);
                         break;
                     case CWP_WALLET_MANAGER_SHOP:
