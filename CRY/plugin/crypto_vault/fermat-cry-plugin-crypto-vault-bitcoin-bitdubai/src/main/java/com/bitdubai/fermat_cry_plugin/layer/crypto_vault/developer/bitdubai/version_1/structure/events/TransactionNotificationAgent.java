@@ -206,7 +206,7 @@ public class TransactionNotificationAgent implements Agent,DealsWithEvents,Deals
                  */
                 try {
 
-                    database =  databaseFactory.createDatabase(pluginId, walletId);
+                    database =  databaseFactory.createDatabase(pluginId, walletId.toString());
 
                 }
                 catch (CantCreateDatabaseException cantCreateDatabaseException){
