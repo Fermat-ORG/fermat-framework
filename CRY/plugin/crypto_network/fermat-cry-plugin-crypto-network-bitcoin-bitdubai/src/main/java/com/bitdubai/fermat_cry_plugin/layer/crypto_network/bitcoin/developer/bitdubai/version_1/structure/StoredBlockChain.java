@@ -109,7 +109,7 @@ class StoredBlockChain implements BitcoinManager, DealsWithErrors, DealsWithPlug
             String blockChainFileName = userId.toString() + ".spvchain";
             PluginTextFile blockchainFile = pluginFileSystem.createTextFile(pluginId, userId.toString(), blockChainFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             blockchainFile.persistToMedia();
-            
+
             spvStore = new SPVBlockStore(this.networkParameters, new File(pluginId.toString(), blockChainFileName));
             chain = new BlockChain(this.networkParameters, this.wallet, spvStore);
         } catch (Exception exception){
