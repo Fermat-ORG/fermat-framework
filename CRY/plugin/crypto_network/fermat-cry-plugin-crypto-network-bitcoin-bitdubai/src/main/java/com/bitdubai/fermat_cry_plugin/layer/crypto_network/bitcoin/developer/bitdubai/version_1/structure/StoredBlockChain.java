@@ -118,7 +118,7 @@ class StoredBlockChain implements BitcoinManager, DealsWithErrors, DealsWithPlug
             memoryStore = new MemoryBlockStore(this.networkParameters);
             try {
                 chain = new BlockChain(this.networkParameters, this.wallet, memoryStore);
-                System.out.println("Warning. Blockchain saved in memory.");
+                System.err.println("Warning!!. Blockchain saved in memory.");
                 /**
                  * if everything fails I will have to throw the exception
                  */

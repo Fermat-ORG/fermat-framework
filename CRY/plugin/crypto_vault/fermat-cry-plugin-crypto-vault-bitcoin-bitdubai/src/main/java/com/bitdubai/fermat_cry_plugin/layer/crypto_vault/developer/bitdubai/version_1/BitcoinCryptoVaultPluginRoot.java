@@ -171,24 +171,12 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DealsWi
 
     @Override
     public void start() throws CantStartPluginException {
-        /**
-         * I will initialize the handling of com.bitdubai.platform events.
-         */
-        EventListener eventListener;
-        EventHandler eventHandler;
-
-        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_IDENTIFIED);
-        eventHandler = new BitcoinCoinsReceivedEventHandler();
-        ((BitcoinCoinsReceivedEventHandler) eventHandler).setCryptoVaultManager(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
 
         /**
          * I get the userId from the deviceUserManager
          */
         //userId = deviceUserManager.getLoggedInUser().getId();
-        userId = UUID.randomUUID(); //todo fix deviceUser Implementation
+        userId = UUID.fromString("dca1129e-6ee1-4ae1-967d-fd0b67f23683"); //todo fix deviceUser Implementation
         System.out.println("Vault UserID: " + userId.toString());
 
         /**
@@ -216,6 +204,8 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DealsWi
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT);
         }
+
+
         /**
          * I will start the loading creation of the wallet from the user Id
          */
@@ -229,6 +219,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DealsWi
             vault.setPluginId(pluginId);
 
             vault.loadOrCreateVault();
+
 
             /**
              * Once the vault is loaded or created, I will connect it to Bitcoin network to recieve pending transactions
