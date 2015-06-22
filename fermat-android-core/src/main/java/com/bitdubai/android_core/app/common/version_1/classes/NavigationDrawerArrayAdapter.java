@@ -46,15 +46,19 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                     rowView = inflater.inflate(R.layout.shell_shop_desktop_activity_navigation_drawer_first_row, parent, false);
                     break;
                 default:
-                    rowView = inflater.inflate(R.layout.wallet_framework_activity_framework_navigation_drawer_first_row, parent, false);
+                    rowView = inflater.inflate(R.layout.wallet_manager_main_activity_navigation_drawer_first_row_empty, parent, false);
 
             }
-            TextView textView = (TextView) rowView.findViewById(R.id.label);
 
-            textView.setTypeface(MyApplication.getDefaultTypeface(), 1);
+            if(rowView.findViewById(R.id.label) != null){
+                TextView textView = (TextView) rowView.findViewById(R.id.label);
 
-            ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
-            textView.setText("Tessa Crankston");
+                textView.setTypeface(MyApplication.getDefaultTypeface(), 1);
+
+                ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
+                textView.setText("Tessa Crankston");
+            }
+
 
             //        ImageView iconEdit = (ImageView) rowView.findViewById(R.id.icon_edit_profile);
             //        iconEdit.setOnClickListener(new View.OnClickListener() {
@@ -86,14 +90,19 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                     rowView = inflater.inflate(R.layout.wallet_framework_activity_framework_navigation_drawer_row_layout, parent, false);
                     break;
                 default:
-                    rowView = inflater.inflate(R.layout.wallet_framework_activity_framework_navigation_drawer_row_layout, parent, false);
+                    rowView = inflater.inflate(R.layout.wallet_framework_activity_main_navigation_drawer_row_layout_empty, parent, false);
                     break;
 
             }
-            TextView textView = (TextView) rowView.findViewById(R.id.label);
-            textView.setTypeface(MyApplication.getDefaultTypeface(), 1);
-            ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
-            textView.setText(values[position]);
+            ImageView imageView = null;
+            if(rowView.findViewById(R.id.label) != null)
+            {
+                TextView textView = (TextView) rowView.findViewById(R.id.label);
+                textView.setTypeface(MyApplication.getDefaultTypeface(), 1);
+                imageView = (ImageView) rowView.findViewById(R.id.icon);
+                textView.setText(values[position]);
+            }
+
 
             if (MyApplication.getActivityId() == "DesktopActivity") {
 
@@ -129,7 +138,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
 
             }else{
 
-                switch (position)
+             /*   switch (position)
                 {
                     case 1:
                         imageView.setImageResource(R.drawable.ic_action_user);
@@ -161,7 +170,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                     case 10:
                         imageView.setImageResource(R.drawable.ic_action_exit);
                         break;
-                }
+                }*/
             }
 
         }
