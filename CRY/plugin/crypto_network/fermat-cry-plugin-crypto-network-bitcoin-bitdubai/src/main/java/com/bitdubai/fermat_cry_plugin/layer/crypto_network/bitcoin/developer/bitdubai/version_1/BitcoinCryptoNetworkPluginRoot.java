@@ -140,10 +140,10 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManag
         bitcoinCryptoNetworkMonitoringAgent.setPluginFileSystem(pluginFileSystem);
         bitcoinCryptoNetworkMonitoringAgent.setErrorManager(errorManager);
         bitcoinCryptoNetworkMonitoringAgent.setPluginId(pluginId);
-
         try {
             bitcoinCryptoNetworkMonitoringAgent.start();
         } catch (CantStartAgentException e) {
+            //todo handle this
             e.printStackTrace();
         }
     }

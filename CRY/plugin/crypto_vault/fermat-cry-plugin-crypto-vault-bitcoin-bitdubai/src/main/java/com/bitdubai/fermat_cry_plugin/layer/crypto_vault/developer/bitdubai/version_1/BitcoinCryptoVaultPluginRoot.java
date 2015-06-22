@@ -44,7 +44,7 @@ import java.util.UUID;
 /**
  * Created by loui on 08/06/15.
  */
-public class BitcoinCryptoVaultPluginRoot implements CryptoVault, CryptoVaultManager, DealsWithEvents, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithDeviceUsers, DealsWithPluginFileSystem, Plugin, Service {
+public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DealsWithEvents, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithDeviceUsers, DealsWithPluginFileSystem, Plugin, Service {
 
     /**
      * BitcoinCryptoVaultPluginRoot member variables
@@ -91,24 +91,6 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVault, CryptoVaultMan
      */
     PluginFileSystem pluginFileSystem;
 
-    /**
-     * CryptoVault interface implementations
-     * @param UserId
-     */
-    @Override
-    public void setUserId(UUID UserId) {
-
-    }
-
-    @Override
-    public UUID getUserId() {
-        return userId;
-    }
-
-    @Override
-    public Object getWallet() {
-        return vault;
-    }
 
     /**
      * Service interface implementation
@@ -322,6 +304,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVault, CryptoVaultMan
         try {
             vault.connectVault();
         } catch (CantStartAgentException e) {
+            //todo handle this
             e.printStackTrace();
         }
     }

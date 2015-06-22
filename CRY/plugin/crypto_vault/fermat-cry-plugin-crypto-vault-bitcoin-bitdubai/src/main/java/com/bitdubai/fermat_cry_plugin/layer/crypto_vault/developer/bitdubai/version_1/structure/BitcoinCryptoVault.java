@@ -277,7 +277,9 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
      * @throws CantStartAgentException
      */
     public void connectVault() throws CantStartAgentException {
+
         bitcoinCryptoNetworkManager.setVault(this);
+
         bitcoinCryptoNetworkManager.connectToBitcoinNetwork();
     }
 
