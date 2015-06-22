@@ -791,6 +791,7 @@ public class Platform  {
                  * * *
                  */
             } catch (Exception e){
+                System.err.println("PluginNotRecognizedException: " + e.getMessage());
                 errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
                 /**
                  * This is worse than the previous catch since the plugin didn't even throw an expected exception.
@@ -801,7 +802,5 @@ public class Platform  {
             System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
             pluginNotRecognizedException.printStackTrace();
         }
-
-        System.out.println("********************************* Pasa el plugin: " + descriptor.toString());
     }
 }
