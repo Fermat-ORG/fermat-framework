@@ -14,11 +14,9 @@ public class AcceptVPNConnectionTest extends NetworkServiceClientManagerIntegrat
 	@Test
 	public void AcceptPendingVPNRequest_ReceivesAcceptForward_ActiveVPNInRegistry() throws Exception{
 		setUp(TCP_PORT_PADDING + 1);
-		Thread.sleep(getThreadSleepMillis());
 		testClient.requestVPNConnection(testClient.getPublicKey());
 		Thread.sleep(getThreadSleepMillis());
 		String peerVPN = testClient.getPendingVPNRequest();
-		assertThat(peerVPN).isNotNull();
 		testClient.acceptPendingVPNRequest(peerVPN);
 		Thread.sleep(getThreadSleepMillis());
 		assertThat(testClient.getActiveVPN(peerVPN)).isNotNull();
@@ -27,14 +25,12 @@ public class AcceptVPNConnectionTest extends NetworkServiceClientManagerIntegrat
 	@Test
 	public void AcceptPendingVPNRequest_ReceivesAcceptForward_ActiveVPNStarted() throws Exception{
 		setUp(TCP_PORT_PADDING + 3);
-		Thread.sleep(getThreadSleepMillis());
 		testClient.requestVPNConnection(testClient.getPublicKey());
 		Thread.sleep(getThreadSleepMillis());
-		String peerVPN = testClient.getPendingVPNRequest();
-		assertThat(peerVPN).isNotNull();
-		testClient.acceptPendingVPNRequest(peerVPN);
+		String peerVPNSolicitant = testClient.getPendingVPNRequest();
+		testClient.acceptPendingVPNRequest(peerVPNSolicitant);
 		Thread.sleep(getThreadSleepMillis());
-		NetworkServiceClientVPN testVPN = testClient.getActiveVPN(peerVPN);
+		NetworkServiceClientVPN testVPN = testClient.getActiveVPN(peerVPNSolicitant);
 		assertThat(testVPN.isRunning()).isTrue();
 		assertThat(testVPN.isRegistered()).isTrue();
 	}

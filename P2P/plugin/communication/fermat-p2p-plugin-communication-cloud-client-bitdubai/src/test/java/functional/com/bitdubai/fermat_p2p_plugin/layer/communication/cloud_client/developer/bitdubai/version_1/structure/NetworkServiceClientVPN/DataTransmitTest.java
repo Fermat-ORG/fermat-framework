@@ -5,9 +5,9 @@ import static org.fest.assertions.api.Assertions.*;
 import org.junit.Test;
 
 
-public class DataTransmitTest extends CloudClientVPNIntegrationTest {
+public class DataTransmitTest extends NetworkServiceClientVPNIntegrationTest {
 	
-	private static final int TCP_PORT_PADDING = 100;
+	private static final int TCP_PORT_PADDING = 200;
 	
 	private String testMessage = "THIS IS A TEST MESSAGE";
 	

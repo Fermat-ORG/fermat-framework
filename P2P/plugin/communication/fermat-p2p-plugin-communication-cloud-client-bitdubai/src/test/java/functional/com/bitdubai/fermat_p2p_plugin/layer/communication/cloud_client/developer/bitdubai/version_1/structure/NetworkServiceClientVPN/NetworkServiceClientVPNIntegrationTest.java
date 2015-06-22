@@ -11,16 +11,14 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.CommunicationChannelAddressFactory;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.structure.NetworkServiceClientVPN;
-import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.CloudNetworkServiceManager;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.CloudNetworkServiceVPN;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.ECCKeyPair;
 
-import functional.com.bitdubai.fermat_p2p_plugin.layer._11_communication.cloud_server.developer.bitdubai.version_1.structure.mocks.MockFMPPacketsFactory;
+public abstract class NetworkServiceClientVPNIntegrationTest {
+	
+	protected static final String CLIENT_PRIVATE_KEY = "18E14A7B6A307F426A94F8114701E7C8E774E7F9A47E2C2035DB29A206321725";
+	protected static final String CLIENT_PUBLIC_KEY = "0450863AD64A87AE8A2FE83C1AF1A8403CB53F53E486D8511DAD8A04887E5B23522CD470243453A299FA9E77237716103ABC11A1DF38855ED6F2EE187E9C582BA6";
 
-public abstract class CloudClientVPNIntegrationTest {
-	
-	protected String clientPrivateKey = MockFMPPacketsFactory.MOCK_PRIVATE_KEY;
-	
 	protected String serverPrivateKey = "a06a1274b8bd327c0ddeebc75597101a1e09c3551915e25ad2d8949e0507c142";
 	protected String serverPublicKey = "047F9F57BDE5771B4A9DA604B1CA138AA3B593B7EFBC3C890E384CF8B3EB3080E70DDA5130A26768DDEF30379AA6F9B924339407B0D429964503372CB71D3328D0";
 
@@ -31,7 +29,6 @@ public abstract class CloudClientVPNIntegrationTest {
 	protected CloudNetworkServiceVPN testServer;
 	protected NetworkServiceClientVPN testClient;
 	
-	protected CloudNetworkServiceManager testNetworkServiceServer;
 	protected NetworkServices testNetworkService;
 	protected Set<String> testParticipants;
 	
@@ -39,7 +36,7 @@ public abstract class CloudClientVPNIntegrationTest {
 		testAddress = CommunicationChannelAddressFactory.constructCloudAddress(testHost, testBasePort+tcpPadding);
 		ECCKeyPair testKeyPair = new ECCKeyPair(serverPrivateKey);
 		testParticipants = new HashSet<String>();
-		testParticipants.add(MockFMPPacketsFactory.MOCK_PUBLIC_KEY);
+		testParticipants.add(CLIENT_PUBLIC_KEY);
 		testNetworkService = NetworkServices.INTRA_USER;
 		
 		testServer = new CloudNetworkServiceVPN(testAddress, getExecutor(), testKeyPair, testNetworkService, testParticipants);
@@ -50,7 +47,7 @@ public abstract class CloudClientVPNIntegrationTest {
 	
 	protected void setUpClient(final int tcpPadding) throws Exception{
 		setUpServer(tcpPadding);
-		testClient = new NetworkServiceClientVPN(testAddress, getExecutor(), clientPrivateKey, serverPublicKey, MockFMPPacketsFactory.MOCK_PUBLIC_KEY, testNetworkService);
+		testClient = new NetworkServiceClientVPN(testAddress, getExecutor(), CLIENT_PRIVATE_KEY, serverPublicKey, CLIENT_PUBLIC_KEY, testNetworkService);
 		testClient.start();
 		Thread.sleep(getThreadSleepMillis());
 	}
@@ -60,7 +57,7 @@ public abstract class CloudClientVPNIntegrationTest {
 	}
 	
 	private ExecutorService getExecutor(){
-		return Executors.newFixedThreadPool(3);
+		return Executors.newCachedThreadPool();
 	}
 
 }
