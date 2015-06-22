@@ -13,7 +13,7 @@ import java.util.UUID;
 /**
  * This class manages the relationship between actors and crypto addresses by storing them on a Database Table.
  */
-public class ActorCryptoAddressBookRecord implements ActorAddressBookRecord {
+public class ActorAddressBookCryptoModuleRecord implements ActorAddressBookRecord {
 
     /**
      * ActorAddressBookRecord Interface member variables.
@@ -26,7 +26,7 @@ public class ActorCryptoAddressBookRecord implements ActorAddressBookRecord {
     /**
      * Constructor.
      */
-    public ActorCryptoAddressBookRecord(UUID actorId, Actors actorType, CryptoAddress cryptoAddress){
+    public ActorAddressBookCryptoModuleRecord(UUID actorId, Actors actorType, CryptoAddress cryptoAddress){
         /**
          * Set actor settings.
          */

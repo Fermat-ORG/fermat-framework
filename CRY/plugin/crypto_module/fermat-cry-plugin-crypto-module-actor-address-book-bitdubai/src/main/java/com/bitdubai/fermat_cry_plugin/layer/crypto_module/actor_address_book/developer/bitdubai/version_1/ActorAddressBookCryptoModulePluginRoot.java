@@ -13,7 +13,7 @@ import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.except
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookRegistry;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.exceptions.CantInitializeActorAddressBookException;
-import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.structure.ActorCryptoAddressBookRegistry;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.structure.ActorAddressBookCryptoModuleRegistry;
 
 import java.util.UUID;
 
@@ -27,7 +27,7 @@ import java.util.UUID;
  * * * * * *
  */
 
-public class ActorAddressBookPluginRoot implements ActorAddressBookManager, DealsWithErrors, DealsWithPluginDatabaseSystem, Plugin, Service {
+public class ActorAddressBookCryptoModulePluginRoot implements ActorAddressBookManager, DealsWithErrors, DealsWithPluginDatabaseSystem, Plugin, Service {
 
     /**
      * DealsWithErrors Interface member variables.
@@ -58,7 +58,7 @@ public class ActorAddressBookPluginRoot implements ActorAddressBookManager, Deal
         /**
          * I created instance of WalletCryptoAddressBookRegistry
          */
-        ActorCryptoAddressBookRegistry actorCryptoAddressBookRegistry = new ActorCryptoAddressBookRegistry();
+        ActorAddressBookCryptoModuleRegistry actorCryptoAddressBookRegistry = new ActorAddressBookCryptoModuleRegistry();
 
         actorCryptoAddressBookRegistry.setErrorManager(this.errorManager);
         actorCryptoAddressBookRegistry.setPluginDatabaseSystem(this.pluginDatabaseSystem);

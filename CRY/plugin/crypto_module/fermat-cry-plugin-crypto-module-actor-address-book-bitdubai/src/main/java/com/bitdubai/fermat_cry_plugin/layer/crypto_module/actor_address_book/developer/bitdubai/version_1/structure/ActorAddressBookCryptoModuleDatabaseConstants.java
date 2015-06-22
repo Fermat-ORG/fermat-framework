@@ -3,7 +3,7 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.de
 /**
  * Created by Natalia on 30/03/2015.
  */
-class ActorAddressBookDatabaseConstants {
+class ActorAddressBookCryptoModuleDatabaseConstants {
     /**
      * Crypto Address Book database table definition.
      */
