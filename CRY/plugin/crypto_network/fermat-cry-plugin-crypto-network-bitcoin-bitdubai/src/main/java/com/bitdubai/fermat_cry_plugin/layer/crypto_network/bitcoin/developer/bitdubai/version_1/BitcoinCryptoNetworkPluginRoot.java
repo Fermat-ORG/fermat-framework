@@ -31,7 +31,7 @@ import java.util.UUID;
  * * * * * * * *
  */
 
-public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManager, DealsWithErrors, DealsWithPluginIdentity, DealsWithPluginFileSystem, Service, Plugin{
+public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManager, DealsWithErrors, DealsWithPluginFileSystem, Service, Plugin{
 
     /**
      * BitcoinCryptoNetworkManager interface member variables
@@ -69,14 +69,6 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManag
         this.errorManager = errorManager;
     }
 
-    /**
-     * DealsWithPluginIdentity interface implementation
-     * @param pluginId
-     */
-    @Override
-    public void setPluginId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
 
     /**
      * DealsWithPluginFileSystem interface implementation
@@ -127,6 +119,7 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManag
      */
     @Override
     public void setId(UUID uuid) {
+        this.pluginId = uuid;
     }
 
     @Override
@@ -144,6 +137,7 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManag
         try {
             bitcoinCryptoNetworkMonitoringAgent.start();
         } catch (CantStartAgentException e) {
+            //todo handle this
             e.printStackTrace();
         }
     }
