@@ -885,7 +885,6 @@ public class Platform  {
 
         ((DealsWithErrors) cryptoNetwork).setErrorManager((ErrorManager) errorManager);
         ((DealsWithPluginFileSystem) cryptoNetwork).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
-        ((DealsWithEvents) cryptoNetwork).setEventManager((EventManager) eventManager);
 
 
         corePlatformContext.addPlugin(cryptoNetwork, Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK);
