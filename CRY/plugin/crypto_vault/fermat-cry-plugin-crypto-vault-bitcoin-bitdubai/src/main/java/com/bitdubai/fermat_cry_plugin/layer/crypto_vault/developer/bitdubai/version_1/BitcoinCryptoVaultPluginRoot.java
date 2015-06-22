@@ -27,6 +27,8 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventMan
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventType;
 import com.bitdubai.fermat_api.layer.pip_user.device_user.DealsWithDeviceUsers;
 import com.bitdubai.fermat_api.layer.pip_user.device_user.DeviceUserManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.DealsWithBitcoinCryptoNetwork;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantCreateCryptoWalletException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVault;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
@@ -44,7 +46,7 @@ import java.util.UUID;
 /**
  * Created by loui on 08/06/15.
  */
-public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DealsWithEvents, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithDeviceUsers, DealsWithPluginFileSystem, Plugin, Service {
+public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DealsWithBitcoinCryptoNetwork, DealsWithEvents, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithDeviceUsers, DealsWithPluginFileSystem, Plugin, Service {
 
     /**
      * BitcoinCryptoVaultPluginRoot member variables
@@ -55,10 +57,9 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DealsWi
 
 
     /**
-     * Service Interface member variables.
+     * DealsWithBitcoinCryptoNetwork interface member variable
      */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
-    List<EventListener> listenersAdded = new ArrayList<>();
+    BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager;
 
     /**
      * DealWithEvents Interface member variables.
@@ -91,6 +92,22 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DealsWi
      */
     PluginFileSystem pluginFileSystem;
 
+
+    /**
+     * Service Interface member variables.
+     */
+    ServiceStatus serviceStatus = ServiceStatus.CREATED;
+    List<EventListener> listenersAdded = new ArrayList<>();
+
+
+    /**
+     * DealsWithBitcoinCryptoNetwork interface implementation
+     * @param bitcoinCryptoNetworkManager
+     */
+    @Override
+    public void setBitcoinCryptoNetworkManager(BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager) {
+        this.bitcoinCryptoNetworkManager = bitcoinCryptoNetworkManager;
+    }
 
     /**
      * Service interface implementation
@@ -208,6 +225,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DealsWi
             vault.setPluginDatabaseSystem(pluginDatabaseSystem);
             vault.setDatabase(this.database);
             vault.setPluginFileSystem(pluginFileSystem);
+            vault.setBitcoinCryptoNetworkManager(bitcoinCryptoNetworkManager);
             vault.setPluginId(pluginId);
 
             vault.loadOrCreateVault();
