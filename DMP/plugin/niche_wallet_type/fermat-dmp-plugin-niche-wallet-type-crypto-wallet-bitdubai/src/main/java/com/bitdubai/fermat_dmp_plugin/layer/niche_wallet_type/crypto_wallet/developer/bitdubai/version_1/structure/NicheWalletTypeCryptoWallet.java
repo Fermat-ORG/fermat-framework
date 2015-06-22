@@ -2,15 +2,14 @@ package com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.crypto_wallet.dev
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformWalletType;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantCalculateBalanceException;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantGetTransactionsException;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantLoadWalletException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.*;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.BitcoinTransaction;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWallet;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsManager;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetBalanceException;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantRequestCryptoAddressException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantSendCryptoException;
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.DealsWithOutgoingExtraUser;
@@ -20,11 +19,6 @@ import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interf
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.DealsWithWalletContacts;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsRegistry;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantCreateWalletContactException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantDeleteWalletContactException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetAllWalletContactsException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetWalletContactException;
-import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantUpdateWalletContactException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -43,6 +37,7 @@ import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
 import com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.crypto_wallet.developer.bitdubai.version_1.exceptions.CantCreateOrRegisterActorException;
 import com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.crypto_wallet.developer.bitdubai.version_1.exceptions.CantInitializeCryptoWalletManagerException;
 import com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.crypto_wallet.developer.bitdubai.version_1.exceptions.CantRequestOrRegisterCryptoAddressException;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -115,12 +110,24 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
 
     @Override
     public List<WalletContactRecord> listWalletContacts(UUID walletId) throws CantGetAllWalletContactsException {
-        return walletContactsRegistry.listWalletContacts(walletId);
+        List<WalletContactRecord> walletContactRecords;
+        try {
+            walletContactRecords = walletContactsRegistry.listWalletContacts(walletId);
+        } catch (Exception e) {
+            throw new CantGetAllWalletContactsException(e.getMessage());
+        }
+        return walletContactRecords;
     }
 
     @Override
     public List<WalletContactRecord> listWalletContactsScrolling(UUID walletId, Integer max, Integer offset) throws CantGetAllWalletContactsException {
-        return walletContactsRegistry.listWalletContactsScrolling(walletId, max, offset);
+        List<WalletContactRecord> walletContactRecords;
+        try {
+            walletContactRecords = walletContactsRegistry.listWalletContactsScrolling(walletId, max, offset);
+        } catch (Exception e) {
+            throw new CantGetAllWalletContactsException(e.getMessage());
+        }
+        return walletContactRecords;
     }
 
     @Override
@@ -148,7 +155,12 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantCreateWalletContactException(e.getMessage());
             }
-            walletContactRecord = walletContactsRegistry.createWalletContact(actorId, actorName, actorType, receivedCryptoAddress, walletId);
+            try {
+                walletContactRecord = walletContactsRegistry.createWalletContact(actorId, actorName, actorType, receivedCryptoAddress, walletId);
+            } catch (Exception e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantCreateWalletContactException(e.getMessage());
+            }
         } else {
             throw new CantCreateWalletContactException("Contact already exists.");
         }
@@ -227,17 +239,31 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
 
     @Override
     public void updateWalletContact(UUID contactId, CryptoAddress receivedCryptoAddress, String actorName) throws CantUpdateWalletContactException {
-        walletContactsRegistry.updateWalletContact(contactId, receivedCryptoAddress, actorName);
+        try {
+            walletContactsRegistry.updateWalletContact(contactId, receivedCryptoAddress, actorName);
+        } catch (Exception e) {
+            throw new CantUpdateWalletContactException(e.getMessage());
+        }
     }
 
     @Override
     public void deleteWalletContact(UUID contactId) throws CantDeleteWalletContactException {
-        walletContactsRegistry.deleteWalletContact(contactId);
+        try {
+            walletContactsRegistry.deleteWalletContact(contactId);
+        } catch (Exception e) {
+            throw new CantDeleteWalletContactException(e.getMessage());
+        }
     }
 
     @Override
     public WalletContactRecord getWalletContactByContainsLikeAndWalletId(String actorName, UUID walletId) throws CantGetWalletContactException {
-        return walletContactsRegistry.getWalletContactByNameContainsAndWalletId(actorName, walletId);
+        WalletContactRecord walletContactRecord;
+        try {
+            walletContactRecord = walletContactsRegistry.getWalletContactByNameContainsAndWalletId(actorName, walletId);
+        } catch (Exception e) {
+            throw new CantGetWalletContactException(e.getMessage());
+        }
+        return walletContactRecord;
     }
 
     @Override
@@ -260,24 +286,21 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
     @Override
     public List<BitcoinTransaction> getTransactions(int max, int offset, UUID walletId) throws CantGetTransactionsException {
         BitcoinWallet bitcoinWallet;
+        List<BitcoinTransaction> bitcoinTransactions;
         try {
             bitcoinWallet = bitcoinWalletManager.loadWallet(walletId);
-        } catch (CantLoadWalletException cantLoadWalletException) {
+            bitcoinTransactions = bitcoinWallet.getTransactions(max, offset);
+        } catch (Exception e) {
             throw new CantGetTransactionsException();
         }
 
-        return bitcoinWallet.getTransactions(max, offset);
+        return bitcoinTransactions;
     }
 
     @Override
-    public void send(long cryptoAmount, CryptoAddress destinationAddress, PlatformWalletType platformWalletType, UUID walletID) throws CantSendCryptoException {
-        switch (platformWalletType){
-            case BASIC_WALLET_BITCOIN_WALLET:
-                outgoingExtraUserManager.getTransactionManager().send(walletID, destinationAddress, cryptoAmount);
-                break;
-        }
+    public void send(long cryptoAmount, CryptoAddress destinationAddress, UUID walletID) throws CantSendCryptoException {
+        outgoingExtraUserManager.getTransactionManager().send(walletID, destinationAddress, cryptoAmount);
     }
-
 
     /**
      * DealsWithActorAddressBook Interface implementation.
