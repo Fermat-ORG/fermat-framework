@@ -270,8 +270,12 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
     }
 
     @Override
-    public void send(UUID walletID, CryptoAddress destinationAddress, long cryptoAmount) throws CantSendCryptoException {
-        outgoingExtraUserManager.getTransactionManager().send(walletID, destinationAddress, cryptoAmount);
+    public void send(long cryptoAmount, CryptoAddress destinationAddress, PlatformWalletType platformWalletType, UUID walletID) throws CantSendCryptoException {
+        switch (platformWalletType){
+            case BASIC_WALLET_BITCOIN_WALLET:
+                outgoingExtraUserManager.getTransactionManager().send(walletID, destinationAddress, cryptoAmount);
+                break;
+        }
     }
 
 
