@@ -27,6 +27,8 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.Unexpect
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 
+import com.bitdubai.fermat_api.layer.pip_user.device_user.DealsWithDeviceUsers;
+import com.bitdubai.fermat_api.layer.pip_user.device_user.DeviceUserManager;
 import com.bitdubai.fermat_api.layer.pip_user.extra_user.DealsWithExtraUsers;
 import com.bitdubai.fermat_api.layer.pip_user.extra_user.ExtraUserManager;
 import com.bitdubai.fermat_core.layer.cry_crypto_router.CryptoRouterLayer;
@@ -883,7 +885,6 @@ public class Platform  {
 
         ((DealsWithErrors) cryptoNetwork).setErrorManager((ErrorManager) errorManager);
         ((DealsWithPluginFileSystem) cryptoNetwork).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
-        ((DealsWithEvents) cryptoNetwork).setEventManager((EventManager) eventManager);
 
 
         corePlatformContext.addPlugin(cryptoNetwork, Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK);
@@ -1729,6 +1730,7 @@ public class Platform  {
         Plugin bitcoinCryptoVault = ((CryptoVaultLayer) mCryptoVaultLayer).getmBitcoin();
 
 
+        ((DealsWithDeviceUsers) bitcoinCryptoVault).setDeviceUserManager((DeviceUserManager) deviceUser);
         ((DealsWithErrors) bitcoinCryptoVault).setErrorManager((ErrorManager) errorManager);
         ((DealsWithPluginFileSystem) bitcoinCryptoVault).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
         ((DealsWithEvents) bitcoinCryptoVault).setEventManager((EventManager) eventManager);
@@ -1776,8 +1778,6 @@ public class Platform  {
         }
         catch (PluginNotRecognizedException pluginNotRecognizedException)
         {
-
-
             System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
             pluginNotRecognizedException.printStackTrace();
 

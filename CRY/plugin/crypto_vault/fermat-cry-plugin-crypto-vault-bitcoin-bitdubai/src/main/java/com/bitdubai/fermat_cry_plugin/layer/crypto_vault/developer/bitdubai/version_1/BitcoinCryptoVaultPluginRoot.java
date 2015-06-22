@@ -21,6 +21,8 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventHan
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventType;
+import com.bitdubai.fermat_api.layer.pip_user.device_user.DealsWithDeviceUsers;
+import com.bitdubai.fermat_api.layer.pip_user.device_user.DeviceUserManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantCreateCryptoWalletException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.event_handlers.BitcoinCoinsReceivedEventHandler;
@@ -36,7 +38,7 @@ import java.util.UUID;
 /**
  * Created by loui on 08/06/15.
  */
-public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Service, DealsWithEvents, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, Plugin {
+public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Service, DealsWithEvents, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithDeviceUsers, DealsWithPluginFileSystem, Plugin {
 
     /**
      * BitcoinCryptoVaultPluginRoot member variables
@@ -70,6 +72,11 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Service
      * DealsWithPluginDatabaseSystem interface member variable
      */
     PluginDatabaseSystem pluginDatabaseSystem;
+
+    /**
+     * DealsWithDeviceUsers interface member variable
+     */
+    DeviceUserManager deviceUserManager;
 
     /**
      * DealsWithPluginFileSystem interface member variable
@@ -121,6 +128,12 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Service
         this.pluginId = pluginId;
     }
 
+
+    @Override
+    public void setDeviceUserManager(DeviceUserManager deviceUserManager) {
+        this.deviceUserManager = deviceUserManager;
+    }
+
     /**
      * DealsWithPluginFileSystem interface implementation
      * @param pluginFileSystem
@@ -145,7 +158,10 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Service
         eventManager.addListener(eventListener);
         listenersAdded.add(eventListener);
 
-        this.serviceStatus = ServiceStatus.STARTED;
+        /**
+         * I get the userId from the deviceUserManager
+         */
+        userId = deviceUserManager.getLoggedInUser().getId();
 
         /**
          * I will start the loading creation of the wallet from the user Id
@@ -165,6 +181,8 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Service
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT);
         }
+
+        this.serviceStatus = ServiceStatus.STARTED;
 
     }
 
@@ -204,15 +222,6 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Service
         listenersAdded.clear();
     }
 
-
-    /**
-     * CryptoVaultManager interface implementation
-     * @param UserId
-     */
-    @Override
-    public void setUserId(UUID UserId) {
-        this.userId = UserId;
-    }
 
     /**
      * CryptoVaultManager interface implementation

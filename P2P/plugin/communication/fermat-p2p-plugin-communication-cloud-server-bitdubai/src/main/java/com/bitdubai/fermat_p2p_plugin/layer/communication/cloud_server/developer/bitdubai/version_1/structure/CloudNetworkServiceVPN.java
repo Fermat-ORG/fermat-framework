@@ -14,7 +14,6 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelA
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket.FMPPacketType;
-import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.exceptions.IncorrectFMPPacketDestinationException;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.exceptions.RegisteringAddressHasNotRequestedConnectionException;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.exceptions.WrongFMPPacketEncryptionException;
 
@@ -40,10 +39,10 @@ public class CloudNetworkServiceVPN extends CloudFMPConnectionManager {
 	
 	@Override
 	public void handleConnectionRequest(final FMPPacket packet) throws FMPException{
-		if(participants.contains(packet.getSender()))
+		if(participants.contains(packet.getSender()) && participants.contains(packet.getDestination()))
 			requestUnregisteredConnection(packet);
 		else
-			denyConnectionRequest(packet, "Client Address Is Not A Participant Of This VPN");
+			denyConnectionRequest(packet, "Address Is Not A Participant Of This VPN");
 	}	
 	
 	@Override
@@ -63,7 +62,7 @@ public class CloudNetworkServiceVPN extends CloudFMPConnectionManager {
 		if(unregisteredConnections.containsKey(packet.getSender()))
 			registerConnection(packet);
 		else
-			throw new RegisteringAddressHasNotRequestedConnectionException();
+			throw new RegisteringAddressHasNotRequestedConnectionException(packet.getSender());
 	}
 
 	@Override
@@ -76,8 +75,7 @@ public class CloudNetworkServiceVPN extends CloudFMPConnectionManager {
 
 	@Override
 	public void handleDataTransmit(final FMPPacket packet) throws FMPException{
-		if(participants.contains(packet.getSender()) && participants.contains(packet.getDestination()))
-				sendPacketToRecipient(packet);
+		sendPacketToRecipient(packet);
 	}
 	
 	private void sendPacketToRecipient(final FMPPacket packet) throws FMPException{
@@ -117,9 +115,6 @@ public class CloudNetworkServiceVPN extends CloudFMPConnectionManager {
 	}
 	
 	private void requestUnregisteredConnection(final FMPPacket packet) throws FMPException {
-		if(!packet.getDestination().equals(getPublicKey()))
-			throw new IncorrectFMPPacketDestinationException();
-		
 		NetworkServices networkService;
 		try{
 			networkService = NetworkServices.valueOf(AsymmectricCryptography.decryptMessagePrivateKey(packet.getMessage(), eccPrivateKey));
@@ -173,12 +168,14 @@ public class CloudNetworkServiceVPN extends CloudFMPConnectionManager {
 	
 	private void writeToUnregisteredConnection(final FMPPacket packet) {
 		SelectionKey connection = unregisteredConnections.get(packet.getDestination());
-		writeToConnection(packet, connection);
+		if(connection!=null)
+			writeToConnection(packet, connection);
 	}
 	
 	private void writeToRegisteredConnection(final FMPPacket packet) {
 		SelectionKey connection = registeredConnections.get(packet.getDestination());
-		writeToConnection(packet, connection);
+		if(connection!=null)
+			writeToConnection(packet, connection);
 	}
 	
 	private void writeToConnection(final FMPPacket packet, final SelectionKey connection){
