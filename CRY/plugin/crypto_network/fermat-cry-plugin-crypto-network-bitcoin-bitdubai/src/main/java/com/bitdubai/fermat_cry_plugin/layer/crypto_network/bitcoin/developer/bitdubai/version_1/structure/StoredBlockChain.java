@@ -110,7 +110,8 @@ class StoredBlockChain implements BitcoinManager, DealsWithErrors, DealsWithPlug
             PluginTextFile blockchainFile = pluginFileSystem.createTextFile(pluginId, userId.toString(), blockChainFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             blockchainFile.persistToMedia();
 
-            File spvFile = new File(userId.toString(), blockChainFileName);
+
+            File spvFile = new File("/data/data/com.bitdubai.fermat/files", blockChainFileName);
 
             spvStore = new SPVBlockStore(this.networkParameters, spvFile);
             chain = new BlockChain(this.networkParameters, this.wallet, spvStore);
