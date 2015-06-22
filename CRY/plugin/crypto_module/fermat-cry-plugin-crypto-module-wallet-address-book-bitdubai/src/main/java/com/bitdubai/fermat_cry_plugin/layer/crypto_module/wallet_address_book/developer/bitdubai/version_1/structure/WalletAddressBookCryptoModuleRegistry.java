@@ -11,19 +11,19 @@ import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.inter
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookRegistry;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.CantGetWalletCryptoAddressBookException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.CantRegisterWalletCryptoAddressBookException;
-import com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.exceptions.CantInitializeWalletCryptoAddressBookException;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.exceptions.CantInitializeWalletAddressBookCryptoModuleException;
 
 import java.util.List;
 import java.util.UUID;
 
 /**
- * The class <code>com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.structure.WalletCryptoAddressBookRegistry</code>
+ * The class <code>com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.structure.WalletAddressBookCryptoModuleRegistry</code>
  * haves all consumable methods from the plugin Wallet Crypto Address Book
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 17/06/15.
  * @version 1.0
  */
-public class WalletCryptoAddressBookRegistry implements DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity, WalletAddressBookRegistry {
+public class WalletAddressBookCryptoModuleRegistry implements DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity, WalletAddressBookRegistry {
 
     /**
      * DealsWithErrors Interface member variables.
@@ -43,13 +43,13 @@ public class WalletCryptoAddressBookRegistry implements DealsWithErrors, DealsWi
     /**
      * WalletAddressBookRegistry Interface member variables.
      */
-    private WalletCryptoAddressBookDao walletCryptoAddressBookDao;
+    private WalletAddressBookCryptoModuleDao walletCryptoAddressBookDao;
 
-    public void initialize() throws CantInitializeWalletCryptoAddressBookException {
+    public void initialize() throws CantInitializeWalletAddressBookCryptoModuleException {
         /**
          * I will try to create and initialize a new DAO
          */
-        walletCryptoAddressBookDao = new WalletCryptoAddressBookDao(errorManager, pluginDatabaseSystem, pluginId);
+        walletCryptoAddressBookDao = new WalletAddressBookCryptoModuleDao(errorManager, pluginDatabaseSystem, pluginId);
         walletCryptoAddressBookDao.initialize();
 
     }
@@ -61,12 +61,12 @@ public class WalletCryptoAddressBookRegistry implements DealsWithErrors, DealsWi
     @Override
 
     public WalletAddressBookRecord getWalletCryptoAddressBookByCryptoAddress(CryptoAddress cryptoAddress) throws CantGetWalletCryptoAddressBookException {
-        return walletCryptoAddressBookDao.getWalletCryptoAddressBookByCryptoAddress(cryptoAddress);
+        return walletCryptoAddressBookDao.getWalletAddressBookModuleByCryptoAddress(cryptoAddress);
     }
 
     @Override
     public List<WalletAddressBookRecord> getAllWalletCryptoAddressBookByWalletId(UUID walletId) throws CantGetWalletCryptoAddressBookException {
-        return walletCryptoAddressBookDao.getAllWalletCryptoAddressBookByActorId(walletId);
+        return walletCryptoAddressBookDao.getAllWalletAddressBookModuleByActorId(walletId);
     }
 
 
@@ -76,7 +76,7 @@ public class WalletCryptoAddressBookRegistry implements DealsWithErrors, DealsWi
         /**
          * Here I create the Wallet Crypto Address book record for new address.
          */
-        walletCryptoAddressBookDao.registerWalletCryptoAddressBook(cryptoAddress, platformWalletType, walletId);
+        walletCryptoAddressBookDao.registerWalletAddressBookModule(cryptoAddress, platformWalletType, walletId);
 
     }
 

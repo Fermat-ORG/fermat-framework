@@ -13,13 +13,13 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Inva
 import java.util.UUID;
 
 /**
- * The interface <code>com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.structure.WalletAddressBookDataBaseFactory</code>
+ * The interface <code>com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.structure.WalletAddressBookCryptoModuleDatabaseFactory</code>
  * create all the wallet crypto address book tables.
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/06/15.
  * @version 1.0
  */
-class WalletAddressBookDataBaseFactory implements DealsWithPluginDatabaseSystem {
+class WalletAddressBookCryptoModuleDatabaseFactory implements DealsWithPluginDatabaseSystem {
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -59,21 +59,21 @@ class WalletAddressBookDataBaseFactory implements DealsWithPluginDatabaseSystem 
             /**
              * First the Address book table.
              */
-            table = ((DatabaseFactory) database).newTableFactory(pluginId, WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_NAME);
+            table = ((DatabaseFactory) database).newTableFactory(pluginId, WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_NAME);
 
-            table.addColumn(WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_ID, DatabaseDataType.STRING, 36,true);
+            table.addColumn(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_ID, DatabaseDataType.STRING, 36,true);
 
-            table.addColumn(WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_ID, DatabaseDataType.STRING, 36,false);
+            table.addColumn(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_ID, DatabaseDataType.STRING, 36,false);
 
-            table.addColumn(WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_TYPE, DatabaseDataType.STRING, 3,false);
+            table.addColumn(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_TYPE, DatabaseDataType.STRING, 3,false);
 
-            table.addColumn(WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS, DatabaseDataType.STRING, 34 ,false);
+            table.addColumn(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS, DatabaseDataType.STRING, 34 ,false);
 
-            table.addColumn(WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_CURRENCY, DatabaseDataType.STRING, 3,false);
+            table.addColumn(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_CURRENCY, DatabaseDataType.STRING, 3,false);
 
-            table.addColumn(WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_TIME_STAMP, DatabaseDataType.LONG_INTEGER,0,false);
+            table.addColumn(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_TIME_STAMP, DatabaseDataType.LONG_INTEGER,0,false);
 
-            table.addIndex(WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESS_FIRST_KEY_COLUMN_NAME);
+            table.addIndex(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_FIRST_KEY_COLUMN_NAME);
 
             try {
                 ((DatabaseFactory) database).createTable(pluginId, table);
