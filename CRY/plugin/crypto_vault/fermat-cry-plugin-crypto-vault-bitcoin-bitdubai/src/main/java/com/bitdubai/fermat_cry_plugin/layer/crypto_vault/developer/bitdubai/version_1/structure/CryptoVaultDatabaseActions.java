@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
@@ -10,8 +12,19 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilterGroup;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventType;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoIdentifiedEvent;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantExecuteQueryException;
 
 import org.bitcoinj.core.Wallet;
 
@@ -25,30 +38,74 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 2015.06.17..
  */
-public class CryptoVaultDatabaseActions {
+public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErrors{
+    /**
+     * CryptoVaultDatabaseActions  member variables
+     */
     Database database;
 
-    public CryptoVaultDatabaseActions(Database database){
-        this.database = database;
+    /**
+     * DealsWithEvents interface member variables
+     */
+    EventManager eventManager;
+
+    /**
+     * DealsWithErrors interface member variables
+     */
+    ErrorManager errorManager;
+
+
+    /**
+     * DealsWithErrors interface implementation
+     * @param errorManager
+     */
+    @Override
+    public void setErrorManager(ErrorManager errorManager) {
+        this.errorManager = errorManager;
     }
 
-    public void saveIncomingTransaction(String txHash){
+    @Override
+    public void setEventManager(EventManager eventManager) {
+        this.eventManager = eventManager;
+    }
+
+
+    /**
+     * Constructor
+     * @param database
+     */
+    public CryptoVaultDatabaseActions(Database database, ErrorManager errorManager, EventManager eventManager){
+        this.database = database;
+        this.eventManager = eventManager;
+        this.errorManager = errorManager;
+    }
+
+    public void saveIncomingTransaction(String txHash) throws CantExecuteQueryException {
         DatabaseTable cryptoTxTable;
+        DatabaseTransaction dbTx = this.database.newTransaction();
         cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
         DatabaseTableRecord incomingTxRecord =  cryptoTxTable.getEmptyRecord();
         incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, UUID.randomUUID().toString());
         incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, txHash);
         incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.toString());
         incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME, CryptoStatus.IDENTIFIED.toString());
+
+        dbTx.addRecordToInsert(cryptoTxTable, incomingTxRecord);
         try {
-            cryptoTxTable.insertRecord(incomingTxRecord);
-        } catch (CantInsertRecord cantInsertRecord) {
-            /**
-             * If there was an error trying to insert the transaction, I will try to get all transactions from wallet and see what's missing
-             *
-             */
-            //todo handle this
+            this.database.executeTransaction(dbTx);
+        } catch (DatabaseTransactionFailedException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantExecuteQueryException();
         }
+
+
+        /**
+         * after I save the transaction in the database and the vault, I'll raise the incoming transaction.
+         *
+         */
+        PlatformEvent event = new IncomingCryptoIdentifiedEvent(EventType.INCOMING_CRYPTO_RECEIVED);
+        eventManager.raiseEvent(event);
+
     }
 
     /**
@@ -56,10 +113,17 @@ public class CryptoVaultDatabaseActions {
      * @param txId the ID of the transaction
      * @return
      */
-    public boolean isNewFermatTransaction(UUID txId){
+    public boolean isNewFermatTransaction(UUID txId) throws CantExecuteQueryException {
         DatabaseTable fermatTxTable;
+
         fermatTxTable = database.getTable(CryptoVaultDatabaseConstants.FERMAT_TRANSACTIONS_TABLE_NAME);
         fermatTxTable.setStringFilter(CryptoVaultDatabaseConstants.FERMAT_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, txId.toString(), DatabaseFilterType.EQUAL);
+        try {
+            fermatTxTable.loadToMemory();
+        } catch (CantLoadTableToMemory cantLoadTableToMemory) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
+            throw new CantExecuteQueryException();
+        }
         /**
          * If I couldnt find any record with this transaction id, then it is a new transactions.
          */
@@ -73,10 +137,11 @@ public class CryptoVaultDatabaseActions {
     /**
      * I will persist a new crypto transaction generated by our wallet.
      */
-    public UUID persistNewTransaction(String txHash){
+    public UUID persistNewTransaction(String txHash) throws CantExecuteQueryException {
         UUID txId = UUID.randomUUID();
 
         DatabaseTable cryptoTxTable;
+        DatabaseTransaction dbTx = this.database.newTransaction();
         cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
         DatabaseTableRecord incomingTxRecord =  cryptoTxTable.getEmptyRecord();
         incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, txId.toString());
@@ -86,12 +151,15 @@ public class CryptoVaultDatabaseActions {
          */
         incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME, ProtocolStatus.NO_ACTION_REQUIRED.toString());
         incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME, CryptoStatus.IDENTIFIED.toString());
+
+        dbTx.addRecordToInsert(cryptoTxTable, incomingTxRecord);
         try {
-            cryptoTxTable.insertRecord(incomingTxRecord);
-        } catch (CantInsertRecord cantInsertRecord) {
-            //todo see how I will handle this
-            cantInsertRecord.printStackTrace();
+            database.executeTransaction(dbTx);
+        } catch (DatabaseTransactionFailedException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantExecuteQueryException();
         }
+
         return txId;
     }
 
@@ -99,7 +167,7 @@ public class CryptoVaultDatabaseActions {
      * Will retrieve all the transactions that are in status pending ProtocolStatus = TO_BE_NOTIFIED
      * @return
      */
-    public HashMap<String, String> getPendingTransactionsHeaders(){
+    public HashMap<String, String> getPendingTransactionsHeaders() throws CantExecuteQueryException {
         /**
          * I need to obtain all the transactions ids with protocol status SENDING_NOTIFIED y TO_BE_NOTIFIED
          */
@@ -111,18 +179,32 @@ public class CryptoVaultDatabaseActions {
          * I get the transaction IDs and Hashes for the TO_BE_NOTIFIED
          */
         cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.toString(), DatabaseFilterType.EQUAL);
-        for (DatabaseTableRecord record : cryptoTxTable.getRecords()){
-            transactionsIds.put(record.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME), record.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME));
+        try {
+            cryptoTxTable.loadToMemory();
+            for (DatabaseTableRecord record : cryptoTxTable.getRecords()){
+                transactionsIds.put(record.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME), record.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME));
+            }
+        } catch (CantLoadTableToMemory cantLoadTableToMemory) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
+            throw new CantExecuteQueryException();
         }
+
 
 
         /**
          * I get the transaction IDs and Hashes for the TO_BE_NOTIFIED
          */
         cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME, ProtocolStatus.SENDING_NOTIFIED.toString(), DatabaseFilterType.EQUAL);
-        for (DatabaseTableRecord record : cryptoTxTable.getRecords()){
-            transactionsIds.put(record.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME), record.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME));
+        try {
+            cryptoTxTable.loadToMemory();
+            for (DatabaseTableRecord record : cryptoTxTable.getRecords()){
+                transactionsIds.put(record.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME), record.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME));
+            }
+        } catch (CantLoadTableToMemory cantLoadTableToMemory) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
+            throw new CantExecuteQueryException();
         }
+
 
         return transactionsIds;
     }
@@ -132,22 +214,33 @@ public class CryptoVaultDatabaseActions {
      * @param txHash
      * @param newState
      */
-    public void updateCryptoTransactionStatus(String txHash, CryptoStatus newState){
+    public void updateCryptoTransactionStatus(String txHash, CryptoStatus newState) throws CantExecuteQueryException {
         DatabaseTable cryptoTxTable;
         cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
+        DatabaseTableRecord toUpdate;
         cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, txHash, DatabaseFilterType.EQUAL);
-        DatabaseTableRecord toUpdate = cryptoTxTable.getRecords().get(0); //todo add validation that only one record exists
+        try {
+            cryptoTxTable.loadToMemory();
+            toUpdate = cryptoTxTable.getRecords().get(0); //todo add validation that only one record exists
+        } catch (CantLoadTableToMemory cantLoadTableToMemory) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
+            throw new CantExecuteQueryException();
+        }
+
 
         /**
          * I set the Protocol status to the new value
          */
+        DatabaseTransaction dbTrx = this.database.newTransaction();
         toUpdate.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME, newState.toString());
+        dbTrx.addRecordToUpdate(cryptoTxTable, toUpdate);
         try {
-            cryptoTxTable.updateRecord(toUpdate);
-        } catch (CantUpdateRecord cantUpdateRecord) {
-            //todo deals with this error
-            cantUpdateRecord.printStackTrace();
+            database.executeTransaction(dbTrx);
+        } catch (DatabaseTransactionFailedException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantExecuteQueryException();
         }
+
 
     }
 
@@ -156,21 +249,30 @@ public class CryptoVaultDatabaseActions {
      * @param txId
      * @param newStatus
      */
-    public void updateTransactionProtocolStatus(UUID  txId, ProtocolStatus newStatus){
+    public void updateTransactionProtocolStatus(UUID  txId, ProtocolStatus newStatus) throws CantExecuteQueryException {
         DatabaseTable cryptoTxTable;
         cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
         cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, txId.toString(), DatabaseFilterType.EQUAL);
+        try {
+            cryptoTxTable.loadToMemory();
+        } catch (CantLoadTableToMemory cantLoadTableToMemory) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
+            throw  new CantExecuteQueryException();
+        }
+
+        DatabaseTransaction dbTrx = this.database.newTransaction();
         DatabaseTableRecord toUpdate = cryptoTxTable.getRecords().get(0); //todo add validation that only one record exists
 
         /**
          * I set the Protocol status to the new value
          */
         toUpdate.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME, newStatus.toString());
+        dbTrx.addRecordToUpdate(cryptoTxTable, toUpdate);
         try {
-            cryptoTxTable.updateRecord(toUpdate);
-        } catch (CantUpdateRecord cantUpdateRecord) {
-            //todo deals with this error
-            cantUpdateRecord.printStackTrace();
+            database.executeTransaction(dbTrx);
+        } catch (DatabaseTransactionFailedException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantExecuteQueryException();
         }
 
     }
@@ -180,10 +282,16 @@ public class CryptoVaultDatabaseActions {
      * @param txId
      * @return
      */
-    public ProtocolStatus getCurrentTransactionProtocolStatus(UUID txId){
+    public ProtocolStatus getCurrentTransactionProtocolStatus(UUID txId) throws CantExecuteQueryException {
         DatabaseTable cryptoTxTable;
         cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
         cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, txId.toString(), DatabaseFilterType.EQUAL);
+        try {
+            cryptoTxTable.loadToMemory();
+        } catch (CantLoadTableToMemory cantLoadTableToMemory) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
+            throw new CantExecuteQueryException();
+        }
         DatabaseTableRecord currentStatus = cryptoTxTable.getRecords().get(0); //todo add validation that only one record exists
 
         return ProtocolStatus.valueOf(currentStatus.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME));
@@ -193,23 +301,27 @@ public class CryptoVaultDatabaseActions {
      * will return true if there are transactions in NO_BE_NOTIFIED status
      * @return
      */
-    public boolean isPendingTransactions(){
+    public boolean isPendingTransactions() throws CantExecuteQueryException {
         DatabaseTable cryptoTxTable;
         cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
         cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME,ProtocolStatus.TO_BE_NOTIFIED.toString() ,DatabaseFilterType.EQUAL);
-
-        if (!cryptoTxTable.getRecords().isEmpty())
-            return false;
-        else
-            return true;
-
+        try {
+            cryptoTxTable.loadToMemory();
+            if (!cryptoTxTable.getRecords().isEmpty())
+                return false;
+            else
+                return true;
+        } catch (CantLoadTableToMemory cantLoadTableToMemory) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
+            throw new CantExecuteQueryException();
+        }
     }
 
     /**
      * I Will check in the vault all transactions that are not included in the database and insert them.
      * @param vault
      */
-    public void persistMissingTransactionsFromWallet(Wallet vault){
+    public void persistMissingTransactionsFromWallet(Wallet vault) throws CantExecuteQueryException {
         /**
          * get all transactions from the vault
          */
@@ -219,7 +331,13 @@ public class CryptoVaultDatabaseActions {
 
         for (org.bitcoinj.core.Transaction transaction : transactions){
                 txTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, transaction.getHashAsString(), DatabaseFilterType.EQUAL);
-                if (txTable.getRecords().isEmpty()){
+            try {
+                txTable.loadToMemory();
+            } catch (CantLoadTableToMemory cantLoadTableToMemory) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
+                throw new CantExecuteQueryException();
+            }
+            if (txTable.getRecords().isEmpty()){
                     /**
                      * if this transaction hash is not in the database, I will insert it.
                      */

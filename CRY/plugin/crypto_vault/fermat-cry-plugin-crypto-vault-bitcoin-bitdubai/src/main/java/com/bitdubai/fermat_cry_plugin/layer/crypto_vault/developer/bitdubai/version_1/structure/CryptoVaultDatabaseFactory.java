@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
@@ -8,19 +9,29 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlugin
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerId;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
 import java.util.UUID;
 
 /**
  * Created by rodrigo on 11/06/15.
  */
-public class CryptoVaultDatabaseFactory implements DealsWithPluginDatabaseSystem{
+public class CryptoVaultDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithErrors{
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
     private PluginDatabaseSystem pluginDatabaseSystem;
+
+    /**
+     * DealsWithErrors interface member variable
+     */
+    ErrorManager errorManager;
 
     /**
      * DealsWithPluginDatabaseSystem Interface implementation.
@@ -30,7 +41,16 @@ public class CryptoVaultDatabaseFactory implements DealsWithPluginDatabaseSystem
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
-    public Database createDatabase(UUID ownerId, UUID walletId) throws CantCreateDatabaseException {
+    /**
+     * DealsWithErrors interface implementation
+     * @param errorManager
+     */
+    @Override
+    public void setErrorManager(ErrorManager errorManager) {
+        this.errorManager = errorManager;
+    }
+
+    public Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
 
         Database database;
 
@@ -39,13 +59,14 @@ public class CryptoVaultDatabaseFactory implements DealsWithPluginDatabaseSystem
          */
         try {
 
-            database = this.pluginDatabaseSystem.createDatabase(ownerId, walletId.toString());
+            database = this.pluginDatabaseSystem.createDatabase(ownerId, databaseName);
 
         } catch (CantCreateDatabaseException cantCreateDatabaseException) {
 
             /**
              * I can not handle this situation.
              */
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateDatabaseException);
             System.err.println("CantCreateDatabaseException: " + cantCreateDatabaseException.getMessage());
             cantCreateDatabaseException.printStackTrace();
             throw new CantCreateDatabaseException();
@@ -69,6 +90,7 @@ public class CryptoVaultDatabaseFactory implements DealsWithPluginDatabaseSystem
         try {
             ((DatabaseFactory) database).createTable(table);
         } catch (CantCreateTableException cantCreateTableException) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateTableException);
             System.err.println("CantCreateTableException: " + cantCreateTableException.getMessage());
             cantCreateTableException.printStackTrace();
             throw new CantCreateDatabaseException();
@@ -91,11 +113,24 @@ public class CryptoVaultDatabaseFactory implements DealsWithPluginDatabaseSystem
             try {
                 ((DatabaseFactory) database).createTable(table);
             } catch (CantCreateTableException cantCreateTableException) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateTableException);
                 System.err.println("CantCreateTableException: " + cantCreateTableException.getMessage());
                 cantCreateTableException.printStackTrace();
                 throw new CantCreateDatabaseException();
             }
 
         return database;
+        }
+
+    /**
+     * Load the database
+     * @param ownerID
+     * @param databaseName
+     * @return
+     * @throws CantOpenDatabaseException
+     * @throws DatabaseNotFoundException
+     */
+        public Database loadDatabase(UUID ownerID, String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException {
+        return pluginDatabaseSystem.openDatabase(ownerID, databaseName);
         }
     }

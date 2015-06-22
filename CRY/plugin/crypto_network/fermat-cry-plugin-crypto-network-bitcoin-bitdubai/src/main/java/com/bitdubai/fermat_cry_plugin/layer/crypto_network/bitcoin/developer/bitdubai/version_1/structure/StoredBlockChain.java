@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -106,8 +107,8 @@ class StoredBlockChain implements BitcoinManager, DealsWithErrors, DealsWithPlug
              * I will save the blockchain into disk.
              */
             String blockChainFileName = userId.toString() + ".spvchain";
-            PluginBinaryFile chainFile = pluginFileSystem.createBinaryFile(pluginId, pluginId.toString(), blockChainFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-            chainFile.persistToMedia();
+            PluginTextFile blockchainFile = pluginFileSystem.createTextFile(pluginId, userId.toString(), blockChainFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            blockchainFile.persistToMedia();
 
             spvStore = new SPVBlockStore(this.networkParameters, new File(pluginId.toString(), blockChainFileName));
             chain = new BlockChain(this.networkParameters, this.wallet, spvStore);
@@ -118,7 +119,7 @@ class StoredBlockChain implements BitcoinManager, DealsWithErrors, DealsWithPlug
             memoryStore = new MemoryBlockStore(this.networkParameters);
             try {
                 chain = new BlockChain(this.networkParameters, this.wallet, memoryStore);
-                System.out.println("Warning. Blockchain saved in memory.");
+                System.err.println("Warning!!. Blockchain saved in memory.");
                 /**
                  * if everything fails I will have to throw the exception
                  */

@@ -214,9 +214,9 @@ public class DeviceUserUserAddonRoot implements Addon, DealsWithErrors, DealsWit
         EventListener eventListener;
         EventHandler eventHandler;
 
-        // eventListener = eventManager.getNewListener(EventType.DEVICE_USER_CREATED);
-        // eventHandler = new UserCreatedEventHandler();
-        // ((UserCreatedEventHandler) eventHandler).setWalletManager(this);
+        //eventListener = eventManager.getNewListener(EventType.DEVICE_USER_CREATED);
+        //eventHandler = new UserCreatedEventHandler();
+        //((UserCreatedEventHandler) eventHandler).setWalletManager(this);
         // eventListener.setEventHandler(eventHandler);
         // eventManager.addListener(eventListener);
         // listenersAdded.add(eventListener);
