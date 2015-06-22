@@ -9,6 +9,15 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetAllWalletContactsException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.niche_wallet.bitcoin_wallet.Platform;
+
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by natalia on 19/06/15.
@@ -17,6 +26,15 @@ public class BitcoinContactsFragment extends Fragment {
 
     private static final String ARG_POSITION = "position";
     View rootView;
+    UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
+
+    /**
+     * DealsWithNicheWalletTypeCryptoWallet Interface member variables.
+     */
+    private static CryptoWalletManager cryptoWalletManager;
+    private static Platform platform = new Platform();
+    CryptoWallet cryptoWallet;
+
 
     public static BitcoinContactsFragment newInstance(int position) {
         BitcoinContactsFragment f = new BitcoinContactsFragment();
@@ -29,13 +47,29 @@ public class BitcoinContactsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        cryptoWalletManager = platform.getCryptoWalletManager();
 
+        try {
+            cryptoWallet = cryptoWalletManager.getCryptoWallet();
+        } catch (CantGetCryptoWalletException e) {
+            e.printStackTrace();
+        }
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_contacts, container, false);
+
+        //get contacts list
+        try
+        {
+            List<WalletContactRecord> walletContactRecords = cryptoWallet.listWalletContacts(wallet_id);
+        }
+        catch(CantGetAllWalletContactsException e)
+        {
+            e.printStackTrace();
+        }
 
         // Get ListView object from xml
         ListView listView = (ListView) rootView.findViewById(R.id.transactionlist);

@@ -11,10 +11,13 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -22,6 +25,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformWalletType;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantRequestCryptoAddressException;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.niche_wallet.bitcoin_wallet.Platform;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
@@ -30,6 +41,7 @@ import com.google.zxing.common.BitMatrix;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by Natalia on 02/06/2015.
@@ -45,6 +57,15 @@ public class BitcoinReceiveFragment extends Fragment {
     final int colorBackQR = Color.WHITE;
     final int width = 400;
     final int height = 400;
+    UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
+
+    /**
+     * DealsWithNicheWalletTypeCryptoWallet Interface member variables.
+     */
+    private static CryptoWalletManager cryptoWalletManager;
+    private static Platform platform = new Platform();
+    CryptoWallet cryptoWallet;
+
 
     public static BitcoinReceiveFragment newInstance(int position) {
         BitcoinReceiveFragment f = new BitcoinReceiveFragment();
@@ -59,6 +80,14 @@ public class BitcoinReceiveFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
 
+        cryptoWalletManager = platform.getCryptoWalletManager();
+
+        try {
+            cryptoWallet = cryptoWalletManager.getCryptoWallet();
+        } catch (CantGetCryptoWalletException e) {
+            e.printStackTrace();
+        }
+
 
     }
 
@@ -69,52 +98,82 @@ public class BitcoinReceiveFragment extends Fragment {
         rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_receive, container, false);
         TextView tv;
 
+        final EditText nameText = (EditText)rootView.findViewById(R.id.contact_name);
 
-        //define action for click options of spinner control
-        final Spinner spinner = (Spinner) rootView.findViewById(R.id.share_spinner);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        //add onchange event
+        nameText.addTextChangedListener(new TextWatcher() {
 
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view,
-                                       int position, long id) {
+            public void afterTextChanged(Editable s) {
 
-                int option =  spinner.getSelectedItemPosition();
-                switch ( option) {
-                    case 1:
-                        copytoClipboard(rootView);
-                        break;
-                    case 2:
-                        sendWhatsappMessage(rootView); //whatsapp message
-                        break;
-                    case 3:
-                        sendMessage(rootView); //sms message
-                        break;
-                    default:
-                        break;
-                }
             }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // show qrcode and share
+                //get wallet address
+                //TODO CryptoVaultManager is null, falta la referencia para poder probar
+                // try {
+                // CryptoAddress cryptoAddress = cryptoWallet.requestAddress(nameText.getText().toString(), Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
+
+                // user_address_wallet = cryptoAddress.getAddress();
+                //} catch (CantRequestCryptoAddressException e) {
+                //    e.printStackTrace();
+                // }
+                //create QR code with user address wallet
+
+                if(count > 3){
+                    try {
+                        Bitmap bitmapQR = generateBitmap(user_address_wallet, width, height,
+                                MARGIN_AUTOMATIC, colorQR, colorBackQR);
+
+                        ImageView imageQR = (ImageView) rootView.findViewById(R.id.qr_code);
+
+                        imageQR.setImageBitmap(bitmapQR);
+                        imageQR.setVisibility(View.VISIBLE);
+                    } catch (WriterException writerException) {
+
+                    }
+
+                    //define action for click options of spinner control
+                    final Spinner spinner = (Spinner) rootView.findViewById(R.id.share_spinner);
+                    spinner.setVisibility(View.VISIBLE);
+                    spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view,
+                                                   int position, long id) {
+
+                            int option = spinner.getSelectedItemPosition();
+                            switch (option) {
+                                case 1:
+                                    copytoClipboard(rootView);
+                                    break;
+                                case 2:
+                                    sendWhatsappMessage(rootView); //whatsapp message
+                                    break;
+                                case 3:
+                                    sendMessage(rootView); //sms message
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> arg0) {
+
+                        }
+                    });
+
+                }
 
             }
         });
 
-        //create QR code with user address wallet
 
 
-        try
-        {
-            Bitmap bitmapQR = generateBitmap(user_address_wallet, width, height,
-                    MARGIN_AUTOMATIC, colorQR, colorBackQR);
-
-            ImageView imageQR = (ImageView)rootView.findViewById(R.id.qr_code);
-
-            imageQR.setImageBitmap(bitmapQR);
-        }
-        catch(WriterException writerException) {
-
-        }
         return rootView;
     }
 

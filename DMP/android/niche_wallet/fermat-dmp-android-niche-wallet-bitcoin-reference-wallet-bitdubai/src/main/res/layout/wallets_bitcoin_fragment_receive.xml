@@ -43,6 +43,7 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:entries="@array/share_options"
+            android:visibility="invisible"
             />
     </LinearLayout>
 
@@ -57,7 +58,8 @@
             android:id="@+id/qr_code"
             android:src="@drawable/qr_code"
             android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true" />
+            android:layout_centerHorizontal="true"
+            android:visibility="invisible"/>
 
     </LinearLayout>
 

@@ -12,11 +12,18 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.BitcoinTransaction;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantGetTransactionsException;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.niche_wallet.bitcoin_wallet.Platform;
 
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 
 /**
@@ -30,6 +37,14 @@ public class BitcoinTransactionsFragment extends Fragment {
 
     List TRANSACTIONS = new ArrayList<Transactions>();
 
+    /**
+     * DealsWithNicheWalletTypeCryptoWallet Interface member variables.
+     */
+    private static CryptoWalletManager cryptoWalletManager;
+    private static Platform platform = new Platform();
+    CryptoWallet cryptoWallet;
+
+    UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
 
     public static BitcoinTransactionsFragment newInstance(int position) {
         BitcoinTransactionsFragment f = new BitcoinTransactionsFragment();
@@ -42,6 +57,23 @@ public class BitcoinTransactionsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        cryptoWalletManager = platform.getCryptoWalletManager();
+
+        try{
+            cryptoWallet = cryptoWalletManager.getCryptoWallet();
+        }
+        catch (CantGetCryptoWalletException e) {
+            e.printStackTrace();
+        }
+
+        //TODO falta el BitcoinWalletManager para poder consultar las transacciones
+      //  try {
+         //   List<BitcoinTransaction> bitcoinTransactions = cryptoWallet.getTransactions(10, 10, wallet_id);
+
+      //  } catch (CantGetTransactionsException e) {
+            //e.printStackTrace();
+      //  }
 
         // Construct the data source
         TRANSACTIONS.add(new Transactions("Lucia Alarcon De Zamacona", "4 hours ago", "0.0012", "New telephone","Send"));
