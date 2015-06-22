@@ -37,7 +37,7 @@ import java.util.UUID;
  * This class manages the relationship between users and crypto addresses by storing them on a Database Table.
  */
 
-public class ActorAddressBookDao implements DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class ActorAddressBookCryptoModuleDao implements DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
 
     /**
      * CryptoAddressBook Interface member variables.
@@ -63,7 +63,7 @@ public class ActorAddressBookDao implements DealsWithErrors, DealsWithPluginData
     /**
      * Constructor.
      */
-    public ActorAddressBookDao(ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId){
+    public ActorAddressBookCryptoModuleDao(ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId){
         /**
          * The only one who can set the pluginId is the Plugin Root.
          */
@@ -95,7 +95,7 @@ public class ActorAddressBookDao implements DealsWithErrors, DealsWithPluginData
         }
         catch (DatabaseNotFoundException databaseNotFoundException) {
 
-            ActorAddressBookDatabaseFactory databaseFactory = new ActorAddressBookDatabaseFactory();
+            ActorAddressBookCryptoModuleDatabaseFactory databaseFactory = new ActorAddressBookCryptoModuleDatabaseFactory();
             databaseFactory.setPluginDatabaseSystem(this.pluginDatabaseSystem);
 
             /**
@@ -124,17 +124,17 @@ public class ActorAddressBookDao implements DealsWithErrors, DealsWithPluginData
          */
         long unixTime = System.currentTimeMillis() / 1000L;
 
-        DatabaseTable addressBookTable = database.getTable(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME);
+        DatabaseTable addressBookTable = database.getTable(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME);
         DatabaseTableRecord addressBookRecord = addressBookTable.getEmptyRecord();
 
         UUID creditRecordId = UUID.randomUUID();
 
-        addressBookRecord.setUUIDValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ID , creditRecordId);
-        addressBookRecord.setUUIDValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ACTOR_ID, actorId);
-        addressBookRecord.setStringValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ACTOR_TYPE, actorType.getCode());
-        addressBookRecord.setStringValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS, cryptoAddress.getAddress());
-        addressBookRecord.setStringValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_CRYPTO_CURRENCY, cryptoAddress.getCryptoCurrency().getCode());
-        addressBookRecord.setLongValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_TIME_STAMP, unixTime);
+        addressBookRecord.setUUIDValue(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ID , creditRecordId);
+        addressBookRecord.setUUIDValue(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ACTOR_ID, actorId);
+        addressBookRecord.setStringValue(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ACTOR_TYPE, actorType.getCode());
+        addressBookRecord.setStringValue(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS, cryptoAddress.getAddress());
+        addressBookRecord.setStringValue(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_CRYPTO_CURRENCY, cryptoAddress.getCryptoCurrency().getCode());
+        addressBookRecord.setLongValue(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_TIME_STAMP, unixTime);
 
         try{
             addressBookTable.insertRecord(addressBookRecord);
@@ -154,9 +154,9 @@ public class ActorAddressBookDao implements DealsWithErrors, DealsWithPluginData
         /**
          *  I will load the information of table into a memory structure, filter by crypto address .
          */
-        table = this.database.getTable(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME);
-        table.setStringFilter(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS,cryptoAddress.getAddress(), DatabaseFilterType.EQUAL);
-        table.setStringFilter(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_CRYPTO_CURRENCY,cryptoAddress.getCryptoCurrency().getCode(), DatabaseFilterType.EQUAL);
+        table = this.database.getTable(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME);
+        table.setStringFilter(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS,cryptoAddress.getAddress(), DatabaseFilterType.EQUAL);
+        table.setStringFilter(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_CRYPTO_CURRENCY,cryptoAddress.getCryptoCurrency().getCode(), DatabaseFilterType.EQUAL);
         try {
             table.loadToMemory();
         }
@@ -181,13 +181,13 @@ public class ActorAddressBookDao implements DealsWithErrors, DealsWithPluginData
 
         if (records.size() > 0) {
             record = records.get(0);
-            actorId = record.getUUIDValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ACTOR_ID);
-            actorType = Actors.getByCode(record.getStringValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ACTOR_TYPE));
+            actorId = record.getUUIDValue(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ACTOR_ID);
+            actorType = Actors.getByCode(record.getStringValue(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ACTOR_TYPE));
         } else {
             return null;
         }
 
-        return new ActorCryptoAddressBookRecord(actorId, actorType, cryptoAddress);
+        return new ActorAddressBookCryptoModuleRecord(actorId, actorType, cryptoAddress);
     }
 
     public List<ActorAddressBookRecord> getAllActorAddressBookByActorId(UUID actorId) throws CantGetActorAddressBook {
@@ -199,8 +199,8 @@ public class ActorAddressBookDao implements DealsWithErrors, DealsWithPluginData
         /**
          *  I will load the information of table into a memory structure, filter by crypto address .
          */
-        table = this.database.getTable(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME);
-        table.setUUIDFilter(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ACTOR_ID, actorId, DatabaseFilterType.EQUAL);
+        table = this.database.getTable(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_NAME);
+        table.setUUIDFilter(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ACTOR_ID, actorId, DatabaseFilterType.EQUAL);
         try {
             table.loadToMemory();
         }
@@ -223,11 +223,11 @@ public class ActorAddressBookDao implements DealsWithErrors, DealsWithPluginData
         CryptoAddress cryptoAddress;
 
         for (DatabaseTableRecord record : table.getRecords()) {
-            actorType = Actors.getByCode(record.getStringValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ACTOR_TYPE));
-            address = record.getStringValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS);
-            cryptoCurrency = CryptoCurrency.getByCode(record.getStringValue(ActorAddressBookDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_CRYPTO_CURRENCY));
+            actorType = Actors.getByCode(record.getStringValue(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ACTOR_TYPE));
+            address = record.getStringValue(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS);
+            cryptoCurrency = CryptoCurrency.getByCode(record.getStringValue(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_CRYPTO_CURRENCY));
             cryptoAddress = new CryptoAddress(address, cryptoCurrency);
-            ActorAddressBookRecord addressBook = new ActorCryptoAddressBookRecord(actorId, actorType, cryptoAddress);
+            ActorAddressBookRecord addressBook = new ActorAddressBookCryptoModuleRecord(actorId, actorType, cryptoAddress);
             actorsAddressBooks.add(addressBook);
 
         }
