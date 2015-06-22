@@ -883,8 +883,9 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
     //cambio mati test
     @Override
     public void onResume(){
-        cleanWindows();
-        NavigateWallet();
+        super.onResume();
+        //cleanWindows();
+        //NavigateWallet();
     }
 
     @Override
