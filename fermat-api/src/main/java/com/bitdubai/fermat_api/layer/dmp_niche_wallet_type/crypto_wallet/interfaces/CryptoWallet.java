@@ -57,5 +57,5 @@ public interface CryptoWallet {
     /**
      * Send money methods
      */
-    void send(UUID walletID, CryptoAddress destinationAddress, long cryptoAmount) throws CantSendCryptoException;
+    void send(long cryptoAmount, CryptoAddress destinationAddress, PlatformWalletType platformWalletType, UUID walletID) throws CantSendCryptoException;
 }
