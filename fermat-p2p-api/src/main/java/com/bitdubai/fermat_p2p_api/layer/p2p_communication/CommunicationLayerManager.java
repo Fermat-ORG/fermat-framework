@@ -10,9 +10,9 @@ import java.util.UUID;
  */
 public interface CommunicationLayerManager {
     
-    public void registerNetworkService (NetworkServices networkServices,UUID networkService);
+    public void registerNetworkService (NetworkServices networkService);
 
-    public void unregisterNetworkService (UUID networkService);
+    public void unregisterNetworkService (NetworkServices networkService);
     
     public ServiceToServiceOnlineConnection acceptIncomingNetworkServiceConnectionRequest (CommunicationChannels communicationChannel, NetworkServices networkService, UUID localNetworkService, UUID remoteNetworkService ) throws  CommunicationChannelNotImplemented;
 
