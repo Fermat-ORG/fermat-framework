@@ -42,8 +42,7 @@ public class NetworkServiceClientVPN extends CloudFMPConnectionManager {
 	
 	private final AtomicBoolean registered;
 	private final Set<String> pendingMessages = new ConcurrentSkipListSet<String>();
-	private FMPPacket messagePacket;
-
+	
 	public NetworkServiceClientVPN(final CommunicationChannelAddress vpnAddress, final ExecutorService executor, final String clientPrivateKey, final String vpnPublicKey, final String peerPublicKey, final NetworkServices networkService) throws IllegalArgumentException {
 		super(vpnAddress, executor, clientPrivateKey, AsymmectricCryptography.derivePublicKey(clientPrivateKey), CloudFMPConnectionManagerMode.FMP_CLIENT);
 		this.vpnPublicKey = vpnPublicKey;
@@ -199,7 +198,6 @@ public class NetworkServiceClientVPN extends CloudFMPConnectionManager {
 		String messageHash = AsymmectricCryptography.encryptMessagePublicKey(message, peerPublicKey);
 		String signature = AsymmectricCryptography.createMessageSignature(messageHash, eccPrivateKey);
 		FMPPacket packet = FMPPacketFactory.constructCloudPacket(sender, destination, type, messageHash, signature);
-		messagePacket = packet;
 		pendingPackets.add(packet);
 		registeredConnections.get(vpnPublicKey).interestOps(SelectionKey.OP_WRITE);
 	}

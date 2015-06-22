@@ -8,7 +8,7 @@ import org.junit.Test;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.exceptions.CloudConnectionException;
 
 
-public class RequestConnectionTest extends CloudClientVPNIntegrationTest {
+public class RequestConnectionTest extends NetworkServiceClientVPNIntegrationTest {
 	
 	private static final int TCP_PORT_PADDING = 100;
 	

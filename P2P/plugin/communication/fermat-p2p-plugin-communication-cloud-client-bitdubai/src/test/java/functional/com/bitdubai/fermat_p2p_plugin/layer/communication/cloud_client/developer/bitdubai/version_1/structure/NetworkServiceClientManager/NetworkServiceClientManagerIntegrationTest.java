@@ -16,8 +16,9 @@ import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer
 
 public abstract class NetworkServiceClientManagerIntegrationTest {
 	
-	protected String clientPrivateKey = "362b22fdc53e753f17edf3ec98a39b855e7c7ac0614fb5a33a3bdebeff18932e";
-	
+	protected static final String CLIENT_PRIVATE_KEY = "18E14A7B6A307F426A94F8114701E7C8E774E7F9A47E2C2035DB29A206321725";
+	protected static final String CLIENT_PUBLIC_KEY = "0450863AD64A87AE8A2FE83C1AF1A8403CB53F53E486D8511DAD8A04887E5B23522CD470243453A299FA9E77237716103ABC11A1DF38855ED6F2EE187E9C582BA6";
+
 	protected String serverPrivateKey = "a06a1274b8bd327c0ddeebc75597101a1e09c3551915e25ad2d8949e0507c142";
 	protected String serverPublicKey = "047F9F57BDE5771B4A9DA604B1CA138AA3B593B7EFBC3C890E384CF8B3EB3080E70DDA5130A26768DDEF30379AA6F9B924339407B0D429964503372CB71D3328D0";
 
@@ -44,8 +45,9 @@ public abstract class NetworkServiceClientManagerIntegrationTest {
 	
 	protected void setUp(final int tcpPadding) throws Exception{
 		setUpServer(tcpPadding);
-		testClient = new NetworkServiceClientManager(testAddress, getExecutor(), clientPrivateKey, serverPublicKey, testNetworkService);
+		testClient = new NetworkServiceClientManager(testAddress, getExecutor(), CLIENT_PRIVATE_KEY, serverPublicKey, testNetworkService);
 		testClient.start();
+		Thread.sleep(getThreadSleepMillis());
 	}
 	
 	protected int getThreadSleepMillis(){
@@ -53,7 +55,7 @@ public abstract class NetworkServiceClientManagerIntegrationTest {
 	}
 	
 	private ExecutorService getExecutor(){
-		return Executors.newFixedThreadPool(2);
+		return Executors.newCachedThreadPool();
 	}
 
 }

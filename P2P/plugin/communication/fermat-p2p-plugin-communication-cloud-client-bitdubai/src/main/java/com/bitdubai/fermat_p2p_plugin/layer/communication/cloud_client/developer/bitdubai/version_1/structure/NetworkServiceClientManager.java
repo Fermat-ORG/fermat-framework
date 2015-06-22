@@ -96,7 +96,7 @@ public class NetworkServiceClientManager extends CloudFMPConnectionManager {
 		String vpnPublicKey = messageComponents[2];
 		CommunicationChannelAddress vpnAddress = CommunicationChannelAddressFactory.constructCloudAddress(host, port);
 		try{
-			NetworkServiceClientVPN vpnClient = new NetworkServiceClientVPN(vpnAddress, Executors.newFixedThreadPool(2), eccPrivateKey, vpnPublicKey, dataPacket.getSender(), networkService);
+			NetworkServiceClientVPN vpnClient = new NetworkServiceClientVPN(vpnAddress, Executors.newCachedThreadPool(), eccPrivateKey, vpnPublicKey, dataPacket.getSender(), networkService);
 			vpnClient.start();
 			activeVPNRegistry.put(dataPacket.getSender(), vpnClient);
 			pendingVPNRequests.remove(dataPacket.getSender());
