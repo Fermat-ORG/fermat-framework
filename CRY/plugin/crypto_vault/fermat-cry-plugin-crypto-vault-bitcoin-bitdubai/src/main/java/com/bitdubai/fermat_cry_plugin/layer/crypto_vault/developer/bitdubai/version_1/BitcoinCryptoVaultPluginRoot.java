@@ -34,6 +34,7 @@ import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVault;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.event_handlers.BitcoinCoinsReceivedEventHandler;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.BitcoinCryptoVault;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseFactory;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.events.TransactionNotificationAgent;
 
 import org.bitcoinj.core.InsufficientMoneyException;
@@ -146,7 +147,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DealsWi
     }
 
     /**
-     * DealsWithPluginIdentity methods implementation.
+     * Plugin method implementation.
      */
 
     @Override
@@ -176,20 +177,24 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DealsWi
          * I get the userId from the deviceUserManager
          */
         //userId = deviceUserManager.getLoggedInUser().getId();
-        userId = UUID.fromString("dca1129e-6ee1-4ae1-967d-fd0b67f23683"); //todo fix deviceUser Implementation
+        userId = UUID.fromString("dca1129e-6ee1-4ae1-967d-fd0b37f13683"); //todo fix deviceUser Implementation
         System.out.println("Vault UserID: " + userId.toString());
 
         /**
          * I will try to open the database first, if it doesn't exists, then I create it
          */
+        CryptoVaultDatabaseFactory cryptoVaultDatabaseFactory = new CryptoVaultDatabaseFactory();
         try {
-            database = pluginDatabaseSystem.openDatabase(pluginId, userId.toString());
+            cryptoVaultDatabaseFactory.setPluginDatabaseSystem(pluginDatabaseSystem);
+            cryptoVaultDatabaseFactory.setErrorManager(errorManager);
+
+            database = cryptoVaultDatabaseFactory.loadDatabase(pluginId, userId.toString());
         }  catch (DatabaseNotFoundException e) {
             /**
              * The database doesn't exists, lets create it.
              */
             try {
-                database = pluginDatabaseSystem.createDatabase(pluginId, userId.toString());
+                database = cryptoVaultDatabaseFactory.createDatabase(pluginId, userId.toString());
             } catch (CantCreateDatabaseException e1) {
                 /**
                  * something went wrong creatig the db, I can't handle this.

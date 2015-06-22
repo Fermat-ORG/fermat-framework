@@ -13,8 +13,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="427c3f72-8668-4350-a048-9d476db88dcb" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_vault/developer/bitdubai/version_1/BitcoinCryptoVaultPluginRoot.java" afterPath="$PROJECT_DIR$/CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_vault/developer/bitdubai/version_1/BitcoinCryptoVaultPluginRoot.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_vault/developer/bitdubai/version_1/structure/CryptoVaultDatabaseFactory.java" afterPath="$PROJECT_DIR$/CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_vault/developer/bitdubai/version_1/structure/CryptoVaultDatabaseFactory.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CRY/plugin/crypto_network/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_network/bitcoin/developer/bitdubai/version_1/structure/StoredBlockChain.java" afterPath="$PROJECT_DIR$/CRY/plugin/crypto_network/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_network/bitcoin/developer/bitdubai/version_1/structure/StoredBlockChain.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="fermat.iws" />
@@ -341,10 +341,10 @@
         <entry file="file://$PROJECT_DIR$/CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_vault/developer/bitdubai/version_1/structure/CryptoVaultDatabaseFactory.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="44" column="7" selection-start-line="44" selection-start-column="7" selection-end-line="44" selection-end-column="7" />
+              <caret line="131" column="7" selection-start-line="131" selection-start-column="7" selection-end-line="131" selection-end-column="7" />
               <folding>
-                <element signature="e#2066#2067#0" expanded="true" />
-                <element signature="e#2114#2115#0" expanded="true" />
+                <element signature="e#2268#2269#0" expanded="true" />
+                <element signature="e#2316#2317#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -363,8 +363,61 @@
       <file leaf-file-name="BitcoinCryptoVaultPluginRoot.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_vault/developer/bitdubai/version_1/BitcoinCryptoVaultPluginRoot.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.7487437">
-              <caret line="193" column="19" selection-start-line="193" selection-start-column="19" selection-end-line="193" selection-end-column="19" />
+            <state vertical-scroll-proportion="0.88757396">
+              <caret line="209" column="48" selection-start-line="209" selection-start-column="48" selection-end-line="209" selection-end-column="48" />
+              <folding>
+                <element signature="e#5346#5347#0" expanded="true" />
+                <element signature="e#5387#5388#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BlockchainInfoWorldPluginRoot.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-blockchain-info-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/world/blockchain_info/developer/bitdubai/version_1/BlockchainInfoWorldPluginRoot.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="222" column="9" selection-start-line="222" selection-start-column="9" selection-end-line="222" selection-end-column="9" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="BlockchainInfoDatabaseFactory.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-blockchain-info-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/world/blockchain_info/developer/bitdubai/version_1/structure/BlockchainInfoDatabaseFactory.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="PluginsIdentityManager.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/PluginsIdentityManager.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="35" column="0" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CommunicationLayer.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/p2p_communication/CommunicationLayer.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AndroidPluginDatabaseSystem.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-database-system-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/android/database_system/developer/bitdubai/version_1/structure/AndroidPluginDatabaseSystem.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="56" column="0" selection-start-line="56" selection-start-column="0" selection-end-line="56" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -17572,7 +17625,6 @@
         <option value="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/transaction/incoming_extra_user/developer/bitdubai/DealsWithRegistry.java" />
         <option value="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/transaction/incoming_extra_user/developer/bitdubai/version_1/interfaces/DealsWithRegistry.java" />
         <option value="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/Platform.java" />
-        <option value="$PROJECT_DIR$/CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_vault/developer/bitdubai/version_1/BitcoinCryptoVaultPluginRoot.java" />
         <option value="$PROJECT_DIR$/CRY/plugin/crypto_network/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_network/bitcoin/developer/bitdubai/version_1/structure/BitcoinEventListeners.java" />
         <option value="$PROJECT_DIR$/CRY/plugin/crypto_network/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_network/bitcoin/developer/bitdubai/version_1/BitcoinCryptoNetworkPluginRoot.java" />
         <option value="$PROJECT_DIR$/CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_vault/developer/bitdubai/version_1/exceptions/CantExecuteQueryException.java" />
@@ -17582,6 +17634,7 @@
         <option value="$PROJECT_DIR$/CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_vault/developer/bitdubai/version_1/structure/BitcoinCryptoVault.java" />
         <option value="$PROJECT_DIR$/CRY/plugin/crypto_network/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_network/bitcoin/developer/bitdubai/version_1/structure/StoredBlockChain.java" />
         <option value="$PROJECT_DIR$/CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_vault/developer/bitdubai/version_1/structure/CryptoVaultDatabaseFactory.java" />
+        <option value="$PROJECT_DIR$/CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_vault/developer/bitdubai/version_1/BitcoinCryptoVaultPluginRoot.java" />
       </list>
     </option>
   </component>
@@ -17921,6 +17974,84 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="version_1" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="DMP" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="plugin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="world" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat-dmp-plugin-world-blockchain-info-bitdubai" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="com" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bitdubai" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat_dmp_plugin" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="layer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="world" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="blockchain_info" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="developer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="bitdubai" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="version_1" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="structure" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -18480,8 +18611,8 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3279743" sideWeight="0.50967383" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.42443728" sideWeight="0.49573106" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3279743" sideWeight="0.49032614" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.42443728" sideWeight="0.49573106" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3279743" sideWeight="0.49032614" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2497332" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -18548,18 +18679,10 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_vault/developer/bitdubai/version_1/BitcoinCryptoVaultPluginRoot.java</url>
-          <line>191</line>
-          <properties />
-          <option name="timeStamp" value="6" />
-        </line-breakpoint>
-      </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
-      <option name="time" value="7" />
+      <option name="time" value="9" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -18568,34 +18691,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/transaction/incoming_extra_user/developer/bitdubai/version_1/IncomingExtraUserTransactionPluginRoot.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="15" column="1" selection-start-line="15" selection-start-column="1" selection-end-line="15" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/transaction/incoming_extra_user/developer/bitdubai/version_1/structure/IncomingExtraUSerDataBaseConstants.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/transaction/incoming_extra_user/developer/bitdubai/version_1/structure/IncomingExtraUserEventRecorderService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="32" column="13" selection-start-line="32" selection-start-column="13" selection-end-line="32" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/transaction/incoming_extra_user/developer/bitdubai/version_1/structure/IncomingExtraUserMonitorAgent.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -18932,14 +19027,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-blockchain-info-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/world/blockchain_info/developer/bitdubai/version_1/BlockchainInfoWorldPluginRoot.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="115" column="34" selection-start-line="115" selection-start-column="34" selection-end-line="115" selection-end-column="34" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_vault/developer/bitdubai/version_1/structure/BitcoinCryptoVault.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -18964,17 +19051,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_vault/developer/bitdubai/version_1/structure/CryptoVaultDatabaseFactory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="44" column="7" selection-start-line="44" selection-start-column="7" selection-end-line="44" selection-end-column="7" />
-          <folding>
-            <element signature="e#2066#2067#0" expanded="true" />
-            <element signature="e#2114#2115#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_vault/developer/bitdubai/version_1/structure/CryptoVaultDatabaseConstants.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -18983,11 +19059,65 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-database-system-bitdubai/src/main/java/com/bitdubai/fermat_osa_addon/layer/android/database_system/developer/bitdubai/version_1/structure/AndroidPluginDatabaseSystem.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="56" column="0" selection-start-line="56" selection-start-column="0" selection-end-line="56" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/p2p_communication/CommunicationLayer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/PluginsIdentityManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="35" column="0" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-blockchain-info-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/world/blockchain_info/developer/bitdubai/version_1/structure/BlockchainInfoDatabaseFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="33" column="0" selection-start-line="33" selection-start-column="0" selection-end-line="33" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-blockchain-info-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/world/blockchain_info/developer/bitdubai/version_1/BlockchainInfoWorldPluginRoot.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="222" column="9" selection-start-line="222" selection-start-column="9" selection-end-line="222" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_vault/developer/bitdubai/version_1/structure/CryptoVaultDatabaseFactory.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="131" column="7" selection-start-line="131" selection-start-column="7" selection-end-line="131" selection-end-column="7" />
+          <folding>
+            <element signature="e#2268#2269#0" expanded="true" />
+            <element signature="e#2316#2317#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_vault/developer/bitdubai/version_1/BitcoinCryptoVaultPluginRoot.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7487437">
-          <caret line="193" column="19" selection-start-line="193" selection-start-column="19" selection-end-line="193" selection-end-column="19" />
-          <folding />
+        <state vertical-scroll-proportion="0.88757396">
+          <caret line="209" column="48" selection-start-line="209" selection-start-column="48" selection-end-line="209" selection-end-column="48" />
+          <folding>
+            <element signature="e#5346#5347#0" expanded="true" />
+            <element signature="e#5387#5388#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

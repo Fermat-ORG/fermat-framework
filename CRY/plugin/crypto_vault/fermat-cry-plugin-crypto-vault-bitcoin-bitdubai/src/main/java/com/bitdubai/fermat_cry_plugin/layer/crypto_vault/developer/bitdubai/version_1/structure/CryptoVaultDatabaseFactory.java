@@ -9,7 +9,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlugin
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerId;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -48,7 +50,7 @@ public class CryptoVaultDatabaseFactory implements DealsWithPluginDatabaseSystem
         this.errorManager = errorManager;
     }
 
-    public Database createDatabase(UUID ownerId, UUID walletId) throws CantCreateDatabaseException {
+    public Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
 
         Database database;
 
@@ -57,7 +59,7 @@ public class CryptoVaultDatabaseFactory implements DealsWithPluginDatabaseSystem
          */
         try {
 
-            database = this.pluginDatabaseSystem.createDatabase(ownerId, walletId.toString());
+            database = this.pluginDatabaseSystem.createDatabase(ownerId, databaseName);
 
         } catch (CantCreateDatabaseException cantCreateDatabaseException) {
 
@@ -118,5 +120,17 @@ public class CryptoVaultDatabaseFactory implements DealsWithPluginDatabaseSystem
             }
 
         return database;
+        }
+
+    /**
+     * Load the database
+     * @param ownerID
+     * @param databaseName
+     * @return
+     * @throws CantOpenDatabaseException
+     * @throws DatabaseNotFoundException
+     */
+        public Database loadDatabase(UUID ownerID, String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException {
+        return pluginDatabaseSystem.openDatabase(ownerID, databaseName);
         }
     }
