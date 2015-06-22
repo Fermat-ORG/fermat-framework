@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.CryptoWalletContactsDatabaseConstants</code>
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.structure.WalletContactsMiddlewareDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
  * <p/>
  *
@@ -10,7 +10,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.develope
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CryptoWalletContactsDatabaseConstants {
+public class WalletContactsMiddlewareDatabaseConstants {
 
     /**
      * Crypto Wallet Contacts Address Book database table definition.

@@ -1,13 +1,13 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.structure;
 
 /**
- * The interface <code>com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.structure.WalletAddressBookDataBaseConstants</code>
+ * The interface <code>com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.structure.WalletAddressBookCryptoModuleDatabaseConstants</code>
  * have the definition of wallet_address_book datatables.
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/06/15.
  * @version 1.0
  */
-class WalletAddressBookDataBaseConstants {
+class WalletAddressBookCryptoModuleDatabaseConstants {
 
     static final String CRYPTO_WALLET_ADDRESS_BOOK_TABLE_NAME = "wallet_crypto_address_book_registry";
     static final String CRYPTO_WALLET_ADDRESS_BOOK_TABLE_ID = "id";

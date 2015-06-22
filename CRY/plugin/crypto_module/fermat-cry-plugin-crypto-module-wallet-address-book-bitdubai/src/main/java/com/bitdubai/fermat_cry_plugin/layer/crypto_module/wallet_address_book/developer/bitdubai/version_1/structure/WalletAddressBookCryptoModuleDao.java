@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.structure;
 
 /**
- * The interface <code>com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.structure.WalletCryptoAddressBookDao</code>
+ * The interface <code>com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.structure.WalletAddressBookCryptoModuleDao</code>
  * haves all the methods that interact with the database.
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/06/15.
@@ -22,10 +22,10 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpen
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookRecord;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.CantGetWalletCryptoAddressBookException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.CantRegisterWalletCryptoAddressBookException;
-import com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.exceptions.CantInitializeWalletCryptoAddressBookException;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookRecord;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.exceptions.CantInitializeWalletAddressBookCryptoModuleException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ import java.util.UUID;
  * This class manages the relationship between users and crypto addresses by storing them on a Database Table.
  */
 
-public class WalletCryptoAddressBookDao implements DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class WalletAddressBookCryptoModuleDao implements DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
 
     /**
      * CryptoAddressBook Interface member variables.
@@ -61,7 +61,7 @@ public class WalletCryptoAddressBookDao implements DealsWithErrors, DealsWithPlu
     /**
      * Constructor.
      */
-    public WalletCryptoAddressBookDao(ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId){
+    public WalletAddressBookCryptoModuleDao(ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId){
         /**
          * The only one who can set the pluginId is the Plugin Root.
          */
@@ -75,7 +75,7 @@ public class WalletCryptoAddressBookDao implements DealsWithErrors, DealsWithPlu
      * CryptoAddressBook Interface implementation.
      */
 
-    public void initialize() throws CantInitializeWalletCryptoAddressBookException{
+    public void initialize() throws CantInitializeWalletAddressBookCryptoModuleException {
 
         /**
          * I will try to open the wallets' database..
@@ -89,11 +89,11 @@ public class WalletCryptoAddressBookDao implements DealsWithErrors, DealsWithPlu
              * The database exists but cannot be open. I can not handle this situation.
              */
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_ADDRESS_BOOK_CRYPTO, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
-            throw new CantInitializeWalletCryptoAddressBookException();
+            throw new CantInitializeWalletAddressBookCryptoModuleException();
         }
         catch (DatabaseNotFoundException databaseNotFoundException) {
 
-            WalletAddressBookDataBaseFactory databaseFactory = new WalletAddressBookDataBaseFactory();
+            WalletAddressBookCryptoModuleDatabaseFactory databaseFactory = new WalletAddressBookCryptoModuleDatabaseFactory();
             databaseFactory.setPluginDatabaseSystem(this.pluginDatabaseSystem);
 
             /**
@@ -110,32 +110,32 @@ public class WalletCryptoAddressBookDao implements DealsWithErrors, DealsWithPlu
                  * The database cannot be created. I can not handle this situation.
                  */
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_ADDRESS_BOOK_CRYPTO, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
-                throw new CantInitializeWalletCryptoAddressBookException();
+                throw new CantInitializeWalletAddressBookCryptoModuleException();
             }
         }
     }
 
-    public void registerWalletCryptoAddressBook(CryptoAddress cryptoAddress, PlatformWalletType platformWalletType, UUID walletId) throws CantRegisterWalletCryptoAddressBookException {
+    public void registerWalletAddressBookModule(CryptoAddress cryptoAddress, PlatformWalletType platformWalletType, UUID walletId) throws CantRegisterWalletCryptoAddressBookException {
 
         /**
          * Here I create the Address book record for new Actor.
          */
         long unixTime = System.currentTimeMillis() / 1000L;
 
-        DatabaseTable walletCryptoAddressBookTable = database.getTable(WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_NAME);
-        DatabaseTableRecord walletCryptoAddressBookRecord = walletCryptoAddressBookTable.getEmptyRecord();
+        DatabaseTable walletAddressBookModuleTable = database.getTable(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_NAME);
+        DatabaseTableRecord walletAddressBookModuleRecord = walletAddressBookModuleTable.getEmptyRecord();
 
         UUID recordId = UUID.randomUUID();
 
-        walletCryptoAddressBookRecord.setUUIDValue(WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_ID , recordId);
-        walletCryptoAddressBookRecord.setUUIDValue(WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_ID, walletId);
-        walletCryptoAddressBookRecord.setStringValue(WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_TYPE, platformWalletType.getCode());
-        walletCryptoAddressBookRecord.setStringValue(WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS, cryptoAddress.getAddress());
-        walletCryptoAddressBookRecord.setStringValue(WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_CURRENCY, cryptoAddress.getCryptoCurrency().getCode());
-        walletCryptoAddressBookRecord.setLongValue(WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_TIME_STAMP, unixTime);
+        walletAddressBookModuleRecord.setUUIDValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_ID , recordId);
+        walletAddressBookModuleRecord.setUUIDValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_ID, walletId);
+        walletAddressBookModuleRecord.setStringValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_TYPE, platformWalletType.getCode());
+        walletAddressBookModuleRecord.setStringValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS, cryptoAddress.getAddress());
+        walletAddressBookModuleRecord.setStringValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_CURRENCY, cryptoAddress.getCryptoCurrency().getCode());
+        walletAddressBookModuleRecord.setLongValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_TIME_STAMP, unixTime);
 
         try{
-            walletCryptoAddressBookTable.insertRecord(walletCryptoAddressBookRecord);
+            walletAddressBookModuleTable.insertRecord(walletAddressBookModuleRecord);
         } catch(CantInsertRecord cantInsertRecord) {
             /**
              * I can not solve this situation.
@@ -145,16 +145,16 @@ public class WalletCryptoAddressBookDao implements DealsWithErrors, DealsWithPlu
         }
     }
 
-    public WalletAddressBookRecord getWalletCryptoAddressBookByCryptoAddress(CryptoAddress cryptoAddress) throws CantGetWalletCryptoAddressBookException {
+    public WalletAddressBookRecord getWalletAddressBookModuleByCryptoAddress(CryptoAddress cryptoAddress) throws CantGetWalletCryptoAddressBookException {
 
         DatabaseTable table;
 
         /**
          *  I will load the information of table into a memory structure, filter by crypto address .
          */
-        table = this.database.getTable(WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_NAME);
-        table.setStringFilter(WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS,cryptoAddress.getAddress(), DatabaseFilterType.EQUAL);
-        table.setStringFilter(WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_CURRENCY,cryptoAddress.getCryptoCurrency().getCode(), DatabaseFilterType.EQUAL);
+        table = this.database.getTable(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_NAME);
+        table.setStringFilter(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS,cryptoAddress.getAddress(), DatabaseFilterType.EQUAL);
+        table.setStringFilter(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_CURRENCY,cryptoAddress.getCryptoCurrency().getCode(), DatabaseFilterType.EQUAL);
         try {
             table.loadToMemory();
         }
@@ -179,16 +179,16 @@ public class WalletCryptoAddressBookDao implements DealsWithErrors, DealsWithPlu
 
         if (records.size() > 0) {
             record = records.get(0);
-            walletId = record.getUUIDValue(WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_ID);
-            platformWalletType = PlatformWalletType.getByCode(record.getStringValue(WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_TYPE));
+            walletId = record.getUUIDValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_ID);
+            platformWalletType = PlatformWalletType.getByCode(record.getStringValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_TYPE));
         } else {
             return null;
         }
 
-        return new WalletCryptoAddressBookRecord(cryptoAddress, platformWalletType, walletId);
+        return new WalletAddressBookCryptoModuleRecord(cryptoAddress, platformWalletType, walletId);
     }
 
-    public List<WalletAddressBookRecord> getAllWalletCryptoAddressBookByActorId(UUID walletId) throws CantGetWalletCryptoAddressBookException {
+    public List<WalletAddressBookRecord> getAllWalletAddressBookModuleByActorId(UUID walletId) throws CantGetWalletCryptoAddressBookException {
 
         DatabaseTable table;
 
@@ -197,8 +197,8 @@ public class WalletCryptoAddressBookDao implements DealsWithErrors, DealsWithPlu
         /**
          *  I will load the information of table into a memory structure, filter by crypto address .
          */
-        table = this.database.getTable(WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_NAME);
-        table.setUUIDFilter(WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_ID, walletId, DatabaseFilterType.EQUAL);
+        table = this.database.getTable(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_NAME);
+        table.setUUIDFilter(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_ID, walletId, DatabaseFilterType.EQUAL);
         try {
             table.loadToMemory();
         }
@@ -221,11 +221,11 @@ public class WalletCryptoAddressBookDao implements DealsWithErrors, DealsWithPlu
         CryptoAddress cryptoAddress;
 
         for (DatabaseTableRecord record : table.getRecords()) {
-            platformWalletType = PlatformWalletType.getByCode(record.getStringValue(WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_TYPE));
-            address = record.getStringValue(WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS);
-            cryptoCurrency = CryptoCurrency.getByCode(record.getStringValue(WalletAddressBookDataBaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_CURRENCY));
+            platformWalletType = PlatformWalletType.getByCode(record.getStringValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_TYPE));
+            address = record.getStringValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS);
+            cryptoCurrency = CryptoCurrency.getByCode(record.getStringValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_CURRENCY));
             cryptoAddress = new CryptoAddress(address, cryptoCurrency);
-            WalletAddressBookRecord addressBook = new WalletCryptoAddressBookRecord(cryptoAddress, platformWalletType, walletId);
+            WalletAddressBookRecord addressBook = new WalletAddressBookCryptoModuleRecord(cryptoAddress, platformWalletType, walletId);
             walletAddressBookRecords.add(addressBook);
 
         }

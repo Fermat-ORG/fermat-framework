@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Toast;
 
 
+import com.bitdubai.android_core.app.common.PagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.fragment.NavigationDrawerFragment;
 import com.bitdubai.android_core.app.subapp.shop.version_1.activity.ShopActivity;
 

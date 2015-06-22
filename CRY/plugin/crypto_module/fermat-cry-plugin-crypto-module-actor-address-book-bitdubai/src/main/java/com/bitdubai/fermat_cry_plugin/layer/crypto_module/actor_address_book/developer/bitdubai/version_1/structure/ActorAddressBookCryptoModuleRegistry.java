@@ -17,18 +17,18 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * The class <code>com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.structure.ActorCryptoAddressBookRegistry</code>
+ * The class <code>com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.structure.ActorAddressBookCryptoModuleRegistry</code>
  * haves all consumable methods from the plugin Actor Address Book
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 17/06/15.
  * @version 1.0
  */
-public class ActorCryptoAddressBookRegistry implements ActorAddressBookRegistry, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class ActorAddressBookCryptoModuleRegistry implements ActorAddressBookRegistry, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
 
     /**
-     * ActorCryptoAddressBookRecord Interface member variables.
+     * ActorAddressBookCryptoModuleRecord Interface member variables.
      */
-    private ActorAddressBookDao actorAddressBookDao;
+    private ActorAddressBookCryptoModuleDao actorAddressBookDao;
 
     /**
      * DealsWithErrors Interface member variables.
@@ -49,7 +49,7 @@ public class ActorCryptoAddressBookRegistry implements ActorAddressBookRegistry,
         /**
          * I will try to create and initialize a new DAO
          */
-        actorAddressBookDao = new ActorAddressBookDao(errorManager, pluginDatabaseSystem, pluginId);
+        actorAddressBookDao = new ActorAddressBookCryptoModuleDao(errorManager, pluginDatabaseSystem, pluginId);
         actorAddressBookDao.initialize();
 
     }
