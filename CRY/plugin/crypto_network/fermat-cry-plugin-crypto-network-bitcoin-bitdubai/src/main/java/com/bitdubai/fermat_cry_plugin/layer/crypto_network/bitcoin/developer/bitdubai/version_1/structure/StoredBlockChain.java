@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -106,9 +107,9 @@ class StoredBlockChain implements BitcoinManager, DealsWithErrors, DealsWithPlug
              * I will save the blockchain into disk.
              */
             String blockChainFileName = userId.toString() + ".spvchain";
-            pluginFileSystem.createBinaryFile(pluginId, userId.toString(), blockChainFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-
-
+            PluginTextFile blockchainFile = pluginFileSystem.createTextFile(pluginId, userId.toString(), blockChainFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            blockchainFile.persistToMedia();
+            
             spvStore = new SPVBlockStore(this.networkParameters, new File(pluginId.toString(), blockChainFileName));
             chain = new BlockChain(this.networkParameters, this.wallet, spvStore);
         } catch (Exception exception){

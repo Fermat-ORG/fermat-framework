@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWit
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_cry_api.layer.definition.DepthInBlocksThreshold;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantExecuteQueryException;
 
 import org.bitcoinj.core.AbstractWalletEventListener;
 import org.bitcoinj.core.Coin;
@@ -79,12 +80,10 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
          */
         try {
             dbActions.saveIncomingTransaction(tx.getHashAsString());
-        } catch (CantInsertRecord cantInsertRecord) {
-            /**
-             * if there is an error, then I will try to sync the entire vault and the DB
-             */
-            dbActions.persistMissingTransactionsFromWallet(wallet);
+        } catch (CantExecuteQueryException e) {
+            e.printStackTrace();
         }
+
     }
 
     @Override
@@ -104,7 +103,11 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
                  * The transaction height in the blockchain has reached our threshold.
                  */
 
-                dbActions.updateCryptoTransactionStatus(tx.getHashAsString(), CryptoStatus.RECEIVED);
+                try {
+                    dbActions.updateCryptoTransactionStatus(tx.getHashAsString(), CryptoStatus.RECEIVED);
+                } catch (CantExecuteQueryException e) {
+                    e.printStackTrace();
+                }
             }
 
             if (1 == txConfidence.getDepthInBlocks()){
@@ -112,7 +115,11 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
                  * The transactions has one block already.
                  */
 
-                dbActions.updateCryptoTransactionStatus(tx.getHashAsString(), CryptoStatus.CONFIRMED);
+                try {
+                    dbActions.updateCryptoTransactionStatus(tx.getHashAsString(), CryptoStatus.CONFIRMED);
+                } catch (CantExecuteQueryException e) {
+                    e.printStackTrace();
+                }
             }
         }
 
