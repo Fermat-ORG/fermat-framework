@@ -2,6 +2,9 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.ver
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.event.DealWithEventMonitor;
+import com.bitdubai.fermat_api.layer.all_definition.event.EventMonitor;
+import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer.dmp_world.Agent;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantInitializeMonitorAgentException;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
@@ -14,6 +17,11 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpen
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventSource;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventType;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoTransactionsWaitingTransferenceEvent;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseActions;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseFactory;
 
@@ -22,7 +30,7 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 2015.06.18..
  */
-public class TransactionNotificationAgent implements Agent, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class TransactionNotificationAgent implements Agent,DealsWithEvents,DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
 
         /**
      * TransactionNotificationAgent variables
@@ -35,6 +43,12 @@ public class TransactionNotificationAgent implements Agent, DealsWithErrors, Dea
      */
     Thread agentThread;
     MonitorAgent monitorAgent;
+
+
+    /**
+     * DealsWithEvents interface member variables
+     */
+    EventManager eventManager;
 
     /**
      * DealsWithErrors interface member variables
@@ -55,7 +69,8 @@ public class TransactionNotificationAgent implements Agent, DealsWithErrors, Dea
     /**
      * Constructor
      */
-    public TransactionNotificationAgent(PluginDatabaseSystem pluginDatabaseSystem, ErrorManager errorManager, UUID pluginId, UUID walletId){
+    public TransactionNotificationAgent(EventManager eventManager, PluginDatabaseSystem pluginDatabaseSystem, ErrorManager errorManager, UUID pluginId, UUID walletId){
+        this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.errorManager = errorManager;
         this.pluginId = pluginId;
@@ -101,6 +116,14 @@ public class TransactionNotificationAgent implements Agent, DealsWithErrors, Dea
     @Override
     public void stop() {
         this.agentThread.interrupt();
+    }
+
+    /**
+     * DealsWithEvents interface implementation
+     */
+    @Override
+    public void setEventManager(EventManager eventManager) {
+        this.eventManager = eventManager;
     }
 
     /**
@@ -234,14 +257,17 @@ public class TransactionNotificationAgent implements Agent, DealsWithErrors, Dea
              * I search for transactions not yet notified. If I found something, Ill raise an event
              */
             if (isTransactionToBeNotified()){
-                //todo raiseevent
+                PlatformEvent event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE);
+                event.setSource(EventSource.CRYPTO_VAULT);
+
+                eventManager.raiseEvent(event);
             }
 
         }
 
 
         private boolean isTransactionToBeNotified() {
-            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database);
+            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
             if (db.isPendingTransactions())
                 return  true;
             else

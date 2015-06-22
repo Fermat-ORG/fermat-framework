@@ -6,6 +6,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecord;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
@@ -20,20 +22,24 @@ import org.bitcoinj.core.Wallet;
 /**
  * Created by rodrigo on 11/06/15.
  */
-class VaultEventListeners extends AbstractWalletEventListener implements DealsWithEvents{
-
-    /**
-     * DealsWithEvents interface member variables
-     */
-    EventManager eventManager;
-    EventListener eventListener;
-    PlatformEvent platformEvent;
+class VaultEventListeners extends AbstractWalletEventListener implements DealsWithErrors, DealsWithEvents{
 
     /**
      * VaultEventListeners member variables
      */
     Database database;
     CryptoVaultDatabaseActions dbActions;
+
+    /**
+     * DealsWithErrors interface member variable
+     */
+    ErrorManager errorManager;
+
+    /**
+     * DealsWithEvents interface member variables
+     */
+    EventManager eventManager;
+
 
     /**
      * DealsWithEvents interface implmentation
@@ -45,12 +51,24 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
     }
 
     /**
+     * DealsWithErrors interface implementation
+     * @param errorManager
+     */
+    @Override
+    public void setErrorManager(ErrorManager errorManager) {
+        this.errorManager = errorManager;
+    }
+
+    /**
      * Constructor
      * @param database
      */
-    VaultEventListeners (Database database){
+    VaultEventListeners (Database database, ErrorManager errorManager, EventManager eventManager){
         this.database = database;
-        dbActions = new CryptoVaultDatabaseActions(this.database);
+        this.errorManager = errorManager;
+        this.eventManager = eventManager;
+
+        dbActions = new CryptoVaultDatabaseActions(this.database, errorManager, eventManager);
     }
 
 
@@ -60,11 +78,6 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
          * I save this transaction in the database
          */
             dbActions.saveIncomingTransaction(tx.getHashAsString());
-
-        /**
-         * once saved, I notify the platform event that we have recieved money
-         */
-        //todo add platforn event of coins received event. This should be done when saving.
     }
 
     @Override

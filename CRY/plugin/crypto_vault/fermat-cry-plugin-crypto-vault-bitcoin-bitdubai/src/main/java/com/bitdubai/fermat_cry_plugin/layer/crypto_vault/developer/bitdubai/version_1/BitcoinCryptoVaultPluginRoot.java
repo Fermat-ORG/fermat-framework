@@ -220,7 +220,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DealsWi
         /**
          * now I will start the TransactionNotificationAgent to monitor
          */
-        transactionNotificationAgent = new TransactionNotificationAgent(pluginDatabaseSystem, errorManager, pluginId, userId);
+        transactionNotificationAgent = new TransactionNotificationAgent(eventManager,pluginDatabaseSystem, errorManager, pluginId, userId);
         try {
             transactionNotificationAgent.start();
         } catch (CantStartAgentException e) {

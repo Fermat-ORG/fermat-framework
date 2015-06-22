@@ -24,6 +24,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.DealsWithBitcoinCryptoNetwork;
@@ -55,7 +57,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by rodrigo on 09/06/15.
  */
-public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWithBitcoinCryptoNetwork, DealsWithErrors, DealsWithPluginIdentity, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, TransactionProtocolManager{
+public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWithBitcoinCryptoNetwork, DealsWithEvents,DealsWithErrors, DealsWithPluginIdentity, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, TransactionProtocolManager{
 
     /**
      * BitcoinCryptoVault member variables
@@ -76,6 +78,12 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
      * DealsWithCryptonetwork interface member variable
      */
     BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager;
+
+
+    /**
+     * DealsWithEvents interface member variable
+     */
+    EventManager eventManager;
 
     /**
      * DealsWithErros interface member variable
@@ -134,6 +142,15 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
     @Override
     public void setBitcoinCryptoNetworkManager(BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager) {
         this.bitcoinCryptoNetworkManager = bitcoinCryptoNetworkManager;
+    }
+
+    /**
+     * DealsWithEvents interface implementation
+     * @param eventManager
+     */
+    @Override
+    public void setEventManager(EventManager eventManager) {
+        this.eventManager = eventManager;
     }
 
     /**
@@ -277,7 +294,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
     private void configureVault() throws CantCreateCryptoWalletException {
         vault.autosaveToFile(vaultFile, 0, TimeUnit.SECONDS, null);
         createDatabase();
-        vaultEventListeners = new VaultEventListeners(database);
+        vaultEventListeners = new VaultEventListeners(database, errorManager, eventManager);
         vault.addEventListener(vaultEventListeners);
     }
 
@@ -312,7 +329,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         /**
          * if the transaction was requested before but resend my mistake, Im not going to send it again
          */
-        CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database);
+        CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
 
         if (!db.isNewFermatTransaction(FermatTxId))
             return "";
@@ -392,7 +409,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
          * will marked the transaction as notified
          */
         try{
-            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database);
+            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
             db.updateTransactionProtocolStatus(transactionID, ProtocolStatus.RECEPTION_NOTIFIED);
         } catch (Exception e){
             throw new CantConfirmTransactionException();
@@ -406,7 +423,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
          */
         try{
             List<com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction> txs = new ArrayList<com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction>();
-            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database);
+            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
             /**
              * Im getting the transaction headers which is a map with transactionID and Transaction Hash. I will use this information to access the vault.
              */

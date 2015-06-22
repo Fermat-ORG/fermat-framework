@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
@@ -12,6 +13,12 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFi
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecord;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventType;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoIdentifiedEvent;
 
 import org.bitcoinj.core.Wallet;
 
@@ -25,11 +32,43 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 2015.06.17..
  */
-public class CryptoVaultDatabaseActions {
+public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErrors{
     Database database;
 
-    public CryptoVaultDatabaseActions(Database database){
+    /**
+     * DealsWithEvents interface member variables
+     */
+    EventManager eventManager;
+
+    /**
+     * DealsWithErrors interface member variables
+     */
+    ErrorManager errorManager;
+
+
+    /**
+     * DealsWithErrors interface implementation
+     * @param errorManager
+     */
+    @Override
+    public void setErrorManager(ErrorManager errorManager) {
+        this.errorManager = errorManager;
+    }
+
+    @Override
+    public void setEventManager(EventManager eventManager) {
+        this.eventManager = eventManager;
+    }
+
+
+    /**
+     * Constructor
+     * @param database
+     */
+    public CryptoVaultDatabaseActions(Database database, ErrorManager errorManager, EventManager eventManager){
         this.database = database;
+        this.eventManager = eventManager;
+        this.errorManager = errorManager;
     }
 
     public void saveIncomingTransaction(String txHash){
@@ -42,6 +81,13 @@ public class CryptoVaultDatabaseActions {
         incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME, CryptoStatus.IDENTIFIED.toString());
         try {
             cryptoTxTable.insertRecord(incomingTxRecord);
+
+            /**
+             * after I save the transaction in the database and the vault, I'll raise the incoming transaction.
+             *
+             */
+            PlatformEvent event = new IncomingCryptoIdentifiedEvent(EventType.INCOMING_CRYPTO_RECEIVED);
+            eventManager.raiseEvent(event);
         } catch (CantInsertRecord cantInsertRecord) {
             /**
              * If there was an error trying to insert the transaction, I will try to get all transactions from wallet and see what's missing
