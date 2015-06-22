@@ -42,7 +42,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.world.coinapult.developer.bitdubai.v
 import com.bitdubai.fermat_dmp_plugin.layer.world.blockchain_info.developer.bitdubai.version_1.BlockchainInfoWorldPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.CryptoIndexWorldPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.world.shape_shift.developer.bitdubai.version_1.ShapeShiftWorldPluginRoot;
-import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.ActorAddressBookPluginRoot;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.ActorAddressBookCryptoModulePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.app_runtime.developer.bitdubai.version_1.AppRuntimeMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.BankNotesMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.WalletContactsMiddlewarePluginRoot;
@@ -483,8 +483,8 @@ public class PluginsIdentityManager {
         if (pluginIndex == 0) {
             try
             {
-                ActorAddressBookPluginRoot tryType;
-                tryType = (ActorAddressBookPluginRoot) plugin;
+                ActorAddressBookCryptoModulePluginRoot tryType;
+                tryType = (ActorAddressBookCryptoModulePluginRoot) plugin;
                 pluginIndex = 18;
             }
             catch (Exception e)
