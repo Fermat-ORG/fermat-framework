@@ -3,19 +3,10 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.devel
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.*;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoIdentifiedEvent;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoReceivedEvent;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoReceptionConfirmedEvent;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoReversedEvent;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoTransactionsWaitingTransferenceEvent;
-import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoReceivedEventHandler;
-import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoReceptionConfirmedEventHandler;
-import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoReversedEventHandler;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoTransactionsWaitingTransferenceEventHandler;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantSaveEvent;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantStartServiceException;
-import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.event_handlers.IncomingCryptoIdentifiedEventHandler;
-
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.interfaces.DealsWithRegistry;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.interfaces.TransactionService;
 
@@ -84,24 +75,7 @@ public class IncomingCryptoEventRecorderService implements DealsWithEvents, Deal
         this.registry.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
     }
 
-    // TODO: Delete this four methods
-    public void incomingCryptoIdentified(IncomingCryptoIdentifiedEvent event) throws CantSaveEvent {
-        this.registry.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
-    }
 
-    public void incomingCryptoReceived(IncomingCryptoReceivedEvent event)  throws CantSaveEvent {
-        this.registry.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
-    }
-
-    public void incomingCryptoReceptionConfirmed(IncomingCryptoReceptionConfirmedEvent event)  throws CantSaveEvent {
-        this.registry.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
-    }
-
-    public void incomingCryptoReversed(IncomingCryptoReversedEvent event) throws CantSaveEvent {
-        this.registry.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
-    }
-
-    
     /**
      * TransactionService interface implementation.
      */
@@ -121,36 +95,6 @@ public class IncomingCryptoEventRecorderService implements DealsWithEvents, Deal
         eventManager.addListener(eventListener);
         listenersAdded.add(eventListener);
 
-
-
-        // TODO: Delete this four handlers
-        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_IDENTIFIED);
-        eventHandler = new IncomingCryptoIdentifiedEventHandler();
-        ((IncomingCryptoIdentifiedEventHandler) eventHandler).setIncomingCryptoEventRecorderService(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
-
-        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_RECEIVED);
-        eventHandler = new IncomingCryptoReceivedEventHandler();
-        ((IncomingCryptoReceivedEventHandler) eventHandler).setIncomingCryptoEventRecorderService(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
-
-        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_RECEPTION_CONFIRMED);
-        eventHandler = new IncomingCryptoReceptionConfirmedEventHandler();
-        ((IncomingCryptoReceptionConfirmedEventHandler) eventHandler).setIncomingCryptoEventRecorder(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
-
-        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_REVERSED);
-        eventHandler = new IncomingCryptoReversedEventHandler();
-        ((IncomingCryptoReversedEventHandler) eventHandler).setIncomingCryptoEventRecorderService(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
 
         this.serviceStatus = ServiceStatus.STARTED;
         

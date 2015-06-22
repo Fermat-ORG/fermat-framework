@@ -31,6 +31,8 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.Unexpect
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 
+import com.bitdubai.fermat_api.layer.pip_user.device_user.DealsWithDeviceUsers;
+import com.bitdubai.fermat_api.layer.pip_user.device_user.DeviceUserManager;
 import com.bitdubai.fermat_api.layer.pip_user.extra_user.DealsWithExtraUsers;
 import com.bitdubai.fermat_api.layer.pip_user.extra_user.ExtraUserManager;
 import com.bitdubai.fermat_core.layer.cry_crypto_router.CryptoRouterLayer;
@@ -543,8 +545,1527 @@ public class Platform  {
          * Plugin Bank Notes Middleware
          * -----------------------------
          */
+<<<<<<< HEAD
         Plugin bankNotesMiddleware = ((MiddlewareLayer) mMiddlewareLayer).getBankNotesPlugin();
         setPluginReferencesAndStart(bankNotesMiddleware, Plugins.BITDUBAI_BANK_NOTES_MIDDLEWARE);
+=======
+
+        Plugin coinbaseWorld = ((WorldLayer)  mWorldLayer).getCoinbase();
+
+        ((DealsWithPluginFileSystem) coinbaseWorld).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
+        ((DealsWithEvents) coinbaseWorld).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(coinbaseWorld, Plugins.BITDUBAI_CRYPTO_INDEX);
+
+        try
+        {
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(coinbaseWorld);
+            (coinbaseWorld).setId(pluginID);
+
+            try {
+                ((Service) coinbaseWorld).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, cantStartPluginException);
+
+                /**
+                 * This plugin wont disable the whole platform, so I will allow the Platform to start even if this one
+                 * will be disabled. In the future, I will re-try the start of plugins that are not starting at once.
+                 * * *
+                 */
+            }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+                throw new CantStartPlatformException();
+            }
+
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+        }
+
+
+        /**
+         * -----------------------------
+         * Plugin Location World
+         * -----------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the Crypto Index plugin access to the File System so it can load and save information from persistent
+         * media.
+         */
+
+        Plugin locationWorld = ((WorldLayer)  mWorldLayer).getLocation();
+
+        ((DealsWithPluginFileSystem) locationWorld).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
+        ((DealsWithEvents) locationWorld).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(locationWorld, Plugins.BITDUBAI_CRYPTO_INDEX);
+
+        try
+        {
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(locationWorld);
+            (locationWorld).setId(pluginID);
+
+            try {
+                ((Service) locationWorld).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, cantStartPluginException);
+
+                /**
+                 * This plugin wont disable the whole platform, so I will allow the Platform to start even if this one
+                 * will be disabled. In the future, I will re-try the start of plugins that are not starting at once.
+                 * * *
+                 */
+            }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+                throw new CantStartPlatformException();
+            }
+
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+        }
+
+
+
+
+        /**
+         * -----------------------------
+         * Plugin Crypto Index World
+         * -----------------------------
+         * * * * 
+         */
+
+
+
+        /**
+         * I will give the Crypto Index plugin access to the File System so it can load and save information from persistent
+         * media.
+         */
+
+        Plugin cryptoIndexWorld = ((WorldLayer)  mWorldLayer).getCryptoIndex();
+
+        ((DealsWithPluginFileSystem) cryptoIndexWorld).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
+        ((DealsWithEvents) cryptoIndexWorld).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(cryptoIndexWorld, Plugins.BITDUBAI_CRYPTO_INDEX);
+
+        try
+        {
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(cryptoIndexWorld);
+            (cryptoIndexWorld).setId(pluginID);
+
+            try {
+                ((Service) cryptoIndexWorld).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, cantStartPluginException);
+
+                /**
+                 * This plugin wont disable the whole platform, so I will allow the Platform to start even if this one
+                 * will be disabled. In the future, I will re-try the start of plugins that are not starting at once.
+                 * * *
+                 */
+            }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+                throw new CantStartPlatformException();
+            }
+
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+        }
+
+
+
+        /**
+         * -----------------------------
+         * Plugin Bitcoin Crypto Network
+         * -----------------------------
+         * * * * 
+         */
+
+
+
+        /**
+         * I will give the plugin access to the File System so it can load and save and load information from persistent 
+         * media.
+         */
+        Plugin cryptoNetwork = ((CryptoNetworkLayer) mCryptoNetworkLayer).getCryptoNetwork(CryptoNetworks.BITCOIN);
+
+        ((DealsWithErrors) cryptoNetwork).setErrorManager((ErrorManager) errorManager);
+        ((DealsWithPluginFileSystem) cryptoNetwork).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
+
+
+        corePlatformContext.addPlugin(cryptoNetwork, Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK);
+
+        try
+        {
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(cryptoNetwork);
+            (cryptoNetwork).setId(pluginID);
+
+            try {
+                ((Service)cryptoNetwork).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, cantStartPluginException);
+
+                /**
+                 * This plugin wont disable the whole platform, so I will allow the Platform to start even if this one
+                 * will be disabled. In the future, I will re-try the start of plugins that are not starting at once.
+                 * * *
+                 */
+            }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+            /**
+             * Even if it is not desirable, the platform can still start without one crypto network. I will simply ask
+             * this module to stop running. 
+             */
+            ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, pluginNotRecognizedException);
+
+            ((Service)cryptoNetwork).stop();
+        }
+
+        /**
+         * ------------------------------------*
+         *  Plugin Wallet Address Book Crypto  *
+         * ------------------------------------*
+         *
+         * I'm giving the Wallet Address book crypto plugin access to the Database System and to Error Manager
+         */
+
+        Plugin walletAddressBookCrypto = ((CryptoLayer) mCryptoLayer).getmWalletAddressBook();
+
+        ((DealsWithErrors) walletAddressBookCrypto).setErrorManager((ErrorManager) errorManager);
+        ((DealsWithPluginDatabaseSystem) walletAddressBookCrypto).setPluginDatabaseSystem(databaseSystemOs.getPluginDatabaseSystem());
+
+        corePlatformContext.addPlugin(walletAddressBookCrypto, Plugins.BITDUBAI_WALLET_ADDRESS_BOOK_CRYPTO);
+
+        try {
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+            UUID pluginID = pluginsIdentityManager.getPluginId(walletAddressBookCrypto);
+            (walletAddressBookCrypto).setId(pluginID);
+            try {
+                ((Service) walletAddressBookCrypto).start();
+            } catch (Exception e){
+                System.err.println(e.getMessage());
+
+            }
+        } catch (PluginNotRecognizedException pluginNotRecognizedException) {
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+            throw new CantStartPlatformException();
+        }
+
+
+        /**
+         * ------------------------------
+         *  Plugin Actor Address Book Crypto
+         * ------------------------------
+         *
+         * I'm giving to the Actor Address book crypto plugin access to the Database System and to the Error Manager
+         */
+
+        Plugin actorAddressBookCrypto = ((CryptoLayer) mCryptoLayer).getmUserAddressBook();
+
+        ((DealsWithPluginDatabaseSystem) actorAddressBookCrypto).setPluginDatabaseSystem(databaseSystemOs.getPluginDatabaseSystem());
+        ((DealsWithErrors) actorAddressBookCrypto).setErrorManager((ErrorManager) errorManager);
+
+        corePlatformContext.addPlugin(actorAddressBookCrypto, Plugins.BITDUBAI_USER_ADDRESS_BOOK_CRYPTO);
+
+        try {
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+            UUID pluginID = pluginsIdentityManager.getPluginId(actorAddressBookCrypto);
+            (actorAddressBookCrypto).setId(pluginID);
+            try {
+                ((Service) actorAddressBookCrypto).start();
+            } catch (Exception e){
+                System.err.println(e.getMessage());
+            }
+        } catch (PluginNotRecognizedException pluginNotRecognizedException) {
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+            throw new CantStartPlatformException();
+        }
+
+
+        /**
+         * -----------------------------
+         * Plugin Cloud Server Communication
+         * -----------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the Cloud Server Communication access to the File System and to the Event Manager
+         */
+
+        Plugin cloudServerCommunication = ((CommunicationLayer) mCommunicationLayer).getCloudServerPlugin();
+
+        ((DealsWithPluginFileSystem) cloudServerCommunication).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
+        ((DealsWithEvents) cloudServerCommunication).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(cloudServerCommunication, Plugins.BITDUBAI_CLOUD_SERVER_COMMUNICATION);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(cloudServerCommunication);
+            (cloudServerCommunication).setId(pluginID);
+
+            try {
+                ((Service) cloudServerCommunication).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * *
+                 */
+
+                throw new CantStartPlatformException();
+            }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
+
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
+
+        /**
+         * -----------------------------
+         * Plugin Cloud Communication
+         * -----------------------------
+         * * * * 
+         */
+
+
+
+        /**
+         * I will give the Cloud Communication access to the File System and to the Event Manager
+         */
+
+        Plugin cloudCommunication = ((CommunicationLayer) mCommunicationLayer).getCloudPlugin();
+
+        ((DealsWithPluginFileSystem) cloudCommunication).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
+        ((DealsWithEvents) cloudCommunication).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(cloudCommunication, Plugins.BITDUBAI_CLOUD_CHANNEL);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(cloudCommunication);
+            (cloudCommunication).setId(pluginID);
+
+            try {
+                ((Service) cloudCommunication).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * * 
+                 */
+
+                throw new CantStartPlatformException();
+            }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
+
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
+
+        /**
+         * -----------------------------
+         * Plugin Bank Notes Network Service
+         * -----------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the Bank Notes Network Service access to the File System and to the Event Manager
+         */
+
+        Plugin bankNotesNetworkService = ((NetworkServiceLayer) mNetworkServiceLayer).getBankNotesPlugin();
+
+        ((DealsWithPluginFileSystem) bankNotesNetworkService).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
+        ((DealsWithEvents) bankNotesNetworkService).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(bankNotesNetworkService, Plugins.BITDUBAI_BANK_NOTES_NETWORK_SERVICE);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(bankNotesNetworkService);
+            (bankNotesNetworkService).setId(pluginID);
+
+            try {
+                ((Service) bankNotesNetworkService).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * * 
+                 */
+
+                throw new CantStartPlatformException();
+            }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
+
+        /**
+         * -----------------------------
+         * Plugin Wallet Resources Network Service
+         * -----------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the Wallet Resources Network Service access to the File System and to the Event Manager
+         */
+
+        Plugin walletResourcesNetworkService = ((NetworkServiceLayer) mNetworkServiceLayer).getWalletResources();
+
+        ((DealsWithPluginFileSystem) walletResourcesNetworkService).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
+        ((DealsWithEvents) walletResourcesNetworkService).setEventManager((EventManager) eventManager);
+        ((DealsWithErrors) walletResourcesNetworkService).setErrorManager((ErrorManager) errorManager);
+
+        corePlatformContext.addPlugin(walletResourcesNetworkService, Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(walletResourcesNetworkService);
+            (walletResourcesNetworkService).setId(pluginID);
+
+            try {
+                ((Service) walletResourcesNetworkService).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * * 
+                 */
+
+                throw new CantStartPlatformException();
+            }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
+
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
+        /**
+         * -----------------------------
+         * Plugin Wallet Community Network Service
+         * -----------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the Wallet Community Network Service access to the File System and to the Event Manager
+         */
+
+        Plugin walletCommunityNetworkService = ((NetworkServiceLayer) mNetworkServiceLayer).getWalletCommunity();
+
+        ((DealsWithPluginFileSystem) walletCommunityNetworkService).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
+        ((DealsWithEvents) walletCommunityNetworkService).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(walletCommunityNetworkService, Plugins.BITDUBAI_WALLET_STORE_NETWORK_SERVICE);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(walletCommunityNetworkService);
+            (walletCommunityNetworkService).setId(pluginID);
+
+            try {
+                ((Service) walletCommunityNetworkService).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * * 
+                 */
+
+                throw new CantStartPlatformException();
+            }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
+
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
+
+
+        /**
+         * -----------------------------
+         * Plugin Wallet Store Network Service
+         * -----------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the Wallet Store Network Service access to the File System and to the Event Manager
+         */
+
+        Plugin walletStoreNetworkService = ((NetworkServiceLayer) mNetworkServiceLayer).getWalletStore();
+
+        ((DealsWithPluginFileSystem) walletStoreNetworkService).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
+        ((DealsWithEvents) walletStoreNetworkService).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(walletStoreNetworkService, Plugins.BITDUBAI_WALLET_STORE_NETWORK_SERVICE);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(walletStoreNetworkService);
+            (walletStoreNetworkService).setId(pluginID);
+
+            try {
+                ((Service) walletStoreNetworkService).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * * 
+                 */
+
+                throw new CantStartPlatformException();
+            }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
+
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
+
+
+        /**
+         * -------------------------------
+         * Plugin App Runtime Middleware 
+         * -------------------------------
+         * * * * 
+         */
+
+
+
+        Plugin appRuntimeMiddleware = ((MiddlewareLayer) mMiddlewareLayer).getAppRuntimePlugin();
+
+        ((DealsWithPluginFileSystem) appRuntimeMiddleware).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
+        ((DealsWithEvents) appRuntimeMiddleware).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(appRuntimeMiddleware, Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(appRuntimeMiddleware);
+            (appRuntimeMiddleware).setId(pluginID);
+
+            try {
+                ((Service) appRuntimeMiddleware).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * * 
+                 */
+
+                throw new CantStartPlatformException();
+            }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
+
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
+
+
+        /**
+         * -----------------------------
+         * Plugin Bank Notes Middleware
+         * -----------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the Bank Notes Middleware access to the File System and to the Event Manager
+         */
+
+        Plugin bankNotesMiddleware = ((MiddlewareLayer) mMiddlewareLayer).getBankNotesPlugin();
+
+        ((DealsWithPluginFileSystem) bankNotesMiddleware).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
+        ((DealsWithEvents) bankNotesMiddleware).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(bankNotesMiddleware, Plugins.BITDUBAI_BANK_NOTES_MIDDLEWARE);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(bankNotesMiddleware);
+            (bankNotesMiddleware).setId(pluginID);
+
+            try {
+                ((Service) bankNotesMiddleware).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * * 
+                 */
+
+                throw new CantStartPlatformException();
+            }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
+
+
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
+
+
+
+
+
+        /**
+         * -----------------------------
+         * Plugin Bitcoin Wallet Basic Wallet
+         * -----------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the Wallet Middleware access to the File System and to the Event Manager
+         */
+
+        // Plugin bitcoinWalletBasicWallet = ((BasicWalletLayer) mBasicWalletLayer).getBitcoinWallet();
+
+        //  ((DealsWithPluginFileSystem) bitcoinWalletBasicWallet).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
+        // ((DealsWithEvents) bitcoinWalletBasicWallet).setEventManager((EventManager) eventManager);
+
+        // corePlatformContext.addPlugin(bitcoinWalletBasicWallet, Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET);
+
+        //  try
+        // {
+
+        /**
+         * As any other plugin, this one will need its identity in order to access the data it persisted before.
+         */
+
+        //  UUID pluginID = pluginsIdentityManager.getPluginId(bitcoinWalletBasicWallet);
+        //  (bitcoinWalletBasicWallet).setId(pluginID);
+
+        // try {
+        //       ((Service) bitcoinWalletBasicWallet).start();
+        //    }
+        //   catch (CantStartPluginException cantStartPluginException) {
+
+        //     System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+        //    cantStartPluginException.printStackTrace();
+
+        /**
+         * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+         * start, then the platform wont start either. In the future we will review this policy.
+         * * *
+         */
+
+        //  throw new CantStartPlatformException();
+        //}
+        //  }
+        // catch (PluginNotRecognizedException pluginNotRecognizedException)
+        // {
+
+
+        //  System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+        //  pluginNotRecognizedException.printStackTrace();
+
+        //throw new CantStartPlatformException();
+        // }
+
+
+
+        /**
+         * -----------------------------
+         * Plugin Discount Wallet Basic Wallet
+         * -----------------------------
+         * * * * 
+         */
+
+
+
+        /**
+         * I will give the Discount Wallet access to the File System and to the Event Manager
+         */
+
+        //    Plugin discountWalletBasicWallet = ((BasicWalletLayer) mBasicWalletLayer).getDiscountWallet();
+
+        //  ((DealsWithPluginFileSystem) discountWalletBasicWallet).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
+        //  ((DealsWithEvents) discountWalletBasicWallet).setEventManager((EventManager) eventManager);
+
+        //  corePlatformContext.addPlugin(discountWalletBasicWallet, Plugins.BITDUBAI_DISCOUNT_WALLET_BASIC_WALLET);
+
+        //   try
+        //  {
+
+        /**
+         * As any other plugin, this one will need its identity in order to access the data it persisted before.
+         */
+
+        //     UUID pluginID = pluginsIdentityManager.getPluginId(discountWalletBasicWallet);
+        //    (discountWalletBasicWallet).setId(pluginID);
+
+        // try {
+        //      ((Service) discountWalletBasicWallet).start();
+        //  }
+        //  catch (CantStartPluginException cantStartPluginException) {
+
+        //  System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+        //  cantStartPluginException.printStackTrace();
+
+        /**
+         * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+         * start, then the platform wont start either. In the future we will review this policy.
+         * * *
+         */
+
+        //  throw new CantStartPlatformException();
+        //  }
+        // }
+        //  catch (PluginNotRecognizedException pluginNotRecognizedException)
+        //  {
+
+
+        //  System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+        //  pluginNotRecognizedException.printStackTrace();
+
+        // throw new CantStartPlatformException();
+        // }
+
+        /**
+         * ----------------------------------
+         * Plugin Wallet Contacts Middleware
+         * ----------------------------------
+         *
+         * I will give the Wallet Contacts Middleware access to the Database System and to the Error Manager
+         */
+
+        Plugin walletContactsMiddleware = ((MiddlewareLayer) mMiddlewareLayer).getWalletContactsPlugin();
+
+        ((DealsWithErrors) walletContactsMiddleware).setErrorManager((ErrorManager) errorManager);
+        ((DealsWithPluginDatabaseSystem) walletContactsMiddleware).setPluginDatabaseSystem(databaseSystemOs.getPluginDatabaseSystem());
+        corePlatformContext.addPlugin(walletContactsMiddleware, Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE);
+
+        try {
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+            UUID pluginID = pluginsIdentityManager.getPluginId(walletContactsMiddleware);
+            (walletContactsMiddleware).setId(pluginID);
+            try {
+                ((Service) walletContactsMiddleware).start();
+            } catch (CantStartPluginException cantStartPluginException) {
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * * 
+                 */
+                throw new CantStartPlatformException();
+            } catch (Exception e){
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+            }
+        } catch (PluginNotRecognizedException pluginNotRecognizedException) {
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+            throw new CantStartPlatformException();
+        }
+
+
+        /**
+         * ----------------------------------
+         * Plugin Bitcoin Crypto Vault
+         * ----------------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the Bitcoin Crypto Vault access to the File System and to the Event Manager
+         */
+
+        Plugin bitcoinCryptoVault = ((CryptoVaultLayer) mCryptoVaultLayer).getmBitcoin();
+
+
+        ((DealsWithDeviceUsers) bitcoinCryptoVault).setDeviceUserManager((DeviceUserManager) deviceUser);
+        ((DealsWithErrors) bitcoinCryptoVault).setErrorManager((ErrorManager) errorManager);
+        ((DealsWithPluginFileSystem) bitcoinCryptoVault).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
+        ((DealsWithEvents) bitcoinCryptoVault).setEventManager((EventManager) eventManager);
+        ((DealsWithPluginDatabaseSystem) bitcoinCryptoVault).setPluginDatabaseSystem(databaseSystemOs.getPluginDatabaseSystem());
+
+        corePlatformContext.addPlugin(bitcoinCryptoVault, Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(bitcoinCryptoVault);
+            (bitcoinCryptoVault).setId(pluginID);
+
+            try {
+                ((Service) bitcoinCryptoVault).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * *
+                 */
+
+                throw new CantStartPlatformException();
+            }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
+
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
+
+
+
+
+        /**
+         * ----------------------------------
+         * Plugin Incoming Crypto Transaction
+         * ----------------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the Incoming Crypto Transaction access to the File System and to the Event Manager
+         */
+
+        Plugin incomingCryptoTransaction = ((CryptoRouterLayer) mCryptoRouterLayer).getIncomingCrypto();
+
+        ((DealsWithActorAddressBook) incomingCryptoTransaction).setActorAddressBookManager((ActorAddressBookManager) actorAddressBookCrypto);
+        ((DealsWithCryptoVault) incomingCryptoTransaction).setCryptoVaultManager((CryptoVaultManager) bitcoinCryptoVault);
+        ((DealsWithErrors) incomingCryptoTransaction).setErrorManager((ErrorManager) errorManager);
+        ((DealsWithEvents) incomingCryptoTransaction).setEventManager((EventManager) eventManager);
+        ((DealsWithPluginDatabaseSystem) incomingCryptoTransaction).setPluginDatabaseSystem(databaseSystemOs.getPluginDatabaseSystem());
+
+        corePlatformContext.addPlugin(incomingCryptoTransaction, Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION);
+
+        try {
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(incomingCryptoTransaction);
+            (incomingCryptoTransaction).setId(pluginID);
+
+            try {
+                ((Service) incomingCryptoTransaction).start();
+            } catch (CantStartPluginException cantStartPluginException) {
+
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * * 
+                 */
+
+                throw new CantStartPlatformException();
+            } catch (Exception e) {
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
+
+
+
+
+
+        /**
+         * ----------------------------------
+         * Plugin Incoming Extra User Transaction
+         * ----------------------------------
+         * * * * 
+         */
+
+
+
+        /**
+         * I will give the From Extra User Transaction access to the File System and to the Event Manager
+         */
+
+        Plugin incomingExtraUserTransaction = ((TransactionLayer) mTransactionLayer).getIncomingExtraUserPlugin();
+
+        ((DealsWithPluginFileSystem) incomingExtraUserTransaction).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
+        ((DealsWithEvents) incomingExtraUserTransaction).setEventManager((EventManager) eventManager);
+        corePlatformContext.addPlugin(incomingExtraUserTransaction, Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(incomingExtraUserTransaction);
+            (incomingExtraUserTransaction).setId(pluginID);
+
+            try {
+                ((Service) incomingExtraUserTransaction).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * * 
+                 */
+
+                throw new CantStartPlatformException();
+            }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
+
+
+        /**
+         * ----------------------------------
+         * Plugin Incoming Intra User Transaction
+         * ----------------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the Inter User Transaction access to the File System and to the Event Manager
+         */
+
+        Plugin incomingIntraUserTransaction = ((TransactionLayer) mTransactionLayer).getIncomingIntraUserPlugin();
+
+        ((DealsWithPluginFileSystem) incomingIntraUserTransaction).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
+        ((DealsWithEvents) incomingIntraUserTransaction).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(incomingIntraUserTransaction, Plugins.BITDUBAI_INCOMING_INTRA_USER_TRANSACTION);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(incomingIntraUserTransaction);
+            (incomingIntraUserTransaction).setId(pluginID);
+
+            try {
+                ((Service) incomingIntraUserTransaction).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * * 
+                 */
+
+                throw new CantStartPlatformException();
+            }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
+
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
+
+
+        /**
+         * ----------------------------------
+         * Plugin Inter Wallet Transaction
+         * ----------------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the Inter Wallet Transaction access to the File System and to the Event Manager
+         */
+
+        Plugin interWalletTransaction = ((TransactionLayer) mTransactionLayer).getInterWalletPlugin();
+
+        ((DealsWithPluginFileSystem) interWalletTransaction).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
+        ((DealsWithEvents) interWalletTransaction).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(interWalletTransaction, Plugins.BITDUBAI_INTER_WALLET_TRANSACTION);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(interWalletTransaction);
+            (interWalletTransaction).setId(pluginID);
+
+            try {
+                ((Service) interWalletTransaction).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * * 
+                 */
+
+                throw new CantStartPlatformException();
+            }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
+
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
+        /**
+         * ----------------------------------
+         * Plugin Outgoing Extra User Transaction
+         * ----------------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the Outgoing Extra User Transaction access to the File System and to the Event Manager
+         */
+
+        Plugin outgoingExtraUserTransaction = ((TransactionLayer) mTransactionLayer).getOutgoingExtraUserPlugin();
+
+        ((DealsWithPluginFileSystem) outgoingExtraUserTransaction).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
+        ((DealsWithEvents) outgoingExtraUserTransaction).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(outgoingExtraUserTransaction, Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(outgoingExtraUserTransaction);
+            (outgoingExtraUserTransaction).setId(pluginID);
+
+            try {
+                ((Service) outgoingExtraUserTransaction).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * * 
+                 */
+
+                throw new CantStartPlatformException();
+            }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
+
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
+
+
+        /**
+         * ----------------------------------
+         * Plugin Outgoing Device user Transaction
+         * ----------------------------------
+         * * * *
+         */
+
+
+
+        /**
+         * I will give the Outgoing Device User Transaction access to the File System and to the Event Manager
+         */
+
+        Plugin outgoingDeviceUserTransaction = ((TransactionLayer) mTransactionLayer).getOutgoingDeviceUserPlugin();
+
+        ((DealsWithPluginFileSystem) outgoingDeviceUserTransaction).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
+        ((DealsWithEvents) outgoingDeviceUserTransaction).setEventManager((EventManager) eventManager);
+
+        corePlatformContext.addPlugin(outgoingDeviceUserTransaction, Plugins.BITDUBAI_OUTGOING_DEVICE_USER_TRANSACTION);
+
+        try
+        {
+
+            /**
+             * As any other plugin, this one will need its identity in order to access the data it persisted before.
+             */
+
+            UUID pluginID = pluginsIdentityManager.getPluginId(outgoingDeviceUserTransaction);
+            (outgoingDeviceUserTransaction).setId(pluginID);
+
+            try {
+                ((Service) outgoingDeviceUserTransaction).start();
+            }
+            catch (CantStartPluginException cantStartPluginException) {
+
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
+
+                /**
+                 * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
+                 * start, then the platform wont start either. In the future we will review this policy.
+                 * * * 
+                 */
+
+                throw new CantStartPlatformException();
+            }
+            catch (Exception e){
+
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
+                /**
+                 * This is worse than the previous catch since the plugin didn't even throw an expected exception.
+                 * * *
+                 */
+
+            }
+
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+
+
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
+
+            throw new CantStartPlatformException();
+        }
+
+
+>>>>>>> upstream/master
 
         /**
          * -----------------------------

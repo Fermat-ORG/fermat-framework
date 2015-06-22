@@ -298,8 +298,12 @@ public class AndroidDatabaseTable implements  DatabaseTable {
         }
 
         tableRecord.setValues(recordValues);
-          this.records.add(this.tableRecord);
 
+
+        // TODO: REVISAR ESTO. SE COLOCÓ PARA QUE SE RETORNE UNA
+        // LISTA VACÍA DE RECORDS AL DAR VACÍA LA CONSULTA
+        if(!recordValues.isEmpty())
+            this.records.add(this.tableRecord);
     }
 
     /**

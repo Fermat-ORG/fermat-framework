@@ -5,7 +5,6 @@ import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
 import com.bitdubai.fermat_api.layer.dmp_transaction.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionSubsystem;
-import com.bitdubai.fermat_core.layer.dmp_transaction.incoming_crypto.IncomingCryptoSubsysten;
 import com.bitdubai.fermat_core.layer.dmp_transaction.incoming_device_user.IncomingdeviceUserSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_transaction.incoming_extra_user.IncomingExtraUserSubsystem;
 import com.bitdubai.fermat_core.layer.dmp_transaction.incoming_intra_user.IncomingIntraUserSubsystem;
