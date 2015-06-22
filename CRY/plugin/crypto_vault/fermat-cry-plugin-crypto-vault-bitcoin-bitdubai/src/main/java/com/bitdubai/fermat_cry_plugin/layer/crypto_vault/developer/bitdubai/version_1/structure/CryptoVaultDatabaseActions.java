@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
@@ -12,13 +13,16 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFi
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilterGroup;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecord;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventType;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoIdentifiedEvent;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantExecuteQueryException;
 
 import org.bitcoinj.core.Wallet;
 
@@ -236,16 +240,20 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
      * will return true if there are transactions in NO_BE_NOTIFIED status
      * @return
      */
-    public boolean isPendingTransactions(){
+    public boolean isPendingTransactions() throws CantExecuteQueryException {
         DatabaseTable cryptoTxTable;
         cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
         cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME,ProtocolStatus.TO_BE_NOTIFIED.toString() ,DatabaseFilterType.EQUAL);
-
-        if (!cryptoTxTable.getRecords().isEmpty())
-            return false;
-        else
-            return true;
-
+        try {
+            cryptoTxTable.loadToMemory();
+            if (!cryptoTxTable.getRecords().isEmpty())
+                return false;
+            else
+                return true;
+        } catch (CantLoadTableToMemory cantLoadTableToMemory) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
+            throw new CantExecuteQueryException();
+        }
     }
 
     /**

@@ -106,8 +106,8 @@ class StoredBlockChain implements BitcoinManager, DealsWithErrors, DealsWithPlug
              * I will save the blockchain into disk.
              */
             String blockChainFileName = userId.toString() + ".spvchain";
-            PluginBinaryFile chainFile = pluginFileSystem.createBinaryFile(pluginId, pluginId.toString(), blockChainFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
-            chainFile.persistToMedia();
+            pluginFileSystem.createBinaryFile(pluginId, userId.toString(), blockChainFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+
 
             spvStore = new SPVBlockStore(this.networkParameters, new File(pluginId.toString(), blockChainFileName));
             chain = new BlockChain(this.networkParameters, this.wallet, spvStore);

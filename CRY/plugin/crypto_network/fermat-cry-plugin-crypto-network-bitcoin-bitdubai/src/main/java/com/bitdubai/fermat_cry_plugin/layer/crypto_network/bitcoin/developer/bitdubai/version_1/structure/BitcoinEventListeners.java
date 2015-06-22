@@ -95,8 +95,7 @@ class BitcoinEventListeners implements BlockChainListener, PeerEventListener{
      */
     @Override
     public void onBlocksDownloaded(Peer peer, Block block, int blocksLeft) {
-        System.out.println("Blocks Downloaded. Blocks Left " + blocksLeft);
-
+        //System.out.println("Blocks Downloaded. Blocks Left " + blocksLeft);
     }
 
     /**

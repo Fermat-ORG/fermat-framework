@@ -22,6 +22,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventMan
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventSource;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventType;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoTransactionsWaitingTransferenceEvent;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseActions;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseFactory;
 
@@ -244,7 +245,11 @@ public class TransactionNotificationAgent implements Agent,DealsWithEvents,Deals
                 /**
                  * now I will check if there are pending transactions to raise the event
                  */
-                doTheMainTask();
+                try {
+                    doTheMainTask();
+                } catch (CantExecuteQueryException e) {
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                }
             }
 
         }
@@ -252,7 +257,7 @@ public class TransactionNotificationAgent implements Agent,DealsWithEvents,Deals
         /**
          * Implements the agent
          */
-        private void doTheMainTask() {
+        private void doTheMainTask() throws CantExecuteQueryException {
             /**
              * I search for transactions not yet notified. If I found something, Ill raise an event
              */
@@ -266,7 +271,7 @@ public class TransactionNotificationAgent implements Agent,DealsWithEvents,Deals
         }
 
 
-        private boolean isTransactionToBeNotified() {
+        private boolean isTransactionToBeNotified() throws CantExecuteQueryException {
             CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
             if (db.isPendingTransactions())
                 return  true;

@@ -223,6 +223,8 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         vault = new Wallet(networkParameters);
         try {
             pluginFileSystem.createBinaryFile(pluginId, userId.toString(), vaultFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+
+            System.out.println("Vault created into file " + vaultFileName);
             /**
              * If I couldn't create it I can't go on
              */
@@ -240,6 +242,8 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
     private void loadExistingVaultFromFile() throws CantCreateCryptoWalletException {
         try {
             vault = Wallet.loadFromFile(vaultFile);
+            System.out.println("Vault loaded from file " + vaultFile.getAbsoluteFile().toString());
+
             /**
              * If I couldn't load it I can't go on.
              */
@@ -276,14 +280,14 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
      * I'm connecting the vault to the bitcoin Agent.
      * @throws CantStartAgentException
      */
-    public void connectVault() throws CantStartAgentException {
+    public void connectVault() throws CantStartAgentException { //todo this exception is not ok.
 
         bitcoinCryptoNetworkManager.setVault(this);
 
         bitcoinCryptoNetworkManager.connectToBitcoinNetwork();
     }
 
-    public void disconnectVault(){
+    public void disconnectVault(){ //todo raise correct exception
         bitcoinCryptoNetworkManager.setVault(this);
         bitcoinCryptoNetworkManager.disconnectFromBitcoinNetwork();
     }
@@ -295,17 +299,10 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
      */
     private void configureVault() throws CantCreateCryptoWalletException {
         vault.autosaveToFile(vaultFile, 0, TimeUnit.SECONDS, null);
-        createDatabase();
         vaultEventListeners = new VaultEventListeners(database, errorManager, eventManager);
         vault.addEventListener(vaultEventListeners);
     }
 
-    /**
-     * I create (or load if already exists) the database for this userID
-     */
-    private void createDatabase() throws CantCreateCryptoWalletException {
-
-    }
 
     /**
      * returns a valid CryptoAddrres from this vault

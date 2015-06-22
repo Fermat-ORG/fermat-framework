@@ -219,7 +219,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DealsWi
             vault.setPluginId(pluginId);
 
             vault.loadOrCreateVault();
-
+            System.out.println("Valid receive address for the vault is: " + vault.getAddress().getAddress());
 
             /**
              * Once the vault is loaded or created, I will connect it to Bitcoin network to recieve pending transactions
