@@ -14,6 +14,6 @@ public class RequestVPNConnectionTest extends NetworkServiceClientManagerIntegra
 		setUp(TCP_PORT_PADDING + 1);
 		testClient.requestVPNConnection(testClient.getPublicKey());
 		Thread.sleep(getThreadSleepMillis());
-		assertThat(testClient.getPendingVPNRequest()).isNotNull();
+		assertThat(testClient.getPendingVPNRequests()).isNotNull();
 	}
 }

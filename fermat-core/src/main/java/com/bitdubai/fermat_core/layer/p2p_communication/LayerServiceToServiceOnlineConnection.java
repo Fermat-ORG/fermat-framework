@@ -96,6 +96,11 @@ public class LayerServiceToServiceOnlineConnection implements ServiceToServiceOn
     }
 
     @Override
+    public void clearMessage(Message message) {
+
+    }
+
+    @Override
     public int getUnreadMessagesCount() {
         return this.serviceToServiceOnlineConnection.getUnreadMessagesCount();
     }

@@ -208,7 +208,7 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
             /*
              * Register this network service whit the communicationLayerManager
              */
-            communicationLayerManager.registerNetworkService(NetworkServices.INTRA_USER, pluginId);
+            communicationLayerManager.registerNetworkService(NetworkServices.INTRA_USER);
 
             /*
              * Its all ok, set the new status
@@ -262,7 +262,7 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
          /*
          * Unregister whit the communicationLayerManager
          */
-        communicationLayerManager.unregisterNetworkService(pluginId);
+        communicationLayerManager.unregisterNetworkService(NetworkServices.INTRA_USER);
 
         /*
          * Set the new status

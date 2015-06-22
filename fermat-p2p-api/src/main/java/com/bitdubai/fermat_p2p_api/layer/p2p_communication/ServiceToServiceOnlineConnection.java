@@ -5,8 +5,6 @@ package com.bitdubai.fermat_p2p_api.layer.p2p_communication;
  */
 public interface ServiceToServiceOnlineConnection {
 
-
-    
     public void reConnect() throws CantConnectToRemoteServiceException;
     
     public void disconnect();
@@ -14,6 +12,8 @@ public interface ServiceToServiceOnlineConnection {
     public ConnectionStatus getStatus();
     
     public void sendMessage (Message message) throws CantSendMessageException;
+    
+    public void clearMessage (Message message);
     
     public int getUnreadMessagesCount ();
     
