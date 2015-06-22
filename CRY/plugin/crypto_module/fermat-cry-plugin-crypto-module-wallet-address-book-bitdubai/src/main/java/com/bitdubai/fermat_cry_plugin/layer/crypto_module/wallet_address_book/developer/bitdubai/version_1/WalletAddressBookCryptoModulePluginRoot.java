@@ -14,8 +14,8 @@ import com.bitdubai.fermat_cry_api.layer.crypto_module.Crypto;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.CantGetWalletAddressBookRegistryException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookRegistry;
-import com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.exceptions.CantInitializeWalletCryptoAddressBookException;
-import com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.structure.WalletCryptoAddressBookRegistry;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.exceptions.CantInitializeWalletAddressBookCryptoModuleException;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.structure.WalletAddressBookCryptoModuleRegistry;
 
 import java.util.UUID;
 
@@ -29,7 +29,7 @@ import java.util.UUID;
  * * * * * *
  */
 
-public class WalletAddressBookCryptoPluginRoot implements Crypto, DealsWithErrors, DealsWithPluginDatabaseSystem, Plugin, Service, WalletAddressBookManager {
+public class WalletAddressBookCryptoModulePluginRoot implements Crypto, DealsWithErrors, DealsWithPluginDatabaseSystem, Plugin, Service, WalletAddressBookManager {
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
@@ -59,22 +59,22 @@ public class WalletAddressBookCryptoPluginRoot implements Crypto, DealsWithError
     public WalletAddressBookRegistry getWalletAddressBookRegistry() throws CantGetWalletAddressBookRegistryException {
 
         /**
-         * I created instance of WalletCryptoAddressBookRegistry
+         * I created instance of WalletAddressBookCryptoModuleRegistry
          */
-        WalletCryptoAddressBookRegistry walletCryptoAddressBookRegistry = new WalletCryptoAddressBookRegistry();
+        WalletAddressBookCryptoModuleRegistry walletAddressBookModuleRegistry = new WalletAddressBookCryptoModuleRegistry();
 
-        walletCryptoAddressBookRegistry.setErrorManager(this.errorManager);
-        walletCryptoAddressBookRegistry.setPluginDatabaseSystem(this.pluginDatabaseSystem);
-        walletCryptoAddressBookRegistry.setPluginId(this.pluginId);
+        walletAddressBookModuleRegistry.setErrorManager(this.errorManager);
+        walletAddressBookModuleRegistry.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+        walletAddressBookModuleRegistry.setPluginId(this.pluginId);
 
         try {
-            walletCryptoAddressBookRegistry.initialize();
+            walletAddressBookModuleRegistry.initialize();
 
-        } catch (CantInitializeWalletCryptoAddressBookException cantInitializeWalletCryptoAddressBookException) {
+        } catch (CantInitializeWalletAddressBookCryptoModuleException cantInitializeWalletCryptoAddressBookException) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_ADDRESS_BOOK_CRYPTO, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantInitializeWalletCryptoAddressBookException);
             throw new CantGetWalletAddressBookRegistryException();
         }
-        return walletCryptoAddressBookRegistry;
+        return walletAddressBookModuleRegistry;
     }
 
     /**

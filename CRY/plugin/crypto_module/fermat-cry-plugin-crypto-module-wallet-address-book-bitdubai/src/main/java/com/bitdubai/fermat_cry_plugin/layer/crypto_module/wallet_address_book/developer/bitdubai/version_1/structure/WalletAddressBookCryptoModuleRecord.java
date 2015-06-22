@@ -7,13 +7,13 @@ import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.inter
 import java.util.UUID;
 
 /**
- * The class <code>com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.structure.WalletCryptoAddressBookRecord</code>
+ * The class <code>com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.structure.WalletAddressBookCryptoModuleRecord</code>
  * represents a wallet crypto address book record.
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 18/06/15.
  * @version 1.0
  */
-public class WalletCryptoAddressBookRecord implements WalletAddressBookRecord {
+public class WalletAddressBookCryptoModuleRecord implements WalletAddressBookRecord {
 
     CryptoAddress cryptoAddress;
 
@@ -21,7 +21,7 @@ public class WalletCryptoAddressBookRecord implements WalletAddressBookRecord {
 
     UUID walletId;
 
-    public WalletCryptoAddressBookRecord(CryptoAddress cryptoAddress, PlatformWalletType platformWalletType, UUID walletId) {
+    public WalletAddressBookCryptoModuleRecord(CryptoAddress cryptoAddress, PlatformWalletType platformWalletType, UUID walletId) {
         this.cryptoAddress = cryptoAddress;
         this.platformWalletType = platformWalletType;
         this.walletId = walletId;
