@@ -208,10 +208,10 @@ public class MyApplication extends android.support.multidex.MultiDexApplication 
 
             case 4:
                 color = "#d07b62";
-                actionBar.setIcon(context.getDrawable(R.drawable.wallet_3));
-                wallpaper = context.getDrawable(R.drawable.background_tiled_diagonal_light);
+                actionBar.setIcon(context.getDrawable(R.drawable.wallet_2));
+                wallpaper = context.getDrawable(R.drawable.background_tabs_diagonal_rotated);
                 abTitle.setTextColor(Color.BLACK);
-                walletStyle = "Club";
+                walletStyle = "Young";
                 break;
 
             case 5:

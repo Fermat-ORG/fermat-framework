@@ -40,6 +40,7 @@ public class BitcoinContactsFragment extends Fragment {
         // Get ListView object from xml
         ListView listView = (ListView) rootView.findViewById(R.id.transactionlist);
 
+
         // Defined Array values to show in ListView
         String[] contacts = new String[]{"","Lucia Alarcon De Zamacona", "Juan Luis R. Pons", "Karina Rodríguez", "Simon Cushing","Céline Begnis","Taylor Backus","Stephanie Himonidis","Kimberly Brown" };
 
@@ -52,7 +53,6 @@ public class BitcoinContactsFragment extends Fragment {
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),
                 android.R.layout.simple_list_item_1, android.R.id.text1, contacts);
-
 
         // Assign adapter to ListView
         listView.setAdapter(adapter);

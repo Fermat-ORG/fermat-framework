@@ -55,6 +55,7 @@ public class BitcoinReceiveFragment extends Fragment {
     }
 
     public void onCreate(Bundle savedInstanceState) {
+        //setHasOptionsMenu(false);
         super.onCreate(savedInstanceState);
 
 

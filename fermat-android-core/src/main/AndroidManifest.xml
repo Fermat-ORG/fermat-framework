@@ -36,6 +36,7 @@
         android:name="com.bitdubai.android_core.app.common.version_1.classes.MyApplication"
         android:allowBackup="true" >
 
+
         <!-- Google Maps Fragment API Key Data -->
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"

@@ -78,7 +78,7 @@ public class WalletDesktopFragment extends Fragment {
                 {"Girls' wallet",
                         "Boys' wallet",
                         "Ladies' wallet",
-                        "Basic wallet",
+                        "Bitcoin Reference Wallet",
                         "Boca Juniors' wallet",
                         "Carrefour's wallet",
                         "Gucci's wallet",
@@ -100,7 +100,7 @@ public class WalletDesktopFragment extends Fragment {
                 {"wallet_store_cover_photo_girl",
                         "wallet_store_cover_photo_boy",
                         "wallet_store_cover_photo_lady",
-                        "wallet_store_cover_photo_young",
+                        "wallet_store_cover_fermat",
                         "wallet_store_cover_photo_boca_juniors",
                         "wallet_store_cover_photo_carrefour",
                         "wallet_store_cover_photo_gucci",
@@ -270,8 +270,13 @@ public class WalletDesktopFragment extends Fragment {
                     holder.imageView.setImageResource(R.drawable.wallet_1);
                     holder.imageView.setTag("AdultsActivity|3");
                     break;
-                case "wallet_store_cover_photo_young":
+                /*case "wallet_store_cover_photo_young":
                     holder.imageView.setImageResource(R.drawable.wallet_2);
+                    holder.imageView.setTag("WalletBitcoinActivity|4");
+                    break;
+                */
+                case "wallet_store_cover_fermat":
+                    holder.imageView.setImageResource(R.drawable.fermat);
                     holder.imageView.setTag("WalletBitcoinActivity|4");
                     break;
                 case "wallet_store_cover_photo_boca_juniors":
