@@ -28,6 +28,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventTyp
 import com.bitdubai.fermat_api.layer.pip_user.device_user.DealsWithDeviceUsers;
 import com.bitdubai.fermat_api.layer.pip_user.device_user.DeviceUserManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantCreateCryptoWalletException;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVault;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.event_handlers.BitcoinCoinsReceivedEventHandler;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.BitcoinCryptoVault;
@@ -43,7 +44,7 @@ import java.util.UUID;
 /**
  * Created by loui on 08/06/15.
  */
-public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DealsWithEvents, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithDeviceUsers, DealsWithPluginFileSystem, Plugin, Service {
+public class BitcoinCryptoVaultPluginRoot implements CryptoVault, CryptoVaultManager, DealsWithEvents, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithDeviceUsers, DealsWithPluginFileSystem, Plugin, Service {
 
     /**
      * BitcoinCryptoVaultPluginRoot member variables
@@ -89,6 +90,25 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DealsWi
      * DealsWithPluginFileSystem interface member variable
      */
     PluginFileSystem pluginFileSystem;
+
+    /**
+     * CryptoVault interface implementations
+     * @param UserId
+     */
+    @Override
+    public void setUserId(UUID UserId) {
+
+    }
+
+    @Override
+    public UUID getUserId() {
+        return userId;
+    }
+
+    @Override
+    public Object getWallet() {
+        return vault;
+    }
 
     /**
      * Service interface implementation
@@ -168,8 +188,9 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DealsWi
         /**
          * I get the userId from the deviceUserManager
          */
-        userId = deviceUserManager.getLoggedInUser().getId();
-
+        //userId = deviceUserManager.getLoggedInUser().getId();
+        userId = UUID.randomUUID(); //todo fix deviceUser Implementation
+        System.out.println("Vault UserID: " + userId.toString());
 
         /**
          * I will try to open the database first, if it doesn't exists, then I create it
@@ -208,6 +229,19 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DealsWi
             vault.setPluginId(pluginId);
 
             vault.loadOrCreateVault();
+
+            /**
+             * Once the vault is loaded or created, I will connect it to Bitcoin network to recieve pending transactions
+             */
+
+            try {
+                vault.connectVault();
+
+            } catch (CantStartAgentException e) { //todo this exception is not correct.
+                e.printStackTrace();
+            }
+
+
         } catch (CantCreateCryptoWalletException e) {
             /**
              * If I couldnt create the Vault, I cant go on.

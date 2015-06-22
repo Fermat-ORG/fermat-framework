@@ -77,7 +77,14 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
         /**
          * I save this transaction in the database
          */
+        try {
             dbActions.saveIncomingTransaction(tx.getHashAsString());
+        } catch (CantInsertRecord cantInsertRecord) {
+            /**
+             * if there is an error, then I will try to sync the entire vault and the DB
+             */
+            dbActions.persistMissingTransactionsFromWallet(wallet);
+        }
     }
 
     @Override

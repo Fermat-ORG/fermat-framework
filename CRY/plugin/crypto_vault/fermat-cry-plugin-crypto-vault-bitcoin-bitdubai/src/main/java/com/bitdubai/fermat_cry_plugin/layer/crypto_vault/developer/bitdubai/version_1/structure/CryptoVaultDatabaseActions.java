@@ -33,6 +33,9 @@ import java.util.UUID;
  * Created by rodrigo on 2015.06.17..
  */
 public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErrors{
+    /**
+     * CryptoVaultDatabaseActions  member variables
+     */
     Database database;
 
     /**
@@ -71,7 +74,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
         this.errorManager = errorManager;
     }
 
-    public void saveIncomingTransaction(String txHash){
+    public void saveIncomingTransaction(String txHash) throws CantInsertRecord {
         DatabaseTable cryptoTxTable;
         cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
         DatabaseTableRecord incomingTxRecord =  cryptoTxTable.getEmptyRecord();
@@ -79,22 +82,16 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
         incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, txHash);
         incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.toString());
         incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME, CryptoStatus.IDENTIFIED.toString());
-        try {
-            cryptoTxTable.insertRecord(incomingTxRecord);
 
-            /**
-             * after I save the transaction in the database and the vault, I'll raise the incoming transaction.
-             *
-             */
-            PlatformEvent event = new IncomingCryptoIdentifiedEvent(EventType.INCOMING_CRYPTO_RECEIVED);
-            eventManager.raiseEvent(event);
-        } catch (CantInsertRecord cantInsertRecord) {
-            /**
-             * If there was an error trying to insert the transaction, I will try to get all transactions from wallet and see what's missing
-             *
-             */
-            //todo handle this
-        }
+        cryptoTxTable.insertRecord(incomingTxRecord);
+
+        /**
+         * after I save the transaction in the database and the vault, I'll raise the incoming transaction.
+         *
+         */
+        PlatformEvent event = new IncomingCryptoIdentifiedEvent(EventType.INCOMING_CRYPTO_RECEIVED);
+        eventManager.raiseEvent(event);
+
     }
 
     /**
