@@ -343,8 +343,7 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
     public void logIn (UUID userId) throws CantLogInNetworkIntraUserException{
 
         //Se puso para solucion de "Unread field, findBug
-       // pluginDatabaseSystem.toString();
-
+		System.out.println(pluginDatabaseSystem.hashCode());
     }
 
     /**
