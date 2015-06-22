@@ -1,4 +1,4 @@
-package com.bitdubai.android_core.app.shell.version_1.activity;
+package com.bitdubai.android_core.app.common;
 import java.util.List;
 
 import android.support.v4.app.Fragment;
