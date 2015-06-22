@@ -43,17 +43,22 @@ import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.PeerGroup;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.store.UnreadableWalletException;
 import org.bitcoinj.wallet.DeterministicSeed;
 
 import java.io.File;
+import java.security.Timestamp;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+
+import sun.rmi.runtime.Log;
 
 /**
  * Created by rodrigo on 09/06/15.
@@ -428,6 +433,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
          * will return all the pending transactions
          */
         try{
+            List<com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction> txs = new ArrayList<com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction>();
             CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database);
             /**
              * Im getting the transaction headers which is a map with transactionID and Transaction Hash. I will use this information to access the vault.
@@ -440,24 +446,28 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
                 /**
                  * I get the transaction from the vault
                  */
-                CryptoAddress addressFrom = new CryptoAddress(getAddressFromVaul(txHash), CryptoCurrency.BITCOIN);
-                CryptoAddress addressTo = new CryptoAddress(getAddressToVaul(txHash), CryptoCurrency.BITCOIN);
+                CryptoAddress addressFrom = new CryptoAddress(getAddressFromVault(txHash), CryptoCurrency.BITCOIN);
+                CryptoAddress addressTo = new CryptoAddress(getAddressToFromVaul(txHash), CryptoCurrency.BITCOIN);
                 long amount = getAmountFromVault(txHash);
                 //todo needs to complete the way to get the transaction status from the database.
                 CryptoTransaction cryptoTransaction = new CryptoTransaction(txHash, addressFrom, addressTo,CryptoCurrency.BITCOIN, amount, CryptoStatus.CONFIRMED);
 
+                com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction tx = new com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction(UUID.fromString(txId),cryptoTransaction, Action.APPLY, getTransactionTimestampFromVault(txHash));
+                txs.add(tx);
 
                 /**
                  * I update the status of the transaction protocol to SENDING_NOTIFIED
                  */
                 db.updateTransactionProtocolStatus(UUID.fromString(txId), ProtocolStatus.SENDING_NOTIFIED);
+
             }
 
 
             /**
              * once the database is updated, I return the transaction
              */
-            return null;
+
+            return txs;
         } catch (Exception e){
             throw new CantDeliverPendingTransactionsException();
         }
@@ -469,10 +479,13 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
      * @return satoshis
      */
     private long getAmountFromVault(String txHash) {
-        //todo finish this
+        /**
+         * I calculate the ammount by SUM all the outputs amounts.
+         */
         Sha256Hash hash = new Sha256Hash(txHash);
         Transaction tx = vault.getTransaction(hash);
-        return 0;
+        Coin values = tx.getValue(vault);
+        return values.getValue();
     }
 
     /**
@@ -480,11 +493,12 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
      * @param txHash
      * @return the string of the address
      */
-    private String getAddressToVaul(String txHash) {
-        //todo finish this
+    private String getAddressToFromVaul(String txHash) {
         Sha256Hash hash = new Sha256Hash(txHash);
         Transaction tx = vault.getTransaction(hash);
-        return null;
+        // todo this needs to be fixed
+        String addressTo = tx.getInput(0).getFromAddress().toString();
+        return addressTo;
     }
 
     /**
@@ -492,12 +506,19 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
      * @param txHash
      * @return the string of the address
      */
-    private String getAddressFromVaul(String txHash) {
-        //todo finish this
+    private String getAddressFromVault(String txHash) {
         Sha256Hash hash = new Sha256Hash(txHash);
         Transaction tx = vault.getTransaction(hash);
+        // todo this needs to be fixed
+        String addressTo = tx.getInput(0).getFromAddress().toString();
+        return addressTo;
+    }
 
+    private long getTransactionTimestampFromVault(String txHash){
+        Sha256Hash hash = new Sha256Hash(txHash);
+        Transaction tx = vault.getTransaction(hash);
+        //todo this needs to be completed.
 
-        return null;
+        return 0;
     }
 }

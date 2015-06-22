@@ -139,61 +139,7 @@ public class IncomingCryptoRelayAgent implements DealsWithActorAddressBook , Dea
 
     }
 
-    /*
-      ¿Qué quizo hacer arturo acá?!
 
-    private void eventsToRaise(){
-
-        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_IDENTIFIED_FROM_EXTRA_USER);
-        platformEvent.setSource(EventSource.CRYPTO_ADDRESS_BOOK);
-        eventManager.raiseEvent(platformEvent);
-
-        PlatformEvent platformEvent_1 = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_IDENTIFIED_FROM_INTRA_USER);
-        platformEvent_1.setSource(EventSource.CRYPTO_ADDRESS_BOOK);
-        eventManager.raiseEvent(platformEvent_1);
-
-        PlatformEvent platformEvent_2 = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_IDENTIFIED_FROM_DEVICE_USER);
-        platformEvent_2.setSource(EventSource.CRYPTO_ADDRESS_BOOK);
-        eventManager.raiseEvent(platformEvent_2);
-
-        PlatformEvent platformEvent_3 = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_RECEIVED_FROM_EXTRA_USER);
-        platformEvent_3.setSource(EventSource.CRYPTO_ADDRESS_BOOK);
-        eventManager.raiseEvent(platformEvent_3);
-
-        PlatformEvent platformEvent_4 = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_RECEIVED_FROM_INTRA_USER);
-        platformEvent_4.setSource(EventSource.CRYPTO_ADDRESS_BOOK);
-        eventManager.raiseEvent(platformEvent_4);
-
-        PlatformEvent platformEvent_5 = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_RECEIVED_FROM_DEVICE_USER);
-        platformEvent_5.setSource(EventSource.CRYPTO_ADDRESS_BOOK);
-        eventManager.raiseEvent(platformEvent_5);
-
-        PlatformEvent platformEvent_6 = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_EXTRA_USER);
-        platformEvent_6.setSource(EventSource.CRYPTO_ADDRESS_BOOK);
-        eventManager.raiseEvent(platformEvent_6);
-
-        PlatformEvent platformEvent_7 = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_INTRA_USER);
-        platformEvent_7.setSource(EventSource.CRYPTO_ADDRESS_BOOK);
-        eventManager.raiseEvent(platformEvent_7);
-
-        PlatformEvent platformEvent_8 = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_DEVICE_USER);
-        platformEvent_8.setSource(EventSource.CRYPTO_ADDRESS_BOOK);
-        eventManager.raiseEvent(platformEvent_8);
-
-        PlatformEvent platformEvent_9 = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_REVERSED_FROM_EXTRA_USER);
-        platformEvent_9.setSource(EventSource.CRYPTO_ADDRESS_BOOK);
-        eventManager.raiseEvent(platformEvent_9);
-
-        PlatformEvent platformEvent_10 = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_REVERSED_FROM_INTRA_USER);
-        platformEvent_10.setSource(EventSource.CRYPTO_ADDRESS_BOOK);
-        eventManager.raiseEvent(platformEvent_10);
-
-        PlatformEvent platformEvent_11 = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_REVERSED_FROM_DEVICE_USER);
-        platformEvent_11.setSource(EventSource.CRYPTO_ADDRESS_BOOK);
-        eventManager.raiseEvent(platformEvent_11);
-
-    }
-    */
 
     private static class RelayAgent implements DealsWithActorAddressBook , DealsWithErrors, DealsWithEvents, DealsWithRegistry , Runnable  {
 

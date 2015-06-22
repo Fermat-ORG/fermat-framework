@@ -1,8 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#f3e4c4">
+    android:background="#fbf7ed"
+    android:textColor="#000000">
 
     <ListView
         android:id="@+id/transactionlist"
@@ -10,7 +12,8 @@
         android:layout_width="match_parent"
         android:layout_weight="0.14"
         android:headerDividersEnabled="false"
-        android:divider="#00000000">
+        android:divider="#000000"
+        android:textColor="#000000" >
     </ListView>
 
 </LinearLayout>

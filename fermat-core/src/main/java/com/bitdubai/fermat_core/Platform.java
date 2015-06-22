@@ -29,6 +29,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventMan
 
 import com.bitdubai.fermat_api.layer.pip_user.extra_user.DealsWithExtraUsers;
 import com.bitdubai.fermat_api.layer.pip_user.extra_user.ExtraUserManager;
+import com.bitdubai.fermat_core.layer.cry_crypto_router.CryptoRouterLayer;
 import com.bitdubai.fermat_core.layer.dmp_basic_wallet.BasicWalletLayer;
 import com.bitdubai.fermat_core.layer.dmp_transaction.TransactionLayer;
 import com.bitdubai.fermat_core.layer.dmp_niche_wallet_type.NicheWalletTypeLayer;
@@ -75,6 +76,7 @@ public class Platform  {
     PlatformLayer mCryptoNetworkLayer = new CryptoNetworkLayer();
     PlatformLayer mCryptoVaultLayer = new CryptoVaultLayer();
     PlatformLayer mCryptoLayer = new CryptoLayer();
+    PlatformLayer mCryptoRouterLayer = new CryptoRouterLayer();
     PlatformLayer mCommunicationLayer = new CommunicationLayer();
     PlatformLayer mNetworkServiceLayer = new NetworkServiceLayer();
     PlatformLayer mTransactionLayer = new TransactionLayer();
@@ -125,6 +127,8 @@ public class Platform  {
     public PlatformLayer getCrypto() {
         return mCryptoLayer;
     }
+
+    public PlatformLayer getCryptoRouter() { return mCryptoRouterLayer; }
 
     public PlatformLayer getCommunicationLayer() {
         return mCommunicationLayer;
@@ -315,6 +319,7 @@ public class Platform  {
             mCryptoNetworkLayer.start();
             mCryptoVaultLayer.start();
             mCryptoLayer.start();
+            mCryptoRouterLayer.start();
             mCommunicationLayer.start();
             mNetworkServiceLayer.start();
             mMiddlewareLayer.start();
@@ -876,8 +881,10 @@ public class Platform  {
          */
         Plugin cryptoNetwork = ((CryptoNetworkLayer) mCryptoNetworkLayer).getCryptoNetwork(CryptoNetworks.BITCOIN);
 
-       // ((DealsWithPluginFileSystem) cryptoNetwork).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
-        //((DealsWithEvents) cryptoNetwork).setEventManager((EventManager) eventManager);
+        ((DealsWithErrors) cryptoNetwork).setErrorManager((ErrorManager) errorManager);
+        ((DealsWithPluginFileSystem) cryptoNetwork).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
+        ((DealsWithEvents) cryptoNetwork).setEventManager((EventManager) eventManager);
+
 
         corePlatformContext.addPlugin(cryptoNetwork, Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK);
 
@@ -1721,8 +1728,11 @@ public class Platform  {
 
         Plugin bitcoinCryptoVault = ((CryptoVaultLayer) mCryptoVaultLayer).getmBitcoin();
 
+
+        ((DealsWithErrors) bitcoinCryptoVault).setErrorManager((ErrorManager) errorManager);
         ((DealsWithPluginFileSystem) bitcoinCryptoVault).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
         ((DealsWithEvents) bitcoinCryptoVault).setEventManager((EventManager) eventManager);
+        ((DealsWithPluginDatabaseSystem) bitcoinCryptoVault).setPluginDatabaseSystem(databaseSystemOs.getPluginDatabaseSystem());
 
         corePlatformContext.addPlugin(bitcoinCryptoVault, Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT);
 
@@ -1791,31 +1801,30 @@ public class Platform  {
          * I will give the Incoming Crypto Transaction access to the File System and to the Event Manager
          */
 
-       /* Plugin incomingCryptoTransaction = ((TransactionLayer) mTransactionLayer).getIncomingCrypto();
+        Plugin incomingCryptoTransaction = ((CryptoRouterLayer) mCryptoRouterLayer).getIncomingCrypto();
 
-       // ((DealsWithPluginFileSystem) incomingCryptoTransaction).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
+        ((DealsWithActorAddressBook) incomingCryptoTransaction).setActorAddressBookManager((ActorAddressBookManager) actorAddressBookCrypto);
+        ((DealsWithCryptoVault) incomingCryptoTransaction).setCryptoVaultManager((CryptoVaultManager) bitcoinCryptoVault);
+        ((DealsWithErrors) incomingCryptoTransaction).setErrorManager((ErrorManager) errorManager);
         ((DealsWithEvents) incomingCryptoTransaction).setEventManager((EventManager) eventManager);
-        corePlatformContext.addPlugin(incomingCryptoTransaction, Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION);
-        */
-//TODO: COMETADO por null point en el start
-       // try
-       // {
+        ((DealsWithPluginDatabaseSystem) incomingCryptoTransaction).setPluginDatabaseSystem(databaseSystemOs.getPluginDatabaseSystem());
 
+        corePlatformContext.addPlugin(incomingCryptoTransaction, Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION);
+
+        try {
             /**
              * As any other plugin, this one will need its identity in order to access the data it persisted before.
              */
 
-         //   UUID pluginID = pluginsIdentityManager.getPluginId(incomingCryptoTransaction);
-           // (incomingCryptoTransaction).setId(pluginID);
+            UUID pluginID = pluginsIdentityManager.getPluginId(incomingCryptoTransaction);
+            (incomingCryptoTransaction).setId(pluginID);
 
-           // try {
-                //TODO: ver que da error null point
-               // ((Service) incomingCryptoTransaction).start();
-           // }
-           // catch (CantStartPluginException cantStartPluginException) {
+            try {
+                ((Service) incomingCryptoTransaction).start();
+            } catch (CantStartPluginException cantStartPluginException) {
 
-                //System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
-                //cantStartPluginException.printStackTrace();
+                System.err.println("CantStartPluginException: " + cantStartPluginException.getMessage() + cantStartPluginException.getPlugin().getKey());
+                cantStartPluginException.printStackTrace();
 
                 /**
                  * For now, we will take this plugin as a essential for the platform itself to be running so if it can not
@@ -1823,29 +1832,25 @@ public class Platform  {
                  * * * 
                  */
 
-               // throw new CantStartPlatformException();
-            //}
-           // catch (Exception e){
+                throw new CantStartPlatformException();
+            } catch (Exception e) {
 
-            //    ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+                ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
 
                 /**
                  * This is worse than the previous catch since the plugin didn't even throw an expected exception.
                  * * *
                  */
 
-          //  }
+            }
+        }
+        catch (PluginNotRecognizedException pluginNotRecognizedException)
+        {
+            System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
+            pluginNotRecognizedException.printStackTrace();
 
-       // }
-      //  catch (PluginNotRecognizedException pluginNotRecognizedException)
-     //   {
-
-
-          //  System.err.println("PluginNotRecognizedException: " + pluginNotRecognizedException.getMessage());
-          //  pluginNotRecognizedException.printStackTrace();
-
-           // throw new CantStartPlatformException();
-        //}
+            throw new CantStartPlatformException();
+        }
 
 
 
