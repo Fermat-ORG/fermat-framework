@@ -13,8 +13,97 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="427c3f72-8668-4350-a048-9d476db88dcb" name="Default" comment="">
+<<<<<<< HEAD
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_vault/developer/bitdubai/version_1/BitcoinCryptoVaultPluginRoot.java" afterPath="$PROJECT_DIR$/CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_vault/developer/bitdubai/version_1/BitcoinCryptoVaultPluginRoot.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_vault/developer/bitdubai/version_1/structure/CryptoVaultDatabaseFactory.java" afterPath="$PROJECT_DIR$/CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_vault/developer/bitdubai/version_1/structure/CryptoVaultDatabaseFactory.java" />
+=======
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/communication/cloud_client/developer/bitdubai/version_1/CloudClientCommunicationChannelPluginRoot.java" afterPath="$PROJECT_DIR$/P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/communication/cloud_client/developer/bitdubai/version_1/CloudClientCommunicationChannelPluginRoot.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/communication/cloud_server/developer/bitdubai/version_1/CloudServerCommunicationPluginRoot.java" afterPath="$PROJECT_DIR$/P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/communication/cloud_server/developer/bitdubai/version_1/CloudServerCommunicationPluginRoot.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-p2p-api/src/main/java/com/bitdubai/fermat_p2p_api/layer/p2p_communication/CommunicationChannel.java" afterPath="$PROJECT_DIR$/fermat-p2p-api/src/main/java/com/bitdubai/fermat_p2p_api/layer/p2p_communication/CommunicationChannel.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/p2p_communication/CommunicationLayer.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/p2p_communication/CommunicationLayer.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-p2p-api/src/main/java/com/bitdubai/fermat_p2p_api/layer/p2p_communication/CommunicationLayerManager.java" afterPath="$PROJECT_DIR$/fermat-p2p-api/src/main/java/com/bitdubai/fermat_p2p_api/layer/p2p_communication/CommunicationLayerManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/communication/cloud_client/developer/bitdubai/DeveloperBitDubai.java" afterPath="$PROJECT_DIR$/P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/communication/cloud_client/developer/bitdubai/DeveloperBitDubai.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-intra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/intra_user/developer/bitdubai/version_1/IntraUserNetworkServicePluginRoot.java" afterPath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-intra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/intra_user/developer/bitdubai/version_1/IntraUserNetworkServicePluginRoot.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/p2p_communication/LayerServiceToServiceOnlineConnection.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/p2p_communication/LayerServiceToServiceOnlineConnection.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/PluginsIdentityManager.java" afterPath="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/PluginsIdentityManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/fermat-android-core.iml" afterPath="$PROJECT_DIR$/fermat-android-core/fermat-android-core.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-api/fermat-api.iml" afterPath="$PROJECT_DIR$/fermat-api/fermat-api.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-core/fermat-core.iml" afterPath="$PROJECT_DIR$/fermat-core/fermat-core.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-cry-api/fermat-cry-api.iml" afterPath="$PROJECT_DIR$/fermat-cry-api/fermat-cry-api.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CRY/plugin/crypto_module/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai.iml" afterPath="$PROJECT_DIR$/CRY/plugin/crypto_module/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CRY/plugin/crypto_module/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai.iml" afterPath="$PROJECT_DIR$/CRY/plugin/crypto_module/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CRY/plugin/crypto_network/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/fermat-cry-plugin-crypto-network-bitcoin-bitdubai.iml" afterPath="$PROJECT_DIR$/CRY/plugin/crypto_network/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/fermat-cry-plugin-crypto-network-bitcoin-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CRY/plugin/crypto_router/fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai/fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai.iml" afterPath="$PROJECT_DIR$/CRY/plugin/crypto_router/fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai/fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai.iml" afterPath="$PROJECT_DIR$/CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/addon/license/fermat-dmp-addon-license-wallet-bitdubai/fermat-dmp-addon-license-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/addon/license/fermat-dmp-addon-license-wallet-bitdubai/fermat-dmp-addon-license-wallet-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-age-kids-boys-bitdubai/fermat-dmp-android-niche-wallet-age-kids-boys-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-age-kids-boys-bitdubai/fermat-dmp-android-niche-wallet-age-kids-boys-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-reference-wallet-bitdubai/fermat-dmp-android-niche-wallet-bitcoin-reference-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-reference-wallet-bitdubai/fermat-dmp-android-niche-wallet-bitcoin-reference-wallet-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-shop-manager-bitdubai/fermat-dmp-android-sub-app-shop-manager-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-shop-manager-bitdubai/fermat-dmp-android-sub-app-shop-manager-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-factory-bitdubai/fermat-dmp-android-sub-app-wallet-factory-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-factory-bitdubai/fermat-dmp-android-sub-app-wallet-factory-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-manager-bitdubai/fermat-dmp-android-sub-app-wallet-manager-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-manager-bitdubai/fermat-dmp-android-sub-app-wallet-manager-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-publisher-bitdubai/fermat-dmp-android-sub-app-wallet-publisher-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-publisher-bitdubai/fermat-dmp-android-sub-app-wallet-publisher-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-store-bitdubai/fermat-dmp-android-sub-app-wallet-store-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-store-bitdubai/fermat-dmp-android-sub-app-wallet-store-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/actor/fermat-dmp-plugin-actor-extra-user-bitdubai/fermat-dmp-plugin-actor-extra-user-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/actor/fermat-dmp-plugin-actor-extra-user-bitdubai/fermat-dmp-plugin-actor-extra-user-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/basic_wallet/fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai/fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/basic_wallet/fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai/fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/basic_wallet/fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai/fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/basic_wallet/fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai/fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/composite_wallet/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/composite_wallet/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai/fermat-dmp-plugin-identity-intra-user-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai/fermat-dmp-plugin-identity-intra-user-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/middleware/fermat-dmp-plugin-middleware-app-runtime-bitdubai/fermat-dmp-plugin-middleware-app-runtime-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/middleware/fermat-dmp-plugin-middleware-app-runtime-bitdubai/fermat-dmp-plugin-middleware-app-runtime-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/middleware/fermat-dmp-plugin-middleware-bank-notes-bitdubai/fermat-dmp-plugin-middleware-bank-notes-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/middleware/fermat-dmp-plugin-middleware-bank-notes-bitdubai/fermat-dmp-plugin-middleware-bank-notes-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/middleware/fermat-dmp-plugin-middleware-money-request-bitdubai/fermat-dmp-plugin-middleware-money-request-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/middleware/fermat-dmp-plugin-middleware-money-request-bitdubai/fermat-dmp-plugin-middleware-money-request-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-contacts-bitdubai/fermat-dmp-plugin-middleware-wallet-contacts-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-contacts-bitdubai/fermat-dmp-plugin-middleware-wallet-contacts-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/module/fermat-dmp-plugin-module-wallet-factory-bitdubai/fermat-dmp-plugin-module-wallet-factory-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/module/fermat-dmp-plugin-module-wallet-factory-bitdubai/fermat-dmp-plugin-module-wallet-factory-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/module/fermat-dmp-plugin-module-wallet-manager-bitdubai/fermat-dmp-plugin-module-wallet-manager-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/module/fermat-dmp-plugin-module-wallet-manager-bitdubai/fermat-dmp-plugin-module-wallet-manager-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/module/fermat-dmp-plugin-module-wallet-publisher-bitdubai/fermat-dmp-plugin-module-wallet-publisher-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/module/fermat-dmp-plugin-module-wallet-publisher-bitdubai/fermat-dmp-plugin-module-wallet-publisher-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/module/fermat-dmp-plugin-module-wallet-runtime-bitdubai/fermat-dmp-plugin-module-wallet-runtime-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/module/fermat-dmp-plugin-module-wallet-runtime-bitdubai/fermat-dmp-plugin-module-wallet-runtime-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/module/fermat-dmp-plugin-module-wallet-store-bitdubai/fermat-dmp-plugin-module-wallet-store-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/module/fermat-dmp-plugin-module-wallet-store-bitdubai/fermat-dmp-plugin-module-wallet-store-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-bank-notes-bitdubai/fermat-dmp-plugin-network-service-bank-notes-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-bank-notes-bitdubai/fermat-dmp-plugin-network-service-bank-notes-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-crypto-addresses-bitdubai/fermat-dmp-plugin-network-service-crypto-addresses-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-crypto-addresses-bitdubai/fermat-dmp-plugin-network-service-crypto-addresses-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-intra-user-bitdubai/fermat-dmp-plugin-network-service-intra-user-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-intra-user-bitdubai/fermat-dmp-plugin-network-service-intra-user-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-money-bitdubai/fermat-dmp-plugin-network-service-money-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-money-bitdubai/fermat-dmp-plugin-network-service-money-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-money-request-bitdubai/fermat-dmp-plugin-network-service-money-request-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-money-request-bitdubai/fermat-dmp-plugin-network-service-money-request-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-community-bitdubai/fermat-dmp-plugin-network-service-wallet-community-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-community-bitdubai/fermat-dmp-plugin-network-service-wallet-community-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-resources-bitdubai/fermat-dmp-plugin-network-service-wallet-resources-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-resources-bitdubai/fermat-dmp-plugin-network-service-wallet-resources-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/fermat-dmp-plugin-network-service-wallet-store-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/fermat-dmp-plugin-network-service-wallet-store-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-bank-notes-wallet-bitdubai/fermat-dmp-plugin-niche-wallet-type-bank-notes-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-bank-notes-wallet-bitdubai/fermat-dmp-plugin-niche-wallet-type-bank-notes-wallet-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-crypto-loss-protected-wallet-bitdubai/fermat-dmp-plugin-niche-wallet-type-crypto-loss-protected-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-crypto-loss-protected-wallet-bitdubai/fermat-dmp-plugin-niche-wallet-type-crypto-loss-protected-wallet-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai/fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai/fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-discount-wallet-bitdubai/fermat-dmp-plugin-niche-wallet-type-discount-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-discount-wallet-bitdubai/fermat-dmp-plugin-niche-wallet-type-discount-wallet-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-bitdubai/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-bitdubai/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai/fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai/fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-device-user-bitdubai/fermat-dmp-plugin-transaction-incoming-device-user-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-device-user-bitdubai/fermat-dmp-plugin-transaction-incoming-device-user-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai/fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai/fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-inter-wallet-bitdubai/fermat-dmp-plugin-transaction-inter-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-inter-wallet-bitdubai/fermat-dmp-plugin-transaction-inter-wallet-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-device-user-bitdubai/fermat-dmp-plugin-transaction-outgoing-device-user-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-device-user-bitdubai/fermat-dmp-plugin-transaction-outgoing-device-user-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai/fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai/fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai/fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai/fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-blockchain-info-bitdubai/fermat-dmp-plugin-world-blockchain-info-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-blockchain-info-bitdubai/fermat-dmp-plugin-world-blockchain-info-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-coinapult-bitdubai/fermat-dmp-plugin-world-coinapult-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-coinapult-bitdubai/fermat-dmp-plugin-world-coinapult-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-coinbase-bitdubai/fermat-dmp-plugin-world-coinbase-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-coinbase-bitdubai/fermat-dmp-plugin-world-coinbase-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-crypto-index-bitdubai/fermat-dmp-plugin-world-crypto-index-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-crypto-index-bitdubai/fermat-dmp-plugin-world-crypto-index-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-location-bitdubai/fermat-dmp-plugin-world-location-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-location-bitdubai/fermat-dmp-plugin-world-location-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-shape-shift-bitdubai/fermat-dmp-plugin-world-shape-shift-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-shape-shift-bitdubai/fermat-dmp-plugin-world-shape-shift-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-database-system-bitdubai/fermat-osa-addon-android-database-system-bitdubai.iml" afterPath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-database-system-bitdubai/fermat-osa-addon-android-database-system-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai/fermat-osa-addon-android-device-connectivity-bitdubai.iml" afterPath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai/fermat-osa-addon-android-device-connectivity-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-device-location-bitdubai/fermat-osa-addon-android-device-location-bitdubai.iml" afterPath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-device-location-bitdubai/fermat-osa-addon-android-device-location-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-device-power-bitdubai/fermat-osa-addon-android-device-power-bitdubai.iml" afterPath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-device-power-bitdubai/fermat-osa-addon-android-device-power-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-file-system-bitdubai/fermat-osa-addon-android-file-system-bitdubai.iml" afterPath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-file-system-bitdubai/fermat-osa-addon-android-file-system-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-logger-bitdubai/fermat-osa-addon-android-logger-bitdubai.iml" afterPath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-logger-bitdubai/fermat-osa-addon-android-logger-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OSA/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/fermat-osa-addon-multi-os-database-system-bitdubai.iml" afterPath="$PROJECT_DIR$/OSA/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/fermat-osa-addon-multi-os-database-system-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OSA/addon/multi_os/fermat-osa-addon-multi-os-file-system-bitdubai/fermat-osa-addon-multi-os-file-system-bitdubai.iml" afterPath="$PROJECT_DIR$/OSA/addon/multi_os/fermat-osa-addon-multi-os-file-system-bitdubai/fermat-osa-addon-multi-os-file-system-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-p2p-api/fermat-p2p-api.iml" afterPath="$PROJECT_DIR$/fermat-p2p-api/fermat-p2p-api.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/fermat-p2p-plugin-communication-cloud-client-bitdubai.iml" afterPath="$PROJECT_DIR$/P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/fermat-p2p-plugin-communication-cloud-client-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/fermat-p2p-plugin-communication-cloud-server-bitdubai.iml" afterPath="$PROJECT_DIR$/P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/fermat-p2p-plugin-communication-cloud-server-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PIP/addon/hardware/fermat-pip-addon-hardware-local-device-bitdubai/fermat-pip-addon-hardware-local-device-bitdubai.iml" afterPath="$PROJECT_DIR$/PIP/addon/hardware/fermat-pip-addon-hardware-local-device-bitdubai/fermat-pip-addon-hardware-local-device-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PIP/addon/hardware/fermat-pip-addon-hardware-remote-device-bitdubai/fermat-pip-addon-hardware-remote-device-bitdubai.iml" afterPath="$PROJECT_DIR$/PIP/addon/hardware/fermat-pip-addon-hardware-remote-device-bitdubai/fermat-pip-addon-hardware-remote-device-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai/fermat-pip-addon-platform-service-error-manager-bitdubai.iml" afterPath="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai/fermat-pip-addon-platform-service-error-manager-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-event-manager-bitdubai/fermat-pip-addon-platform-service-event-manager-bitdubai.iml" afterPath="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-event-manager-bitdubai/fermat-pip-addon-platform-service-event-manager-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-location-subsystem-bitdubai/fermat-pip-addon-platform-service-location-subsystem-bitdubai.iml" afterPath="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-location-subsystem-bitdubai/fermat-pip-addon-platform-service-location-subsystem-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PIP/addon/user/fermat-pip-addon-user-device-user-bitdubai/fermat-pip-addon-user-device-user-bitdubai.iml" afterPath="$PROJECT_DIR$/PIP/addon/user/fermat-pip-addon-user-device-user-bitdubai/fermat-pip-addon-user-device-user-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat.iml" afterPath="$PROJECT_DIR$/fermat.iml" />
+>>>>>>> bitDubai/master
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="fermat.iws" />
@@ -11597,7 +11686,7 @@
     </option>
     <option name="modificationStamps">
       <map>
-        <entry key="$PROJECT_DIR$" value="111928740204504" />
+        <entry key="$PROJECT_DIR$" value="111909184554608" />
       </map>
     </option>
     <option name="projectBuildClasspath">
@@ -12217,10 +12306,17 @@
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/external/lombok/lombok-ast/0.2.2/lombok-ast-0.2.2.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/org/ow2/asm/asm-tree/4.0/asm-tree-4.0-sources.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/org/ow2/asm/asm-tree/4.0/asm-tree-4.0.jar" />
+<<<<<<< HEAD
                             <option value="$USER_HOME$/Android/Sdk/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
                             <option value="$USER_HOME$/Android/Sdk/extras/android/m2repository/com/android/support/support-v13/21.0.2/support-v13-21.0.2.aar" />
                             <option value="$USER_HOME$/Android/Sdk/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
                             <option value="$USER_HOME$/Android/Sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
+=======
+                            <option value="/opt/android/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
+                            <option value="/opt/android/extras/android/m2repository/com/android/support/support-v13/21.0.2/support-v13-21.0.2.aar" />
+                            <option value="/opt/android/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
+                            <option value="/opt/android/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
+>>>>>>> bitDubai/master
                           </list>
                         </option>
                         <option name="path" value="$PROJECT_DIR$/DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-age-kids-boys-bitdubai" />
@@ -12296,12 +12392,21 @@
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/external/lombok/lombok-ast/0.2.2/lombok-ast-0.2.2.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/org/ow2/asm/asm-tree/4.0/asm-tree-4.0-sources.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/org/ow2/asm/asm-tree/4.0/asm-tree-4.0.jar" />
+<<<<<<< HEAD
                             <option value="$USER_HOME$/Android/Sdk/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
                             <option value="$USER_HOME$/Android/Sdk/extras/android/m2repository/com/android/support/support-v13/21.0.2/support-v13-21.0.2.aar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.zxing/core/3.2.0/e019d15a13a9786f881141d2df6654b8510bce8b/core-3.2.0.jar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.zxing/android-integration/3.2.0/790720750cfe1e04510d0cb37ca8e8eff2beeed3/android-integration-3.2.0.jar" />
                             <option value="$USER_HOME$/Android/Sdk/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
                             <option value="$USER_HOME$/Android/Sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
+=======
+                            <option value="/opt/android/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
+                            <option value="/opt/android/extras/android/m2repository/com/android/support/support-v13/21.0.2/support-v13-21.0.2.aar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.zxing/core/3.2.0/e019d15a13a9786f881141d2df6654b8510bce8b/core-3.2.0.jar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.zxing/android-integration/3.2.0/790720750cfe1e04510d0cb37ca8e8eff2beeed3/android-integration-3.2.0.jar" />
+                            <option value="/opt/android/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
+                            <option value="/opt/android/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
+>>>>>>> bitDubai/master
                           </list>
                         </option>
                         <option name="path" value="$PROJECT_DIR$/DMP/android/niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-reference-wallet-bitdubai" />
@@ -12377,10 +12482,17 @@
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/external/lombok/lombok-ast/0.2.2/lombok-ast-0.2.2.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/org/ow2/asm/asm-tree/4.0/asm-tree-4.0-sources.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/org/ow2/asm/asm-tree/4.0/asm-tree-4.0.jar" />
+<<<<<<< HEAD
                             <option value="$USER_HOME$/Android/Sdk/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
                             <option value="$USER_HOME$/Android/Sdk/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
                             <option value="$USER_HOME$/Android/Sdk/extras/android/m2repository/com/android/support/support-v13/21.0.3/support-v13-21.0.3.aar" />
                             <option value="$USER_HOME$/Android/Sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
+=======
+                            <option value="/opt/android/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
+                            <option value="/opt/android/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
+                            <option value="/opt/android/extras/android/m2repository/com/android/support/support-v13/21.0.3/support-v13-21.0.3.aar" />
+                            <option value="/opt/android/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
+>>>>>>> bitDubai/master
                           </list>
                         </option>
                         <option name="path" value="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-shop-manager-bitdubai" />
@@ -12456,11 +12568,19 @@
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/external/lombok/lombok-ast/0.2.2/lombok-ast-0.2.2.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/org/ow2/asm/asm-tree/4.0/asm-tree-4.0-sources.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/org/ow2/asm/asm-tree/4.0/asm-tree-4.0.jar" />
+<<<<<<< HEAD
                             <option value="$USER_HOME$/Android/Sdk/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
                             <option value="$USER_HOME$/Android/Sdk/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
                             <option value="$USER_HOME$/Android/Sdk/extras/android/m2repository/com/android/support/support-v13/21.0.3/support-v13-21.0.3.aar" />
                             <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup/otto/1.3.5/7941cd2c2c8ec006800d75c35f8a9dacf892ab93/otto-1.3.5.jar" />
                             <option value="$USER_HOME$/Android/Sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
+=======
+                            <option value="/opt/android/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
+                            <option value="/opt/android/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
+                            <option value="/opt/android/extras/android/m2repository/com/android/support/support-v13/21.0.3/support-v13-21.0.3.aar" />
+                            <option value="$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.squareup/otto/1.3.5/7941cd2c2c8ec006800d75c35f8a9dacf892ab93/otto-1.3.5.jar" />
+                            <option value="/opt/android/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
+>>>>>>> bitDubai/master
                           </list>
                         </option>
                         <option name="path" value="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-factory-bitdubai" />
@@ -12536,10 +12656,17 @@
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/external/lombok/lombok-ast/0.2.2/lombok-ast-0.2.2.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/org/ow2/asm/asm-tree/4.0/asm-tree-4.0-sources.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/org/ow2/asm/asm-tree/4.0/asm-tree-4.0.jar" />
+<<<<<<< HEAD
                             <option value="$USER_HOME$/Android/Sdk/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
                             <option value="$USER_HOME$/Android/Sdk/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
                             <option value="$USER_HOME$/Android/Sdk/extras/android/m2repository/com/android/support/support-v13/21.0.3/support-v13-21.0.3.aar" />
                             <option value="$USER_HOME$/Android/Sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
+=======
+                            <option value="/opt/android/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
+                            <option value="/opt/android/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
+                            <option value="/opt/android/extras/android/m2repository/com/android/support/support-v13/21.0.3/support-v13-21.0.3.aar" />
+                            <option value="/opt/android/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
+>>>>>>> bitDubai/master
                           </list>
                         </option>
                         <option name="path" value="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-manager-bitdubai" />
@@ -12615,10 +12742,17 @@
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/external/lombok/lombok-ast/0.2.2/lombok-ast-0.2.2.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/org/ow2/asm/asm-tree/4.0/asm-tree-4.0-sources.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/org/ow2/asm/asm-tree/4.0/asm-tree-4.0.jar" />
+<<<<<<< HEAD
                             <option value="$USER_HOME$/Android/Sdk/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
                             <option value="$USER_HOME$/Android/Sdk/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
                             <option value="$USER_HOME$/Android/Sdk/extras/android/m2repository/com/android/support/support-v13/21.0.3/support-v13-21.0.3.aar" />
                             <option value="$USER_HOME$/Android/Sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
+=======
+                            <option value="/opt/android/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
+                            <option value="/opt/android/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
+                            <option value="/opt/android/extras/android/m2repository/com/android/support/support-v13/21.0.3/support-v13-21.0.3.aar" />
+                            <option value="/opt/android/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
+>>>>>>> bitDubai/master
                           </list>
                         </option>
                         <option name="path" value="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-publisher-bitdubai" />
@@ -12694,10 +12828,17 @@
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/external/lombok/lombok-ast/0.2.2/lombok-ast-0.2.2.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/org/ow2/asm/asm-tree/4.0/asm-tree-4.0-sources.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/org/ow2/asm/asm-tree/4.0/asm-tree-4.0.jar" />
+<<<<<<< HEAD
                             <option value="$USER_HOME$/Android/Sdk/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
                             <option value="$USER_HOME$/Android/Sdk/extras/android/m2repository/com/android/support/support-v13/21.0.3/support-v13-21.0.3.aar" />
                             <option value="$USER_HOME$/Android/Sdk/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
                             <option value="$USER_HOME$/Android/Sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
+=======
+                            <option value="/opt/android/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
+                            <option value="/opt/android/extras/android/m2repository/com/android/support/support-v13/21.0.3/support-v13-21.0.3.aar" />
+                            <option value="/opt/android/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
+                            <option value="/opt/android/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
+>>>>>>> bitDubai/master
                           </list>
                         </option>
                         <option name="path" value="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-store-bitdubai" />
@@ -17197,11 +17338,19 @@
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/com/android/tools/external/lombok/lombok-ast/0.2.2/lombok-ast-0.2.2.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/org/ow2/asm/asm-tree/4.0/asm-tree-4.0-sources.jar" />
                             <option value="$APPLICATION_HOME_DIR$/gradle/m2repository/org/ow2/asm/asm-tree/4.0/asm-tree-4.0.jar" />
+<<<<<<< HEAD
                             <option value="$USER_HOME$/Android/Sdk/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
                             <option value="$USER_HOME$/Android/Sdk/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
                             <option value="$USER_HOME$/Android/Sdk/extras/android/m2repository/com/android/support/support-v13/21.0.3/support-v13-21.0.3.aar" />
                             <option value="$USER_HOME$/Android/Sdk/extras/google/m2repository/com/google/android/gms/play-services/6.5.87/play-services-6.5.87.aar" />
                             <option value="$USER_HOME$/Android/Sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
+=======
+                            <option value="/opt/android/extras/android/m2repository/com/android/support/appcompat-v7/21.0.3/appcompat-v7-21.0.3.aar" />
+                            <option value="/opt/android/extras/android/m2repository/com/android/support/support-v4/21.0.3/support-v4-21.0.3.aar" />
+                            <option value="/opt/android/extras/android/m2repository/com/android/support/support-v13/21.0.3/support-v13-21.0.3.aar" />
+                            <option value="/opt/android/extras/google/m2repository/com/google/android/gms/play-services/6.5.87/play-services-6.5.87.aar" />
+                            <option value="/opt/android/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar" />
+>>>>>>> bitDubai/master
                           </list>
                         </option>
                         <option name="path" value="$PROJECT_DIR$/fermat-android-core" />
@@ -17518,6 +17667,7 @@
               <option name="name" value="fermat-dmp-android-sub-app-wallet-publisher-bitdubai" />
               <option name="projectBuildClasspath">
                 <list>
+<<<<<<< HEAD
                   <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/gradle-model-core-2.2.1.jar" />
                   <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/gradle-messaging-2.2.1.jar" />
                   <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/gradle-ui-2.2.1.jar" />
@@ -17531,10 +17681,26 @@
                   <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/groovy-all-2.3.6.jar" />
                   <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/gradle-wrapper-2.2.1.jar" />
                   <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/gradle-cli-2.2.1.jar" />
+=======
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/gradle-open-api-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/gradle-wrapper-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/gradle-launcher-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/gradle-ui-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/gradle-core-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/gradle-model-core-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/ant-launcher-1.9.3.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/gradle-model-groovy-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/gradle-cli-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/ant-1.9.3.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/gradle-messaging-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/gradle-tooling-api-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/gradle-docs-2.2.1.jar" />
+>>>>>>> bitDubai/master
                   <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/gradle-native-2.2.1.jar" />
                   <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/gradle-base-services-2.2.1.jar" />
                   <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/gradle-base-services-groovy-2.2.1.jar" />
                   <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/gradle-resources-2.2.1.jar" />
+<<<<<<< HEAD
                   <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/gradle-launcher-2.2.1.jar" />
                   <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-platform-native-2.2.1.jar" />
                   <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-osgi-2.2.1.jar" />
@@ -17571,6 +17737,44 @@
                   <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-language-native-2.2.1.jar" />
                   <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/ivy-2.2.0.jar" />
                   <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-ide-native-2.2.1.jar" />
+=======
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/groovy-all-2.3.6.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-resources-http-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-jacoco-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-jetty-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-antlr-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-language-native-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/ivy-2.2.0.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-platform-base-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-ivy-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-scala-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-publish-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-reporting-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-build-init-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-signing-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-diagnostics-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-sonar-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-code-quality-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-build-comparison-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-ear-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-maven-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/ant-antlr-1.9.3.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-platform-native-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-plugins-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-dependency-management-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-ide-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-javascript-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-osgi-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-announce-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-language-java-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-language-groovy-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-platform-jvm-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-plugin-use-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-ide-native-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-cunit-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-plugin-development-2.2.1.jar" />
+                  <option value="$APPLICATION_HOME_DIR$/gradle/gradle-2.2.1/lib/plugins/gradle-language-jvm-2.2.1.jar" />
+>>>>>>> bitDubai/master
                   <option value="$PROJECT_DIR$/buildSrc/src/main/java" />
                   <option value="$PROJECT_DIR$/buildSrc/src/main/groovy" />
                 </list>
@@ -17624,6 +17828,7 @@
         <option value="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/transaction/incoming_extra_user/developer/bitdubai/version_1/IncomingCryptoTransactionPluginRoot.java" />
         <option value="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/transaction/incoming_extra_user/developer/bitdubai/DealsWithRegistry.java" />
         <option value="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/transaction/incoming_extra_user/developer/bitdubai/version_1/interfaces/DealsWithRegistry.java" />
+<<<<<<< HEAD
         <option value="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/Platform.java" />
         <option value="$PROJECT_DIR$/CRY/plugin/crypto_network/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_network/bitcoin/developer/bitdubai/version_1/structure/BitcoinEventListeners.java" />
         <option value="$PROJECT_DIR$/CRY/plugin/crypto_network/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_network/bitcoin/developer/bitdubai/version_1/BitcoinCryptoNetworkPluginRoot.java" />
@@ -17635,6 +17840,16 @@
         <option value="$PROJECT_DIR$/CRY/plugin/crypto_network/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_network/bitcoin/developer/bitdubai/version_1/structure/StoredBlockChain.java" />
         <option value="$PROJECT_DIR$/CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_vault/developer/bitdubai/version_1/structure/CryptoVaultDatabaseFactory.java" />
         <option value="$PROJECT_DIR$/CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_vault/developer/bitdubai/version_1/BitcoinCryptoVaultPluginRoot.java" />
+=======
+        <option value="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/PluginsIdentityManager.java" />
+        <option value="$PROJECT_DIR$/fermat-p2p-api/src/main/java/com/bitdubai/fermat_p2p_api/layer/p2p_communication/CommunicationLayerManager.java" />
+        <option value="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/p2p_communication/CommunicationLayer.java" />
+        <option value="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-intra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/intra_user/developer/bitdubai/version_1/IntraUserNetworkServicePluginRoot.java" />
+        <option value="$PROJECT_DIR$/fermat-p2p-api/src/main/java/com/bitdubai/fermat_p2p_api/layer/p2p_communication/CommunicationChannel.java" />
+        <option value="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/p2p_communication/LayerServiceToServiceOnlineConnection.java" />
+        <option value="$PROJECT_DIR$/P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/communication/cloud_client/developer/bitdubai/version_1/CloudClientCommunicationChannelPluginRoot.java" />
+        <option value="$PROJECT_DIR$/P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/communication/cloud_server/developer/bitdubai/version_1/CloudServerCommunicationPluginRoot.java" />
+>>>>>>> bitDubai/master
       </list>
     </option>
   </component>
@@ -17681,10 +17896,15 @@
       <sortByType />
     </navigator>
     <panes>
+<<<<<<< HEAD
       <pane id="PackagesPane" />
       <pane id="Scratches" />
       <pane id="AndroidView" />
       <pane id="Scope" />
+=======
+      <pane id="Scratches" />
+      <pane id="AndroidView" />
+>>>>>>> bitDubai/master
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -18227,11 +18447,15 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+<<<<<<< HEAD
               <option name="myItemId" value="crypto_vault" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" />
+=======
+              <option name="myItemId" value="fermat-core" />
+>>>>>>> bitDubai/master
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -18243,6 +18467,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+<<<<<<< HEAD
               <option name="myItemId" value="java" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -18268,6 +18493,25 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="developer" />
+=======
+              <option name="myItemId" value="fermat-core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="com" />
+>>>>>>> bitDubai/master
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -18275,7 +18519,11 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+<<<<<<< HEAD
               <option name="myItemId" value="version_1" />
+=======
+              <option name="myItemId" value="fermat_core" />
+>>>>>>> bitDubai/master
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -18289,19 +18537,11 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+<<<<<<< HEAD
               <option name="myItemId" value="CRY" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="plugin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="crypto_vault" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" />
+=======
+              <option name="myItemId" value="fermat-core" />
+>>>>>>> bitDubai/master
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -18309,11 +18549,19 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+<<<<<<< HEAD
+              <option name="myItemId" value="crypto_vault" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" />
+=======
               <option name="myItemId" value="main" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="java" />
+>>>>>>> bitDubai/master
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
@@ -18325,14 +18573,37 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="fermat_cry_plugin" />
+              <option name="myItemId" value="fermat_core" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="layer" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
+          </PATH>
+          <PATH>
             <PATH_ELEMENT>
+              <option name="myItemId" value="fermat" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="fermat" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+<<<<<<< HEAD
+              <option name="myItemId" value="fermat_cry_plugin" />
+=======
+              <option name="myItemId" value="fermat-core" />
+>>>>>>> bitDubai/master
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+<<<<<<< HEAD
               <option name="myItemId" value="crypto_vault" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -18346,23 +18617,33 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="version_1" />
+=======
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="com" />
+>>>>>>> bitDubai/master
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="structure" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-          </PATH>
-          <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
+              <option name="myItemId" value="fermat_core" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="layer" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+<<<<<<< HEAD
               <option name="myItemId" value="CRY" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -18382,11 +18663,19 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="CRY" />
+=======
+              <option name="myItemId" value="p2p_communication" />
+>>>>>>> bitDubai/master
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
+<<<<<<< HEAD
+=======
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
+>>>>>>> bitDubai/master
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -18602,6 +18891,7 @@
     <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+<<<<<<< HEAD
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290461" sideWeight="0.4850587" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -18661,6 +18951,39 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout-to-restore>
+=======
+      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290461" sideWeight="0.48313984" order="14" side_tool="false" content_ui="tabs" />
+      <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290461" sideWeight="0.5168601" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290461" sideWeight="0.49806523" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.42443728" sideWeight="0.51741296" order="8" side_tool="true" content_ui="tabs" />
+      <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.42443728" sideWeight="0.48258707" order="11" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.21007502" sideWeight="0.49032614" order="13" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2497332" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.19845219" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.328125" sideWeight="0.49359658" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Memory Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="true" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.328125" sideWeight="0.49573106" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="PlantUML" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+    </layout>
+>>>>>>> bitDubai/master
   </component>
   <component name="Vcs.Log.UiProperties">
     <option name="RECENTLY_FILTERED_USER_GROUPS">
@@ -18691,6 +19014,37 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
+<<<<<<< HEAD
+=======
+    <entry file="file://$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/transaction/incoming_extra_user/developer/bitdubai/version_1/IncomingExtraUserTransactionPluginRoot.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="2" column="0" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="15" column="1" selection-start-line="15" selection-start-column="1" selection-end-line="15" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/transaction/incoming_extra_user/developer/bitdubai/version_1/structure/IncomingExtraUSerDataBaseConstants.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/transaction/incoming_extra_user/developer/bitdubai/version_1/structure/IncomingExtraUserEventRecorderService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="32" column="13" selection-start-line="32" selection-start-column="13" selection-end-line="32" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+>>>>>>> bitDubai/master
     <entry file="file://$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/transaction/incoming_extra_user/developer/bitdubai/version_1/structure/IncomingExtraUserMonitorAgent.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -18894,6 +19248,7 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/Platform.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -18938,28 +19293,53 @@
             <element signature="e#8410#8411#0" expanded="true" />
             <element signature="e#8747#8748#0" expanded="true" />
             <element signature="e#8795#8796#0" expanded="true" />
+=======
+    <entry file="file://$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/PluginsIdentityManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="245" column="36" selection-start-line="245" selection-start-column="36" selection-end-line="245" selection-end-column="36" />
+          <folding>
+            <element signature="imports" expanded="true" />
+>>>>>>> bitDubai/master
           </folding>
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/CRY/plugin/crypto_network/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_network/bitcoin/developer/bitdubai/version_1/structure/BitcoinEventListeners.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="163" column="0" selection-start-line="163" selection-start-column="0" selection-end-line="163" selection-end-column="0" />
+=======
+    <entry file="file://$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-intra-user-bitdubai/src/main/java/com/bitdubai/fermat_dmp_plugin/layer/network_service/intra_user/developer/bitdubai/version_1/IntraUserNetworkServicePluginRoot.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5108481">
+          <caret line="264" column="85" selection-start-line="264" selection-start-column="85" selection-end-line="264" selection-end-column="85" />
+>>>>>>> bitDubai/master
           <folding />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/CRY/plugin/crypto_router/fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_router/incoming_crypto/developer/bitdubai/version_1/structure/IncomingCryptoEventRecorderService.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.025125628">
           <caret line="72" column="7" selection-start-line="72" selection-start-column="7" selection-end-line="72" selection-end-column="7" />
           <folding>
             <element signature="imports" expanded="false" />
+=======
+    <entry file="file://$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/p2p_communication/CommunicationLayer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="1.2331933">
+          <caret line="136" column="147" selection-start-line="136" selection-start-column="147" selection-end-line="136" selection-end-column="147" />
+          <folding>
+            <element signature="e#1484#1501#0" expanded="true" />
+>>>>>>> bitDubai/master
           </folding>
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/CRY/plugin/crypto_router/fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_router/incoming_crypto/developer/bitdubai/version_1/structure/IncomingCryptoMonitorAgent.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.025125628">
@@ -18972,18 +19352,32 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="5" column="56" selection-start-line="5" selection-start-column="56" selection-end-line="5" selection-end-column="56" />
+=======
+    <entry file="file://$PROJECT_DIR$/fermat-p2p-api/src/main/java/com/bitdubai/fermat_p2p_api/layer/p2p_communication/CommunicationLayerManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.32544377">
+          <caret line="14" column="58" selection-start-line="14" selection-start-column="58" selection-end-line="14" selection-end-column="58" />
+>>>>>>> bitDubai/master
           <folding />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_vault/developer/bitdubai/version_1/structure/events/TransactionNotificationAgent.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="245" column="0" selection-start-line="245" selection-start-column="0" selection-end-line="245" selection-end-column="0" />
+=======
+    <entry file="file://$PROJECT_DIR$/fermat-p2p-api/src/main/java/com/bitdubai/fermat_p2p_api/layer/p2p_communication/CommunicationChannel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="12" column="47" selection-start-line="12" selection-start-column="47" selection-end-line="12" selection-end-column="47" />
+>>>>>>> bitDubai/master
           <folding />
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/CRY/plugin/crypto_network/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_network/bitcoin/developer/bitdubai/version_1/structure/BitcoinCryptoNetworkMonitoringAgent.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.3517588">
@@ -18999,10 +19393,22 @@
           <folding>
             <element signature="e#3400#3401#0" expanded="false" />
             <element signature="e#3436#3437#0" expanded="false" />
+=======
+    <entry file="file://$PROJECT_DIR$/P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/communication/cloud_server/developer/bitdubai/version_1/CloudServerCommunicationPluginRoot.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.9408284">
+          <caret line="195" column="5" selection-start-line="195" selection-start-column="5" selection-end-line="195" selection-end-column="5" />
+          <folding>
+            <element signature="e#3537#3538#0" expanded="true" />
+            <element signature="e#3585#3586#0" expanded="true" />
+            <element signature="e#5263#5264#0" expanded="true" />
+            <element signature="e#5290#5291#0" expanded="true" />
+>>>>>>> bitDubai/master
           </folding>
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/CRY/plugin/crypto_router/fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_router/incoming_crypto/developer/bitdubai/version_1/structure/IncomingCryptoRegistry.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -19106,10 +19512,20 @@
           <folding>
             <element signature="e#2268#2269#0" expanded="true" />
             <element signature="e#2316#2317#0" expanded="true" />
+=======
+    <entry file="file://$PROJECT_DIR$/P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/communication/cloud_client/developer/bitdubai/version_1/CloudClientCommunicationChannelPluginRoot.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.40828404">
+          <caret line="90" column="0" selection-start-line="90" selection-start-column="0" selection-end-line="94" selection-end-column="5" />
+          <folding>
+            <element signature="e#4130#4131#0" expanded="true" />
+            <element signature="e#4148#4149#0" expanded="true" />
+>>>>>>> bitDubai/master
           </folding>
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_vault/developer/bitdubai/version_1/BitcoinCryptoVaultPluginRoot.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.88757396">
@@ -19118,6 +19534,13 @@
             <element signature="e#5346#5347#0" expanded="true" />
             <element signature="e#5387#5388#0" expanded="true" />
           </folding>
+=======
+    <entry file="file://$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/p2p_communication/LayerServiceToServiceOnlineConnection.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="2.1005917">
+          <caret line="99" column="0" selection-start-line="99" selection-start-column="0" selection-end-line="99" selection-end-column="0" />
+          <folding />
+>>>>>>> bitDubai/master
         </state>
       </provider>
     </entry>

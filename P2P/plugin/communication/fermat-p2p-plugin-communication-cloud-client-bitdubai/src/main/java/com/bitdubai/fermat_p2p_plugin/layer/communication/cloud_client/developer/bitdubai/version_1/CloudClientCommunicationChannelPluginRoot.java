@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.CommunicationChannelAddressFactory;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication. CommunicationChannel;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.OnlineChannel;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.ServiceToServiceOnlineConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.enums.RejectConnectionRequestReasons;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.exceptions.CloudConnectionException;
@@ -39,6 +40,8 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
     /**
      * CommunicationChannel Interface member variables.
      */
+	private CommunicationChannelAddress serverAddress;
+	private String serverPublicKey;
 	private CloudClientManager cloudClient;
     private Set<NetworkServices> networkServices = new HashSet<NetworkServices>();
     
@@ -72,6 +75,12 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
     	this.errorManager = null;
 	}
     
+    public CloudClientCommunicationChannelPluginRoot(final String serverHost, final Integer serverPort, final String serverPublicKey){
+    	this();
+    	this.serverAddress = CommunicationChannelAddressFactory.constructCloudAddress(serverHost, serverPort);
+    	this.serverPublicKey = serverPublicKey;
+    }
+    
     public CloudClientCommunicationChannelPluginRoot(final UUID pluginId, final EventManager eventManager, 
     		final ErrorManager errorManager, final PluginFileSystem pluginFileSystem){
     	this.pluginId = UUID.fromString(pluginId.toString());
@@ -79,8 +88,13 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
     	this.errorManager = errorManager;
     	this.pluginFileSystem = pluginFileSystem;
     }
-    
-    /**
+
+	@Override
+	public OnlineChannel createOnlineChannel() {
+		return null;
+	}
+
+	/**
      * CommunicationChannel Interface implementation.
      */	
     @Override
@@ -194,6 +208,11 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
     public void setId(final UUID pluginId) {
         this.pluginId = pluginId;
     }
+    
+    public void setCloudServerInfo(final String serverHost, final Integer serverPort, final String serverPublicKey){
+    	this.serverAddress = CommunicationChannelAddressFactory.constructCloudAddress(serverHost, serverPort);
+    	this.serverPublicKey = serverPublicKey;
+    }
 
     /**
      * Service Interface implementation.
@@ -205,14 +224,10 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
          */
         //EventListener eventListener;
         //EventHandler eventHandler;
-    	String serverHost = "localhost";
-    	Integer serverPort = Integer.valueOf(9090);
-    	CommunicationChannelAddress serverAddress = CommunicationChannelAddressFactory.constructCloudAddress(serverHost, serverPort);
-    	String serverKey = "04F0F591F89E3CA948824F3CA8FD7D2115AE20B801EDE4CA090E3DA1856C1AC199CAB9BCF755162159C3C999F921ACE78B9529DFE67715C321DA8208B483DC74DB";
     	ExecutorService executor = Executors.newCachedThreadPool();
     	String clientKey = AsymmectricCryptography.createPrivateKey();
     	try{ 
-    		cloudClient = new CloudClientManager(serverAddress, executor, clientKey, serverKey);
+    		cloudClient = new CloudClientManager(serverAddress, executor, clientKey, serverPublicKey);
     		cloudClient.start();
     		cloudClient.requestConnectionToServer();
     		this.serviceStatus = ServiceStatus.STARTED;

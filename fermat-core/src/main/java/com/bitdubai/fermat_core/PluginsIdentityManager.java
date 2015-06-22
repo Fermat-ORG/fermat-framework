@@ -29,7 +29,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.network_service.bank_notes.developer
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_community.developer.bitdubai.version_1.WalletCommunityNetworkServicePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.WalletResourcesNetworkServicePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.WalletStoreNetworkServicePluginRoot;
-import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.CloudCommunicationChannelPluginRoot;
+import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.CloudClientCommunicationChannelPluginRoot;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.CloudServerCommunicationPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_device_user.developer.bitdubai.version_1.IncomingDeviceUserTransactionPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.IncomingExtraUserTransactionPluginRoot;
@@ -243,8 +243,8 @@ public class PluginsIdentityManager {
         if (pluginIndex == 0) {
             try
             {
-                CloudCommunicationChannelPluginRoot tryType;
-                tryType = (CloudCommunicationChannelPluginRoot) plugin;
+                CloudClientCommunicationChannelPluginRoot tryType;
+                tryType = (CloudClientCommunicationChannelPluginRoot) plugin;
                 pluginIndex = 2;
             }
             catch (Exception e)
