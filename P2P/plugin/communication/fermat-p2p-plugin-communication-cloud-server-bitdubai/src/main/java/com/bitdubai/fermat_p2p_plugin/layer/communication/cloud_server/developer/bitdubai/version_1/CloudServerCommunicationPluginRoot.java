@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWit
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannel;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.OnlineChannel;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.ServiceToServiceOnlineConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.enums.RejectConnectionRequestReasons;
 
@@ -187,5 +188,11 @@ public class CloudServerCommunicationPluginRoot implements Service, Communicatio
 		// TODO Auto-generated method stub
 		
 	}
+
+
+    @Override
+    public OnlineChannel createOnlineChannel() {
+        return null;
+    }
 
 }

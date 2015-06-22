@@ -9,6 +9,8 @@ import java.util.Collection;
  * Created by ciencias on 31.12.14.
  */
 public interface CommunicationChannel {
+
+    public OnlineChannel createOnlineChannel();
     
     public String getChannelPublicKey();
     
