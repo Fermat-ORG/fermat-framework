@@ -56,6 +56,8 @@ import com.bitdubai.fermat_core.layer.dmp_network_service.NetworkServiceLayer;
 import com.bitdubai.fermat_core.layer.dmp_middleware.MiddlewareLayer;
 import com.bitdubai.fermat_core.layer.dmp_module.ModuleLayer;
 import com.bitdubai.fermat_core.layer.dmp_agent.AgentLayer;
+import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.DealsWithBitcoinCryptoNetwork;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
 
@@ -1735,6 +1737,7 @@ public class Platform  {
         ((DealsWithPluginFileSystem) bitcoinCryptoVault).setPluginFileSystem(fileSystemOs.getPlugInFileSystem());
         ((DealsWithEvents) bitcoinCryptoVault).setEventManager((EventManager) eventManager);
         ((DealsWithPluginDatabaseSystem) bitcoinCryptoVault).setPluginDatabaseSystem(databaseSystemOs.getPluginDatabaseSystem());
+        ((DealsWithBitcoinCryptoNetwork) bitcoinCryptoVault).setBitcoinCryptoNetworkManager((BitcoinCryptoNetworkManager) cryptoNetwork);
 
         corePlatformContext.addPlugin(bitcoinCryptoVault, Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT);
 
