@@ -9,10 +9,14 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -27,6 +31,7 @@ import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantC
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.event_handlers.BitcoinCoinsReceivedEventHandler;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.BitcoinCryptoVault;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.events.TransactionNotificationAgent;
 
 import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.Wallet;
@@ -38,13 +43,14 @@ import java.util.UUID;
 /**
  * Created by loui on 08/06/15.
  */
-public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Service, DealsWithEvents, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithDeviceUsers, DealsWithPluginFileSystem, Plugin {
+public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DealsWithEvents, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithDeviceUsers, DealsWithPluginFileSystem, Plugin, Service {
 
     /**
      * BitcoinCryptoVaultPluginRoot member variables
      */
     BitcoinCryptoVault vault;
     UUID userId;
+    TransactionNotificationAgent transactionNotificationAgent;
 
 
     /**
@@ -72,6 +78,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Service
      * DealsWithPluginDatabaseSystem interface member variable
      */
     PluginDatabaseSystem pluginDatabaseSystem;
+    Database database;
 
     /**
      * DealsWithDeviceUsers interface member variable
@@ -163,6 +170,32 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Service
          */
         userId = deviceUserManager.getLoggedInUser().getId();
 
+
+        /**
+         * I will try to open the database first, if it doesn't exists, then I create it
+         */
+        try {
+            database = pluginDatabaseSystem.openDatabase(pluginId, userId.toString());
+        }  catch (DatabaseNotFoundException e) {
+            /**
+             * The database doesn't exists, lets create it.
+             */
+            try {
+                database = pluginDatabaseSystem.createDatabase(pluginId, userId.toString());
+            } catch (CantCreateDatabaseException e1) {
+                /**
+                 * something went wrong creatig the db, I can't handle this.
+                 */
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+                throw new CantStartPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT);
+            }
+        } catch (CantOpenDatabaseException e) {
+            /**
+             * the database exists, but I cannot open it! I cannot handle this.
+             */
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT);
+        }
         /**
          * I will start the loading creation of the wallet from the user Id
          */
@@ -170,6 +203,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Service
             vault = new BitcoinCryptoVault(this.userId);
             vault.setErrorManager(errorManager);
             vault.setPluginDatabaseSystem(pluginDatabaseSystem);
+            vault.setDatabase(this.database);
             vault.setPluginFileSystem(pluginFileSystem);
             vault.setPluginId(pluginId);
 
@@ -182,6 +216,24 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Service
             throw new CantStartPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT);
         }
 
+
+        /**
+         * now I will start the TransactionNotificationAgent to monitor
+         */
+        transactionNotificationAgent = new TransactionNotificationAgent(pluginDatabaseSystem, errorManager, pluginId, userId);
+        try {
+            transactionNotificationAgent.start();
+        } catch (CantStartAgentException e) {
+            /**
+             * If I couldn't start the agent, I still will continue with the vault
+             */
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
+
+
+        /**
+         * the service is started.
+         */
         this.serviceStatus = ServiceStatus.STARTED;
 
     }
@@ -200,8 +252,6 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Service
      */
     @Override
     public void resume() {
-
-
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
@@ -220,6 +270,13 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Service
         }
 
         listenersAdded.clear();
+
+        /**
+         * I will also stop the Notification Agent
+         */
+        transactionNotificationAgent.stop();
+
+        this.serviceStatus = ServiceStatus.STOPPED;
     }
 
 

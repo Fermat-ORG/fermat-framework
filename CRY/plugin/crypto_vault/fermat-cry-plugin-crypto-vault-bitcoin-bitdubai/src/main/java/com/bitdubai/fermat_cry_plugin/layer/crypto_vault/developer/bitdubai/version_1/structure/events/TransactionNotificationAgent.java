@@ -55,7 +55,7 @@ public class TransactionNotificationAgent implements Agent, DealsWithErrors, Dea
     /**
      * Constructor
      */
-    public void TransactionNotificationAgent(PluginDatabaseSystem pluginDatabaseSystem, ErrorManager errorManager, UUID pluginId, UUID walletId){
+    public TransactionNotificationAgent(PluginDatabaseSystem pluginDatabaseSystem, ErrorManager errorManager, UUID pluginId, UUID walletId){
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.errorManager = errorManager;
         this.pluginId = pluginId;
@@ -100,7 +100,7 @@ public class TransactionNotificationAgent implements Agent, DealsWithErrors, Dea
 
     @Override
     public void stop() {
-
+        this.agentThread.interrupt();
     }
 
     /**
@@ -234,7 +234,7 @@ public class TransactionNotificationAgent implements Agent, DealsWithErrors, Dea
              * I search for transactions not yet notified. If I found something, Ill raise an event
              */
             if (isTransactionToBeNotified()){
-                //raiseevent
+                //todo raiseevent
             }
 
         }
