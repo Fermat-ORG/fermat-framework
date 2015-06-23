@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventHandler;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
+import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure.BitcoinWalletBasicWallet;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.UUID;
  */
 public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager, Service, Plugin {
 
+    BitcoinWallet bitcoinWallet = new BitcoinWalletBasicWallet();
     /**
      * Plugin Interface member variables.
      */
@@ -92,7 +94,7 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
     //TODO: COMPLETAR
     @Override
     public BitcoinWallet loadWallet(UUID walletId) throws CantLoadWalletException {
-        return null;
+        return this.bitcoinWallet;
     }
 
     @Override
