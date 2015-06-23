@@ -140,17 +140,10 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
         }
         if (walletContactRecord == null) {
 
-            CryptoAddress deliveredCryptoAddress;
             UUID actorId;
-            try {
-                deliveredCryptoAddress = requestAndRegisterCryptoAddress(walletId, platformWalletType);
-            } catch (Exception e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantCreateWalletContactException(e.getMessage());
-            }
 
             try {
-                actorId = createAndRegisterActor(actorName, actorType, deliveredCryptoAddress);
+                actorId = createActor(actorName, actorType);
             } catch (Exception e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantCreateWalletContactException(e.getMessage());
@@ -204,6 +197,25 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
             } catch (Exception e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantCreateOrRegisterActorException();
+            }
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantCreateOrRegisterActorException();
+        }
+        return actorId;
+    }
+
+    private UUID createActor(String actorName, Actors actorType) throws CantCreateOrRegisterActorException {
+        UUID actorId;
+
+        try {
+            switch (actorType){
+                case EXTRA_USER:
+                    User user = extraUserManager.createUser(actorName);
+                    actorId = user.getId();
+                    break;
+                default:
+                    actorId = null ;
             }
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
