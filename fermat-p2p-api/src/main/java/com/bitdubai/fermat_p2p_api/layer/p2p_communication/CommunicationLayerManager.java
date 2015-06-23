@@ -3,6 +3,7 @@ package com.bitdubai.fermat_p2p_api.layer.p2p_communication;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.enums.RejectConnectionRequestReasons;
 
+import java.util.Collection;
 import java.util.UUID;
 
 /**
@@ -13,10 +14,14 @@ public interface CommunicationLayerManager {
     public void registerNetworkService (NetworkServices networkService);
 
     public void unregisterNetworkService (NetworkServices networkService);
-    
-    public ServiceToServiceOnlineConnection acceptIncomingNetworkServiceConnectionRequest (CommunicationChannels communicationChannel, NetworkServices networkService, UUID localNetworkService, UUID remoteNetworkService ) throws  CommunicationChannelNotImplemented;
 
-    public void rejectIncomingNetworkServiceConnectionRequest (CommunicationChannels communicationChannel, NetworkServices networkService, UUID localNetworkService, UUID remoteNetworkService, RejectConnectionRequestReasons reason ) throws  CommunicationChannelNotImplemented;
+    public void requestConnectionTo(NetworkServices networkServices, String remoteNetworkService) throws CantConnectToRemoteServiceException;
 
-    public ServiceToServiceOnlineConnection connectTo (NetworkServices networkServices, UUID remoteNetworkService) throws CantConnectToRemoteServiceException;
+    public void acceptIncomingNetworkServiceConnectionRequest (CommunicationChannels communicationChannel, NetworkServices networkService, String remoteNetworkService ) throws  CommunicationChannelNotImplemented;
+
+    public void rejectIncomingNetworkServiceConnectionRequest (CommunicationChannels communicationChannel, NetworkServices networkService, String remoteNetworkService, RejectConnectionRequestReasons reason ) throws  CommunicationChannelNotImplemented;
+
+    public Collection<String> getActiveNetworkServiceConnectionIdentifiers(NetworkServices networkService);
+
+    public ServiceToServiceOnlineConnection getActiveNetworkServiceConnection(CommunicationChannels communicationChannel, NetworkServices networkService, String remoteNetworkService);
 }

@@ -244,5 +244,9 @@ public class NetworkServiceClientManager extends CloudFMPConnectionManager {
 	public Collection<String> getPendingVPNRequests() {
 		return pendingVPNRequests.keySet();
 	}
+
+	public Collection<String> getActiveVPNIdentifiers() {
+		return activeVPNRegistry.keySet();
+	}
 	
 }

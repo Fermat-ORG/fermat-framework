@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorMan
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CantConnectToRemoteServiceException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannel;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.OnlineChannel;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.ServiceToServiceOnlineConnection;
@@ -160,7 +161,12 @@ public class CloudServerCommunicationPluginRoot implements Service, Communicatio
 		return null;
 	}
 
-	@Override
+    @Override
+    public void requestConnectiontTo(NetworkServices networkServices, String remoteNetworkService) throws CantConnectToRemoteServiceException {
+
+    }
+
+    @Override
 	public Collection<String> getIncomingNetworkServiceConnectionRequests(
 			NetworkServices networkService) {
 		// TODO Auto-generated method stub
@@ -181,7 +187,12 @@ public class CloudServerCommunicationPluginRoot implements Service, Communicatio
 		return null;
 	}
 
-	@Override
+    @Override
+    public Collection<String> getActiveNetworkServiceConnectionIdentifiers(NetworkServices networkService) {
+        return null;
+    }
+
+    @Override
 	public void rejectIncomingNetworkServiceConnectionRequest(
 			NetworkServices networkService, String remoteNetworkService,
 			RejectConnectionRequestReasons reason) {
