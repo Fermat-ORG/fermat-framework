@@ -47,7 +47,7 @@ public class SpecialistSelector implements DealsWithActorAddressBook {
             actorsRegistry = this.actorAddressBook.getActorAddressBookRegistry();
         } catch (CantGetActorAddressBookRegistryException e) {
             //TODO: Manage Exception
-            e.printStackTrace();
+            //e.printStackTrace();
         }
 
         if (actorsRegistry != null) {

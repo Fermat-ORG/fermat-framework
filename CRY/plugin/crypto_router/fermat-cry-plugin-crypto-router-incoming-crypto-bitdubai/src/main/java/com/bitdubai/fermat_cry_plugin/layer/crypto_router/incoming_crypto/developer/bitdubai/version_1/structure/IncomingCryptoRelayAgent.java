@@ -256,20 +256,23 @@ public class IncomingCryptoRelayAgent implements DealsWithActorAddressBook , Dea
         }
 
         private void doTheMainTask() {
-            // errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
 
             /*
             El RelayAgent del IncomingCrypto analizará las transacciones con estado (RESPONSIBLE,NO_ACTION_REQUIRED).
             */
             List<Transaction<CryptoTransaction>> responsibleTransactionList = this.registry.getResponsibleNARTransactions();
+            if(responsibleTransactionList.isEmpty())
+                return;
 
+            System.out.println("TTF - INCOMING CRYPTO RELAY: " + responsibleTransactionList.size() + "TRANSACTION(s) DETECTED");
             // Por cada una de ellas haría los siguientes pasos en el orden enunciado:
             // Deduciría a partir de la información de las mismas su Specialist y lo marcaría.
             // Pasaría la transacción al estado (RESPONSIBLE,TO_BE_NOTIFIED)
-            for(Transaction<CryptoTransaction> transaction : responsibleTransactionList){
+            for (Transaction<CryptoTransaction> transaction : responsibleTransactionList) {
                 try {
                     this.registry.setToNotify(transaction.getTransactionID(),
-                                    this.specialistSelector.getSpecialist(transaction.getInformation()));
+                            this.specialistSelector.getSpecialist(transaction.getInformation()));
+                    System.out.println("TTF - INCOMING CRYPTO RELAY: SPECIALIST SETTED");
                 } catch (CantSelectSpecialistException e) {
                     // TODO: MANAGE EXCEPTION
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -289,10 +292,19 @@ public class IncomingCryptoRelayAgent implements DealsWithActorAddressBook , Dea
                 return;
             }
 
+            System.out.println("TTF - INCOMING CRYPTO RELAY: SPECIALIST LIST CALCULATED");
+            System.out.println("TTF - INCOMING CRYPTO RELAY: " + specialistList.size() + " SPECIALIST(s) TO CALL");
+
+
             this.eventsLauncher.sendEvents(specialistList);
+
+            System.out.println("TTF - INCOMING CRYPTO RELAY: SPECIALIST(s) INFORMED");
+
 
             //  Pasa cada transacción con ProtocolStatus TO_BE_NOTIFIED a SENDING_NOTIFED.
             this.registry.setToSendingNotified();
+            System.out.println("TTF - INCOMING CRYPTO RELAY: TRANSACTION(s) SETTED TO NOTIFIED");
+
 
             // Aquí termina su tarea, será el receptor de las transacciones quien las confirmará
             // al recibirlas

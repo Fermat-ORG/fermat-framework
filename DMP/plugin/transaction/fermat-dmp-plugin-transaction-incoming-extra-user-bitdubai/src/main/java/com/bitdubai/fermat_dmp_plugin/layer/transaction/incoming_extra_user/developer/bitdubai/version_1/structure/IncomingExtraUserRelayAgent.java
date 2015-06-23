@@ -260,6 +260,10 @@ public class IncomingExtraUserRelayAgent implements DealsWithBitcoinWallet, Deal
             */
             List<Transaction<CryptoTransaction>> responsibleTransactionList = this.registry.getResponsibleTBATransactions();
 
+            if(responsibleTransactionList.isEmpty())
+                return;
+
+            System.out.println("TTF - EXTRA USER RELAY: " +responsibleTransactionList.size() + "TRANSACTION(s) TO BE APPLIED");
             // Por cada transacción en estado (RESPONSIBLE,TO_BE_APPLIED)
             // Aplica la transacción en la wallet correspondiente
             // y luego pasa la transacción al estado (RESPONSIBLE,APPLIED)
@@ -269,6 +273,8 @@ public class IncomingExtraUserRelayAgent implements DealsWithBitcoinWallet, Deal
                 try {
                     this.transactionExecutor.executeTransaction(transaction);
                     this.registry.setToApplied(transaction.getTransactionID());
+                    System.out.println("TTF - EXTRA USER RELAY: TRANSACTION APPLIED");
+
                 } catch (Exception e) {
                     this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
                 }

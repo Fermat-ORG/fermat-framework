@@ -236,7 +236,7 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantReadEvent);
             }
             if(eventWrapper != null){
-
+                System.out.println("TTF - EXTRA USER MONITOR: NEW EVENT DETECTED");
                 // We have here new pending transactions, we will check the source and ask for the right
                 // TransactionSender
 
@@ -252,12 +252,13 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
                 List<Transaction<CryptoTransaction>> transactionList = null;
 
                 try {
-                    transactionList = source.getPendingTransactions(Specialist.CRYPTO_ROUTER_SPECIALIST);
+                    transactionList = source.getPendingTransactions(Specialist.EXTRA_USER_SPECIALIST);
                 } catch (CantDeliverPendingTransactionsException e) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                     //if somethig wrong happenned we try in the next round
                     return;
                 }
+                System.out.println("TTF - EXTRA USER MONITOR: " + transactionList.size() + " TRAMSACTION(s) DETECTED");
 
                 // Now we save the list in the registry
                 if(transactionList != null){
@@ -266,6 +267,9 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
                   // if sombething failed we try in next round
                   return;
                 }
+
+                System.out.println("TTF - EXTRA USER MONITOR: " + transactionList.size() + " TRAMSACTION(s) ACKNOWLEDGED");
+
 
                 // Now we take all the transactions in state (ACKNOWLEDGE,TO_BE_NOTIFIED)
                 // Remember that this list can be more extensive than the one we saved, this is
@@ -278,6 +282,7 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
                 for(Transaction<CryptoTransaction> transaction : acknowledgedTransactions){
                     try {
                         source.confirmReception(transaction.getTransactionID());
+                        System.out.println("TTF - EXTRA USER MONITOR: TRANSACTION RESPONSIBILITY ACQUIRED");
                         this.registry.acquireResponsibility(transaction);
                     } catch (CantConfirmTransactionException e) {
                         // TODO: Consultar si esto hace lo que pienso, si falla no registra en base de datos
@@ -289,6 +294,7 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
                 // After finishing all the steps we mark the event as seen.
                 try {
                     this.registry.disableEvent(eventWrapper.eventId);
+                    System.out.println("TTF - EXTRA USER MONITOR: EVENT DISABLED");
                 } catch (Exception e) { // There are two exceptions and we react in the same way to both
                     // We will inform the exception and try again in the next round
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
