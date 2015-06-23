@@ -121,16 +121,4 @@ public class CryptoVaultDatabaseFactory implements DealsWithPluginDatabaseSystem
 
         return database;
         }
-
-    /**
-     * Load the database
-     * @param ownerID
-     * @param databaseName
-     * @return
-     * @throws CantOpenDatabaseException
-     * @throws DatabaseNotFoundException
-     */
-        public Database loadDatabase(UUID ownerID, String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException {
-        return pluginDatabaseSystem.openDatabase(ownerID, databaseName);
-        }
     }

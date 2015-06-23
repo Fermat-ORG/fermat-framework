@@ -184,6 +184,7 @@ public class AndroidPluginFileSystem implements PluginFileSystem {
         }catch(NoSuchAlgorithmException e){
             throw e;
         }
-        return encryptedString.replace("/","");
+        encryptedString = encryptedString.replace("/","");
+        return encryptedString.replace("\n","");
     }
 }

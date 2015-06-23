@@ -178,22 +178,25 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DealsWi
          */
         //userId = deviceUserManager.getLoggedInUser().getId();
         userId = UUID.fromString("dca1129e-6ee1-4ae1-967d-fd0b37f13283"); //todo fix deviceUser Implementation
+        //userId = UUID.randomUUID();
         System.out.println("Vault UserID: " + userId.toString());
+        System.out.println("PluginId: " + pluginId.toString());
 
         /**
          * I will try to open the database first, if it doesn't exists, then I create it
          */
-        CryptoVaultDatabaseFactory cryptoVaultDatabaseFactory = new CryptoVaultDatabaseFactory();
         try {
-            cryptoVaultDatabaseFactory.setPluginDatabaseSystem(pluginDatabaseSystem);
-            cryptoVaultDatabaseFactory.setErrorManager(errorManager);
 
-            database = cryptoVaultDatabaseFactory.loadDatabase(pluginId, userId.toString());
+            database = pluginDatabaseSystem.openDatabase(pluginId, userId.toString());
         }  catch (DatabaseNotFoundException e) {
             /**
              * The database doesn't exists, lets create it.
              */
             try {
+                CryptoVaultDatabaseFactory cryptoVaultDatabaseFactory = new CryptoVaultDatabaseFactory();
+                cryptoVaultDatabaseFactory.setPluginDatabaseSystem(pluginDatabaseSystem);
+                cryptoVaultDatabaseFactory.setErrorManager(errorManager);
+
                 database = cryptoVaultDatabaseFactory.createDatabase(pluginId, userId.toString());
             } catch (CantCreateDatabaseException e1) {
                 /**
