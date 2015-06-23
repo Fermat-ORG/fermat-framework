@@ -1,308 +1,113 @@
 /*
- * @#IntraUserNetworkServiceLocal.java - 2015
+ * @#IntraUserNetworkServiceRemoteAgent.java - 2015
  * Copyright bitDubai.com., All rights reserved.
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.IntraUserStatus;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.Message;
 
-import java.security.KeyPair;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceLocal</code>
- * is the abstraction of a representation of Intra User Network Service Local of the platform
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer._11_network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceRemoteAgent</code>
+ *
+ * This class extend of the <code>java.util.Observer</code> class,  its used on the software design pattern called: The observer pattern,
+ * for more info see @link https://en.wikipedia.org/wiki/Observer_pattern
  * <p/>
  *
- * Created by ciencias on 2/13/15.
- * Update by Roberto Requena - (rart3001@gmail.com) on 31/05/15.
+ * Created by Roberto Requena - (rart3001@gmail.com) on 13/06/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class IntraUserNetworkServiceLocal{
+public class IntraUserNetworkServiceLocal implements Observer{
 
     /**
-     * Represent the address
+     * Represent the public key of the remote network service
      */
-    private String address;
+    private String remoteNetworkServicePublicKey;
 
     /**
-     * Represent the userId
+     * DealsWithErrors Interface member variables.
      */
-    private UUID userId;
+    private ErrorManager errorManager;
 
     /**
-     * Represent the userName
+     * DealsWithPluginDatabaseSystem Interface member variable
      */
-    private String userName;
-
-    /**
-     * Represent the lastLocation
-     */
-    private String lastLocation;
-
-    /**
-     * Represent the status
-     */
-    private IntraUserStatus status;
-
-    /**
-     * Represent the profilePicture
-     */
-    private String profilePicture;
-
-    /**
-     * Represent the keyPair
-     */
-    private KeyPair keyPair;
-
-    /**
-     * Hold all IntraUserNetworkServiceRemote instance references with have a communication channel open
-     */
-    private Map<UUID, IntraUserNetworkServiceRemote> intraUserNetworkServiceRemoteInstanceReferences;
-
-
-    /**
-     * Constructor
-     */
-    public IntraUserNetworkServiceLocal(){
-        super();
-    }
+    private PluginDatabaseSystem pluginDatabaseSystem;
 
     /**
      * Constructor with parameters
      *
-     * @param lastLocation
-     * @param profilePicture
-     * @param status
-     * @param userId
-     * @param userName
+     * @param remoteNetworkServicePublicKey
+     * @param errorManager the errorManager instance
+     * @param pluginDatabaseSystem the pluginDatabaseSystem instance
      */
-    public IntraUserNetworkServiceLocal(String lastLocation, String profilePicture, IntraUserStatus status, UUID userId, String userName) {
-        super();
-        this.lastLocation = lastLocation;
-        this.profilePicture = profilePicture;
-        this.status = status;
-        this.userId = userId;
-        this.userName = userName;
-        this.intraUserNetworkServiceRemoteInstanceReferences = new HashMap<>();
+    public IntraUserNetworkServiceLocal(String remoteNetworkServicePublicKey, ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem) {
+        this.remoteNetworkServicePublicKey = remoteNetworkServicePublicKey;
+        this.errorManager = errorManager;
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
+
     /**
-     * Return the address
+     * This method encrypt the content of the message to send and save on the
+     * data base in the table <code>outbox_messages</code>
      *
-     * @return String
+     * @param message the message to send
      */
-    public String getAddress() {
-        return address;
+    public void sendMessage(Message message){
+
+
+        //Cast the message to IntraUserNetworkServiceMessage
+        IntraUserNetworkServiceMessage intraUserNetworkServiceMessage = (IntraUserNetworkServiceMessage) message;
+
+
+        //Save to the data base table
+
+    }
+
+
+
+    /**
+     * Notify the client when a incoming message is receive by the IntraUserNetworkServiceRemoteAgent
+     * ant fire a new event
+     */
+    private void onMessageReceived(IntraUserNetworkServiceMessage intraUserNetworkServiceMessage){
+
+
+        /**
+         * Put the message on and event and fire new event
+         */
+
     }
 
     /**
-     * Set the address
+     * This method is called automatically when IntraUserNetworkServiceRemoteAgent (Observable object) update the database
+     * when new message is received
      *
-     * @param address
-     */
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    /**
-     * Return the lastLocation
-     *
-     * @return String
-     */
-    public String getLastLocation() {
-        return lastLocation;
-    }
-
-    /**
-     * Set the lastLocation
-     *
-     * @param lastLocation
-     */
-    public void setLastLocation(String lastLocation) {
-        this.lastLocation = lastLocation;
-    }
-
-    /**
-     * Return the profilePicture
-     *
-     * @return String
-     */
-    public String getProfilePicture() {
-        return profilePicture;
-    }
-
-    /**
-     * Set the profilePicture
-     *
-     * @param profilePicture
-     */
-    public void setProfilePicture(String profilePicture) {
-        this.profilePicture = profilePicture;
-    }
-
-    /**
-     * Return the status
-     *
-     * @return IntraUserStatus
-     */
-    public IntraUserStatus getStatus() {
-        return status;
-    }
-
-    /**
-     * Set the status
-     *
-     * @param status
-     */
-    public void setStatus(IntraUserStatus status) {
-        this.status = status;
-    }
-
-    /**
-     * Return the userId
-     *
-     * @return UUID
-     */
-    public UUID getUserId() {
-        return userId;
-    }
-
-    /**
-     * Set the userId
-     *
-     * @param userId
-     */
-    public void setUserId(UUID userId) {
-        this.userId = userId;
-    }
-
-    /**
-     * Return the userName
-     *
-     * @return String
-     */
-    public String getUserName() {
-        return userName;
-    }
-
-    /**
-     * Set the userName
-     *
-     * @param userName
-     */
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    /**
-     * Return the keyPair
-     *
-     * @return keyPair
-     */
-    public KeyPair getKeyPair() {
-        return keyPair;
-    }
-
-    /**
-     * Set the keyPair
-     *
-     * @param keyPair
-     */
-    public void setKeyPair(KeyPair keyPair) {
-        this.keyPair = keyPair;
-    }
-
-    /**
-     * (non-Javadoc)
-     * @see Object#equals(Object)
+     * @param observable the observable object
+     * @param data the data update
      */
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof IntraUserNetworkServiceLocal)) return false;
-        IntraUserNetworkServiceLocal that = (IntraUserNetworkServiceLocal) o;
-        return Objects.equals(getUserId(), that.getUserId());
+    public void update(Observable observable, Object data) {
+
+        if (data instanceof IntraUserNetworkServiceMessage)
+            onMessageReceived((IntraUserNetworkServiceMessage) data);
     }
 
     /**
-     * (non-Javadoc)
-     * @see Object#hashCode()
+     * Return the public key of the remote network service
+     * @return
      */
-    @Override
-    public int hashCode() {
-        return Objects.hash(getUserId());
+    public String getRemoteNetworkServicePublicKey() {
+        return remoteNetworkServicePublicKey;
     }
-
-    /**
-     * (non-Javadoc)
-     * @see Object#toString()
-     */
-    @Override
-    public String toString() {
-        return "IntraUserNetworkServiceLocal{" + "userId=" + userId + '}';
-    }
-
-
-    /**
-     * Return the remote representation of this local
-     *
-     * @return IntraUserNetworkServiceRemote
-     */
-    public IntraUserNetworkServiceRemote getRemoteObject(){
-
-        return new IntraUserNetworkServiceRemote(address,
-                                                 lastLocation,
-                                                 profilePicture,
-                                                 status,
-                                                 userId,
-                                                 userName,
-                                                 keyPair.getPublic());
-    }
-
-    /**
-     * Put a new remote reference
-     *
-     * @param intraUserNetworkServiceRemote
-     */
-    public void addIntraUserNetworkServiceRemoteInstance(UUID remoteNetworkService, IntraUserNetworkServiceRemote intraUserNetworkServiceRemote){
-
-        //Put the new reference
-        intraUserNetworkServiceRemoteInstanceReferences.put(remoteNetworkService, intraUserNetworkServiceRemote);
-
-    }
-
-    /**
-     * Get a remote reference
-     *
-     * @param remoteNetworkService
-     * @return IntraUserNetworkServiceRemote
-     */
-    public IntraUserNetworkServiceRemote getIntraUserNetworkServiceRemoteInstance(UUID remoteNetworkService){
-
-        //get the reference
-       return intraUserNetworkServiceRemoteInstanceReferences.get(remoteNetworkService);
-
-    }
-
-
-    /**
-     * Remove a remote reference
-     *
-     * @param remoteNetworkService
-     */
-    public void removeIntraUserNetworkServiceRemoteInstance(UUID remoteNetworkService){
-
-        //remove the reference
-        intraUserNetworkServiceRemoteInstanceReferences.remove(remoteNetworkService);
-
-    }
-
 }
