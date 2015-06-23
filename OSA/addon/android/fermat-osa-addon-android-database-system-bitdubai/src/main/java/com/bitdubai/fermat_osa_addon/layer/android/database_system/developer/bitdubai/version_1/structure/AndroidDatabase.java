@@ -8,6 +8,7 @@ import java.util.UUID;
 import android.content.Context;
 import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
@@ -205,7 +206,11 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
             databasePath += "/" + databaseName.replace("-","") + ".db";
 
 
-            this.Database = SQLiteDatabase.openDatabase(databasePath,null,0,null);
+            File dbFile = new File(databasePath);
+            if (dbFile.exists())
+                this.Database = SQLiteDatabase.openDatabase(databasePath,null,0,null);
+            else
+                throw new DatabaseNotFoundException();
 
           }
         catch (Exception exception) {
