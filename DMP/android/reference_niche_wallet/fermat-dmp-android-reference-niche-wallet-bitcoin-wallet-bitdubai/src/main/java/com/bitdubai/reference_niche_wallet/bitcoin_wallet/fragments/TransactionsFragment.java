@@ -64,41 +64,44 @@ public class TransactionsFragment extends Fragment {
         {
 
 
-        cryptoWalletManager = platform.getCryptoWalletManager();
+            cryptoWalletManager = platform.getCryptoWalletManager();
 
-        try{
-            cryptoWallet = cryptoWalletManager.getCryptoWallet();
-        }
-        catch (CantGetCryptoWalletException e) {
-            showMessage("CantGetCryptoWalletException- " + e.getMessage());
-            e.printStackTrace();
-        }
+            try{
+                cryptoWallet = cryptoWalletManager.getCryptoWallet();
+            }
+            catch (CantGetCryptoWalletException e) {
+                showMessage("CantGetCryptoWalletException- " + e.getMessage());
+                e.printStackTrace();
+            }
 
 
             try {
-               List<BitcoinTransaction> bitcoinTransactions = cryptoWallet.getTransactions(10, 10, wallet_id);
+                List<BitcoinTransaction> bitcoinTransactions = cryptoWallet.getTransactions(10, 10, wallet_id);
 
-               // for (int i = 0; i < bitcoinTransactions.size(); i++) {
-                 //   BitcoinTransaction transaction = (BitcoinTransaction) bitcoinTransactions.get(i);
+                for(int i = 0; i < bitcoinTransactions.size(); i++) {
+                    BitcoinTransaction transaction = (BitcoinTransaction) bitcoinTransactions.get(i);
+                    transaction.getAmount();
+                    // Construct the data source
+                    TRANSACTIONS.add(new Transactions(transaction.getAddressFrom().getAddress().toString(), String.valueOf(transaction.getTimestamp()), String.valueOf(transaction.getAmount()), transaction.getMemo(), transaction.getType().toString()));
 
-               // }
-
-               }
-            catch (CantGetTransactionsException e) {
-                showMessage("Cant Get Transactions Exception- " + e.getMessage());
-                    e.printStackTrace();
                 }
 
-         }
+            }
+            catch (CantGetTransactionsException e) {
+                showMessage("Cant Get Transactions Exception- " + e.getMessage());
+                e.printStackTrace();
+            }
+
+        }
         catch(Exception ex) {
             showMessage("Unexpected error get Transactions - " + ex.getMessage());
             ex.printStackTrace();
         }
 
         // Construct the data source
-        TRANSACTIONS.add(new Transactions("Lucia Alarcon De Zamacona", "4 hours ago", "0.0012", "New telephone","Send"));
-        TRANSACTIONS.add(new Transactions("Juan Luis R Pons","5 hours ago", "0.0023", "Old desk", "Received"));
-        TRANSACTIONS.add(new Transactions("Karina Rodríguez","yesterday 11:00 PM","0.1023","Car oil","Received"));
+       // TRANSACTIONS.add(new Transactions("Lucia Alarcon De Zamacona", "4 hours ago", "0.0012", "New telephone","Send"));
+        //TRANSACTIONS.add(new Transactions("Juan Luis R Pons","5 hours ago", "0.0023", "Old desk", "Received"));
+        //TRANSACTIONS.add(new Transactions("Karina Rodríguez","yesterday 11:00 PM","0.1023","Car oil","Received"));
 
     }
 
@@ -106,8 +109,8 @@ public class TransactionsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-       rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_transactions, container, false);
-       // Get ListView object from xml
+        rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_transactions, container, false);
+        // Get ListView object from xml
         ListView listView = (ListView) rootView.findViewById(R.id.transactionlist);
 
 
@@ -118,31 +121,9 @@ public class TransactionsFragment extends Fragment {
 
 
         // Assign adapter to ListView
-       listView.setAdapter(adapter);
+        listView.setAdapter(adapter);
 
 
-
-        // ListView Item Click Listener
-       /* listView.setOnItemClickListener(new OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-
-                // ListView Clicked item index
-                int itemPosition     = position;
-
-                // ListView Clicked item value
-                String  itemValue    = (String) listView.getItemAtPosition(position);
-
-                // Show Alert
-                Toast.makeText(getApplicationContext(),
-                        "Position :"+itemPosition+"  ListItem : " +itemValue , Toast.LENGTH_LONG)
-                        .show();
-
-            }
-
-        });*/
         return rootView;
     }
 

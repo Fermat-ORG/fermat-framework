@@ -76,7 +76,7 @@ public class BalanceFragment extends  Fragment {
 
         try{
 
-         balance = "BTC 0.0049";
+         balance = "BTC 0.0000";
         cryptoWalletManager = platform.getCryptoWalletManager();
 
         try {
@@ -90,7 +90,7 @@ public class BalanceFragment extends  Fragment {
         try {
             long lngBalance = cryptoWallet.getBalance(wallet_id);
 
-            balance = String.valueOf(lngBalance);
+            balance = "BTC " + String.valueOf(lngBalance);
 
         } catch (CantGetBalanceException e) {
             showMessage("CantGetBalanceException- " + e.getMessage());

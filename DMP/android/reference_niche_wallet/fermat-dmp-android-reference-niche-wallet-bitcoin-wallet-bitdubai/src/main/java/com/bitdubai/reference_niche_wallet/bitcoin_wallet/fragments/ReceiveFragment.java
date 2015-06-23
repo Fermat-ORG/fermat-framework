@@ -55,7 +55,7 @@ public class ReceiveFragment extends Fragment {
 
     View rootView;
 
-    private String user_address_wallet = "1FGvNMMbwnewMcVzPMsoyj5jAHEYt53ypa";
+    private String user_address_wallet = "";
     final int colorQR = Color.BLACK;
     final int colorBackQR = Color.WHITE;
     final int width = 400;
@@ -81,19 +81,19 @@ public class ReceiveFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         //setHasOptionsMenu(false);
         super.onCreate(savedInstanceState);
-    try
-    {
-        cryptoWalletManager = platform.getCryptoWalletManager();
+        try
+        {
+            cryptoWalletManager = platform.getCryptoWalletManager();
 
-        try {
-            cryptoWallet = cryptoWalletManager.getCryptoWallet();
-        } catch (CantGetCryptoWalletException e) {
-            e.printStackTrace();
+            try {
+                cryptoWallet = cryptoWalletManager.getCryptoWallet();
+            } catch (CantGetCryptoWalletException e) {
+                e.printStackTrace();
+            }
+        } catch(Exception ex) {
+            showMessage("Unexpected error init Crypto Manager - " + ex.getMessage());
+            ex.printStackTrace();
         }
-    } catch(Exception ex) {
-        showMessage("Unexpected error init Crypto Manager - " + ex.getMessage());
-        ex.printStackTrace();
-    }
 
 
 
@@ -147,63 +147,66 @@ public class ReceiveFragment extends Fragment {
     private void getWalletAddress(String contact_name) {
         try {
 
-             try {
+            try {
                 CryptoAddress cryptoAddress = cryptoWallet.requestAddress(contact_name.toString(), Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
 
                 user_address_wallet = cryptoAddress.getAddress();
+
+                //create QR code with user address wallet
+
+
+                try {
+                    Bitmap bitmapQR = generateBitmap(user_address_wallet, width, height,
+                            MARGIN_AUTOMATIC, colorQR, colorBackQR);
+
+                    ImageView imageQR = (ImageView) rootView.findViewById(R.id.qr_code);
+
+                    imageQR.setImageBitmap(bitmapQR);
+                    imageQR.setVisibility(View.VISIBLE);
+                } catch (WriterException writerException) {
+
+                }
+
+                //define action for click options of spinner control
+                final Spinner spinner = (Spinner) rootView.findViewById(R.id.share_spinner);
+                spinner.setVisibility(View.VISIBLE);
+                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view,
+                                               int position, long id) {
+
+                        int option = spinner.getSelectedItemPosition();
+                        switch (option) {
+                            case 1:
+                                copytoClipboard(rootView);
+                                break;
+                            case 2:
+                                sendWhatsappMessage(rootView); //whatsapp message
+                                break;
+                            case 3:
+                                sendMessage(rootView); //sms message
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> arg0) {
+
+                    }
+                });
+
             } catch (CantRequestCryptoAddressException e) {
-                 showMessage("Cant Request Crypto Address Exception - " + e.getMessage());
+                showMessage("Cant Request Crypto Address Exception - " + e.getMessage());
                 e.printStackTrace();
             }
 
         }  catch(Exception ex) {
             showMessage("Unexpected error get wallet address - " + ex.getMessage());
         }
-        //create QR code with user address wallet
 
-
-            try {
-                Bitmap bitmapQR = generateBitmap(user_address_wallet, width, height,
-                        MARGIN_AUTOMATIC, colorQR, colorBackQR);
-
-                ImageView imageQR = (ImageView) rootView.findViewById(R.id.qr_code);
-
-                imageQR.setImageBitmap(bitmapQR);
-                imageQR.setVisibility(View.VISIBLE);
-            } catch (WriterException writerException) {
-
-            }
-
-            //define action for click options of spinner control
-            final Spinner spinner = (Spinner) rootView.findViewById(R.id.share_spinner);
-            spinner.setVisibility(View.VISIBLE);
-            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view,
-                                           int position, long id) {
-
-                    int option = spinner.getSelectedItemPosition();
-                    switch (option) {
-                        case 1:
-                            copytoClipboard(rootView);
-                            break;
-                        case 2:
-                            sendWhatsappMessage(rootView); //whatsapp message
-                            break;
-                        case 3:
-                            sendMessage(rootView); //sms message
-                            break;
-                        default:
-                            break;
-                    }
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> arg0) {
-
-                }
-            });
 
 
     }
