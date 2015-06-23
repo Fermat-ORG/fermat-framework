@@ -22,6 +22,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventMan
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventSource;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventType;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoTransactionsWaitingTransferenceEvent;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultTransactionNotificationAgent;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseActions;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseFactory;
@@ -155,12 +156,12 @@ public class TransactionNotificationAgent implements Agent,DealsWithEvents,Deals
     /**
      * Private class which implements runnable and is started by the Agent
      */
-    private class MonitorAgent implements DealsWithPluginDatabaseSystem, DealsWithErrors, Runnable{
+    private class MonitorAgent implements CryptoVaultTransactionNotificationAgent, DealsWithPluginDatabaseSystem, DealsWithErrors, Runnable{
 
         /**
          * how often I will search for transactions to notify
          */
-        public final int SLEEP_TIME = 10000;
+        public final int SLEEP_TIME = CryptoVaultTransactionNotificationAgent.AGENT_SLEEP_TIME;
 
         /**
          * PluginDatabaseSystem interfaz member variables

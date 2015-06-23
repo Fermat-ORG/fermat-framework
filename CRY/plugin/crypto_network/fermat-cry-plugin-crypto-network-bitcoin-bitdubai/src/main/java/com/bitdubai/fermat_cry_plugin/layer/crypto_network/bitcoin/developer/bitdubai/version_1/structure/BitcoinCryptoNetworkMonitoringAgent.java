@@ -200,15 +200,16 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
         public void run() {
             doTheMainTask();
         }
-    }
 
-    /**
-     * triggers the connection to peers, the download (or update) of the block chain
-     * and the listening to incoming transactions.
-     */
-    private void doTheMainTask() {
-        peers.startAsync();
-        peers.awaitRunning();
-        peers.downloadBlockChain();
+
+        /**
+         * triggers the connection to peers, the download (or update) of the block chain
+         * and the listening to incoming transactions.
+         */
+        private void doTheMainTask() {
+            peers.startAsync();
+            peers.awaitRunning();
+            peers.downloadBlockChain();
+        }
     }
 }
