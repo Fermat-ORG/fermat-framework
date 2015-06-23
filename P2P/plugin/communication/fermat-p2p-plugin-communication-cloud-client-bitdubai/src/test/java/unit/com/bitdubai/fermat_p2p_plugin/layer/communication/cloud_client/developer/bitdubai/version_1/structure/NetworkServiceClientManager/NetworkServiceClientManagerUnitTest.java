@@ -8,7 +8,7 @@ import java.util.concurrent.Executors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.CommunicationChannelAddressFactory;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
-import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.structure.NetworkServiceClientManager;
+import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.structure.CloudClientCommunicationNetworkServiceConnection;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.CloudNetworkServiceManager;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.ECCKeyPair;
 
@@ -26,7 +26,7 @@ public class NetworkServiceClientManagerUnitTest {
 	protected ExecutorService testExecutor = Executors.newFixedThreadPool(30);
 	
 	protected CloudNetworkServiceManager testServer;
-	protected NetworkServiceClientManager testClient;
+	protected CloudClientCommunicationNetworkServiceConnection testClient;
 	protected NetworkServices testNetworkService = NetworkServices.INTRA_USER;
 	
 	protected void setUpParameters(int tcpPadding) throws Exception{
@@ -36,7 +36,7 @@ public class NetworkServiceClientManagerUnitTest {
 	
 	protected void setUp(int tcpPadding) throws Exception{
 		setUpParameters(tcpPadding);
-		testClient = new NetworkServiceClientManager(testAddress, testExecutor, clientPrivateKey, serverPublicKey, testNetworkService);
+		testClient = new CloudClientCommunicationNetworkServiceConnection(testAddress, testExecutor, clientPrivateKey, serverPublicKey, testNetworkService);
 	}
 	
 	protected void setUpWithServer(int tcpPadding) throws Exception{
@@ -46,7 +46,7 @@ public class NetworkServiceClientManagerUnitTest {
 		testVPNPorts.add(testAddress.getPort()+1);
 		testServer = new CloudNetworkServiceManager(testAddress, testExecutor, testKeyPair, testNetworkService, testVPNPorts);
 		testServer.start();
-		testClient = new NetworkServiceClientManager(testAddress, testExecutor, clientPrivateKey, serverPublicKey, testNetworkService);
+		testClient = new CloudClientCommunicationNetworkServiceConnection(testAddress, testExecutor, clientPrivateKey, serverPublicKey, testNetworkService);
 		
 	}
 	

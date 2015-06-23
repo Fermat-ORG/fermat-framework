@@ -27,21 +27,21 @@ import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.IllegalPacketSenderException;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.IllegalSignatureException;
 
-public class CloudClientManager extends CloudFMPConnectionManager {
+public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 	
 	private static final String CHARSET_NAME = "UTF-8";
 	
 	private final Queue<FMPPacket> pendingOutgoingMessages = new ConcurrentLinkedQueue<FMPPacket>();
 	private Map<String, SelectionKey> requestedConnections = new ConcurrentHashMap<String, SelectionKey>();
 	
-	private Map<NetworkServices, NetworkServiceClientManager> networkServiceRegistry;
+	private Map<NetworkServices, CloudClientCommunicationNetworkServiceConnection> networkServiceRegistry;
 	
 	private final String serverPublicKey;
 	
-	public CloudClientManager(final CommunicationChannelAddress serverAddress, final ExecutorService executor, final String clientPrivateKey, final String serverPublicKey) throws IllegalArgumentException {
+	public CloudClientCommunicationManager(final CommunicationChannelAddress serverAddress, final ExecutorService executor, final String clientPrivateKey, final String serverPublicKey) throws IllegalArgumentException {
 		super(serverAddress, executor, clientPrivateKey, AsymmectricCryptography.derivePublicKey(clientPrivateKey), CloudFMPConnectionManagerMode.FMP_CLIENT);
 		this.serverPublicKey = serverPublicKey;
-		networkServiceRegistry = new ConcurrentHashMap<NetworkServices, NetworkServiceClientManager>();
+		networkServiceRegistry = new ConcurrentHashMap<NetworkServices, CloudClientCommunicationNetworkServiceConnection>();
 		networkServiceRegistry.clear();
 	}
 	
@@ -101,7 +101,7 @@ public class CloudClientManager extends CloudFMPConnectionManager {
 		Integer port = Integer.valueOf(messageComponents[2]);
 		CommunicationChannelAddress networkServiceServerAddress = CommunicationChannelAddressFactory.constructCloudAddress(host, port);
 		String networkServiceServerPublicKey = messageComponents[3];
-		NetworkServiceClientManager networkServiceClient = new NetworkServiceClientManager(networkServiceServerAddress, executor, AsymmectricCryptography.createPrivateKey(), networkServiceServerPublicKey, networkService);
+		CloudClientCommunicationNetworkServiceConnection networkServiceClient = new CloudClientCommunicationNetworkServiceConnection(networkServiceServerAddress, executor, AsymmectricCryptography.createPrivateKey(), networkServiceServerPublicKey, networkService);
 		try{
 			networkServiceClient.start();
 		}catch(CloudConnectionException ex){
@@ -163,6 +163,7 @@ public class CloudClientManager extends CloudFMPConnectionManager {
 			unregisteredConnections.put(serverPublicKey, serverConnection);
 			executor.execute(this);
 		}catch(IOException ex){
+			ex.printStackTrace();
 			throw new CloudConnectionException(ex.getMessage());
 		}
 	}
@@ -205,7 +206,7 @@ public class CloudClientManager extends CloudFMPConnectionManager {
 		}
 	}
 	
-	public NetworkServiceClientManager getNetworkServiceClient(final NetworkServices networkService) throws CloudConnectionException {
+	public CloudClientCommunicationNetworkServiceConnection getNetworkServiceClient(final NetworkServices networkService) throws CloudConnectionException {
 		return networkServiceRegistry.get(networkService);
 	}
 

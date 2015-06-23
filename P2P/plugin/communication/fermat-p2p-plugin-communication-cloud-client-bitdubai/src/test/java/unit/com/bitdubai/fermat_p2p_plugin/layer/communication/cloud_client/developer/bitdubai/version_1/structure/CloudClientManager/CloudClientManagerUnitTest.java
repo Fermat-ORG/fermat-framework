@@ -5,7 +5,7 @@ import java.util.concurrent.Executors;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.CommunicationChannelAddressFactory;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
-import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.structure.CloudClientManager;
+import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.structure.CloudClientCommunicationManager;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.CloudServiceManager;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.ECCKeyPair;
 
@@ -23,7 +23,7 @@ public class CloudClientManagerUnitTest {
 	protected ExecutorService testExecutor = Executors.newFixedThreadPool(30);
 	
 	protected CloudServiceManager testServer;
-	protected CloudClientManager testClient;
+	protected CloudClientCommunicationManager testClient;
 	
 	protected void setUpParameters(int tcpPadding) throws Exception{
 		testAddress = CommunicationChannelAddressFactory.constructCloudAddress(testHost, testBasePort+tcpPadding);
@@ -32,7 +32,7 @@ public class CloudClientManagerUnitTest {
 	
 	protected void setUp(int tcpPadding) throws Exception{
 		setUpParameters(tcpPadding);
-		testClient = new CloudClientManager(testAddress, testExecutor, clientPrivateKey, serverPublicKey);
+		testClient = new CloudClientCommunicationManager(testAddress, testExecutor, clientPrivateKey, serverPublicKey);
 	}
 	
 	protected void setUpWithServer(int tcpPadding) throws Exception{
@@ -40,7 +40,7 @@ public class CloudClientManagerUnitTest {
 		ECCKeyPair testKeyPair = new ECCKeyPair(serverPrivateKey);
 		testServer = new CloudServiceManager(testAddress, testExecutor, testKeyPair);
 		testServer.start();
-		testClient = new CloudClientManager(testAddress, testExecutor, clientPrivateKey, serverPublicKey);
+		testClient = new CloudClientCommunicationManager(testAddress, testExecutor, clientPrivateKey, serverPublicKey);
 		
 	}
 	

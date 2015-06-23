@@ -30,7 +30,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.IllegalSignatureException;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.VPNInitializationException;
 
-public class NetworkServiceClientManager extends CloudFMPConnectionManager {
+public class CloudClientCommunicationNetworkServiceConnection extends CloudFMPConnectionManager {
 	
 	private static final String CHARSET_NAME = "UTF-8";
 	
@@ -40,10 +40,10 @@ public class NetworkServiceClientManager extends CloudFMPConnectionManager {
 	private final String serverPublicKey;
 	private final NetworkServices networkService;
 	
-	private final Map<String, NetworkServiceClientVPN> activeVPNRegistry = new ConcurrentHashMap<String, NetworkServiceClientVPN>();
+	private final Map<String, CloudClientCommunicationNetworkServiceVPN> activeVPNRegistry = new ConcurrentHashMap<String, CloudClientCommunicationNetworkServiceVPN>();
 	private final Map<String, String> pendingVPNRequests = new ConcurrentHashMap<String, String>();
 
-	public NetworkServiceClientManager(final CommunicationChannelAddress serverAddress, final ExecutorService executor, final String clientPrivateKey, final String serverPublicKey, final NetworkServices networkService) throws IllegalArgumentException {
+	public CloudClientCommunicationNetworkServiceConnection(final CommunicationChannelAddress serverAddress, final ExecutorService executor, final String clientPrivateKey, final String serverPublicKey, final NetworkServices networkService) throws IllegalArgumentException {
 		super(serverAddress, executor, clientPrivateKey, AsymmectricCryptography.derivePublicKey(clientPrivateKey), CloudFMPConnectionManagerMode.FMP_CLIENT);
 		this.serverPublicKey = serverPublicKey;
 		this.networkService = networkService;
@@ -97,7 +97,7 @@ public class NetworkServiceClientManager extends CloudFMPConnectionManager {
 		String vpnPublicKey = messageComponents[2];
 		CommunicationChannelAddress vpnAddress = CommunicationChannelAddressFactory.constructCloudAddress(host, port);
 		try{
-			NetworkServiceClientVPN vpnClient = new NetworkServiceClientVPN(vpnAddress, Executors.newCachedThreadPool(), eccPrivateKey, vpnPublicKey, dataPacket.getSender(), networkService);
+			CloudClientCommunicationNetworkServiceVPN vpnClient = new CloudClientCommunicationNetworkServiceVPN(vpnAddress, Executors.newCachedThreadPool(), eccPrivateKey, vpnPublicKey, dataPacket.getSender(), networkService);
 			vpnClient.start();
 			activeVPNRegistry.put(dataPacket.getSender(), vpnClient);
 			pendingVPNRequests.remove(dataPacket.getSender());
@@ -202,7 +202,7 @@ public class NetworkServiceClientManager extends CloudFMPConnectionManager {
 		return pendingVPNRequests.keySet().iterator().next();
 	}
 	
-	public NetworkServiceClientVPN getActiveVPN(final String peer){
+	public CloudClientCommunicationNetworkServiceVPN getActiveVPN(final String peer){
 		return activeVPNRegistry.get(peer);
 	}
 	
@@ -243,6 +243,10 @@ public class NetworkServiceClientManager extends CloudFMPConnectionManager {
 
 	public Collection<String> getPendingVPNRequests() {
 		return pendingVPNRequests.keySet();
+	}
+
+	public Collection<String> getActiveVPNIdentifiers() {
+		return activeVPNRegistry.keySet();
 	}
 	
 }

@@ -206,7 +206,8 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         this.networkParameters = BitcoinNetworkConfiguration.getNetworkConfiguration();
 
         this.vaultFileName = userId.toString() + ".vault";
-        this.vaultFile = new File(userId.toString(), vaultFileName);
+        //todo this needs to be fixed
+        this.vaultFile = new File("/data/data/com.bitdubai.fermat/files", vaultFileName);
     }
 
     public  void loadOrCreateVault() throws CantCreateCryptoWalletException {

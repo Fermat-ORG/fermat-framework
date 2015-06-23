@@ -3,7 +3,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.develope
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.Message;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 
-public class CloudMessage implements Message {
+public class CloudClientCommunicationMessage implements Message {
 	
 	private static final int HASH_PRIME_NUMBER_PRODUCT = 3733;
 	private static final int HASH_PRIME_NUMBER_ADD = 6781;
@@ -11,7 +11,7 @@ public class CloudMessage implements Message {
 	private String textContent;
 	private MessagesStatus status;
 	
-	public CloudMessage(final String textContent, final MessagesStatus status) {
+	public CloudClientCommunicationMessage(final String textContent, final MessagesStatus status) {
 		if(textContent == null || status == null ||textContent.isEmpty())
 			throw new IllegalArgumentException();
 		this.textContent = textContent;

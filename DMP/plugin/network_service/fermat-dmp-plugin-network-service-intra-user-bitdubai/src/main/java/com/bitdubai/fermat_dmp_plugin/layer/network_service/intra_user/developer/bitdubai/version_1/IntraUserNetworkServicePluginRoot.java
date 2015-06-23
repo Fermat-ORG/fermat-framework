@@ -362,10 +362,10 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
      * @param remoteNetworkService
      */
     public void  acceptIncomingNetworkServiceConnectionRequest(CommunicationChannels communicationChannel, UUID remoteNetworkService){
-
+        /*
         try {
 
-           ServiceToServiceOnlineConnection serviceToServiceOnlineConnection = communicationLayerManager.acceptIncomingNetworkServiceConnectionRequest(communicationChannel, NetworkServices.INTRA_USER, this.getId(), remoteNetworkService);
+           ServiceToServiceOnlineConnection serviceToServiceOnlineConnection= communicationLayerManager.acceptIncomingNetworkServiceConnectionRequest(communicationChannel, NetworkServices.INTRA_USER, this.getId(), remoteNetworkService);
 
            if (serviceToServiceOnlineConnection.getStatus() == ConnectionStatus.CONNECTED &&
                    serviceToServiceOnlineConnection.getUnreadMessagesCount() > 0 ) {
@@ -381,7 +381,7 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
                  *
                  *  Posible solución enviarla en un atributo aparte en el mismo mensaje? es seguro?
                  *
-                 */
+                 *
 
                 //Deserialize the remote object
                 IntraUserNetworkServiceRemote intraUserNetworkServiceRemote = new IntraUserNetworkServiceRemote(jsomObject);
@@ -398,7 +398,7 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
         } catch (CommunicationChannelNotImplemented communicationChannelNotImplemented) {
             errorManager.reportUnexpectedPluginException(BITDUBAI_USER_NETWORK_SERVICE, DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not accept incoming connection"));
 
-        }
+        }*/
 
     }
 
@@ -408,10 +408,10 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
      * @param remoteNetworkService
      */
     public void connectTo(UUID remoteNetworkService){
-
+        /*
         try {
 
-            ServiceToServiceOnlineConnection serviceToServiceOnlineConnection = communicationLayerManager.connectTo(NetworkServices.INTRA_USER, remoteNetworkService);
+            ServiceToServiceOnlineConnection serviceToServiceOnlineConnection = communicationLayerManager.requestConnectionTo(NetworkServices.INTRA_USER, remoteNetworkService);
 
             if (serviceToServiceOnlineConnection.getStatus() == ConnectionStatus.CONNECTED) {
 
@@ -428,7 +428,7 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
 
         } catch (CantConnectToRemoteServiceException e) {
             errorManager.reportUnexpectedPluginException(BITDUBAI_USER_NETWORK_SERVICE, DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not connect to remote network service "+remoteNetworkService));
-        }
+        }*/
 
     }
 

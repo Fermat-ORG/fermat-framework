@@ -8,7 +8,7 @@ import java.util.concurrent.Executors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.CommunicationChannelAddressFactory;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
-import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.structure.NetworkServiceClientVPN;
+import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.structure.CloudClientCommunicationNetworkServiceVPN;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.CloudNetworkServiceVPN;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.ECCKeyPair;
 
@@ -27,7 +27,7 @@ public class NetworkServiceClientVPNUnitTest {
 	protected ExecutorService testExecutor = Executors.newFixedThreadPool(30);
 	
 	protected CloudNetworkServiceVPN testServer;
-	protected NetworkServiceClientVPN testClient;
+	protected CloudClientCommunicationNetworkServiceVPN testClient;
 	protected NetworkServices testNetworkService = NetworkServices.INTRA_USER;
 	
 	protected void setUpParameters(int tcpPadding) throws Exception{
@@ -38,7 +38,7 @@ public class NetworkServiceClientVPNUnitTest {
 	
 	protected void setUp(int tcpPadding) throws Exception{
 		setUpParameters(tcpPadding);
-		testClient = new NetworkServiceClientVPN(testAddress, testExecutor, clientPrivateKey, serverPublicKey, peerPublicKey, testNetworkService);
+		testClient = new CloudClientCommunicationNetworkServiceVPN(testAddress, testExecutor, clientPrivateKey, serverPublicKey, peerPublicKey, testNetworkService);
 	}
 	
 	protected void setUpWithServer(int tcpPadding) throws Exception{
@@ -48,7 +48,7 @@ public class NetworkServiceClientVPNUnitTest {
 		testParticipants.add(peerPublicKey);
 		testServer = new CloudNetworkServiceVPN(testAddress, testExecutor, testKeyPair, testNetworkService, testParticipants);
 		testServer.start();
-		testClient = new NetworkServiceClientVPN(testAddress, testExecutor, clientPrivateKey, serverPublicKey, peerPublicKey, testNetworkService);
+		testClient = new CloudClientCommunicationNetworkServiceVPN(testAddress, testExecutor, clientPrivateKey, serverPublicKey, peerPublicKey, testNetworkService);
 	}
 	
 	protected int getThreadSleepMillis(){

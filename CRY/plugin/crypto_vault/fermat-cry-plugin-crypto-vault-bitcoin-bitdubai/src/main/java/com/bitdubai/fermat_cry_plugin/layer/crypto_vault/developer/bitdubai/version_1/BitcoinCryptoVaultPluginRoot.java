@@ -179,8 +179,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DealsWi
         //userId = deviceUserManager.getLoggedInUser().getId();
         userId = UUID.fromString("dca1129e-6ee1-4ae1-967d-fd0b37f13283"); //todo fix deviceUser Implementation
         //userId = UUID.randomUUID();
-        System.out.println("Vault UserID: " + userId.toString());
-        System.out.println("PluginId: " + pluginId.toString());
+
 
         /**
          * I will try to open the database first, if it doesn't exists, then I create it

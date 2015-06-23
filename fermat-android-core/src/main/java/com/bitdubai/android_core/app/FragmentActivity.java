@@ -21,8 +21,7 @@ import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.su
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.SendAllFragment;
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.SendToNewContactFragment;
 
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ReceiveFromContactFragment;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.SendToContactFragment;
+
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.App;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.AppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.Fragment;
@@ -113,37 +112,6 @@ public class FragmentActivity  extends Activity {
                 RuntimeFragment fragment = (RuntimeFragment) fragmentEntry.getValue();
                 Fragments type = fragment.getType();
                 switch (type) {
-                    //Bitcoin wallet fragments
-
-
-                    case   CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS_SEND:
-                        if (savedInstanceState == null) {
-
-                            SendToContactFragment bc = new SendToContactFragment();
-                            //pass to fragment params
-                            Bundle b = new Bundle();
-                            b.putString("contactId",tagParam);
-                            bc.setArguments(b);
-                            getFragmentManager().beginTransaction()
-                                    .add(R.id.container, bc)
-                                    .commit();
-                        }
-                        break;
-
-                    case    CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS_RECEIVE:
-                        if (savedInstanceState == null) {
-
-                            ReceiveFromContactFragment bc = new ReceiveFromContactFragment();
-                            //pass to fragment params
-                            Bundle b = new Bundle();
-                            b.putString("contactId",tagParam);
-                            bc.setArguments(b);
-
-                            getFragmentManager().beginTransaction()
-                                    .add(R.id.container, bc)
-                                    .commit();
-                        }
-                        break;
 
                     case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS:
                         if (savedInstanceState == null) {

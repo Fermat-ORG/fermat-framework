@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.CommunicationChannelAddressFactory;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
-import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.structure.NetworkServiceClientManager;
+import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.structure.CloudClientCommunicationNetworkServiceConnection;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.CloudNetworkServiceManager;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.ECCKeyPair;
 
@@ -26,7 +26,7 @@ public abstract class NetworkServiceClientManagerIntegrationTest {
 	protected Integer testBasePort = 51000;
 	protected CommunicationChannelAddress testAddress;
 	
-	protected NetworkServiceClientManager testClient;
+	protected CloudClientCommunicationNetworkServiceConnection testClient;
 	
 	protected CloudNetworkServiceManager testServer;
 	protected NetworkServices testNetworkService;
@@ -45,7 +45,7 @@ public abstract class NetworkServiceClientManagerIntegrationTest {
 	
 	protected void setUp(final int tcpPadding) throws Exception{
 		setUpServer(tcpPadding);
-		testClient = new NetworkServiceClientManager(testAddress, getExecutor(), CLIENT_PRIVATE_KEY, serverPublicKey, testNetworkService);
+		testClient = new CloudClientCommunicationNetworkServiceConnection(testAddress, getExecutor(), CLIENT_PRIVATE_KEY, serverPublicKey, testNetworkService);
 		testClient.start();
 		Thread.sleep(getThreadSleepMillis());
 	}
