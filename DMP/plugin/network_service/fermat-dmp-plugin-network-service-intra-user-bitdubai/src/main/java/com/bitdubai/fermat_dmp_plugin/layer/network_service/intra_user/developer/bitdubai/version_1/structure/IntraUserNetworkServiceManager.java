@@ -103,7 +103,7 @@ public class IntraUserNetworkServiceManager implements IntraUserManager {
              communicationLayerManager.requestConnectionTo(NetworkServices.INTRA_USER, remoteNetworkServicePublicKey);
 
 
-        } catch (Exception e) {
+        } catch (CantConnectToRemoteServiceException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not connect to remote network service "));
         }
 
@@ -144,20 +144,119 @@ public class IntraUserNetworkServiceManager implements IntraUserManager {
      */
     public void  acceptIncomingNetworkServiceConnectionRequest(CommunicationChannels communicationChannel, String remoteNetworkServicePublicKey){
 
+        try {
 
+            /*
+             * Accept the new connection
+             */
+            communicationLayerManager.acceptIncomingNetworkServiceConnectionRequest(communicationChannel, NetworkServices.INTRA_USER, remoteNetworkServicePublicKey);
 
+            /*
+             * Get the active connection
+             */
+            ServiceToServiceOnlineConnection serviceToServiceOnlineConnection = communicationLayerManager.getActiveNetworkServiceConnection(communicationChannel, NetworkServices.INTRA_USER, remoteNetworkServicePublicKey);
+
+            //Validate the connection
+            if (serviceToServiceOnlineConnection != null &&
+                    serviceToServiceOnlineConnection.getStatus() == ConnectionStatus.CONNECTED) {
+
+                 /*
+                 * Instantiate the local reference
+                 */
+                IntraUserNetworkServiceLocal intraUserNetworkServiceLocal = new IntraUserNetworkServiceLocal(remoteNetworkServicePublicKey, errorManager, pluginDatabaseSystem);
+
+                /*
+                 * Instantiate the remote reference
+                 */
+                IntraUserNetworkServiceRemoteAgent intraUserNetworkServiceRemoteAgent = new IntraUserNetworkServiceRemoteAgent(serviceToServiceOnlineConnection, pluginDatabaseSystem, errorManager);
+
+                /*
+                 * Register the observer to the observable agent
+                 */
+                intraUserNetworkServiceRemoteAgent.addObserver(intraUserNetworkServiceLocal);
+
+                /*
+                 * Start the service thread
+                 */
+                intraUserNetworkServiceRemoteAgent.start();
+
+                /*
+                 * Add to the cache
+                 */
+                intraUserNetworkServiceLocalsCache.put(remoteNetworkServicePublicKey, intraUserNetworkServiceLocal);
+                intraUserNetworkServiceRemoteAgentsCache.put(remoteNetworkServicePublicKey, intraUserNetworkServiceRemoteAgent);
+
+            }
+
+        } catch (CommunicationChannelNotImplemented communicationChannelNotImplemented) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not accept incoming connection"));
+        }
+
+    }
+
+    /**
+     * Handles events that indicate a connection to been established between two intra user
+     * network services and prepares all objects to work with this new connection
+     *
+     * @param communicationChannel
+     * @param remoteNetworkServicePublicKey
+     */
+    protected void handleStablishedRequestedNetworkServiceConnection(CommunicationChannels communicationChannel, String remoteNetworkServicePublicKey){
+
+        try {
+
+            /*
+             * Get the active connection
+             */
+            ServiceToServiceOnlineConnection serviceToServiceOnlineConnection = communicationLayerManager.getActiveNetworkServiceConnection(communicationChannel, NetworkServices.INTRA_USER, remoteNetworkServicePublicKey);
+
+            //Validate the connection
+            if (serviceToServiceOnlineConnection != null &&
+                    serviceToServiceOnlineConnection.getStatus() == ConnectionStatus.CONNECTED) {
+
+                 /*
+                 * Instantiate the local reference
+                 */
+                IntraUserNetworkServiceLocal intraUserNetworkServiceLocal = new IntraUserNetworkServiceLocal(remoteNetworkServicePublicKey, errorManager, pluginDatabaseSystem);
+
+                /*
+                 * Instantiate the remote reference
+                 */
+                IntraUserNetworkServiceRemoteAgent intraUserNetworkServiceRemoteAgent = new IntraUserNetworkServiceRemoteAgent(serviceToServiceOnlineConnection, pluginDatabaseSystem, errorManager);
+
+                /*
+                 * Register the observer to the observable agent
+                 */
+                intraUserNetworkServiceRemoteAgent.addObserver(intraUserNetworkServiceLocal);
+
+                /*
+                 * Start the service thread
+                 */
+                intraUserNetworkServiceRemoteAgent.start();
+
+                /*
+                 * Add to the cache
+                 */
+                intraUserNetworkServiceLocalsCache.put(remoteNetworkServicePublicKey, intraUserNetworkServiceLocal);
+                intraUserNetworkServiceRemoteAgentsCache.put(remoteNetworkServicePublicKey, intraUserNetworkServiceRemoteAgent);
+
+            }
+
+        }catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not get connection"));
+        }
     }
 
     /**
      * Return the IntraUserNetworkServiceLocal that represent the intra user network service remote
      *
-     * @param remoteNetworkServiceId
+     * @param remoteNetworkServicePublicKey
      * @return IntraUserNetworkServiceLocal
      */
-    public IntraUserNetworkServiceLocal getIntraUserNetworkServiceLocalInstance(UUID remoteNetworkServiceId){
+    public IntraUserNetworkServiceLocal getIntraUserNetworkServiceLocalInstance(String remoteNetworkServicePublicKey){
 
         //return the instance
-        return intraUserNetworkServiceLocalsCache.get(remoteNetworkServiceId);
+        return intraUserNetworkServiceLocalsCache.get(remoteNetworkServicePublicKey);
     }
 
 }
