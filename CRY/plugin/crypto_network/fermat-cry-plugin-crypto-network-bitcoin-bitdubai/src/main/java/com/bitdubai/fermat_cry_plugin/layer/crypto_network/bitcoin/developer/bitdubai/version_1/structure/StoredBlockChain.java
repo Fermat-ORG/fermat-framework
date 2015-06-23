@@ -111,6 +111,7 @@ class StoredBlockChain implements BitcoinManager, DealsWithErrors, DealsWithPlug
             blockchainFile.persistToMedia();
 
 
+            //todo this needs to be fixed
             File spvFile = new File("/data/data/com.bitdubai.fermat/files", blockChainFileName);
 
             spvStore = new SPVBlockStore(this.networkParameters, spvFile);

@@ -307,7 +307,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
         cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME,ProtocolStatus.TO_BE_NOTIFIED.toString() ,DatabaseFilterType.EQUAL);
         try {
             cryptoTxTable.loadToMemory();
-            if (!cryptoTxTable.getRecords().isEmpty())
+            if (cryptoTxTable.getRecords().isEmpty())
                 return false;
             else
                 return true;
