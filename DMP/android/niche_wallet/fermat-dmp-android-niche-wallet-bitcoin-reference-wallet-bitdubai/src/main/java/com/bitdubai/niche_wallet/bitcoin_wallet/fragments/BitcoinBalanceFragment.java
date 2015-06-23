@@ -13,6 +13,14 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetBalanceException;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.niche_wallet.bitcoin_wallet.Platform;
+
+import java.util.UUID;
+
 /**
  * Created by Natalia on 02/06/2015.
  */
@@ -22,8 +30,16 @@ public class BitcoinBalanceFragment extends  Fragment {
     String[] balances;
 
     private static final String ARG_POSITION = "position";
-
     private int position;
+
+    UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
+
+    /**
+     * DealsWithNicheWalletTypeCryptoWallet Interface member variables.
+     */
+    private static CryptoWalletManager cryptoWalletManager;
+    private static Platform platform = new Platform();
+    CryptoWallet cryptoWallet;
 
     public static BitcoinBalanceFragment newInstance(int position) {
         BitcoinBalanceFragment f = new BitcoinBalanceFragment();
@@ -55,6 +71,23 @@ public class BitcoinBalanceFragment extends  Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
+        cryptoWalletManager = platform.getCryptoWalletManager();
+
+        try{
+            cryptoWallet = cryptoWalletManager.getCryptoWallet();
+        }
+        catch (CantGetCryptoWalletException e) {
+            e.printStackTrace();
+        }
+
+        //TODO falta el BitcoinWalletManager para poder consultar el balancce
+     //   try {
+           // long balance = cryptoWallet.getBalance(wallet_id);
+      //  } catch (CantGetBalanceException e) {
+      //  e.printStackTrace();
+
+      //  }
 
         balances = new String[]{"BTC 0.0049"};
 
