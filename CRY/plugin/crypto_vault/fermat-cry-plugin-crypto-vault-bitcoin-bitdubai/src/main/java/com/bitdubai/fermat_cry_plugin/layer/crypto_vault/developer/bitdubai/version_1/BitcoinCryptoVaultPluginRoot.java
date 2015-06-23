@@ -177,7 +177,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DealsWi
          * I get the userId from the deviceUserManager
          */
         //userId = deviceUserManager.getLoggedInUser().getId();
-        userId = UUID.fromString("dca1129e-6ee1-4ae1-967d-fd0b37f13283"); //todo fix deviceUser Implementation
+        userId = UUID.fromString("dc15139e-5ee1-4ae1-967d-fd0b37f13283"); //todo fix deviceUser Implementation
         //userId = UUID.randomUUID();
 
 

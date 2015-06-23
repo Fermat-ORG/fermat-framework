@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import android.content.Context;
+import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -202,7 +203,7 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
                 databasePath =  this.context.getFilesDir().getPath() + "/databases/";
 
             databasePath += "/" + databaseName.replace("-","") + ".db";
-            
+
 
             this.Database = SQLiteDatabase.openDatabase(databasePath,null,0,null);
 

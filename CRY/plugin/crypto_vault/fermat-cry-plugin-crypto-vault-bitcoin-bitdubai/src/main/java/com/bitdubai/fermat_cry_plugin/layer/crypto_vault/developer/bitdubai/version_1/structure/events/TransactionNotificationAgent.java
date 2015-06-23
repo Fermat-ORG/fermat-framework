@@ -236,6 +236,7 @@ public class TransactionNotificationAgent implements Agent,DealsWithEvents,Deals
             /**
              * this will run in an infinite loop
              */
+            System.out.println("Transaction Protocol Notification Agent: running...");
             while (true)
             {
                 try {
@@ -263,7 +264,6 @@ public class TransactionNotificationAgent implements Agent,DealsWithEvents,Deals
             /**
              * I search for transactions not yet notified. If I found something, Ill raise an event
              */
-            System.out.println("Transaction Protocol Notification Agent: running...");
             CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
 
             if (isTransactionToBeNotified()){
