@@ -177,7 +177,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DealsWi
          * I get the userId from the deviceUserManager
          */
         //userId = deviceUserManager.getLoggedInUser().getId();
-        userId = UUID.fromString("dca1129e-6ee1-4ae1-967d-fd0b37f13283"); //todo fix deviceUser Implementation
+        userId = UUID.fromString("dc1513de-5ee1-4ae1-967d35d0bf7f172832"); //todo fix deviceUser Implementation
         //userId = UUID.randomUUID();
 
 
@@ -187,7 +187,8 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DealsWi
         try {
 
             database = pluginDatabaseSystem.openDatabase(pluginId, userId.toString());
-        }  catch (DatabaseNotFoundException e) {
+
+        } catch (Exception e) {
             /**
              * The database doesn't exists, lets create it.
              */
@@ -204,70 +205,64 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DealsWi
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                 throw new CantStartPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT);
             }
-        } catch (CantOpenDatabaseException e) {
-            /**
-             * the database exists, but I cannot open it! I cannot handle this.
-             */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantStartPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT);
-        }
 
-
-        /**
-         * I will start the loading creation of the wallet from the user Id
-         */
-        try {
-            vault = new BitcoinCryptoVault(this.userId);
-            vault.setErrorManager(errorManager);
-            vault.setPluginDatabaseSystem(pluginDatabaseSystem);
-            vault.setDatabase(this.database);
-            vault.setPluginFileSystem(pluginFileSystem);
-            vault.setBitcoinCryptoNetworkManager(bitcoinCryptoNetworkManager);
-            vault.setPluginId(pluginId);
-
-            vault.loadOrCreateVault();
-            System.out.println("Valid receive address for the vault is: " + vault.getAddress().getAddress());
 
             /**
-             * Once the vault is loaded or created, I will connect it to Bitcoin network to recieve pending transactions
+             * I will start the loading creation of the wallet from the user Id
              */
-
             try {
-                vault.connectVault();
+                vault = new BitcoinCryptoVault(this.userId);
+                vault.setErrorManager(errorManager);
+                vault.setPluginDatabaseSystem(pluginDatabaseSystem);
+                vault.setDatabase(this.database);
+                vault.setPluginFileSystem(pluginFileSystem);
+                vault.setBitcoinCryptoNetworkManager(bitcoinCryptoNetworkManager);
+                vault.setPluginId(pluginId);
 
-            } catch (CantStartAgentException e) { //todo this exception is not correct.
-                e.printStackTrace();
+                vault.loadOrCreateVault();
+                System.out.println("Valid receive address for the vault is: " + vault.getAddress().getAddress());
+
+                /**
+                 * Once the vault is loaded or created, I will connect it to Bitcoin network to recieve pending transactions
+                 */
+
+                try {
+                    vault.connectVault();
+
+                } catch (CantStartAgentException cantStartAgentException) { //todo this exception is not correct.
+                    cantStartAgentException.printStackTrace();
+                }
+
+
+            } catch (CantCreateCryptoWalletException cantCreateCryptoWalletException ) {
+                /**
+                 * If I couldnt create the Vault, I cant go on.
+                 */
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateCryptoWalletException );
+                throw new CantStartPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT);
             }
 
 
-        } catch (CantCreateCryptoWalletException e) {
             /**
-             * If I couldnt create the Vault, I cant go on.
+             * now I will start the TransactionNotificationAgent to monitor
              */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantStartPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT);
-        }
+            transactionNotificationAgent = new TransactionNotificationAgent(eventManager, pluginDatabaseSystem, errorManager, pluginId, userId);
+            try {
+                transactionNotificationAgent.start();
+            } catch (CantStartAgentException cantStartAgentException ) {
+                /**
+                 * If I couldn't start the agent, I still will continue with the vault
+                 */
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantStartAgentException );
+            }
 
 
-        /**
-         * now I will start the TransactionNotificationAgent to monitor
-         */
-        transactionNotificationAgent = new TransactionNotificationAgent(eventManager,pluginDatabaseSystem, errorManager, pluginId, userId);
-        try {
-            transactionNotificationAgent.start();
-        } catch (CantStartAgentException e) {
             /**
-             * If I couldn't start the agent, I still will continue with the vault
+             * the service is started.
              */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            this.serviceStatus = ServiceStatus.STARTED;
+
         }
-
-
-        /**
-         * the service is started.
-         */
-        this.serviceStatus = ServiceStatus.STARTED;
-
     }
 
     /**
