@@ -18,5 +18,7 @@ public interface ServiceToServiceOnlineConnection {
     public int getUnreadMessagesCount ();
     
     public Message readNextMessage();
-    
+
+    // TODO: JORGE Manejo de Excepciones y entregarselas a Roberto
+
 }

@@ -5,10 +5,9 @@ import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
-import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkService;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.*;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.enums.RejectConnectionRequestReasons;
-import com.bitdubai.fermat_core.layer.p2p_communication.cloud.CloudSubsystem;
+import com.bitdubai.fermat_core.layer.p2p_communication.cloud_client.CloudClientSubsystem;
 import com.bitdubai.fermat_core.layer.p2p_communication.cloud_server.CloudServerSubsystem;
 
 import java.util.*;
@@ -36,6 +35,7 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
      * anytime, and when it is online, I have to register the network services by myself.
      * * * 
      */
+    //TODO: JORGE : Agregar a este listado los network services al momento del registro.
     
      private Set<NetworkServices> networkServices = new ConcurrentSkipListSet<NetworkServices>();
 
@@ -59,11 +59,11 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
         /**
          * For now, the only way to communicate with other devices is through a cloud service.
          */
-        CommunicationSubsystem cloudSubsystem = new CloudSubsystem();
+        CommunicationSubsystem cloudClientSubsystem = new CloudClientSubsystem();
 
         try {
-            cloudSubsystem.start();
-            mCloudPlugin = ((CloudSubsystem) cloudSubsystem).getPlugin();
+            cloudClientSubsystem.start();
+            mCloudPlugin = ((CloudClientSubsystem) cloudClientSubsystem).getPlugin();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());
@@ -75,7 +75,7 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
         }
 
         /**
-         * For now, the only way to communicate with other devices is through a cloud service.
+         *
          */
         CommunicationSubsystem cloudServerSubsystem = new CloudServerSubsystem();
 
@@ -143,6 +143,7 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
     @Override
     public ServiceToServiceOnlineConnection getActiveNetworkServiceConnection(CommunicationChannels communicationChannel, NetworkServices networkService, String remoteNetworkService) {
         return ((CommunicationChannel) mCloudPlugin).getActiveNetworkServiceConnection(networkService, remoteNetworkService);
+    //TODO: JORGE usar el objeto LayerServiceToServiceOnlineConnection para encapsular la conexion real.
     }
 
     @Override

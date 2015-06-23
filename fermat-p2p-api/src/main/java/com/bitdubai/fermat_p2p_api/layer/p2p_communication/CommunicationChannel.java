@@ -32,4 +32,6 @@ public interface CommunicationChannel {
 
     public Collection<String> getActiveNetworkServiceConnectionIdentifiers(NetworkServices networkService);
 
+    //TODO: JORGE El Cloud Server no deberia ser un Communication Channel
+    //TODO: JORGE Sacar los metodos que no sirvan
 }

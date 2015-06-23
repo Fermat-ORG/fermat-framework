@@ -24,4 +24,6 @@ public interface CommunicationLayerManager {
     public Collection<String> getActiveNetworkServiceConnectionIdentifiers(NetworkServices networkService);
 
     public ServiceToServiceOnlineConnection getActiveNetworkServiceConnection(CommunicationChannels communicationChannel, NetworkServices networkService, String remoteNetworkService);
+
+// TODO: JORGE Manejo de Excepciones y entregarselas a Roberto
 }

@@ -164,7 +164,7 @@
                 <package>com.bitdubai.fermat_core.layer.osa_android.android</package>
                 <package>com.bitdubai.fermat_core.layer.osa_android.android.device_location</package>
                 <package>com.bitdubai.fermat_core.layer.p2p_communication</package>
-                <package>com.bitdubai.fermat_core.layer.p2p_communication.cloud</package>
+                <package>com.bitdubai.fermat_core.layer.p2p_communication.cloud_client</package>
                 <package>com.bitdubai.fermat_core.layer.p2p_communication.cloud_server</package>
                 <package>com.bitdubai.fermat_core.layer.pip_hardware</package>
                 <package>com.bitdubai.fermat_core.layer.pip_hardware.local_device</package>

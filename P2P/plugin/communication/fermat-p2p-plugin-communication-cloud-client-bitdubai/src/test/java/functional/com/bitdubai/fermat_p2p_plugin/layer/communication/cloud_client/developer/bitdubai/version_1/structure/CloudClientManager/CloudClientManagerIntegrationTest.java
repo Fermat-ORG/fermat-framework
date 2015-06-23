@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.CommunicationChannelAddressFactory;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
-import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.structure.CloudClientManager;
+import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.structure.CloudClientCommunicationManager;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.CloudNetworkServiceManager;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.CloudServiceManager;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.ECCKeyPair;
@@ -28,7 +28,7 @@ public abstract class CloudClientManagerIntegrationTest {
 	protected CommunicationChannelAddress testAddress;
 	
 	protected CloudServiceManager testServer;
-	protected CloudClientManager testClient;
+	protected CloudClientCommunicationManager testClient;
 	
 	protected CloudNetworkServiceManager testNetworkServiceServer;
 	protected NetworkServices testNetworkService;
@@ -50,7 +50,7 @@ public abstract class CloudClientManagerIntegrationTest {
 	
 	protected void setUp(final int tcpPadding) throws Exception{
 		setUpServer(tcpPadding);
-		testClient = new CloudClientManager(testAddress, getExecutor(), CLIENT_PRIVATE_KEY, serverPublicKey);
+		testClient = new CloudClientCommunicationManager(testAddress, getExecutor(), CLIENT_PRIVATE_KEY, serverPublicKey);
 		testClient.start();
 	}
 	

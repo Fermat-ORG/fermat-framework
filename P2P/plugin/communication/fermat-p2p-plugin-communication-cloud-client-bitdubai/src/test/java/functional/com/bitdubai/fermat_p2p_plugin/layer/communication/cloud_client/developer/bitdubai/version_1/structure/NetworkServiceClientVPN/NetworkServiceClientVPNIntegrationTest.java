@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.CommunicationChannelAddressFactory;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
-import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.structure.NetworkServiceClientVPN;
+import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.structure.CloudClientCommunicationNetworkServiceVPN;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.CloudNetworkServiceVPN;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.ECCKeyPair;
 
@@ -27,7 +27,7 @@ public abstract class NetworkServiceClientVPNIntegrationTest {
 	protected CommunicationChannelAddress testAddress;
 	
 	protected CloudNetworkServiceVPN testServer;
-	protected NetworkServiceClientVPN testClient;
+	protected CloudClientCommunicationNetworkServiceVPN testClient;
 	
 	protected NetworkServices testNetworkService;
 	protected Set<String> testParticipants;
@@ -47,7 +47,7 @@ public abstract class NetworkServiceClientVPNIntegrationTest {
 	
 	protected void setUpClient(final int tcpPadding) throws Exception{
 		setUpServer(tcpPadding);
-		testClient = new NetworkServiceClientVPN(testAddress, getExecutor(), CLIENT_PRIVATE_KEY, serverPublicKey, CLIENT_PUBLIC_KEY, testNetworkService);
+		testClient = new CloudClientCommunicationNetworkServiceVPN(testAddress, getExecutor(), CLIENT_PRIVATE_KEY, serverPublicKey, CLIENT_PUBLIC_KEY, testNetworkService);
 		testClient.start();
 		Thread.sleep(getThreadSleepMillis());
 	}
