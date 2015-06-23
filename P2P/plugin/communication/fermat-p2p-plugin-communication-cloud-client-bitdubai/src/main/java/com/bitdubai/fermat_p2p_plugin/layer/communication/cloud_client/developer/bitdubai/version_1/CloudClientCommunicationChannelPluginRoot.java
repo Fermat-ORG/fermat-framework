@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventMan
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.CommunicationChannelAddressFactory;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CantConnectToRemoteServiceException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication. CommunicationChannel;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.OnlineChannel;
@@ -20,7 +21,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.ServiceToServiceOnlin
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.enums.RejectConnectionRequestReasons;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.exceptions.CloudConnectionException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
-import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.structure.CloudClientManager;
+import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.structure.CloudClientCommunicationManager;
 
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -30,6 +31,7 @@ import java.util.concurrent.Executors;
  * Created by ciencias on 20.01.15.
  */
 
+// TODO; JORE: Cuando llega una llamada entrante disparar un evento para que el Network Service venga a tomarla.
 
 /**
  * Hi! I am a cloud service which centralizes the communications between system users.
@@ -42,7 +44,7 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
      */
 	private CommunicationChannelAddress serverAddress;
 	private String serverPublicKey;
-	private CloudClientManager cloudClient;
+	private CloudClientCommunicationManager cloudClient;
     private Set<NetworkServices> networkServices = new HashSet<NetworkServices>();
     
     /**
@@ -130,6 +132,16 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 	}
 
 	@Override
+	public void requestConnectiontTo(NetworkServices networkServices, String remoteNetworkService) throws CantConnectToRemoteServiceException {
+		try {
+			cloudClient.getNetworkServiceClient(networkServices).requestVPNConnection(remoteNetworkService);
+		} catch (CloudConnectionException e) {
+			e.printStackTrace();
+			throw new CantConnectToRemoteServiceException(e.getMessage());
+		}
+	}
+
+	@Override
 	public Collection<String> getIncomingNetworkServiceConnectionRequests(final NetworkServices networkService) {
 		try {
 			return cloudClient.getNetworkServiceClient(networkService).getPendingVPNRequests();
@@ -162,6 +174,16 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.println(errorManager.hashCode());
+			return null;
+		}
+	}
+
+	@Override
+	public Collection<String> getActiveNetworkServiceConnectionIdentifiers(NetworkServices networkService) {
+		try {
+			return cloudClient.getNetworkServiceClient(networkService).getActiveVPNIdentifiers();
+		} catch (CloudConnectionException e) {
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -213,7 +235,8 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
     	this.serverAddress = CommunicationChannelAddressFactory.constructCloudAddress(serverHost, serverPort);
     	this.serverPublicKey = serverPublicKey;
     }
-
+//TODO JORGE: sacar el stacktrace
+	// TODO JORGE: Integrarse con LOCAL DEVICE ADDON para que el sea el que maneje la identidad del dispositivo.
     /**
      * Service Interface implementation.
      */
@@ -227,7 +250,7 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
     	ExecutorService executor = Executors.newCachedThreadPool();
     	String clientKey = AsymmectricCryptography.createPrivateKey();
     	try{ 
-    		cloudClient = new CloudClientManager(serverAddress, executor, clientKey, serverPublicKey);
+    		cloudClient = new CloudClientCommunicationManager(serverAddress, executor, clientKey, serverPublicKey);
     		cloudClient.start();
     		cloudClient.requestConnectionToServer();
     		this.serviceStatus = ServiceStatus.STARTED;

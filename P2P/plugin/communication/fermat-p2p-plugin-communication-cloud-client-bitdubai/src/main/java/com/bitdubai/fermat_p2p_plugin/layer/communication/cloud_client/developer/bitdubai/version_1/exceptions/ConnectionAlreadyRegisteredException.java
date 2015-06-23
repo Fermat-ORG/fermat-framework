@@ -20,4 +20,6 @@ public class ConnectionAlreadyRegisteredException extends
 		super(DEFAULT_MESSAGE + ": " + message);
 	}
 
+
+	//TODO: JORGE Estandarizar lo que va en las excepciones.
 }

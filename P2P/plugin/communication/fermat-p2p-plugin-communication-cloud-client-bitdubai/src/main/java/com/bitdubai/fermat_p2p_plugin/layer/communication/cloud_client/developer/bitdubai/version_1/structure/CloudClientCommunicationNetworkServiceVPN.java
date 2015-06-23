@@ -35,7 +35,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.IllegalPacketSenderException;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.IllegalSignatureException;
 
-public class NetworkServiceClientVPN extends CloudFMPConnectionManager implements ServiceToServiceOnlineConnection {
+public class CloudClientCommunicationNetworkServiceVPN extends CloudFMPConnectionManager implements ServiceToServiceOnlineConnection {
 	
 	private static final String CHARSET_NAME = "UTF-8";
 	
@@ -49,7 +49,7 @@ public class NetworkServiceClientVPN extends CloudFMPConnectionManager implement
 	private final AtomicBoolean registered;
 	private final Set<String> pendingMessages = new ConcurrentSkipListSet<String>();
 	
-	public NetworkServiceClientVPN(final CommunicationChannelAddress vpnAddress, final ExecutorService executor, final String clientPrivateKey, final String vpnPublicKey, final String peerPublicKey, final NetworkServices networkService) throws IllegalArgumentException {
+	public CloudClientCommunicationNetworkServiceVPN(final CommunicationChannelAddress vpnAddress, final ExecutorService executor, final String clientPrivateKey, final String vpnPublicKey, final String peerPublicKey, final NetworkServices networkService) throws IllegalArgumentException {
 		super(vpnAddress, executor, clientPrivateKey, AsymmectricCryptography.derivePublicKey(clientPrivateKey), CloudFMPConnectionManagerMode.FMP_CLIENT);
 		this.vpnPublicKey = vpnPublicKey;
 		this.peerPublicKey = peerPublicKey;
@@ -256,7 +256,7 @@ public class NetworkServiceClientVPN extends CloudFMPConnectionManager implement
 	@Override
 	public Message readNextMessage() {
 		String messageContent = getPendingMessage();
-		return new CloudMessage(messageContent, MessagesStatus.DELIVERED);
+		return new CloudClientCommunicationMessage(messageContent, MessagesStatus.DELIVERED);
 	}
 
 	@Override
