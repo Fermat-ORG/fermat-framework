@@ -5,13 +5,14 @@ import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionServiceNotStartedException;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventHandler;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoTransactionsWaitingTransferenceEvent;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoTransactionsWaitingTransferenceExtraUserEvent;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantSaveEvent;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserEventRecorderService;
 
 /**
  * Created by eze on 2015.06.19..
  */
-public class IncomingCryptoTransactionsWaitingTransferenceEventHandler implements EventHandler {
+public class IncomingCryptoTransactionsWaitingTransferenceExtraUserEventHandler implements EventHandler {
     /**
      * IncomingCryptoIdentifiedEventHandler member variables
      */
@@ -36,7 +37,7 @@ public class IncomingCryptoTransactionsWaitingTransferenceEventHandler implement
 
             try
             {
-                this.incomingExtraUserEventRecorderService.incomingCryptoWaitingTransference((IncomingCryptoTransactionsWaitingTransferenceEvent) platformEvent);
+                this.incomingExtraUserEventRecorderService.incomingCryptoWaitingTransference((IncomingCryptoTransactionsWaitingTransferenceExtraUserEvent) platformEvent);
             }
             catch (CantSaveEvent cantSaveEvent)
             {

@@ -3,8 +3,8 @@ package com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.dev
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.*;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoTransactionsWaitingTransferenceEvent;
-import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoTransactionsWaitingTransferenceEventHandler;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoTransactionsWaitingTransferenceExtraUserEvent;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoTransactionsWaitingTransferenceExtraUserEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantSaveEvent;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.DealsWithRegistry;
@@ -71,7 +71,7 @@ public class IncomingExtraUserEventRecorderService implements DealsWithEvents, D
     /**
      * IncomingCryptoEventRecorder Interface implementation.
      */
-    public void incomingCryptoWaitingTransference(IncomingCryptoTransactionsWaitingTransferenceEvent event) throws CantSaveEvent {
+    public void incomingCryptoWaitingTransference(IncomingCryptoTransactionsWaitingTransferenceExtraUserEvent event) throws CantSaveEvent {
         this.registry.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
     }
 
@@ -88,9 +88,9 @@ public class IncomingExtraUserEventRecorderService implements DealsWithEvents, D
         EventListener eventListener;
         EventHandler eventHandler;
 
-        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE);
-        eventHandler = new IncomingCryptoTransactionsWaitingTransferenceEventHandler();
-        ((IncomingCryptoTransactionsWaitingTransferenceEventHandler) eventHandler).setIncomingExtraUserEventRecorderService(this);
+        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE_EXTRA_USER);
+        eventHandler = new IncomingCryptoTransactionsWaitingTransferenceExtraUserEventHandler();
+        ((IncomingCryptoTransactionsWaitingTransferenceExtraUserEventHandler) eventHandler).setIncomingExtraUserEventRecorderService(this);
         eventListener.setEventHandler(eventHandler);
         eventManager.addListener(eventListener);
         listenersAdded.add(eventListener);

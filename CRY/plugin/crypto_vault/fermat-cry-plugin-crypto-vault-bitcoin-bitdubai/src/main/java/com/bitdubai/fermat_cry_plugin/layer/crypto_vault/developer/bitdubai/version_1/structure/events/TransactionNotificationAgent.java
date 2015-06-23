@@ -23,6 +23,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventSou
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventType;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoTransactionsWaitingTransferenceEvent;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultTransactionNotificationAgent;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.LimitReachedTransactionNotificationAgentException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseActions;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseFactory;
@@ -235,6 +236,7 @@ public class TransactionNotificationAgent implements Agent,DealsWithEvents,Deals
             /**
              * this will run in an infinite loop
              */
+            System.out.println("Transaction Protocol Notification Agent: running...");
             while (true)
             {
                 try {
@@ -262,11 +264,33 @@ public class TransactionNotificationAgent implements Agent,DealsWithEvents,Deals
             /**
              * I search for transactions not yet notified. If I found something, Ill raise an event
              */
+            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
+
             if (isTransactionToBeNotified()){
                 PlatformEvent event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE);
                 event.setSource(EventSource.CRYPTO_VAULT);
 
+
+                System.out.println("Found transactions pending to be notified! Raising INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE event.");
                 eventManager.raiseEvent(event);
+
+                /**
+                 * I need to increase the counter of the iterations. If the value excedes the threashold, then there might be
+                 * an error in the platform, so I will raise an error.
+                 */
+                int iterations = db.updateTransactionProtocolStatus(true);
+                System.out.println("Transaction Protocol Notification Agent: iteration number " + iterations + " without other plugins consuming transaction.");
+                if (ITERATIONS_THRESHOLD < iterations){
+                    System.out.println("Transaction Protocol Notification Agent: reached threshold of maximun iterations without any plugin consuming transactions.");
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new LimitReachedTransactionNotificationAgentException());
+                }
+
+            } else
+            {
+                /**
+                 * there are no transactions pending. I will reset the counter to 0.
+                 */
+                db.updateTransactionProtocolStatus(false);
             }
 
         }

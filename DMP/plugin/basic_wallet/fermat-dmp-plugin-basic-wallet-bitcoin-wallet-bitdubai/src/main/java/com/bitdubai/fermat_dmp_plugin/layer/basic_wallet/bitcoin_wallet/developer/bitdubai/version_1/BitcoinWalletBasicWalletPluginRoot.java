@@ -3,6 +3,10 @@ package com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.develop
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantCreateWalletException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantLoadWalletException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWallet;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventHandler;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
 
@@ -13,7 +17,7 @@ import java.util.UUID;
 /**
  * Created by loui on 30/04/15.
  */
-public class BitcoinWalletBasicWalletPluginRoot implements Service, Plugin {
+public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager, Service, Plugin {
 
     /**
      * Plugin Interface member variables.
@@ -84,5 +88,16 @@ public class BitcoinWalletBasicWalletPluginRoot implements Service, Plugin {
         return this.serviceStatus;
     }
 
+
+    //TODO: COMPLETAR
+    @Override
+    public BitcoinWallet loadWallet(UUID walletId) throws CantLoadWalletException {
+        return null;
+    }
+
+    @Override
+    public void createWallet(UUID walletId) throws CantCreateWalletException {
+
+    }
 }
 
