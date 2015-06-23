@@ -19,13 +19,17 @@ public interface CommunicationChannel {
     public void unregisterNetworkService (NetworkServices networkService);
     
     public String getNetworkServiceChannelPublicKey(NetworkServices networkService);
+
+    public void requestConnectiontTo(NetworkServices networkServices, String remoteNetworkService) throws CantConnectToRemoteServiceException;
     
     public Collection<String> getIncomingNetworkServiceConnectionRequests(NetworkServices networkService);
-    
+
     public void acceptIncomingNetworkServiceConnectionRequest (NetworkServices networkService, String remoteNetworkService);
-    
-    public ServiceToServiceOnlineConnection getActiveNetworkServiceConnection(NetworkServices networkService, String remoteNetworkService);
 
     public void rejectIncomingNetworkServiceConnectionRequest (NetworkServices networkService, String remoteNetworkService, RejectConnectionRequestReasons reason );
+
+    public ServiceToServiceOnlineConnection getActiveNetworkServiceConnection(NetworkServices networkService, String remoteNetworkService);
+
+    public Collection<String> getActiveNetworkServiceConnectionIdentifiers(NetworkServices networkService);
 
 }

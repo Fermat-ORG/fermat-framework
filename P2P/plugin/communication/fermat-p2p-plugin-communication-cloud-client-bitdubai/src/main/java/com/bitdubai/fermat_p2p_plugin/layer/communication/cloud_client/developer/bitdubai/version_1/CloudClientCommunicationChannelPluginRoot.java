@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventMan
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.CommunicationChannelAddressFactory;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CantConnectToRemoteServiceException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication. CommunicationChannel;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.OnlineChannel;
@@ -130,6 +131,16 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 	}
 
 	@Override
+	public void requestConnectiontTo(NetworkServices networkServices, String remoteNetworkService) throws CantConnectToRemoteServiceException {
+		try {
+			cloudClient.getNetworkServiceClient(networkServices).requestVPNConnection(remoteNetworkService);
+		} catch (CloudConnectionException e) {
+			e.printStackTrace();
+			throw new CantConnectToRemoteServiceException(e.getMessage());
+		}
+	}
+
+	@Override
 	public Collection<String> getIncomingNetworkServiceConnectionRequests(final NetworkServices networkService) {
 		try {
 			return cloudClient.getNetworkServiceClient(networkService).getPendingVPNRequests();
@@ -162,6 +173,16 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			System.out.println(errorManager.hashCode());
+			return null;
+		}
+	}
+
+	@Override
+	public Collection<String> getActiveNetworkServiceConnectionIdentifiers(NetworkServices networkService) {
+		try {
+			return cloudClient.getNetworkServiceClient(networkService).getActiveVPNIdentifiers();
+		} catch (CloudConnectionException e) {
+			e.printStackTrace();
 			return null;
 		}
 	}

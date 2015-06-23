@@ -4,14 +4,11 @@ import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,18 +35,10 @@ import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopReviewsF
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopShopFragment;
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.AccountDetailAllFragment;
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.AccountDetailCreditsFragment;
-import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.BalanceFragment;
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.DiscountsFragment;
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.HomeFragment;
-import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ReceiveFragment;
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.RefillFragment;
-import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.SendFragment;
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ShopFragment;
-import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsDataBaseSystem;
-import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsFileSystem;
-import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsLocationSystem;
-import com.bitdubai.fermat_api.CantReportCriticalStartingProblem;
-import com.bitdubai.fermat_api.CantStartPlatformException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.Activity;
@@ -71,15 +60,14 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorMan
 import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.app_runtime.developer.bitdubai.version_1.structure.RuntimeFragment;
-import com.bitdubai.niche_wallet.age.kids.boys.fragments.CommunityFragment;
-import com.bitdubai.niche_wallet.age.kids.boys.fragments.ContactsFragment;
-import com.bitdubai.niche_wallet.age.kids.boys.fragments.ProfileCardFrontFragment;
-import com.bitdubai.niche_wallet.age.kids.boys.fragments.UsdBalanceFragment;
-import com.bitdubai.niche_wallet.bitcoin_wallet.fragments.BitcoinBalanceFragment;
-import com.bitdubai.niche_wallet.bitcoin_wallet.fragments.BitcoinContactsFragment;
-import com.bitdubai.niche_wallet.bitcoin_wallet.fragments.BitcoinReceiveFragment;
-import com.bitdubai.niche_wallet.bitcoin_wallet.fragments.BitcoinSendFragment;
-import com.bitdubai.niche_wallet.bitcoin_wallet.fragments.BitcoinTransactionsFragment;
+import com.bitdubai.reference_niche_wallet.age.kids.boys.fragments.CommunityFragment;
+import com.bitdubai.reference_niche_wallet.age.kids.boys.fragments.ProfileCardFrontFragment;
+import com.bitdubai.reference_niche_wallet.age.kids.boys.fragments.UsdBalanceFragment;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.BalanceFragment;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ContactsFragment;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ReceiveFragment;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.SendFragment;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.TransactionsFragment;
 import com.bitdubai.sub_app.shop_manager.fragment.ShopDesktopFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment.WalletDesktopFragment;
 import com.bitdubai.sub_app.wallet_store.fragment.AllFragment;
@@ -274,7 +262,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
                         fragments.add(android.support.v4.app.Fragment.instantiate(this, ShopDesktopFragment.class.getName()));
                         break;
                     case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE :
-                        fragments.add(android.support.v4.app.Fragment.instantiate(this, BitcoinReceiveFragment.class.getName()));
+                        fragments.add(android.support.v4.app.Fragment.instantiate(this, ReceiveFragment.class.getName()));
                         break;
                     case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_PROFILE:
                         break;
@@ -683,8 +671,8 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
 
         @Override
         public android.support.v4.app.Fragment getItem(int position) {
-            com.bitdubai.niche_wallet.age.kids.boys.Platform kidsplatform = null;
-            com.bitdubai.niche_wallet.bitcoin_wallet.Platform bitcoinPlatform = null;
+            com.bitdubai.reference_niche_wallet.age.kids.boys.Platform kidsplatform = null;
+            com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform bitcoinPlatform = null;
 
             android.support.v4.app.Fragment currentFragment = null;
             Fragments fragmentType = Fragments.CWP_SHELL_LOGIN;
@@ -722,64 +710,64 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
                         currentFragment =  AllFragment.newInstance(2);
                         break;
                     case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE:
-                        bitcoinPlatform = new com.bitdubai.niche_wallet.bitcoin_wallet.Platform();
+                        bitcoinPlatform = new com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform();
                          bitcoinPlatform.setNicheWalletTypeCryptoWalletManager((CryptoWalletManager) platformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE));
 
-                        currentFragment =  BitcoinBalanceFragment.newInstance(0);
+                        currentFragment =  BalanceFragment.newInstance(0);
                         break;
                     case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE:
-                        bitcoinPlatform = new com.bitdubai.niche_wallet.bitcoin_wallet.Platform();
+                        bitcoinPlatform = new com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform();
                         bitcoinPlatform.setNicheWalletTypeCryptoWalletManager((CryptoWalletManager) platformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE));
 
-                        currentFragment = BitcoinReceiveFragment.newInstance(0);
+                        currentFragment = ReceiveFragment.newInstance(0);
                         break;
                     case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND:
-                        bitcoinPlatform = new com.bitdubai.niche_wallet.bitcoin_wallet.Platform();
+                        bitcoinPlatform = new com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform();
                         bitcoinPlatform.setNicheWalletTypeCryptoWalletManager((CryptoWalletManager) platformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE));
 
-                        currentFragment =  BitcoinSendFragment.newInstance(0);
+                        currentFragment =  SendFragment.newInstance(0);
                         break;
 
                     case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS:
-                        bitcoinPlatform = new com.bitdubai.niche_wallet.bitcoin_wallet.Platform();
+                        bitcoinPlatform = new com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform();
                         bitcoinPlatform.setNicheWalletTypeCryptoWalletManager((CryptoWalletManager) platformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE));
 
-                        currentFragment =  BitcoinTransactionsFragment.newInstance(0);
+                        currentFragment =  TransactionsFragment.newInstance(0);
 
                         break;
                     case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS:
-                        bitcoinPlatform = new com.bitdubai.niche_wallet.bitcoin_wallet.Platform();
+                        bitcoinPlatform = new com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform();
                         bitcoinPlatform.setNicheWalletTypeCryptoWalletManager((CryptoWalletManager) platformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE));
 
-                        currentFragment =  BitcoinContactsFragment.newInstance(0);
+                        currentFragment =  ContactsFragment.newInstance(0);
                         break;
 
                     case CWP_SHOP_MANAGER_ACCEPTED_NEARBY:
                         currentFragment =  AllFragment.newInstance(3);
                         break;
                     case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_PROFILE:
-                        kidsplatform = new com.bitdubai.niche_wallet.age.kids.boys.Platform();
+                        kidsplatform = new com.bitdubai.reference_niche_wallet.age.kids.boys.Platform();
                         kidsplatform.setWalletResourcesManager((WalletResourcesManager) platformContext.getPlugin(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE));
                         kidsplatform.setErrorManager((ErrorManager)platformContext.getAddon(Addons.ERROR_MANAGER));
                         ProfileCardFrontFragment.setPlatform(kidsplatform);
                         currentFragment =  ProfileCardFrontFragment.newInstance(position);
                         break;
                     case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_DESKTOP:
-                        kidsplatform = new com.bitdubai.niche_wallet.age.kids.boys.Platform();
+                        kidsplatform = new com.bitdubai.reference_niche_wallet.age.kids.boys.Platform();
                         kidsplatform.setWalletResourcesManager((WalletResourcesManager) platformContext.getPlugin(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE));
                         kidsplatform.setErrorManager((ErrorManager)platformContext.getAddon(Addons.ERROR_MANAGER));
                         UsdBalanceFragment.setPlatform(kidsplatform);
                         currentFragment =  UsdBalanceFragment.newInstance(position);
                         break;
                     case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_CONTACTS:
-                        kidsplatform = new com.bitdubai.niche_wallet.age.kids.boys.Platform();
+                        kidsplatform = new com.bitdubai.reference_niche_wallet.age.kids.boys.Platform();
                         kidsplatform.setWalletResourcesManager((WalletResourcesManager) platformContext.getPlugin(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE));
                         kidsplatform.setErrorManager((ErrorManager)platformContext.getAddon(Addons.ERROR_MANAGER));
-                        ContactsFragment.setPlatform(kidsplatform);
-                        currentFragment =  ContactsFragment.newInstance(position);
+                        com.bitdubai.reference_niche_wallet.age.kids.boys.fragments.ContactsFragment.setPlatform(kidsplatform);
+                        currentFragment =  com.bitdubai.reference_niche_wallet.age.kids.boys.fragments.ContactsFragment.newInstance(position);
                         break;
                     case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_COMMUNITY:
-                        kidsplatform = new com.bitdubai.niche_wallet.age.kids.boys.Platform();
+                        kidsplatform = new com.bitdubai.reference_niche_wallet.age.kids.boys.Platform();
                         kidsplatform.setWalletResourcesManager((WalletResourcesManager) platformContext.getPlugin(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE));
                         kidsplatform.setErrorManager((ErrorManager)platformContext.getAddon(Addons.ERROR_MANAGER));
                         CommunityFragment.setPlatform(kidsplatform);
@@ -789,13 +777,13 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
                         currentFragment =   HomeFragment.newInstance(position);
                         break;
                     case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_BALANCE:
-                        currentFragment =  BalanceFragment.newInstance(position);
+                        currentFragment =  com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.BalanceFragment.newInstance(position);
                         break;
                     case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SEND:
-                        currentFragment =  SendFragment.newInstance(position);
+                        currentFragment =  com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.SendFragment.newInstance(position);
                         break;
                     case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_RECEIVE:
-                        currentFragment =  ReceiveFragment.newInstance(position);
+                        currentFragment =  com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ReceiveFragment.newInstance(position);
                         break;
                     case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOPS:
                         currentFragment =  ShopFragment.newInstance(position);

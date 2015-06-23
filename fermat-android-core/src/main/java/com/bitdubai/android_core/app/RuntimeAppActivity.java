@@ -17,7 +17,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 //import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.widget.SearchView;
 import android.util.TypedValue;
 import android.view.Menu;
@@ -37,14 +36,9 @@ import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopMapFragm
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopProductsFragment;
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopReviewsFragment;
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopShopFragment;
-import com.bitdubai.niche_wallet.bitcoin_wallet.fragments.BitcoinContactsFragment;
-import com.bitdubai.niche_wallet.bitcoin_wallet.fragments.BitcoinReceiveFragment;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ReceiveFragment;
 
-import com.bitdubai.niche_wallet.bitcoin_wallet.fragments.BitcoinSendFragment;
-
-import com.bitdubai.niche_wallet.bitcoin_wallet.fragments.BitcoinBalanceFragment;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.*;
-import com.bitdubai.niche_wallet.bitcoin_wallet.fragments.BitcoinTransactionsFragment;
 import com.bitdubai.sub_app.shop_manager.fragment.ShopDesktopFragment;
 
 import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsDataBaseSystem;
@@ -57,17 +51,10 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime.WalletRuntimeMana
 
 import com.bitdubai.sub_app.wallet_manager.fragment.WalletDesktopFragment;
 
-import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesManager;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.app_runtime.developer.bitdubai.version_1.structure.RuntimeFragment;
-import com.bitdubai.niche_wallet.age.kids.boys.fragments.CommunityFragment;
-import com.bitdubai.niche_wallet.age.kids.boys.fragments.ContactsFragment;
-import com.bitdubai.niche_wallet.age.kids.boys.fragments.ProfileCardFrontFragment;
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.BalanceFragment;
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.DiscountsFragment;
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.HomeFragment;
-import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ReceiveFragment;
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.RefillFragment;
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.SendFragment;
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ShopFragment;
@@ -90,7 +77,6 @@ import com.bitdubai.smartwallet.R;
 
 
 import com.bitdubai.fermat_core.CorePlatformContext;
-import com.bitdubai.niche_wallet.age.kids.boys.fragments.UsdBalanceFragment;
 
 
 import java.util.List;
@@ -271,7 +257,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                         fragments.add(android.support.v4.app.Fragment.instantiate(this, ShopDesktopFragment.class.getName()));
                         break;
                     case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE :
-                        fragments.add(android.support.v4.app.Fragment.instantiate(this, BitcoinReceiveFragment.class.getName()));
+                        fragments.add(android.support.v4.app.Fragment.instantiate(this, ReceiveFragment.class.getName()));
                         break;
                     case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_PROFILE:
                         break;
@@ -893,8 +879,8 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
         @Override
         public android.support.v4.app.Fragment getItem(int position) {
-            com.bitdubai.niche_wallet.age.kids.boys.Platform kidsplatform = null;
-            com.bitdubai.niche_wallet.bitcoin_wallet.Platform bitcoinPlatform = null;
+            com.bitdubai.reference_niche_wallet.age.kids.boys.Platform kidsplatform = null;
+            com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform bitcoinPlatform = null;
 
             android.support.v4.app.Fragment currentFragment = null;
             Fragments fragmentType = Fragments.CWP_SHELL_LOGIN;
@@ -948,7 +934,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
                         currentFragment =  SendFragment.newInstance(position);
                         break;
                     case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_RECEIVE:
-                        currentFragment =  ReceiveFragment.newInstance(position);
+                        currentFragment =  com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ReceiveFragment.newInstance(position);
                         break;
                     case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOPS:
                         currentFragment =  ShopFragment.newInstance(position);

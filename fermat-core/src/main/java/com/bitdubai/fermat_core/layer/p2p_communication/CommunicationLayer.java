@@ -116,55 +116,46 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
     }
 
     @Override
-    public ServiceToServiceOnlineConnection acceptIncomingNetworkServiceConnectionRequest(CommunicationChannels communicationChannel, NetworkServices networkService, UUID localNetworkService, UUID remoteNetworkService) throws CommunicationChannelNotImplemented {
+    public void acceptIncomingNetworkServiceConnectionRequest(CommunicationChannels communicationChannel, NetworkServices networkService, String remoteNetworkService) throws CommunicationChannelNotImplemented {
 
         switch (communicationChannel) {
-
             case CLOUD:
-                return ((CommunicationChannel) mCloudPlugin).getActiveNetworkServiceConnection(networkService, remoteNetworkService.toString());
-
+                ((CommunicationChannel) mCloudPlugin).acceptIncomingNetworkServiceConnectionRequest(networkService, remoteNetworkService);
+                return;
         }
         
         throw new CommunicationChannelNotImplemented();
     }
 
     @Override
-    public void rejectIncomingNetworkServiceConnectionRequest(CommunicationChannels communicationChannel, NetworkServices networkService, UUID localNetworkService, UUID remoteNetworkService, RejectConnectionRequestReasons reason) throws CommunicationChannelNotImplemented {
+    public void rejectIncomingNetworkServiceConnectionRequest(CommunicationChannels communicationChannel, NetworkServices networkService, String remoteNetworkService, RejectConnectionRequestReasons reason) throws CommunicationChannelNotImplemented {
 
         switch (communicationChannel) {
 
             case CLOUD:
-                ((CommunicationChannel) mCloudPlugin).rejectIncomingNetworkServiceConnectionRequest(networkService, remoteNetworkService.toString(), reason);
+                ((CommunicationChannel) mCloudPlugin).rejectIncomingNetworkServiceConnectionRequest(networkService, remoteNetworkService, reason);
 
         }
 
         throw new CommunicationChannelNotImplemented();
     }
 
+    @Override
+    public ServiceToServiceOnlineConnection getActiveNetworkServiceConnection(CommunicationChannels communicationChannel, NetworkServices networkService, String remoteNetworkService) {
+        return ((CommunicationChannel) mCloudPlugin).getActiveNetworkServiceConnection(networkService, remoteNetworkService);
+    }
+
+    @Override
+    public Collection<String> getActiveNetworkServiceConnectionIdentifiers(NetworkServices networkService) {
+        return ((CommunicationChannel) mCloudPlugin).getActiveNetworkServiceConnectionIdentifiers(networkService);
+    }
+
     /**
      * This is the primary method to connect a local network service to a remote network service.
      */
-    public ServiceToServiceOnlineConnection connectTo (NetworkServices networkServices, UUID remoteNetworkService) throws CantConnectToRemoteServiceException {
-
-        LayerServiceToServiceOnlineConnection layerServiceToServiceOnlineConnection = new LayerServiceToServiceOnlineConnection(networkServices, remoteNetworkService);
-
-
-        try
-        {
-            layerServiceToServiceOnlineConnection.connect();
-        }
-        catch (CantConnectToRemoteServiceException cantConnectToRemoteServiceException)
-        {
-            System.err.println("CantConnectToUserException: " + cantConnectToRemoteServiceException.getMessage());
-
-            /**
-             * I can't do anything with this exception here. I throw it again.
-             */
-            throw cantConnectToRemoteServiceException;
-        }
-
-        return (ServiceToServiceOnlineConnection) layerServiceToServiceOnlineConnection;
-
+    @Override
+    public void requestConnectionTo(NetworkServices networkService, String remoteNetworkService) throws CantConnectToRemoteServiceException{
+        ((CommunicationChannel) mCloudPlugin).requestConnectiontTo(networkService, remoteNetworkService);
     }
     
     
