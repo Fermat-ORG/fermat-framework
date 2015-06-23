@@ -68,8 +68,8 @@ dependencies {
 
 // DMP Projects (Wallets)
 
-    compile project(':fermat-dmp-android-niche-wallet-bitcoin-reference-wallet-bitdubai')
-    compile project(':fermat-dmp-android-niche-wallet-age-kids-boys-bitdubai')
+    compile project(':fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai')
+    compile project(':fermat-dmp-android-reference-niche-wallet-age-kids-boys-bitdubai')
 
 /*
 

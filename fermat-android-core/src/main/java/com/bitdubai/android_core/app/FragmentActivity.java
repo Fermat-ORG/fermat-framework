@@ -17,15 +17,12 @@ import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.su
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ContactsFragment;
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.DailyDiscountsFragment;
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ReceiveAllFragment;
-import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ReceiveFromContactFragment;
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ReceiveFromNewContactFragment;
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.SendAllFragment;
-import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.SendToContactFragment;
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.SendToNewContactFragment;
 
-import com.bitdubai.niche_wallet.bitcoin_wallet.fragments.BitcoinReceiveFromContactFragment;
-import com.bitdubai.niche_wallet.bitcoin_wallet.fragments.BitcoinReceiveFragment;
-import com.bitdubai.niche_wallet.bitcoin_wallet.fragments.BitcoinSendToContactFragment;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ReceiveFromContactFragment;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.SendToContactFragment;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.App;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.AppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.Fragment;
@@ -122,7 +119,7 @@ public class FragmentActivity  extends Activity {
                     case   CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS_SEND:
                         if (savedInstanceState == null) {
 
-                            BitcoinSendToContactFragment bc = new BitcoinSendToContactFragment();
+                            SendToContactFragment bc = new SendToContactFragment();
                             //pass to fragment params
                             Bundle b = new Bundle();
                             b.putString("contactId",tagParam);
@@ -136,7 +133,7 @@ public class FragmentActivity  extends Activity {
                     case    CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS_RECEIVE:
                         if (savedInstanceState == null) {
 
-                            BitcoinReceiveFromContactFragment bc = new BitcoinReceiveFromContactFragment();
+                            ReceiveFromContactFragment bc = new ReceiveFromContactFragment();
                             //pass to fragment params
                             Bundle b = new Bundle();
                             b.putString("contactId",tagParam);
@@ -185,12 +182,12 @@ public class FragmentActivity  extends Activity {
                         break;
                     case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_SEND :
                         getFragmentManager().beginTransaction()
-                                .add(R.id.container, new SendToContactFragment())
+                                .add(R.id.container, new com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.SendToContactFragment())
                                 .commit();
                         break;
                     case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_RECEIVE:
                         getFragmentManager().beginTransaction()
-                                .add(R.id.container, new ReceiveFromContactFragment())
+                                .add(R.id.container, new com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ReceiveFromContactFragment())
                                 .commit();
                         break;
                     case CWP_SHOP_MANAGER_MAIN:
