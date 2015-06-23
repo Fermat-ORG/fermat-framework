@@ -1,5 +1,7 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -38,7 +40,7 @@ public class SendFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-       // cryptoWalletManager = platform.getCryptoWalletManager();
+        cryptoWalletManager = platform.getCryptoWalletManager();
 
     }
 
@@ -90,5 +92,19 @@ public class SendFragment extends Fragment {
             }
 
         }
+    }
+
+    //show alert
+    private void showMessage(String text){
+        AlertDialog alertDialog = new AlertDialog.Builder(this.getActivity()).create();
+        alertDialog.setTitle("Warning");
+        alertDialog.setMessage(text);
+        alertDialog.setButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // aquí puedes añadir funciones
+            }
+        });
+        //alertDialog.setIcon(R.drawable.icon);
+        alertDialog.show();
     }
 }

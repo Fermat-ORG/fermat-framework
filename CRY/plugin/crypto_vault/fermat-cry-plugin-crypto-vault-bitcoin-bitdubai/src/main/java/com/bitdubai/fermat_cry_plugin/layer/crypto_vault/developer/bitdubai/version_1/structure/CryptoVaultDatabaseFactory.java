@@ -111,13 +111,38 @@ public class CryptoVaultDatabaseFactory implements DealsWithPluginDatabaseSystem
 
 
             try {
-                ((DatabaseFactory) database).createTable(table);
+                ((DatabaseFactory) database).createTable(table2);
             } catch (CantCreateTableException cantCreateTableException) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateTableException);
                 System.err.println("CantCreateTableException: " + cantCreateTableException.getMessage());
                 cantCreateTableException.printStackTrace();
                 throw new CantCreateDatabaseException();
             }
+
+        /**
+         * Next, I will add the needed tables.
+         */
+
+
+        DatabaseTableFactory table3;
+
+        /**
+         * Transaction Status table to hold the ocurrences of how many times I'm notifying there are new transactions but noone is getting them
+         * we are  keeping track of this because it may be an error if no one consumes my transactions.
+         */
+        table3 = ((DatabaseFactory) database).newTableFactory(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS);
+        table3.addColumn(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 34, true);
+        table3.addColumn(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_ocurrences_COLUMN_NAME, DatabaseDataType.INTEGER, 4, false);
+
+
+        try {
+            ((DatabaseFactory) database).createTable(table3);
+        } catch (CantCreateTableException cantCreateTableException) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateTableException);
+            System.err.println("CantCreateTableException: " + cantCreateTableException.getMessage());
+            cantCreateTableException.printStackTrace();
+            throw new CantCreateDatabaseException();
+        }
 
         return database;
         }
