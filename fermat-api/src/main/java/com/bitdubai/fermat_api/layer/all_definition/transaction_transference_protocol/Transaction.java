@@ -11,8 +11,6 @@ public class Transaction <E> {
     private Action action;
     private long timestamp;
 
-    // IMPORTANT: Fill the action parameter with the corresponding Action value applying name method.
-    // Examples: Action.APPLY.name(), Action.REVERT.name();
 
     public Transaction(UUID transactionID, E information , Action action, long timestamp) {
         this.transactionID = transactionID;

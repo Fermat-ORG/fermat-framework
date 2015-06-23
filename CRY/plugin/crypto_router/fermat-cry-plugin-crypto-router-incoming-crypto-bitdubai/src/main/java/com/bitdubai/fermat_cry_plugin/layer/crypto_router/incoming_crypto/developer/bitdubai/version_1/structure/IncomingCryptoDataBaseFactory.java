@@ -67,20 +67,20 @@ class IncomingCryptoDataBaseFactory implements DealsWithPluginDatabaseSystem {
         try {
             for(Map.Entry<String, List<IncomingCryptoDataBaseConstants.ColumnDefinition>> tableDefinition: tablesDefinitions.entrySet()){
                 table = ((DatabaseFactory) database).newTableFactory(ownerId, tableDefinition.getKey());
-                System.err.println("INCOMING CRYPTO REGISTRY: " + tableDefinition.getKey() + " TABLE CREATED");
+                //System.err.println("INCOMING CRYPTO REGISTRY: " + tableDefinition.getKey() + " TABLE CREATED");
                 for(IncomingCryptoDataBaseConstants.ColumnDefinition columnDefinition: tableDefinition.getValue()){
                     table.addColumn(columnDefinition.columnName, columnDefinition.columnDataType, columnDefinition.columnDataTypeSize, columnDefinition.columnIsPrimaryKey);
-                    System.err.println("INCOMING CRYPTO REGISTRY: " + tableDefinition.getKey() + " - " + columnDefinition.columnName + " COLUMN ADDED");
+                    //System.err.println("INCOMING CRYPTO REGISTRY: " + tableDefinition.getKey() + " - " + columnDefinition.columnName + " COLUMN ADDED");
                 }
                 ((DatabaseFactory) database).createTable(table);
             }
 
         } catch (InvalidOwnerId invalidOwnerId) {
-            System.out.println("InvalidOwnerId: " + invalidOwnerId.getMessage());
+            //System.out.println("InvalidOwnerId: " + invalidOwnerId.getMessage());
             invalidOwnerId.printStackTrace();
             throw new CantCreateDatabaseException();
         } catch (CantCreateTableException e) {
-            System.out.println("InvalidOwnerId: CantCreateTableException " + e.getMessage());
+            //System.out.println("InvalidOwnerId: CantCreateTableException " + e.getMessage());
             throw new CantCreateDatabaseException();
         }
         return database;

@@ -60,6 +60,8 @@ import com.bitdubai.fermat_core.layer.dmp_module.ModuleLayer;
 import com.bitdubai.fermat_core.layer.dmp_agent.AgentLayer;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.DealsWithBitcoinCryptoNetwork;
+import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.DealsWithIncomingCrypto;
+import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
 
@@ -383,6 +385,17 @@ public class Platform  {
 
         corePlatformContext.addAddon((Addon) extraUser, Addons.EXTRA_USER);
 
+        try {
+            ((Service) extraUser).start();
+        } catch (Exception e) {
+            ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+            /**
+             * This plugin wont disable the whole platform, so I will allow the Platform to start even if this one
+             * will be disabled. In the future, I will re-try the start of plugins that are not starting at once.
+             * * *
+             */
+        }
+
         /**
          *-------------------------------
          * Addon Intra User
@@ -553,8 +566,8 @@ public class Platform  {
          * Plugin Bitcoin Wallet Basic Wallet
          * -----------------------------
          */
-        // Plugin bitcoinWalletBasicWallet = ((BasicWalletLayer) mBasicWalletLayer).getBitcoinWallet();
-        // setPluginReferencesAndStart(bitcoinWalletBasicWallet, Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET);
+         Plugin bitcoinWalletBasicWallet = ((BasicWalletLayer) mBasicWalletLayer).getBitcoinWallet();
+         setPluginReferencesAndStart(bitcoinWalletBasicWallet, Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET);
 
         /**
          * -----------------------------
@@ -582,7 +595,7 @@ public class Platform  {
 
         /**
          * ----------------------------------
-         * Plugin Incoming Crypto Transaction
+         * Plugin Incoming Crypto Crypto Router
          * ----------------------------------
          */
         Plugin incomingCryptoTransaction = ((CryptoRouterLayer) mCryptoRouterLayer).getIncomingCrypto();
@@ -595,6 +608,8 @@ public class Platform  {
          */
         Plugin incomingExtraUserTransaction = ((TransactionLayer) mTransactionLayer).getIncomingExtraUserPlugin();
         setPluginReferencesAndStart(incomingExtraUserTransaction, Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION);
+        //System.out.println("EXTRA USER START SUCCESS");
+
 
         /**
          * ----------------------------------
@@ -737,9 +752,8 @@ public class Platform  {
             if (plugin instanceof DealsWithActorAddressBook)
                 ((DealsWithActorAddressBook) plugin).setActorAddressBookManager((ActorAddressBookManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_USER_ADDRESS_BOOK_CRYPTO));
 
-            //  if (plugin instanceof DealsWithBitcoinWallet)
-            //      ((DealsWithBitcoinWallet) plugin).setBitcoinWalletManager((BitcoinWalletManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET));
-            // TODO COMENTADO HASTA QUE EXISTA la referencia
+             if (plugin instanceof DealsWithBitcoinWallet)
+                  ((DealsWithBitcoinWallet) plugin).setBitcoinWalletManager((BitcoinWalletManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET));
 
             if (plugin instanceof DealsWithBitcoinCryptoNetwork)
                 ((DealsWithBitcoinCryptoNetwork) plugin).setBitcoinCryptoNetworkManager((BitcoinCryptoNetworkManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK));
@@ -754,7 +768,7 @@ public class Platform  {
                 ((DealsWithEvents) plugin).setEventManager((EventManager) corePlatformContext.getAddon(Addons.EVENT_MANAGER));
 
             if (plugin instanceof DealsWithExtraUsers)
-                ((DealsWithExtraUsers) plugin).setExtraUserManager((ExtraUserManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_USER_EXTRA_USER));
+                ((DealsWithExtraUsers) plugin).setExtraUserManager((ExtraUserManager) corePlatformContext.getAddon(Addons.EXTRA_USER));
 
             if (plugin instanceof DealsWithNicheWalletTypeCryptoWallet)
                 ((DealsWithNicheWalletTypeCryptoWallet) plugin).setNicheWalletTypeCryptoWalletManager((CryptoWalletManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE));
@@ -773,6 +787,9 @@ public class Platform  {
 
             if (plugin instanceof DealsWithWalletContacts)
                 ((DealsWithWalletContacts) plugin).setWalletContactsManager((WalletContactsManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE));
+
+            if (plugin instanceof DealsWithIncomingCrypto)
+                ((DealsWithIncomingCrypto) plugin).setIncomingCryptoManager((IncomingCryptoManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION));
 
             corePlatformContext.addPlugin(plugin, descriptor);
         } catch (Exception e){

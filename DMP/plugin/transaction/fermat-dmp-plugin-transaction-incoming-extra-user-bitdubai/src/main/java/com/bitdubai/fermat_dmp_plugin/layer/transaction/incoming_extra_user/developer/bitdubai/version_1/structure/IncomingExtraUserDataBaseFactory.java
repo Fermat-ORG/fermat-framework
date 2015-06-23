@@ -38,39 +38,39 @@ class IncomingExtraUserDataBaseFactory implements DealsWithPluginDatabaseSystem 
         /**
          * IncomingExtraUserRegistry table
          */
-        tablesDefinitions.put(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NAME, Arrays.asList(
-                IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ID_COLUMN,
-                IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_TRANSACTION_HASH_COLUMN,
-                IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ADDRESS_TO_COLUMN,
-                IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_CRYPTO_CURRENCY_COLUMN,
-                IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_CRYPTO_AMOUNT_COLUMN,
-                IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ADDRESS_FROM_COLUMN,
-                IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_SPECIALIST_COLUMN,
-                IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_CRYPTO_STATUS_COLUMN,
-                IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ACTION_COLUMN,
-                IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN,
-                IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_TRANSACTION_STATUS_COLUMN,
-                IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_TIMESTAMP_COLUMN
+        tablesDefinitions.put(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_NAME, Arrays.asList(
+                IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_ID_COLUMN,
+                IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_TRANSACTION_HASH_COLUMN,
+                IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_ADDRESS_TO_COLUMN,
+                IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_CRYPTO_CURRENCY_COLUMN,
+                IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_CRYPTO_AMOUNT_COLUMN,
+                IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_ADDRESS_FROM_COLUMN,
+                //  IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_SPECIALIST_COLUMN,
+                IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_CRYPTO_STATUS_COLUMN,
+                IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_ACTION_COLUMN,
+                IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN,
+                IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_TRANSACTION_STATUS_COLUMN,
+                IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_TIMESTAMP_COLUMN
         ));
 
         /**
          * IncomingCryptoEventsRecorded table
          */
-        tablesDefinitions.put(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_NAME, Arrays.asList(
-                IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_ID_COLUMN,
-                IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_EVENT_COLUMN,
-                IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_SOURCE_COLUMN,
-                IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_STATUS_COLUMN,
-                IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_TIMESTAMP_COLUMN
+        tablesDefinitions.put(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_NAME, Arrays.asList(
+                IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_ID_COLUMN,
+                IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_EVENT_COLUMN,
+                IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_SOURCE_COLUMN,
+                IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_STATUS_COLUMN,
+                IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_TIMESTAMP_COLUMN
         ));
 
         try {
             for(Map.Entry<String, List<IncomingExtraUSerDataBaseConstants.ColumnDefinition>> tableDefinition: tablesDefinitions.entrySet()){
                 table = ((DatabaseFactory) database).newTableFactory(ownerId, tableDefinition.getKey());
-                System.err.println("INCOMING CRYPTO REGISTRY: " + tableDefinition.getKey() + " TABLE CREATED");
+                System.err.println("INCOMING EXTRA USER REGISTRY: " + tableDefinition.getKey() + " TABLE CREATED");
                 for(IncomingExtraUSerDataBaseConstants.ColumnDefinition columnDefinition: tableDefinition.getValue()){
                     table.addColumn(columnDefinition.columnName, columnDefinition.columnDataType, columnDefinition.columnDataTypeSize, columnDefinition.columnIsPrimaryKey);
-                    System.err.println("INCOMING CRYPTO REGISTRY: " + tableDefinition.getKey() + " - " + columnDefinition.columnName + " COLUMN ADDED");
+                    System.err.println("INCOMING EXTRA USER REGISTRY: " + tableDefinition.getKey() + " - " + columnDefinition.columnName + " COLUMN ADDED");
                 }
                 ((DatabaseFactory) database).createTable(table);
             }
