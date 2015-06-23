@@ -19,7 +19,7 @@ import java.util.UUID;
 
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceDatabaseFactory</code>
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer._11_network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceDatabaseFactory</code>
  * is responsible for creating the tables in the database where it is to keep the information.
  *
  * Created by Roberto Requena - (rrequena) on 22/05/15.
@@ -54,7 +54,7 @@ public class IntraUserNetworkServiceDatabaseFactory {
         Database database;
 
         /**
-         * I will create the database where I am going to store the information of this wallet.
+         * I will create the database where going to store all the information of this network service.
          */
         try {
 
@@ -78,7 +78,53 @@ public class IntraUserNetworkServiceDatabaseFactory {
             DatabaseTableFactory table;
 
             /**
-             * Create the Known Network Intra Users Cache table.
+             * Configure the Incoming messages table.
+             */
+            table = ((DatabaseFactory) database).newTableFactory(ownerId, IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_NAME);
+
+            table.addColumn(IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_ID_COLUMN_NAME,                 DatabaseDataType.LONG_INTEGER,  50, Boolean.TRUE);
+            table.addColumn(IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SENDER_ID_COLUMN_NAME,          DatabaseDataType.STRING,       100, Boolean.FALSE);
+            table.addColumn(IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_RECEIVER_ID_COLUMN_NAME,        DatabaseDataType.STRING,       100, Boolean.FALSE);
+            table.addColumn(IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TEXT_CONTENT_COLUMN_NAME,       DatabaseDataType.STRING,       255, Boolean.FALSE);
+            table.addColumn(IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TYPE_COLUMN_NAME,               DatabaseDataType.STRING,       100, Boolean.FALSE);
+            table.addColumn(IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SHIPPING_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER,  50, Boolean.FALSE);
+            table.addColumn(IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_DELIVERY_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER,  50, Boolean.FALSE);
+            table.addColumn(IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_STATUS_COLUMN_NAME,             DatabaseDataType.STRING,        10, Boolean.FALSE);
+
+            try {
+
+                //Create the incoming messages table.
+                ((DatabaseFactory) database).createTable(ownerId, table);
+            }
+            catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException();
+            }
+
+            /**
+             * Configure the Outgoing messages table.
+             */
+            table = ((DatabaseFactory) database).newTableFactory(ownerId, IntraUserNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME);
+
+            table.addColumn(IntraUserNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_ID_COLUMN_NAME,                 DatabaseDataType.LONG_INTEGER,  50, Boolean.TRUE);
+            table.addColumn(IntraUserNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_SENDER_ID_COLUMN_NAME,          DatabaseDataType.STRING,       100, Boolean.FALSE);
+            table.addColumn(IntraUserNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_RECEIVER_ID_COLUMN_NAME,        DatabaseDataType.STRING,       100, Boolean.FALSE);
+            table.addColumn(IntraUserNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_TEXT_CONTENT_COLUMN_NAME,       DatabaseDataType.STRING,       255, Boolean.FALSE);
+            table.addColumn(IntraUserNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_TYPE_COLUMN_NAME,               DatabaseDataType.STRING,       100, Boolean.FALSE);
+            table.addColumn(IntraUserNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_SHIPPING_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER,  50, Boolean.FALSE);
+            table.addColumn(IntraUserNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_DELIVERY_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER,  50, Boolean.FALSE);
+            table.addColumn(IntraUserNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_STATUS_COLUMN_NAME,             DatabaseDataType.STRING,        10, Boolean.FALSE);
+
+            try {
+
+                //Create the outgoing messages table.
+                ((DatabaseFactory) database).createTable(ownerId, table);
+            }
+            catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException();
+            }
+
+            /**
+             * Configure the Known Network Intra Users Cache table.
              */
             table = ((DatabaseFactory) database).newTableFactory(ownerId, IntraUserNetworkServiceDatabaseConstants.KNOWN_NETWORK_INTRA_USER_CACHE_TABLE_NAME);
 
@@ -92,7 +138,7 @@ public class IntraUserNetworkServiceDatabaseFactory {
 
             try {
 
-                //Create the table
+                //Create the Known Network Intra Users Cache table
                 ((DatabaseFactory) database).createTable(ownerId, table);
             }
             catch (CantCreateTableException cantCreateTableException) {

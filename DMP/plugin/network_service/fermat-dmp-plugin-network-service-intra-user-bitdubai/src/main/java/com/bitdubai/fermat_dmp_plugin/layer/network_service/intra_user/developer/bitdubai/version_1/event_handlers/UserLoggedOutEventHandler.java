@@ -59,7 +59,7 @@ public class UserLoggedOutEventHandler implements EventHandler{
             /*
              *  IntraUserManager make the job
              */
-            ((IntraUserNetworkServicePluginRoot) this.intraUserManager).logIn(((IntraUserLoggedOutEvent) platformEvent).getIntraUserId());
+            //((IntraUserNetworkServicePluginRoot) this.intraUserManager).logIn(((IntraUserLoggedOutEvent) platformEvent).getIntraUserId());
 
         }
 

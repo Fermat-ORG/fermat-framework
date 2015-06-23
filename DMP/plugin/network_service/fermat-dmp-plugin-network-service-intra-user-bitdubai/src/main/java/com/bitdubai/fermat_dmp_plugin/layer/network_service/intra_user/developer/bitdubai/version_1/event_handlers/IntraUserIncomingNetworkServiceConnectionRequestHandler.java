@@ -55,8 +55,8 @@ public class IntraUserIncomingNetworkServiceConnectionRequestHandler implements 
              *  IntraUserManager make the job
              */
             IncomingNetworkServiceConnectionRequestEvent incomingNetworkServiceConnectionRequestEvent = (IncomingNetworkServiceConnectionRequestEvent) platformEvent;
-            ((IntraUserNetworkServicePluginRoot) this.intraUserManager).acceptIncomingNetworkServiceConnectionRequest(incomingNetworkServiceConnectionRequestEvent.getCommunicationChannels(),
-                                                                                                                      incomingNetworkServiceConnectionRequestEvent.getRemoteNetworkService());
+           // ((IntraUserNetworkServicePluginRoot) this.intraUserManager).acceptIncomingNetworkServiceConnectionRequest(incomingNetworkServiceConnectionRequestEvent.getCommunicationChannels(),
+            //                                                                                                          incomingNetworkServiceConnectionRequestEvent.getRemoteNetworkService());
 
         }
     }

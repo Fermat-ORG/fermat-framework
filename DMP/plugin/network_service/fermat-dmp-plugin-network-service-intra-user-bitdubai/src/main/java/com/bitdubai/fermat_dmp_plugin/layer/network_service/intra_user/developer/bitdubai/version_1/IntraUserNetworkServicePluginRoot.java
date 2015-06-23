@@ -3,52 +3,41 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.develope
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CantConnectToRemoteServiceException;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CantSendMessageException;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelNotImplemented;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkService;
+import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.IntraUserManager;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventType;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.IntraUserIncomingNetworkServiceConnectionRequestHandler;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.UserLoggedInEventHandler;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.UserLoggedOutEventHandler;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationLayerManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.ConnectionStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithCommunicationLayerManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.ServiceToServiceOnlineConnection;
-import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.IntraUserManager;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricKeyCreator;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricPrivateKey;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.PrivateKey;
-import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventType;
-import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkService;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.IntraUserIncomingNetworkServiceConnectionRequestHandler;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.UserLoggedInEventHandler;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.UserLoggedOutEventHandler;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantLogInNetworkIntraUserException;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceLocal;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceMessage;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceRemote;
 
-import java.math.BigInteger;
 import java.security.KeyPair;
-import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static com.bitdubai.fermat_api.layer.all_definition.enums.Plugins.BITDUBAI_USER_NETWORK_SERVICE;
-import static com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.IntraUserNetworkServicePluginRoot</code> is
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer._11_network_service.intra_user.developer.bitdubai.version_1.IntraUserNetworkServicePluginRoot</code> is
  * the responsible to initialize all component to work together, and hold all resources they needed.
  * <p/>
  *
@@ -99,50 +88,19 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
      */
     private KeyPair keyPair;
 
-    /**
-     * Represent the intraUserNetworkServiceLocal
-     */
-    private IntraUserNetworkServiceLocal intraUserNetworkServiceLocal;
-
 
     /**
-     * Holds the serviceToServiceOnlineConnectionsCache
+     * Holds the intraUserNetworkServiceManagersCache
      */
-    private Map<UUID, ServiceToServiceOnlineConnection>  serviceToServiceOnlineConnectionsCache;
+    private Map<UUID, IntraUserNetworkServiceManager>  intraUserNetworkServiceManagersCache;
 
     /**
      * Constructor
      */
     public IntraUserNetworkServicePluginRoot() {
         super();
-        this.listenersAdded                         = new ArrayList<>();
-        this.intraUserNetworkServiceLocal           = new IntraUserNetworkServiceLocal();
-        this.serviceToServiceOnlineConnectionsCache = new HashMap<>();
-    }
-
-    /**
-     * Initialize the pair key to this instance
-     *
-     *  Private Key + Public Key
-     */
-    private void initializePairKey() {
-
-        /*
-         * Created a new private key with generate big integer random
-         */
-        PrivateKey privateKey = new AsymmetricPrivateKey(new BigInteger(AsymmectricCryptography.createPrivateKey(),16));
-
-        /*
-         * Generate the public key from the private key
-         */
-        AsymmetricKeyCreator keyCreator = new AsymmetricKeyCreator();
-        PublicKey publicKey = keyCreator.createPublicKey(privateKey);
-
-        /*
-         * Storage in the key pair
-         */
-        keyPair = new KeyPair(publicKey, privateKey);
-
+        this.listenersAdded                       = new ArrayList<EventListener>();
+        this.intraUserNetworkServiceManagersCache = new HashMap<UUID, IntraUserNetworkServiceManager>();
     }
 
     /**
@@ -182,11 +140,6 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
     @Override
     public void start() throws CantStartPluginException {
 
-
-        boolean entrar = Boolean.TRUE;
-
-        if (entrar) return;
-
         /*
          * If all resources are inject
          */
@@ -198,7 +151,7 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
             /*
              * Generate a new KeyPair
              */
-            initializePairKey();
+           // keyPair = AsymmectricCryptography.generateKeyPair();
 
             /*
              * Initialize the listener
@@ -217,8 +170,8 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
 
 
         } else {
-            errorManager.reportUnexpectedPluginException(BITDUBAI_USER_NETWORK_SERVICE, DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("No all required resource are injected"));
-            throw new CantStartPluginException(BITDUBAI_USER_NETWORK_SERVICE);
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("No all required resource are injected"));
+            throw new CantStartPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE);
         }
 
 
@@ -249,15 +202,18 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
     @Override
     public void stop() {
 
+        //Clear all references of the event listeners registered with the event manager.
+        listenersAdded.clear();
 
-        /**
-         * I will remove all the event listeners registered with the event manager.
+        /*
+         * Stop all connection on the manages
          */
-        for (EventListener eventListener : listenersAdded) {
-            eventManager.removeListener(eventListener);
+        for (UUID key : intraUserNetworkServiceManagersCache.keySet()){
+            intraUserNetworkServiceManagersCache.get(key).closeAllConnection();
         }
 
-        listenersAdded.clear();
+        //Clear all references
+        intraUserNetworkServiceManagersCache.clear();
 
          /*
          * Unregister whit the communicationLayerManager
@@ -335,136 +291,41 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
     }
 
     /**
-     * Method that logged out the user (register on the net)
+     * This is a factory method for create new instances of the intra user network service manager
      *
-     * @param userId
-     * @throws CantLogInNetworkIntraUserException
+     * @param pluginClientId the plugin client id
+     * @return IntraUserNetworkServiceManager the intra user network service manager
      */
-    public void logIn (UUID userId) throws CantLogInNetworkIntraUserException{
+    public IntraUserNetworkServiceManager intraUserNetworkServiceManagerFactory(UUID pluginClientId){
 
-        //Se puso para solucion de "Unread field, findBug
-		System.out.println(pluginDatabaseSystem.hashCode());
-    }
-
-    /**
-     * Method that logged out the user (unregister on the net)
-     *
-     * @param userId
-     */
-    public void logOut (UUID userId) {
-
-    }
-
-    /**
-     * Method to accept incoming connection request
-     *
-     * @param communicationChannel
-     * @param remoteNetworkService
-     */
-    public void  acceptIncomingNetworkServiceConnectionRequest(CommunicationChannels communicationChannel, UUID remoteNetworkService){
         /*
-        try {
+         * Create a new instance
+         */
+        IntraUserNetworkServiceManager manager = new IntraUserNetworkServiceManager(this, communicationLayerManager, pluginDatabaseSystem, errorManager);
 
-           ServiceToServiceOnlineConnection serviceToServiceOnlineConnection= communicationLayerManager.acceptIncomingNetworkServiceConnectionRequest(communicationChannel, NetworkServices.INTRA_USER, this.getId(), remoteNetworkService);
+        /**
+         * Cache the instance
+         */
+        intraUserNetworkServiceManagersCache.put(pluginClientId, manager);
 
-           if (serviceToServiceOnlineConnection.getStatus() == ConnectionStatus.CONNECTED &&
-                   serviceToServiceOnlineConnection.getUnreadMessagesCount() > 0 ) {
-
-                //Read a message with serialize remote object
-                IntraUserNetworkServiceMessage message = (IntraUserNetworkServiceMessage) serviceToServiceOnlineConnection.readNextMessage();
-                String jsomObject = message.getTextContent();
-
-                /*
-                 * Problema de seguridad si el mensaje viene encriptado
-                 * de donde obtener la clave publica del intra user remoto
-                 * para desencriptar dicho mensaje
-                 *
-                 *  Posible solución enviarla en un atributo aparte en el mismo mensaje? es seguro?
-                 *
-                 *
-
-                //Deserialize the remote object
-                IntraUserNetworkServiceRemote intraUserNetworkServiceRemote = new IntraUserNetworkServiceRemote(jsomObject);
-
-
-                //Cache the Online Connection
-                serviceToServiceOnlineConnectionsCache.put(remoteNetworkService, serviceToServiceOnlineConnection);
-
-                //Put to the references cache
-                this.intraUserNetworkServiceLocal.addIntraUserNetworkServiceRemoteInstance(remoteNetworkService, intraUserNetworkServiceRemote);
-
-           }
-
-        } catch (CommunicationChannelNotImplemented communicationChannelNotImplemented) {
-            errorManager.reportUnexpectedPluginException(BITDUBAI_USER_NETWORK_SERVICE, DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not accept incoming connection"));
-
-        }*/
-
-    }
-
-    /**
-     * Create a new connection to
-     *
-     * @param remoteNetworkService
-     */
-    public void connectTo(UUID remoteNetworkService){
         /*
-        try {
-
-            ServiceToServiceOnlineConnection serviceToServiceOnlineConnection = communicationLayerManager.requestConnectionTo(NetworkServices.INTRA_USER, remoteNetworkService);
-
-            if (serviceToServiceOnlineConnection.getStatus() == ConnectionStatus.CONNECTED) {
-
-                IntraUserNetworkServiceRemote remote = intraUserNetworkServiceLocal.getRemoteObject();
-                String jsomObject = remote.serializeToJsomObject();
-
-                //Send a message with serialize remote object
-                sendMessage(remoteNetworkService, jsomObject);
-
-                //Cache the Online Connection
-                serviceToServiceOnlineConnectionsCache.put(remoteNetworkService, serviceToServiceOnlineConnection);
-
-            }
-
-        } catch (CantConnectToRemoteServiceException e) {
-            errorManager.reportUnexpectedPluginException(BITDUBAI_USER_NETWORK_SERVICE, DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not connect to remote network service "+remoteNetworkService));
-        }*/
+         * return the instance
+         */
+        return manager;
 
     }
 
     /**
-     * Send a message
+     * Return a previously created instances of the intra user network service manager
      *
-     * @param remoteNetworkService
-     * @param msjTextContent
+     * @param pluginClientId
+     * @return IntraUserNetworkServiceManager
      */
-    public void sendMessage(UUID remoteNetworkService, String msjTextContent){
+    public IntraUserNetworkServiceManager getIntraUserNetworkServiceManager(UUID pluginClientId){
 
-        //Get the Online Connection from remote reference
-        ServiceToServiceOnlineConnection serviceToServiceOnlineConnection = serviceToServiceOnlineConnectionsCache.get(remoteNetworkService);
-
-        if (serviceToServiceOnlineConnection.getStatus() == ConnectionStatus.CONNECTED) {
-
-            try {
-
-                //Create a new message to send
-                IntraUserNetworkServiceMessage message = new IntraUserNetworkServiceMessage();
-
-                //Encrypt the message text content
-                message.setTextContent(AsymmectricCryptography.encryptMessagePublicKey(msjTextContent, keyPair.getPublic().toString()));
-
-                //Sing the encrypt message
-                message.setSignature(AsymmectricCryptography.createMessageSignature(message.getTextContent(), keyPair.getPrivate().toString()));
-
-                //Send the message
-                serviceToServiceOnlineConnection.sendMessage(message);
-
-            } catch (CantSendMessageException e) {
-                errorManager.reportUnexpectedPluginException(BITDUBAI_USER_NETWORK_SERVICE, DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not send message to remote network service " + remoteNetworkService));
-            }
-
-        }
-
+        return  intraUserNetworkServiceManagersCache.get(pluginClientId);
     }
+
+
 
 }
