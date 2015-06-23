@@ -67,10 +67,10 @@ class IncomingExtraUserDataBaseFactory implements DealsWithPluginDatabaseSystem 
         try {
             for(Map.Entry<String, List<IncomingExtraUSerDataBaseConstants.ColumnDefinition>> tableDefinition: tablesDefinitions.entrySet()){
                 table = ((DatabaseFactory) database).newTableFactory(ownerId, tableDefinition.getKey());
-                System.err.println("INCOMING CRYPTO REGISTRY: " + tableDefinition.getKey() + " TABLE CREATED");
+                System.err.println("INCOMING EXTRA USER REGISTRY: " + tableDefinition.getKey() + " TABLE CREATED");
                 for(IncomingExtraUSerDataBaseConstants.ColumnDefinition columnDefinition: tableDefinition.getValue()){
                     table.addColumn(columnDefinition.columnName, columnDefinition.columnDataType, columnDefinition.columnDataTypeSize, columnDefinition.columnIsPrimaryKey);
-                    System.err.println("INCOMING CRYPTO REGISTRY: " + tableDefinition.getKey() + " - " + columnDefinition.columnName + " COLUMN ADDED");
+                    System.err.println("INCOMING EXTRA USER REGISTRY: " + tableDefinition.getKey() + " - " + columnDefinition.columnName + " COLUMN ADDED");
                 }
                 ((DatabaseFactory) database).createTable(table);
             }

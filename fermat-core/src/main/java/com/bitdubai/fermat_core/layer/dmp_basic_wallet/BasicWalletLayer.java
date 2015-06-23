@@ -50,8 +50,8 @@ public class BasicWalletLayer implements PlatformLayer {
         BasicWalletSubsystem bitcoinWalletSubsystem = new BitcoinWalletSubsystem();
 
         try {
-            bitcoinWalletSubsystem .start();
-            mDiscountWallet = bitcoinWalletSubsystem .getPlugin();
+            bitcoinWalletSubsystem.start();
+            mBitcoinWallet = bitcoinWalletSubsystem.getPlugin();
 
         } catch (CantStartSubsystemException e) {
             System.err.println("CantStartSubsystemException: " + e.getMessage());

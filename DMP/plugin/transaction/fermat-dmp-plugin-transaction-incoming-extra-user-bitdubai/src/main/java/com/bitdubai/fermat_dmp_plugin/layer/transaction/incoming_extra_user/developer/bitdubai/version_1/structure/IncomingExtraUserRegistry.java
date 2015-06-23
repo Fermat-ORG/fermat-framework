@@ -106,11 +106,17 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
      * IncomingExtraUserRegistry member methods.
      */
     public void initialize(UUID pluginId) throws CantInitializeCryptoRegistryException {
+        System.out.println("EXTRA USER REGISTRY 1");
+
         try {
             this.database = this.pluginDatabaseSystem.openDatabase(pluginId, IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_DATABASE);
+            System.out.println("EXTRA USER REGISTRY 1.5");
+
         } catch (DatabaseNotFoundException e) {
             IncomingExtraUserDataBaseFactory databaseFactory = new IncomingExtraUserDataBaseFactory();
             databaseFactory.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+
+            System.out.println("EXTRA USER REGISTRY 2");
 
             try {
                 this.database = databaseFactory.createDatabase(pluginId, IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_DATABASE);
@@ -122,6 +128,7 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
             throw new CantInitializeCryptoRegistryException();
         }
+        System.out.println("EXTRA USER REGISTRY SUCCESS");
     }
 
 
