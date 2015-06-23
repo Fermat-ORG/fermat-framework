@@ -1,8 +1,10 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
 
+import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,7 +14,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.BitcoinTransaction;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform;
@@ -56,27 +60,46 @@ public class TransactionsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        try
+        {
+
+
         cryptoWalletManager = platform.getCryptoWalletManager();
 
         try{
             cryptoWallet = cryptoWalletManager.getCryptoWallet();
         }
         catch (CantGetCryptoWalletException e) {
+            showMessage("CantGetCryptoWalletException- " + e.getMessage());
             e.printStackTrace();
         }
 
-        //TODO falta el BitcoinWalletManager para poder consultar las transacciones
-      //  try {
-         //   List<BitcoinTransaction> bitcoinTransactions = cryptoWallet.getTransactions(10, 10, wallet_id);
 
-      //  } catch (CantGetTransactionsException e) {
-            //e.printStackTrace();
-      //  }
+            try {
+               List<BitcoinTransaction> bitcoinTransactions = cryptoWallet.getTransactions(10, 10, wallet_id);
+
+               // for (int i = 0; i < bitcoinTransactions.size(); i++) {
+                 //   BitcoinTransaction transaction = (BitcoinTransaction) bitcoinTransactions.get(i);
+
+               // }
+
+               }
+            catch (CantGetTransactionsException e) {
+                showMessage("Cant Get Transactions Exception- " + e.getMessage());
+                    e.printStackTrace();
+                }
+
+         }
+        catch(Exception ex) {
+            showMessage("Unexpected error get Transactions - " + ex.getMessage());
+            ex.printStackTrace();
+        }
 
         // Construct the data source
         TRANSACTIONS.add(new Transactions("Lucia Alarcon De Zamacona", "4 hours ago", "0.0012", "New telephone","Send"));
-        TRANSACTIONS.add(new Transactions("Juan Luis R Pons","5 hours ago","0.0023","Old desk","Received"));
+        TRANSACTIONS.add(new Transactions("Juan Luis R Pons","5 hours ago", "0.0023", "Old desk", "Received"));
         TRANSACTIONS.add(new Transactions("Karina Rodríguez","yesterday 11:00 PM","0.1023","Car oil","Received"));
+
     }
 
 
@@ -219,11 +242,33 @@ public class TransactionsFragment extends Fragment {
             this.type=type;
         }
 
-        public String getName(){return this.name;}
+        public String getName(){
+            return this.name;}
         public String getDate(){return this.date;}
-        public String getAmount(){return this.amount;}
-        public String getMemo(){return this.memo;}
-        public String getType(){return this.type;}
+        public String getAmount() {
+            return this.amount;
+        }
 
+        public String getMemo() {
+            return this.memo;
+        }
+
+        public String getType() {
+            return this.type;
+        }
+
+    }
+
+    private void showMessage(String text){
+        AlertDialog alertDialog = new AlertDialog.Builder(this.getActivity()).create();
+        alertDialog.setTitle("Warning");
+        alertDialog.setMessage(text);
+        alertDialog.setButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // aquí puedes añadir funciones
+            }
+        });
+        //alertDialog.setIcon(R.drawable.icon);
+        alertDialog.show();
     }
 }
