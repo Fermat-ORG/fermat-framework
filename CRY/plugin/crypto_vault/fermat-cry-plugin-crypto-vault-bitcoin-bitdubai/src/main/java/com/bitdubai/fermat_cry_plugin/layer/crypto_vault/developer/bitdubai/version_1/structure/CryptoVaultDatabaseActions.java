@@ -28,6 +28,7 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.vers
 
 import org.bitcoinj.core.Wallet;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -346,6 +347,76 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
                 }
         }
 
+    }
+
+    /**
+     * increase by one or resets to zero the counter of transactions found ready to be consumed
+     * @param newOcurrence
+     * @return the amount of iterations
+     * @throws CantExecuteQueryException
+     */
+    public int updateTransactionProtocolStatus(boolean newOcurrence) throws CantExecuteQueryException {
+        DatabaseTable transactionProtocolStatusTable;
+        transactionProtocolStatusTable = database.getTable(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS);
+
+        try {
+            transactionProtocolStatusTable.loadToMemory();
+        } catch (CantLoadTableToMemory cantLoadTableToMemory) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
+            throw new CantExecuteQueryException();
+        }
+        List<DatabaseTableRecord> records = transactionProtocolStatusTable.getRecords();
+        if (records.isEmpty()){
+            /**
+             * there are no records, I will insert the first one that will be always updated
+             */
+            long timestamp = System.currentTimeMillis() / 1000L;
+            DatabaseTableRecord emptyRecord = transactionProtocolStatusTable.getEmptyRecord();
+            emptyRecord.setLongValue(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_TIMESTAMP_COLUMN_NAME, timestamp);
+            emptyRecord.setIntegerValue(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_ocurrences_COLUMN_NAME, 0);
+
+            /**
+             * returns 0
+             */
+            return 0;
+        }
+
+        DatabaseTableRecord record = records.get(0);
+        DatabaseTransaction dbTx = database.newTransaction();
+
+        if (newOcurrence){
+            /**
+             * I need to increase the ocurrences counter by one
+             */
+            int ocurrence = record.getIntegerValue(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_ocurrences_COLUMN_NAME);
+            ocurrence = ocurrence +1;
+            record.setIntegerValue(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_ocurrences_COLUMN_NAME, ocurrence);
+            dbTx.addRecordToUpdate(transactionProtocolStatusTable, record);
+
+            try {
+                database.executeTransaction(dbTx);
+            } catch (DatabaseTransactionFailedException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantExecuteQueryException();
+            }
+            return ocurrence;
+
+        }else {
+            /**
+             * I need to reset the counter to 0
+             */
+            record.setIntegerValue(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_ocurrences_COLUMN_NAME, 0);
+            dbTx.addRecordToUpdate(transactionProtocolStatusTable, record);
+            try {
+                database.executeTransaction(dbTx);
+            } catch (DatabaseTransactionFailedException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantExecuteQueryException();
+            }
+
+            return 0;
+
+        }
     }
 
 }
