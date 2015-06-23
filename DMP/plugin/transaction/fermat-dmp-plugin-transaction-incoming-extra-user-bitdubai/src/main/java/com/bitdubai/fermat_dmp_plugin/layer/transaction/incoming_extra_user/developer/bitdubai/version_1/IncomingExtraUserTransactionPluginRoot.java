@@ -17,10 +17,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventMan
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventType;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoIdentifiedFromExtraUserEventHandler;
-import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoReceivedFromExtraUserEventHandler;
-import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoReceptionConfirmedFromExtraUserEventHandler;
-import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoReversedFromExtraUserEventHandler;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,10 +78,9 @@ public class IncomingExtraUserTransactionPluginRoot implements Service, Incoming
         /**
          * I will initialize the handling of platform events.
          */
-
+        /*
         EventListener eventListener;
         EventHandler eventHandler;
-
 
         eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_IDENTIFIED_FROM_EXTRA_USER);
         eventHandler = new IncomingCryptoIdentifiedFromExtraUserEventHandler();
@@ -115,6 +111,8 @@ public class IncomingExtraUserTransactionPluginRoot implements Service, Incoming
         eventListener.setEventHandler(eventHandler);
         eventManager.addListener(eventListener);
         listenersAdded.add(eventListener);
+
+        */
 
         this.serviceStatus = ServiceStatus.STARTED;
     }

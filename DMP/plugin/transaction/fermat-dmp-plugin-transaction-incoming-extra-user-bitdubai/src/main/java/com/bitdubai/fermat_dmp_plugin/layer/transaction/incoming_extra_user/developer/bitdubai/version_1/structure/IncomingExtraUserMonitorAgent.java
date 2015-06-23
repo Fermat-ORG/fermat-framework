@@ -18,13 +18,13 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWit
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventSource;
-import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
+import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.DealsWithIncomingCrypto;
+import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantReadEvent;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.DealsWithRegistry;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.TransactionAgent;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantStartAgentException;
-import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.util.SourceAdministrator;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.util.SourceAdministrator;
 
 import java.util.List;
 
@@ -44,13 +44,13 @@ import java.util.List;
  */
 
 
-public class IncomingExtraUserMonitorAgent implements DealsWithCryptoVault , DealsWithErrors, DealsWithRegistry, TransactionAgent {
+public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, DealsWithErrors, DealsWithRegistry, TransactionAgent {
 
 
     /**
-     * DealsWithCryptoVault Interface member variables.
+     * DealsWithIncomingCrypto Interface member variables.
      */
-    private CryptoVaultManager cryptoVaultManager;
+    private IncomingCryptoManager incomingCryptoManager;
 
     /**
      * DealsWithErrors Interface member variables.
@@ -73,11 +73,11 @@ public class IncomingExtraUserMonitorAgent implements DealsWithCryptoVault , Dea
 
 
     /**
-     *DealsWithCryptoVault Interface implementation.
+     *DealsWithIncomingCrypto Interface implementation.
      */
     @Override
-    public void setCryptoVaultManager(CryptoVaultManager cryptoVaultManager) {
-        this.cryptoVaultManager = cryptoVaultManager;
+    public void setIncomingCryptoManager(IncomingCryptoManager incomingCryptoManager) {
+        this.incomingCryptoManager = incomingCryptoManager;
     }
 
     /**
@@ -109,7 +109,7 @@ public class IncomingExtraUserMonitorAgent implements DealsWithCryptoVault , Dea
         try {
             this.monitorAgent.setErrorManager(this.errorManager);
             this.monitorAgent.setRegistry(this.registry);
-            this.monitorAgent.setCryptoVaultManager(this.cryptoVaultManager);
+            this.monitorAgent.setIncomingCryptoManager(this.incomingCryptoManager);
             this.monitorAgent.initialize();
 
             this.agentThread = new Thread(this.monitorAgent);
@@ -132,12 +132,12 @@ public class IncomingExtraUserMonitorAgent implements DealsWithCryptoVault , Dea
 
 
 
-    private static class MonitorAgent implements DealsWithCryptoVault, DealsWithErrors, DealsWithRegistry, Runnable  {
+    private static class MonitorAgent implements DealsWithIncomingCrypto, DealsWithErrors, DealsWithRegistry, Runnable  {
 
         /**
          * DealsWithCryptoVault Interface member variables.
          */
-        private CryptoVaultManager cryptoVaultManager;
+        private IncomingCryptoManager incomingCryptoManager;
 
         /**
          * DealsWithErrors Interface member variables.
@@ -164,8 +164,8 @@ public class IncomingExtraUserMonitorAgent implements DealsWithCryptoVault , Dea
          *DealsWithCryptoVault Interface implementation.
          */
         @Override
-        public void setCryptoVaultManager(CryptoVaultManager cryptoVaultManager) {
-            this.cryptoVaultManager = cryptoVaultManager;
+        public void setIncomingCryptoManager(IncomingCryptoManager incomungCryptoManager) {
+            this.incomingCryptoManager = incomungCryptoManager;
         }
 
         /**
@@ -189,7 +189,7 @@ public class IncomingExtraUserMonitorAgent implements DealsWithCryptoVault , Dea
          */
         private void initialize () {
             this.sourceAdministrator = new SourceAdministrator();
-            this.sourceAdministrator.setCryptoVaultManager(this.cryptoVaultManager);
+            this.sourceAdministrator.setIncomingCryptoManager(this.incomingCryptoManager);
         }
 
         /**

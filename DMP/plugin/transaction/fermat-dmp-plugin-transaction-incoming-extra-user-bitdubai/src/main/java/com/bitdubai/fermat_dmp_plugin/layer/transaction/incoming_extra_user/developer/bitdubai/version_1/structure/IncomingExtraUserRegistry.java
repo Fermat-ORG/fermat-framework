@@ -6,15 +6,11 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Action;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -71,7 +67,7 @@ import java.util.UUID;
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
  */
 
-public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPluginDatabaseSystem, TransactionProtocolManager<CryptoTransaction> {
+public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPluginDatabaseSystem {
 
     /**
      * DealsWithErrors Interface member variables.
@@ -111,13 +107,13 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
      */
     public void initialize(UUID pluginId) throws CantInitializeCryptoRegistryException {
         try {
-            this.database = this.pluginDatabaseSystem.openDatabase(pluginId, IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_DATABASE);
+            this.database = this.pluginDatabaseSystem.openDatabase(pluginId, IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_DATABASE);
         } catch (DatabaseNotFoundException e) {
             IncomingExtraUserDataBaseFactory databaseFactory = new IncomingExtraUserDataBaseFactory();
             databaseFactory.setPluginDatabaseSystem(this.pluginDatabaseSystem);
 
             try {
-                this.database = databaseFactory.createDatabase(pluginId, IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_DATABASE);
+                this.database = databaseFactory.createDatabase(pluginId, IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_DATABASE);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantInitializeCryptoRegistryException();
@@ -148,16 +144,16 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
     void saveNewEvent(String eventType, String eventSource) throws CantSaveEvent {
         try {
             DatabaseTransaction dbTrx = this.database.newTransaction();
-            DatabaseTable eventsTable = this.database.getTable(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_NAME);
+            DatabaseTable eventsTable = this.database.getTable(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_NAME);
             DatabaseTableRecord eventRecord = eventsTable.getEmptyRecord();
 
             UUID eventRecordID = UUID.randomUUID();
             long unixTime = System.currentTimeMillis();
-            eventRecord.setUUIDValue(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_ID_COLUMN.columnName, eventRecordID);
-            eventRecord.setStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_EVENT_COLUMN.columnName, eventType);
-            eventRecord.setStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_SOURCE_COLUMN.columnName, eventSource);
-            eventRecord.setStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_STATUS_COLUMN.columnName, "PENDING");
-            eventRecord.setLongValue(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_TIMESTAMP_COLUMN.columnName, unixTime);
+            eventRecord.setUUIDValue(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_ID_COLUMN.columnName, eventRecordID);
+            eventRecord.setStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_EVENT_COLUMN.columnName, eventType);
+            eventRecord.setStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_SOURCE_COLUMN.columnName, eventSource);
+            eventRecord.setStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_STATUS_COLUMN.columnName, "PENDING");
+            eventRecord.setLongValue(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_TIMESTAMP_COLUMN.columnName, unixTime);
             dbTrx.addRecordToInsert(eventsTable, eventRecord);
             this.database.executeTransaction(dbTrx);
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
@@ -168,8 +164,8 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
 
     EventWrapper getNextPendingEvent() throws CantReadEvent {
         try {
-            DatabaseTable eventsTable = this.database.getTable(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_NAME);
-            eventsTable.setStringFilter(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_STATUS_COLUMN.columnName, "PENDING", DatabaseFilterType.EQUAL);
+            DatabaseTable eventsTable = this.database.getTable(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_NAME);
+            eventsTable.setStringFilter(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_STATUS_COLUMN.columnName, "PENDING", DatabaseFilterType.EQUAL);
             try {
                 eventsTable.loadToMemory();
             } catch (CantLoadTableToMemory cantLoadTableToMemory) {
@@ -182,11 +178,11 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
             if (events != null && !events.isEmpty()) {
                 DatabaseTableRecord event = events.get(0);
                 return new EventWrapper(
-                        event.getUUIDValue(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_ID_COLUMN.columnName),
-                        event.getStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_EVENT_COLUMN.columnName),
-                        event.getStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_SOURCE_COLUMN.columnName),
-                        event.getStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_STATUS_COLUMN.columnName),
-                        event.getLongValue(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_TIMESTAMP_COLUMN.columnName)
+                        event.getUUIDValue(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_ID_COLUMN.columnName),
+                        event.getStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_EVENT_COLUMN.columnName),
+                        event.getStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_SOURCE_COLUMN.columnName),
+                        event.getStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_STATUS_COLUMN.columnName),
+                        event.getLongValue(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_TIMESTAMP_COLUMN.columnName)
                 );
             }
             return null;
@@ -199,8 +195,8 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
     void disableEvent(UUID eventId) throws CantReadEvent, CantSaveEvent {
         try {
             DatabaseTransaction dbTrx = this.database.newTransaction();
-            DatabaseTable eventsTable = this.database.getTable(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_NAME);
-            eventsTable.setUUIDFilter(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_ID_COLUMN.columnName, eventId, DatabaseFilterType.EQUAL);
+            DatabaseTable eventsTable = this.database.getTable(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_NAME);
+            eventsTable.setUUIDFilter(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_ID_COLUMN.columnName, eventId, DatabaseFilterType.EQUAL);
             try {
                 eventsTable.loadToMemory();
             } catch (CantLoadTableToMemory cantLoadTableToMemory) {
@@ -217,7 +213,7 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
             }
 
             DatabaseTableRecord eventRecord = records.get(0);
-            eventRecord.setStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_STATUS_COLUMN.columnName, "DISABLED");
+            eventRecord.setStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_STATUS_COLUMN.columnName, "DISABLED");
             dbTrx.addRecordToUpdate(eventsTable, eventRecord);
             this.database.executeTransaction(dbTrx);
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
@@ -231,13 +227,13 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
 
     // Las coloca en (A,TBN)
     public void acknowledgeTransactions(List<Transaction<CryptoTransaction>> transactionList) { // throws CantAcknowledgeTransactionException
-        DatabaseTable registryTable = this.database.getTable(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NAME);
+        DatabaseTable registryTable = this.database.getTable(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_NAME);
         //DatabaseTransaction databaseTransaction = this.database.newTransaction();
         for(Transaction<CryptoTransaction> transaction : transactionList) {
             // We first check if we have this transaction registered as (A,TBN). This would not be
             // a mistake. It just mean that the system shut down before we could confirm reception to
             // the sender and the sender sent it again.
-            registryTable.setUUIDFilter(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ID_COLUMN.columnName, transaction.getTransactionID(), DatabaseFilterType.EQUAL);
+            registryTable.setUUIDFilter(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_ID_COLUMN.columnName, transaction.getTransactionID(), DatabaseFilterType.EQUAL);
 
             try {
                 registryTable.loadToMemory();
@@ -251,7 +247,7 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
                 // if it is empty this is a new transaction
                 // If it is a new transaction we save it as usual
                 DatabaseTableRecord transactionRecord = registryTable.getEmptyRecord();
-                fillRegistryTableRecord(transactionRecord, transaction, TransactionStatus.ACKNOWLEDGED, ProtocolStatus.TO_BE_NOTIFIED, Specialist.UNKNOWN_SPECIALIST);
+                fillRegistryTableRecord(transactionRecord, transaction, TransactionStatus.ACKNOWLEDGED, ProtocolStatus.TO_BE_NOTIFIED);
                 try {
                     registryTable.insertRecord(transactionRecord);
                 } catch (CantInsertRecord cantInsertRecord) {
@@ -269,12 +265,12 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
     // Retorna las que están en (A,TBN)
     List<Transaction<CryptoTransaction>> getAcknowledgedTransactions() {//throws CantGetTransactionsException
 
-        DatabaseTable registryTable = this.database.getTable(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NAME);
-        registryTable.setStringFilter(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_TRANSACTION_STATUS_COLUMN.columnName ,
+        DatabaseTable registryTable = this.database.getTable(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_NAME);
+        registryTable.setStringFilter(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_TRANSACTION_STATUS_COLUMN.columnName ,
                                       TransactionStatus.ACKNOWLEDGED.getCode(),
                                       DatabaseFilterType.EQUAL
                                      );
-        registryTable.setStringFilter(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName ,
+        registryTable.setStringFilter(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName,
                 ProtocolStatus.TO_BE_NOTIFIED.getCode(),
                 DatabaseFilterType.EQUAL
         );
@@ -297,12 +293,12 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
         return tbaList;
     }
 
-    // Pasa una a (R,NAR)
+    // Pasa una a (R,TBA)
     void acquireResponsibility(Transaction<CryptoTransaction> transaction) { // throws CantAcquireResponsibility
-        DatabaseTable registryTable = this.database.getTable(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NAME);
+        DatabaseTable registryTable = this.database.getTable(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_NAME);
 
         // We look for the record to update
-        registryTable.setUUIDFilter(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ID_COLUMN.columnName, transaction.getTransactionID(), DatabaseFilterType.EQUAL);
+        registryTable.setUUIDFilter(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_ID_COLUMN.columnName, transaction.getTransactionID(), DatabaseFilterType.EQUAL);
 
         try {
             registryTable.loadToMemory();
@@ -318,13 +314,13 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
         } else {
             DatabaseTableRecord recordToUpdate = records.get(0);
             recordToUpdate.setStringValue(
-                    IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_TRANSACTION_STATUS_COLUMN.columnName,
+                    IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_TRANSACTION_STATUS_COLUMN.columnName,
                     TransactionStatus.RESPONSIBLE.getCode()
                                          );
 
             recordToUpdate.setStringValue(
-                    IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName,
-                    ProtocolStatus.NO_ACTION_REQUIRED.getCode()
+                    IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName,
+                    ProtocolStatus.TO_BE_APPLIED.getCode()
                                          );
             try {
                 registryTable.updateRecord(recordToUpdate);
@@ -338,46 +334,17 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
 
 
     // Used by Relay Agent
-    // Retorna las (R,NAR)
-    List<Transaction<CryptoTransaction>> getResponsibleNARTransactions() { //throws CantAccessTransactionsException
-
-        DatabaseTable registryTable = this.database.getTable(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NAME);
-
-        registryTable.setStringFilter(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_TRANSACTION_STATUS_COLUMN.columnName ,
-                TransactionStatus.RESPONSIBLE.getCode(),
-                DatabaseFilterType.EQUAL
-        );
-        registryTable.setStringFilter(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName ,
-                ProtocolStatus.NO_ACTION_REQUIRED.getCode(),
-                DatabaseFilterType.EQUAL
-        );
-
-        try {
-            registryTable.loadToMemory();
-        } catch (CantLoadTableToMemory cantLoadTableToMemory) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
-            //TODO: MANAGE EXCEPTION
-        }
-
-        List<Transaction<CryptoTransaction>> narList = new ArrayList<>();
-        List<DatabaseTableRecord> records = registryTable.getRecords();
-
-
-        for (DatabaseTableRecord r : records){
-            narList.add(getTransactionFromRecord(r));
-        }
-
-        registryTable.clearAllFilters();
-
-        return narList;
+    // Retorna las (R,TBA)
+    List<Transaction<CryptoTransaction>> getResponsibleTBATransactions() { //throws CantAccessTransactionsException
+        return getAllTransactionsInState(TransactionStatus.RESPONSIBLE,ProtocolStatus.TO_BE_APPLIED);
     }
 
-    // Pasa la transacción a TBN y le agrega el Specialist.
-    void setToNotify(UUID id, Specialist specialist) {
-        DatabaseTable registryTable = this.database.getTable(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NAME);
+    // Pasa la transacción a APPLIED.
+    void setToApplied(UUID id) {
+        DatabaseTable registryTable = this.database.getTable(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_NAME);
 
         // We look for the record to update
-        registryTable.setUUIDFilter(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ID_COLUMN.columnName, id, DatabaseFilterType.EQUAL);
+        registryTable.setUUIDFilter(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_ID_COLUMN.columnName, id, DatabaseFilterType.EQUAL);
 
         try {
             registryTable.loadToMemory();
@@ -387,9 +354,6 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
         }
 
         List<DatabaseTableRecord> records = registryTable.getRecords();
-        if(records == null)
-            return;
-
 
         if (records.size() != 1) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new ExpectedTransactionNotFoundException());
@@ -398,13 +362,8 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
             DatabaseTableRecord recordToUpdate = records.get(0);
 
             recordToUpdate.setStringValue(
-                    IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName,
-                    ProtocolStatus.TO_BE_NOTIFIED.getCode()
-            );
-
-            recordToUpdate.setStringValue(
-                    IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_SPECIALIST_COLUMN.columnName,
-                    specialist.getCode()
+                    IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName,
+                    ProtocolStatus.APPLIED.getCode()
             );
 
             try {
@@ -415,231 +374,79 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
             }
         }
     }
-
-    // La lista de (R,TBN) o (R,SN)
-    private List<Transaction<CryptoTransaction>> getResponsibleTransactionsPendingAction() {//throws CantAccessTransactionsException;
-        List<Transaction<CryptoTransaction>> tbnList = getAllTransactionsInState(TransactionStatus.RESPONSIBLE, ProtocolStatus.TO_BE_NOTIFIED);
-        List<Transaction<CryptoTransaction>> snList = getAllTransactionsInState(TransactionStatus.RESPONSIBLE, ProtocolStatus.SENDING_NOTIFIED);
-        List<Transaction<CryptoTransaction>> concatenatedList = new ArrayList<>();
-        concatenatedList.addAll(tbnList);
-        concatenatedList.addAll(snList);
-        return concatenatedList;
-    }
-
-    // Da los Specialist de las que están en TBN y SN
-    public List<Specialist> getSpecialists() throws InvalidParameterException {//throws CantReadSpecialistsException
-
-        DatabaseTable registryTable = this.database.getTable(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NAME);
-        DatabaseTableRecord r;
-
-        List<Transaction<CryptoTransaction>> transactionList = getResponsibleTransactionsPendingAction();
-
-        List<Specialist> specialistList = new ArrayList<>();
-
-
-        for(Transaction<CryptoTransaction> transaction : transactionList) {
-
-
-            // We look for the record to update
-            registryTable.setUUIDFilter(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ID_COLUMN.columnName, transaction.getTransactionID(), DatabaseFilterType.EQUAL);
-
-            try {
-                registryTable.loadToMemory();
-            } catch (CantLoadTableToMemory cantLoadTableToMemory) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
-                //TODO: MANAGE EXCEPTION
-            }
-
-            List<DatabaseTableRecord> records = registryTable.getRecords();
-            if (records.size() != 1) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new ExpectedTransactionNotFoundException());
-                //TODO: MANAGE EXCEPTION
-            } else {
-                r = records.get(0);
-                specialistList.add(Specialist.getByCode(r.getStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_SPECIALIST_COLUMN.columnName)));
-            }
-
-            registryTable.clearAllFilters();
-        }
-
-        return specialistList;
-    }
-
-    // Pasa las que son TBN a SN
-    void setToSendingNotified() { // throws CantSaveTransactionsException
-
-        // First we get the TO_BE_NOTIFIED transactions
-        List<DatabaseTableRecord> tbnList = getAllRecordsInState(TransactionStatus.RESPONSIBLE, ProtocolStatus.TO_BE_NOTIFIED);
-
-        DatabaseTable registryTable = this.database.getTable(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NAME);
-
-        for(DatabaseTableRecord recordToUpdate: tbnList) {
-            recordToUpdate.setStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName,
-                                          ProtocolStatus.SENDING_NOTIFIED.getCode());
-            try {
-                registryTable.updateRecord(recordToUpdate);
-            } catch (CantUpdateRecord cantUpdateRecord) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantUpdateRecord);
-                // TODO: MANAGE EXCEPTION.
-            }
-        }
-    }
-
-    /*
-     * TransactionProtocolManager interface implementation
-     */
-
-    /*
-     * El método confirmedReception marca la transacción marcada como argumento como (DELIVERED,RECEPTION_NOTIFIED).
-     */
-    public void confirmReception(UUID transactionId) throws CantConfirmTransactionException {
-
-        DatabaseTable registryTable = this.database.getTable(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NAME);
-        registryTable.setUUIDFilter(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ID_COLUMN.columnName, transactionId, DatabaseFilterType.EQUAL);
-        DatabaseTableRecord recordToUpdate;
-
-        try {
-            registryTable.loadToMemory();
-        } catch (CantLoadTableToMemory cantLoadTableToMemory) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
-            //TODO: MANAGE EXCEPTION
-        }
-
-        List<DatabaseTableRecord> records = registryTable.getRecords();
-        if (records.size() != 1) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new ExpectedTransactionNotFoundException());
-            //TODO: MANAGE EXCEPTION
-        } else {
-            recordToUpdate = records.get(0);
-            // We will update it independently if it was or no in the (D,RN) state
-            // If it was updated it means the system shut down before the receptor could register
-            // that he had notified the reception.
-            recordToUpdate.setStringValue(
-                    IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_TRANSACTION_STATUS_COLUMN.columnName,
-                    TransactionStatus.DELIVERED.getCode()
-            );
-            recordToUpdate.setStringValue(
-                    IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName,
-                    ProtocolStatus.RECEPTION_NOTIFIED.getCode()
-            );
-
-            try {
-                registryTable.updateRecord(recordToUpdate);
-            } catch (CantUpdateRecord cantUpdateRecord) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantUpdateRecord);
-                throw new CantConfirmTransactionException();
-                // TODO: MANAGE EXCEPTION.
-            }
-
-        }
-        registryTable.clearAllFilters();
-
-    }
-
-    /*
-     *  El método getPendingTransactions retorna la lista de todas las transacciones con ProtocolStatus SENDING_NOTIFIED que tienen como Specialist al pasado como argumento. Notar que no camba el estado de ninguna transacción.
-     */
-    public List<Transaction<CryptoTransaction>> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
-
-        DatabaseTable registryTable = this.database.getTable(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NAME);
-        registryTable.setStringFilter(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName,ProtocolStatus.SENDING_NOTIFIED.getCode(),DatabaseFilterType.EQUAL);
-        registryTable.setStringFilter(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_SPECIALIST_COLUMN.columnName,specialist.getCode(),DatabaseFilterType.EQUAL);
-
-        try {
-            registryTable.loadToMemory();
-        } catch (CantLoadTableToMemory cantLoadTableToMemory) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
-            throw new CantDeliverPendingTransactionsException();//TODO: MANAGE EXCEPTION
-        }
-
-
-        List<Transaction<CryptoTransaction>> returnList = new ArrayList<>();
-
-        List<DatabaseTableRecord> records = registryTable.getRecords();
-
-        for(DatabaseTableRecord r : records)
-            returnList.add(getTransactionFromRecord(r));
-
-        return returnList;
-    }
-
-
 
 
     private void fillRegistryTableRecord(DatabaseTableRecord databaseTableRecord,
                                          Transaction<CryptoTransaction> transaction,
                                          TransactionStatus transactionStatus,
-                                         ProtocolStatus protocolStatus,
-                                         Specialist specialist){
+                                         ProtocolStatus protocolStatus){
 
-        databaseTableRecord.setUUIDValue(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ID_COLUMN.columnName, transaction.getTransactionID());
-        databaseTableRecord.setStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_TRANSACTION_HASH_COLUMN.columnName, transaction.getInformation().getTransactionHash());
-        databaseTableRecord.setStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ADDRESS_FROM_COLUMN.columnName, transaction.getInformation().getAddressFrom().getAddress());
-        databaseTableRecord.setStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ADDRESS_TO_COLUMN.columnName, transaction.getInformation().getAddressTo().getAddress());
-        databaseTableRecord.setStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_CRYPTO_CURRENCY_COLUMN.columnName, String.valueOf(transaction.getInformation().getCryptoCurrency()));
-        databaseTableRecord.setLongValue(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_CRYPTO_AMOUNT_COLUMN.columnName,transaction.getInformation().getCryptoAmount());
+        databaseTableRecord.setUUIDValue(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_ID_COLUMN.columnName, transaction.getTransactionID());
+        databaseTableRecord.setStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_TRANSACTION_HASH_COLUMN.columnName, transaction.getInformation().getTransactionHash());
+        databaseTableRecord.setStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_ADDRESS_FROM_COLUMN.columnName, transaction.getInformation().getAddressFrom().getAddress());
+        databaseTableRecord.setStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_ADDRESS_TO_COLUMN.columnName, transaction.getInformation().getAddressTo().getAddress());
+        databaseTableRecord.setStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_CRYPTO_CURRENCY_COLUMN.columnName, String.valueOf(transaction.getInformation().getCryptoCurrency()));
+        databaseTableRecord.setLongValue(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_CRYPTO_AMOUNT_COLUMN.columnName, transaction.getInformation().getCryptoAmount());
 
-        databaseTableRecord.setStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ACTION_COLUMN.columnName,transaction.getAction().getCode());
-        // We set the specialist as a parameter
-        databaseTableRecord.setStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_SPECIALIST_COLUMN.columnName,specialist.getCode());
-        databaseTableRecord.setStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_CRYPTO_STATUS_COLUMN.columnName, transaction.getInformation().getCryptoStatus().getCode());
-        databaseTableRecord.setStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_TRANSACTION_STATUS_COLUMN.columnName, transactionStatus.getCode());
-        databaseTableRecord.setStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName, protocolStatus.getCode());
+        databaseTableRecord.setStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_ACTION_COLUMN.columnName,transaction.getAction().getCode());
+        databaseTableRecord.setStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_CRYPTO_STATUS_COLUMN.columnName, transaction.getInformation().getCryptoStatus().getCode());
+        databaseTableRecord.setStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_TRANSACTION_STATUS_COLUMN.columnName, transactionStatus.getCode());
+        databaseTableRecord.setStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName, protocolStatus.getCode());
 
-        databaseTableRecord.setLongValue(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_TIMESTAMP_COLUMN.columnName, transaction.getTimestamp());
+        databaseTableRecord.setLongValue(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_TIMESTAMP_COLUMN.columnName, transaction.getTimestamp());
 
     }
 
     private Transaction<CryptoTransaction> getTransactionFromRecord(DatabaseTableRecord databaseTableRecord){
         CryptoAddress cryptoAddressFrom = new CryptoAddress();
-        cryptoAddressFrom.setAddress(databaseTableRecord.getStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ADDRESS_FROM_COLUMN.columnName));
-        cryptoAddressFrom.setCryptoCurrency(CryptoCurrency.getByCode(databaseTableRecord.getStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_CRYPTO_CURRENCY_COLUMN.columnName)));
+        cryptoAddressFrom.setAddress(databaseTableRecord.getStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_ADDRESS_FROM_COLUMN.columnName));
+        cryptoAddressFrom.setCryptoCurrency(CryptoCurrency.getByCode(databaseTableRecord.getStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_CRYPTO_CURRENCY_COLUMN.columnName)));
         CryptoAddress cryptoAddressTo = new CryptoAddress();
-        cryptoAddressTo.setAddress(databaseTableRecord.getStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ADDRESS_TO_COLUMN.columnName));
-        cryptoAddressTo.setCryptoCurrency(CryptoCurrency.BITCOIN);
+        cryptoAddressTo.setAddress(databaseTableRecord.getStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_ADDRESS_TO_COLUMN.columnName));
+        cryptoAddressTo.setCryptoCurrency(CryptoCurrency.getByCode(databaseTableRecord.getStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_CRYPTO_CURRENCY_COLUMN.columnName)));
 
         CryptoStatus cryptoStatus = null;
         try {
-            cryptoStatus = CryptoStatus.getByCode(databaseTableRecord.getStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_CRYPTO_STATUS_COLUMN.columnName));
+            cryptoStatus = CryptoStatus.getByCode(databaseTableRecord.getStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_CRYPTO_STATUS_COLUMN.columnName));
         } catch (InvalidParameterException e) {
             // TODO: Manage exception
             e.printStackTrace();
         }
 
         CryptoTransaction cryptoTransaction = new CryptoTransaction(
-                  databaseTableRecord.getStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_TRANSACTION_HASH_COLUMN.columnName),
+                  databaseTableRecord.getStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_TRANSACTION_HASH_COLUMN.columnName),
                   cryptoAddressFrom,
                   cryptoAddressTo,
-                  CryptoCurrency.getByCode(databaseTableRecord.getStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_CRYPTO_CURRENCY_COLUMN.columnName)),
-                  databaseTableRecord.getLongValue(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_CRYPTO_AMOUNT_COLUMN.columnName),
+                  CryptoCurrency.getByCode(databaseTableRecord.getStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_CRYPTO_CURRENCY_COLUMN.columnName)),
+                  databaseTableRecord.getLongValue(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_CRYPTO_AMOUNT_COLUMN.columnName),
                   cryptoStatus
                                                                      );
         Action action = null;
         try {
-            action = Action.getByCode(databaseTableRecord.getStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ACTION_COLUMN.columnName));
+            action = Action.getByCode(databaseTableRecord.getStringValue(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_ACTION_COLUMN.columnName));
         } catch (InvalidParameterException e) {
             // Manage Exceotion
             e.printStackTrace();
         }
 
         return new Transaction<>(
-                  databaseTableRecord.getUUIDValue(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ID_COLUMN.columnName),
+                  databaseTableRecord.getUUIDValue(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_ID_COLUMN.columnName),
                   cryptoTransaction,
                   action,
-                  databaseTableRecord.getLongValue(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_TIMESTAMP_COLUMN.columnName)
+                  databaseTableRecord.getLongValue(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_TIMESTAMP_COLUMN.columnName)
                                   );
     }
 
 
     private List<DatabaseTableRecord> getAllRecordsInState(TransactionStatus transactionStatus, ProtocolStatus protocolStatus) {
-        DatabaseTable registryTable = this.database.getTable(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NAME);
+        DatabaseTable registryTable = this.database.getTable(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_NAME);
 
-        registryTable.setStringFilter(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_TRANSACTION_STATUS_COLUMN.columnName ,
+        registryTable.setStringFilter(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_TRANSACTION_STATUS_COLUMN.columnName ,
                 transactionStatus.getCode(),
                 DatabaseFilterType.EQUAL
         );
 
-        registryTable.setStringFilter(IncomingExtraUSerDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName ,
+        registryTable.setStringFilter(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName ,
                 protocolStatus.getCode(),
                 DatabaseFilterType.EQUAL
         );
