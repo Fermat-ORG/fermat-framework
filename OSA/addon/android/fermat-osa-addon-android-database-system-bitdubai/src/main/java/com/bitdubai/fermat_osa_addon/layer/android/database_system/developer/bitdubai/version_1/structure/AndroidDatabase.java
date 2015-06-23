@@ -381,7 +381,7 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
 
         }catch (Exception e)
         {
-            e.printStackTrace();
+            //e.printStackTrace();
         	throw new CantCreateTableException();
         }
 
@@ -443,7 +443,7 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
 
         }catch (Exception e)
         {
-            e.printStackTrace();
+            //e.printStackTrace();
         	throw new CantCreateTableException();
         }
 
