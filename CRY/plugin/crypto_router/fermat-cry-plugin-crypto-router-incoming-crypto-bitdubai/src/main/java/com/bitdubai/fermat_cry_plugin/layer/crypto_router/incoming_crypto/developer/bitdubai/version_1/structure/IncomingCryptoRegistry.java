@@ -533,7 +533,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
 
         }
         registryTable.clearAllFilters();
-
+        System.out.println("TTF - INCOMING CRYPTO: RECEPTION CONFIRMED BY SPECIALIST");
     }
 
     /*

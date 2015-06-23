@@ -239,6 +239,7 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantReadEvent);
             }
             if(eventWrapper != null){
+                System.out.println("TTF - INCOMING CRYPTO MONITOR: NEW EVENT READ");
 
                 // We have here new pending transactions, we will check the source and ask for the right
                 // TransactionSender
@@ -265,6 +266,8 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
                 // Now we save the list in the registry
                 if(transactionList != null){
                     this.registry.acknowledgeTransactions(transactionList);
+                    System.out.println("TTF - INCOMING CRYPTO MONITOR: " + transactionList.size() +" TRANSACTION(S) ACKNOWLEDGE");
+
                 } else {
                   // if sombething failed we try in next round
                   return;
@@ -281,6 +284,7 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
                 for(Transaction<CryptoTransaction> transaction : acknowledgedTransactions){
                     try {
                         source.confirmReception(transaction.getTransactionID());
+                        System.out.println("TTF - INCOMING CRYPTO MONITOR: RESPONSIBILITY ACQUIRED");
                         this.registry.acquireResponsibility(transaction);
                     } catch (CantConfirmTransactionException e) {
                         // TODO: Consultar si esto hace lo que pienso, si falla no registra en base de datos
@@ -292,6 +296,8 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
                 // After finishing all the steps we mark the event as seen.
                 try {
                     this.registry.disableEvent(eventWrapper.eventId);
+                    System.out.println("TTF - INCOMING CRYPTO MONITR: EVENT DISABLED");
+
                 } catch (Exception e) { // There are two exceptions and we react in the same way to both
                     // We will inform the exception and try again in the next round
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);

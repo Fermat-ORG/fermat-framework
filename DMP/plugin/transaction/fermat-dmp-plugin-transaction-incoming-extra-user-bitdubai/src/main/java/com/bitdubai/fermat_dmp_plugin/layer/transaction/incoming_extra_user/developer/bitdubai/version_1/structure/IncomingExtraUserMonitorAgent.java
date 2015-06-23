@@ -18,8 +18,8 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWit
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventSource;
-import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
+import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.DealsWithIncomingCrypto;
+import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantReadEvent;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.DealsWithRegistry;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.TransactionAgent;
@@ -44,19 +44,17 @@ import java.util.List;
  */
 
 
-public class IncomingExtraUserMonitorAgent implements DealsWithCryptoVault , DealsWithErrors, DealsWithRegistry, TransactionAgent {
-
-
-    /**
-     * DealsWithCryptoVault Interface member variables.
-     */
-    private CryptoVaultManager cryptoVaultManager;
+public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, DealsWithErrors, DealsWithRegistry, TransactionAgent {
 
     /**
      * DealsWithErrors Interface member variables.
      */
     ErrorManager errorManager;
 
+    /**
+     * DealsWithIncomingCrypto Interface member variables.
+     */
+    private IncomingCryptoManager incomingCryptoManager;
 
     /**
      * DealsWithRegistry Interface member variables.
@@ -73,19 +71,19 @@ public class IncomingExtraUserMonitorAgent implements DealsWithCryptoVault , Dea
 
 
     /**
-     *DealsWithCryptoVault Interface implementation.
-     */
-    @Override
-    public void setCryptoVaultManager(CryptoVaultManager cryptoVaultManager) {
-        this.cryptoVaultManager = cryptoVaultManager;
-    }
-
-    /**
      *DealsWithErrors Interface implementation.
      */
     @Override
     public void setErrorManager(ErrorManager errorManager) {
         this.errorManager = errorManager;
+    }
+
+    /**
+     *DealsWithIncomingCrypto Interface implementation.
+     */
+    @Override
+    public void setIncomingCryptoManager(IncomingCryptoManager incomingCryptoManager) {
+        this.incomingCryptoManager = incomingCryptoManager;
     }
 
     /**
@@ -109,7 +107,7 @@ public class IncomingExtraUserMonitorAgent implements DealsWithCryptoVault , Dea
         try {
             this.monitorAgent.setErrorManager(this.errorManager);
             this.monitorAgent.setRegistry(this.registry);
-            this.monitorAgent.setCryptoVaultManager(this.cryptoVaultManager);
+            this.monitorAgent.setIncomingCryptoManager(this.incomingCryptoManager);
             this.monitorAgent.initialize();
 
             this.agentThread = new Thread(this.monitorAgent);
@@ -132,12 +130,12 @@ public class IncomingExtraUserMonitorAgent implements DealsWithCryptoVault , Dea
 
 
 
-    private static class MonitorAgent implements DealsWithCryptoVault, DealsWithErrors, DealsWithRegistry, Runnable  {
+    private static class MonitorAgent implements DealsWithIncomingCrypto, DealsWithErrors, DealsWithRegistry, Runnable  {
 
         /**
          * DealsWithCryptoVault Interface member variables.
          */
-        private CryptoVaultManager cryptoVaultManager;
+        private IncomingCryptoManager incomingCryptoManager;
 
         /**
          * DealsWithErrors Interface member variables.
@@ -164,8 +162,8 @@ public class IncomingExtraUserMonitorAgent implements DealsWithCryptoVault , Dea
          *DealsWithCryptoVault Interface implementation.
          */
         @Override
-        public void setCryptoVaultManager(CryptoVaultManager cryptoVaultManager) {
-            this.cryptoVaultManager = cryptoVaultManager;
+        public void setIncomingCryptoManager(IncomingCryptoManager incomungCryptoManager) {
+            this.incomingCryptoManager = incomungCryptoManager;
         }
 
         /**
@@ -189,7 +187,7 @@ public class IncomingExtraUserMonitorAgent implements DealsWithCryptoVault , Dea
          */
         private void initialize () {
             this.sourceAdministrator = new SourceAdministrator();
-            this.sourceAdministrator.setCryptoVaultManager(this.cryptoVaultManager);
+            this.sourceAdministrator.setIncomingCryptoManager(this.incomingCryptoManager);
         }
 
         /**
@@ -238,7 +236,7 @@ public class IncomingExtraUserMonitorAgent implements DealsWithCryptoVault , Dea
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantReadEvent);
             }
             if(eventWrapper != null){
-
+                System.out.println("TTF - EXTRA USER MONITOR: NEW EVENT DETECTED");
                 // We have here new pending transactions, we will check the source and ask for the right
                 // TransactionSender
 
@@ -254,12 +252,13 @@ public class IncomingExtraUserMonitorAgent implements DealsWithCryptoVault , Dea
                 List<Transaction<CryptoTransaction>> transactionList = null;
 
                 try {
-                    transactionList = source.getPendingTransactions(Specialist.CRYPTO_ROUTER_SPECIALIST);
+                    transactionList = source.getPendingTransactions(Specialist.EXTRA_USER_SPECIALIST);
                 } catch (CantDeliverPendingTransactionsException e) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                     //if somethig wrong happenned we try in the next round
                     return;
                 }
+                System.out.println("TTF - EXTRA USER MONITOR: " + transactionList.size() + " TRAMSACTION(s) DETECTED");
 
                 // Now we save the list in the registry
                 if(transactionList != null){
@@ -268,6 +267,9 @@ public class IncomingExtraUserMonitorAgent implements DealsWithCryptoVault , Dea
                   // if sombething failed we try in next round
                   return;
                 }
+
+                System.out.println("TTF - EXTRA USER MONITOR: " + transactionList.size() + " TRAMSACTION(s) ACKNOWLEDGED");
+
 
                 // Now we take all the transactions in state (ACKNOWLEDGE,TO_BE_NOTIFIED)
                 // Remember that this list can be more extensive than the one we saved, this is
@@ -280,6 +282,7 @@ public class IncomingExtraUserMonitorAgent implements DealsWithCryptoVault , Dea
                 for(Transaction<CryptoTransaction> transaction : acknowledgedTransactions){
                     try {
                         source.confirmReception(transaction.getTransactionID());
+                        System.out.println("TTF - EXTRA USER MONITOR: TRANSACTION RESPONSIBILITY ACQUIRED");
                         this.registry.acquireResponsibility(transaction);
                     } catch (CantConfirmTransactionException e) {
                         // TODO: Consultar si esto hace lo que pienso, si falla no registra en base de datos
@@ -291,6 +294,7 @@ public class IncomingExtraUserMonitorAgent implements DealsWithCryptoVault , Dea
                 // After finishing all the steps we mark the event as seen.
                 try {
                     this.registry.disableEvent(eventWrapper.eventId);
+                    System.out.println("TTF - EXTRA USER MONITOR: EVENT DISABLED");
                 } catch (Exception e) { // There are two exceptions and we react in the same way to both
                     // We will inform the exception and try again in the next round
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
