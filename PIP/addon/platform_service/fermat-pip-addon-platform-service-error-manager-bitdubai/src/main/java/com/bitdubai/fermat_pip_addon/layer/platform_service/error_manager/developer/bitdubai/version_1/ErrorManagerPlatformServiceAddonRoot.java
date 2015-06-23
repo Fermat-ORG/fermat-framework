@@ -60,6 +60,11 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
      */
     @Override
     public void reportUnexpectedPlatformException(PlatformComponents exceptionSource, UnexpectedPlatformExceptionSeverity unexpectedPlatformExceptionSeverity, Exception exception) {
+        String parameters = "COMPONENT_TYPE=Platform&";
+        parameters = parameters.concat("COMPONENT_NAME="+exceptionSource.toString()+"&");
+        parameters = parameters.concat("SEVERITY="+unexpectedPlatformExceptionSeverity.toString()+"&");
+        parameters = parameters.concat("MESSAGE="+exception.getMessage()+"&");
+        System.out.println(parameters);
         try {
             //I need the timestamp when the Exception occurred
             Calendar timeStamp = Calendar.getInstance();
@@ -81,7 +86,11 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
 
     @Override
     public void reportUnexpectedPluginException(Plugins exceptionSource, UnexpectedPluginExceptionSeverity unexpectedPluginExceptionSeverity, Exception exception) {
-
+        String parameters = "COMPONENT_TYPE=Plugins&";
+        parameters = parameters.concat("COMPONENT_NAME="+exceptionSource.toString()+"&");
+        parameters = parameters.concat("SEVERITY="+unexpectedPluginExceptionSeverity.toString()+"&");
+        parameters = parameters.concat("MESSAGE="+exception.getMessage()+"&");
+        System.out.println(parameters);
         try {
             //I need the timestamp when the Exception occurred
             Calendar timeStamp = Calendar.getInstance();
@@ -106,7 +115,11 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
     public void reportUnexpectedWalletException(Wallets exceptionSource, UnexpectedWalletExceptionSeverity unexpectedWalletExceptionSeverity, Exception exception) {
 
 
-
+        String parameters = "COMPONENT_TYPE=Wallets&";
+        parameters = parameters.concat("COMPONENT_NAME="+exceptionSource.toString()+"&");
+        parameters = parameters.concat("SEVERITY="+unexpectedWalletExceptionSeverity.toString()+"&");
+        parameters = parameters.concat("MESSAGE="+exception.getMessage()+"&");
+        System.out.println(parameters);
 
         try {
             //I need the timestamp when the Exception occurred
@@ -128,7 +141,11 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
     @Override
     public void reportUnexpectedAddonsException(Addons exceptionSource, UnexpectedAddonsExceptionSeverity unexpectedAddonsExceptionSeverity, Exception exception) {
 
-
+        String parameters = "COMPONENT_TYPE=Addons&";
+        parameters = parameters.concat("COMPONENT_NAME="+exceptionSource.toString()+"&");
+        parameters = parameters.concat("SEVERITY="+unexpectedAddonsExceptionSeverity.toString()+"&");
+        parameters = parameters.concat("MESSAGE="+exception.getMessage()+"&");
+        System.out.println(parameters);
 
         try {
             //I need the timestamp when the Exception occurred
