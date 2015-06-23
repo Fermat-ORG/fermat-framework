@@ -109,8 +109,6 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 		try {
 			cloudClient.registerNetworkService(networkService);
 		} catch (CloudConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 			System.out.println(errorManager.hashCode());
 		}
 	}
@@ -125,8 +123,6 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 		try {
 			return cloudClient.getNetworkServiceClient(networkService).getPublicKey();
 		} catch (CloudConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 			return null;
 		}
 	}
@@ -136,7 +132,6 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 		try {
 			cloudClient.getNetworkServiceClient(networkServices).requestVPNConnection(remoteNetworkService);
 		} catch (CloudConnectionException e) {
-			e.printStackTrace();
 			throw new CantConnectToRemoteServiceException(e.getMessage());
 		}
 	}
@@ -146,9 +141,6 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 		try {
 			return cloudClient.getNetworkServiceClient(networkService).getPendingVPNRequests();
 		} catch (CloudConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.out.println(errorManager.hashCode());
 			return null;
 		}
 	}
@@ -158,9 +150,7 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 		try {
 			cloudClient.getNetworkServiceClient(networkService).acceptPendingVPNRequest(remoteNetworkService);
 		} catch (CloudConnectionException | FMPException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			System.out.println(errorManager.hashCode());
+			return;
 		}
 	}
 		
@@ -171,8 +161,6 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 		try {
 			return cloudClient.getNetworkServiceClient(networkService).getActiveVPN(remoteNetworkService);
 		} catch (CloudConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 			System.out.println(errorManager.hashCode());
 			return null;
 		}
@@ -183,7 +171,6 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 		try {
 			return cloudClient.getNetworkServiceClient(networkService).getActiveVPNIdentifiers();
 		} catch (CloudConnectionException e) {
-			e.printStackTrace();
 			return null;
 		}
 	}
@@ -235,7 +222,7 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
     	this.serverAddress = CommunicationChannelAddressFactory.constructCloudAddress(serverHost, serverPort);
     	this.serverPublicKey = serverPublicKey;
     }
-//TODO JORGE: sacar el stacktrace
+
 	// TODO JORGE: Integrarse con LOCAL DEVICE ADDON para que el sea el que maneje la identidad del dispositivo.
     /**
      * Service Interface implementation.
@@ -255,7 +242,7 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
     		cloudClient.requestConnectionToServer();
     		this.serviceStatus = ServiceStatus.STARTED;
     	} catch(Exception ex){
-    		ex.printStackTrace();
+    		stop();
     	}
     }
 
@@ -282,7 +269,7 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
         try {
 			this.cloudClient.stop();
 		} catch (CloudConnectionException e) {
-			e.printStackTrace();
+			return;
 		}
     }
 
