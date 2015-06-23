@@ -40,6 +40,7 @@ import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.su
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.RefillFragment;
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ShopFragment;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.Activity;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.App;
@@ -53,10 +54,13 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.TabStrip;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.TitleBar;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Fragments;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesManager;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.app_runtime.developer.bitdubai.version_1.structure.RuntimeFragment;
@@ -96,6 +100,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
     private Map<Fragments, Fragment> fragments;
     private AppRuntimeManager appRuntimeMiddleware;
     private WalletRuntimeManager walletRuntimeMiddleware;
+    private ErrorManager errorManager;
 
 
     private CorePlatformContext platformContext;
@@ -136,7 +141,8 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
 
             // get instances of Runtime middleware object
             this.appRuntimeMiddleware = MyApplication.getAppRuntime();
-            walletRuntimeMiddleware = MyApplication.getwalletRuntime();
+            this.walletRuntimeMiddleware = MyApplication.getwalletRuntime();
+            this.errorManager = MyApplication.getErrorManager();
 
             //load wallet UI
             NavigateWallet();
@@ -191,7 +197,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
                     // Set up the drawer.
                     this.NavigationDrawerFragment.setUp(
                             R.id.navigation_drawer,
-                            (DrawerLayout) findViewById(R.id.drawer_layout),sidemenu);
+                            (DrawerLayout) findViewById(R.id.drawer_layout), sidemenu);
 
             }
 
@@ -221,7 +227,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
             }
         }
         catch (Exception e) {
-            System.err.println("CantNavigateWallet: " + e.getMessage());
+            this.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
 
             Toast.makeText(getApplicationContext(), "Error in NavigateWallet " + e.getMessage(),
                     Toast.LENGTH_LONG).show();
@@ -326,8 +332,13 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
             pager.setBackgroundResource(R.drawable.background_tiled_diagonal_light);
 
 
-        }catch (Exception ex) {
-            String strError = ex.getMessage();
+        }
+        catch (Exception e)
+        {
+            this.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN,e);
+
+            Toast.makeText(getApplicationContext(), "Can't Create Tabs: " + e.getMessage(),
+                    Toast.LENGTH_LONG).show();
         }
 
     }
@@ -343,41 +354,43 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        this.menu=menu;
-        MenuInflater inflater = getMenuInflater();
+
+        try {
+            this.menu=menu;
+            MenuInflater inflater = getMenuInflater();
 
 
-        switch ( this.activity.getType()) {
+            switch ( this.activity.getType()) {
 
-            case CWP_SHELL_LOGIN:
-                break;
-            case CWP_SHOP_MANAGER_MAIN:
-                MenuItem searchItem = menu.findItem(com.wallet_store.bitdubai.R.id.action_search);
-                searchItem.setVisible(true);
-                MenuItemCompat.setShowAsAction(searchItem, MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_ALWAYS);
-                //mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+                case CWP_SHELL_LOGIN:
+                    break;
+                case CWP_SHOP_MANAGER_MAIN:
+                    MenuItem searchItem = menu.findItem(com.wallet_store.bitdubai.R.id.action_search);
+                    searchItem.setVisible(true);
+                    MenuItemCompat.setShowAsAction(searchItem, MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_ALWAYS);
+                    //mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 
-                //mSearchView.setIconifiedByDefault(false);
-                break;
-            case CWP_WALLET_MANAGER_MAIN:
-                break;
-            case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_VERSION_1_MAIN:
+                    //mSearchView.setIconifiedByDefault(false);
+                    break;
+                case CWP_WALLET_MANAGER_MAIN:
+                    break;
+                case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_VERSION_1_MAIN:
 
-                break;
-            case CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN:
-                inflater.inflate(R.menu.app_activity_main_empty_menu, menu);
+                    break;
+                case CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN:
+                    inflater.inflate(R.menu.app_activity_main_empty_menu, menu);
 
-                break;
-            case CWP_WALLET_STORE_MAIN:
-                break;
-            case CWP_WALLET_ADULTS_ALL_MAIN:
-                int walletId = ((MyApplication) this.getApplication()).getWalletId();
-                if (walletId == 1 || walletId == 2)
-                    inflater.inflate(R.menu.wallet_framework_activity_framework_menu2, menu);
-                else
-                    inflater.inflate(R.menu.wallet_framework_activity_framework_menu, menu);
-                break;
-            case CWP_WALLET_RUNTIME_STORE_MAIN:
+                    break;
+                case CWP_WALLET_STORE_MAIN:
+                    break;
+                case CWP_WALLET_ADULTS_ALL_MAIN:
+                    int walletId = ((MyApplication) this.getApplication()).getWalletId();
+                    if (walletId == 1 || walletId == 2)
+                        inflater.inflate(R.menu.wallet_framework_activity_framework_menu2, menu);
+                    else
+                        inflater.inflate(R.menu.wallet_framework_activity_framework_menu, menu);
+                    break;
+                case CWP_WALLET_RUNTIME_STORE_MAIN:
                 /*inflater.inflate(R.menu.wallet_store_activity_wallet_menu, menu);
                 MenuItem searchItem1 = menu.findItem(com.wallet_store.bitdubai.R.id.action_search);
                 MenuItemCompat.setShowAsAction(searchItem1, MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -385,44 +398,54 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
                 mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem1);
                 mSearchView.setIconifiedByDefault(false);
                 */
-                break;
-            case CWP_WALLET_RUNTIME_WALLET_AGE_ADULTS_ALL_BITDUBAI_VERSION_1_MAIN:
-                break;
-            case CWP_WALLET_RUNTIME_ADULTS_ALL_MAIN:
-                break;
-            case CWP_WALLET_RUNTIME_ADULTS_ALL_ACCOUNTS:
-                break;
-            case CWP_WALLET_RUNTIME_ADULTS_ALL_BANKS:
-                break;
-            case CWP_WALLET_RUNTIME_ADULTS_ALL_COUPONS:
-                break;
-            case CWP_WALLET_RUNTIME_ADULTS_ALL_DISCOUNTS:
-                break;
-            case CWP_WALLET_RUNTIME_ADULTS_ALL_VOUCHERS:
-                break;
-            case CWP_WALLET_RUNTIME_ADULTS_ALL_GIFT_CARDS:
-                break;
-            case CWP_WALLET_RUNTIME_ADULTS_ALL_CLONES:
-                break;
-            case CWP_WALLET_RUNTIME_ADULTS_ALL_CHILDS:
-                break;
-            case CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS:
-                break;
-            case CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_CHAT:
-                getMenuInflater().inflate(R.menu.wallet_framework_activity_sent_all_menu, menu);
-                return true;
-            case CWP_WALLET_ADULTS_ALL_SHOPS:
-                inflater.inflate(R.menu.wallet_shop_activity_account_detail_menu, menu);
-                break;
-            case CWP_WALLET_ADULTS_ALL_REFFILS:
-                break;
-            case CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED:
-                break;
-            case CWP_WALLET_ADULTS_ALL_REQUEST_SEND:
-                break;
-            case CWP_WALLET_FACTORY_MAIN:
-                break;
+                    break;
+                case CWP_WALLET_RUNTIME_WALLET_AGE_ADULTS_ALL_BITDUBAI_VERSION_1_MAIN:
+                    break;
+                case CWP_WALLET_RUNTIME_ADULTS_ALL_MAIN:
+                    break;
+                case CWP_WALLET_RUNTIME_ADULTS_ALL_ACCOUNTS:
+                    break;
+                case CWP_WALLET_RUNTIME_ADULTS_ALL_BANKS:
+                    break;
+                case CWP_WALLET_RUNTIME_ADULTS_ALL_COUPONS:
+                    break;
+                case CWP_WALLET_RUNTIME_ADULTS_ALL_DISCOUNTS:
+                    break;
+                case CWP_WALLET_RUNTIME_ADULTS_ALL_VOUCHERS:
+                    break;
+                case CWP_WALLET_RUNTIME_ADULTS_ALL_GIFT_CARDS:
+                    break;
+                case CWP_WALLET_RUNTIME_ADULTS_ALL_CLONES:
+                    break;
+                case CWP_WALLET_RUNTIME_ADULTS_ALL_CHILDS:
+                    break;
+                case CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS:
+                    break;
+                case CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_CHAT:
+                    getMenuInflater().inflate(R.menu.wallet_framework_activity_sent_all_menu, menu);
+                    return true;
+                case CWP_WALLET_ADULTS_ALL_SHOPS:
+                    inflater.inflate(R.menu.wallet_shop_activity_account_detail_menu, menu);
+                    break;
+                case CWP_WALLET_ADULTS_ALL_REFFILS:
+                    break;
+                case CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED:
+                    break;
+                case CWP_WALLET_ADULTS_ALL_REQUEST_SEND:
+                    break;
+                case CWP_WALLET_FACTORY_MAIN:
+                    break;
+            }
+
         }
+        catch (Exception e) {
+
+            this.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN,e);
+
+            Toast.makeText(getApplicationContext(), "Error in CleanWindows " + e.getMessage(),
+                    Toast.LENGTH_LONG).show();
+        }
+
 
 
         return super.onCreateOptionsMenu(menu);
@@ -485,7 +508,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
 
         }
         catch (Exception e) {
-            System.err.println("CantOptionsItemSelecte: " + e.getMessage());
+            this.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
 
             Toast.makeText(getApplicationContext(), "Error in OptionsItemSelecte " + e.getMessage(),
                     Toast.LENGTH_LONG).show();
@@ -529,7 +552,8 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
 
         }
         catch (Exception e) {
-            System.err.println("CantOptionsItemSelecte: " + e.getMessage());
+            this.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+
 
             Toast.makeText(getApplicationContext(), "Error in OptionsItemSelecte " + e.getMessage(),
                     Toast.LENGTH_LONG).show();
@@ -594,29 +618,41 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
 
     private void cleanWindows()
     {
-        //clean page adapter
-        pagertabs = (ViewPager) findViewById(R.id.pager);
-        this.collection = pagertabs;
-        // if(adapter != null) {
-        collection.removeAllViews();
+        try
+        {
+            //clean page adapter
+            pagertabs = (ViewPager) findViewById(R.id.pager);
+            this.collection = pagertabs;
+            // if(adapter != null) {
+            collection.removeAllViews();
 
-        ViewPager viewpager = (ViewPager)super.findViewById(R.id.viewpager);
-        viewpager.setVisibility(View.INVISIBLE);
-        ViewPager pager = (ViewPager)super.findViewById(R.id.pager);
-        pager.setVisibility(View.INVISIBLE);
-        if(NavigationDrawerFragment!= null)
-            this.NavigationDrawerFragment.setMenuVisibility(false);
-        NavigationDrawerFragment = null;
-        this.PagerAdapter = null;
-        this.abTitle = null;
-        this.adapter = null;
-        this.pager = null;
-        this.pagertabs = null;
-        this.Title = "";
+            ViewPager viewpager = (ViewPager)super.findViewById(R.id.viewpager);
+            viewpager.setVisibility(View.INVISIBLE);
+            ViewPager pager = (ViewPager)super.findViewById(R.id.pager);
+            pager.setVisibility(View.INVISIBLE);
+            if(NavigationDrawerFragment!= null)
+                this.NavigationDrawerFragment.setMenuVisibility(false);
+            NavigationDrawerFragment = null;
+            this.PagerAdapter = null;
+            this.abTitle = null;
+            this.adapter = null;
+            this.pager = null;
+            this.pagertabs = null;
+            this.Title = "";
 
-        List<android.support.v4.app.Fragment> fragments = new Vector<android.support.v4.app.Fragment>();
+            List<android.support.v4.app.Fragment> fragments = new Vector<android.support.v4.app.Fragment>();
 
-        this.PagerAdapter  = new PagerAdapter(getSupportFragmentManager(), fragments);
+            this.PagerAdapter  = new PagerAdapter(getSupportFragmentManager(), fragments);
+
+
+        }
+        catch (Exception e) {
+
+            this.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN,e);
+
+            Toast.makeText(getApplicationContext(), "Error in CleanWindows " + e.getMessage(),
+                    Toast.LENGTH_LONG).show();
+        }
 
 
     }
@@ -835,7 +871,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
             }
             catch(Exception ex)
             {
-                System.err.println("CantInitFragment: " + ex.getMessage());
+                errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, ex);
 
                 Toast.makeText(getApplicationContext(), "Error in PagerAdapter GetItem " + ex.getMessage(),
                         Toast.LENGTH_LONG).show();

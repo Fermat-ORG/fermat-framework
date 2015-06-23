@@ -19,6 +19,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.SideMenu;
@@ -88,6 +90,8 @@ public class NavigationDrawerFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        try{
+
         // Read in the flag indicating whether or not the user has demonstrated awareness of the
         // drawer. See PREF_USER_LEARNED_DRAWER for details.
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -100,6 +104,11 @@ public class NavigationDrawerFragment extends Fragment {
 
         // Select either the default item (0) or the last selected item.
         selectItem(mCurrentSelectedPosition);
+        }
+        catch (Exception e)
+        {
+            throw e;
+        }
     }
 
 
@@ -116,27 +125,31 @@ public class NavigationDrawerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        mDrawerListView = (ListView) inflater.inflate(
-                R.layout.wallet_framework_fragment_navigation_drawer, container, false);
-        mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                selectItem(position);
-            }
-        });
 
-        //create menu option based activity submenu definition
-        Platform platform = MyApplication.getPlatform();
+        try
+        {
 
-        this.platformContext = platform.getCorePlatformContext();
+            mDrawerListView = (ListView) inflater.inflate(
+                    R.layout.wallet_framework_fragment_navigation_drawer, container, false);
+            mDrawerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    selectItem(position);
+                }
+            });
 
-        this.appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
+            //create menu option based activity submenu definition
+            Platform platform = MyApplication.getPlatform();
 
-        String[] menuOption = new String[]{} ;
+            this.platformContext = platform.getCorePlatformContext();
 
-        mDrawerListView.setAdapter(new NavigationDrawerArrayAdapter(
-                getActivity(),
-                menuOption));
+            this.appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
+
+            String[] menuOption = new String[]{} ;
+
+            mDrawerListView.setAdapter(new NavigationDrawerArrayAdapter(
+                    getActivity(),
+                    menuOption));
 
        /* if (MyApplication.getActivityId() == "DesktopActivity") {
 
@@ -171,7 +184,13 @@ public class NavigationDrawerFragment extends Fragment {
 
 
 
-        mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
+            mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
+
+        }
+    catch (Exception e)
+    {
+        throw e;
+    }
 
         return mDrawerListView;
     }
@@ -189,94 +208,102 @@ public class NavigationDrawerFragment extends Fragment {
     public void setUp(int fragmentId, DrawerLayout drawerLayout,SideMenu sideMenu) {
 
         //create menu option based activity submenu definition
+        try {
 
+            List<String> menuOption = new ArrayList<String>();
+            List<com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.MenuItem> menuItem = new ArrayList<>();
 
-        List<String> menuOption = new ArrayList<String>();
-        List<com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.MenuItem> menuItem = new ArrayList<>();
-
-            if(sideMenu !=null)
-            {
-                 menuItem = sideMenu.getMenuItems();
+            if (sideMenu != null) {
+                menuItem = sideMenu.getMenuItems();
                 for (int i = 0; i < menuItem.size(); i++) {
 
                     com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.MenuItem menu = menuItem.get(i);
                     menuOption.add(menu.getLabel());
                 }
 
-             }
+            }
 
             mDrawerListView.setAdapter(new NavigationDrawerArrayAdapter(
                     getActivity(),
                     menuOption.toArray(new String[menuItem.size()])));
 
-        mFragmentContainerView = getActivity().findViewById(fragmentId);
-        mDrawerLayout = drawerLayout;
+            mFragmentContainerView = getActivity().findViewById(fragmentId);
+            mDrawerLayout = drawerLayout;
 
-        // set a custom shadow that overlays the main content when the drawer opens
-        mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
-        // set up the drawer's list view with items and click listener
+            // set a custom shadow that overlays the main content when the drawer opens
+            mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
+            // set up the drawer's list view with items and click listener
 
-        ActionBar actionBar = getActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeButtonEnabled(true);
+            ActionBar actionBar = getActionBar();
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setHomeButtonEnabled(true);
 
-        // ActionBarDrawerToggle ties together the the proper interactions
-        // between the navigation drawer and the action bar app icon.
-        mDrawerToggle = new ActionBarDrawerToggle(
-                getActivity(),                    /* host Activity */
-                mDrawerLayout,                    /* DrawerLayout object */
-                R.drawable.ic_drawer,             /* nav drawer image to replace 'Up' caret */
-                R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
-                R.string.navigation_drawer_close  /* "close drawer" description for accessibility */
-        ) {
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                super.onDrawerClosed(drawerView);
-                if (!isAdded()) {
-                    return;
+            // ActionBarDrawerToggle ties together the the proper interactions
+            // between the navigation drawer and the action bar app icon.
+            mDrawerToggle = new ActionBarDrawerToggle(
+                    getActivity(),                    /* host Activity */
+                    mDrawerLayout,                    /* DrawerLayout object */
+                    R.drawable.ic_drawer,             /* nav drawer image to replace 'Up' caret */
+                    R.string.navigation_drawer_open,  /* "open drawer" description for accessibility */
+                    R.string.navigation_drawer_close  /* "close drawer" description for accessibility */
+            ) {
+                @Override
+                public void onDrawerClosed(View drawerView) {
+                    super.onDrawerClosed(drawerView);
+                    if (!isAdded()) {
+                        return;
+                    }
+
+                    getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
                 }
 
-                getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
+                @Override
+                public void onDrawerOpened(View drawerView) {
+                    super.onDrawerOpened(drawerView);
+                    if (!isAdded()) {
+                        return;
+                    }
+
+                    if (!mUserLearnedDrawer) {
+                        // The user manually opened the drawer; store this flag to prevent auto-showing
+                        // the navigation drawer automatically in the future.
+                        mUserLearnedDrawer = true;
+                        SharedPreferences sp = PreferenceManager
+                                .getDefaultSharedPreferences(getActivity());
+                        sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true).apply();
+                    }
+
+                    getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
+                }
+            };
+
+            // If the user hasn't 'learned' about the drawer, open it to introduce them to the drawer,
+            // per the navigation drawer design guidelines.
+            if (!mUserLearnedDrawer && !mFromSavedInstanceState) {
+                mDrawerLayout.openDrawer(mFragmentContainerView);
             }
 
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                super.onDrawerOpened(drawerView);
-                if (!isAdded()) {
-                    return;
+            // Defer code dependent on restoration of previous instance state.
+            mDrawerLayout.post(new Runnable() {
+                @Override
+                public void run() {
+                    mDrawerToggle.syncState();
                 }
+            });
 
-                if (!mUserLearnedDrawer) {
-                    // The user manually opened the drawer; store this flag to prevent auto-showing
-                    // the navigation drawer automatically in the future.
-                    mUserLearnedDrawer = true;
-                    SharedPreferences sp = PreferenceManager
-                            .getDefaultSharedPreferences(getActivity());
-                    sp.edit().putBoolean(PREF_USER_LEARNED_DRAWER, true).apply();
-                }
-
-                getActivity().invalidateOptionsMenu(); // calls onPrepareOptionsMenu()
-            }
-        };
-
-        // If the user hasn't 'learned' about the drawer, open it to introduce them to the drawer,
-        // per the navigation drawer design guidelines.
-        if (!mUserLearnedDrawer && !mFromSavedInstanceState) {
-            mDrawerLayout.openDrawer(mFragmentContainerView);
+            mDrawerLayout.setDrawerListener(mDrawerToggle);
         }
-
-        // Defer code dependent on restoration of previous instance state.
-        mDrawerLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                mDrawerToggle.syncState();
-            }
-        });
-
-        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        catch (Exception e)
+        {
+            throw e;
+        }
     }
 
     private void selectItem(int position) {
+
+        try{
+
+
         mCurrentSelectedPosition = position;
         if (mDrawerListView != null) {
             mDrawerListView.setItemChecked(position, true);
@@ -344,6 +371,11 @@ public class NavigationDrawerFragment extends Fragment {
             }
 
         }
+        }
+        catch (Exception e)
+        {
+            throw e;
+        }
 
     }
 
@@ -356,7 +388,7 @@ public class NavigationDrawerFragment extends Fragment {
         try {
             //*** CAST EXCEPTION ! mCallbacks = (NavigationDrawerCallbacks) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException("Activity must implement NavigationDrawerCallbacks.");
+            throw e;
         }
     }
 
@@ -388,22 +420,40 @@ public class NavigationDrawerFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         // If the drawer is open, show the wallet_framework_activity_framework_drawer_open_menu app actions in the action bar. See also
         // showGlobalContextActionBar, which controls the top-left area of the action bar.
-        if (mDrawerLayout != null && isDrawerOpen()) {
-            inflater.inflate(R.menu.wallet_framework_activity_framework_drawer_open_menu, menu);
-            showGlobalContextActionBar();
-        }
-        super.onCreateOptionsMenu(menu, inflater);
+      try
+      {
+
+            if (mDrawerLayout != null && isDrawerOpen()) {
+                inflater.inflate(R.menu.wallet_framework_activity_framework_drawer_open_menu, menu);
+                showGlobalContextActionBar();
+            }
+            super.onCreateOptionsMenu(menu, inflater);
+      }
+      catch (Exception e)
+      {
+          throw e;
+      }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (mDrawerToggle.onOptionsItemSelected(item)) {
-            return true;
+
+        try
+        {
+            if (mDrawerToggle.onOptionsItemSelected(item)) {
+                return true;
+            }
+
+
+
+            return super.onOptionsItemSelected(item);
+
+        }
+        catch (Exception e)
+        {
+            throw e;
         }
 
-
-
-        return super.onOptionsItemSelected(item);
     }
 
     /**
