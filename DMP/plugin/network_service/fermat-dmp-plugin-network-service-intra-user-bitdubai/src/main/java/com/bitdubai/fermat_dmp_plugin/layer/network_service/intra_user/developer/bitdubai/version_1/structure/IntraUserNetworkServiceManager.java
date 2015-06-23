@@ -91,9 +91,7 @@ public class IntraUserNetworkServiceManager implements IntraUserManager {
      * @param remoteNetworkServicePublicKey the remote Network Service public key
      * @return IntraUserNetworkServiceLocal a new instance
      */
-    public IntraUserNetworkServiceLocal connectTo(String remoteNetworkServicePublicKey){
-
-        IntraUserNetworkServiceLocal intraUserNetworkServiceLocal = null;
+    public void connectTo(String remoteNetworkServicePublicKey){
 
         try {
 
@@ -106,8 +104,6 @@ public class IntraUserNetworkServiceManager implements IntraUserManager {
         } catch (CantConnectToRemoteServiceException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not connect to remote network service "));
         }
-
-        return intraUserNetworkServiceLocal;
 
     }
 
