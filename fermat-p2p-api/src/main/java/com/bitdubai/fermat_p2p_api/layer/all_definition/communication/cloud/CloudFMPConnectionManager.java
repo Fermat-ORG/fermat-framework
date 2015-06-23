@@ -47,7 +47,7 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 	protected final Map<String, SelectionKey> registeredConnections = new ConcurrentHashMap<String, SelectionKey>();
 	protected final Queue<FMPPacket> pendingIncomingMessages = new ConcurrentLinkedQueue<FMPPacket>();
 	
-	private static final int SELECTOR_SELECT_TIMEOUT = 50;
+	private static final int SELECTOR_SELECT_TIMEOUT = 20;
 	private static final String CHARSET_NAME = "UTF-8";
 
 	public CloudFMPConnectionManager(final CommunicationChannelAddress address, final ExecutorService executor, final String privateKey, final String publicKey, final CloudFMPConnectionManagerMode mode) throws IllegalArgumentException{
