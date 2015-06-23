@@ -168,17 +168,17 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
 
             Bundle bundle = getIntent().getExtras();
 
-            try {
-                if (bundle != null) {
-                    if (bundle.getString("executeStart").toString() == "0") {
-                        if (firstexecute)
-                            platform.start();
-                    }
-                } else {
-                    if (firstexecute)
+            try
+            {
+                if(bundle != null){
+                    if(bundle.getString("executeStart").toString() == "0")
                         platform.start();
+                }else
+                {
+                    platform.start();
                 }
-            } catch (CantStartPlatformException | CantReportCriticalStartingProblem e) {
+            }
+            catch (CantStartPlatformException | CantReportCriticalStartingProblem e) {
                 System.err.println("CantStartPlatformException: " + e.getMessage());
 
                 Toast.makeText(getApplicationContext(), "Error Started Platform, null point",
