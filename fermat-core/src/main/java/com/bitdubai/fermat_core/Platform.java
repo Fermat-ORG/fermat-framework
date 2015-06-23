@@ -383,6 +383,17 @@ public class Platform  {
 
         corePlatformContext.addAddon((Addon) extraUser, Addons.EXTRA_USER);
 
+        try {
+            ((Service) extraUser).start();
+        } catch (Exception e) {
+            ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
+            /**
+             * This plugin wont disable the whole platform, so I will allow the Platform to start even if this one
+             * will be disabled. In the future, I will re-try the start of plugins that are not starting at once.
+             * * *
+             */
+        }
+
         /**
          *-------------------------------
          * Addon Intra User
@@ -754,7 +765,7 @@ public class Platform  {
                 ((DealsWithEvents) plugin).setEventManager((EventManager) corePlatformContext.getAddon(Addons.EVENT_MANAGER));
 
             if (plugin instanceof DealsWithExtraUsers)
-                ((DealsWithExtraUsers) plugin).setExtraUserManager((ExtraUserManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_USER_EXTRA_USER));
+                ((DealsWithExtraUsers) plugin).setExtraUserManager((ExtraUserManager) corePlatformContext.getAddon(Addons.EXTRA_USER));
 
             if (plugin instanceof DealsWithNicheWalletTypeCryptoWallet)
                 ((DealsWithNicheWalletTypeCryptoWallet) plugin).setNicheWalletTypeCryptoWalletManager((CryptoWalletManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE));
