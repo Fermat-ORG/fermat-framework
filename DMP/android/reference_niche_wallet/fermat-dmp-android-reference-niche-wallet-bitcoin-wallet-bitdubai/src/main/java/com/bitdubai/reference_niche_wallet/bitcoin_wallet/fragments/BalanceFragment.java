@@ -1,6 +1,8 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,6 +15,8 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetAllWalletContactsException;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
@@ -26,7 +30,7 @@ import java.util.UUID;
 public class BalanceFragment extends  Fragment {
     View rootView;
 
-    String[] balances;
+    String balance;
 
     private static final String ARG_POSITION = "position";
     private int position;
@@ -70,25 +74,36 @@ public class BalanceFragment extends  Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        try{
 
+         balance = "BTC 0.0049";
         cryptoWalletManager = platform.getCryptoWalletManager();
 
-        //try{
-           // cryptoWallet = cryptoWalletManager.getCryptoWallet();
-        //}
-        //catch (CantGetCryptoWalletException e) {
-           // e.printStackTrace();
-        //}
+        try {
+            cryptoWallet = cryptoWalletManager.getCryptoWallet();
+        }
+        catch (CantGetCryptoWalletException e) {
+            showMessage("CantGetCryptoWalletException- " + e.getMessage());
+           e.printStackTrace();
+        }
 
-        //TODO falta el BitcoinWalletManager para poder consultar el balancce
-     //   try {
-           // long balance = cryptoWallet.getBalance(wallet_id);
-      //  } catch (CantGetBalanceException e) {
-      //  e.printStackTrace();
+        try {
+            long lngBalance = cryptoWallet.getBalance(wallet_id);
 
-      //  }
+            balance = String.valueOf(lngBalance);
 
-        balances = new String[]{"BTC 0.0049"};
+        } catch (CantGetBalanceException e) {
+            showMessage("CantGetBalanceException- " + e.getMessage());
+            e.printStackTrace();
+
+        }
+    }
+    catch(Exception ex) {
+        showMessage("Unexpected error get Balance - " + ex.getMessage());
+        ex.printStackTrace();
+    }
+
+
 
       //  MyApplication.changeColor(Color.parseColor("#F0E173"), super.getActivity().getResources());
 
@@ -117,7 +132,7 @@ public class BalanceFragment extends  Fragment {
 
         rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_balance, container, false);
         TextView tv = ((TextView)rootView.findViewById(R.id.balance));
-        tv.setText(balances[0]);
+        tv.setText(balance);
 
         return rootView;
     }
@@ -130,6 +145,21 @@ public class BalanceFragment extends  Fragment {
 
 
     }
+    private void showMessage(String text){
+        AlertDialog alertDialog = new AlertDialog.Builder(this.getActivity()).create();
+        alertDialog.setTitle("Warning");
+        alertDialog.setMessage(text);
+        alertDialog.setButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // aquí puedes añadir funciones
+            }
+        });
+       // alertDialog.setIcon(R.drawable.icon);
+        alertDialog.show();
+    }
+
+
+
 
 
 
