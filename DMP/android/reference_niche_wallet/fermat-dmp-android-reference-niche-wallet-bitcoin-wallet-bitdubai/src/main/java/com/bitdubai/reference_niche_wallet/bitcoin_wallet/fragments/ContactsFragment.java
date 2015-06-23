@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfa
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -66,9 +67,10 @@ public class ContactsFragment extends Fragment {
         rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_contacts, container, false);
 
         //get contacts list
+        List<WalletContactRecord> walletContactRecords = new ArrayList<>();
        try
         {
-            List<WalletContactRecord> walletContactRecords = cryptoWallet.listWalletContacts(wallet_id);
+            walletContactRecords = cryptoWallet.listWalletContacts(wallet_id);
        }
         catch(CantGetAllWalletContactsException e)
        {
@@ -81,8 +83,17 @@ public class ContactsFragment extends Fragment {
 
 
         // Defined Array values to show in ListView
-        String[] contacts = new String[]{"","Lucia Alarcon De Zamacona", "Juan Luis R. Pons", "Karina Rodríguez", "Simon Cushing","Céline Begnis","Taylor Backus","Stephanie Himonidis","Kimberly Brown" };
+        //String[] contacts = new String[]{"","Lucia Alarcon De Zamacona", "Juan Luis R. Pons", "Karina Rodríguez", "Simon Cushing","Céline Begnis","Taylor Backus","Stephanie Himonidis","Kimberly Brown" };
 
+        String[] contacts;
+        if (walletContactRecords.size() > 0) {
+            contacts = new String[walletContactRecords.size()];
+            for(int i = 0; i < walletContactRecords.size() ; i++) {
+                contacts[i] = walletContactRecords.get(i).getActorName();
+            }
+        } else {
+            contacts = new String[0];
+        }
 
         // Define a new Adapter
         // First parameter - Context
