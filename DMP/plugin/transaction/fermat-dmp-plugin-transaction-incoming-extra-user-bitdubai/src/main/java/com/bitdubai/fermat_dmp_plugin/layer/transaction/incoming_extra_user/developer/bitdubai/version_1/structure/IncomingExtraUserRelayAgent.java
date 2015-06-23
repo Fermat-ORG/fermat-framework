@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.BitcoinTransaction;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -13,12 +14,15 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.Unexpect
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.DealsWithActorAddressBook;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.DealsWithWalletAddressBook;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookManager;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.DealsWithRegistry;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.TransactionAgent;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.util.SpecialistSelector;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantSelectSpecialistException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.util.EventsLauncher;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.util.TransactionExecutor;
 
 import java.util.List;
 
@@ -45,13 +49,13 @@ import java.util.List;
  */
 
 
-public class IncomingExtraUserRelayAgent implements DealsWithActorAddressBook , DealsWithErrors, DealsWithEvents, DealsWithRegistry , TransactionAgent {
+public class IncomingExtraUserRelayAgent implements DealsWithWalletAddressBook , DealsWithErrors, DealsWithEvents, DealsWithRegistry , TransactionAgent {
 
 
     /**
      * DealsWithActorAddressBook Interface member variables.
      */
-    private ActorAddressBookManager actorAddressBook;
+    private WalletAddressBookManager walletAddressBookManager;
 
     /**
      * DealsWithErrors Interface member variables.
@@ -79,8 +83,8 @@ public class IncomingExtraUserRelayAgent implements DealsWithActorAddressBook , 
      * DealsWithActorAddressBook Interface implementation.
      */
     @Override
-    public void setActorAddressBookManager(ActorAddressBookManager actorAddressBook) {
-        this.actorAddressBook = actorAddressBook;
+    public void setWalletAddressBookManager(WalletAddressBookManager walletAddressBookManager) {
+        this.walletAddressBookManager = walletAddressBookManager;
     }
 
     /**
@@ -142,12 +146,12 @@ public class IncomingExtraUserRelayAgent implements DealsWithActorAddressBook , 
 
 
 
-    private static class RelayAgent implements DealsWithActorAddressBook , DealsWithErrors, DealsWithEvents, DealsWithRegistry , Runnable  {
+    private static class RelayAgent implements DealsWithWalletAddressBook , DealsWithBitcoinWallet, DealsWithErrors, DealsWithEvents, DealsWithRegistry , Runnable  {
 
         /**
          * DealsWithActorAddressBook Interface member variables.
          */
-        private ActorAddressBookManager actorAddressBook;
+        private WalletAddressBookManager walletAddressBookManager;
 
         /**
          * DealsWithErrors Interface member variables.
@@ -166,9 +170,7 @@ public class IncomingExtraUserRelayAgent implements DealsWithActorAddressBook , 
 
 
 
-
-        private SpecialistSelector specialistSelector;
-        private EventsLauncher eventsLauncher;
+        private TransactionExecutor transactionExecutor;
 
         private static final int SLEEP_TIME = 5000;
 
@@ -178,8 +180,8 @@ public class IncomingExtraUserRelayAgent implements DealsWithActorAddressBook , 
          * DealsWithActorAddressBook Interface implementation.
          */
         @Override
-        public void setActorAddressBookManager(ActorAddressBookManager actorAddressBook) {
-            this.actorAddressBook = actorAddressBook;
+        public void setWalletAddressBookManager(WalletAddressBookManager walletAddressBookManager) {
+            this.walletAddressBookManager = walletAddressBookManager;
         }
 
         /**
@@ -213,11 +215,9 @@ public class IncomingExtraUserRelayAgent implements DealsWithActorAddressBook , 
          * MonitorAgent interface implementation.
          */
         private void initialize () {
-            this.eventsLauncher = new EventsLauncher();
-            this.eventsLauncher.setEventManager(this.eventManager);
-
-            this.specialistSelector = new SpecialistSelector();
-            this.specialistSelector.setActorAddressBookManager(actorAddressBook);
+            this.transactionExecutor = new TransactionExecutor();
+            this.transactionExecutor.setWalletAddressBookManager(this.walletAddressBookManager);
+            this.transactionExecutor.setBitcoinWalletManager();
         }
 
         /**

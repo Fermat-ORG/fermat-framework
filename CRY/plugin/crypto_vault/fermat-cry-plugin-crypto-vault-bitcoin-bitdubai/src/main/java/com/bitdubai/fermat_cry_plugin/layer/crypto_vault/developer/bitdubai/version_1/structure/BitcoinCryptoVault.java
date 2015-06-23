@@ -2,7 +2,9 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.ver
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Action;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
@@ -11,28 +13,27 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.DealsWithBitcoinCryptoNetwork;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantCreateCryptoWalletException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVault;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.*;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantExecuteQueryException;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import org.bitcoinj.core.Address;
@@ -43,13 +44,11 @@ import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.PeerGroup;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
-import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.store.UnreadableWalletException;
 import org.bitcoinj.wallet.DeterministicSeed;
 
 import java.io.File;
-import java.security.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,12 +57,10 @@ import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-import sun.rmi.runtime.Log;
-
 /**
  * Created by rodrigo on 09/06/15.
  */
-public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWithBitcoinCryptoNetwork, DealsWithErrors, DealsWithPluginIdentity, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, TransactionProtocolManager{
+public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWithBitcoinCryptoNetwork, DealsWithEvents,DealsWithErrors, DealsWithPluginIdentity, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, TransactionProtocolManager{
 
     /**
      * BitcoinCryptoVault member variables
@@ -84,6 +81,12 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
      * DealsWithCryptonetwork interface member variable
      */
     BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager;
+
+
+    /**
+     * DealsWithEvents interface member variable
+     */
+    EventManager eventManager;
 
     /**
      * DealsWithErros interface member variable
@@ -145,6 +148,15 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
     }
 
     /**
+     * DealsWithEvents interface implementation
+     * @param eventManager
+     */
+    @Override
+    public void setEventManager(EventManager eventManager) {
+        this.eventManager = eventManager;
+    }
+
+    /**
      * DealsWithPluginFileSystem interface implementation
      * @param pluginFileSystem
      */
@@ -180,6 +192,10 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
+    public void setDatabase(Database database){
+        this.database = database;
+    }
+
 
     /**
      * Constructor
@@ -209,13 +225,18 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
     private void createNewVault() throws CantCreateCryptoWalletException {
         vault = new Wallet(networkParameters);
         try {
-            pluginFileSystem.createBinaryFile(pluginId, userId.toString(), vaultFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            PluginTextFile vaultFile = pluginFileSystem.createTextFile(pluginId, userId.toString(), vaultFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            vaultFile.persistToMedia();
+            System.out.println("Vault created into file " + vaultFileName);
             /**
              * If I couldn't create it I can't go on
              */
         } catch (CantCreateFileException cantCreateFileException) {
 
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateFileException);
+            throw new CantCreateCryptoWalletException();
+        } catch (CantPersistFileException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantCreateCryptoWalletException();
         }
     }
@@ -227,6 +248,8 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
     private void loadExistingVaultFromFile() throws CantCreateCryptoWalletException {
         try {
             vault = Wallet.loadFromFile(vaultFile);
+            System.out.println("Vault loaded from file " + vaultFile.getAbsoluteFile().toString());
+
             /**
              * If I couldn't load it I can't go on.
              */
@@ -263,12 +286,14 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
      * I'm connecting the vault to the bitcoin Agent.
      * @throws CantStartAgentException
      */
-    public void connectVault() throws CantStartAgentException {
+    public void connectVault() throws CantStartAgentException { //todo this exception is not ok.
+
         bitcoinCryptoNetworkManager.setVault(this);
+
         bitcoinCryptoNetworkManager.connectToBitcoinNetwork();
     }
 
-    public void disconnectVault(){
+    public void disconnectVault(){ //todo raise correct exception
         bitcoinCryptoNetworkManager.setVault(this);
         bitcoinCryptoNetworkManager.disconnectFromBitcoinNetwork();
     }
@@ -280,41 +305,10 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
      */
     private void configureVault() throws CantCreateCryptoWalletException {
         vault.autosaveToFile(vaultFile, 0, TimeUnit.SECONDS, null);
-        createDatabase();
-        vaultEventListeners = new VaultEventListeners(database);
+        vaultEventListeners = new VaultEventListeners(database, errorManager, eventManager);
         vault.addEventListener(vaultEventListeners);
     }
 
-    /**
-     * I create (or load if already exists) the database for this userID
-     */
-    private void createDatabase() throws CantCreateCryptoWalletException {
-        /**
-         * I will try to open the database first, if it doesn't exists, then I create it
-         */
-        try {
-            database = pluginDatabaseSystem.openDatabase(pluginId, userId.toString());
-        }  catch (DatabaseNotFoundException e) {
-            /**
-             * The database doesn't exists, lets create it.
-             */
-            try {
-                database = pluginDatabaseSystem.createDatabase(pluginId, userId.toString());
-            } catch (CantCreateDatabaseException e1) {
-                /**
-                 * something went wrong creatig the db, I can't handle this.
-                 */
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-                throw new CantCreateCryptoWalletException();
-            }
-        } catch (CantOpenDatabaseException e) {
-            /**
-             * the database exists, but I cannot open it! I cannot handle this.
-             */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantCreateCryptoWalletException();
-        }
-    }
 
     /**
      * returns a valid CryptoAddrres from this vault
@@ -340,11 +334,14 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         /**
          * if the transaction was requested before but resend my mistake, Im not going to send it again
          */
-        CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database);
+        CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
 
-        if (!db.isNewFermatTransaction(FermatTxId))
+        try {
+            if (!db.isNewFermatTransaction(FermatTxId))
+                return "";
+        } catch (CantExecuteQueryException e) {
             return "";
-
+        }
 
 
         Address address = null;
@@ -400,6 +397,8 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
             e.printStackTrace();
         } catch (ExecutionException e) {
             e.printStackTrace();
+        } catch (CantExecuteQueryException e) {
+            e.printStackTrace();
         }
 
         /**
@@ -420,7 +419,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
          * will marked the transaction as notified
          */
         try{
-            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database);
+            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
             db.updateTransactionProtocolStatus(transactionID, ProtocolStatus.RECEPTION_NOTIFIED);
         } catch (Exception e){
             throw new CantConfirmTransactionException();
@@ -434,7 +433,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
          */
         try{
             List<com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction> txs = new ArrayList<com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction>();
-            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database);
+            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
             /**
              * Im getting the transaction headers which is a map with transactionID and Transaction Hash. I will use this information to access the vault.
              */

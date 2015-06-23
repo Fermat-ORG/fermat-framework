@@ -5,12 +5,14 @@ import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
+import com.bitdubai.fermat_api.layer.dmp_network_service.NetworkService;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.*;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.enums.RejectConnectionRequestReasons;
 import com.bitdubai.fermat_core.layer.p2p_communication.cloud.CloudSubsystem;
 import com.bitdubai.fermat_core.layer.p2p_communication.cloud_server.CloudServerSubsystem;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
  * Created by ciencias on 31.12.14.
@@ -35,7 +37,7 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
      * * * 
      */
     
-     private Map<UUID,NetworkServices> networkServices = new HashMap();
+     private Set<NetworkServices> networkServices = new ConcurrentSkipListSet<NetworkServices>();
 
   
     public Plugin getCloudPlugin() {
@@ -98,15 +100,15 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
 
 
     @Override
-    public void registerNetworkService(NetworkServices networkServices,UUID networkService) {
-        this.networkServices.put(networkService,networkServices );
+    public void registerNetworkService(NetworkServices networkService) {
+        this.networkServices.add(networkService);
         
-        ((CommunicationChannel) mCloudPlugin).registerNetworkService(networkServices,networkService);
+        ((CommunicationChannel) mCloudPlugin).registerNetworkService(networkService);
         
     }
 
     @Override
-    public void unregisterNetworkService(UUID networkService) {
+    public void unregisterNetworkService(NetworkServices networkService) {
         this.networkServices.remove(networkService);
 
         ((CommunicationChannel) mCloudPlugin).unregisterNetworkService(networkService);
@@ -119,7 +121,7 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
         switch (communicationChannel) {
 
             case CLOUD:
-                return ((CommunicationChannel) mCloudPlugin).acceptIncomingNetworkServiceConnectionRequest(networkService, localNetworkService, remoteNetworkService);
+                return ((CommunicationChannel) mCloudPlugin).getActiveNetworkServiceConnection(networkService, remoteNetworkService.toString());
 
         }
         
@@ -132,7 +134,7 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
         switch (communicationChannel) {
 
             case CLOUD:
-                ((CommunicationChannel) mCloudPlugin).rejectIncomingNetworkServiceConnectionRequest(networkService, localNetworkService, remoteNetworkService, reason);
+                ((CommunicationChannel) mCloudPlugin).rejectIncomingNetworkServiceConnectionRequest(networkService, remoteNetworkService.toString(), reason);
 
         }
 

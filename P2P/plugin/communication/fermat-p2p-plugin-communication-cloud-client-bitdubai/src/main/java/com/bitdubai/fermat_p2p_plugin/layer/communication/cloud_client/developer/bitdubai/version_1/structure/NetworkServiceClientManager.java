@@ -5,6 +5,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
+import java.util.Collection;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Queue;
@@ -129,6 +130,7 @@ public class NetworkServiceClientManager extends CloudFMPConnectionManager {
 	public void handleConnectionRequest(final FMPPacket dataPacket) throws FMPException {
 		String decryptedMessage = AsymmectricCryptography.decryptMessagePrivateKey(dataPacket.getMessage(), eccPrivateKey);
 		pendingVPNRequests.put(dataPacket.getSender(), decryptedMessage);
+		acceptPendingVPNRequest(dataPacket.getSender());
 	}
 
 	@Override
@@ -237,6 +239,10 @@ public class NetworkServiceClientManager extends CloudFMPConnectionManager {
 	private void sendPacketToRegisteredServer(final FMPPacket packet){
 		pendingMessages.add(packet);
 		registeredConnections.get(serverPublicKey).interestOps(SelectionKey.OP_WRITE);
+	}
+
+	public Collection<String> getPendingVPNRequests() {
+		return pendingVPNRequests.keySet();
 	}
 	
 }

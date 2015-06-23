@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.PluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.pip_license.PluginLicensor;
-import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.ActorAddressBookPluginRoot;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.ActorAddressBookCryptoModulePluginRoot;
 
 /**
  * Created by loui on 20/02/15.
@@ -34,7 +34,7 @@ public class DeveloperBitDubai implements PluginDeveloper, PluginLicensor {
          * it is easy to choose.
          */
 
-        plugin = new ActorAddressBookPluginRoot();
+        plugin = new ActorAddressBookCryptoModulePluginRoot();
 
     }
 

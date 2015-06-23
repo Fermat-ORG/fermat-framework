@@ -24,12 +24,12 @@ import com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.discount_wallet.de
 //import com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.fiat_over_crypto_loss_protected_wallet.developer.bitdubai.version_1.FiatOverCryptoLossProtectedWalletNicheWalletTypePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.fiat_over_crypto_wallet.developer.bitdubai.version_1.FiatOverCryptoWalletNicheWalletTypePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.multi_account_wallet.developer.bitdubai.version_1.MultiAccountWalletNicheWalletTypePluginRoot;
-import com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.WalletAddressBookCryptoPluginRoot;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.WalletAddressBookCryptoModulePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.bank_notes.developer.bitdubai.version_1.BankNotesNetworkServicePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_community.developer.bitdubai.version_1.WalletCommunityNetworkServicePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.WalletResourcesNetworkServicePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_store.developer.bitdubai.version_1.WalletStoreNetworkServicePluginRoot;
-import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.CloudCommunicationChannelPluginRoot;
+import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.CloudClientCommunicationChannelPluginRoot;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.CloudServerCommunicationPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_device_user.developer.bitdubai.version_1.IncomingDeviceUserTransactionPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.IncomingExtraUserTransactionPluginRoot;
@@ -42,7 +42,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.world.coinapult.developer.bitdubai.v
 import com.bitdubai.fermat_dmp_plugin.layer.world.blockchain_info.developer.bitdubai.version_1.BlockchainInfoWorldPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.CryptoIndexWorldPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.world.shape_shift.developer.bitdubai.version_1.ShapeShiftWorldPluginRoot;
-import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.ActorAddressBookPluginRoot;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.ActorAddressBookCryptoModulePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.app_runtime.developer.bitdubai.version_1.AppRuntimeMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.BankNotesMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.WalletContactsMiddlewarePluginRoot;
@@ -243,8 +243,8 @@ public class PluginsIdentityManager {
         if (pluginIndex == 0) {
             try
             {
-                CloudCommunicationChannelPluginRoot tryType;
-                tryType = (CloudCommunicationChannelPluginRoot) plugin;
+                CloudClientCommunicationChannelPluginRoot tryType;
+                tryType = (CloudClientCommunicationChannelPluginRoot) plugin;
                 pluginIndex = 2;
             }
             catch (Exception e)
@@ -483,8 +483,8 @@ public class PluginsIdentityManager {
         if (pluginIndex == 0) {
             try
             {
-                ActorAddressBookPluginRoot tryType;
-                tryType = (ActorAddressBookPluginRoot) plugin;
+                ActorAddressBookCryptoModulePluginRoot tryType;
+                tryType = (ActorAddressBookCryptoModulePluginRoot) plugin;
                 pluginIndex = 18;
             }
             catch (Exception e)
@@ -648,8 +648,8 @@ public class PluginsIdentityManager {
 
             if (pluginIndex == 0) {
                 try {
-                    WalletAddressBookCryptoPluginRoot tryType;
-                    tryType = (WalletAddressBookCryptoPluginRoot) plugin;
+                    WalletAddressBookCryptoModulePluginRoot tryType;
+                    tryType = (WalletAddressBookCryptoModulePluginRoot) plugin;
                     pluginIndex = 30;
                 } catch (Exception e) {
                     /**

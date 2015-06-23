@@ -15,7 +15,13 @@ import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CantConnectToRemoteServiceException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CantSendMessageException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.ConnectionStatus;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.Message;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.ServiceToServiceOnlineConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.exceptions.CloudConnectionException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
@@ -29,7 +35,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.IllegalPacketSenderException;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.IllegalSignatureException;
 
-public class NetworkServiceClientVPN extends CloudFMPConnectionManager {
+public class NetworkServiceClientVPN extends CloudFMPConnectionManager implements ServiceToServiceOnlineConnection {
 	
 	private static final String CHARSET_NAME = "UTF-8";
 	
@@ -123,8 +129,7 @@ public class NetworkServiceClientVPN extends CloudFMPConnectionManager {
 		if(message.equals("REGISTERED"))
 			registerVPNConnection();
 		else
-			pendingMessages.add(message);
-		
+			pendingMessages.add(message);	
 	}
 	
 	private void registerVPNConnection() {
@@ -206,6 +211,59 @@ public class NetworkServiceClientVPN extends CloudFMPConnectionManager {
 		if(pendingMessages.isEmpty())
 			return "";
 		return pendingMessages.iterator().next();
+	}
+
+	@Override
+	public void reConnect() throws CantConnectToRemoteServiceException {
+		try{
+			start();
+		} catch(Exception ex){
+			throw new CantConnectToRemoteServiceException(ex.getMessage());
+		}
+	}
+
+	@Override
+	public void disconnect() {
+		try{
+			stop();
+		}catch(Exception ex){
+			ex.printStackTrace();
+		}
+	}
+
+	@Override
+	public ConnectionStatus getStatus() {
+		if(isRegistered())
+			return ConnectionStatus.CONNECTED;
+		else
+			return ConnectionStatus.DISCONNECTED;
+	}
+
+	@Override
+	public void sendMessage(Message message) throws CantSendMessageException {
+		try{
+			sendMessage(message.getTextContent());
+		}catch(Exception ex){
+			throw new CantSendMessageException(ex.getMessage());
+		}
+	}
+
+	@Override
+	public int getUnreadMessagesCount() {
+		return pendingMessages.size();
+	}
+
+	@Override
+	public Message readNextMessage() {
+		String messageContent = getPendingMessage();
+		return new CloudMessage(messageContent, MessagesStatus.DELIVERED);
+	}
+
+	@Override
+	public void clearMessage(Message message) {
+		if(pendingMessages.isEmpty()|| !pendingMessages.contains(message.getTextContent()))
+			throw new IllegalArgumentException("Message not in the stack");
+		pendingMessages.remove(message.getTextContent());
 	}
 	
 }

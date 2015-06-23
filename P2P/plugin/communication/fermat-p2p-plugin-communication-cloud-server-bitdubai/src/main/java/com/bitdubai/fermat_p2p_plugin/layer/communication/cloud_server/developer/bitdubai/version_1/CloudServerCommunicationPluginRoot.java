@@ -9,7 +9,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
-//import com.bitdubai.fermat_api.layer.platform_service.event_manager.EventHandler;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannel;
@@ -18,6 +17,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.ServiceToServiceOnlin
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.enums.RejectConnectionRequestReasons;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -100,30 +100,7 @@ public class CloudServerCommunicationPluginRoot implements Service, Communicatio
      * Communication channels interface implementation.
      */
 
-    @Override
-    public OnlineChannel createOnlineChannel() {
-        return null;
-    }
-
-    @Override
-    public void unregisterNetworkService(UUID networkService) {
-
-    }
-
-    @Override
-    public void registerNetworkService(NetworkServices networkServices, UUID networkService) {
-
-    }
-
-    @Override
-    public ServiceToServiceOnlineConnection acceptIncomingNetworkServiceConnectionRequest(NetworkServices networkService, UUID localNetworkService, UUID remoteNetworkService) {
-        return null;
-    }
-
-    @Override
-    public void rejectIncomingNetworkServiceConnectionRequest(NetworkServices networkService, UUID localNetworkService, UUID remoteNetworkService, RejectConnectionRequestReasons reason) {
-
-    }
+   
 
     /**
      * UsesFileSystem Interface implementation.
@@ -156,6 +133,66 @@ public class CloudServerCommunicationPluginRoot implements Service, Communicatio
     @Override
     public void setId(UUID pluginId) {
         //this.pluginId = pluginId;
+    }
+
+	@Override
+	public void registerNetworkService(NetworkServices networkService) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String getChannelPublicKey() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void unregisterNetworkService(NetworkServices networkService) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String getNetworkServiceChannelPublicKey(
+			NetworkServices networkService) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Collection<String> getIncomingNetworkServiceConnectionRequests(
+			NetworkServices networkService) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void acceptIncomingNetworkServiceConnectionRequest(
+			NetworkServices networkService, String remoteNetworkService) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public ServiceToServiceOnlineConnection getActiveNetworkServiceConnection(
+			NetworkServices networkService, String remoteNetworkService) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void rejectIncomingNetworkServiceConnectionRequest(
+			NetworkServices networkService, String remoteNetworkService,
+			RejectConnectionRequestReasons reason) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+    @Override
+    public OnlineChannel createOnlineChannel() {
+        return null;
     }
 
 }

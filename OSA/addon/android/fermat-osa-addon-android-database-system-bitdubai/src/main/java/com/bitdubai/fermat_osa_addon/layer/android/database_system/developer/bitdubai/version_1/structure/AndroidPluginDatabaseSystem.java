@@ -151,7 +151,9 @@ public class AndroidPluginDatabaseSystem  implements PluginDatabaseSystem{
         }catch(NoSuchAlgorithmException e){
             throw e;
         }
-        return encryptedString.replace("/","");
+        encryptedString = encryptedString.replace("/","");
+
+        return encryptedString.replace("\n","");
     }
 
 }
