@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_core.layer.p2p_communication.cloud;
+package com.bitdubai.fermat_core.layer.p2p_communication.cloud_client;
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CantStartSubsystemException;
@@ -8,7 +8,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer
 /**
  * Created by ciencias on 20.01.15.
  */
-public class CloudSubsystem implements CommunicationSubsystem {
+public class CloudClientSubsystem implements CommunicationSubsystem {
 
     private Plugin plugin;
 
