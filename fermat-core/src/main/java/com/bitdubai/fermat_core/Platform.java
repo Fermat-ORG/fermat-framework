@@ -1813,7 +1813,7 @@ public class Platform  {
         ((DealsWithEvents) incomingCryptoTransaction).setEventManager((EventManager) eventManager);
         ((DealsWithPluginDatabaseSystem) incomingCryptoTransaction).setPluginDatabaseSystem(databaseSystemOs.getPluginDatabaseSystem());
 
-        corePlatformContext.addPlugin(incomingCryptoTransaction, Plugins.BITDUBAI_INCOMING_EXTRA_USER_TRANSACTION);
+        corePlatformContext.addPlugin(incomingCryptoTransaction, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
 
         try {
             /**

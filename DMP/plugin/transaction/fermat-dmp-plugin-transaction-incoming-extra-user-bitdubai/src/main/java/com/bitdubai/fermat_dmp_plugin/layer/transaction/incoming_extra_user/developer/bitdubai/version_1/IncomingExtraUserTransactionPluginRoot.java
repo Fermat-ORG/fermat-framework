@@ -4,12 +4,19 @@ package com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.dev
  * Created by ciencias on 2/16/15.
  */
 
+import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
 import com.bitdubai.fermat_api.layer.dmp_transaction.incoming_extra_user.IncomingExtraUserManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventHandler;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
@@ -17,6 +24,22 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventMan
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventType;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.DealsWithActorAddressBook;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.DealsWithWalletAddressBook;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.DealsWithIncomingCrypto;
+import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantInitializeCryptoRegistryException;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantStartAgentException;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantStartServiceException;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.DealsWithRegistry;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.TransactionAgent;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.TransactionService;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserEventRecorderService;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserMonitorAgent;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserRegistry;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserRelayAgent;
 
 
 import java.util.ArrayList;
@@ -44,149 +67,254 @@ import java.util.UUID;
  * * * 
  */
 
-public class IncomingExtraUserTransactionPluginRoot implements Service, IncomingExtraUserManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
+public class IncomingExtraUserTransactionPluginRoot implements DealsWithBitcoinWallet, DealsWithErrors, DealsWithEvents, DealsWithIncomingCrypto, DealsWithPluginDatabaseSystem, DealsWithWalletAddressBook ,IncomingExtraUserManager, Plugin, Service {
+
+
+    /*
+     * DealsWithBitcoinWallet Interface member variables.
+     */
+    private BitcoinWalletManager bitcoinWalletManager;
+
+    /**
+     * DealsWithErrors Interface member variables.
+     */
+    private ErrorManager errorManager;
+
+    /**
+     * DealsWithEvents Interface member variables.
+     */
+    private EventManager eventManager;
+
+    /**
+     * DealsWithIncomingCrypto Interface member variables.
+     */
+    private IncomingCryptoManager incomingCryptoManager;
 
 
     /**
-     * Service Interface member variables.
+     * DealsWithPluginDatabaseSystem Interface member variables.
      */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
-    List<EventListener> listenersAdded = new ArrayList<>();
+    private PluginDatabaseSystem pluginDatabaseSystem;
+
+
+    /*
+     * DealsWithWalletAddressBook  Interface member variables.
+     */
+    private WalletAddressBookManager walletAddressBookManager;
+
+
 
     /**
-     * UsesFileSystem Interface member variables.
+     * IncomingCryptoManager Interface member variables.
      */
-    PluginFileSystem pluginFileSystem;
-
-    /**
-     * DealWithEvents Interface member variables.
-     */
-    EventManager eventManager;
+    private IncomingExtraUserRegistry registry;
 
     /**
      * Plugin Interface member variables.
      */
-    UUID pluginId;
+    private UUID pluginId;
+
+    /**
+     * Service Interface member variables.
+     */
+    private ServiceStatus serviceStatus = ServiceStatus.CREATED;
+    private TransactionAgent monitor;
+    private TransactionAgent relay;
+    private TransactionService eventRecorder;
+
+
+
+    /*
+     * DealsWithBitcoinWallet Interface implementation
+     */
+    @Override
+    public void setBitcoinWalletManager(BitcoinWalletManager bitcoinWalletManager){
+        this.bitcoinWalletManager = bitcoinWalletManager;
+    }
+
+    /**
+     *DealsWithErrors Interface implementation.
+     */
+    @Override
+    public void setErrorManager(ErrorManager errorManager) {
+        this.errorManager = errorManager;
+    }
+
+    /**
+     * DealWithEvents Interface implementation.
+     */
+    @Override
+    public void setEventManager(EventManager eventManager) {
+        this.eventManager = eventManager;
+    }
+
+
+    /**
+     *DealsWithIncomingCrypto Interface implementation.
+     */
+    @Override
+    public void setIncomingCryptoManager(IncomingCryptoManager incomingCryptoManager) {
+        this.incomingCryptoManager = incomingCryptoManager;
+    }
+
+    /**
+     * DealsWithPluginDatabaseSystem interface implementation.
+     */
+    @Override
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+    }
+
+    /*
+     * DealsWithWalletAddressBook  Interface implementation
+     */
+    @Override
+    public void setWalletAddressBookManager(WalletAddressBookManager walletAddressBookManager){
+        this.walletAddressBookManager = walletAddressBookManager;
+    }
+
+    /**
+     * Plugin interface implementation.
+     */
+    @Override
+    public void setId(UUID pluginId) {
+        this.pluginId = pluginId;
+    }
+
 
     /**
      * Service Interface implementation.
      */
-
-
     @Override
-    public void start() {
+    public void start()  throws CantStartPluginException {
+
+
         /**
-         * I will initialize the handling of platform events.
+         * I will initialize the Registry, which in turn will create the database if necessary.
          */
-        /*
-        EventListener eventListener;
-        EventHandler eventHandler;
+        this.registry = new IncomingExtraUserRegistry();
 
-        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_IDENTIFIED_FROM_EXTRA_USER);
-        eventHandler = new IncomingCryptoIdentifiedFromExtraUserEventHandler();
-        ((IncomingCryptoIdentifiedFromExtraUserEventHandler) eventHandler).setIncomingExtraUserManager(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
+        try {
+            this.registry.setErrorManager(this.errorManager);
+            this.registry.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+            this.registry.initialize(this.pluginId);
+        }
+        catch (CantInitializeCryptoRegistryException cantInitializeCryptoRegistryException) {
+
+            /**
+             * If I can not initialize the Registry then I can not start the service.
+             */
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantInitializeCryptoRegistryException);
+            System.err.print("INCOMING CRYPTO: CantInitializeCryptoRegistryException");
+            throw new CantStartPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
+        }
+
+        System.err.println("INCOMING CRYPTO: REGISTRY INITIALIZED");
 
 
-        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_RECEIVED_FROM_EXTRA_USER);
-        eventHandler = new IncomingCryptoReceivedFromExtraUserEventHandler();
-        ((IncomingCryptoReceivedFromExtraUserEventHandler) eventHandler).setIncomingExtraUserManager(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
+        /**
+         * I will start the Event Recorder.
+         */
+        this.eventRecorder = new IncomingExtraUserEventRecorderService();
+        ((DealsWithEvents) this.eventRecorder).setEventManager(this.eventManager);
+        ((DealsWithRegistry) this.eventRecorder).setRegistry(this.registry);
 
+        try {
+            this.eventRecorder.start();
+        }
+        catch (CantStartServiceException cantStartServiceException) {
 
-        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_RECEPTION_CONFIRMED_FROM_EXTRA_USER);
-        eventHandler = new IncomingCryptoReceptionConfirmedFromExtraUserEventHandler();
-        ((IncomingCryptoReceptionConfirmedFromExtraUserEventHandler) eventHandler).setIncomingExtraUserManager(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
+            /**
+             * I cant continue if this happens.
+             */
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantStartServiceException);
+            throw new CantStartPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
+        }
 
-        eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_REVERSED_FROM_EXTRA_USER);
-        eventHandler = new IncomingCryptoReversedFromExtraUserEventHandler();
-        ((IncomingCryptoReversedFromExtraUserEventHandler) eventHandler).setIncomingExtraUserManager(this);
-        eventListener.setEventHandler(eventHandler);
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
+        /**
+         * I will start the Relay Agent.
+         */
+        this.relay = new IncomingExtraUserRelayAgent();
 
-        */
+        try {
+            ((DealsWithBitcoinWallet) this.relay).setBitcoinWalletManager(this.bitcoinWalletManager);
+            ((DealsWithErrors) this.relay).setErrorManager(this.errorManager);
+            ((DealsWithRegistry) this.relay).setRegistry(this.registry);
+            ((DealsWithWalletAddressBook) this.relay).setWalletAddressBookManager(this.walletAddressBookManager);
+            this.relay.start();
+        }
+        catch (CantStartAgentException cantStartAgentException) {
+
+            /**
+             * Note that I stop previously started services and agents.
+             */
+            this.eventRecorder.stop();
+
+            /**
+             * I cant continue if this happens.
+             */
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantStartAgentException);
+
+            throw new CantStartPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
+        }
+
+        /**
+         * I will start the Monitor Agent.
+         */
+        this.monitor = new IncomingExtraUserMonitorAgent();
+        try {
+            ((DealsWithErrors) this.monitor).setErrorManager(this.errorManager);
+            ((DealsWithIncomingCrypto) this.monitor).setIncomingCryptoManager(this.incomingCryptoManager);
+            ((DealsWithRegistry) this.monitor).setRegistry(this.registry);
+            this.monitor.start();
+        }
+        catch (CantStartAgentException cantStartAgentException) {
+
+            /**
+             * Note that I stop previously started services and agents.
+             */
+            this.eventRecorder.stop();
+            this.relay.stop();
+
+            /**
+             * I cant continue if this happens.
+             */
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantStartAgentException);
+
+            throw new CantStartPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
+        }
 
         this.serviceStatus = ServiceStatus.STARTED;
+
     }
 
     @Override
     public void pause() {
 
         this.serviceStatus = ServiceStatus.PAUSED;
+
     }
 
     @Override
     public void resume() {
 
-
         this.serviceStatus = ServiceStatus.STARTED;
+
     }
 
     @Override
     public void stop() {
 
-        /**
-         * I will remove all the event listeners registered with the event manager.
-         */
+        this.eventRecorder.stop();
+        this.relay.stop();
+        this.monitor.stop();
 
-        for (EventListener eventListener : listenersAdded) {
-            eventManager.removeListener(eventListener);
-        }
-
-        listenersAdded.clear();
+        this.serviceStatus = ServiceStatus.STOPPED;
     }
 
     @Override
     public ServiceStatus getStatus() {
         return this.serviceStatus;
-    }
-
-    /**
-     * IncomingExtraUserManager Interface implementation.
-     */
-
-
-
-    /**
-     * UsesFileSystem Interface implementation.
-     */
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
-
-    /**
-     * DealWithEvents Interface implementation.
-     */
-
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-    /**
-     *DealWithErrors Interface implementation.
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-
-    }
-
-    /**
-     * DealsWithPluginIdentity methods implementation.
-     */
-
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
     }
 
 

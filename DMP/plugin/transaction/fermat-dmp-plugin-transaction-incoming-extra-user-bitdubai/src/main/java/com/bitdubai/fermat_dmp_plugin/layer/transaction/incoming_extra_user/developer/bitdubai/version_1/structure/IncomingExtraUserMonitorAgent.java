@@ -46,17 +46,15 @@ import java.util.List;
 
 public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, DealsWithErrors, DealsWithRegistry, TransactionAgent {
 
-
-    /**
-     * DealsWithIncomingCrypto Interface member variables.
-     */
-    private IncomingCryptoManager incomingCryptoManager;
-
     /**
      * DealsWithErrors Interface member variables.
      */
     ErrorManager errorManager;
 
+    /**
+     * DealsWithIncomingCrypto Interface member variables.
+     */
+    private IncomingCryptoManager incomingCryptoManager;
 
     /**
      * DealsWithRegistry Interface member variables.
@@ -73,19 +71,19 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
 
 
     /**
-     *DealsWithIncomingCrypto Interface implementation.
-     */
-    @Override
-    public void setIncomingCryptoManager(IncomingCryptoManager incomingCryptoManager) {
-        this.incomingCryptoManager = incomingCryptoManager;
-    }
-
-    /**
      *DealsWithErrors Interface implementation.
      */
     @Override
     public void setErrorManager(ErrorManager errorManager) {
         this.errorManager = errorManager;
+    }
+
+    /**
+     *DealsWithIncomingCrypto Interface implementation.
+     */
+    @Override
+    public void setIncomingCryptoManager(IncomingCryptoManager incomingCryptoManager) {
+        this.incomingCryptoManager = incomingCryptoManager;
     }
 
     /**
