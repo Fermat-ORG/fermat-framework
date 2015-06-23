@@ -3,7 +3,6 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.develope
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
@@ -19,16 +18,11 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventLis
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventType;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.IntraUserIncomingNetworkServiceConnectionRequestHandler;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.UserLoggedInEventHandler;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.UserLoggedOutEventHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceManager;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationLayerManager;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.ConnectionStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithCommunicationLayerManager;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.ServiceToServiceOnlineConnection;
 
-import java.security.KeyPair;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -84,12 +78,6 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
     private List<EventListener> listenersAdded;
 
     /**
-     * Holds the private and public key
-     */
-    private KeyPair keyPair;
-
-
-    /**
      * Holds the intraUserNetworkServiceManagersCache
      */
     private Map<UUID, IntraUserNetworkServiceManager>  intraUserNetworkServiceManagersCache;
@@ -106,29 +94,13 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
     /**
      * Initialize the event listener and configure
      */
-    private void initializeListener(){
+    private void initializeListener(IntraUserNetworkServiceManager intraUserNetworkServiceManager){
 
         /*
          * Listen and handle incoming network service connection request in event
          */
         EventListener eventListener = eventManager.getNewListener(EventType.INCOMING_NETWORK_SERVICE_CONNECTION_REQUEST);
         eventListener.setEventHandler(new IntraUserIncomingNetworkServiceConnectionRequestHandler(this));
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
-
-        /*
-         * Listen and handle intra user logged in event
-         */
-        eventListener = eventManager.getNewListener(EventType.INTRA_USER_LOGGED_IN);
-        eventListener.setEventHandler(new UserLoggedInEventHandler(this));
-        eventManager.addListener(eventListener);
-        listenersAdded.add(eventListener);
-
-        /*
-         * Listen and handle intra user logged out event
-         */
-        eventListener = eventManager.getNewListener(EventType.INTRA_USER_LOGGED_OUT);
-        eventListener.setEventHandler(new UserLoggedOutEventHandler(this));
         eventManager.addListener(eventListener);
         listenersAdded.add(eventListener);
 
@@ -147,16 +119,6 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
                 pluginDatabaseSystem  != null &&
                     errorManager      != null &&
                         eventManager  != null) {
-
-            /*
-             * Generate a new KeyPair
-             */
-           // keyPair = AsymmectricCryptography.generateKeyPair();
-
-            /*
-             * Initialize the listener
-             */
-            initializeListener();
 
             /*
              * Register this network service whit the communicationLayerManager
@@ -303,6 +265,11 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
          */
         IntraUserNetworkServiceManager manager = new IntraUserNetworkServiceManager(this, communicationLayerManager, pluginDatabaseSystem, errorManager);
 
+        /*
+         * Initialize the manager to listener the events
+         */
+        initializeListener(manager);
+
         /**
          * Cache the instance
          */
@@ -325,7 +292,6 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
 
         return  intraUserNetworkServiceManagersCache.get(pluginClientId);
     }
-
 
 
 }
