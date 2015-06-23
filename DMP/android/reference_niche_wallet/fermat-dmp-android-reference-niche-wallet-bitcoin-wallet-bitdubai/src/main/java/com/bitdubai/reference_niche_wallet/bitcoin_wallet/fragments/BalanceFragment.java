@@ -73,12 +73,12 @@ public class BalanceFragment extends  Fragment {
 
         cryptoWalletManager = platform.getCryptoWalletManager();
 
-        try{
-            cryptoWallet = cryptoWalletManager.getCryptoWallet();
-        }
-        catch (CantGetCryptoWalletException e) {
-            e.printStackTrace();
-        }
+        //try{
+           // cryptoWallet = cryptoWalletManager.getCryptoWallet();
+        //}
+        //catch (CantGetCryptoWalletException e) {
+           // e.printStackTrace();
+        //}
 
         //TODO falta el BitcoinWalletManager para poder consultar el balancce
      //   try {
@@ -115,7 +115,7 @@ public class BalanceFragment extends  Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_home_list_item, container, false);
+        rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_balance, container, false);
         TextView tv = ((TextView)rootView.findViewById(R.id.balance));
         tv.setText(balances[0]);
 

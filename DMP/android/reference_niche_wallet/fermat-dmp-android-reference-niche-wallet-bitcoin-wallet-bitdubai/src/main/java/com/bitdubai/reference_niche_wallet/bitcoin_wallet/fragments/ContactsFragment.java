@@ -49,11 +49,11 @@ public class ContactsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         cryptoWalletManager = platform.getCryptoWalletManager();
 
-        try {
-            cryptoWallet = cryptoWalletManager.getCryptoWallet();
-        } catch (CantGetCryptoWalletException e) {
-            e.printStackTrace();
-        }
+      //  try {
+     //       cryptoWallet = cryptoWalletManager.getCryptoWallet();
+      //  } catch (CantGetCryptoWalletException e) {
+      //      e.printStackTrace();
+      //  }
 
     }
 
@@ -62,14 +62,14 @@ public class ContactsFragment extends Fragment {
         rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_contacts, container, false);
 
         //get contacts list
-        try
-        {
-            List<WalletContactRecord> walletContactRecords = cryptoWallet.listWalletContacts(wallet_id);
-        }
-        catch(CantGetAllWalletContactsException e)
-        {
-            e.printStackTrace();
-        }
+      //  try
+       // {
+       //     List<WalletContactRecord> walletContactRecords = cryptoWallet.listWalletContacts(wallet_id);
+       // }
+       // catch(CantGetAllWalletContactsException e)
+       // {
+       //     e.printStackTrace();
+       // }
 
         // Get ListView object from xml
         ListView listView = (ListView) rootView.findViewById(R.id.transactionlist);
