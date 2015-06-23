@@ -172,13 +172,14 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DealsWi
 
     @Override
     public void start() throws CantStartPluginException {
-
+        System.out.println("Starting CryptoVault...");
         /**
          * I get the userId from the deviceUserManager
          */
         //userId = deviceUserManager.getLoggedInUser().getId();
-        userId = UUID.fromString("dc1513de-5ee1-4ae1-967d35d0bf7f172832"); //todo fix deviceUser Implementation
+        userId = UUID.fromString("4c6322c7-8c73-4633-956d-96991f413e93"); //todo fix deviceUser Implementation
         //userId = UUID.randomUUID();
+        System.out.println(userId);
 
 
         /**
@@ -188,7 +189,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DealsWi
 
             database = pluginDatabaseSystem.openDatabase(pluginId, userId.toString());
 
-        } catch (Exception e) {
+        } catch (CantOpenDatabaseException e) {
             /**
              * The database doesn't exists, lets create it.
              */
@@ -206,6 +207,9 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DealsWi
                 throw new CantStartPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT);
             }
 
+        } catch (DatabaseNotFoundException e) {
+            e.printStackTrace(); //todo arreglar!! solo para pruebas.
+        }
 
             /**
              * I will start the loading creation of the wallet from the user Id
@@ -261,9 +265,8 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DealsWi
              * the service is started.
              */
             this.serviceStatus = ServiceStatus.STARTED;
-
-        }
-    }
+            System.out.println("CryptoVault started.");
+}
 
     /**
      * Service interface implementation

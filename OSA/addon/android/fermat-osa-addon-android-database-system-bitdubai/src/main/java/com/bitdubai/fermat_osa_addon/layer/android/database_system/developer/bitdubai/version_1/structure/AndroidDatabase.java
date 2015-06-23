@@ -205,7 +205,6 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
 
             databasePath += "/" + databaseName.replace("-","") + ".db";
 
-
             File dbFile = new File(databasePath);
             if (dbFile.exists())
                 this.Database = SQLiteDatabase.openDatabase(databasePath,null,0,null);
