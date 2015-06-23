@@ -35,9 +35,9 @@ public class IncomingNetworkServiceConnectionRequestEvent implements PlatformEve
     private EventSource eventSource;
 
     /**
-     *  Represent the remoteNetworkService
+     *  Represent the remoteNetworkServicePublicKey
      */
-    private UUID remoteNetworkService;
+    private String remoteNetworkServicePublicKey;
 
     /**
      *  Represent the communicationChannels
@@ -59,13 +59,13 @@ public class IncomingNetworkServiceConnectionRequestEvent implements PlatformEve
      * @param communicationChannels
      * @param eventSource
      * @param eventType
-     * @param remoteNetworkService
+     * @param remoteNetworkServicePublicKey
      */
-    public IncomingNetworkServiceConnectionRequestEvent(CommunicationChannels communicationChannels, EventSource eventSource, EventType eventType, UUID remoteNetworkService) {
+    public IncomingNetworkServiceConnectionRequestEvent(CommunicationChannels communicationChannels, EventSource eventSource, EventType eventType, String remoteNetworkServicePublicKey) {
         this.communicationChannels = communicationChannels;
         this.eventSource = eventSource;
         this.eventType = eventType;
-        this.remoteNetworkService = remoteNetworkService;
+        this.remoteNetworkServicePublicKey = remoteNetworkServicePublicKey;
     }
 
     /**
@@ -117,20 +117,10 @@ public class IncomingNetworkServiceConnectionRequestEvent implements PlatformEve
     }
 
     /**
-     * Get the id of the remote network service
-     *
-     * @return UUID
+     * Return the public key of the remote network service
+     * @return
      */
-    public UUID getRemoteNetworkService() {
-        return remoteNetworkService;
-    }
-
-    /**
-     * Set the id of the remote network service
-     *
-     * @return UUID
-     */
-    public void setRemoteNetworkService(UUID remoteNetworkService) {
-        this.remoteNetworkService = remoteNetworkService;
+    public String getRemoteNetworkServicePublicKey() {
+        return remoteNetworkServicePublicKey;
     }
 }
