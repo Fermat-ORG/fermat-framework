@@ -2,9 +2,15 @@ package com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.crypto_wallet.dev
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformWalletType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.DealsWithWalletContacts;
+import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsManager;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.NicheWalletType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
@@ -15,6 +21,7 @@ import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.DealsWit
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.OutgoingExtraUserManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.pip_user.extra_user.DealsWithExtraUsers;
 import com.bitdubai.fermat_api.layer.pip_user.extra_user.ExtraUserManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
@@ -90,6 +97,39 @@ public class CryptoWalletNicheWalletTypePluginRoot implements CryptoWalletManage
     @Override
     public void start() {
         this.serviceStatus = ServiceStatus.STARTED;
+
+        System.out.println("***********TESTING....");
+        try {
+            CryptoWallet cryptoWallet = getCryptoWallet();
+            UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
+
+            System.out.println("***********Request Address...");
+
+            CryptoAddress cryptoAddress = new CryptoAddress( "ASDSADSAD", CryptoCurrency.BITCOIN);
+            System.out.println("***********Create Wallet Contact...");
+
+            WalletContactRecord walletContactRecord = cryptoWallet.createWalletContact(cryptoAddress, "francisco", Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
+            System.out.println("***********SUCCESS: ContactName: "+walletContactRecord.getActorName()+"Address: "+walletContactRecord.getReceivedCryptoAddress().getAddress()+" - CryptoCurrency: "+cryptoAddress.getCryptoCurrency().toString());
+
+            walletContactRecord = cryptoWallet.createWalletContact(cryptoAddress, "roberto", Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
+            System.out.println("***********SUCCESS: ContactName: "+walletContactRecord.getActorName()+"Address: "+walletContactRecord.getReceivedCryptoAddress().getAddress()+" - CryptoCurrency: "+cryptoAddress.getCryptoCurrency().toString());
+
+            walletContactRecord = cryptoWallet.createWalletContact(cryptoAddress, "julio", Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
+            System.out.println("***********SUCCESS: ContactName: "+walletContactRecord.getActorName()+"Address: "+walletContactRecord.getReceivedCryptoAddress().getAddress()+" - CryptoCurrency: "+cryptoAddress.getCryptoCurrency().toString());
+
+            walletContactRecord = cryptoWallet.createWalletContact(cryptoAddress, "adalberto", Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
+            System.out.println("***********SUCCESS: ContactName: "+walletContactRecord.getActorName()+"Address: "+walletContactRecord.getReceivedCryptoAddress().getAddress()+" - CryptoCurrency: "+cryptoAddress.getCryptoCurrency().toString());
+
+            walletContactRecord = cryptoWallet.createWalletContact(cryptoAddress, "ramiro", Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
+            System.out.println("***********SUCCESS: ContactName: "+walletContactRecord.getActorName()+"Address: "+walletContactRecord.getReceivedCryptoAddress().getAddress()+" - CryptoCurrency: "+cryptoAddress.getCryptoCurrency().toString());
+
+
+            for (WalletContactRecord w : cryptoWallet.listWalletContacts(wallet_id)) {
+                System.out.println("Hola, soy un contacto! Y me llamo: "+w.getActorName());
+            }
+        } catch (Exception e) {
+            System.out.println("**************** SOY UN ERROR PORQUE SOY RE HEAVY Y RE JODIDO"+ e.getMessage());
+        }
     }
 
     @Override
@@ -128,6 +168,7 @@ public class CryptoWalletNicheWalletTypePluginRoot implements CryptoWalletManage
         try {
             nicheWalletTypeCryptoWallet.initialize();
         } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetCryptoWalletException();
         }
 
