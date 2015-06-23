@@ -18,7 +18,7 @@ import java.util.UUID;
  */
 public class BitcoinWalletBasicWallet implements BitcoinWallet {
 
-    long balance = 0;
+    long balance =123;
 
     @Override
     public UUID getWalletId() {

@@ -57,6 +57,10 @@ public class TransactionExecutor implements DealsWithBitcoinWallet, DealsWithWal
 
     public void executeTransaction(Transaction<CryptoTransaction> transaction) throws CantGetWalletAddressBookRegistryException, CantGetWalletCryptoAddressBookException, CantLoadWalletException, CantRegisterCreditException {
 
+        BitcoinWallet bitcoinWallet = bitcoinWalletManager.loadWallet(UUID.randomUUID());
+        bitcoinWallet.credit(generateBitcoinTransaction(transaction.getInformation()));
+        if (true)
+          return;
 
         UUID walletID;
         PlatformWalletType platformWalletType;
@@ -71,7 +75,7 @@ public class TransactionExecutor implements DealsWithBitcoinWallet, DealsWithWal
 
         switch (platformWalletType) {
             case BASIC_WALLET_BITCOIN_WALLET:
-                BitcoinWallet bitcoinWallet = bitcoinWalletManager.loadWallet(walletID);
+                //      BitcoinWallet bitcoinWallet = bitcoinWalletManager.loadWallet(walletID);
                 bitcoinWallet.credit(generateBitcoinTransaction(transaction.getInformation()));
                 return;
             default:
