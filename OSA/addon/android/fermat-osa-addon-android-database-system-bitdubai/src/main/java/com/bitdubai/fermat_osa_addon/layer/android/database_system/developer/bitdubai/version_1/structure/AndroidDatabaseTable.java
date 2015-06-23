@@ -256,21 +256,15 @@ public class AndroidDatabaseTable implements  DatabaseTable {
     @Override
     public void loadToMemory() throws CantLoadTableToMemory {
 
-
-        this.tableRecord  = new AndroidDatabaseRecord();
-
-        List<DatabaseRecord>  recordValues = new ArrayList<DatabaseRecord>();
-        this.records = new ArrayList<DatabaseTableRecord>() ;
-
+        this.records = new ArrayList<>();
 
         String topSentence = "";
         try {
 
+            if (!this.top.isEmpty())
+                topSentence = " LIMIT " + this.top;
 
-        if(!this.top.isEmpty())
-            topSentence = " LIMIT " + this.top ;
-
-            Cursor c = this.database.rawQuery("SELECT  * FROM " + tableName + makeFilter() + makeOrder() + topSentence , null);
+            Cursor c = this.database.rawQuery("SELECT  * FROM " + tableName + makeFilter() + makeOrder() + topSentence, null);
 
             List<String> columns = getColumns();
 
@@ -280,6 +274,8 @@ public class AndroidDatabaseTable implements  DatabaseTable {
                      * Get columns name to read values of files
                      *
                      */
+                    DatabaseTableRecord tableRecord1 = new AndroidDatabaseRecord();
+                    List<DatabaseRecord> recordValues = new ArrayList<>();
 
                     for (int i = 0; i < columns.size(); ++i) {
                         DatabaseRecord recordValue = new AndroidRecord();
@@ -288,6 +284,8 @@ public class AndroidDatabaseTable implements  DatabaseTable {
                         recordValue.setChange(false);
                         recordValues.add(recordValue);
                     }
+                    tableRecord1.setValues(recordValues);
+                    this.records.add(tableRecord1);
 
                 } while (c.moveToNext());
             }
@@ -296,14 +294,6 @@ public class AndroidDatabaseTable implements  DatabaseTable {
         } catch (Exception e) {
             throw new CantLoadTableToMemory();
         }
-
-        tableRecord.setValues(recordValues);
-
-
-        // TODO: REVISAR ESTO. SE COLOCÓ PARA QUE SE RETORNE UNA
-        // LISTA VACÍA DE RECORDS AL DAR VACÍA LA CONSULTA
-        if(!recordValues.isEmpty())
-            this.records.add(this.tableRecord);
     }
 
     /**
