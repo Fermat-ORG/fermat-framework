@@ -20,4 +20,11 @@ public class CryptoVaultDatabaseConstants {
      */
     static final String FERMAT_TRANSACTIONS_TABLE_NAME = "fermat_transactions";
     static final String FERMAT_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME = "trx_id";
+
+    /**
+     * TransitionProtocol_Status table definition
+     */
+    static final String TRANSITION_PROTOCOL_STATUS = "transition_protocol_status";
+    static final String TRANSITION_PROTOCOL_STATUS_TABLE_TIMESTAMP_COLUMN_NAME = "timestamp";
+    static final String TRANSITION_PROTOCOL_STATUS_TABLE_ocurrences_COLUMN_NAME = "ocurrences";
 }

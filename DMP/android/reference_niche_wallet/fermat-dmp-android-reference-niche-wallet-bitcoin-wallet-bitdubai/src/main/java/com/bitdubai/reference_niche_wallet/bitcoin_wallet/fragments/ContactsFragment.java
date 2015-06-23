@@ -1,5 +1,7 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -16,6 +18,7 @@ import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfa
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -49,11 +52,13 @@ public class ContactsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         cryptoWalletManager = platform.getCryptoWalletManager();
 
-      //  try {
-     //       cryptoWallet = cryptoWalletManager.getCryptoWallet();
-      //  } catch (CantGetCryptoWalletException e) {
-      //      e.printStackTrace();
-      //  }
+       try {
+           cryptoWallet = cryptoWalletManager.getCryptoWallet();
+       } catch (CantGetCryptoWalletException e) {
+
+           showMessage("Unexpected error get Contact list - " + e.getMessage());
+           e.printStackTrace();
+       }
 
     }
 
@@ -62,22 +67,33 @@ public class ContactsFragment extends Fragment {
         rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_contacts, container, false);
 
         //get contacts list
-      //  try
-       // {
-       //     List<WalletContactRecord> walletContactRecords = cryptoWallet.listWalletContacts(wallet_id);
-       // }
-       // catch(CantGetAllWalletContactsException e)
-       // {
-       //     e.printStackTrace();
-       // }
+        List<WalletContactRecord> walletContactRecords = new ArrayList<>();
+       try
+        {
+            walletContactRecords = cryptoWallet.listWalletContacts(wallet_id);
+       }
+        catch(CantGetAllWalletContactsException e)
+       {
+           showMessage("CantGetAllWalletContactsException- " + e.getMessage());
+            e.printStackTrace();
+        }
 
         // Get ListView object from xml
         ListView listView = (ListView) rootView.findViewById(R.id.transactionlist);
 
 
         // Defined Array values to show in ListView
-        String[] contacts = new String[]{"","Lucia Alarcon De Zamacona", "Juan Luis R. Pons", "Karina Rodríguez", "Simon Cushing","Céline Begnis","Taylor Backus","Stephanie Himonidis","Kimberly Brown" };
+        //String[] contacts = new String[]{"","Lucia Alarcon De Zamacona", "Juan Luis R. Pons", "Karina Rodríguez", "Simon Cushing","Céline Begnis","Taylor Backus","Stephanie Himonidis","Kimberly Brown" };
 
+        String[] contacts;
+        if (walletContactRecords.size() > 0) {
+            contacts = new String[walletContactRecords.size()];
+            for(int i = 0; i < walletContactRecords.size() ; i++) {
+                contacts[i] = walletContactRecords.get(i).getActorName();
+            }
+        } else {
+            contacts = new String[0];
+        }
 
         // Define a new Adapter
         // First parameter - Context
@@ -114,4 +130,18 @@ public class ContactsFragment extends Fragment {
         });*/
         return rootView;
            }
+
+    //show alert
+    private void showMessage(String text){
+        AlertDialog alertDialog = new AlertDialog.Builder(this.getActivity()).create();
+        alertDialog.setTitle("Warning");
+        alertDialog.setMessage(text);
+        alertDialog.setButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // aquí puedes añadir funciones
+            }
+        });
+        //alertDialog.setIcon(R.drawable.icon);
+        alertDialog.show();
+    }
 }

@@ -2,6 +2,8 @@ package com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.dev
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.OutgoingExtraUserManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.TransactionManager;
@@ -13,6 +15,9 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventLis
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.structure.OutgoingExtraUserTransactionManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +26,10 @@ import java.util.UUID;
 /**
  * Created by loui on 20/02/15.
  */
-public class OutgoingExtraUserTransactionPluginRoot implements Service, OutgoingExtraUserManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
+public class OutgoingExtraUserTransactionPluginRoot implements Service,DealsWithBitcoinWallet, DealsWithCryptoVault, OutgoingExtraUserManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
+
+    OutgoingExtraUserTransactionManager transactionManager;
+
 
     /**
      * PlatformService Interface member variables.
@@ -51,12 +59,18 @@ public class OutgoingExtraUserTransactionPluginRoot implements Service, Outgoing
 
     @Override
     public void start() {
+
+        this.transactionManager = new OutgoingExtraUserTransactionManager();
+        this.transactionManager.setCryptoVaultManager(this.cryptoVaultManager);
+        this.transactionManager.setBitcoinWalletManager(this.bitcoinWalletManager);
+
         /**
          * I will initialize the handling of com.bitdubai.platform events.
          */
 
         EventListener eventListener;
         EventHandler eventHandler;
+
 
 
         this.serviceStatus = ServiceStatus.STARTED;
@@ -135,9 +149,24 @@ public class OutgoingExtraUserTransactionPluginRoot implements Service, Outgoing
     }
 
 
+
     @Override
     public TransactionManager getTransactionManager() {
         // TODO: ADD CORRESPONDING MODULE
-        return null;
+        return this.transactionManager;
+    }
+
+    private BitcoinWalletManager bitcoinWalletManager;
+
+    @Override
+    public void setBitcoinWalletManager(BitcoinWalletManager bitcoinWalletManager) {
+        this.bitcoinWalletManager = bitcoinWalletManager;
+    }
+
+    private CryptoVaultManager cryptoVaultManager;
+
+    @Override
+    public void setCryptoVaultManager(CryptoVaultManager cryptoVaultManager) {
+        this.cryptoVaultManager = cryptoVaultManager;
     }
 }

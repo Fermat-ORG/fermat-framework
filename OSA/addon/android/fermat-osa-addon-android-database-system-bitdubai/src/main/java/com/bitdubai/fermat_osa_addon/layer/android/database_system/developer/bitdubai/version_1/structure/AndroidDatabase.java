@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.UUID;
 
 import android.content.Context;
+import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
@@ -202,7 +204,6 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
                 databasePath =  this.context.getFilesDir().getPath() + "/databases/";
 
             databasePath += "/" + databaseName.replace("-","") + ".db";
-            
 
             this.Database = SQLiteDatabase.openDatabase(databasePath,null,0,null);
 
@@ -381,7 +382,7 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
 
         }catch (Exception e)
         {
-            e.printStackTrace();
+            //e.printStackTrace();
         	throw new CantCreateTableException();
         }
 
@@ -443,7 +444,7 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
 
         }catch (Exception e)
         {
-            e.printStackTrace();
+            //e.printStackTrace();
         	throw new CantCreateTableException();
         }
 

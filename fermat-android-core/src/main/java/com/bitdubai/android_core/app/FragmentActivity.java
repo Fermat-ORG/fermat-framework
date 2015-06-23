@@ -7,6 +7,7 @@ import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 import com.bitdubai.android_core.app.common.version_1.classes.PagerSlidingTabStrip;
@@ -21,8 +22,7 @@ import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.su
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.SendAllFragment;
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.SendToNewContactFragment;
 
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ReceiveFromContactFragment;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.SendToContactFragment;
+
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.App;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.AppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.Fragment;
@@ -76,168 +76,145 @@ public class FragmentActivity  extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.runtime_app_activity_fragment);
+        try{
+            // get instances of Runtime middleware object
+
+            this.appRuntimeMiddleware =  MyApplication.getAppRuntime(); //(AppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
+
+            this.app = appRuntimeMiddleware.getLastApp();
+            this.subApp = appRuntimeMiddleware.getLastSubApp();
+
+            walletRuntimeMiddleware = MyApplication.getwalletRuntime();
+
+            //get actual activity to execute
+            this.activity = walletRuntimeMiddleware.getLasActivity();
 
 
-        // get instances of Runtime middleware object
+            // Fragment fragment = appRuntimeMiddleware.getLastFragment();
+            MyApplication.setActivityId(activity.getType().getKey());
 
-        this.appRuntimeMiddleware =  MyApplication.getAppRuntime(); //(AppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
+            //get activity settings
+            this.tabs = activity.getTabStrip();
+            this.fragments =activity.getFragments();
+            this.titleBar = activity.getTitleBar();
 
-        this.app = appRuntimeMiddleware.getLastApp();
-        this.subApp = appRuntimeMiddleware.getLastSubApp();
-
-        walletRuntimeMiddleware = MyApplication.getwalletRuntime();
-
-        //get actual activity to execute
-        this.activity = walletRuntimeMiddleware.getLasActivity();
-
-
-        // Fragment fragment = appRuntimeMiddleware.getLastFragment();
-        MyApplication.setActivityId(activity.getType().getKey());
-
-        //get activity settings
-        this.tabs = activity.getTabStrip();
-        this.fragments =activity.getFragments();
-        this.titleBar = activity.getTitleBar();
-
-        this.mainMenumenu= activity.getMainMenu();
+            this.mainMenumenu= activity.getMainMenu();
 
 
 
-        if(fragments.size() == 1){
-            List<android.support.v4.app.Fragment> fragments = new Vector<android.support.v4.app.Fragment>();
-            Iterator<Map.Entry<Fragments, Fragment>> efragments = this.fragments.entrySet().iterator();
+            if(fragments.size() == 1){
+                List<android.support.v4.app.Fragment> fragments = new Vector<android.support.v4.app.Fragment>();
+                Iterator<Map.Entry<Fragments, Fragment>> efragments = this.fragments.entrySet().iterator();
 
-            while (efragments.hasNext()) {
-                Map.Entry<Fragments, Fragment> fragmentEntry = efragments.next();
+                while (efragments.hasNext()) {
+                    Map.Entry<Fragments, Fragment> fragmentEntry = efragments.next();
 
-                RuntimeFragment fragment = (RuntimeFragment) fragmentEntry.getValue();
-                Fragments type = fragment.getType();
-                switch (type) {
-                    //Bitcoin wallet fragments
+                    RuntimeFragment fragment = (RuntimeFragment) fragmentEntry.getValue();
+                    Fragments type = fragment.getType();
+                    switch (type) {
 
-
-                    case   CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS_SEND:
-                        if (savedInstanceState == null) {
-
-                            SendToContactFragment bc = new SendToContactFragment();
-                            //pass to fragment params
-                            Bundle b = new Bundle();
-                            b.putString("contactId",tagParam);
-                            bc.setArguments(b);
+                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS:
+                            if (savedInstanceState == null) {
+                                getFragmentManager().beginTransaction()
+                                        .add(R.id.container, new ContactsFragment())
+                                        .commit();
+                            }
+                            break;
+                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_CHAT:
+                            if (savedInstanceState == null) {
+                                getFragmentManager().beginTransaction()
+                                        .add(R.id.container, new ChatWithContactFragment())
+                                        .commit();
+                            }
+                            break;
+                        case CWP_WALLET_RUNTIME_ADULTS_ALL_AVAILABLE_BALANCE:
+                            if (savedInstanceState == null) {
+                                getFragmentManager().beginTransaction()
+                                        .add(R.id.container, new AvailableBalanceFragment())
+                                        .commit();
+                            }
+                            break;
+                        case  CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_NEW_SEND:
+                            if (savedInstanceState == null) {
+                                getFragmentManager().beginTransaction()
+                                        .add(R.id.container, new SendToNewContactFragment())
+                                        .commit();
+                            }
+                            break;
+                        case  CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_NEW_RECEIVE:
+                            if (savedInstanceState == null) {
+                                getFragmentManager().beginTransaction()
+                                        .add(R.id.container, new ReceiveFromNewContactFragment())
+                                        .commit();
+                            }
+                            break;
+                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_SEND :
                             getFragmentManager().beginTransaction()
-                                    .add(R.id.container, bc)
+                                    .add(R.id.container, new com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.SendToContactFragment())
                                     .commit();
-                        }
-                        break;
-
-                    case    CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS_RECEIVE:
-                        if (savedInstanceState == null) {
-
-                            ReceiveFromContactFragment bc = new ReceiveFromContactFragment();
-                            //pass to fragment params
-                            Bundle b = new Bundle();
-                            b.putString("contactId",tagParam);
-                            bc.setArguments(b);
-
+                            break;
+                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_RECEIVE:
                             getFragmentManager().beginTransaction()
-                                    .add(R.id.container, bc)
+                                    .add(R.id.container, new com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ReceiveFromContactFragment())
                                     .commit();
-                        }
-                        break;
+                            break;
+                        case CWP_SHOP_MANAGER_MAIN:
+                            break;
+                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_DEBITS:
+                            break;
+                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNT_CREDITS:
+                            break;
+                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_ALL:
+                            break;
+                        case CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED:
+                            break;
+                        case CWP_WALLET_ADULTS_ALL_REQUEST_SEND:
+                            break;
+                        case CWP_WALLET_ADULTS_ALL_SEND_HISTORY:
+                            getFragmentManager().beginTransaction()
+                                    .add(R.id.container, new SendAllFragment())
+                                    .commit();
 
-                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS:
-                        if (savedInstanceState == null) {
+                            break;
+                        case CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED_HISTORY:
                             getFragmentManager().beginTransaction()
-                                    .add(R.id.container, new ContactsFragment())
+                                    .add(R.id.container, new ReceiveAllFragment())
                                     .commit();
-                        }
-                        break;
-                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_CHAT:
-                        if (savedInstanceState == null) {
-                            getFragmentManager().beginTransaction()
-                                    .add(R.id.container, new ChatWithContactFragment())
-                                    .commit();
-                        }
-                        break;
-                    case CWP_WALLET_RUNTIME_ADULTS_ALL_AVAILABLE_BALANCE:
-                        if (savedInstanceState == null) {
-                            getFragmentManager().beginTransaction()
-                                    .add(R.id.container, new AvailableBalanceFragment())
-                                    .commit();
-                        }
-                        break;
-                    case  CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_NEW_SEND:
-                        if (savedInstanceState == null) {
-                            getFragmentManager().beginTransaction()
-                                    .add(R.id.container, new SendToNewContactFragment())
-                                    .commit();
-                        }
-                        break;
-                    case  CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_NEW_RECEIVE:
-                        if (savedInstanceState == null) {
-                            getFragmentManager().beginTransaction()
-                                    .add(R.id.container, new ReceiveFromNewContactFragment())
-                                    .commit();
-                        }
-                        break;
-                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_SEND :
-                        getFragmentManager().beginTransaction()
-                                .add(R.id.container, new com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.SendToContactFragment())
-                                .commit();
-                        break;
-                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_RECEIVE:
-                        getFragmentManager().beginTransaction()
-                                .add(R.id.container, new com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ReceiveFromContactFragment())
-                                .commit();
-                        break;
-                    case CWP_SHOP_MANAGER_MAIN:
-                        break;
-                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_DEBITS:
-                        break;
-                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNT_CREDITS:
-                        break;
-                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_ALL:
-                        break;
-                    case CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED:
-                        break;
-                    case CWP_WALLET_ADULTS_ALL_REQUEST_SEND:
-                        break;
-                    case CWP_WALLET_ADULTS_ALL_SEND_HISTORY:
-                        getFragmentManager().beginTransaction()
-                                .add(R.id.container, new SendAllFragment())
-                                .commit();
 
-                        break;
-                    case CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED_HISTORY:
-                        getFragmentManager().beginTransaction()
-                                .add(R.id.container, new ReceiveAllFragment())
-                                .commit();
+                            break;
+                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CHAT_TRX:
+                            getFragmentManager().beginTransaction()
+                                    .add(R.id.container, new ChatOverTransactionFragment())
+                                    .commit();
+                            break;
+                        case CWP_WALLET_ADULTS_ALL_DAILY_DISCOUNT:
+                            getFragmentManager().beginTransaction()
+                                    .add(R.id.container, new DailyDiscountsFragment())
+                                    .commit();
+                            break;
+                        case CWP_WALLET_STORE_MAIN:
+                            break;
+                        case CWP_WALLET_FACTORY_MAIN:
+                            break;
 
-                        break;
-                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CHAT_TRX:
-                        getFragmentManager().beginTransaction()
-                                .add(R.id.container, new ChatOverTransactionFragment())
-                                .commit();
-                        break;
-                    case CWP_WALLET_ADULTS_ALL_DAILY_DISCOUNT:
-                        getFragmentManager().beginTransaction()
-                                .add(R.id.container, new DailyDiscountsFragment())
-                                .commit();
-                        break;
-                    case CWP_WALLET_STORE_MAIN:
-                        break;
-                    case CWP_WALLET_FACTORY_MAIN:
-                        break;
-
+                    }
                 }
+
             }
 
+            int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
+            this.abTitle = (TextView) findViewById(titleId);
+
+            MyApplication.setActivityProperties(this, getWindow(),getResources(),tabStrip,getActionBar(), titleBar,abTitle,Title);
+
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(getApplicationContext(), "Can't Create Fragment: " + e.getMessage(),
+                    Toast.LENGTH_LONG).show();
         }
 
-        int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
-        this.abTitle = (TextView) findViewById(titleId);
 
-        MyApplication.setActivityProperties(this, getWindow(),getResources(),tabStrip,getActionBar(), titleBar,abTitle,Title);
 
 
     }
