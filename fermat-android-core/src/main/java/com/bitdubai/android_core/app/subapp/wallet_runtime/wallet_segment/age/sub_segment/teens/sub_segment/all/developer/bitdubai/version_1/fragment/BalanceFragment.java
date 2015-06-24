@@ -19,7 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bitdubai.android_core.app.RuntimeAppActivity;
+import com.bitdubai.android_core.app.SubAppActivity;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.AppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -82,7 +82,7 @@ public class BalanceFragment extends ListFragment implements LoaderManager.Loade
 
         appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_ACCOUNT_DETAIL);
 
-        intent = new Intent(getActivity(), RuntimeAppActivity.class);
+        intent = new Intent(getActivity(), SubAppActivity.class);
         intent.putExtra("executeStart", "0");
         startActivity(intent);
 

@@ -89,7 +89,7 @@ import java.util.Vector;
 /**
  * Created by toshiba on 16/02/2015.
  */
-public class RuntimeAppActivity extends FragmentActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks{
+public class SubAppActivity extends FragmentActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks{
 
     private NavigationDrawerFragment NavigationDrawerFragment;
 

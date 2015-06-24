@@ -118,7 +118,7 @@ public class StartActivity extends FragmentActivity{
     }
 
     private boolean fermatInit(){
-        Intent intent = new Intent(this,RuntimeAppActivity.class);
+        Intent intent = new Intent(this,SubAppActivity.class);
         intent.putExtra(START_ACTIVITY_INIT,"init");
         startActivity(intent);
         return true;

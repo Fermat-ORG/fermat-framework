@@ -61,7 +61,7 @@
                     android:value="com.bitdubai.android_core.app.shell.version_1.activity.DesktopActivity" />
         </activity>
         <activity
-            android:name="com.bitdubai.android_core.app.RuntimeAppActivity"
+            android:name="com.bitdubai.android_core.app.SubAppActivity"
             android:label="Fermat" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -93,7 +93,7 @@
             android:label="Desktop" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.android_core.app.RuntimeAppActivity" />
+                android:value="com.bitdubai.android_core.app.SubAppActivity" />
         </activity>
 
         <activity
@@ -101,7 +101,7 @@
             android:label="Wallet" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.android_core.app.RuntimeAppActivity" />
+                android:value="com.bitdubai.android_core.app.SubAppActivity" />
         </activity>
 
         <activity

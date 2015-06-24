@@ -604,7 +604,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
             activity = this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_MANAGER_MAIN);
             cleanWindows();
 
-            Intent intent = new Intent(this, com.bitdubai.android_core.app.RuntimeAppActivity.class);
+            Intent intent = new Intent(this, SubAppActivity.class);
 
             startActivity(intent);
         }else{

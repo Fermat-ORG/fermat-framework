@@ -22,6 +22,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import com.bitdubai.android_core.app.SubAppActivity;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.SideMenu;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.App;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.AppRuntimeManager;
@@ -338,7 +339,7 @@ public class NavigationDrawerFragment extends Fragment {
                 appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
                 Intent intent;
                 appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_STORE_MAIN);
-                intent = new Intent(getActivity(), com.bitdubai.android_core.app.RuntimeAppActivity.class);
+                intent = new Intent(getActivity(), SubAppActivity.class);
                 intent.putExtra("executeStart","1");
                 startActivity(intent);
 
