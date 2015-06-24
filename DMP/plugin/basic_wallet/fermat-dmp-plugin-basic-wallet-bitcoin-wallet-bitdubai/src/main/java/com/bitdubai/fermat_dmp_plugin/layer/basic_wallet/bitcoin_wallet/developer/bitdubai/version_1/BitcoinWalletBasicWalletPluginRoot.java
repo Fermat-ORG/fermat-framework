@@ -11,6 +11,13 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -19,13 +26,15 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventLis
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure.BitcoinWalletBasicWallet;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
  * Created by loui on 30/04/15.
  */
-public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager, DealsWithErrors,DealsWithPluginDatabaseSystem,Service, Plugin {
+public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager, DealsWithErrors,DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem,Service, Plugin {
 
     BitcoinWalletBasicWallet bitcoinWallet ;
 
@@ -38,6 +47,11 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
      * DealsWithDatabaseSystem Interface member variables.
      */
     PluginDatabaseSystem pluginDatabaseSystem;
+
+    /**
+     * DealsWithPluginFileSystem Interface member variables.
+     */
+    private PluginFileSystem pluginFileSystem;
 
     /**
      * DealsWithPluginIdentity Interface member variables.
@@ -69,6 +83,16 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
+
+    /**
+     * DealsWithPluginFileSystem Interface implementation.
+     */
+
+    @Override
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
+        this.pluginFileSystem = pluginFileSystem;
+    }
+
 
     /**
      * DealsWithPluginIdentity methods implementation.
@@ -133,6 +157,7 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
         bitcoinWallet  = new BitcoinWalletBasicWallet(this.pluginId);
         bitcoinWallet.setErrorManager(this.errorManager);
         bitcoinWallet.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+        bitcoinWallet.setPluginFileSystem(pluginFileSystem);
 
 
       //  try {
@@ -161,11 +186,14 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
 
         try {
             bitcoinWallet.create(walletId);
-        }catch(CantInitializeBitcoinWalletBasicException CantInitializeBitcoinWallet)
+        }catch(CantCreateWalletException CantInitializeBitcoinWallet)
         {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, CantInitializeBitcoinWallet);
             throw new CantCreateWalletException();
         }
+
+
+
 
     }
 }
