@@ -216,7 +216,7 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
              * * *
              */
 
-            throw new DatabaseNotFoundException();
+            throw new DatabaseNotFoundException("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaargh#");
             //TODO: NATALIA; Revisa si devuelve la misma exception cuando la base de datos no existe que cuando simplement no la puede abrir por otra razon. Y avisame el resultado de la investigacion esta.
         }
 
