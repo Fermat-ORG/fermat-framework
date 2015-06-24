@@ -74,7 +74,7 @@ public class BalanceFragment extends ListFragment implements LoaderManager.Loade
         View clickedView = v;
 
         MyApplication.setTagId(position);
-        Platform platform = MyApplication.getPlatform();
+        Platform platform = MyApplication.getFermatPlatform();
         CorePlatformContext platformContext = platform.getCorePlatformContext();
 
         AppRuntimeManager appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);

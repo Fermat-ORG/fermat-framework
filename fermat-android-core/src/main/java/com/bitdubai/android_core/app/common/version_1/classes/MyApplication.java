@@ -24,6 +24,15 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorMan
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.fermat_core.Platform;
 
+
+/**
+ * This class, is created by the Android OS before any Activity. That means its constructor is run before any other code
+ * written by ourselves.
+ *
+ * -- Luis.
+ */
+
+
 public class MyApplication extends android.support.multidex.MultiDexApplication {
 
     private final static Handler handler = new Handler();
@@ -116,17 +125,17 @@ public class MyApplication extends android.support.multidex.MultiDexApplication 
     }
 
 
-    private static Platform mPlatform;
+    private static Platform fermatPlatform;
 
 
-    public static Platform getPlatform() {
-        return mPlatform;
+    public static Platform getFermatPlatform() {
+        return fermatPlatform;
     }
 
     public MyApplication () {
         super();
 
-        mPlatform = new Platform();
+        fermatPlatform = new Platform();
 
 
     }

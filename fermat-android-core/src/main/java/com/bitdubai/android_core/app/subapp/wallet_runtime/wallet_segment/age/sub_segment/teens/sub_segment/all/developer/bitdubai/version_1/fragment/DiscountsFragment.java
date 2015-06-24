@@ -70,7 +70,7 @@ public class DiscountsFragment extends ListFragment implements LoaderManager.Loa
     public void onListItemClick(ListView l, View v, int position, long id) {
 
         Intent intent;
-        Platform platform = MyApplication.getPlatform();
+        Platform platform = MyApplication.getFermatPlatform();
         CorePlatformContext platformContext = platform.getCorePlatformContext();
 
         AppRuntimeManager appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);

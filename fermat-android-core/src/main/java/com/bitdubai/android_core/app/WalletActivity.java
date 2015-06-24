@@ -54,13 +54,11 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.TabStrip;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.TitleBar;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Fragments;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesManager;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.app_runtime.developer.bitdubai.version_1.structure.RuntimeFragment;
@@ -132,7 +130,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
             //init runtime app
 
             //get platform object
-            platform = MyApplication.getPlatform();
+            platform = MyApplication.getFermatPlatform();
             this.platformContext = platform.getCorePlatformContext();
 
             setContentView(R.layout.runtime_app_wallet_runtime);

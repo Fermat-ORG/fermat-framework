@@ -184,7 +184,7 @@ public  class AccountDetailCreditsFragment extends Fragment {
 
                 if (groupPosition == 0) {
                     Intent intent;
-                    Platform platform = MyApplication.getPlatform();
+                    Platform platform = MyApplication.getFermatPlatform();
                     CorePlatformContext platformContext = platform.getCorePlatformContext();
 
                     AppRuntimeManager appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);

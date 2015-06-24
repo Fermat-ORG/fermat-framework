@@ -19,7 +19,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -139,7 +138,7 @@ public class NavigationDrawerFragment extends Fragment {
             });
 
             //create menu option based activity submenu definition
-            Platform platform = MyApplication.getPlatform();
+            Platform platform = MyApplication.getFermatPlatform();
 
             this.platformContext = platform.getCorePlatformContext();
 

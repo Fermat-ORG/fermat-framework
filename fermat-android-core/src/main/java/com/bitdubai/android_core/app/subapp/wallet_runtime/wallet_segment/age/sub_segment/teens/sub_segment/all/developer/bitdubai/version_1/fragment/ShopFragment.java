@@ -259,7 +259,7 @@ public class ShopFragment extends Fragment {
                // intent = new Intent(getActivity(), ShopActivity.class);
                 //startActivity(intent);
 
-                Platform platform = MyApplication.getPlatform();
+                Platform platform = MyApplication.getFermatPlatform();
                 CorePlatformContext platformContext = platform.getCorePlatformContext();
 
                 AppRuntimeManager appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
