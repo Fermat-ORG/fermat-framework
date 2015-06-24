@@ -24,6 +24,15 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorMan
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.fermat_core.Platform;
 
+
+/**
+ * This class, is created by the Android OS before any Activity. That means its constructor is run before any other code
+ * written by ourselves.
+ *
+ * -- Luis.
+ */
+
+
 public class MyApplication extends android.support.multidex.MultiDexApplication {
 
     private final static Handler handler = new Handler();
@@ -116,17 +125,17 @@ public class MyApplication extends android.support.multidex.MultiDexApplication 
     }
 
 
-    private static Platform mPlatform;
+    private static Platform fermatPlatform;
 
 
-    public static Platform getPlatform() {
-        return mPlatform;
+    public static Platform getFermatPlatform() {
+        return fermatPlatform;
     }
 
     public MyApplication () {
         super();
 
-        mPlatform = new Platform();
+        fermatPlatform = new Platform();
 
 
     }
@@ -143,8 +152,10 @@ public class MyApplication extends android.support.multidex.MultiDexApplication 
 
                 Title = titleBar.getLabel();
 
-                abTitle.setTextColor(Color.WHITE);
-                abTitle.setTypeface(MyApplication.getDefaultTypeface());
+                if(abTitle !=null) {
+                    abTitle.setTextColor(Color.WHITE);
+                    abTitle.setTypeface(MyApplication.getDefaultTypeface());
+                }
                 actionBar.setTitle(Title);
                 actionBar.show();
                 setActionBarProperties(activity,window,tabStrip, actionBar,context,abTitle, Title.toString());
@@ -232,7 +243,9 @@ public class MyApplication extends android.support.multidex.MultiDexApplication 
                     color = "#d07b62";
                     actionBar.setIcon(context.getDrawable(R.drawable.fermat));
                     wallpaper = context.getDrawable(R.drawable.background_tabs_diagonal_rotated);
-                    abTitle.setTextColor(Color.BLACK);
+                    if(abTitle !=null) {
+                        abTitle.setTextColor(Color.BLACK);
+                    }
                     walletStyle = "Young";
                     break;
 

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.v4.app.*;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
@@ -70,9 +69,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.view.ViewGroup;
 
-import com.bitdubai.fermat_api.CantReportCriticalStartingProblem;
-import com.bitdubai.fermat_api.CantStartPlatformException;
-
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -93,7 +89,7 @@ import java.util.Vector;
 /**
  * Created by toshiba on 16/02/2015.
  */
-public class RuntimeAppActivity extends FragmentActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks{
+public class SubAppActivity extends FragmentActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks{
 
     private NavigationDrawerFragment NavigationDrawerFragment;
 
@@ -151,7 +147,7 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             Context context = this.getApplicationContext();
 
 
-            platform = MyApplication.getPlatform();
+            platform = MyApplication.getFermatPlatform();
 
 
             //get platform object
