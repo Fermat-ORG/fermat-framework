@@ -88,21 +88,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
         incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, txId.toString());
         incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, txHash);
         incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.toString());
-
-        /**
-         * Will get the transaction confidence of the transaction. Preety sure it should be Identified. But just in case...
-         */
-        TransactionConfidenceCalculator transactionConfidenceCalculator = new TransactionConfidenceCalculator(txId.toString(), database, vault);
-        CryptoStatus cryptoStatus;
-        try {
-            cryptoStatus = transactionConfidenceCalculator.getCryptoStatus();
-        } catch (CantCalculateTransactionConfidenceException e) {
-            /**
-             * If I can't calculate the confidence, I will default it to Identified.
-             */
-            cryptoStatus = CryptoStatus.IDENTIFIED;
-        }
-        incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME, cryptoStatus.toString());
+        incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME, CryptoStatus.IDENTIFIED.toString());
 
         dbTx.addRecordToInsert(cryptoTxTable, incomingTxRecord);
         try {
