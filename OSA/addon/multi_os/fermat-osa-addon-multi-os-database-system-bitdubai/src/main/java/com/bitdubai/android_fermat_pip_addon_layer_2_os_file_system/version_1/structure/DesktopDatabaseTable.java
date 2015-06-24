@@ -2,23 +2,15 @@ package com.bitdubai.fermat_osa_addon.layer.desktop.database_system.developer.bi
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DataBaseTableOrder;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
-import static com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator.AND;
-import static com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator.OR;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
-import static com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder.ASCENDING;
-import static com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder.DESCENDING;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
-import static com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType.EQUAL;
-import static com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType.GRATER_THAN;
-import static com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType.LESS_THAN;
-import static com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType.LIKE;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableColumn;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilterGroup;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecord;
 import com.bitdubai.fermat_osa_addon.layer.desktop.database_system.developer.bitdubai.version_1.desktop.database.bridge.DesktopDatabaseBridge;
@@ -223,10 +215,10 @@ public class DesktopDatabaseTable implements  DatabaseTable {
      * <p>This method inserts a new record in the database
      *
      * @param record DatabaseTableRecord to insert
-     * @throws CantInsertRecord
+     * @throws CantInsertRecordException
      */
     @Override
-    public void insertRecord(DatabaseTableRecord record) throws CantInsertRecord {
+    public void insertRecord(DatabaseTableRecord record) throws CantInsertRecordException {
 
         /**
          * First I get the table records with values.
@@ -259,7 +251,7 @@ public class DesktopDatabaseTable implements  DatabaseTable {
             this.database.execSQL("INSERT INTO " + tableName + "(" + strRecords + ")" + " VALUES (" +  strValues + ")");
         }
         catch (Exception exception) {
-            throw new CantInsertRecord();
+            throw new CantInsertRecordException();
           }
 
 

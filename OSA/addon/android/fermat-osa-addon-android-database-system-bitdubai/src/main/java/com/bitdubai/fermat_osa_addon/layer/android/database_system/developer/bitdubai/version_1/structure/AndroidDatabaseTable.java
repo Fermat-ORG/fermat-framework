@@ -15,7 +15,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableCo
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilterGroup;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecord;
 
@@ -205,10 +205,10 @@ public class AndroidDatabaseTable implements  DatabaseTable {
      * <p>This method inserts a new record in the database
      *
      * @param record DatabaseTableRecord to insert
-     * @throws CantInsertRecord
+     * @throws CantInsertRecordException
      */
     @Override
-    public void insertRecord(DatabaseTableRecord record) throws CantInsertRecord {
+    public void insertRecord(DatabaseTableRecord record) throws CantInsertRecordException {
 
         /**
          * First I get the table records with values.
@@ -241,7 +241,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
             this.database.execSQL("INSERT INTO " + tableName + "(" + strRecords + ")" + " VALUES (" +  strValues + ")");
         }
         catch (Exception exception) {
-            throw new CantInsertRecord();
+            throw new CantInsertRecordException();
           }
 
 

@@ -291,12 +291,12 @@ public class BlockchainInfoIncomingCryptoMonitorAgent implements Agent, DealsWit
 
             try{
                 incomingCryptoTable.insertRecord(incomingCryptoRecord);
-            }catch(CantInsertRecord cantInsertRecord)
+            }catch(CantInsertRecordException cantInsertRecord)
             {
                 /**
                  * I can not solve this situation.
                  */
-              //throw new CantInsertRecord
+
            // }
 
 

@@ -163,8 +163,7 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 			unregisteredConnections.put(serverPublicKey, serverConnection);
 			executor.execute(this);
 		}catch(IOException ex){
-			ex.printStackTrace();
-			throw new CloudConnectionException(ex.getMessage());
+			throw new CloudConnectionException(ex.getMessage(), ex);
 		}
 	}
 	
@@ -186,7 +185,7 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 			unregisteredConnections.remove(serverPublicKey);
 			requestedConnections.put(serverPublicKey, serverConnection);
 		} catch(FMPException ex){
-			throw new CloudConnectionException(ex.getMessage());
+			throw new CloudConnectionException(ex.getMessage(), ex);
 		}
 	}
 	

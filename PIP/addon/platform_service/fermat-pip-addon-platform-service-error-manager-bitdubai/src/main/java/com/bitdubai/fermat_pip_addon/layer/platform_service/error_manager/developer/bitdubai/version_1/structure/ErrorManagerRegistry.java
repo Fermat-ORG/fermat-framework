@@ -10,7 +10,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
@@ -42,7 +42,17 @@ public class ErrorManagerRegistry {
     private long sent;
     private long timeStampMillis;
     private PlatformDatabaseSystem platformDatabaseSystem;
-    Database errorManagerDB;
+    private Database errorManagerDB;
+
+    public ErrorManagerRegistry(){
+    }
+
+    public ErrorManagerRegistry(String value){
+        if(value == null)
+            throw new IllegalArgumentException();
+
+    }
+
 
 
     /*
@@ -128,7 +138,7 @@ public class ErrorManagerRegistry {
             try {
                 this.errorManagerDB = databasefactory.createErrorManagerDatabase();
             } catch (CantCreateDatabaseException e1) {
-                //Implement ErrorManager exception catch
+                throw new RuntimeException();
             }
 
         }
@@ -157,7 +167,7 @@ public class ErrorManagerRegistry {
         DatabaseTableRecord errorManagerRegistryRecord = (DatabaseTableRecord) this;
         try {
             errorManagerDB.getTable(ErrorManagerDatabaseConstants.EXCEPTION_TABLE_NAME).insertRecord(errorManagerRegistryRecord);
-        } catch (CantInsertRecord cantInsertRecord) {
+        } catch (CantInsertRecordException cantInsertRecord) {
             cantInsertRecord.printStackTrace();
         }
     }

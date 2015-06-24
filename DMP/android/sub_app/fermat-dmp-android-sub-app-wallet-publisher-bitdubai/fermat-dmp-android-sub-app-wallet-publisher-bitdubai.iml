@@ -19,13 +19,12 @@
         <option name="ALLOW_USER_CONFIGURATION" value="false" />
         <option name="MANIFEST_FILE_RELATIVE_PATH" value="/src/main/AndroidManifest.xml" />
         <option name="RES_FOLDER_RELATIVE_PATH" value="/src/main/res" />
-        <option name="RES_FOLDERS_RELATIVE_PATH" value="file://$MODULE_DIR$/src/main/res" />
         <option name="ASSETS_FOLDER_RELATIVE_PATH" value="/src/main/assets" />
         <option name="LIBRARY_PROJECT" value="true" />
       </configuration>
     </facet>
   </component>
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_7" inherit-compiler-output="false">
+  <component name="NewModuleRootManager" inherit-compiler-output="false">
     <output url="file://$MODULE_DIR$/build/intermediates/classes/debug" />
     <output-test url="file://$MODULE_DIR$/build/intermediates/classes/androidTest/debug" />
     <exclude-output />
@@ -92,8 +91,8 @@
     <orderEntry type="library" exported="" name="support-v4-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="google-oauth-client-1.18.0-rc" level="project" />
     <orderEntry type="library" exported="" name="jcip-annotations-1.0" level="project" />
-    <orderEntry type="library" exported="" name="jackson-annotations-2.1.2" level="project" />
     <orderEntry type="library" exported="" name="guava-16.0.1" level="project" />
+    <orderEntry type="library" exported="" name="jackson-annotations-2.1.2" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="bcprov-jdk15on-1.52" level="project" />
     <orderEntry type="library" exported="" name="protobuf-java-2.5.0" level="project" />
@@ -121,8 +120,8 @@
     <orderEntry type="module" module-name="fermat-dmp-plugin-world-blockchain-info-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-app-runtime-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-p2p-plugin-communication-cloud-client-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-wallet-store-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-transaction-inter-wallet-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-wallet-store-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-actor-extra-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-intra-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-cry-plugin-crypto-module-actor-address-book-bitdubai" exported="" />
@@ -141,28 +140,28 @@
     <orderEntry type="module" module-name="fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-hardware-remote-device-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-bank-notes-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-transaction-incoming-device-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-world-crypto-index-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-platform-service-location-subsystem-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-platform-service-error-manager-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-money-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-pip-addon-hardware-local-device-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-pip-addon-hardware-local-device-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-money-request-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-bank-notes-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-pip-addon-platform-service-event-manager-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-module-wallet-runtime-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-pip-addon-platform-service-event-manager-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-p2p-api" exported="" />
     <orderEntry type="module" module-name="fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-niche-wallet-type-bank-notes-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-user-device-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-dmp-addon-license-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-niche-wallet-type-crypto-loss-protected-wallet-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-addon-license-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-world-location-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-identity-intra-user-bitdubai" exported="" />

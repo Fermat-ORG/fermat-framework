@@ -143,7 +143,7 @@ public class LocationServiceRegistry implements DealsWithErrors, DealsWithPlugin
         return record;
     }
 
-    public void create(Location location) throws CantInsertRecord {
+    public void create(Location location) throws CantInsertRecordException {
         DatabaseTableRecord record = parseTo(location);
         DatabaseTable table = database.getTable(LocationServiceDatabaseConstants.LOCATION_SERVICE_TABLE_NAME);
         table.insertRecord(record);
