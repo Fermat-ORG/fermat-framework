@@ -352,7 +352,7 @@ public class MyApplication extends android.support.multidex.MultiDexApplication 
     }
 
 
-    // TODO: Mover este metodo a un lugar mas apropiado: una clase llamada AndroidActivity. No debería estar en esta clase que representa la Sesión de toda la APP
+    // TODO: Mover este metodo a un lugar mas apropiado. No debería estar en esta clase que representa la Sesión de toda la APP
     // TODO: Junto con esto mover el call back que sale justo abajo de este metodo.
 
     /**
@@ -360,6 +360,7 @@ public class MyApplication extends android.support.multidex.MultiDexApplication 
      *
      * -- Luis.
      */
+
 
     public static void changeColor(int newColor, Resources context) {
 
@@ -414,6 +415,7 @@ public class MyApplication extends android.support.multidex.MultiDexApplication 
         catch (Exception e)
         {
             // TODO: Si ocurre un error intentando setear el color se debe reportar en el error manager pero no propagar la excepcion porque no es critico. Las actividades debieran tener un colorpor defecto para que si falla la asignacion quede el color por defecto.
+
             throw e;
         }
 
