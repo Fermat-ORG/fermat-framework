@@ -6,20 +6,12 @@
         android:layout_width="match_parent"
         android:layout_height="82dp"
         android:orientation="horizontal"
-
+        android:background="#fbf7ed"
         >
 
 
 
-        <ImageView
-            android:id="@+id/frame_tx_record"
-            android:layout_width="match_parent"
-            android:layout_height="106dp"
-            android:scaleType="centerCrop"
 
-            android:layout_gravity="center"
-            android:background="@drawable/object_frame_3x1_filled"
-            />
 
         <TextView
             android:id="@+id/contact_name"

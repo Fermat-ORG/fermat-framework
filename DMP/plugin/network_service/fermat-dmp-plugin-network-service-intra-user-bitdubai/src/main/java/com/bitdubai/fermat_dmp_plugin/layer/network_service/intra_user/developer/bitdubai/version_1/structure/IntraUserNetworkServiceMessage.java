@@ -6,13 +6,17 @@
  */
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure;
 
+
+
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.Message;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
+import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceMessage</code>
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer._11_network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceMessage</code>
  * is the implementation of the message<p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 09/06/15.
  *
@@ -27,72 +31,189 @@ public class IntraUserNetworkServiceMessage implements Message, Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * Represent  the textContent
+     * Represent the id of the message
+     */
+    private Long id;
+
+    /**
+     * Represent the sender of the message
+     */
+    private UUID sender;
+
+    /**
+     * Represent the receiver of the message
+     */
+    private UUID receiver;
+
+    /**
+     * Represent the textContent
      */
     private String textContent;
+
+    /**
+     * Represent the type of the message
+     */
+    private String typeMessage;
+
+    /**
+     * Represent the shipping timestamp of the message
+     */
+    private Timestamp shippingTimestamp;
+
+    /**
+     * Represent the delivery timestamp of the message
+     */
+    private Timestamp deliveryTimestamp;
 
     /**
      * Represent the status
      */
     private MessagesStatus status;
 
-    /**
-     * Represent the signature
-     */
-    private String signature;
 
     /**
      * Constructor
      */
     public IntraUserNetworkServiceMessage(){
         super();
+        this.deliveryTimestamp = null;
+        this.id           = null;
+        this.receiver     = null;
+        this.sender       = null;
+        this.shippingTimestamp = new Timestamp(System.currentTimeMillis())  ;
+        this.status       = null;
+        this.textContent  = null;
+        this.typeMessage  = null;
     }
 
     /**
-     * Constructor whit parameter
+     * Constructor whit parameters
      */
-    public IntraUserNetworkServiceMessage(String signature, MessagesStatus status, String textContent) {
-        this.signature = signature;
-        this.status = status;
-        this.textContent = textContent;
+    public IntraUserNetworkServiceMessage(Timestamp deliveryTimestamp, Long id, UUID receiver, UUID sender, Timestamp shippingTimestamp, MessagesStatus status, String textContent, String typeMessage) {
+        super();
+        this.deliveryTimestamp = deliveryTimestamp;
+        this.id           = id;
+        this.receiver     = receiver;
+        this.sender       = sender;
+        this.shippingTimestamp = shippingTimestamp;
+        this.status       = status;
+        this.textContent  = textContent;
+        this.typeMessage  = typeMessage;
     }
 
     /**
-     * Return the signature
+     * Get the deliveryTimestamp
      *
-     * @return String
+     * @return Long the delivery time
      */
-    public String getSignature() {
-        return signature;
+    public Timestamp getDeliveryTimestamp() {
+        return deliveryTimestamp;
     }
 
     /**
-     *  Set the signature
+     * Set the deliveryTimestamp
      *
-     * @param signature
+     * @param deliveryTimestamp the delivery time
      */
-    public void setSignature(String signature) {
-        this.signature = signature;
+    public void setDeliveryTimestamp(Timestamp deliveryTimestamp) {
+        this.deliveryTimestamp = deliveryTimestamp;
     }
 
     /**
-     * (non-Javadoc)
+     * Get the id
      *
-     * @see Message#getStatus()
+     * @return Long the id
+     */
+    public Long getId() {
+        return id;
+    }
+
+    /**
+     * Set the id
+     *
+     * @param id the id
+     */
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    /**
+     * Get the id of the receiver
+     *
+     * @return UUID the id of the receiver
+     */
+    public UUID getReceiver() {
+        return receiver;
+    }
+
+    /**
+     * Set the id of the receiver
+     *
+     * @param receiver the id of the receiver
+     */
+    public void setReceiver(UUID receiver) {
+        this.receiver = receiver;
+    }
+
+    /**
+     * Get the id of the sender
+     *
+     * @return the id of the sender
+     */
+    public UUID getSender() {
+        return sender;
+    }
+
+    /**
+     * Set the id of the sender
+     *
+     * @param sender the id of the sender
+     */
+    public void setSender(UUID sender) {
+        this.sender = sender;
+    }
+
+    /**
+     * Get the shipping time
+     *
+     * @return the shipping time
+     */
+    public Timestamp getShippingTimestamp() {
+        return shippingTimestamp;
+    }
+
+    /**
+     * Set the shipping time
+     *
+     * @param shippingTimestamp the shipping time
+     */
+    public void setShippingTimestamp(Timestamp shippingTimestamp) {
+        this.shippingTimestamp = shippingTimestamp;
+    }
+
+    /**
+     * Get the status
+     *
+     * @return the status
      */
     @Override
     public MessagesStatus getStatus() {
         return status;
     }
 
+    /**
+     * Set the status
+     *
+     * @param status the status
+     */
     public void setStatus(MessagesStatus status) {
         this.status = status;
     }
 
     /**
-     * (non-Javadoc)
+     * Get the textContent
      *
-     * @see Message#getTextContent()
+     * @return  the textContent
      */
     @Override
     public String getTextContent() {
@@ -100,13 +221,29 @@ public class IntraUserNetworkServiceMessage implements Message, Serializable {
     }
 
     /**
-     * (non-Javadoc)
+     * Set the textContent
      *
-     * @see Message#setTextContent(String)
+     * @param textContent the textContent
      */
     @Override
     public void setTextContent(String textContent) {
         this.textContent = textContent;
     }
 
+    /**
+     * Get the textContent
+     *
+     * @return the textContent
+     */
+    public String getTypeMessage() {
+        return typeMessage;
+    }
+
+    /**
+     * Set the type message
+     * @param typeMessage the type message
+     */
+    public void setTypeMessage(String typeMessage) {
+        this.typeMessage = typeMessage;
+    }
 }

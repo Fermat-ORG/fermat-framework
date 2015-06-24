@@ -1,6 +1,7 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetAllWalletContactsException;
@@ -52,29 +54,31 @@ public class ContactsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         cryptoWalletManager = platform.getCryptoWalletManager();
 
-       try {
-           cryptoWallet = cryptoWalletManager.getCryptoWallet();
-       } catch (CantGetCryptoWalletException e) {
+        try {
+            cryptoWallet = cryptoWalletManager.getCryptoWallet();
+        } catch (CantGetCryptoWalletException e) {
 
-           showMessage("Unexpected error get Contact list - " + e.getMessage());
-           e.printStackTrace();
-       }
+            showMessage("Unexpected error get Contact list - " + e.getMessage());
+            e.printStackTrace();
+        }
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_contacts, container, false);
+    try{
+
 
         //get contacts list
         List<WalletContactRecord> walletContactRecords = new ArrayList<>();
-       try
+        try
         {
             walletContactRecords = cryptoWallet.listWalletContacts(wallet_id);
-       }
+        }
         catch(CantGetAllWalletContactsException e)
-       {
-           showMessage("CantGetAllWalletContactsException- " + e.getMessage());
+        {
+            showMessage("CantGetAllWalletContactsException- " + e.getMessage());
             e.printStackTrace();
         }
 
@@ -109,27 +113,27 @@ public class ContactsFragment extends Fragment {
 
         // ListView Item Click Listener
        /* listView.setOnItemClickListener(new OnItemClickListener() {
-
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-
                 // ListView Clicked item index
                 int itemPosition     = position;
-
                 // ListView Clicked item value
                 String  itemValue    = (String) listView.getItemAtPosition(position);
-
                 // Show Alert
                 Toast.makeText(getApplicationContext(),
                         "Position :"+itemPosition+"  ListItem : " +itemValue , Toast.LENGTH_LONG)
                         .show();
-
             }
-
         });*/
+        }
+        catch(Exception e)
+        {
+            showMessage("CantGetAllWalletContactsException- " + e.getMessage());
+            e.printStackTrace();
+        }
         return rootView;
-           }
+    }
 
     //show alert
     private void showMessage(String text){
