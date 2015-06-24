@@ -13,7 +13,8 @@ public enum EventType {
     INTRA_USER_LOGGED_IN ("ILI"),
     INTRA_USER_LOGGED_OUT ("ILO"),
     INTRA_USER_CONTACT_CREATED ("ICC"),
-    INCOMING_NETWORK_SERVICE_CONNECTION_REQUEST ("NCR"),
+    INCOMING_NETWORK_SERVICE_CONNECTION_REQUEST ("INSCR"),
+    STABLISHED_NETWORK_SERVICE_CONNECTION ("SNSC"),
 
     WALLET_CREATED ("WC1"),
     WALLET_WENT_ONLINE ("WWO"),
@@ -87,8 +88,10 @@ public enum EventType {
                 return EventType.INTRA_USER_LOGGED_OUT;
             case "ICC":
                 return EventType.INTRA_USER_CONTACT_CREATED;
-            case "NCR":
+            case "INSCR":
                 return EventType.INCOMING_NETWORK_SERVICE_CONNECTION_REQUEST;
+            case "SNSC":
+                return EventType.STABLISHED_NETWORK_SERVICE_CONNECTION;
 
             case "WC1":
                 return EventType.WALLET_CREATED;
