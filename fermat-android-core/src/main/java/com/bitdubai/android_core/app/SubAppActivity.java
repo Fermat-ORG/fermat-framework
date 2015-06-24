@@ -327,6 +327,15 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
         }
     }
 
+
+
+    // TODO: Aca dependiendo del tipo de activity se esta inflando uno u otro menu. Esto esta lejos de ser como debe. Se supone que en el plugin WalletRuntime o AppRuntime están definidos los menues para cada actividad y es en base a eso que se debe crear los menues.
+    // TODO: Si no es posible, como aparentemente no lo es inflar un menu de manera programatica sin basarse en un layout, lo que deberiamos tener es en todo caso un conjunto de layouts que sirvan de templates
+    // TODO: Por ejemplo, un layout con un item, otro con dos items, otro con tres y asi, si el problema es definir dinamicamente la cantidad.
+    // TODO: Dicho template debiera tener ya incorporado los iconos (con un PNG invisible) que luego se pueda reemplazar desde el codigo.
+    // TODO: En definitiva, tenemos que llegar al punto de que la parametrización este en el plugin WalletRuntime y APPRuntime y solo ahi.
+
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -460,6 +469,14 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
     public void onNavigationDrawerItemSelected(int position) {
 
     }
+
+
+
+
+
+    // TODO: Aparentemente este es el manejo que se hace de lo que vendria a ser el Wallet Manager, ya que distribuye la navegacion de acuerdo al item que se clickea.
+    // TODO: Definitivamente esto no debiera estar aca siendo que es parte de una SUB APP llamada Wallet Manager.
+    // TODO: Hay que decifrar esto y diseñar la manera de resolverlo.
 
     public void onItemSelectedClicked(View v) {
 
