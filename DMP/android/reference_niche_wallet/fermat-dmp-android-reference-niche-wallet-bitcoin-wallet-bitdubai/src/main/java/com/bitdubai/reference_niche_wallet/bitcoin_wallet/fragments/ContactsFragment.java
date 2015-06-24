@@ -67,51 +67,48 @@ public class ContactsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_contacts, container, false);
-    try{
+        try {
 
 
-        //get contacts list
-        List<WalletContactRecord> walletContactRecords = new ArrayList<>();
-        try
-        {
-            walletContactRecords = cryptoWallet.listWalletContacts(wallet_id);
-        }
-        catch(CantGetAllWalletContactsException e)
-        {
-            showMessage("CantGetAllWalletContactsException- " + e.getMessage());
-            e.printStackTrace();
-        }
-
-        // Get ListView object from xml
-        ListView listView = (ListView) rootView.findViewById(R.id.transactionlist);
-
-
-        // Defined Array values to show in ListView
-        //String[] contacts = new String[]{"","Lucia Alarcon De Zamacona", "Juan Luis R. Pons", "Karina Rodríguez", "Simon Cushing","Céline Begnis","Taylor Backus","Stephanie Himonidis","Kimberly Brown" };
-
-        String[] contacts;
-        if (walletContactRecords.size() > 0) {
-            contacts = new String[walletContactRecords.size()];
-            for(int i = 0; i < walletContactRecords.size() ; i++) {
-                contacts[i] = walletContactRecords.get(i).getActorName();
+            //get contacts list
+            List<WalletContactRecord> walletContactRecords = new ArrayList<>();
+            try {
+                walletContactRecords = cryptoWallet.listWalletContacts(wallet_id);
+            } catch (CantGetAllWalletContactsException e) {
+                showMessage("CantGetAllWalletContactsException- " + e.getMessage());
+                e.printStackTrace();
             }
-        } else {
-            contacts = new String[0];
-        }
 
-        // Define a new Adapter
-        // First parameter - Context
-        // Second parameter - Layout for the row
-        // Third parameter - ID of the TextView to which the data is written
-        // Forth - the Array of data
+            // Get ListView object from xml
+            ListView listView = (ListView) rootView.findViewById(R.id.contactlist);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, contacts);
 
-        // Assign adapter to ListView
-        listView.setAdapter(adapter);
+            // Defined Array values to show in ListView
+            //String[] contacts = new String[]{"","Lucia Alarcon De Zamacona", "Juan Luis R. Pons", "Karina Rodríguez", "Simon Cushing","Céline Begnis","Taylor Backus","Stephanie Himonidis","Kimberly Brown" };
 
-        // ListView Item Click Listener
+            String[] contacts;
+            if (walletContactRecords.size() > 0) {
+                contacts = new String[walletContactRecords.size()];
+                for (int i = 0; i < walletContactRecords.size(); i++) {
+                    contacts[i] = walletContactRecords.get(i).getActorName();
+                }
+            } else {
+                contacts = new String[0];
+            }
+
+            // Define a new Adapter
+            // First parameter - Context
+            // Second parameter - Layout for the row
+            // Third parameter - ID of the TextView to which the data is written
+            // Forth - the Array of data
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),
+                    android.R.layout.simple_list_item_1, android.R.id.text1, contacts);
+
+            // Assign adapter to ListView
+            listView.setAdapter(adapter);
+
+            // ListView Item Click Listener
        /* listView.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
@@ -126,17 +123,15 @@ public class ContactsFragment extends Fragment {
                         .show();
             }
         });*/
-        }
-        catch(Exception e)
-        {
-            showMessage("CantGetAllWalletContactsException- " + e.getMessage());
+        } catch (Exception e) {
+            showMessage("Contacts Fragment onCreateView Exception - " + e.getMessage());
             e.printStackTrace();
         }
         return rootView;
     }
 
     //show alert
-    private void showMessage(String text){
+    private void showMessage(String text) {
         AlertDialog alertDialog = new AlertDialog.Builder(this.getActivity()).create();
         alertDialog.setTitle("Warning");
         alertDialog.setMessage(text);

@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -55,8 +56,7 @@ public class SendFragment extends Fragment implements View.OnClickListener {
 
         try {
             cryptoWallet = cryptoWalletManager.getCryptoWallet();
-        }
-        catch (CantGetCryptoWalletException e) {
+        } catch (CantGetCryptoWalletException e) {
             showMessage("CantGetCryptoWalletException- " + e.getMessage());
             e.printStackTrace();
         }
@@ -68,9 +68,6 @@ public class SendFragment extends Fragment implements View.OnClickListener {
         rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_send, container, false);
 
         try {
-
-
-
             TextView tv;
             EditText contact_name = (EditText) rootView.findViewById(R.id.contact_name);
             EditText editAddress = (EditText) rootView.findViewById(R.id.address);
@@ -93,9 +90,9 @@ public class SendFragment extends Fragment implements View.OnClickListener {
                                     event.getAction() == KeyEvent.ACTION_DOWN &&
                                             event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
 
-                                    // the user is done typing.
-                                    linear_address.setVisibility(View.VISIBLE);
-                                    return true; // consume.
+                                // the user is done typing.
+                                linear_address.setVisibility(View.VISIBLE);
+                                return true; // consume.
 
                             }
                             return false; // pass on to other listeners.
@@ -110,9 +107,9 @@ public class SendFragment extends Fragment implements View.OnClickListener {
                                     actionId == EditorInfo.IME_ACTION_DONE ||
                                     event.getAction() == KeyEvent.ACTION_DOWN &&
                                             event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                                    // the user is done typing.
-                                    linear_amount.setVisibility(View.VISIBLE);
-                                    return true; // consume.
+                                // the user is done typing.
+                                linear_amount.setVisibility(View.VISIBLE);
+                                return true; // consume.
 
                             }
                             return false; // pass on to other listeners.
@@ -130,10 +127,10 @@ public class SendFragment extends Fragment implements View.OnClickListener {
                                     event.getAction() == KeyEvent.ACTION_DOWN &&
                                             event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
 
-                                    // the user is done typing.
-                                    linear_notes.setVisibility(View.VISIBLE);
-                                    linear_send.setVisibility(View.VISIBLE);
-                                    return true; // consume.
+                                // the user is done typing.
+                                linear_notes.setVisibility(View.VISIBLE);
+                                linear_send.setVisibility(View.VISIBLE);
+                                return true; // consume.
 
                             }
                             return false; // pass on to other listeners.
@@ -153,8 +150,7 @@ public class SendFragment extends Fragment implements View.OnClickListener {
             });
 
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             showMessage(" CreateView Exception- " + e.getMessage());
             e.printStackTrace();
         }
@@ -164,14 +160,12 @@ public class SendFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if(requestCode == 0){
-            if(intent != null){
+        if (requestCode == 0) {
+            if (intent != null) {
                 // Handle successful scan
                 String contents = intent.getStringExtra("SCAN_RESULT");
                 String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
@@ -188,8 +182,8 @@ public class SendFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        try{
-           EditText contact_name = (EditText) rootView.findViewById(R.id.contact_name);
+        try {
+            EditText contact_name = (EditText) rootView.findViewById(R.id.contact_name);
             EditText amount = (EditText) rootView.findViewById(R.id.amount);
             EditText address = (EditText) rootView.findViewById(R.id.address);
             CryptoAddress cryptoAddress = new CryptoAddress();
@@ -199,27 +193,26 @@ public class SendFragment extends Fragment implements View.OnClickListener {
                 cryptoAddress.setAddress(address.getText().toString());
                 cryptoAddress.setCryptoCurrency(CryptoCurrency.BITCOIN);
 
-            //TODO no se esta guardando en este metodo el memo que cargo y el nombre del contacto.
+                //TODO no se esta guardando en este metodo el memo que cargo y el nombre del contacto.
                 cryptoWallet.send(Long.parseLong(amount.getText().toString()), cryptoAddress, wallet_id);
 
                 showMessage("Send OK");
 
             } catch (CantSendCryptoException e) {
                 e.printStackTrace();
-                showMessage("Error send Bitcoin- " + e.getMessage());
+                showMessage("Error sending satoshis - " + e.getMessage());
             }
 
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
-            showMessage("Error send Bitcoin- " + e.getMessage());
+            showMessage("Error send satoshis - " + e.getMessage());
         }
 
     }
 
 
     //show alert
-    private void showMessage(String text){
+    private void showMessage(String text) {
         AlertDialog alertDialog = new AlertDialog.Builder(this.getActivity()).create();
         alertDialog.setTitle("Warning");
         alertDialog.setMessage(text);

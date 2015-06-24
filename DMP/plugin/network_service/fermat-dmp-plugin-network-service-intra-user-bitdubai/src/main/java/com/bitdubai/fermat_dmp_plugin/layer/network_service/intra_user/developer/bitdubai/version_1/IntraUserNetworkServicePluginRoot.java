@@ -19,8 +19,11 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventMan
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventType;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.IntraUserIncomingNetworkServiceConnectionRequestHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceManager;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationLayerManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithCommunicationLayerManager;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.NetworkServiceNotRegisteredException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.NetworkServiceNotSupportedException;
 
 
 import java.util.ArrayList;
@@ -123,7 +126,11 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
             /*
              * Register this network service whit the communicationLayerManager
              */
-            communicationLayerManager.registerNetworkService(NetworkServices.INTRA_USER);
+            try {
+                communicationLayerManager.registerNetworkService(NetworkServices.INTRA_USER);
+            } catch (CommunicationException e) {
+
+            }
 
             /*
              * Its all ok, set the new status
@@ -180,7 +187,11 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
          /*
          * Unregister whit the communicationLayerManager
          */
-        communicationLayerManager.unregisterNetworkService(NetworkServices.INTRA_USER);
+        try {
+            communicationLayerManager.unregisterNetworkService(NetworkServices.INTRA_USER);
+        } catch (CommunicationException e) {
+
+        }
 
         /*
          * Set the new status

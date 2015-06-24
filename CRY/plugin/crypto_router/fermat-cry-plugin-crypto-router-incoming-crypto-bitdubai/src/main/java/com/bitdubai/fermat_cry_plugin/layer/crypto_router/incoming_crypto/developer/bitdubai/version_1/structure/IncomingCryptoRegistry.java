@@ -277,7 +277,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
                 fillRegistryTableRecord(transactionRecord, transaction, TransactionStatus.ACKNOWLEDGED, ProtocolStatus.TO_BE_NOTIFIED, Specialist.UNKNOWN_SPECIALIST);
                 try {
                     registryTable.insertRecord(transactionRecord);
-                } catch (CantInsertRecord cantInsertRecord) {
+                } catch (CantInsertRecordException cantInsertRecord) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantInsertRecord);
                     // TODO: MANAGE EXCEPTION.
                 }

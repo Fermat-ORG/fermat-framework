@@ -4,9 +4,11 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
@@ -16,6 +18,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.Communicat
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CantConnectToRemoteServiceException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication. CommunicationChannel;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.OnlineChannel;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.ServiceToServiceOnlineConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.enums.RejectConnectionRequestReasons;
@@ -241,8 +244,9 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
     		cloudClient.start();
     		cloudClient.requestConnectionToServer();
     		this.serviceStatus = ServiceStatus.STARTED;
-    	} catch(Exception ex){
-    		stop();
+    	} catch(CommunicationException ex){
+			this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CLOUD_CHANNEL, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, ex);
+			stop();
     	}
     }
 
@@ -269,7 +273,7 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
         try {
 			this.cloudClient.stop();
 		} catch (CloudConnectionException e) {
-			return;
+				return;
 		}
     }
 
