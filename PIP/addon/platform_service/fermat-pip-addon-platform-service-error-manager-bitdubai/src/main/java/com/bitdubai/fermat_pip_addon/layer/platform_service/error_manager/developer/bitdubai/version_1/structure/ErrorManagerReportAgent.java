@@ -193,6 +193,7 @@ public class ErrorManagerReportAgent implements ErrorAgent, DealsWithPlatformDat
 
         private void loadNotSentErrorRegistries(){
             //Load the ErrorManagerRegistry list of objects not sent
+
             listErrorManagerRegistryToSend = errorManagerRegistry.getListOfErrorRegistryNotSent();
         }
 
@@ -202,9 +203,9 @@ public class ErrorManagerReportAgent implements ErrorAgent, DealsWithPlatformDat
             */
             String url = "http://www.fermatwallet.com/devExceptionReport?";
             String parameters = "COMPONENT_TYPE="+emr.getComponentType()+"&";
-            parameters = parameters.concat("COMPONENT_NAME="+emr.getComponentName()+"&");
-            parameters = parameters.concat("SEVERITY="+emr.getSeverity()+"&");
-            parameters = parameters.concat("MESSAGE="+emr.getExceptionMessage()+"&");
+            parameters = parameters.concat("COMPONENT_NAME="+emr.getComponentName()+" & ");
+            parameters = parameters.concat("SEVERITY="+emr.getSeverity()+" & ");
+            parameters = parameters.concat("MESSAGE="+emr.getExceptionMessage()+" &         ");
             parameters = parameters.concat("TIMESTAMP="+String.valueOf(emr.getTimeStampMillis()));
             /**
              * Sends the exception to the server using an URL

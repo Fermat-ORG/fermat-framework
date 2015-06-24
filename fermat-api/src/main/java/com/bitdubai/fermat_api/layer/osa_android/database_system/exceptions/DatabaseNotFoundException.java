@@ -9,4 +9,12 @@ public class DatabaseNotFoundException extends Exception {
 	 * 
 	 */
 	private static final long serialVersionUID = 5578619047961290769L;
+
+	public DatabaseNotFoundException(){
+		super();
+	}
+
+	public DatabaseNotFoundException(String msh){
+		super(msh);
+	}
 }
