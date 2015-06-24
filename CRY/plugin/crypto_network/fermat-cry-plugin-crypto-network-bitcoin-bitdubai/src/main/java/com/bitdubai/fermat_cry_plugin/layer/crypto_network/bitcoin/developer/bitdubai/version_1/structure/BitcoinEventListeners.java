@@ -67,7 +67,7 @@ class BitcoinEventListeners implements BlockChainListener, PeerEventListener{
      */
     @Override
     public void receiveFromBlock(Transaction tx, StoredBlock block, AbstractBlockChain.NewBlockType blockType, int relativityOffset) throws VerificationException {
-        System.out.println("Receive from block. Transaction: " + tx.toString());
+        System.out.println("BitcoinCryptoNetwork information message: Receive from block. Transaction: " + tx.toString());
         System.out.println("block: " + block.toString());
 
     }
@@ -105,7 +105,7 @@ class BitcoinEventListeners implements BlockChainListener, PeerEventListener{
      */
     @Override
     public void onChainDownloadStarted(Peer peer, int blocksLeft) {
-        System.out.println("Blockchain Download started. Blocks left: " + blocksLeft);
+        System.out.println("BitcoinCryptoNetwork information message: Blockchain Download started. Blocks left: " + blocksLeft);
     }
 
     /**
@@ -115,7 +115,7 @@ class BitcoinEventListeners implements BlockChainListener, PeerEventListener{
      */
     @Override
     public void onPeerConnected(Peer peer, int peerCount) {
-        System.out.println("Peer connected (total: " + peerCount + "). Peer info: " + peer.toString());
+        System.out.println("BitcoinCryptoNetwork information message: Peer connected (total: " + peerCount + "). Peer info: " + peer.toString());
     }
 
     /**
@@ -125,7 +125,7 @@ class BitcoinEventListeners implements BlockChainListener, PeerEventListener{
      */
     @Override
     public void onPeerDisconnected(Peer peer, int peerCount) {
-        System.out.println("Peer disconnected. Total Peers are " + peerCount);
+        System.out.println("BitcoinCryptoNetwork information message: Peer disconnected. Total Peers are " + peerCount);
     }
 
     /**

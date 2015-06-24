@@ -29,9 +29,11 @@ import com.bitdubai.fermat_api.layer.pip_user.device_user.DealsWithDeviceUsers;
 import com.bitdubai.fermat_api.layer.pip_user.device_user.DeviceUserManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.DealsWithBitcoinCryptoNetwork;
+import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantConnectToBitcoinNetwork;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantCreateCryptoWalletException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVault;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.VaultNotConnectedToNetworkException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.event_handlers.BitcoinCoinsReceivedEventHandler;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.BitcoinCryptoVault;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseFactory;
@@ -179,7 +181,6 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DealsWi
         //userId = deviceUserManager.getLoggedInUser().getId();
         userId = UUID.fromString("4c4322c7-8c73-4633-956d-96991f413e93"); //todo fix deviceUser Implementation
         //userId = UUID.randomUUID();
-        System.out.println(userId);
 
 
         /**
@@ -190,6 +191,24 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DealsWi
             database = pluginDatabaseSystem.openDatabase(pluginId, userId.toString());
 
         } catch (CantOpenDatabaseException e) {
+            /**
+             * The database could not be opened, let try to create it instead.
+             */
+            try {
+                CryptoVaultDatabaseFactory cryptoVaultDatabaseFactory = new CryptoVaultDatabaseFactory();
+                cryptoVaultDatabaseFactory.setPluginDatabaseSystem(pluginDatabaseSystem);
+                cryptoVaultDatabaseFactory.setErrorManager(errorManager);
+
+                database = cryptoVaultDatabaseFactory.createDatabase(pluginId, userId.toString());
+            } catch (CantCreateDatabaseException e1) {
+                /**
+                 * something went wrong creating the db, I can't handle this.
+                 */
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+                throw new CantStartPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT);
+            }
+
+        } catch (DatabaseNotFoundException e) {
             /**
              * The database doesn't exists, lets create it.
              */
@@ -206,9 +225,6 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DealsWi
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                 throw new CantStartPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT);
             }
-
-        } catch (DatabaseNotFoundException e) {
-            e.printStackTrace(); //todo arreglar!! solo para pruebas.
         }
 
             /**
@@ -224,7 +240,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DealsWi
                 vault.setPluginId(pluginId);
 
                 vault.loadOrCreateVault();
-                System.out.println("Valid receive address for the vault is: " + vault.getAddress().getAddress());
+                System.out.println("CryptoVault - Valid receive address for the vault is: " + vault.getAddress().getAddress());
 
                 /**
                  * Once the vault is loaded or created, I will connect it to Bitcoin network to recieve pending transactions
@@ -232,9 +248,9 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DealsWi
 
                 try {
                     vault.connectVault();
+                } catch (CantConnectToBitcoinNetwork cantConnectToBitcoinNetwork) {
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantConnectToBitcoinNetwork);
 
-                } catch (CantStartAgentException cantStartAgentException) { //todo this exception is not correct.
-                    cantStartAgentException.printStackTrace();
                 }
 
 
@@ -314,12 +330,12 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DealsWi
      * CryptoVaultManager interface implementation
      */
     @Override
-    public void connectToBitcoin() {
+    public void connectToBitcoin() throws VaultNotConnectedToNetworkException {
         try {
             vault.connectVault();
-        } catch (CantStartAgentException e) {
-            //todo handle this
-            e.printStackTrace();
+        } catch (CantConnectToBitcoinNetwork cantConnectToBitcoinNetwork) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantConnectToBitcoinNetwork);
+            throw new VaultNotConnectedToNetworkException();
         }
     }
 

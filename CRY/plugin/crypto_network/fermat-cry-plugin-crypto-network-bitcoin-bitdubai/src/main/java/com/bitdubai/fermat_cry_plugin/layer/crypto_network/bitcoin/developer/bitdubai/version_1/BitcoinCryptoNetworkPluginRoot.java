@@ -3,13 +3,16 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bi
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantConnectToBitcoinNetwork;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVault;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure.BitcoinCryptoNetworkMonitoringAgent;
 import org.bitcoinj.core.Wallet;
@@ -128,7 +131,7 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManag
     }
 
     @Override
-    public void connectToBitcoinNetwork() {
+    public void connectToBitcoinNetwork() throws CantConnectToBitcoinNetwork {
         bitcoinCryptoNetworkMonitoringAgent = new BitcoinCryptoNetworkMonitoringAgent((Wallet) cryptoVault.getWallet(), cryptoVault.getUserId());
         bitcoinCryptoNetworkMonitoringAgent.setPluginFileSystem(pluginFileSystem);
         bitcoinCryptoNetworkMonitoringAgent.setErrorManager(errorManager);
@@ -137,8 +140,8 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManag
         try {
             bitcoinCryptoNetworkMonitoringAgent.start();
         } catch (CantStartAgentException e) {
-            //todo handle this
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantConnectToBitcoinNetwork();
         }
     }
 
