@@ -135,17 +135,20 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
         bitcoinWallet.setPluginDatabaseSystem(this.pluginDatabaseSystem);
 
 
-        try {
-            bitcoinWallet.initialize(walletId);
-        }catch(CantInitializeBitcoinWalletBasicException CantInitializeBitcoinWallet)
-        {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, CantInitializeBitcoinWallet);
-            throw new CantLoadWalletException();
-        }
+      //  try {
+       //     bitcoinWallet.initialize(walletId);
+       // }catch(CantInitializeBitcoinWalletBasicException CantInitializeBitcoinWallet)
+      //  {
+       //     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, CantInitializeBitcoinWallet);
+       //     throw new CantLoadWalletException();
+       // }
 
 
 
         return this.bitcoinWallet;
+
+
+
     }
 
     @Override
