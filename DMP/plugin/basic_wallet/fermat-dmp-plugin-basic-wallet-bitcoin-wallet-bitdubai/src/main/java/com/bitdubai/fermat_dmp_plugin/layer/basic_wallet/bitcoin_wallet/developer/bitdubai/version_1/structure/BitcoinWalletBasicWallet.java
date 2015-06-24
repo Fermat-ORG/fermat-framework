@@ -52,6 +52,7 @@ public class BitcoinWalletBasicWallet implements BitcoinWallet ,DealsWithErrors,
 
     private Map<UUID, UUID> walletIds =  new HashMap();
 
+    BitcoinWalletBasicWalletDao bitcoinWalletBasicWalletDao;
     /**
      * DealsWithErrors Interface member variables.
      */
@@ -153,7 +154,7 @@ public class BitcoinWalletBasicWallet implements BitcoinWallet ,DealsWithErrors,
 
         PluginTextFile walletIdsFile = null;
 
-        try{
+         try{
             walletIdsFile = pluginFileSystem.createTextFile(pluginId, "", WALLET_IDS_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
         }
         catch (CantCreateFileException cantCreateFileException ) {
@@ -200,20 +201,23 @@ public class BitcoinWalletBasicWallet implements BitcoinWallet ,DealsWithErrors,
 
     @Override
     public UUID getWalletId() {
+
+       // return this.internalWalletId;
         return UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
-        //crear una id propia
-        //cuando creo la wallet me llega el id de la wallet
+
     }
 
     @Override
     public long getBalance() throws CantCalculateBalanceException {
         //suma los debitos y los creditos los resta
 
+        bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(errorManager,pluginDatabaseSystem);
+
+      // return bitcoinWalletBasicWalletDao.getBalance();
 
         return balance;
     }
-    //si ya llame al metodo con ese id ignoro
-    //sino guardo la transaccion de debito o credito en la tabla
+
 
 
     /*
@@ -224,12 +228,21 @@ public class BitcoinWalletBasicWallet implements BitcoinWallet ,DealsWithErrors,
      */
     @Override
     public void debit(BitcoinTransaction cryptoTransaction) throws CantRegisterDebitDebitException {
+
+        bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(errorManager,pluginDatabaseSystem);
+
+        bitcoinWalletBasicWalletDao.addDebit(cryptoTransaction);
         this.balance -= cryptoTransaction.getAmount();
 
     }
 
     @Override
     public void credit(BitcoinTransaction cryptoTransaction) throws CantRegisterCreditException {
+
+        bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(errorManager,pluginDatabaseSystem);
+
+        bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction);
+
         this.balance += cryptoTransaction.getAmount();
     }
 
