@@ -85,10 +85,8 @@ public class ReceiveFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         //setHasOptionsMenu(false);
         super.onCreate(savedInstanceState);
-        try
-        {
+        try {
             cryptoWalletManager = platform.getCryptoWalletManager();
-
             try {
                 cryptoWallet = cryptoWalletManager.getCryptoWallet();
             } catch (CantGetCryptoWalletException e) {
@@ -98,82 +96,103 @@ public class ReceiveFragment extends Fragment {
             showMessage("Unexpected error init Crypto Manager - " + ex.getMessage());
             ex.printStackTrace();
         }
-
-
-
     }
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_receive, container, false);
-        TextView tv;
 
-        Button btn = (Button) rootView.findViewById(R.id.btn);
-        registerForContextMenu(btn);
+        final EditText contact_name = (EditText) rootView.findViewById(R.id.contact_name);
+        contact_name.addTextChangedListener(new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+                resetForm();
+            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        });
 
+        // request_address button definition
+        final Button requestAdressBtn = (Button) rootView.findViewById(R.id.request_btn);
+        requestAdressBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                requestAddress();
+            }
+        });
+
+        // share_address button definition
+        final Button shareAddressBtn = (Button) rootView.findViewById(R.id.share_btn);
+        shareAddressBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                shareAddress();
+            }
+        });
+
+        // share_address button definition
+        final TextView stringAddressTextView = (TextView) rootView.findViewById(R.id.string_address);
+        stringAddressTextView.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                copyToClipboard();
+            }
+        });
         return rootView;
     }
 
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-
-        menu.setHeaderTitle("Share Address");
-        menu.add(0, 1, 0, "Show QR code");
-        menu.add(0, 2, 0, "Copy to Clipboard");
-        menu.add(0, 3, 0, "Send throw WhatsApp");
-        menu.add(0, 4, 0, "Send throw message");
+    public void resetForm() {
+        ImageView imageQR = (ImageView) rootView.findViewById(R.id.qr_code);
+        imageQR.setVisibility(View.GONE);
+        TextView string_address = (TextView) rootView.findViewById(R.id.string_address);
+        string_address.setVisibility(View.GONE);
+        Button share_btn = (Button) rootView.findViewById(R.id.share_btn);
+        share_btn.setVisibility(View.GONE);
     }
 
-    public boolean onContextItemSelected(MenuItem item) {
-
+    public void requestAddress() {
         final EditText nameText = (EditText)rootView.findViewById(R.id.contact_name);
 
         if (nameText != null && nameText.getText().toString() != null && !nameText.getText().toString().equals("")) {
-            System.out.println("************nametext: '"+nameText.getText().toString()+"'");
             getWalletAddress(nameText.getText().toString());
-
-            if (item.getItemId() == 1) {
-                showQRCode();
-            } else if (item.getItemId() == 2) {
-                copytoClipboard(rootView);
-            } else if (item.getItemId() == 3) {
-                sendWhatsappMessage(rootView);
-            } else if (item.getItemId() == 4) {
-                sendMessage(rootView);
-            } else {
-                return false;
-            }
+            showQRCodeAndAddress();
         } else {
             Toast.makeText(getActivity().getApplicationContext(), "Enter a name to share your address", Toast.LENGTH_SHORT).show();
         }
-        return true;
     }
 
+    public void shareAddress(){
+        Intent intent2 = new Intent(); intent2.setAction(Intent.ACTION_SEND);
+        intent2.setType("text/plain");
+        intent2.putExtra(Intent.EXTRA_TEXT, user_address_wallet );
+        startActivity(Intent.createChooser(intent2, "Share via"));
+    }
 
+    private void showQRCodeAndAddress() {
+        try {
+            // get qr image
+            Bitmap bitmapQR = generateBitmap(user_address_wallet, width, height, MARGIN_AUTOMATIC, colorQR, colorBackQR);
+            // set qr image
+            ImageView imageQR = (ImageView) rootView.findViewById(R.id.qr_code);
+            imageQR.setImageBitmap(bitmapQR);
+            // show qr image
+            imageQR.setVisibility(View.VISIBLE);
+
+            // set string_address
+            TextView string_address = (TextView) rootView.findViewById(R.id.string_address);
+            string_address.setText(user_address_wallet);
+            // show string_address
+            string_address.setVisibility(View.VISIBLE);
+
+            // show share_btn
+            Button share_btn = (Button) rootView.findViewById(R.id.share_btn);
+            share_btn.setVisibility(View.VISIBLE);
+
+            //TODO SHOW BUTTON SHARE AND ADDRESS IN SCREEN
+        } catch (WriterException writerException) {
+
+        }
+    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
-    }
-
-    /* show qr wallet code
-
-     */
-    private void showQRCode() {
-        try {
-            Bitmap bitmapQR = generateBitmap(user_address_wallet, width, height, MARGIN_AUTOMATIC, colorQR, colorBackQR);
-
-            ImageView imageQR = (ImageView) rootView.findViewById(R.id.qr_code);
-
-            imageQR.setImageBitmap(bitmapQR);
-            imageQR.setVisibility(View.VISIBLE);
-        } catch (WriterException writerException) {
-
-        }
     }
 
     private void getWalletAddress(String contact_name) {
@@ -185,48 +204,12 @@ public class ReceiveFragment extends Fragment {
             e.printStackTrace();
         }
     }
-    /*
-       Send to whatsapp
-        */
-    public void sendWhatsappMessage(View v) {
-
-        String whatsAppMessage = "This is my wallet address  "; //message.getText().toString();
-        //I save QR code image on memory, then i send it
-        //Uri.parse("file://" + imagePath), "image/*"
-        // ImageView imageQR = (ImageView)tv.findViewById(R.id.qr_code);
-        //You can read the image from external drove too
-        Uri uri = Uri.parse("android.resource://com.code2care.example.whatsappintegrationexample/drawable/mona");
-
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_SEND);
-        intent.putExtra(Intent.EXTRA_TEXT, whatsAppMessage);
-        intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_STREAM,uri);
-        intent.setType("image/jpeg");
-
-        // Do not forget to add this to open whatsApp App specifically
-        intent.setPackage("com.whatsapp");
-        startActivity(intent);
-
-    }
-
-    /*
-   Send to SMS message
-    */
-    public void sendMessage(View v) {
-
-        Intent sendIntent = new Intent(Intent.ACTION_VIEW);
-        sendIntent.putExtra("sms_body", "This is my wallet address " + user_address_wallet);
-        sendIntent.setType("vnd.android-dir/mms-sms");
-        startActivity(sendIntent);
-
-    }
 
     /**
      * copy wallet address to clipboard
      */
 
-    public void copytoClipboard(View v) {
+    public void copyToClipboard() {
 
         ClipboardManager myClipboard = (ClipboardManager)getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData myClip = ClipData.newPlainText("text", this.user_address_wallet);
@@ -234,8 +217,6 @@ public class ReceiveFragment extends Fragment {
         Toast.makeText(getActivity().getApplicationContext(), "Text Copied",
                 Toast.LENGTH_SHORT).show();
     }
-
-
 
     /**
      * Allow the zxing engine use the default argument for the margin variable
