@@ -134,7 +134,6 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         try {
             try {
                 setContentView(R.layout.runtime_app_activity_runtime);
@@ -155,44 +154,6 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             platform = MyApplication.getPlatform();
 
 
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-
-
-            //set Os Addons in platform
-            this.fileSystemOs = new AndroidOsFileSystem();
-            this.fileSystemOs.setContext(this);
-            platform.setFileSystemOs(fileSystemOs);
-
-
-            this.databaseSystemOs = new AndroidOsDataBaseSystem();
-            this.databaseSystemOs.setContext(this);
-            platform.setDataBaseSystemOs(databaseSystemOs);
-
-            this.locationSystemOs = new AndroidOsLocationSystem();
-            this.locationSystemOs.setContext(this);
-            platform.setLocationSystemOs(locationSystemOs);
-
-            Bundle bundle = getIntent().getExtras();
-
-            try
-            {
-                if(bundle != null){
-                    if(bundle.getString("executeStart").toString() == "0")
-                        platform.start();
-                }else
-                {
-                    platform.start();
-                }
-            }
-            catch (CantStartPlatformException | CantReportCriticalStartingProblem e) {
-                System.err.println("CantStartPlatformException: " + e.getMessage());
-
-                Toast.makeText(getApplicationContext(), "Error Started Platform, null point",
-                        Toast.LENGTH_LONG).show();
-            }
-
-
             //get platform object
             this.platformContext = platform.getCorePlatformContext();
 
@@ -200,23 +161,19 @@ public class RuntimeAppActivity extends FragmentActivity implements NavigationDr
             this.appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
             this.walletRuntimeMiddleware =  (WalletRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_WALLET_RUNTIME_MODULE);
 
-            //save object on global class
-            MyApplication.setAppRuntime(appRuntimeMiddleware);
-            MyApplication.setWalletRuntime(walletRuntimeMiddleware);
-
             this.errorManager = (ErrorManager) platformContext.getAddon(Addons.ERROR_MANAGER);
-            MyApplication.setErrorManager(this.errorManager);
 
             /** Download wallet images **/
 
-/*
+            /*
            try{
                 WalletResourcesManager  walletResourceManger = (WalletResourcesManager)platformContext.getPlugin(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE);
                 walletResourceManger.setwalletType(Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI);
                 walletResourceManger.checkResources();
             }
             catch (CantCheckResourcesException e) {
-                e.printStackTrace();}*/
+                e.printStackTrace();}
+            */
 
 
 
