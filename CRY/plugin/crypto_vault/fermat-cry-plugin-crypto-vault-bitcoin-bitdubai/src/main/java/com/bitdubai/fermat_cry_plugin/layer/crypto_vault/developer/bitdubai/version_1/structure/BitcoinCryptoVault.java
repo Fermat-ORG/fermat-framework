@@ -34,6 +34,7 @@ import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.DealsWithBitcoin
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantConnectToBitcoinNetwork;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantCreateCryptoWalletException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVault;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantCalculateTransactionConfidenceException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantExecuteQueryException;
 import com.google.common.util.concurrent.ListenableFuture;
 
@@ -336,6 +337,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
          * if the transaction was requested before but resend my mistake, Im not going to send it again
          */
         CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
+        db.setVault(vault);
 
         try {
             if (!db.isNewFermatTransaction(FermatTxId))
@@ -421,6 +423,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
          */
         try{
             CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
+            db.setVault(vault);
             db.updateTransactionProtocolStatus(transactionID, ProtocolStatus.RECEPTION_NOTIFIED);
         } catch (Exception e){
             throw new CantConfirmTransactionException();
@@ -435,6 +438,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         try{
             List<com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction> txs = new ArrayList<com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction>();
             CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
+            db.setVault(vault);
             /**
              * Im getting the transaction headers which is a map with transactionID and Transaction Hash. I will use this information to access the vault.
              */
@@ -449,8 +453,20 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
                 CryptoAddress addressFrom = new CryptoAddress(getAddressFromVault(txHash), CryptoCurrency.BITCOIN);
                 CryptoAddress addressTo = new CryptoAddress(getAddressToFromVaul(txHash), CryptoCurrency.BITCOIN);
                 long amount = getAmountFromVault(txHash);
-                //todo needs to complete the way to get the transaction status from the database.
-                CryptoTransaction cryptoTransaction = new CryptoTransaction(txHash, addressFrom, addressTo,CryptoCurrency.BITCOIN, amount, CryptoStatus.CONFIRMED);
+
+
+                /**
+                 * Will calculate the correct Confidence of the transaction
+                 */
+                TransactionConfidenceCalculator transactionConfidenceCalculator = new TransactionConfidenceCalculator(txId, database, vault);
+                CryptoStatus cryptoStatus;
+                try{
+                    cryptoStatus = transactionConfidenceCalculator.getCryptoStatus();
+                } catch (CantCalculateTransactionConfidenceException cantCalculateTransactionConfidenceException){
+                    cryptoStatus = CryptoStatus.IDENTIFIED;
+                }
+
+                CryptoTransaction cryptoTransaction = new CryptoTransaction(txHash, addressFrom, addressTo,CryptoCurrency.BITCOIN, amount, cryptoStatus);
 
                 com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction tx = new com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction(UUID.fromString(txId),cryptoTransaction, Action.APPLY, getTransactionTimestampFromVault(txHash));
                 txs.add(tx);
@@ -459,7 +475,6 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
                  * I update the status of the transaction protocol to SENDING_NOTIFIED
                  */
                 db.updateTransactionProtocolStatus(UUID.fromString(txId), ProtocolStatus.SENDING_NOTIFIED);
-
             }
 
 
@@ -496,8 +511,8 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
     private String getAddressToFromVaul(String txHash) {
         Sha256Hash hash = new Sha256Hash(txHash);
         Transaction tx = vault.getTransaction(hash);
-        // todo this needs to be fixed
-        String addressTo = tx.getInput(0).getFromAddress().toString();
+
+        String addressTo = tx.getInput(0).getScriptSig().getToAddress(networkParameters).toString();
         return addressTo;
     }
 
@@ -509,9 +524,9 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
     private String getAddressFromVault(String txHash) {
         Sha256Hash hash = new Sha256Hash(txHash);
         Transaction tx = vault.getTransaction(hash);
-        // todo this needs to be fixed
-        String addressTo = tx.getInput(0).getFromAddress().toString();
-        return addressTo;
+
+        String addressFrom = tx.getOutput(0).getAddressFromP2PKHScript(networkParameters).toString();
+        return addressFrom;
     }
 
     private long getTransactionTimestampFromVault(String txHash){
