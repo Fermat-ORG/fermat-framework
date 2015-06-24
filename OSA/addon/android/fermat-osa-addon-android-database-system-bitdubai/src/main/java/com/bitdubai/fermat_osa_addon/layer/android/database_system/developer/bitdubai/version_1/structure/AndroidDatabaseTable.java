@@ -15,7 +15,12 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableCo
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilterGroup;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+<<<<<<< HEAD
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecord;
+=======
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
+>>>>>>> bitDubai/master
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecord;
 
@@ -221,10 +226,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
              List<DatabaseRecord> records =  record.getValues();
 
 
-            ContentValues initialValues = new ContentValues();
-
             for (int i = 0; i < records.size(); ++i) {
-                initialValues.put(records.get(i).getName(),records.get(i).getValue());
 
                 if(strRecords.length() > 0 )
                     strRecords.append (",");
@@ -236,7 +238,6 @@ public class AndroidDatabaseTable implements  DatabaseTable {
                 strValues.append ("'" + records.get(i).getValue() + "'");
             }
 
-           // this.database.insert(tableName, null, initialValues);
 
             this.database.execSQL("INSERT INTO " + tableName + "(" + strRecords + ")" + " VALUES (" +  strValues + ")");
         }
@@ -245,6 +246,43 @@ public class AndroidDatabaseTable implements  DatabaseTable {
           }
 
 
+    }
+
+    @Override
+    public void deleteRecord(DatabaseTableRecord record) throws CantDeleteRecord {
+        try{
+
+
+                List<DatabaseRecord> records =  record.getValues();
+
+                String queryWhereClause="";
+
+                if(!records.isEmpty()) {
+                    for (int i = 0; i < records.size(); ++i) {
+
+                        if (queryWhereClause.length() > 0) {
+                            queryWhereClause += " and ";
+                            queryWhereClause += records.get(i).getName();
+                        } else
+                            queryWhereClause += records.get(i).getName();
+
+                        queryWhereClause += "=";
+                        queryWhereClause += records.get(i).getValue();
+                    }
+                }else{
+                    queryWhereClause=null;
+                }
+
+
+                if(queryWhereClause!=null){
+                    this.database.execSQL("DELETE FROM " + tableName + " WHERE " + queryWhereClause);
+                }else{
+                    this.database.execSQL("DELETE FROM " + tableName);
+                }
+
+        }catch (Exception exception) {
+            throw new CantDeleteRecord();
+        }
     }
 
     /**

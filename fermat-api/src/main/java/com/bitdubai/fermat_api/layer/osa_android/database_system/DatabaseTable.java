@@ -4,7 +4,12 @@ import java.util.List;
 import java.util.UUID;
 
 
+<<<<<<< HEAD
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecord;
+=======
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
+>>>>>>> bitDubai/master
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecord;
 
@@ -38,6 +43,8 @@ public interface DatabaseTable {
     public void updateRecord (DatabaseTableRecord record) throws CantUpdateRecord;
 
     public void insertRecord (DatabaseTableRecord record) throws CantInsertRecordException;
+
+    public void deleteRecord (DatabaseTableRecord record) throws CantDeleteRecord;
 
     public void loadToMemory() throws CantLoadTableToMemory;
 
