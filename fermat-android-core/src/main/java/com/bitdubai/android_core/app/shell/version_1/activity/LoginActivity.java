@@ -17,7 +17,7 @@ public class LoginActivity extends Activity {
 
 /*
  try {
-        Platform platform = MyApplication.getPlatform();
+        Platform platform = MyApplication.getFermatPlatform();
          Context mContext = this.getApplicationContext();
 
          AndroidOsAddonRoot Os = new AndroidOsAddonRoot();
@@ -37,12 +37,12 @@ public class LoginActivity extends Activity {
          * Get access to the com.bitdubai.platform.
          */
         //MyApplication MyApp = (MyApplication) getApplication();
-       // Platform com.bitdubai.platform = MyApp.getPlatform();
+       // Platform com.bitdubai.platform = MyApp.getFermatPlatform();
 
         /**
          * Now I have access to the OS.
          */
-        //Os os =  ((OsLayer) MyApp.getPlatform().getOsLayer()).getOs();
+        //Os os =  ((OsLayer) MyApp.getFermatPlatform().getOsLayer()).getOs();
 
         /**
          * And now to the bitcoin network..

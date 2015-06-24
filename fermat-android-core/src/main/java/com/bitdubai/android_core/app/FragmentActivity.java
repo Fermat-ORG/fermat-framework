@@ -223,6 +223,8 @@ public class FragmentActivity  extends Activity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
+
+
         switch ( this.activity.getType()) {
 
             case CWP_SHELL_LOGIN:

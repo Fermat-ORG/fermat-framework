@@ -11,7 +11,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
@@ -291,7 +291,7 @@ public class BlockchainInfoIncomingCryptoCatchUpAgent implements Agent, DealsWit
 
                             try {
                                 incomingCryptoTable.insertRecord(incomingCryptoRecord);
-                            } catch (CantInsertRecord cantInsertRecord) {
+                            } catch (CantInsertRecordException cantInsertRecord) {
                                 /**
                                  * I can not solve this situation.
                                  */

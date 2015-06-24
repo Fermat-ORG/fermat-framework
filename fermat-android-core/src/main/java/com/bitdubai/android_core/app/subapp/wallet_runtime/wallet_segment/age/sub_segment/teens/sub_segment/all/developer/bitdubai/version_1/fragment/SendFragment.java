@@ -139,7 +139,7 @@ public  class SendFragment extends Fragment {
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
 
                 if (groupPosition == 0) {
-                    Platform platform = MyApplication.getPlatform();
+                    Platform platform = MyApplication.getFermatPlatform();
                     CorePlatformContext platformContext = platform.getCorePlatformContext();
 
                     AppRuntimeManager appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);

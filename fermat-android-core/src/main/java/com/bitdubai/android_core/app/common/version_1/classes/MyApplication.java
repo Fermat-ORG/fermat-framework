@@ -24,6 +24,15 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorMan
 import com.bitdubai.smartwallet.R;
 import com.bitdubai.fermat_core.Platform;
 
+
+/**
+ * This class, is created by the Android OS before any Activity. That means its constructor is run before any other code
+ * written by ourselves.
+ *
+ * -- Luis.
+ */
+
+
 public class MyApplication extends android.support.multidex.MultiDexApplication {
 
     private final static Handler handler = new Handler();
@@ -116,20 +125,26 @@ public class MyApplication extends android.support.multidex.MultiDexApplication 
     }
 
 
-    private static Platform mPlatform;
+    private static Platform fermatPlatform;
 
 
-    public static Platform getPlatform() {
-        return mPlatform;
+    public static Platform getFermatPlatform() {
+        return fermatPlatform;
     }
 
     public MyApplication () {
         super();
 
-        mPlatform = new Platform();
+        fermatPlatform = new Platform();
 
 
     }
+
+
+
+
+// TODO: De nuevo este método pretende modificar las propiedades de la Actividad que esta corriendo. Lo que hay que hacer es crear el objeto AndroidActivity con estas propiedades y luego poder setear una a una de acuerdo a lo que haya configurado en el plugin walletruntime y appruntime.
+
 
     public static void setActivityProperties(Activity activity, Window window,Resources context,PagerSlidingTabStrip tabStrip,ActionBar actionBar,TitleBar titleBar,TextView abTitle, CharSequence Title)
     {
@@ -143,8 +158,10 @@ public class MyApplication extends android.support.multidex.MultiDexApplication 
 
                 Title = titleBar.getLabel();
 
-                abTitle.setTextColor(Color.WHITE);
-                abTitle.setTypeface(MyApplication.getDefaultTypeface());
+                if(abTitle !=null) {
+                    abTitle.setTextColor(Color.WHITE);
+                    abTitle.setTypeface(MyApplication.getDefaultTypeface());
+                }
                 actionBar.setTitle(Title);
                 actionBar.show();
                 setActionBarProperties(activity,window,tabStrip, actionBar,context,abTitle, Title.toString());
@@ -179,6 +196,18 @@ public class MyApplication extends android.support.multidex.MultiDexApplication 
 
 
     }
+
+
+
+    // TODO: Mover esto a una clase AndroidActionBar a la cual se le pueda setear las propiedades tomadas directamente del AppRuntime o Wallet Runtime.
+
+    /**
+     * This method is used to change the properties of the action bar.
+     *
+     * -- Luis.
+     */
+
+
     public static void setActionBarProperties(Activity activity, Window window,  PagerSlidingTabStrip pTabs, ActionBar pActionBar, Resources context,  TextView abTitle, String pTitle) {
 
         try{
@@ -232,7 +261,9 @@ public class MyApplication extends android.support.multidex.MultiDexApplication 
                     color = "#d07b62";
                     actionBar.setIcon(context.getDrawable(R.drawable.fermat));
                     wallpaper = context.getDrawable(R.drawable.background_tabs_diagonal_rotated);
-                    abTitle.setTextColor(Color.BLACK);
+                    if(abTitle !=null) {
+                        abTitle.setTextColor(Color.BLACK);
+                    }
                     walletStyle = "Young";
                     break;
 
@@ -320,6 +351,17 @@ public class MyApplication extends android.support.multidex.MultiDexApplication 
 
     }
 
+
+    // TODO: Mover este metodo a un lugar mas apropiado. No debería estar en esta clase que representa la Sesión de toda la APP
+    // TODO: Junto con esto mover el call back que sale justo abajo de este metodo.
+
+    /**
+     * This method is used to change the background color of the current activity.
+     *
+     * -- Luis.
+     */
+
+
     public static void changeColor(int newColor, Resources context) {
 
         try
@@ -372,6 +414,8 @@ public class MyApplication extends android.support.multidex.MultiDexApplication 
         }
         catch (Exception e)
         {
+            // TODO: Si ocurre un error intentando setear el color se debe reportar en el error manager pero no propagar la excepcion porque no es critico. Las actividades debieran tener un colorpor defecto para que si falla la asignacion quede el color por defecto.
+
             throw e;
         }
 

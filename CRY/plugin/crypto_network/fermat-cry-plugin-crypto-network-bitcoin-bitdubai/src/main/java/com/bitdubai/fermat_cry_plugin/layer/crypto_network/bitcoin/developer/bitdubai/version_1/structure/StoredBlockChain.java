@@ -92,7 +92,7 @@ class StoredBlockChain implements BitcoinManager, DealsWithErrors, DealsWithPlug
      * @param UserID The if of the user requesting the syncronization
      * @throws CantInitializeMonitorAgentException
      */
-    public StoredBlockChain (Wallet wallet, UUID UserID) throws CantInitializeMonitorAgentException {
+    public StoredBlockChain (Wallet wallet, UUID UserID) {
         this.networkParameters = getNetworkConfiguration();
         this.wallet = wallet;
         this.userId = UserID;
@@ -101,7 +101,7 @@ class StoredBlockChain implements BitcoinManager, DealsWithErrors, DealsWithPlug
     /**
      * creates the blockchain object and the repository
      */
-    public void createBlockChain() throws CantInitializeMonitorAgentException {
+    public void createBlockChain() throws BlockStoreException {
         try {
             /**
              * I will save the blockchain into disk.
@@ -121,16 +121,11 @@ class StoredBlockChain implements BitcoinManager, DealsWithErrors, DealsWithPlug
              * in an error occurs, I will try to save it into memory
              */
             memoryStore = new MemoryBlockStore(this.networkParameters);
-            try {
-                chain = new BlockChain(this.networkParameters, this.wallet, memoryStore);
-                System.err.println("Warning!!. Blockchain saved in memory.");
-                /**
-                 * if everything fails I will have to throw the exception
-                 */
-            } catch (BlockStoreException BlockStoreException) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, BlockStoreException);
-                throw new CantInitializeMonitorAgentException();
-            }
+            chain = new BlockChain(this.networkParameters, this.wallet, memoryStore);
+            /**
+             * if this also fails, then I will raise the blockstoreException
+             */
+            System.err.println("Warning!!. Blockchain saved in memory.");
         }
 
     }

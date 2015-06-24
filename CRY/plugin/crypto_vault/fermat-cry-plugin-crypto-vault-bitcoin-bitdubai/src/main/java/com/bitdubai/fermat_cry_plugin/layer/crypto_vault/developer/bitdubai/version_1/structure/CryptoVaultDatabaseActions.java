@@ -3,19 +3,13 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.ver
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilterGroup;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemory;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -24,15 +18,13 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWit
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventType;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoIdentifiedEvent;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantCalculateTransactionConfidenceException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantExecuteQueryException;
 
 import org.bitcoinj.core.Wallet;
 
-import java.sql.Timestamp;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -44,6 +36,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
      * CryptoVaultDatabaseActions  member variables
      */
     Database database;
+    Wallet vault;
 
     /**
      * DealsWithEvents interface member variables
@@ -81,12 +74,18 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
         this.errorManager = errorManager;
     }
 
+    public void setVault(Wallet vault){
+        this.vault = vault;
+    }
+
+
     public void saveIncomingTransaction(String txHash) throws CantExecuteQueryException {
         DatabaseTable cryptoTxTable;
         DatabaseTransaction dbTx = this.database.newTransaction();
         cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
         DatabaseTableRecord incomingTxRecord =  cryptoTxTable.getEmptyRecord();
-        incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, UUID.randomUUID().toString());
+        UUID txId = UUID.randomUUID();
+        incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, txId.toString());
         incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, txHash);
         incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME, ProtocolStatus.TO_BE_NOTIFIED.toString());
         incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME, CryptoStatus.IDENTIFIED.toString());
@@ -151,6 +150,22 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
          * since the wallet generated this transaction, we dont need to inform it.
          */
         incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME, ProtocolStatus.NO_ACTION_REQUIRED.toString());
+
+
+        /**
+         * Will get the transaction confidence of the transaction. Preety sure it should be Identified. But just in case...
+         */
+        TransactionConfidenceCalculator transactionConfidenceCalculator = new TransactionConfidenceCalculator(txId.toString(), database, vault);
+        CryptoStatus cryptoStatus;
+        try {
+            cryptoStatus = transactionConfidenceCalculator.getCryptoStatus();
+        } catch (CantCalculateTransactionConfidenceException e) {
+            /**
+             * If I can't calculate the confidence, I will default it to Identified.
+             */
+            cryptoStatus = CryptoStatus.IDENTIFIED;
+        }
+
         incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME, CryptoStatus.IDENTIFIED.toString());
 
         dbTx.addRecordToInsert(cryptoTxTable, incomingTxRecord);
@@ -343,7 +358,6 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
                      * if this transaction hash is not in the database, I will insert it.
                      */
                     this.persistNewTransaction(transaction.getHashAsString());
-                    //todo this needs to be corrected in order to verify confidence value before inserting.
                 }
         }
 

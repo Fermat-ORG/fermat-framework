@@ -36,15 +36,13 @@
         android:layout_height="wrap_content"
         android:paddingLeft="7dip"
         >
-        <Spinner
+
+        <Button
+            android:id="@+id/btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/share_spinner"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:entries="@array/share_options"
-            android:visibility="invisible"
-            />
+            android:text="Long press me to share!" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -62,5 +60,7 @@
             android:visibility="invisible"/>
 
     </LinearLayout>
+
+
 
 </LinearLayout>

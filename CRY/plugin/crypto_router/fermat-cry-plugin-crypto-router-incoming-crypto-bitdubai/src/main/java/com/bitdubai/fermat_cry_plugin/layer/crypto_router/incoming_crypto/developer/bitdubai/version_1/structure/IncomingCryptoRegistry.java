@@ -73,6 +73,37 @@ import java.util.UUID;
 
 public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginDatabaseSystem, TransactionProtocolManager<CryptoTransaction> {
 
+    static int flag = 1;
+
+    public void proofTransaction() {
+
+        if(this.flag == 5)
+            return;
+
+        this.flag++;
+
+        List<Transaction<CryptoTransaction>> transactionList = new ArrayList<>();
+        CryptoTransaction c = new CryptoTransaction("random",
+                new CryptoAddress("addFrom", CryptoCurrency.BITCOIN),
+                new CryptoAddress("addTo", CryptoCurrency.BITCOIN),
+                CryptoCurrency.BITCOIN, 1, CryptoStatus.CONFIRMED
+        );
+        /*
+        String transactionHash,
+        CryptoAddress addressFrom,
+        CryptoAddress addressTo,
+        CryptoCurrency cryptoCurrency,
+        long cryptoAmount,
+        CryptoStatus cryptoStatus
+         */
+        Transaction<CryptoTransaction> t = new Transaction<>(UUID.randomUUID(), c, Action.APPLY, System.currentTimeMillis() / 1000L);
+        transactionList.add(t);
+        acknowledgeTransactions(transactionList);
+        acquireResponsibility(t);
+        System.out.println("TTF INCOMING CRYPTO: TRANSACTION INITIALIZED BY REGISTRY");
+    }
+
+
     /**
      * DealsWithErrors Interface member variables.
      */
@@ -254,7 +285,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
                 fillRegistryTableRecord(transactionRecord, transaction, TransactionStatus.ACKNOWLEDGED, ProtocolStatus.TO_BE_NOTIFIED, Specialist.UNKNOWN_SPECIALIST);
                 try {
                     registryTable.insertRecord(transactionRecord);
-                } catch (CantInsertRecord cantInsertRecord) {
+                } catch (CantInsertRecordException cantInsertRecord) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantInsertRecord);
                     // TODO: MANAGE EXCEPTION.
                 }
@@ -560,6 +591,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
         for(DatabaseTableRecord r : records)
             returnList.add(getTransactionFromRecord(r));
 
+        System.out.println("TTF - INCOMING CRYPTO PENDING TRANSACTIONS METHOD CALLED");
         return returnList;
     }
 
