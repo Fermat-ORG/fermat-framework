@@ -75,7 +75,7 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
 
     @Override
     public void onCoinsReceived(Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance) {
-        System.out.println("Ney money received!!! Incoming transaction with " + tx.getValueSentToMe(wallet).getValue() + ". New balance: " + newBalance.getValue());
+        System.out.println("CryptoVault information: Ney money received!!! Incoming transaction with " + tx.getValueSentToMe(wallet).getValue() + ". New balance: " + newBalance.getValue());
         /**
          * I save this transaction in the database
          */

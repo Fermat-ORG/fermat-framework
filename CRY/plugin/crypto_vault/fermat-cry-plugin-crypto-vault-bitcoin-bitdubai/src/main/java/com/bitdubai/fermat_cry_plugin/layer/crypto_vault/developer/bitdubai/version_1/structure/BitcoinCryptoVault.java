@@ -31,6 +31,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventMan
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.DealsWithBitcoinCryptoNetwork;
+import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantConnectToBitcoinNetwork;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantCreateCryptoWalletException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVault;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantExecuteQueryException;
@@ -287,10 +288,9 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
      * I'm connecting the vault to the bitcoin Agent.
      * @throws CantStartAgentException
      */
-    public void connectVault() throws CantStartAgentException { //todo this exception is not ok.
+    public void connectVault() throws CantConnectToBitcoinNetwork {
 
         bitcoinCryptoNetworkManager.setVault(this);
-
         bitcoinCryptoNetworkManager.connectToBitcoinNetwork();
     }
 

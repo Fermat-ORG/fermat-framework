@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.dmp_world.Agent;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantInitializeMonitorAgentException;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
@@ -10,12 +11,15 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantConnectToBitcoinNetwork;
 
 import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.PeerGroup;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.net.discovery.DnsDiscovery;
+import org.bitcoinj.store.BlockStoreException;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -108,19 +112,20 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
         /**
          * I prepare the block chain object
          */
+        storedBlockChain = new StoredBlockChain(wallet, userId);
+        storedBlockChain.setPluginId(pluginId);
+        storedBlockChain.setPluginFileSystem(pluginFileSystem);
+        storedBlockChain.setErrorManager(errorManager);
         try {
-            storedBlockChain = new StoredBlockChain(wallet, userId);
-            storedBlockChain.setPluginId(pluginId);
-            storedBlockChain.setPluginFileSystem(pluginFileSystem);
-            storedBlockChain.setErrorManager(errorManager);
             storedBlockChain.createBlockChain();
-        } catch (CantInitializeMonitorAgentException e) {
+        } catch (BlockStoreException e) {
             /**
-             * If I was not able to save the blockchain in a SPV file or memory I can't monitor the network
+             * If I couldn't create the blockchain I don't have where to save it and I can't go on.
              */
-            errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM_IDENTITY_MANAGER, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
-            throw new CantStartAgentException();
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw  new CantStartAgentException();
         }
+
 
         /**
          * I define the peers information that I will be connecting to.
@@ -151,12 +156,15 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
          */
         peers.stopAsync();
         peers.awaitTerminated();
+
         if (peers.isRunning())
+        /**
+         * If it didn't stop, then I will re try after 10 seconds.
+         */
             try {
                 peers.awaitTerminated(10, TimeUnit.SECONDS);
             } catch (TimeoutException e) {
-                System.out.println("Could't stop the Bitcoin agent.");
-                e.printStackTrace();
+                System.out.println("CryptoNetwork plug in: the Crypto monitoring agent could not be stopped.");
             }
     }
 
@@ -198,7 +206,11 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
     private class MonitorAgent implements Runnable{
         @Override
         public void run() {
-            doTheMainTask();
+            try {
+                doTheMainTask();
+            } catch (CantConnectToBitcoinNetwork cantConnectToBitcoinNetwork) {
+                System.err.println("BitcoinCryptoNetwork: the cryptoNetwork agent could not be started. We are unable to monitore the network for incoming or outgoing transactions.");
+            }
         }
 
 
@@ -206,10 +218,15 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
          * triggers the connection to peers, the download (or update) of the block chain
          * and the listening to incoming transactions.
          */
-        private void doTheMainTask() {
-            peers.startAsync();
-            peers.awaitRunning();
-            peers.downloadBlockChain();
+        private void doTheMainTask() throws CantConnectToBitcoinNetwork {
+            try{
+                peers.startAsync();
+                peers.awaitRunning();
+                peers.downloadBlockChain();
+            } catch (Exception exception){
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+                throw new CantConnectToBitcoinNetwork();
+            }
         }
     }
 }
