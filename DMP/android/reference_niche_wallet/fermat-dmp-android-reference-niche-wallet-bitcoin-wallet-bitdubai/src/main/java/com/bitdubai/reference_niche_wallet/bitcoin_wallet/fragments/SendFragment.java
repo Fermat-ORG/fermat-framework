@@ -18,8 +18,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformWalletType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantCreateWalletContactException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantSendCryptoException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
@@ -183,7 +186,9 @@ public class SendFragment extends Fragment implements View.OnClickListener {
                 cryptoAddress.setAddress(address.getText().toString());
                 cryptoAddress.setCryptoCurrency(CryptoCurrency.BITCOIN);
 
-                //TODO no se esta guardando en este metodo el memo que cargo y el nombre del contacto.
+                // first i add the contact
+                cryptoWallet.createWalletContact(cryptoAddress, contact_name.getText().toString(), Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
+                // then i send crypto
                 cryptoWallet.send(Long.parseLong(amount.getText().toString()), cryptoAddress, wallet_id);
 
                 showMessage("Send OK");
@@ -191,8 +196,10 @@ public class SendFragment extends Fragment implements View.OnClickListener {
             } catch (CantSendCryptoException e) {
                 e.printStackTrace();
                 showMessage("Error sending satoshis - " + e.getMessage());
+            } catch (CantCreateWalletContactException e) {
+                e.printStackTrace();
+                showMessage("Error creating wallet contact - " + e.getMessage());
             }
-
         } catch (Exception e) {
             e.printStackTrace();
             showMessage("Error send satoshis - " + e.getMessage());
