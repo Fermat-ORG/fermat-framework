@@ -256,12 +256,15 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
                     return;
                 }
 
+                System.out.println("TTF - INCOMING CRYPTO MONITOR: Source Identified");
+
                 // Now we ask for the pending transactions
                 List<Transaction<CryptoTransaction>> transactionList = null;
 
                 try {
                     transactionList = source.getPendingTransactions(Specialist.CRYPTO_ROUTER_SPECIALIST);
                 } catch (CantDeliverPendingTransactionsException e) {
+                    System.out.println("TTF - INCOMING CRYPTO MONITOR: cryptoVault raised CantDeliverPendingTransactionsException");
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                     //if somethig wrong happenned we try in the next round
                     return;

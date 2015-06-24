@@ -93,13 +93,24 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
 
     //TODO: COMPLETAR
     @Override
-    public BitcoinWallet loadWallet(UUID walletId) throws CantLoadWalletException {
-        return this.bitcoinWallet;
+    public void createWallet(UUID walletId) throws CantCreateWalletException {
+        /*
+         * El wallet manager va a llamar este método con un UUID.
+         * La idea es que el plug-in root creer un UUID interno y lo asocie a este UUID que recibió
+         * Luego creoa una BitcoinWalletBasicWallet y llama al método create() de esa wallet pasándole este
+         * UUID interno.
+         */
     }
 
     @Override
-    public void createWallet(UUID walletId) throws CantCreateWalletException {
-
+    public BitcoinWallet loadWallet(UUID walletId) throws CantLoadWalletException {
+        return this.bitcoinWallet;
+        /* TODO:
+         * Este método va a buscar el UUID que le pasan en el archivo que mantiene las referencias
+         * Toma el UUID asociado a este ID que le pasaron y crea una BitcoinWalletBasicWallet. A diferencia del
+         * create este método va a llamar al initialize de la BitcoinWalletBasicWallet.
+         */
     }
+
 }
 

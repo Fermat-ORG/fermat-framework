@@ -261,10 +261,11 @@ public class IncomingCryptoRelayAgent implements DealsWithActorAddressBook , Dea
             El RelayAgent del IncomingCrypto analizará las transacciones con estado (RESPONSIBLE,NO_ACTION_REQUIRED).
             */
             List<Transaction<CryptoTransaction>> responsibleTransactionList = this.registry.getResponsibleNARTransactions();
-//            if(responsibleTransactionList.isEmpty())
-//                return;
 
-            //System.out.println("TTF - INCOMING CRYPTO RELAY: " + responsibleTransactionList.size() + " TRANSACTION(s) DETECTED");
+            if(responsibleTransactionList.isEmpty())
+                return;
+
+            System.out.println("TTF - INCOMING CRYPTO RELAY: " + responsibleTransactionList.size() + " TRANSACTION(s) DETECTED");
 
             // Por cada una de ellas haría los siguientes pasos en el orden enunciado:
             // Deduciría a partir de la información de las mismas su Specialist y lo marcaría.
@@ -273,7 +274,7 @@ public class IncomingCryptoRelayAgent implements DealsWithActorAddressBook , Dea
                 try {
                     this.registry.setToNotify(transaction.getTransactionID(),
                             this.specialistSelector.getSpecialist(transaction.getInformation()));
-                    //System.out.println("TTF - INCOMING CRYPTO RELAY: SPECIALIST SETTED");
+                    System.out.println("TTF - INCOMING CRYPTO RELAY: SPECIALIST SETTED");
                 } catch (CantSelectSpecialistException e) {
                     // TODO: MANAGE EXCEPTION
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -290,17 +291,17 @@ public class IncomingCryptoRelayAgent implements DealsWithActorAddressBook , Dea
                 specialistList = this.registry.getSpecialists();
             } catch (InvalidParameterException e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                //System.out.println("TTF - INCOMING CRYPTO RELAY: GETSPECIALISTS FAILED");
+                System.out.println("TTF - INCOMING CRYPTO RELAY: GETSPECIALISTS FAILED");
                 return;
             }
 
-            //System.out.println("TTF - INCOMING CRYPTO RELAY: SPECIALIST LIST CALCULATED");
-            //System.out.println("TTF - INCOMING CRYPTO RELAY: " + specialistList.size() + " SPECIALIST(s) TO CALL");
+            System.out.println("TTF - INCOMING CRYPTO RELAY: SPECIALIST LIST CALCULATED");
+            System.out.println("TTF - INCOMING CRYPTO RELAY: " + specialistList.size() + " SPECIALIST(s) TO CALL");
 
 
             this.eventsLauncher.sendEvents(specialistList);
 
-            //System.out.println("TTF - INCOMING CRYPTO RELAY: SPECIALIST(s) INFORMED");
+            System.out.println("TTF - INCOMING CRYPTO RELAY: SPECIALIST(s) INFORMED");
 
 
             //  Pasa cada transacción con ProtocolStatus TO_BE_NOTIFIED a SENDING_NOTIFED.

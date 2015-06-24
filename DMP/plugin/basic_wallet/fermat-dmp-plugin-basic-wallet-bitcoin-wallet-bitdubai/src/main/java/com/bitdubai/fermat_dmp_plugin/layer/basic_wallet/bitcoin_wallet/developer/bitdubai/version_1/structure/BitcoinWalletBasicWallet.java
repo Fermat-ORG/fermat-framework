@@ -20,6 +20,20 @@ public class BitcoinWalletBasicWallet implements BitcoinWallet {
 
     long balance =123;
 
+    public void create(UUID IDquePasaElWM) {
+        /*
+         * Este método crea la base de datos que se asocia a esta nueva wallet
+         * Si la DB existe debería dar una excepción
+         */
+    }
+
+    public void initialize(UUID IDasociadoAlQuePasaElWM){
+        /*
+         * Este método debería abrir la DB de la bitcoinWallet pedida
+         * Si la DB no existe debe dar una excepción
+         */
+    }
+
     @Override
     public UUID getWalletId() {
         return UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
@@ -30,6 +44,13 @@ public class BitcoinWalletBasicWallet implements BitcoinWallet {
         return balance;
     }
 
+
+    /*
+     * NOTA:
+     *  El debit y el credit debería mirar primero si la tramsacción que
+     *  se quiere aplicar existe. Si no existe aplica los cambios normalmente, pero si existe
+     *  debería ignorar la transacción.
+     */
     @Override
     public void debit(BitcoinTransaction cryptoTransaction) throws CantRegisterDebitDebitException {
         this.balance -= cryptoTransaction.getAmount();
