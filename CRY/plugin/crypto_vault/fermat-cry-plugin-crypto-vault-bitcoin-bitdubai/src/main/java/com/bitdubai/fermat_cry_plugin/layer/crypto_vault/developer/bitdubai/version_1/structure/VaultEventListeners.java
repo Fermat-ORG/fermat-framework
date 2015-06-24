@@ -82,6 +82,20 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
         try {
             dbActions.setVault(wallet);
             dbActions.saveIncomingTransaction(tx.getHashAsString());
+
+            /**
+             * once I save it I will check the confidence level of the transaction.
+             */
+            TransactionConfidenceCalculator transactionConfidenceCalculator = new TransactionConfidenceCalculator(tx, wallet);
+            CryptoStatus cryptoStatus;
+
+            try {
+                cryptoStatus = transactionConfidenceCalculator.getCryptoStatus();
+            } catch (CantCalculateTransactionConfidenceException e) {
+                cryptoStatus = CryptoStatus.IDENTIFIED;
+            }
+
+            dbActions.updateCryptoTransactionStatus(tx.getHashAsString(), cryptoStatus);
         } catch (CantExecuteQueryException e) {
             //todo better handle this
             e.printStackTrace();

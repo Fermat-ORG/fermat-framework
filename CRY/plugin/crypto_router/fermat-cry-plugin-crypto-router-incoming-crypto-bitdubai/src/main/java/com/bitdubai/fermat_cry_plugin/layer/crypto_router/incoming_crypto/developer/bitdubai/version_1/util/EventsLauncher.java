@@ -31,6 +31,7 @@ public class EventsLauncher implements DealsWithEvents {
                     PlatformEvent platformEvent = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE_EXTRA_USER);
                     platformEvent.setSource(EventSource.CRYPTO_ROUTER);
                     eventManager.raiseEvent(platformEvent);
+                    System.out.println("TTF - INCOMING CRYPTO RELAY: EVENTSLAUNCHER - EVENTS RAISED");
                     break;
                 default:
                     //TODO: Manage this case with a proper exception
