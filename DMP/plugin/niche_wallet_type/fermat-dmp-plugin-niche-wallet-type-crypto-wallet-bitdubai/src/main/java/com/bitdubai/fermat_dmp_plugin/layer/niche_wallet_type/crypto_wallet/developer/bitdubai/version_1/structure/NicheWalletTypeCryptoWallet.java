@@ -138,16 +138,17 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
         } catch (Exception e){
             throw new CantCreateWalletContactException(e.getMessage());
         }
+
+        UUID actorId;
+
+        try {
+            actorId = createActor(actorName, actorType);
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantCreateWalletContactException(e.getMessage());
+        }
+
         if (walletContactRecord == null) {
-
-            UUID actorId;
-
-            try {
-                actorId = createActor(actorName, actorType);
-            } catch (Exception e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantCreateWalletContactException(e.getMessage());
-            }
             try {
                 walletContactRecord = walletContactsRegistry.createWalletContact(actorId, actorName, actorType, receivedCryptoAddress, walletId);
             } catch (Exception e) {
@@ -155,7 +156,7 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
                 throw new CantCreateWalletContactException(e.getMessage());
             }
         } else {
-            throw new CantCreateWalletContactException("Contact already exists.");
+            // TODO wallet CONTACT ALREADY EXISTS, WHAT TO DO?
         }
         return walletContactRecord;
     }
