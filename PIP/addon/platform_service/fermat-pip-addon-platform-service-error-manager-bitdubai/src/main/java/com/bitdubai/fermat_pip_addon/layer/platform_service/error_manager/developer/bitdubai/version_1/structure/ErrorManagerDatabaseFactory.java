@@ -34,24 +34,24 @@ public class ErrorManagerDatabaseFactory implements DealsWithPlatformDatabaseSys
         *  The ErrorManagerRegistry related table
         */
         DatabaseTableFactory table = null;
+        table = ((DatabaseFactory) database).newTableFactory(ErrorManagerDatabaseConstants.EXCEPTION_TABLE_NAME);
+        /*
+        * Registry fields
+        */
+        table.addColumn(ErrorManagerDatabaseConstants.EXCEPTION_TABLE_ID_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, true);
+        table.addColumn(ErrorManagerDatabaseConstants.EXCEPTION_TABLE_COMPONENT_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 35, false);
+        table.addColumn(ErrorManagerDatabaseConstants.EXCEPTION_TABLE_COMPONENT_NAME_COLUMN_NAME, DatabaseDataType.STRING, 35, false);
+        table.addColumn(ErrorManagerDatabaseConstants.EXCEPTION_TABLE_SEVERITY_COLUMN_NAME, DatabaseDataType.STRING, 35, false);
+        table.addColumn(ErrorManagerDatabaseConstants.EXCEPTION_TABLE_MESSAGE_COLUMN_NAME, DatabaseDataType.STRING, 100, false);
+        table.addColumn(ErrorManagerDatabaseConstants.EXCEPTION_TABLE_SENT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, false);
+        table.addColumn(ErrorManagerDatabaseConstants.EXCEPTION_TABLE_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, false);
 
-            table = ((DatabaseFactory) database).newTableFactory(ErrorManagerDatabaseConstants.EXCEPTION_TABLE_NAME);
-            /*
-            * Registry fields
-            */
-            table.addColumn(ErrorManagerDatabaseConstants.EXCEPTION_TABLE_ID_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, true);
-            table.addColumn(ErrorManagerDatabaseConstants.EXCEPTION_TABLE_COMPONENT_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 35, false);
-            table.addColumn(ErrorManagerDatabaseConstants.EXCEPTION_TABLE_COMPONENT_NAME_COLUMN_NAME, DatabaseDataType.STRING, 35, false);
-            table.addColumn(ErrorManagerDatabaseConstants.EXCEPTION_TABLE_SEVERITY_COLUMN_NAME, DatabaseDataType.STRING, 35, false);
-            table.addColumn(ErrorManagerDatabaseConstants.EXCEPTION_TABLE_MESSAGE_COLUMN_NAME, DatabaseDataType.STRING, 100, false);
-            table.addColumn(ErrorManagerDatabaseConstants.EXCEPTION_TABLE_SENT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, false);
-            table.addColumn(ErrorManagerDatabaseConstants.EXCEPTION_TABLE_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, false);
-            try {
-                ((DatabaseFactory) database).createTable(table);
-            } catch (CantCreateTableException cantCreateTableException) {
-                System.err.println("CantCreateTableException: " + cantCreateTableException.getMessage());
-                cantCreateTableException.printStackTrace();
-            }
+        try {
+            ((DatabaseFactory) database).createTable(table);
+        } catch (CantCreateTableException cantCreateTableException) {
+            System.err.println("CantCreateTableException: " + cantCreateTableException.getMessage());
+            cantCreateTableException.printStackTrace();
+        }
 
         return database;
     }
