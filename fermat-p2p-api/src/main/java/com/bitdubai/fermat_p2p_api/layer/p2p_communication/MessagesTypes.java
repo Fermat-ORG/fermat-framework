@@ -22,7 +22,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 public enum MessagesTypes {
 
     /**
-     * The values
+     * The enum values
      */
     TEXT  ("TXT"),
     BYTE  ("BYTE"),
@@ -75,5 +75,14 @@ public enum MessagesTypes {
          */
         throw new InvalidParameterException(code);
     };
+
+    /**
+     * (non-Javadoc)
+     * @see Object#toString()
+     */
+    @Override
+    public String toString() {
+        return getCode();
+    }
     
 }

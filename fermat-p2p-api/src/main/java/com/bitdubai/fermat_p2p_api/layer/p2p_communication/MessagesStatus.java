@@ -22,7 +22,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 public enum MessagesStatus {
 
     /**
-     * The values
+     * The enum values
      */
     PENDING_TO_SEND ("PTS"),
     SENT            ("S"),
@@ -75,5 +75,13 @@ public enum MessagesStatus {
          */
         throw new InvalidParameterException(code);
     };
-    
+
+    /**
+     * (non-Javadoc)
+     * @see Object#toString()
+     */
+    @Override
+    public String toString() {
+        return getCode();
+    }
 }
