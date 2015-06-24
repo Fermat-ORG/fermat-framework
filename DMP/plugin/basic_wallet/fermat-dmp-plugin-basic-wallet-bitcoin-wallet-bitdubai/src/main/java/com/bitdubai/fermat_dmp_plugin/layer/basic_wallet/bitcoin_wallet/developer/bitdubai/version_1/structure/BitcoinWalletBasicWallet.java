@@ -198,7 +198,6 @@ public class BitcoinWalletBasicWallet implements BitcoinWallet ,DealsWithErrors,
     }
 
 
-
     @Override
     public UUID getWalletId() {
         return UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
@@ -216,6 +215,13 @@ public class BitcoinWalletBasicWallet implements BitcoinWallet ,DealsWithErrors,
     //si ya llame al metodo con ese id ignoro
     //sino guardo la transaccion de debito o credito en la tabla
 
+
+    /*
+     * NOTA:
+     *  El debit y el credit debería mirar primero si la tramsacción que
+     *  se quiere aplicar existe. Si no existe aplica los cambios normalmente, pero si existe
+     *  debería ignorar la transacción.
+     */
     @Override
     public void debit(BitcoinTransaction cryptoTransaction) throws CantRegisterDebitDebitException {
         this.balance -= cryptoTransaction.getAmount();

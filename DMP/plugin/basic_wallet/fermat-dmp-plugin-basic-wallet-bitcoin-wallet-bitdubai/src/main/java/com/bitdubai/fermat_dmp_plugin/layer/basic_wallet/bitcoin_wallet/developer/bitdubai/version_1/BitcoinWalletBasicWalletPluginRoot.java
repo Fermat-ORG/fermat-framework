@@ -36,7 +36,8 @@ import java.util.UUID;
  */
 public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager, DealsWithErrors,DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem,Service, Plugin {
 
-    BitcoinWalletBasicWallet bitcoinWallet ;
+    // No tocar
+    BitcoinWalletBasicWallet bitcoinWalletTemporal = new BitcoinWalletBasicWallet(UUID.randomUUID());
 
     /**
      * DealsWithErrors Interface member variables.
@@ -154,7 +155,7 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
     @Override
     public BitcoinWallet loadWallet(UUID walletId) throws CantLoadWalletException {
 
-        bitcoinWallet  = new BitcoinWalletBasicWallet(this.pluginId);
+        BitcoinWalletBasicWallet bitcoinWallet = new BitcoinWalletBasicWallet(this.pluginId);
         bitcoinWallet.setErrorManager(this.errorManager);
         bitcoinWallet.setPluginDatabaseSystem(this.pluginDatabaseSystem);
         bitcoinWallet.setPluginFileSystem(pluginFileSystem);
@@ -169,8 +170,8 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
        // }
 
 
-
-        return this.bitcoinWallet;
+        // return bitcoinWallet;
+        return this.bitcoinWalletTemporal;
 
 
 
@@ -179,7 +180,7 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
     @Override
     public void createWallet(UUID walletId) throws CantCreateWalletException {
 
-        bitcoinWallet  = new BitcoinWalletBasicWallet(this.pluginId);
+        BitcoinWalletBasicWallet bitcoinWallet = new BitcoinWalletBasicWallet(this.pluginId);
         bitcoinWallet.setErrorManager(this.errorManager);
         bitcoinWallet.setPluginDatabaseSystem(this.pluginDatabaseSystem);
 
@@ -191,10 +192,6 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, CantInitializeBitcoinWallet);
             throw new CantCreateWalletException();
         }
-
-
-
-
     }
 }
 
