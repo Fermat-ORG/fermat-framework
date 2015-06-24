@@ -29,10 +29,12 @@
 
     </LinearLayout>
     <LinearLayout
+        android:id="@+id/linear_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingLeft="7dip" >
+        android:paddingLeft="7dip"
+        android:visibility="invisible">
         <EditText android:id="@+id/address"
             android:layout_width="match_parent"
             android:layout_height="40dp"
@@ -46,7 +48,8 @@
             android:paddingRight="7dip"
             android:paddingBottom="7dip"
             android:layout_gravity="end"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            />
 
         <ImageView
             android:id="@+id/scan_qr"
@@ -64,6 +67,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="7dip"
+        android:id="@+id/linear_amount"
+        android:visibility="invisible"
         >
         <EditText
             android:id="@+id/amount"
@@ -89,7 +94,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="7dip"
-        android:paddingRight="7dip">
+        android:paddingRight="7dip"
+        android:id="@+id/linear_notes"
+        android:visibility="invisible"
+        >
         <EditText
             android:id="@+id/notes"
             android:layout_width="match_parent"
@@ -110,13 +118,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="7dip"
-        android:paddingRight="7dip">
+        android:paddingRight="7dip"
+        android:id="@+id/linear_send"
+        android:visibility="invisible"
+        >
         <ImageView
             android:id="@+id/send_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:src="@drawable/ic_action_send_now_grey"
-            android:padding="3dp"/>
+            android:padding="3dp"
+            android:clickable="true"
+            />
     </LinearLayout>
 </LinearLayout>
