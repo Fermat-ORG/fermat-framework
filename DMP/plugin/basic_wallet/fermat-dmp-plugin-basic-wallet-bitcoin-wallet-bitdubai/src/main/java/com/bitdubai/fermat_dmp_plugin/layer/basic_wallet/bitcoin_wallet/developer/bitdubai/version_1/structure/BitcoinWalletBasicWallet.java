@@ -233,9 +233,9 @@ public class BitcoinWalletBasicWallet implements BitcoinWallet ,DealsWithErrors,
     @Override
     public void debit(BitcoinTransaction cryptoTransaction) throws CantRegisterDebitDebitException {
 
-        bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(errorManager,pluginDatabaseSystem);
+       // bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(errorManager,pluginDatabaseSystem);
 
-        bitcoinWalletBasicWalletDao.addDebit(cryptoTransaction);
+       // bitcoinWalletBasicWalletDao.addDebit(cryptoTransaction);
         this.balance -= cryptoTransaction.getAmount();
 
     }
@@ -243,9 +243,9 @@ public class BitcoinWalletBasicWallet implements BitcoinWallet ,DealsWithErrors,
     @Override
     public void credit(BitcoinTransaction cryptoTransaction) throws CantRegisterCreditException {
 
-        bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(errorManager,pluginDatabaseSystem);
+       // bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(errorManager,pluginDatabaseSystem);
 
-        bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction);
+        //bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction);
 
         this.balance += cryptoTransaction.getAmount();
     }
