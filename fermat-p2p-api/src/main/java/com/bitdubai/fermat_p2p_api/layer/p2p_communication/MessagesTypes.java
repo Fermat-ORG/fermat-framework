@@ -19,15 +19,15 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * @version 1.0
  * @since Java JDK 1.7
  */
-public enum MessagesStatus {
+public enum MessagesTypes {
 
     /**
      * The values
      */
-    PENDING_TO_SEND ("PTS"),
-    SENT            ("S"),
-    DELIVERED       ("D"),
-    READ            ("R");
+    TEXT  ("TXT"),
+    BYTE  ("BYTE"),
+    IMAGE ("IMG"),
+    VIDEO ("VIDEO");
 
     /**
      * Represent the code of the message status
@@ -39,7 +39,7 @@ public enum MessagesStatus {
      *
      * @param code the valid code
      */
-    MessagesStatus (String code) {
+    MessagesTypes(String code) {
         this.code = code;
     }
 
@@ -54,20 +54,20 @@ public enum MessagesStatus {
      * Return the enum by the code
      *
      * @param code the valid code
-     * @return MessagesStatus enum
+     * @return MessagesTypes enum
      * @throws InvalidParameterException error with is no a valid code
      */
-    public static MessagesStatus getByCode(String code) throws InvalidParameterException {
+    public static MessagesTypes getByCode(String code) throws InvalidParameterException {
 
         switch (code) {
-            case "PTS":
-                return MessagesStatus.PENDING_TO_SEND;
-            case "S":
-                return MessagesStatus.SENT;
-            case "D":
-                return MessagesStatus.DELIVERED;
-            case "R":
-                return MessagesStatus.READ;
+            case "TXT":
+                return MessagesTypes.TEXT;
+            case "BYTE":
+                return MessagesTypes.BYTE;
+            case "IMG":
+                return MessagesTypes.IMAGE;
+            case "VIDEO":
+                return MessagesTypes.VIDEO;
         }
 
         /**
