@@ -36,7 +36,7 @@ public class OutgoingExtraUserTransactionManager implements DealsWithBitcoinWall
         try {
             this.cryptoVaultManager.sendBitcoins(walletID, UUID.randomUUID(), destinationAddress, cryptoAmount);
         } catch (InsufficientMoneyException e) {
-            e.printStackTrace();
+          //  e.printStackTrace();
         }
 
         try {
