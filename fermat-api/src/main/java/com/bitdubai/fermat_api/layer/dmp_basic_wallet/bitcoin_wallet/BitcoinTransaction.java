@@ -11,8 +11,6 @@ import java.util.UUID;
  */
 public class BitcoinTransaction {
 
-    private UUID id;
-
     private String tramsactionHash;
 
     private CryptoAddress addressFrom;
@@ -83,14 +81,6 @@ public class BitcoinTransaction {
 
     public void setMemo(String memo) {
         this.memo = memo;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
     }
 
     public String getTramsactionHash() {
