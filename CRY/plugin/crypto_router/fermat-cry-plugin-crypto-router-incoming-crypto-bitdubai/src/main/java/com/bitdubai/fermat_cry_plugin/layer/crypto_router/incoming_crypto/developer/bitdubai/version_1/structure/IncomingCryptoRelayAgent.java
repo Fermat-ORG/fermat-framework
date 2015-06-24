@@ -261,10 +261,10 @@ public class IncomingCryptoRelayAgent implements DealsWithActorAddressBook , Dea
             El RelayAgent del IncomingCrypto analizará las transacciones con estado (RESPONSIBLE,NO_ACTION_REQUIRED).
             */
             List<Transaction<CryptoTransaction>> responsibleTransactionList = this.registry.getResponsibleNARTransactions();
-            if(responsibleTransactionList.isEmpty())
-                return;
+//            if(responsibleTransactionList.isEmpty())
+//                return;
 
-            System.out.println("TTF - INCOMING CRYPTO RELAY: " + responsibleTransactionList.size() + "TRANSACTION(s) DETECTED");
+            System.out.println("TTF - INCOMING CRYPTO RELAY: " + responsibleTransactionList.size() + " TRANSACTION(s) DETECTED");
             // Por cada una de ellas haría los siguientes pasos en el orden enunciado:
             // Deduciría a partir de la información de las mismas su Specialist y lo marcaría.
             // Pasaría la transacción al estado (RESPONSIBLE,TO_BE_NOTIFIED)
@@ -289,6 +289,7 @@ public class IncomingCryptoRelayAgent implements DealsWithActorAddressBook , Dea
                 specialistList = this.registry.getSpecialists();
             } catch (InvalidParameterException e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                System.out.println("TTF - INCOMING CRYPTO RELAY: GETSPECIALISTS FAILED");
                 return;
             }
 
