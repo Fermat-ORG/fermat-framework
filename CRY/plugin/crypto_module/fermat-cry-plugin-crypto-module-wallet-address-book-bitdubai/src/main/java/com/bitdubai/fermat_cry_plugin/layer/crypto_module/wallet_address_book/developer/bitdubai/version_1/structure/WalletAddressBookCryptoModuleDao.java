@@ -15,7 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.*;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
@@ -136,7 +136,7 @@ public class WalletAddressBookCryptoModuleDao implements DealsWithErrors, DealsW
 
         try{
             walletAddressBookModuleTable.insertRecord(walletAddressBookModuleRecord);
-        } catch(CantInsertRecord cantInsertRecord) {
+        } catch(CantInsertRecordException cantInsertRecord) {
             /**
              * I can not solve this situation.
              */

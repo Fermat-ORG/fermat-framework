@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
@@ -135,11 +135,10 @@ public class WalletStoreCatalog implements DealsWithErrors, DealsWithEvents, Dea
 
             table.insertRecord(record);
 
-        } catch (CantInsertRecord cantInsertRecord) {
+        } catch (CantInsertRecordException cantInsertRecord) {
             /**
              * I cant insert record
              */
-            System.err.println("CantInsertRecord: " + cantInsertRecord.getMessage());
             cantInsertRecord.printStackTrace();
         }
     }
