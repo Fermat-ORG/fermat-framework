@@ -1,7 +1,11 @@
 package com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.BitcoinTransaction;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionState;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CabtStoreMemoException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantFindTransactionException;
@@ -249,7 +253,70 @@ public class BitcoinWalletBasicWallet implements BitcoinWallet ,DealsWithErrors,
     @Override
     public List<BitcoinTransaction> getTransactions(int max, int offset) throws CantGetTransactionsException {
 
-        return new ArrayList<>();
+        List<BitcoinTransaction> bitcoinTransactionList = new ArrayList<BitcoinTransaction>();
+        BitcoinTransaction bitcoinTransaction = new BitcoinTransaction();
+        CryptoAddress crypoAddress = new CryptoAddress();
+        crypoAddress.setAddress("123456789llllsdasdasdasd00");
+        crypoAddress.setCryptoCurrency(CryptoCurrency.BITCOIN);
+        bitcoinTransaction.setAddressFrom(crypoAddress);
+
+        CryptoAddress crypoAddress2 = new CryptoAddress();
+        crypoAddress2.setAddress("4555123456789llllsdasdasdasd");
+
+        bitcoinTransaction.setAddressTo(crypoAddress2);
+        bitcoinTransaction.setAmount(14);
+        bitcoinTransaction.setMemo("memo 1");
+        bitcoinTransaction.setState(null);
+        bitcoinTransaction.setTimestamp(123456);
+        bitcoinTransaction.setTramsactionHash("123456789");
+        bitcoinTransaction.setType(TransactionType.CREDIT);
+
+        bitcoinTransactionList.add(bitcoinTransaction);
+
+        //----
+
+        bitcoinTransaction = new BitcoinTransaction();
+        crypoAddress = new CryptoAddress();
+        crypoAddress.setAddress("adfg123456789llllsdasd00");
+        crypoAddress.setCryptoCurrency(CryptoCurrency.BITCOIN);
+        bitcoinTransaction.setAddressFrom(crypoAddress);
+
+         crypoAddress2 = new CryptoAddress();
+        crypoAddress2.setAddress("4fge3556789llllsdasdasdasd");
+
+        bitcoinTransaction.setAddressTo(crypoAddress2);
+        bitcoinTransaction.setAmount(14);
+        bitcoinTransaction.setMemo("memo 2");
+        bitcoinTransaction.setState(null);
+        bitcoinTransaction.setTimestamp(1234789);
+        bitcoinTransaction.setTramsactionHash("123456789012");
+        bitcoinTransaction.setType(TransactionType.DEBIT);
+
+        bitcoinTransactionList.add(bitcoinTransaction);
+
+        //----
+
+        bitcoinTransaction = new BitcoinTransaction();
+        crypoAddress = new CryptoAddress();
+        crypoAddress.setAddress("123adfg123456789llllsdasd00");
+        crypoAddress.setCryptoCurrency(CryptoCurrency.BITCOIN);
+        bitcoinTransaction.setAddressFrom(crypoAddress);
+
+        crypoAddress2 = new CryptoAddress();
+        crypoAddress2.setAddress("5789fge3556789llllsdasdasdasd");
+
+        bitcoinTransaction.setAddressTo(crypoAddress2);
+        bitcoinTransaction.setAmount(14);
+        bitcoinTransaction.setMemo("memo 3");
+        bitcoinTransaction.setState(null);
+        bitcoinTransaction.setTimestamp(12347004);
+        bitcoinTransaction.setTramsactionHash("123456789012");
+        bitcoinTransaction.setType(TransactionType.CREDIT);
+
+        bitcoinTransactionList.add(bitcoinTransaction);
+
+
+        return  bitcoinTransactionList;
     }
 
     @Override
