@@ -73,7 +73,15 @@ import java.util.UUID;
 
 public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginDatabaseSystem, TransactionProtocolManager<CryptoTransaction> {
 
+    static int flag = 1;
+
     public void proofTransaction() {
+
+        if(this.flag == 5)
+            return;
+
+        this.flag++;
+
         List<Transaction<CryptoTransaction>> transactionList = new ArrayList<>();
         CryptoTransaction c = new CryptoTransaction("random",
                 new CryptoAddress("addFrom", CryptoCurrency.BITCOIN),
