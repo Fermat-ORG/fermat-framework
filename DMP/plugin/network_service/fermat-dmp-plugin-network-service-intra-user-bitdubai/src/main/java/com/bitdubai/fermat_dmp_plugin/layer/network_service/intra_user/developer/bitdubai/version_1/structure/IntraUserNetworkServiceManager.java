@@ -78,8 +78,8 @@ public class IntraUserNetworkServiceManager implements IntraUserManager {
         this.communicationLayerManager                = communicationLayerManager;
         this.pluginDatabaseSystem                     = pluginDatabaseSystem;
         this.errorManager                             = errorManager;
-        this.intraUserNetworkServiceLocalsCache       = new HashMap<String, IntraUserNetworkServiceLocal>();
-        this.intraUserNetworkServiceRemoteAgentsCache = new HashMap<String, IntraUserNetworkServiceRemoteAgent>();
+        this.intraUserNetworkServiceLocalsCache       = new HashMap<>();
+        this.intraUserNetworkServiceRemoteAgentsCache = new HashMap<>();
     }
 
 
@@ -108,7 +108,7 @@ public class IntraUserNetworkServiceManager implements IntraUserManager {
     /**
      * Close a previous connection
      *
-     * @param remoteNetworkServicePublicKey
+     * @param remoteNetworkServicePublicKey he remote network service public key
      */
     public void closeConnection(String remoteNetworkServicePublicKey){
 
@@ -133,8 +133,8 @@ public class IntraUserNetworkServiceManager implements IntraUserManager {
     /**
      * Method to accept incoming connection request
      *
-     * @param communicationChannel
-     * @param remoteNetworkServicePublicKey
+     * @param communicationChannel the communication channel
+     * @param remoteNetworkServicePublicKey the remote network service public key
      */
     public void  acceptIncomingNetworkServiceConnectionRequest(CommunicationChannels communicationChannel, String remoteNetworkServicePublicKey){
 
@@ -182,7 +182,7 @@ public class IntraUserNetworkServiceManager implements IntraUserManager {
 
             }
 
-        } catch (CommunicationException communicationChannelNotImplemented) {
+        } catch (CommunicationException communicationException) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not accept incoming connection"));
         }
 
@@ -192,10 +192,10 @@ public class IntraUserNetworkServiceManager implements IntraUserManager {
      * Handles events that indicate a connection to been established between two intra user
      * network services and prepares all objects to work with this new connection
      *
-     * @param communicationChannel
-     * @param remoteNetworkServicePublicKey
+     * @param communicationChannel the communication channel
+     * @param remoteNetworkServicePublicKey the remote network service public key
      */
-    protected void handleStablishedRequestedNetworkServiceConnection(CommunicationChannels communicationChannel, String remoteNetworkServicePublicKey){
+    public void handleEstablishedRequestedNetworkServiceConnection(CommunicationChannels communicationChannel, String remoteNetworkServicePublicKey){
 
         try {
 
@@ -236,7 +236,7 @@ public class IntraUserNetworkServiceManager implements IntraUserManager {
 
             }
 
-        }catch (Exception e) {
+        }catch (CommunicationException communicationException) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not get connection"));
         }
     }
@@ -244,8 +244,8 @@ public class IntraUserNetworkServiceManager implements IntraUserManager {
     /**
      * Return the IntraUserNetworkServiceLocal that represent the intra user network service remote
      *
-     * @param remoteNetworkServicePublicKey
-     * @return IntraUserNetworkServiceLocal
+     * @param remoteNetworkServicePublicKey the remote network service public key
+     * @return IntraUserNetworkServiceLocal the local instance that represent
      */
     public IntraUserNetworkServiceLocal getIntraUserNetworkServiceLocalInstance(String remoteNetworkServicePublicKey){
 
