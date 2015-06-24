@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.Unexpect
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventSource;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.IncomingCryptoTransactionPluginRoot;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantReadEvent;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.interfaces.DealsWithRegistry;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.interfaces.TransactionAgent;
@@ -231,6 +232,9 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
 
         private void doTheMainTask() {
 
+            // TODO: delete this. Every tune registry is initialized we add a new transaction
+            //this.registry.proofTransaction();
+
             IncomingCryptoRegistry.EventWrapper eventWrapper = null;
             try {
                 eventWrapper = this.registry.getNextPendingEvent();
@@ -252,12 +256,15 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
                     return;
                 }
 
+                System.out.println("TTF - INCOMING CRYPTO MONITOR: Source Identified");
+
                 // Now we ask for the pending transactions
                 List<Transaction<CryptoTransaction>> transactionList = null;
 
                 try {
                     transactionList = source.getPendingTransactions(Specialist.CRYPTO_ROUTER_SPECIALIST);
                 } catch (CantDeliverPendingTransactionsException e) {
+                    System.out.println("TTF - INCOMING CRYPTO MONITOR: cryptoVault raised CantDeliverPendingTransactionsException");
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                     //if somethig wrong happenned we try in the next round
                     return;

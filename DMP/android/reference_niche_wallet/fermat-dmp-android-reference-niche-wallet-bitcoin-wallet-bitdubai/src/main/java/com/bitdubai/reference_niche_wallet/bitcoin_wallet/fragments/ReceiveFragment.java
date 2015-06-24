@@ -15,12 +15,16 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -106,32 +110,48 @@ public class ReceiveFragment extends Fragment {
         rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_receive, container, false);
         TextView tv;
 
-        final EditText nameText = (EditText)rootView.findViewById(R.id.contact_name);
-
-        //add event finish type
-        nameText.setOnEditorActionListener(
-                new EditText.OnEditorActionListener() {
-                    @Override
-                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                        if (actionId == EditorInfo.IME_ACTION_SEARCH ||
-                                actionId == EditorInfo.IME_ACTION_DONE ||
-                                event.getAction() == KeyEvent.ACTION_DOWN &&
-                                        event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                            if (!event.isShiftPressed()) {
-                                // the user is done typing.
-                                getWalletAddress(nameText.getText().toString());
-                                return true; // consume.
-                            }
-                        }
-                        return false; // pass on to other listeners.
-                    }
-                });
-
-
-
+        Button btn = (Button) rootView.findViewById(R.id.btn);
+        registerForContextMenu(btn);
 
         return rootView;
     }
+
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        menu.setHeaderTitle("Share Address");
+        menu.add(0, 1, 0, "Show QR code");
+        menu.add(0, 2, 0, "Copy to Clipboard");
+        menu.add(0, 3, 0, "Send throw WhatsApp");
+        menu.add(0, 4, 0, "Send throw message");
+    }
+
+    public boolean onContextItemSelected(MenuItem item) {
+
+        final EditText nameText = (EditText)rootView.findViewById(R.id.contact_name);
+
+        if (nameText != null && nameText.getText().toString() != null && !nameText.getText().toString().equals("")) {
+            System.out.println("************nametext: '"+nameText.getText().toString()+"'");
+            getWalletAddress(nameText.getText().toString());
+
+            if (item.getItemId() == 1) {
+                showQRCode();
+            } else if (item.getItemId() == 2) {
+                copytoClipboard(rootView);
+            } else if (item.getItemId() == 3) {
+                sendWhatsappMessage(rootView);
+            } else if (item.getItemId() == 4) {
+                sendMessage(rootView);
+            } else {
+                return false;
+            }
+        } else {
+            Toast.makeText(getActivity().getApplicationContext(), "Enter a name to share your address", Toast.LENGTH_SHORT).show();
+        }
+        return true;
+    }
+
+
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -143,72 +163,27 @@ public class ReceiveFragment extends Fragment {
     /* show qr wallet code
 
      */
+    private void showQRCode() {
+        try {
+            Bitmap bitmapQR = generateBitmap(user_address_wallet, width, height, MARGIN_AUTOMATIC, colorQR, colorBackQR);
+
+            ImageView imageQR = (ImageView) rootView.findViewById(R.id.qr_code);
+
+            imageQR.setImageBitmap(bitmapQR);
+            imageQR.setVisibility(View.VISIBLE);
+        } catch (WriterException writerException) {
+
+        }
+    }
 
     private void getWalletAddress(String contact_name) {
         try {
-
-            try {
-                CryptoAddress cryptoAddress = cryptoWallet.requestAddress(contact_name.toString(), Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
-
-                user_address_wallet = cryptoAddress.getAddress();
-
-                //create QR code with user address wallet
-
-
-                try {
-                    Bitmap bitmapQR = generateBitmap(user_address_wallet, width, height,
-                            MARGIN_AUTOMATIC, colorQR, colorBackQR);
-
-                    ImageView imageQR = (ImageView) rootView.findViewById(R.id.qr_code);
-
-                    imageQR.setImageBitmap(bitmapQR);
-                    imageQR.setVisibility(View.VISIBLE);
-                } catch (WriterException writerException) {
-
-                }
-
-                //define action for click options of spinner control
-                final Spinner spinner = (Spinner) rootView.findViewById(R.id.share_spinner);
-                spinner.setVisibility(View.VISIBLE);
-                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view,
-                                               int position, long id) {
-
-                        int option = spinner.getSelectedItemPosition();
-                        switch (option) {
-                            case 1:
-                                copytoClipboard(rootView);
-                                break;
-                            case 2:
-                                sendWhatsappMessage(rootView); //whatsapp message
-                                break;
-                            case 3:
-                                sendMessage(rootView); //sms message
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> arg0) {
-
-                    }
-                });
-
-            } catch (CantRequestCryptoAddressException e) {
-                showMessage("Cant Request Crypto Address Exception - " + e.getMessage());
-                e.printStackTrace();
-            }
-
-        }  catch(Exception ex) {
-            showMessage("Unexpected error get wallet address - " + ex.getMessage());
+            CryptoAddress cryptoAddress = cryptoWallet.requestAddress(contact_name.toString(), Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
+            user_address_wallet = cryptoAddress.getAddress();
+        } catch (CantRequestCryptoAddressException e) {
+            showMessage("Cant Request Crypto Address Exception - " + e.getMessage());
+            e.printStackTrace();
         }
-
-
-
     }
     /*
        Send to whatsapp

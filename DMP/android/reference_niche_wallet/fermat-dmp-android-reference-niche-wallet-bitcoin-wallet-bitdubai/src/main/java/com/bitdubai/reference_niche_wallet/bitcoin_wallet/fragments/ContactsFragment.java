@@ -103,7 +103,7 @@ public class ContactsFragment extends Fragment {
             // Forth - the Array of data
 
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),
-                    android.R.layout.simple_list_item_1, android.R.id.text1, contacts);
+                    R.layout.wallets_bitcoin_fragment_contacts_list, R.id.contact_name, contacts);
 
             // Assign adapter to ListView
             listView.setAdapter(adapter);
