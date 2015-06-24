@@ -1,7 +1,11 @@
 package com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.BitcoinTransaction;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionState;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CabtStoreMemoException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantFindTransactionException;
@@ -52,6 +56,7 @@ public class BitcoinWalletBasicWallet implements BitcoinWallet ,DealsWithErrors,
 
     private Map<UUID, UUID> walletIds =  new HashMap();
 
+    BitcoinWalletBasicWalletDao bitcoinWalletBasicWalletDao;
     /**
      * DealsWithErrors Interface member variables.
      */
@@ -153,7 +158,7 @@ public class BitcoinWalletBasicWallet implements BitcoinWallet ,DealsWithErrors,
 
         PluginTextFile walletIdsFile = null;
 
-        try{
+         try{
             walletIdsFile = pluginFileSystem.createTextFile(pluginId, "", WALLET_IDS_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
         }
         catch (CantCreateFileException cantCreateFileException ) {
@@ -200,20 +205,23 @@ public class BitcoinWalletBasicWallet implements BitcoinWallet ,DealsWithErrors,
 
     @Override
     public UUID getWalletId() {
+
+       // return this.internalWalletId;
         return UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
-        //crear una id propia
-        //cuando creo la wallet me llega el id de la wallet
+
     }
 
     @Override
     public long getBalance() throws CantCalculateBalanceException {
         //suma los debitos y los creditos los resta
 
+        bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(errorManager,pluginDatabaseSystem);
+
+      // return bitcoinWalletBasicWalletDao.getBalance();
 
         return balance;
     }
-    //si ya llame al metodo con ese id ignoro
-    //sino guardo la transaccion de debito o credito en la tabla
+
 
 
     /*
@@ -224,19 +232,91 @@ public class BitcoinWalletBasicWallet implements BitcoinWallet ,DealsWithErrors,
      */
     @Override
     public void debit(BitcoinTransaction cryptoTransaction) throws CantRegisterDebitDebitException {
+
+       // bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(errorManager,pluginDatabaseSystem);
+
+       // bitcoinWalletBasicWalletDao.addDebit(cryptoTransaction);
         this.balance -= cryptoTransaction.getAmount();
 
     }
 
     @Override
     public void credit(BitcoinTransaction cryptoTransaction) throws CantRegisterCreditException {
+
+       // bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(errorManager,pluginDatabaseSystem);
+
+        //bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction);
+
         this.balance += cryptoTransaction.getAmount();
     }
 
     @Override
     public List<BitcoinTransaction> getTransactions(int max, int offset) throws CantGetTransactionsException {
 
-        return new ArrayList<>();
+        List<BitcoinTransaction> bitcoinTransactionList = new ArrayList<BitcoinTransaction>();
+        BitcoinTransaction bitcoinTransaction = new BitcoinTransaction();
+        CryptoAddress crypoAddress = new CryptoAddress();
+        crypoAddress.setAddress("123456789llllsdasdasdasd00");
+        crypoAddress.setCryptoCurrency(CryptoCurrency.BITCOIN);
+        bitcoinTransaction.setAddressFrom(crypoAddress);
+
+        CryptoAddress crypoAddress2 = new CryptoAddress();
+        crypoAddress2.setAddress("4555123456789llllsdasdasdasd");
+
+        bitcoinTransaction.setAddressTo(crypoAddress2);
+        bitcoinTransaction.setAmount(14);
+        bitcoinTransaction.setMemo("memo 1");
+        bitcoinTransaction.setState(null);
+        bitcoinTransaction.setTimestamp(123456);
+        bitcoinTransaction.setTramsactionHash("123456789");
+        bitcoinTransaction.setType(TransactionType.CREDIT);
+
+        bitcoinTransactionList.add(bitcoinTransaction);
+
+        //----
+
+        bitcoinTransaction = new BitcoinTransaction();
+        crypoAddress = new CryptoAddress();
+        crypoAddress.setAddress("adfg123456789llllsdasd00");
+        crypoAddress.setCryptoCurrency(CryptoCurrency.BITCOIN);
+        bitcoinTransaction.setAddressFrom(crypoAddress);
+
+         crypoAddress2 = new CryptoAddress();
+        crypoAddress2.setAddress("4fge3556789llllsdasdasdasd");
+
+        bitcoinTransaction.setAddressTo(crypoAddress2);
+        bitcoinTransaction.setAmount(14);
+        bitcoinTransaction.setMemo("memo 2");
+        bitcoinTransaction.setState(null);
+        bitcoinTransaction.setTimestamp(1234789);
+        bitcoinTransaction.setTramsactionHash("123456789012");
+        bitcoinTransaction.setType(TransactionType.DEBIT);
+
+        bitcoinTransactionList.add(bitcoinTransaction);
+
+        //----
+
+        bitcoinTransaction = new BitcoinTransaction();
+        crypoAddress = new CryptoAddress();
+        crypoAddress.setAddress("123adfg123456789llllsdasd00");
+        crypoAddress.setCryptoCurrency(CryptoCurrency.BITCOIN);
+        bitcoinTransaction.setAddressFrom(crypoAddress);
+
+        crypoAddress2 = new CryptoAddress();
+        crypoAddress2.setAddress("5789fge3556789llllsdasdasdasd");
+
+        bitcoinTransaction.setAddressTo(crypoAddress2);
+        bitcoinTransaction.setAmount(14);
+        bitcoinTransaction.setMemo("memo 3");
+        bitcoinTransaction.setState(null);
+        bitcoinTransaction.setTimestamp(12347004);
+        bitcoinTransaction.setTramsactionHash("123456789012");
+        bitcoinTransaction.setType(TransactionType.CREDIT);
+
+        bitcoinTransactionList.add(bitcoinTransaction);
+
+
+        return  bitcoinTransactionList;
     }
 
     @Override

@@ -5,19 +5,22 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.view.KeyEvent;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformWalletType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantCreateWalletContactException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantSendCryptoException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
@@ -69,8 +72,9 @@ public class SendFragment extends Fragment implements View.OnClickListener {
 
         try {
             TextView tv;
-            EditText contact_name = (EditText) rootView.findViewById(R.id.contact_name);
-            EditText editAddress = (EditText) rootView.findViewById(R.id.address);
+            final EditText contact_name = (EditText) rootView.findViewById(R.id.contact_name);
+            final EditText editAddress = (EditText) rootView.findViewById(R.id.address);
+            final EditText editAmount = (EditText) rootView.findViewById(R.id.amount);
             final LinearLayout linear_address = (LinearLayout) rootView.findViewById(R.id.linear_address);
             final LinearLayout linear_amount = (LinearLayout) rootView.findViewById(R.id.linear_amount);
             final LinearLayout linear_notes = (LinearLayout) rootView.findViewById(R.id.linear_notes);
@@ -81,61 +85,48 @@ public class SendFragment extends Fragment implements View.OnClickListener {
 
             //add event finish type
 
-            contact_name.setOnEditorActionListener(
-                    new EditText.OnEditorActionListener() {
-                        @Override
-                        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                            if (actionId == EditorInfo.IME_ACTION_SEARCH ||
-                                    actionId == EditorInfo.IME_ACTION_DONE ||
-                                    event.getAction() == KeyEvent.ACTION_DOWN &&
-                                            event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+            contact_name.addTextChangedListener(new TextWatcher() {
+                public void afterTextChanged(Editable s) {
+                    if (contact_name != null && contact_name.getText() != null && !contact_name.getText().toString().equals("")) {
+                        linear_address.setVisibility(View.VISIBLE);
+                    } else {
+                        linear_address.setVisibility(View.GONE);
+                        linear_amount.setVisibility(View.GONE);
+                        linear_notes.setVisibility(View.GONE);
+                        linear_send.setVisibility(View.GONE);
+                    }
+                }
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            });
 
-                                // the user is done typing.
-                                linear_address.setVisibility(View.VISIBLE);
-                                return true; // consume.
+            editAddress.addTextChangedListener(new TextWatcher() {
+                public void afterTextChanged(Editable s) {
+                    if (editAddress != null && editAddress.getText() != null && !editAddress.getText().toString().equals("")) {
+                        linear_amount.setVisibility(View.VISIBLE);
+                    } else {
+                        linear_amount.setVisibility(View.GONE);
+                        linear_notes.setVisibility(View.GONE);
+                        linear_send.setVisibility(View.GONE);
+                    }
+                }
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            });
 
-                            }
-                            return false; // pass on to other listeners.
-                        }
-                    });
-
-            editAddress.setOnEditorActionListener(
-                    new EditText.OnEditorActionListener() {
-                        @Override
-                        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                            if (actionId == EditorInfo.IME_ACTION_SEARCH ||
-                                    actionId == EditorInfo.IME_ACTION_DONE ||
-                                    event.getAction() == KeyEvent.ACTION_DOWN &&
-                                            event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                                // the user is done typing.
-                                linear_amount.setVisibility(View.VISIBLE);
-                                return true; // consume.
-
-                            }
-                            return false; // pass on to other listeners.
-                        }
-                    });
-
-            EditText editAmount = (EditText) rootView.findViewById(R.id.amount);
-            //add event finish type
-            editAmount.setOnEditorActionListener(
-                    new EditText.OnEditorActionListener() {
-                        @Override
-                        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                            if (actionId == EditorInfo.IME_ACTION_SEARCH ||
-                                    actionId == EditorInfo.IME_ACTION_DONE ||
-                                    event.getAction() == KeyEvent.ACTION_DOWN &&
-                                            event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-
-                                // the user is done typing.
-                                linear_notes.setVisibility(View.VISIBLE);
-                                linear_send.setVisibility(View.VISIBLE);
-                                return true; // consume.
-
-                            }
-                            return false; // pass on to other listeners.
-                        }
-                    });
+            editAmount.addTextChangedListener(new TextWatcher() {
+                public void afterTextChanged(Editable s) {
+                    if (editAmount != null && editAmount.getText() != null && !editAmount.getText().toString().equals("")) {
+                        linear_notes.setVisibility(View.VISIBLE);
+                        linear_send.setVisibility(View.VISIBLE);
+                    } else {
+                        linear_notes.setVisibility(View.GONE);
+                        linear_send.setVisibility(View.GONE);
+                    }
+                }
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+                public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            });
 
             //define icon event to scan Qr code - wallet address
             ImageView scanImage = (ImageView) rootView.findViewById(R.id.scan_qr);
@@ -193,16 +184,19 @@ public class SendFragment extends Fragment implements View.OnClickListener {
                 cryptoAddress.setAddress(address.getText().toString());
                 cryptoAddress.setCryptoCurrency(CryptoCurrency.BITCOIN);
 
-                //TODO no se esta guardando en este metodo el memo que cargo y el nombre del contacto.
+                // first i add the contact
+                cryptoWallet.createWalletContact(cryptoAddress, contact_name.getText().toString(), Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
+
                 cryptoWallet.send(Long.parseLong(amount.getText().toString()), cryptoAddress, wallet_id);
 
                 showMessage("Send OK");
-
+            } catch (CantCreateWalletContactException e) {
+                e.printStackTrace();
+                showMessage("Error creating wallet contact - " + e.getMessage());
             } catch (CantSendCryptoException e) {
                 e.printStackTrace();
-                showMessage("Error sending satoshis - " + e.getMessage());
+                showMessage("Error send satoshis - " + e.getMessage());
             }
-
         } catch (Exception e) {
             e.printStackTrace();
             showMessage("Error send satoshis - " + e.getMessage());

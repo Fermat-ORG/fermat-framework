@@ -163,7 +163,8 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 			unregisteredConnections.put(serverPublicKey, serverConnection);
 			executor.execute(this);
 		}catch(IOException ex){
-			throw new CloudConnectionException(ex.getMessage(), ex);
+			CloudConnectionException exception = new CloudConnectionException(ex.getMessage(), ex, address.toString(), "Check if there is a server listening at the configured host and port");
+			throw exception;
 		}
 	}
 	
