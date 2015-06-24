@@ -4,10 +4,14 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionState;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
 
+import java.util.UUID;
+
 /**
  * Created by eze on 2015.06.17..
  */
 public class BitcoinTransaction {
+
+    private String transactionHash;
 
     private CryptoAddress addressFrom;
 
@@ -77,5 +81,13 @@ public class BitcoinTransaction {
 
     public void setMemo(String memo) {
         this.memo = memo;
+    }
+
+    public String getTramsactionHash() {
+        return transactionHash;
+    }
+
+    public void setTramsactionHash(String tramsactionHash) {
+        this.transactionHash = tramsactionHash;
     }
 }
