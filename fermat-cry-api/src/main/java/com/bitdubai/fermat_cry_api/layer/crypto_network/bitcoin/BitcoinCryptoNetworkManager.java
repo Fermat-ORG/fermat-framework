@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin;
 
+import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantConnectToBitcoinNetwork;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVault;
 
 /**
@@ -7,7 +8,7 @@ import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVault;
  */
 public interface BitcoinCryptoNetworkManager {
     public void setVault (CryptoVault cryptoVault);
-    public void connectToBitcoinNetwork();
+    public void connectToBitcoinNetwork() throws CantConnectToBitcoinNetwork;
     public void disconnectFromBitcoinNetwork();
     public Object getBroadcasters();
 }

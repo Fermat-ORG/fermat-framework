@@ -17,6 +17,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -108,30 +109,18 @@ public class ReceiveFragment extends Fragment {
 
         final EditText nameText = (EditText)rootView.findViewById(R.id.contact_name);
 
-        //add event finish type
-        nameText.setOnEditorActionListener(
-                new EditText.OnEditorActionListener() {
-                    @Override
-                    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                        if (actionId == EditorInfo.IME_ACTION_SEARCH ||
-                                actionId == EditorInfo.IME_ACTION_DONE ||
-                                event.getAction() == KeyEvent.ACTION_DOWN &&
-                                        event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                            if (!event.isShiftPressed()) {
-                                // the user is done typing.
-                                getWalletAddress(nameText.getText().toString());
-                                return true; // consume.
-                            }
-                        }
-                        return false; // pass on to other listeners.
-                    }
-                });
+        nameText.setOnClickListener(new View.OnClickListener() {
 
-
-
-
+            @Override
+            public void onClick(View v) {
+                if (nameText != null && nameText.getText() != null && nameText.getText().toString() != "")
+                    getWalletAddress(nameText.getText().toString());
+            }
+        });
         return rootView;
     }
+
+
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {

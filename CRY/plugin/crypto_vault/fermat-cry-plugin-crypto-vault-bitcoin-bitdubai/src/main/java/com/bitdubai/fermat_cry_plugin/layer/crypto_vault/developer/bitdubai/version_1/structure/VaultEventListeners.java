@@ -6,7 +6,12 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWit
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventType;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoReceivedEvent;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoReceptionConfirmedEvent;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoReversedEvent;
 import com.bitdubai.fermat_cry_api.layer.definition.DepthInBlocksThreshold;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantCalculateTransactionConfidenceException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantExecuteQueryException;
 
 import org.bitcoinj.core.AbstractWalletEventListener;
@@ -70,11 +75,12 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
 
     @Override
     public void onCoinsReceived(Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance) {
-        System.out.println("Ney money received!!! Incoming transaction with " + tx.getValueSentToMe(wallet).getValue() + ". New balance: " + newBalance.getValue());
+        System.out.println("CryptoVault information: Ney money received!!! Incoming transaction with " + tx.getValueSentToMe(wallet).getValue() + ". New balance: " + newBalance.getValue());
         /**
          * I save this transaction in the database
          */
         try {
+            dbActions.setVault(wallet);
             dbActions.saveIncomingTransaction(tx.getHashAsString());
         } catch (CantExecuteQueryException e) {
             //todo better handle this
@@ -90,36 +96,38 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
 
     @Override
     public void onTransactionConfidenceChanged(Wallet wallet, Transaction tx) {
-        TransactionConfidence txConfidence = tx.getConfidence();
-        /**
-         * Confidence type building is that it is in the main blockchain and increasing
-         */
-        if (txConfidence.getConfidenceType() == TransactionConfidence.ConfidenceType.BUILDING){
-            if (DepthInBlocksThreshold.DEPTH == txConfidence.getDepthInBlocks()){
-                /**
-                 * The transaction height in the blockchain has reached our threshold.
-                 */
-
-                try {
-                    dbActions.updateCryptoTransactionStatus(tx.getHashAsString(), CryptoStatus.RECEIVED);
-                } catch (CantExecuteQueryException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (1 == txConfidence.getDepthInBlocks()){
-                /**
-                 * The transactions has one block already.
-                 */
-
-                try {
-                    dbActions.updateCryptoTransactionStatus(tx.getHashAsString(), CryptoStatus.CONFIRMED);
-                } catch (CantExecuteQueryException e) {
-                    e.printStackTrace();
-                }
-            }
+        TransactionConfidenceCalculator transactionConfidenceCalculator = new TransactionConfidenceCalculator(tx, wallet);
+        CryptoStatus cryptoStatus;
+        try {
+            cryptoStatus = transactionConfidenceCalculator.getCryptoStatus();
+        } catch (CantCalculateTransactionConfidenceException e) {
+            cryptoStatus = CryptoStatus.IDENTIFIED;
         }
 
+        try {
+            /**
+             * I update the record with the new cryptoStatus
+             */
+            dbActions.updateCryptoTransactionStatus(tx.getHashAsString(), cryptoStatus);
+
+            /**
+             * now I raise the event
+             */
+            if (cryptoStatus == CryptoStatus.RECEIVED) {
+                eventManager.raiseEvent(new IncomingCryptoReceivedEvent(EventType.INCOMING_CRYPTO_RECEIVED));
+            }
+
+            if (cryptoStatus == CryptoStatus.CONFIRMED)
+                eventManager.raiseEvent(new IncomingCryptoReceptionConfirmedEvent(EventType.INCOMING_CRYPTO_RECEPTION_CONFIRMED));
+
+            if (cryptoStatus == CryptoStatus.REVERSED)
+                eventManager.raiseEvent(new IncomingCryptoReversedEvent(EventType.INCOMING_CRYPTO_REVERSED));
+
+
+
+        } catch (CantExecuteQueryException e) {
+            System.err.println("CryptoVault Error: new cryptoStatus " + cryptoStatus.getCode() + " could not be saved for transaction " + tx.getHash().toString());
+        }
 
     }
 }

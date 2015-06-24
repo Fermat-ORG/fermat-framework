@@ -2,11 +2,18 @@ package com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.develop
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantCreateWalletException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantInitializeBitcoinWalletBasicException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWallet;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventHandler;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure.BitcoinWalletBasicWallet;
@@ -18,13 +25,25 @@ import java.util.UUID;
 /**
  * Created by loui on 30/04/15.
  */
-public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager, Service, Plugin {
+public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager, DealsWithErrors,DealsWithPluginDatabaseSystem,Service, Plugin {
 
-    BitcoinWallet bitcoinWallet = new BitcoinWalletBasicWallet();
+    BitcoinWalletBasicWallet bitcoinWallet ;
+
     /**
-     * Plugin Interface member variables.
+     * DealsWithErrors Interface member variables.
      */
-    UUID pluginId;
+    ErrorManager errorManager;
+
+    /**
+     * DealsWithDatabaseSystem Interface member variables.
+     */
+    PluginDatabaseSystem pluginDatabaseSystem;
+
+    /**
+     * DealsWithPluginIdentity Interface member variables.
+     */
+    private UUID pluginId;
+
 
     /**
      * Service Interface member variables.
@@ -34,14 +53,30 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
 
 
     /**
-     * DealsWithPluginIdentity methods implementation.
+     * DealsWithErrors interface implementation.
      */
 
     @Override
-    public void setId(UUID pluginId) {
-        this.pluginId = pluginId;
+    public void setErrorManager(ErrorManager errorManager) {
+        this.errorManager = errorManager;
     }
 
+    /**
+     * DealsWithPluginDatabaseSystem interface implementation.
+     */
+
+    @Override
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+    }
+
+    /**
+     * DealsWithPluginIdentity methods implementation.
+     */
+    @Override
+    public void setId (UUID pluginId) {
+        this.pluginId = pluginId;
+    }
     /**
      * Service Interface implementation.
      */
@@ -91,26 +126,47 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
     }
 
 
-    //TODO: COMPLETAR
-    @Override
-    public void createWallet(UUID walletId) throws CantCreateWalletException {
-        /*
-         * El wallet manager va a llamar este método con un UUID.
-         * La idea es que el plug-in root creer un UUID interno y lo asocie a este UUID que recibió
-         * Luego creoa una BitcoinWalletBasicWallet y llama al método create() de esa wallet pasándole este
-         * UUID interno.
-         */
-    }
 
     @Override
     public BitcoinWallet loadWallet(UUID walletId) throws CantLoadWalletException {
+
+        bitcoinWallet = new BitcoinWalletBasicWallet(this.pluginId);
+        bitcoinWallet.setErrorManager(this.errorManager);
+        bitcoinWallet.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+
+
+      //  try {
+       //     bitcoinWallet.initialize(walletId);
+       // }catch(CantInitializeBitcoinWalletBasicException CantInitializeBitcoinWallet)
+      //  {
+       //     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, CantInitializeBitcoinWallet);
+       //     throw new CantLoadWalletException();
+       // }
+
+
+
         return this.bitcoinWallet;
-        /* TODO:
-         * Este método va a buscar el UUID que le pasan en el archivo que mantiene las referencias
-         * Toma el UUID asociado a este ID que le pasaron y crea una BitcoinWalletBasicWallet. A diferencia del
-         * create este método va a llamar al initialize de la BitcoinWalletBasicWallet.
-         */
+
+
+
     }
 
+    @Override
+    public void createWallet(UUID walletId) throws CantCreateWalletException {
+
+        bitcoinWallet = new BitcoinWalletBasicWallet(this.pluginId);
+        bitcoinWallet.setErrorManager(this.errorManager);
+        bitcoinWallet.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+
+
+        try {
+            bitcoinWallet.create(walletId);
+        }catch(CantInitializeBitcoinWalletBasicException CantInitializeBitcoinWallet)
+        {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, CantInitializeBitcoinWallet);
+            throw new CantCreateWalletException();
+        }
+
+    }
 }
 

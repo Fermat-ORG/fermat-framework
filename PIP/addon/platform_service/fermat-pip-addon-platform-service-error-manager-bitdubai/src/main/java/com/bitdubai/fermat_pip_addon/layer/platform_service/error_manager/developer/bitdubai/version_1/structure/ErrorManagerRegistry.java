@@ -42,7 +42,17 @@ public class ErrorManagerRegistry {
     private long sent;
     private long timeStampMillis;
     private PlatformDatabaseSystem platformDatabaseSystem;
-    Database errorManagerDB;
+    private Database errorManagerDB;
+
+    public ErrorManagerRegistry(){
+    }
+
+    public ErrorManagerRegistry(String value){
+        if(value == null)
+            throw new IllegalArgumentException();
+
+    }
+
 
 
     /*
@@ -128,7 +138,7 @@ public class ErrorManagerRegistry {
             try {
                 this.errorManagerDB = databasefactory.createErrorManagerDatabase();
             } catch (CantCreateDatabaseException e1) {
-                //Implement ErrorManager exception catch
+                throw new RuntimeException();
             }
 
         }

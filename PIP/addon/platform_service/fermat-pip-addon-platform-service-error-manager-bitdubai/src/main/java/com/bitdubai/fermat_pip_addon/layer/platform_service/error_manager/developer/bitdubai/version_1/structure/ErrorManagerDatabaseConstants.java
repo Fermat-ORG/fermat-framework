@@ -9,14 +9,14 @@ public class ErrorManagerDatabaseConstants {
     /**
      * ErrorManager exception report database table definition.
      */
-    static final String EXCEPTION_DATABASE_NAME = "ErrorManagerExceptionDatabase";
-    static final String EXCEPTION_TABLE_NAME = "ErrorManagerPluginExceptions";
-    static final String EXCEPTION_TABLE_ID_COLUMN_NAME = "Id";
-    static final String EXCEPTION_TABLE_COMPONENT_TYPE_COLUMN_NAME = "ComponentType";
-    static final String EXCEPTION_TABLE_COMPONENT_NAME_COLUMN_NAME = "Name";
-    static final String EXCEPTION_TABLE_SEVERITY_COLUMN_NAME = "ExceptionSeverity";
-    static final String EXCEPTION_TABLE_MESSAGE_COLUMN_NAME = "ExceptionMessage";
-    static final String EXCEPTION_TABLE_SENT_COLUMN_NAME = "Send";
-    static final String EXCEPTION_TABLE_TIMESTAMP_COLUMN_NAME = "TimeStamp";
+    public static final String EXCEPTION_DATABASE_NAME = "ErrorManagerExceptionDatabase";
+    public static final String EXCEPTION_TABLE_NAME = "ErrorManagerPluginExceptions";
+    public static final String EXCEPTION_TABLE_ID_COLUMN_NAME = "Id";
+    public static final String EXCEPTION_TABLE_COMPONENT_TYPE_COLUMN_NAME = "ComponentType";
+    public static final String EXCEPTION_TABLE_COMPONENT_NAME_COLUMN_NAME = "Name";
+    public static final String EXCEPTION_TABLE_SEVERITY_COLUMN_NAME = "ExceptionSeverity";
+    public static final String EXCEPTION_TABLE_MESSAGE_COLUMN_NAME = "ExceptionMessage";
+    public static final String EXCEPTION_TABLE_SENT_COLUMN_NAME = "Send";
+    public static final String EXCEPTION_TABLE_TIMESTAMP_COLUMN_NAME = "TimeStamp";
 
 }
