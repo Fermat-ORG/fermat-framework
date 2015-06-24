@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.view.View.OnTouchListener;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Wallets;
@@ -382,8 +383,8 @@ public class UsdBalanceFragment extends Fragment {
                     mTicketsList.remove(item1);
                     break;
             }
-        } catch (CantGetResourcesException catGetResource) {
-            platform.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, catGetResource);
+        } catch (CantGetResourcesException cantGetResource) {
+            platform.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, cantGetResource);
         }
 
         return false;
@@ -1093,10 +1094,11 @@ public class UsdBalanceFragment extends Fragment {
             outStream.close();
 
         } catch (FileNotFoundException fileNotFound) {
-            platform.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, fileNotFound);
+            FermatException exception = new FermatException(fileNotFound.getMessage(), fileNotFound, "", "");
+            platform.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, exception);
         } catch (IOException ioException) {
-
-            platform.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ioException);
+            FermatException exception = new FermatException(ioException.getMessage(), ioException, "", "");
+            platform.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, exception);
 
         }
 

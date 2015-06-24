@@ -17,6 +17,7 @@ import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Wallets;
@@ -318,7 +319,8 @@ public class TicketFragment  extends  DialogFragment  {
 
                         this.imageMoney.setImageDrawable(d);
                     } catch (FileNotFoundException e) {
-                        platform.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
+                        FermatException exception = new FermatException(e.getMessage(), e, "", "");
+                        platform.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, exception);
                     }
 
                 }
@@ -434,10 +436,12 @@ public class TicketFragment  extends  DialogFragment  {
                 outStream.flush();
                 outStream.close();
 
-            } catch (FileNotFoundException fileNotFound) {
-                platform.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, fileNotFound);
-            } catch (IOException ioException) {
-                platform.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ioException);
+            } catch (FileNotFoundException ex) {
+                FermatException exception = new FermatException(ex.getMessage(), ex, "", "");
+                platform.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, exception);
+            } catch (IOException ex) {
+                FermatException exception = new FermatException(ex.getMessage(), ex, "", "");
+                platform.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, exception);
             }
 
             String imagePath = mFile1.getAbsolutePath().toString()+"/"+fileName;

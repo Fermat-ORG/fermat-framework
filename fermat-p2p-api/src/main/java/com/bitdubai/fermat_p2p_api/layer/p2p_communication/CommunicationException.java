@@ -16,8 +16,12 @@ public class CommunicationException extends FermatException {
 
 	private static final String DEFAULT_MESSAGE = "THE COMMUNICATION LAYER HAS TRIGGERED AN EXCEPTION: ";
 
+	public CommunicationException(final String message, final Exception cause, final String context, final String possibleReason){
+		super(DEFAULT_MESSAGE + message, cause, context, possibleReason);
+	}
+
 	public CommunicationException(final String message, final Exception cause){
-		super(message, cause);
+		this(DEFAULT_MESSAGE + message, cause, "", "");
 	}
 
 	public CommunicationException(final String message){
