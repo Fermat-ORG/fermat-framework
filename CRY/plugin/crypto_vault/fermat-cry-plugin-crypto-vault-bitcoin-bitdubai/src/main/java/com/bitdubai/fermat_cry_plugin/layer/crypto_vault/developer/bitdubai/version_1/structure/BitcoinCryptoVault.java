@@ -512,7 +512,8 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         Sha256Hash hash = new Sha256Hash(txHash);
         Transaction tx = vault.getTransaction(hash);
 
-        String addressTo = tx.getInput(0).getScriptSig().getToAddress(networkParameters).toString();
+        //String addressTo = tx.getInput(0).getScriptSig().getToAddress(networkParameters).toString();
+        String addressTo = tx.getInput(0).getFromAddress().toString();
         return addressTo;
     }
 
