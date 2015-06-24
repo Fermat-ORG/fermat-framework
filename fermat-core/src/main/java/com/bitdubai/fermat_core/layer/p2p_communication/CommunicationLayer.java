@@ -100,7 +100,7 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
 
 
     @Override
-    public void registerNetworkService(NetworkServices networkService) {
+    public void registerNetworkService(NetworkServices networkService) throws CommunicationException{
         this.networkServices.add(networkService);
         
         ((CommunicationChannel) mCloudPlugin).registerNetworkService(networkService);
@@ -108,15 +108,15 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
     }
 
     @Override
-    public void unregisterNetworkService(NetworkServices networkService) {
+    public void unregisterNetworkService(NetworkServices networkService) throws CommunicationException{
         this.networkServices.remove(networkService);
 
         ((CommunicationChannel) mCloudPlugin).unregisterNetworkService(networkService);
-        
+
     }
 
     @Override
-    public void acceptIncomingNetworkServiceConnectionRequest(CommunicationChannels communicationChannel, NetworkServices networkService, String remoteNetworkService) throws CommunicationChannelNotImplemented {
+    public void acceptIncomingNetworkServiceConnectionRequest(CommunicationChannels communicationChannel, NetworkServices networkService, String remoteNetworkService) throws CommunicationException {
 
         switch (communicationChannel) {
             case CLOUD:
@@ -124,11 +124,11 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
                 return;
         }
         
-        throw new CommunicationChannelNotImplemented();
+        throw new CommunicationChannelNotImplementedException();
     }
 
     @Override
-    public void rejectIncomingNetworkServiceConnectionRequest(CommunicationChannels communicationChannel, NetworkServices networkService, String remoteNetworkService, RejectConnectionRequestReasons reason) throws CommunicationChannelNotImplemented {
+    public void rejectIncomingNetworkServiceConnectionRequest(CommunicationChannels communicationChannel, NetworkServices networkService, String remoteNetworkService, RejectConnectionRequestReasons reason) throws CommunicationException {
 
         switch (communicationChannel) {
 
@@ -137,17 +137,17 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
 
         }
 
-        throw new CommunicationChannelNotImplemented();
+        throw new CommunicationChannelNotImplementedException();
     }
 
     @Override
-    public ServiceToServiceOnlineConnection getActiveNetworkServiceConnection(CommunicationChannels communicationChannel, NetworkServices networkService, String remoteNetworkService) {
+    public ServiceToServiceOnlineConnection getActiveNetworkServiceConnection(CommunicationChannels communicationChannel, NetworkServices networkService, String remoteNetworkService) throws CommunicationException{
         return ((CommunicationChannel) mCloudPlugin).getActiveNetworkServiceConnection(networkService, remoteNetworkService);
     //TODO: JORGE usar el objeto LayerServiceToServiceOnlineConnection para encapsular la conexion real.
     }
 
     @Override
-    public Collection<String> getActiveNetworkServiceConnectionIdentifiers(NetworkServices networkService) {
+    public Collection<String> getActiveNetworkServiceConnectionIdentifiers(NetworkServices networkService) throws CommunicationException{
         return ((CommunicationChannel) mCloudPlugin).getActiveNetworkServiceConnectionIdentifiers(networkService);
     }
 
@@ -155,7 +155,7 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
      * This is the primary method to connect a local network service to a remote network service.
      */
     @Override
-    public void requestConnectionTo(NetworkServices networkService, String remoteNetworkService) throws CantConnectToRemoteServiceException{
+    public void requestConnectionTo(NetworkServices networkService, String remoteNetworkService) throws CommunicationException{
         ((CommunicationChannel) mCloudPlugin).requestConnectiontTo(networkService, remoteNetworkService);
     }
     

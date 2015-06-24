@@ -14,7 +14,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlugin
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 //TODO se movio la interface
 //import com.bitdubai.fermat_api.layer.osa_android.device_location.DealsWithDeviceLocation;
 //import com.bitdubai.fermat_api.layer.osa_android.device_location.Location;
@@ -94,7 +94,7 @@ public class LocationServiceMonitorAgent implements DealsWithErrors,DealsWithDev
         });
     }
 
-    private void doTheMainTask() throws CantGetDeviceLocationException, CantInsertRecord {
+    private void doTheMainTask() throws CantGetDeviceLocationException, CantInsertRecordException {
         Location location = null;
         try {
             location = locationManager.getLocation();

@@ -14,23 +14,23 @@ public interface CommunicationChannel {
     
     public String getChannelPublicKey();
     
-    public void registerNetworkService (NetworkServices networkService);
+    public void registerNetworkService (NetworkServices networkService) throws NetworkServiceNotSupportedException;
     
-    public void unregisterNetworkService (NetworkServices networkService);
+    public void unregisterNetworkService (NetworkServices networkService) throws NetworkServiceNotRegisteredException;
     
-    public String getNetworkServiceChannelPublicKey(NetworkServices networkService);
+    public String getNetworkServiceChannelPublicKey(NetworkServices networkService) throws NetworkServiceNotRegisteredException;
 
     public void requestConnectiontTo(NetworkServices networkServices, String remoteNetworkService) throws CantConnectToRemoteServiceException;
     
-    public Collection<String> getIncomingNetworkServiceConnectionRequests(NetworkServices networkService);
+    public Collection<String> getIncomingNetworkServiceConnectionRequests(NetworkServices networkService) throws NetworkServiceNotRegisteredException;
 
-    public void acceptIncomingNetworkServiceConnectionRequest (NetworkServices networkService, String remoteNetworkService);
+    public void acceptIncomingNetworkServiceConnectionRequest (NetworkServices networkService, String remoteNetworkService) throws NetworkServiceNotRegisteredException;
 
-    public void rejectIncomingNetworkServiceConnectionRequest (NetworkServices networkService, String remoteNetworkService, RejectConnectionRequestReasons reason );
+    public void rejectIncomingNetworkServiceConnectionRequest (NetworkServices networkService, String remoteNetworkService, RejectConnectionRequestReasons reason ) throws NetworkServiceNotRegisteredException;
 
-    public ServiceToServiceOnlineConnection getActiveNetworkServiceConnection(NetworkServices networkService, String remoteNetworkService);
+    public ServiceToServiceOnlineConnection getActiveNetworkServiceConnection(NetworkServices networkService, String remoteNetworkService) throws NetworkServiceNotRegisteredException;
 
-    public Collection<String> getActiveNetworkServiceConnectionIdentifiers(NetworkServices networkService);
+    public Collection<String> getActiveNetworkServiceConnectionIdentifiers(NetworkServices networkService) throws NetworkServiceNotRegisteredException;
 
     //TODO: JORGE El Cloud Server no deberia ser un Communication Channel
     //TODO: JORGE Sacar los metodos que no sirvan
