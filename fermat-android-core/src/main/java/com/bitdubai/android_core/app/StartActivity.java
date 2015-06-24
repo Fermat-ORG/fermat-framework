@@ -43,29 +43,20 @@ import com.bitdubai.smartwallet.R;
 
 /**
  * This Activity is used as a loader, to show something while the Fermat Platform is being initialized.
- *
+ * <p>
  * -- Luis.
  */
 
-public class StartActivity extends FragmentActivity{
+public class StartActivity extends FragmentActivity {
 
 
     public static final String START_ACTIVITY_INIT = "Init";
 
-    private NavigationDrawerFragment NavigationDrawerFragment;
-
-    private PagerAdapter PagerAdapter;
-    public CharSequence Title; // NATALIA TODO:porque esto es publico? LUIS lo usa la funcion Restore Action bar
-    private Menu menu;
-    private PagerSlidingTabStrip tabStrip;
-    private App app;
-    private SubApp subApp;
-    private Activity activity;
     private AppRuntimeManager appRuntimeMiddleware;
     private WalletRuntimeManager walletRuntimeMiddleware;
     private ErrorManager errorManager;
 
-    private  AndroidOsFileSystem fileSystemOs;
+    private AndroidOsFileSystem fileSystemOs;
     private CorePlatformContext platformContext;
     private AndroidOsDataBaseSystem databaseSystemOs;
     private AndroidOsLocationSystem locationSystemOs;
@@ -84,22 +75,18 @@ public class StartActivity extends FragmentActivity{
         try {
             try {
                 setContentView(R.layout.splash_screen);
-            }
-            catch (Exception e)
-            {
+            } catch (Exception e) {
                 Toast.makeText(getApplicationContext(), "Can't set content view as runtime_app_activity_runtime: " + e.getMessage(),
                         Toast.LENGTH_LONG).show();
-               // System.err.println("Can't set content view as runtime_app_activity_runtime: " + e.getMessage());
+                // System.err.println("Can't set content view as runtime_app_activity_runtime: " + e.getMessage());
             }
 
             this.savedInstanceState = savedInstanceState;
             new GetTask(this).execute();
 
 
-
             //NavigateActivity();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
 
             //TODO : MATIAS estas seguro que el error Manager existe en este punto?? LUIS
 
@@ -113,13 +100,13 @@ public class StartActivity extends FragmentActivity{
 
     }
 
-    public void handleTouch(View view){
+    public void handleTouch(View view) {
         fermatInit();
     }
 
-    private boolean fermatInit(){
-        Intent intent = new Intent(this,SubAppActivity.class);
-        intent.putExtra(START_ACTIVITY_INIT,"init");
+    private boolean fermatInit() {
+        Intent intent = new Intent(this, SubAppActivity.class);
+        intent.putExtra(START_ACTIVITY_INIT, "init");
         startActivity(intent);
         return true;
     }
@@ -169,17 +156,14 @@ public class StartActivity extends FragmentActivity{
 
             Bundle bundle = getIntent().getExtras();
 
-            try
-            {
-                if(bundle != null){
-                    if(bundle.getString("executeStart").toString() == "0")
+            try {
+                if (bundle != null) {
+                    if (bundle.getString("executeStart").toString() == "0")
                         platform.start();
-                }else
-                {
+                } else {
                     platform.start();
                 }
-            }
-            catch (CantStartPlatformException | CantReportCriticalStartingProblem e) {
+            } catch (CantStartPlatformException | CantReportCriticalStartingProblem e) {
                 System.err.println("CantStartPlatformException: " + e.getMessage());
 
                 Toast.makeText(getApplicationContext(), "Catastrophic Failure Starting Fermat Platform" + e.getMessage(),
@@ -191,8 +175,8 @@ public class StartActivity extends FragmentActivity{
             platformContext = platform.getCorePlatformContext();
 
             //get instances of Runtime Middleware object
-            appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
-            walletRuntimeMiddleware =  (WalletRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_WALLET_RUNTIME_MODULE);
+            appRuntimeMiddleware = (AppRuntimeManager) platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
+            walletRuntimeMiddleware = (WalletRuntimeManager) platformContext.getPlugin(Plugins.BITDUBAI_WALLET_RUNTIME_MODULE);
 
             //save object on global class
             MyApplication.setAppRuntime(appRuntimeMiddleware);
