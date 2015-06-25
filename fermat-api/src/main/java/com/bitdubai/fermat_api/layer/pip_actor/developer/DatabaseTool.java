@@ -1,20 +1,28 @@
 package com.bitdubai.fermat_api.layer.pip_actor.developer;
 
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+
+import java.util.List;
+
 /**
  * Created by ciencias on 6/25/15.
  */
 public interface DatabaseTool {
 
-    public void getAvailablePluginList (); //TODO ver que tipo de lista devuelve
+    public List<Plugins> getAvailablePluginList ();
 
-    public void getAvailableAddonList (); //TODO ver que tipo de lista devuelve
+    public List<Addons> getAvailableAddonList ();
 
-    public void getDatabaseListFromPlugin (); //TODO ver que tipo de lista devuelve y que parametros enviarle
+    public List<DeveloperDatabase> getDatabaseListFromPlugin (Plugins plugin);
 
-    public void getDatabaseListFromAddon (); //TODO ver que tipo de lista devuelve y que parametros enviarle
+    public List<DeveloperDatabase>  getDatabaseListFromAddon (Addons Addon);
 
-    public void getTableListFromDatabase (); //TODO ver que tipo de lista devuelve y que parametros enviarle
+    public List<DeveloperDatabaseTable>  getTableListFromDatabase (DeveloperDatabase developerDatabase);
 
-    public void getTableContent (); //TODO ver que tipo de lista devuelve y que parametros enviarle
+    public List<DeveloperDatabaseTableRecord>  getTableContent (DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable);
 
 }
