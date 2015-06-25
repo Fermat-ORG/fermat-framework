@@ -15,33 +15,26 @@ import java.util.Map;
  */
 public class CorePlatformContext implements PlatformContext {
 
-    Map addons = new HashMap();
-    Map plugins = new HashMap();
+    Map<Addons, Addon> addons = new HashMap<Addons, Addon>();
+    Map<Plugins, Plugin> plugins = new HashMap<Plugins, Plugin>();
     
     public void addAddon (Addon addon, Addons descriptor) {
-
-        addons.put(descriptor.getKey(),addon);
-
+        addons.put(descriptor,addon);
     }
     
     
     public Addon getAddon (Addons descriptor){
-
-        return (Addon) addons.get(descriptor.getKey());
-
+        return (Addon) addons.get(descriptor);
     }
 
 
     public void addPlugin (Plugin plugin, Plugins descriptor) {
-
-        plugins.put(descriptor.getKey(),plugin);
-
+        plugins.put(descriptor,plugin);
     }
 
 
     public Plugin getPlugin (Plugins descriptor){
-
-        return (Plugin) plugins.get(descriptor.getKey());
+        return (Plugin) plugins.get(descriptor);
     }
 
 

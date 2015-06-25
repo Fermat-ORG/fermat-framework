@@ -68,14 +68,14 @@ import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.IncomingC
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
 
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by ciencias on 20.01.15.
  */
 public class Platform  {
-
-
 
     PlatformLayer mDefinitionLayer = new DefinitionLayer();
     PlatformLayer mPlatformServiceLayer = new PlatformServiceLayer();
@@ -97,6 +97,12 @@ public class Platform  {
     PlatformLayer mBasicWalletLayer = new BasicWalletLayer();
     PlatformLayer mNicheWalletTypeLayer = new NicheWalletTypeLayer();
     PlatformLayer mActorLayer = new ActorLayer();
+
+    Map<Plugins, Plugin> dealsWithDatabaseManagersPlugins = new ConcurrentHashMap<Plugins, Plugin>();
+    Map<Plugins, Plugin> dealsWithLogManagersPlugins = new ConcurrentHashMap<Plugins, Plugin>();
+
+    Map<Addons, Addon> dealsWithDatabaseManagersAddons = new ConcurrentHashMap<Addons, Addon>();
+    Map<Addons, Addon> dealsWithLogManagersAddons = new ConcurrentHashMap<Addons, Addon>();
 
 
     public PlatformLayer getDefinitionLayer() {
@@ -843,4 +849,13 @@ public class Platform  {
             pluginNotRecognizedException.printStackTrace();
         }
     }
+
+    private void checkAddon(final Addons descriptor){
+        Addon addon = corePlatformContext.getAddon(descriptor);
+    }
+
+    private void checkPlugin(final Plugins descriptor){
+        Plugin plugin = corePlatformContext.getPlugin(descriptor);
+    }
+
 }
