@@ -25,6 +25,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPlatformFi
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlatformDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.pip_actor.developer.DealsWithToolManager;
+import com.bitdubai.fermat_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
@@ -37,6 +39,7 @@ import com.bitdubai.fermat_core.layer.cry_crypto_router.CryptoRouterLayer;
 import com.bitdubai.fermat_core.layer.dmp_basic_wallet.BasicWalletLayer;
 import com.bitdubai.fermat_core.layer.dmp_transaction.TransactionLayer;
 import com.bitdubai.fermat_core.layer.dmp_niche_wallet_type.NicheWalletTypeLayer;
+import com.bitdubai.fermat_core.layer.pip_actor.ActorLayer;
 import com.bitdubai.fermat_core.layer.pip_platform_service.PlatformServiceLayer;
 
 import com.bitdubai.fermat_core.layer.all_definition.DefinitionLayer;
@@ -93,7 +96,7 @@ public class Platform  {
     PlatformLayer mAgentLayer = new AgentLayer();
     PlatformLayer mBasicWalletLayer = new BasicWalletLayer();
     PlatformLayer mNicheWalletTypeLayer = new NicheWalletTypeLayer();
-
+    PlatformLayer mActorLayer = new ActorLayer();
 
 
     public PlatformLayer getDefinitionLayer() {
@@ -166,6 +169,9 @@ public class Platform  {
         return mNicheWalletTypeLayer;
     }
 
+    public PlatformLayer getmActorLayer() {
+        return mActorLayer;
+    }
 
     PlatformEventMonitor eventMonitor;
 
@@ -471,6 +477,14 @@ public class Platform  {
          */
         Plugin cryptoIndexWorld = ((WorldLayer)  mWorldLayer).getCryptoIndex();
         setPluginReferencesAndStart(cryptoIndexWorld, Plugins.BITDUBAI_CRYPTO_INDEX);
+
+        /**
+         * -----------------------------
+         * Plugin Actor Developer
+         * -----------------------------
+         */
+        Plugin actorDeveloper = ((ActorLayer) mActorLayer).getmActorDeveloper();
+        setPluginReferencesAndStart(actorDeveloper, Plugins.BITDUBAI_ACTOR_DEVELOPER);
 
         /**
          * -----------------------------
@@ -781,6 +795,9 @@ public class Platform  {
 
             if (plugin instanceof DealsWithPluginDatabaseSystem)
                 ((DealsWithPluginDatabaseSystem) plugin).setPluginDatabaseSystem(databaseSystemOs.getPluginDatabaseSystem());
+
+            if (plugin instanceof DealsWithToolManager)
+                ((DealsWithToolManager) plugin).setToolManager((ToolManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_ACTOR_DEVELOPER));
 
             if (plugin instanceof DealsWithWalletAddressBook)
                 ((DealsWithWalletAddressBook) plugin).setWalletAddressBookManager((WalletAddressBookManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_WALLET_ADDRESS_BOOK_CRYPTO));

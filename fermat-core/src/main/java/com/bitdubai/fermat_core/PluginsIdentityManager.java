@@ -49,6 +49,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer
 import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bitdubai.version_1.WalletManagerModulePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_runtime.developer.bitdubai.version_1.WalletRuntimeModulePluginRoot;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.BitcoinCryptoNetworkPluginRoot;
+import com.bitdubai.fermat_pip_plugin.layer.actor.developer.developer.bitdubai.version_1.ActorDeveloperPluginRoot;
 import com.fermat_dmp_plugin.layer.module.wallet_factory.developer.bitdubai.version_1.WalletFactoryModulePluginRoot;
 
 import java.util.ArrayList;
@@ -61,7 +62,7 @@ import java.util.UUID;
 public class PluginsIdentityManager {
 
     private PlatformFileSystem platformFileSystem;
-    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 40;
+    private final Integer AMOUNT_OF_KNOWN_PLUGINS = 41;
     private List<UUID> pluginIds = new ArrayList<>();
 
 
@@ -761,6 +762,18 @@ public class PluginsIdentityManager {
                     BitcoinCryptoVaultPluginRoot tryType;
                     tryType = (BitcoinCryptoVaultPluginRoot) plugin;
                     pluginIndex = 39;
+                } catch (Exception e) {
+                    /**
+                     * If this fails, is because this is not the index for this plug in.
+                     */
+                }
+            }
+
+            if (pluginIndex == 0) {
+                try {
+                    ActorDeveloperPluginRoot tryType;
+                    tryType = (ActorDeveloperPluginRoot) plugin;
+                    pluginIndex = 40    ;
                 } catch (Exception e) {
                     /**
                      * If this fails, is because this is not the index for this plug in.
