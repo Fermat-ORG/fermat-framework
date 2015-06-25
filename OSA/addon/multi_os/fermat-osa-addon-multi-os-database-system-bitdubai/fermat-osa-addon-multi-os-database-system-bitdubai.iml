@@ -28,6 +28,10 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="fermat-api" exported="" />
+<<<<<<< HEAD
+    <orderEntry type="library" exported="" name="_home_rrequena_Desarrollos_bitDubai_development_fermat_OSA_addon_multi_os_fermat_osa_addon_multi_os_database_system_bitdubai_libs_saaj_impl_1_3_4_jar" level="project" />
+=======
     <orderEntry type="library" exported="" name="_home_jorgegonzalez_Fermat_fermat_OSA_addon_multi_os_fermat_osa_addon_multi_os_database_system_bitdubai_libs_saaj_impl_1_3_4_jar" level="project" />
+>>>>>>> newbranch/master
   </component>
 </module>

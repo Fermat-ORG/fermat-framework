@@ -1,28 +1,26 @@
 /*
- * @#IncomingNetworkServiceConnectionRequestEvent.java - 2015
+ * @#EstablishedNetworkServiceConnectionEvent.java - 2015
  * Copyright bitDubai.com., All rights reserved.
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
 package com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.events;
 
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels;
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventSource;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventType;
-
-import java.util.UUID;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.events.IncomingNetworkServiceConnectionRequestEvent</code> represent the event
+ * The Class <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.events.EstablishedNetworkServiceConnectionEvent</code> represent the event
  * when a new Incoming Network Service Connection Request is made
  * <p/>
- * Created by Roberto Requena - (rart3001@gmail.com) on 07/06/15.
+ * Created by Roberto Requena - (rart3001@gmail.com) on 24/06/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class IncomingNetworkServiceConnectionRequestEvent implements PlatformEvent {
+public class EstablishedNetworkServiceConnectionEvent implements PlatformEvent {
 
     /**
      *  Represent the eventType
@@ -47,9 +45,9 @@ public class IncomingNetworkServiceConnectionRequestEvent implements PlatformEve
     /**
      * Constructor with parameter
      *
-     * @param eventType
+     * @param eventType type of the event
      */
-    public IncomingNetworkServiceConnectionRequestEvent(EventType eventType){
+    public EstablishedNetworkServiceConnectionEvent(EventType eventType){
         this.eventType = eventType;
     }
 
@@ -61,7 +59,7 @@ public class IncomingNetworkServiceConnectionRequestEvent implements PlatformEve
      * @param eventType   the event type
      * @param remoteNetworkServicePublicKey the remote network service public key
      */
-    public IncomingNetworkServiceConnectionRequestEvent(CommunicationChannels communicationChannels, EventSource eventSource, EventType eventType, String remoteNetworkServicePublicKey) {
+    public EstablishedNetworkServiceConnectionEvent(CommunicationChannels communicationChannels, EventSource eventSource, EventType eventType, String remoteNetworkServicePublicKey) {
         this.communicationChannels = communicationChannels;
         this.eventSource = eventSource;
         this.eventType = eventType;

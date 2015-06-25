@@ -25,5 +25,7 @@ public interface CommunicationLayerManager {
 
     public ServiceToServiceOnlineConnection getActiveNetworkServiceConnection(CommunicationChannels communicationChannel, NetworkServices networkService, String remoteNetworkService) throws CommunicationException;
 
+    public String getNetworkServiceChannelPublicKey(NetworkServices networkService) throws NetworkServiceNotRegisteredException;
+
 // TODO: JORGE Manejo de Excepciones y entregarselas a Roberto
 }
