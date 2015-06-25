@@ -14,7 +14,7 @@ public class FermatException extends Exception {
 	private final String possibleReason;
 
 	public FermatException(final String message, final Exception cause, final String context, final String possibleReason){
-		super(DEFAULT_MESSAGE + message, cause);
+		super(message, cause);
 		if(cause instanceof FermatException)
 			this.cause = (FermatException) cause;
 		else

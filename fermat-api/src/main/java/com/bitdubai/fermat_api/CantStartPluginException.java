@@ -5,7 +5,7 @@ package com.bitdubai.fermat_api;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 
 
-public class CantStartPluginException extends Exception{
+public class CantStartPluginException extends FermatException{
     
 
 	private Plugins plugin;
@@ -13,12 +13,35 @@ public class CantStartPluginException extends Exception{
 	
 	private static final long serialVersionUID = -4797409301346577158L;
 
+    public static final String DEFAULT_MESSAGE = "CAN'T START PLUGIN";
 
-    public  CantStartPluginException (Plugins plugin){
-        this.plugin = plugin;
+    public CantStartPluginException(final String message, final Exception cause, final String context, final String possibleReason) {
+        super(message, cause, context, possibleReason);
     }
-    
-    public Plugins getPlugin (){
-        return this.plugin;
+
+    public CantStartPluginException(final String message, final Exception cause) {
+        this(message, cause, "", "");
+    }
+
+    public CantStartPluginException(final String message) {
+        this(message, null);
+    }
+
+    public CantStartPluginException(final Exception exception, final Plugins plugin) {
+        this(plugin.toString() + " " + exception.getMessage());
+        setStackTrace(exception.getStackTrace());
+    }
+
+    public CantStartPluginException(final Exception exception) {
+        this(exception.getMessage());
+        setStackTrace(exception.getStackTrace());
+    }
+
+    public CantStartPluginException(final Plugins plugin){
+        this(plugin.toString());
+    }
+
+    public CantStartPluginException() {
+        this(DEFAULT_MESSAGE);
     }
 }

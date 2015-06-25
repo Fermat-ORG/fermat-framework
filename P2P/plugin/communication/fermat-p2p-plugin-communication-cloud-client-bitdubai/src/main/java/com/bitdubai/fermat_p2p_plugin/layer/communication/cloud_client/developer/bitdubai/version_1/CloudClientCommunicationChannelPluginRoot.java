@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
@@ -21,8 +22,8 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelA
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.OnlineChannel;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.ServiceToServiceOnlineConnection;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.enums.RejectConnectionRequestReasons;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.exceptions.CloudConnectionException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.enums.RejectConnectionRequestReasons;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.exceptions.CloudCommunicationException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.structure.CloudClientCommunicationManager;
 
@@ -111,7 +112,7 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 	public void registerNetworkService(final NetworkServices networkService) {
 		try {
 			cloudClient.registerNetworkService(networkService);
-		} catch (CloudConnectionException e) {
+		} catch (CloudCommunicationException e) {
 			System.out.println(errorManager.hashCode());
 		}
 	}
@@ -125,7 +126,7 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 	public String getNetworkServiceChannelPublicKey(final NetworkServices networkService) {
 		try {
 			return cloudClient.getNetworkServiceClient(networkService).getPublicKey();
-		} catch (CloudConnectionException e) {
+		} catch (CloudCommunicationException e) {
 			return null;
 		}
 	}
@@ -134,7 +135,7 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 	public void requestConnectiontTo(NetworkServices networkServices, String remoteNetworkService) throws CantConnectToRemoteServiceException {
 		try {
 			cloudClient.getNetworkServiceClient(networkServices).requestVPNConnection(remoteNetworkService);
-		} catch (CloudConnectionException e) {
+		} catch (CloudCommunicationException e) {
 			throw new CantConnectToRemoteServiceException(e.getMessage());
 		}
 	}
@@ -143,7 +144,7 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 	public Collection<String> getIncomingNetworkServiceConnectionRequests(final NetworkServices networkService) {
 		try {
 			return cloudClient.getNetworkServiceClient(networkService).getPendingVPNRequests();
-		} catch (CloudConnectionException e) {
+		} catch (CloudCommunicationException e) {
 			return null;
 		}
 	}
@@ -152,7 +153,7 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 	public void acceptIncomingNetworkServiceConnectionRequest(final NetworkServices networkService, String remoteNetworkService) {
 		try {
 			cloudClient.getNetworkServiceClient(networkService).acceptPendingVPNRequest(remoteNetworkService);
-		} catch (CloudConnectionException | FMPException e) {
+		} catch (CloudCommunicationException | FMPException e) {
 			return;
 		}
 	}
@@ -163,7 +164,7 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 	public ServiceToServiceOnlineConnection getActiveNetworkServiceConnection(final NetworkServices networkService, final String remoteNetworkService) {
 		try {
 			return cloudClient.getNetworkServiceClient(networkService).getActiveVPN(remoteNetworkService);
-		} catch (CloudConnectionException e) {
+		} catch (CloudCommunicationException e) {
 			System.out.println(errorManager.hashCode());
 			return null;
 		}
@@ -173,7 +174,7 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 	public Collection<String> getActiveNetworkServiceConnectionIdentifiers(NetworkServices networkService) {
 		try {
 			return cloudClient.getNetworkServiceClient(networkService).getActiveVPNIdentifiers();
-		} catch (CloudConnectionException e) {
+		} catch (CloudCommunicationException e) {
 			return null;
 		}
 	}
@@ -239,13 +240,20 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
         //EventHandler eventHandler;
     	ExecutorService executor = Executors.newCachedThreadPool();
     	String clientKey = AsymmectricCryptography.createPrivateKey();
-    	try{ 
-    		cloudClient = new CloudClientCommunicationManager(serverAddress, executor, clientKey, serverPublicKey);
+		cloudClient = new CloudClientCommunicationManager(serverAddress, executor, clientKey, serverPublicKey);
+		try{
     		cloudClient.start();
     		cloudClient.requestConnectionToServer();
     		this.serviceStatus = ServiceStatus.STARTED;
     	} catch(CommunicationException ex){
-			this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CLOUD_CHANNEL, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, ex);
+			StringBuilder contextBuilder = new StringBuilder();
+			contextBuilder.append("Client Public Key: " + cloudClient.getPublicKey() + " ");
+			contextBuilder.append("Server Address: " + cloudClient.getAddress().toString()+ " ");
+
+			CantStartPluginException pluginException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, ex, contextBuilder.toString(), "The Cloud Client Failed To Initialize");
+
+			this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CLOUD_CHANNEL, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginException);
+
 			stop();
     	}
     }
@@ -272,7 +280,7 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
         this.serviceStatus = ServiceStatus.STOPPED;
         try {
 			this.cloudClient.stop();
-		} catch (CloudConnectionException e) {
+		} catch (CloudCommunicationException e) {
 				return;
 		}
     }

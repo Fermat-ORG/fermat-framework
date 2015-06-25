@@ -7,26 +7,19 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v4.app.FragmentActivity;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
 
-import com.bitdubai.android_core.app.common.PagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
-import com.bitdubai.android_core.app.common.version_1.classes.PagerSlidingTabStrip;
-import com.bitdubai.android_core.app.common.version_1.fragment.NavigationDrawerFragment;
 import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsDataBaseSystem;
 import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsFileSystem;
 import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsLocationSystem;
-import com.bitdubai.fermat_api.CantReportCriticalStartingProblem;
+import com.bitdubai.fermat_api.CantReportCriticalStartingProblemException;
 import com.bitdubai.fermat_api.CantStartPlatformException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.Activity;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.App;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.AppRuntimeManager;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
@@ -163,7 +156,7 @@ public class StartActivity extends FragmentActivity {
                 } else {
                     platform.start();
                 }
-            } catch (CantStartPlatformException | CantReportCriticalStartingProblem e) {
+            } catch (CantStartPlatformException | CantReportCriticalStartingProblemException e) {
                 System.err.println("CantStartPlatformException: " + e.getMessage());
 
                 Toast.makeText(getApplicationContext(), "Catastrophic Failure Starting Fermat Platform" + e.getMessage(),

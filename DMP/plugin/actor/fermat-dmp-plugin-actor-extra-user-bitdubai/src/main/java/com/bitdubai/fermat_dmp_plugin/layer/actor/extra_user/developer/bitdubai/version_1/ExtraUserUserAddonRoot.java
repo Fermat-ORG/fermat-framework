@@ -175,7 +175,7 @@ public class ExtraUserUserAddonRoot implements Addon, DealsWithErrors, DealsWith
 
         } catch (CantInitializeExtraUserRegistryException cantInitializeExtraUserRegistryException) {
             errorManager.reportUnexpectedAddonsException(Addons.EXTRA_USER, UnexpectedAddonsExceptionSeverity.DISABLES_THIS_ADDONS, cantInitializeExtraUserRegistryException);
-            throw new CantStartPluginException(Plugins.BITDUBAI_USER_EXTRA_USER);
+            throw new CantStartPluginException(cantInitializeExtraUserRegistryException, Plugins.BITDUBAI_USER_EXTRA_USER);
         }
 
     }

@@ -123,7 +123,7 @@ public class DiscountWalletBasicWalletPluginRoot implements DealsWithCryptoIndex
                  */
                 System.err.println("cantCreateFileException: " + cantCreateFileException.getMessage());
                 cantCreateFileException.printStackTrace();
-                throw new CantStartPluginException(Plugins.BITDUBAI_DISCOUNT_WALLET_BASIC_WALLET);
+                throw new CantStartPluginException(cantCreateFileException, Plugins.BITDUBAI_DISCOUNT_WALLET_BASIC_WALLET);
             }
             try {
                 walletIdsFile.loadFromMedia();
@@ -163,7 +163,7 @@ public class DiscountWalletBasicWalletPluginRoot implements DealsWithCryptoIndex
                  */
                 System.err.println("CantLoadFileException: " + cantLoadFileException.getMessage());
                 cantLoadFileException.printStackTrace();
-                throw new CantStartPluginException(Plugins.BITDUBAI_DISCOUNT_WALLET_BASIC_WALLET);
+                throw new CantStartPluginException(cantLoadFileException, Plugins.BITDUBAI_DISCOUNT_WALLET_BASIC_WALLET);
             }
         }
         catch (FileNotFoundException fileNotFoundException) {
@@ -186,7 +186,7 @@ public class DiscountWalletBasicWalletPluginRoot implements DealsWithCryptoIndex
                  */
                 System.err.println("cantCreateFileException: " + cantCreateFileException.getMessage());
                 cantCreateFileException.printStackTrace();
-                throw new CantStartPluginException(Plugins.BITDUBAI_DISCOUNT_WALLET_BASIC_WALLET);
+                throw new CantStartPluginException(cantCreateFileException, Plugins.BITDUBAI_DISCOUNT_WALLET_BASIC_WALLET);
             }
             try {
                 walletIdsFile.persistToMedia();
@@ -198,7 +198,7 @@ public class DiscountWalletBasicWalletPluginRoot implements DealsWithCryptoIndex
                  */
                 System.err.println("CantPersistFileException: " + cantPersistFileException.getMessage());
                 cantPersistFileException.printStackTrace();
-                throw new CantStartPluginException(Plugins.BITDUBAI_DISCOUNT_WALLET_BASIC_WALLET);
+                throw new CantStartPluginException(cantPersistFileException, Plugins.BITDUBAI_DISCOUNT_WALLET_BASIC_WALLET);
             }
         }
         
