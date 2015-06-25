@@ -1,14 +1,17 @@
 package com.bitdubai.fermat_api.layer.all_definition.developer;
 
+import java.util.List;
+
 /**
  * Created by ciencias on 6/25/15.
  */
 public interface DatabaseManagerForDevelopers {
 
-    public void getDatabaseList(); //TODO: Ver que tipo de datos devuelve. (debiera ser un xml)
 
-    public void getDatabaseTableList(); //TODO: Ver que tipo de datos devuelve. (debiera ser un xml)
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory);
 
-    public void getDatabaseTableContent(); //TODO: Ver que tipo de datos devuelve. (debiera ser un xml)
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase);
+
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable);
 
 }
