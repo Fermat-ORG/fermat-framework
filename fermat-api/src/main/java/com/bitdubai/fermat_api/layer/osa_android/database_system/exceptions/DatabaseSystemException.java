@@ -7,26 +7,17 @@ import com.bitdubai.fermat_api.layer.osa_android.OsaAndroidException;
  */
 public class DatabaseSystemException extends OsaAndroidException {
 
-    public static final String DEFAULT_MESSAGE = "THE DATABASE SYSTEM HAS TRIGGERED AN EXCEPTION";
+    private static final String DEFAULT_MESSAGE = "THE DATABASE SYSTEM HAS TRIGGERED AN EXCEPTION: ";
 
-    public DatabaseSystemException(final String message, final Exception cause, final String context, final String possibleReason) {
-        super(message, cause, context, possibleReason);
+    public DatabaseSystemException(final String message, final Exception cause){
+        super(DEFAULT_MESSAGE + message, cause);
     }
 
-    public DatabaseSystemException(final String message, final Exception cause) {
-        this(message, cause, "", "");
-    }
-
-    public DatabaseSystemException(final String message) {
+    public DatabaseSystemException(final String message){
         this(message, null);
     }
 
-    public DatabaseSystemException(final Exception exception) {
-        this(exception.getMessage());
-        setStackTrace(exception.getStackTrace());
-    }
-
-    public DatabaseSystemException() {
-        this(DEFAULT_MESSAGE);
+    public DatabaseSystemException(){
+        this("");
     }
 }
