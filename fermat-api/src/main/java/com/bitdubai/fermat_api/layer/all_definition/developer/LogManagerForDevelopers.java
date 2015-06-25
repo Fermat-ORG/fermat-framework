@@ -9,10 +9,10 @@ package com.bitdubai.fermat_api.layer.all_definition.developer;
  * level at runtime.
  */
 
-public interface LoggingManagerForDevelopers {
+public interface LogManagerForDevelopers {
 
-    public LoggingLevel getLoggingLevel();
+    public LogLevel getLoggingLevel();
 
-    public void changeLoggingLevel(LoggingLevel newLoggingLevel);
+    public void changeLoggingLevel(LogLevel newLoggingLevel);
 
 }

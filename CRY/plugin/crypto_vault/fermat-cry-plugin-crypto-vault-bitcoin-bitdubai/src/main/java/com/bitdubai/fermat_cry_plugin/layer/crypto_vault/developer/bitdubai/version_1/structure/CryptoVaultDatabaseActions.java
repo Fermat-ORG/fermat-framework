@@ -210,6 +210,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
         /**
          * I get the transaction IDs and Hashes for the TO_BE_NOTIFIED
          */
+        /*
         cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME, ProtocolStatus.SENDING_NOTIFIED.toString(), DatabaseFilterType.EQUAL);
         try {
             cryptoTxTable.loadToMemory();
@@ -220,7 +221,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
             throw new CantExecuteQueryException();
         }
-
+        */
 
         return transactionsIds;
     }
@@ -390,7 +391,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
             emptyRecord.setIntegerValue(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_ocurrences_COLUMN_NAME, 0);
 
             /**
-             * returns 0
+             * returns 1
              */
             return 0;
         }
@@ -403,7 +404,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
              * I need to increase the ocurrences counter by one
              */
             int ocurrence = record.getIntegerValue(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_ocurrences_COLUMN_NAME);
-            ocurrence = ocurrence +1;
+            ocurrence++;
             record.setIntegerValue(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_ocurrences_COLUMN_NAME, ocurrence);
             dbTx.addRecordToUpdate(transactionProtocolStatusTable, record);
 

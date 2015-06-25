@@ -3,7 +3,7 @@ package com.bitdubai.fermat_api.layer.all_definition.developer;
 /**
  * Created by ciencias on 6/25/15.
  */
-public enum LoggingLevel {
+public enum LogLevel {
 
     NOT_LOGGING,
     MINIMAL_LOGGING,
