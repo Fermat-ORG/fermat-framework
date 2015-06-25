@@ -19,7 +19,7 @@ public interface LogTool {
 
     public LogLevel getLogLevel(Addons addon);
 
-    public void changeLogLevel(Plugins plugin, LogLevel newLogLevel);
+    public void setLogLevel(Plugins plugin, LogLevel newLogLevel);
 
-    public void changeLogLevel(Addons addon, LogLevel newLogLevel);
+    public void setLogLevel(Addons addon, LogLevel newLogLevel);
 }

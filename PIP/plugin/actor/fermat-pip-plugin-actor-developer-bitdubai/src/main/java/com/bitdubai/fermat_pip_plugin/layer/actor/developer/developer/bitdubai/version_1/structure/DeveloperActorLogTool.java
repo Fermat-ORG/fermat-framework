@@ -32,12 +32,12 @@ public class DeveloperActorLogTool implements LogTool {
     }
 
     @Override
-    public void changeLogLevel(Plugins plugin, LogLevel newLogLevel) {
+    public void setLogLevel(Plugins plugin, LogLevel newLogLevel) {
 
     }
 
     @Override
-    public void changeLogLevel(Addons addon, LogLevel newLogLevel) {
+    public void setLogLevel(Addons addon, LogLevel newLogLevel) {
 
     }
 }
