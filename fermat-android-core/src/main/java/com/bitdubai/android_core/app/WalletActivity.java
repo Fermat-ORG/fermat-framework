@@ -67,6 +67,7 @@ import com.bitdubai.reference_niche_wallet.age.kids.boys.fragments.ProfileCardFr
 import com.bitdubai.reference_niche_wallet.age.kids.boys.fragments.UsdBalanceFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.BalanceFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ContactsFragment;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.DatabaseToolsFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ReceiveFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.SendFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.TransactionsFragment;
@@ -258,16 +259,16 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
                         //the application crash
                         if(!flag) {
                             //fragments.add(android.support.v4.app.Fragment.instantiate(this, WalletDesktopFragment.class.getName()));
-                            fragments.add(android.support.v4.app.Fragment.instantiate(this, WalletDesktopFragment.class.getName()));
+                    //        fragments.add(android.support.v4.app.Fragment.instantiate(this, WalletDesktopFragment.class.getName()));
                             flag=true;
                         }
                         break;
                     case CWP_WALLET_MANAGER_SHOP:
-                        fragments.add(android.support.v4.app.Fragment.instantiate(this, ShopDesktopFragment.class.getName()));
+                     //   fragments.add(android.support.v4.app.Fragment.instantiate(this, ShopDesktopFragment.class.getName()));
                         break;
-                    case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE :
-                        fragments.add(android.support.v4.app.Fragment.instantiate(this, ReceiveFragment.class.getName()));
-                        break;
+                   // case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE :
+                     //   fragments.add(android.support.v4.app.Fragment.instantiate(this, ReceiveFragment.class.getName()));
+                     //   break;
                     case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_PROFILE:
                         break;
                     case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_DESKTOP:
@@ -743,9 +744,14 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
                     case CWP_SHOP_MANAGER_PAID:
                         currentFragment =  AllFragment.newInstance(2);
                         break;
+
+                    /**
+                     * Executing fragments for BITCOIN WALLET.
+                     */
+
                     case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE:
                         bitcoinPlatform = new com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform();
-                         bitcoinPlatform.setNicheWalletTypeCryptoWalletManager((CryptoWalletManager) platformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE));
+                        bitcoinPlatform.setNicheWalletTypeCryptoWalletManager((CryptoWalletManager) platformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE));
 
                         currentFragment =  BalanceFragment.newInstance(0);
                         break;
@@ -774,6 +780,10 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
                         bitcoinPlatform.setNicheWalletTypeCryptoWalletManager((CryptoWalletManager) platformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE));
 
                         currentFragment =  ContactsFragment.newInstance(0);
+                        break;
+
+                    case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_DATABASE_TOOLS:
+                        currentFragment = DatabaseToolsFragment.newInstance(0);
                         break;
 
                     case CWP_SHOP_MANAGER_ACCEPTED_NEARBY:
