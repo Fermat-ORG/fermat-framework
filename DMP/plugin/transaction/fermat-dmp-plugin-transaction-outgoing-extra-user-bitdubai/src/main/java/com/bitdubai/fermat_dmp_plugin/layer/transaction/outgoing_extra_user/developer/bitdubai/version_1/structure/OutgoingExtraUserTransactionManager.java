@@ -25,6 +25,7 @@ import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.exceptions.CantInitializeDaoException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.exceptions.CantRegisterNewTransactionException;
 
 import java.util.UUID;
 
@@ -71,10 +72,7 @@ public class OutgoingExtraUserTransactionManager implements DealsWithBitcoinWall
     }
 
     public void initialize() throws CantInitializeDaoException{
-        this.dao = new OutgoingExtraUserDao();
-        this.dao.setErrorManager(this.errorManager);
-        this.dao.setPluginDatabaseSystem(this.pluginDatabaseSystem);
-        this.dao.initialize(this.pluginId);
+
     }
 
     /*
@@ -123,46 +121,21 @@ public class OutgoingExtraUserTransactionManager implements DealsWithBitcoinWall
 
     @Override
     public void send(UUID walletID, CryptoAddress destinationAddress, long cryptoAmount) throws InsufficientFundsException , CantSendFundsException , InconsistentFundsException {
-        BitcoinWallet bitcoinWallet = null;
-
+        OutgoingExtraUserDao dao = new OutgoingExtraUserDao();
+        dao.setErrorManager(this.errorManager);
+        dao.setPluginDatabaseSystem(this.pluginDatabaseSystem);
         try {
-            bitcoinWallet = this.bitcoinWalletManager.loadWallet(UUID.randomUUID());
-        } catch (CantLoadWalletException e) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw  new CantSendFundsException();
-        }
-
-        /*
-         * We first check our funds
-         */
-        long funds = 0;
-        try {
-            funds = bitcoinWallet.getBalance();
-            if(funds < cryptoAmount)
-                throw  new InsufficientFundsException();
-        } catch (CantCalculateBalanceException e) {
+            dao.initialize(this.pluginId);
+        } catch (CantInitializeDaoException e) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
-            throw  new CantSendFundsException();
-        }
-
-        BitcoinTransaction bitcoinTransaction = new BitcoinTransaction();
-        bitcoinTransaction.setAmount(cryptoAmount);
-
-        try {
-            this.cryptoVaultManager.sendBitcoins(walletID, UUID.randomUUID(), destinationAddress, cryptoAmount);
-        } catch (InsufficientMoneyException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new InconsistentFundsException();
-        } catch (InvalidSendToAddressException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw  new CantSendFundsException();
+            throw new CantSendFundsException();
         }
 
         try {
-            bitcoinWallet.debit(bitcoinTransaction);
-        } catch (CantRegisterDebitDebitException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
-            throw  new CantSendFundsException();
+            dao.registerNewTransaction(walletID, destinationAddress, cryptoAmount);
+        } catch (CantRegisterNewTransactionException e) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            throw new CantSendFundsException();
         }
     }
 }

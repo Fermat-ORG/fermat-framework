@@ -24,8 +24,10 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.exceptions.CantInitializeDaoException;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.structure.OutgoingExtraUserDao;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.structure.OutgoingExtraUserTransactionManager;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.structure.OutgoingExtraUserTransactionProcessorAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +76,7 @@ public class OutgoingExtraUserTransactionPluginRoot implements DealsWithBitcoinW
      */
     ServiceStatus serviceStatus = ServiceStatus.CREATED;
     List<EventListener> listenersAdded = new ArrayList<>();
-
+    OutgoingExtraUserTransactionProcessorAgent transactionProcessorAgent;
     /**
      * Service Interface implementation.
      */
@@ -90,14 +92,16 @@ public class OutgoingExtraUserTransactionPluginRoot implements DealsWithBitcoinW
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,e);
             throw new CantStartPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION);
         }
-        /**
-         * I will initialize the handling of com.bitdubai.platform events.
-         */
 
-        EventListener eventListener;
-        EventHandler eventHandler;
-
-
+        this.transactionProcessorAgent = new OutgoingExtraUserTransactionProcessorAgent();
+        this.transactionProcessorAgent.setErrorManager(this.errorManager);
+        this.transactionProcessorAgent.setOutgoingExtraUserDao(dao);
+        try {
+            this.transactionProcessorAgent.start();
+        } catch (CantStartAgentException e) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION);
+        }
 
         this.serviceStatus = ServiceStatus.STARTED;
     }
