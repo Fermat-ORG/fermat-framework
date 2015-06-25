@@ -26,8 +26,6 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorMan
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
-import com.bitdubai.fermat_pip_plugin.layer.actor.developer.developer.bitdubai.version_1.structure.DeveloperActorDatabaseTool;
-import com.bitdubai.fermat_pip_plugin.layer.actor.developer.developer.bitdubai.version_1.structure.DeveloperActorLogTool;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -93,8 +91,8 @@ public class ActorDeveloperPluginRoot implements DealWithDatabaseManagers, DealW
 
 
     //Esto seria lo nuevo
-    private HashMap<Plugins,Plugin> databaseLstPlugins;
-    private HashMap<Addons,Addon> databaseLstAddonds;
+    private HashMap<Plugins,Plugin> databaseManagersOnPlugins;
+    private HashMap<Addons,Addon> databaseManagersOnAddons;
 
     /**
      *DealWithErrors Interface implementation.
@@ -192,9 +190,9 @@ public class ActorDeveloperPluginRoot implements DealWithDatabaseManagers, DealW
 
 
     @Override
-    public void setDatabaseManagers(HashMap<Plugins,Plugin> databaseLstPlugins,HashMap<Addons,Addon> databaseLstAddonds) {
-        this.databaseLstPlugins=databaseLstPlugins;
-        this.databaseLstAddonds=databaseLstAddonds;
+    public void setDatabaseManagers(HashMap<Plugins,Plugin> databaseManagersOnPlugins,HashMap<Addons,Addon> databaseManagersOnAddons) {
+        this.databaseManagersOnPlugins = databaseManagersOnPlugins;
+        this.databaseManagersOnAddons = databaseManagersOnAddons;
     }
 
     @Override
