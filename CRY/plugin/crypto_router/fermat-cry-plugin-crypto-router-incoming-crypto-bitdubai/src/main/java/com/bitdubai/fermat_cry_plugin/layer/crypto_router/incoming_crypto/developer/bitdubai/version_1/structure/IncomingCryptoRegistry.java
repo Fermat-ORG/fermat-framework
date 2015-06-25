@@ -78,7 +78,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
 
     public void proofTransaction() {
 
-        if(this.flag == 5)
+        if(this.flag == 1)
             return;
 
         this.flag++;
