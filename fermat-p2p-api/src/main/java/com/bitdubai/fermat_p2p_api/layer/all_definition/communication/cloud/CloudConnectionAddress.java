@@ -68,4 +68,14 @@ public class CloudConnectionAddress implements CommunicationChannelAddress {
 		return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
 	}
 
+	@Override
+	public String toString(){
+		StringBuilder builder = new StringBuilder();
+		builder.append("Addres Info: ");
+		builder.append("Host " + host);
+		builder.append(", ");
+		builder.append("Port " + port.toString());
+		return builder.toString();
+	}
+
 }

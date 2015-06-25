@@ -53,8 +53,6 @@ public class ErrorManagerRegistry {
 
     }
 
-
-
     /*
     * Getters and Setters
      */
@@ -125,7 +123,7 @@ public class ErrorManagerRegistry {
 
     /*
     * Methods
-     */
+    */
 
     public void Initialize() {
         try{

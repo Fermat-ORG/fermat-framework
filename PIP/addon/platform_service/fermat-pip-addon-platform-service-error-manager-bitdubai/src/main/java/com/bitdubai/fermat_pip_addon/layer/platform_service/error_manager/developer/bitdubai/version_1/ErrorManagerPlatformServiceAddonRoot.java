@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.Addon;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -65,16 +66,19 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
         parameters = parameters.concat("SEVERITY="+unexpectedPlatformExceptionSeverity.toString()+"&");
         parameters = parameters.concat("MESSAGE="+exception.getMessage()+"&");
         System.out.println(parameters);
+        if(exception instanceof FermatException)
+            printErrorReport(parameters, (FermatException) exception);
+
         try {
             //I need the timestamp when the Exception occurred
-            Calendar timeStamp = Calendar.getInstance();
+            //Calendar timeStamp = Calendar.getInstance();
             //Creates a new ErrorManagerRegistry based on the Exception information provided
             this.errorManagerRegistry.createNewErrorRegistry("Platform",
                     exceptionSource.toString(),
                     unexpectedPlatformExceptionSeverity.toString(),
                     exception.getMessage(),
                     0L,
-                    timeStamp.getTimeInMillis());
+                    System.currentTimeMillis());
         }
         catch (Exception e)
         {
@@ -91,16 +95,19 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
         parameters = parameters.concat("SEVERITY="+unexpectedPluginExceptionSeverity.toString()+"&");
         parameters = parameters.concat("MESSAGE="+exception.getMessage()+"&");
         System.out.println(parameters);
+        if(exception instanceof FermatException)
+            printErrorReport(parameters, (FermatException) exception);
+
         try {
             //I need the timestamp when the Exception occurred
-            Calendar timeStamp = Calendar.getInstance();
+            //Calendar timeStamp = Calendar.getInstance();
             //Creates a new ErrorManagerRegistry based on the Exception information provided
             this.errorManagerRegistry.createNewErrorRegistry("Plugins",
                     exceptionSource.toString(),
                     unexpectedPluginExceptionSeverity.toString(),
-                    exception.getMessage(),
+                    exception.toString(),
                     0L,
-                    timeStamp.getTimeInMillis());
+                    System.currentTimeMillis());
         }
         catch (Exception e)
         {
@@ -113,24 +120,24 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
 
     @Override
     public void reportUnexpectedWalletException(Wallets exceptionSource, UnexpectedWalletExceptionSeverity unexpectedWalletExceptionSeverity, Exception exception) {
-
-
         String parameters = "COMPONENT_TYPE=Wallets&";
         parameters = parameters.concat("COMPONENT_NAME="+exceptionSource.toString()+"&");
         parameters = parameters.concat("SEVERITY="+unexpectedWalletExceptionSeverity.toString()+"&");
         parameters = parameters.concat("MESSAGE="+exception.getMessage()+"&");
         System.out.println(parameters);
+        if(exception instanceof FermatException)
+            printErrorReport(parameters, (FermatException) exception);
 
         try {
             //I need the timestamp when the Exception occurred
-            Calendar timeStamp = Calendar.getInstance();
+            //Calendar timeStamp = Calendar.getInstance();
             //Creates a new ErrorManagerRegistry based on the Exception information provided
             this.errorManagerRegistry.createNewErrorRegistry("Wallets",
                     exceptionSource.toString(),
                     unexpectedWalletExceptionSeverity.toString(),
                     exception.getMessage(),
                     0L,
-                    timeStamp.getTimeInMillis());
+                    System.currentTimeMillis());
         }
         catch (Exception e)
         {
@@ -146,17 +153,19 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
         parameters = parameters.concat("SEVERITY="+unexpectedAddonsExceptionSeverity.toString()+"&");
         parameters = parameters.concat("MESSAGE="+exception.getMessage()+"&");
         System.out.println(parameters);
+        if(exception instanceof FermatException)
+            printErrorReport(parameters, (FermatException) exception);
 
         try {
             //I need the timestamp when the Exception occurred
-            Calendar timeStamp = Calendar.getInstance();
+            //Calendar timeStamp = Calendar.getInstance();
             //Creates a new ErrorManagerRegistry based on the Exception information provided
             this.errorManagerRegistry.createNewErrorRegistry("Addons",
                     exceptionSource.toString(),
                     unexpectedAddonsExceptionSeverity.toString(),
                     exception.getMessage(),
                     0L,
-                    timeStamp.getTimeInMillis());
+                    System.currentTimeMillis());
         }
         catch (Exception e)
         {
@@ -221,6 +230,27 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
         return serviceStatus;
     }
 
+    private void printErrorReport(final String parameters, final FermatException exception){
+        System.out.println("====================================================================\n" +
+                "Fermat Error Manager - Unexpected Exception Report\n" +
+                "====================================================================\n");
+        System.out.println(parameters + "\n");
+        System.out.println("--------------------------------------------------------------------\n");
+        int depth = printException(exception, 1) - 1;
+        System.out.println("Reported " + depth + " exceptions");
+        System.out.println("====================================================================\n");
+    }
 
+    private int printException(final FermatException exception, final int depth){
+        int printDepth;
+        if(exception.getCause() != null)
+            printDepth = printException(exception.getCause(),depth);
+        else
+            printDepth = depth;
+        System.out.println("Exception #: " + printDepth);
+        System.out.println(exception.toString());
+        System.out.println("--------------------------------------------------------------------");
+        return ++printDepth;
+    }
 
 }

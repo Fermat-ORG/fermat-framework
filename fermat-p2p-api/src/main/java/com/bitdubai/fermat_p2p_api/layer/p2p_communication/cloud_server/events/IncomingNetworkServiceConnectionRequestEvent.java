@@ -14,7 +14,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventTyp
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_api.layer.platform_service.event_manager.events.IncomingNetworkServiceConnectionRequestEvent</code> represent the event
+ * The Class <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.events.IncomingNetworkServiceConnectionRequestEvent</code> represent the event
  * when a new Incoming Network Service Connection Request is made
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 07/06/15.
@@ -56,10 +56,10 @@ public class IncomingNetworkServiceConnectionRequestEvent implements PlatformEve
     /**
      * Constructor with parameters
      *
-     * @param communicationChannels
-     * @param eventSource
-     * @param eventType
-     * @param remoteNetworkServicePublicKey
+     * @param communicationChannels the communication channels
+     * @param eventSource the event source
+     * @param eventType   the event type
+     * @param remoteNetworkServicePublicKey the remote network service public key
      */
     public IncomingNetworkServiceConnectionRequestEvent(CommunicationChannels communicationChannels, EventSource eventSource, EventType eventType, String remoteNetworkServicePublicKey) {
         this.communicationChannels = communicationChannels;
@@ -101,7 +101,7 @@ public class IncomingNetworkServiceConnectionRequestEvent implements PlatformEve
     /**
      * Return the communication channels for the connection
      *
-     * @return CommunicationChannels
+     * @return CommunicationChannels the communication chanel
      */
     public CommunicationChannels getCommunicationChannels() {
         return communicationChannels;
@@ -110,7 +110,7 @@ public class IncomingNetworkServiceConnectionRequestEvent implements PlatformEve
     /**
      * Set the communication channels for the connection
      *
-     * @return CommunicationChannels
+     * @return CommunicationChannels the communication channel
      */
     public void setCommunicationChannels(CommunicationChannels communicationChannels) {
         this.communicationChannels = communicationChannels;
@@ -118,7 +118,7 @@ public class IncomingNetworkServiceConnectionRequestEvent implements PlatformEve
 
     /**
      * Return the public key of the remote network service
-     * @return
+     * @return String the public key
      */
     public String getRemoteNetworkServicePublicKey() {
         return remoteNetworkServicePublicKey;
