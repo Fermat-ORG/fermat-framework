@@ -53,7 +53,7 @@ include ':fermat-osa-addon-multi-os-file-system-bitdubai'
 project(':fermat-osa-addon-multi-os-file-system-bitdubai').projectDir = new File('OSA/addon/multi_os/fermat-osa-addon-multi-os-file-system-bitdubai')
 
 
-// PIP Projects
+// PIP Projects (Addons)
 
 include ':fermat-pip-addon-platform-service-event-manager-bitdubai'
 project(':fermat-pip-addon-platform-service-event-manager-bitdubai').projectDir = new File('PIP/addon/platform_service/fermat-pip-addon-platform-service-event-manager-bitdubai')
@@ -72,6 +72,13 @@ project(':fermat-pip-addon-hardware-remote-device-bitdubai').projectDir = new Fi
 
 include ':fermat-pip-addon-user-device-user-bitdubai'
 project(':fermat-pip-addon-user-device-user-bitdubai').projectDir = new File('PIP/addon/user/fermat-pip-addon-user-device-user-bitdubai')
+
+// PIP Projects (Plugins)
+
+include ':fermat-pip-plugin-actor-developer-bitdubai'
+project(':fermat-pip-plugin-actor-developer-bitdubai').projectDir = new File('PIP/plugin/actor/fermat-pip-plugin-actor-developer-bitdubai')
+
+
 
 
 // P2P Projects
