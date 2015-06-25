@@ -87,6 +87,10 @@
             <option value="$PROJECT_DIR$/fermat-core" />
             <option value="$PROJECT_DIR$/fermat-cry-api" />
             <option value="$PROJECT_DIR$/fermat-p2p-api" />
+            <option value="$PROJECT_DIR$/pip" />
+            <option value="$PROJECT_DIR$/pip/android" />
+            <option value="$PROJECT_DIR$/pip/android/developer" />
+            <option value="$PROJECT_DIR$/pip/android/developer/fermat-pip-android-developer-bitdubai" />
           </set>
         </option>
       </GradleProjectSettings>

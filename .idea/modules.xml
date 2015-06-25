@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/pip/android/android.iml" filepath="$PROJECT_DIR$/pip/android/android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pip/android/developer/developer.iml" filepath="$PROJECT_DIR$/pip/android/developer/developer.iml" />
       <module fileurl="file://$PROJECT_DIR$/fermat.iml" filepath="$PROJECT_DIR$/fermat.iml" />
       <module fileurl="file://$PROJECT_DIR$/fermat-android-core/fermat-android-core.iml" filepath="$PROJECT_DIR$/fermat-android-core/fermat-android-core.iml" />
       <module fileurl="file://$PROJECT_DIR$/fermat-android-core/fermat-android-core.iml" filepath="$PROJECT_DIR$/fermat-android-core/fermat-android-core.iml" />
@@ -154,7 +156,10 @@
       <module fileurl="file://$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-location-subsystem-bitdubai/fermat-pip-addon-platform-service-location-subsystem-bitdubai.iml" filepath="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-location-subsystem-bitdubai/fermat-pip-addon-platform-service-location-subsystem-bitdubai.iml" />
       <module fileurl="file://$PROJECT_DIR$/PIP/addon/user/fermat-pip-addon-user-device-user-bitdubai/fermat-pip-addon-user-device-user-bitdubai.iml" filepath="$PROJECT_DIR$/PIP/addon/user/fermat-pip-addon-user-device-user-bitdubai/fermat-pip-addon-user-device-user-bitdubai.iml" />
       <module fileurl="file://$PROJECT_DIR$/PIP/addon/user/fermat-pip-addon-user-device-user-bitdubai/fermat-pip-addon-user-device-user-bitdubai.iml" filepath="$PROJECT_DIR$/PIP/addon/user/fermat-pip-addon-user-device-user-bitdubai/fermat-pip-addon-user-device-user-bitdubai.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pip/android/developer/fermat-pip-android-developer-bitdubai/fermat-pip-android-developer-bitdubai.iml" filepath="$PROJECT_DIR$/pip/android/developer/fermat-pip-android-developer-bitdubai/fermat-pip-android-developer-bitdubai.iml" />
+      <module fileurl="file://$PROJECT_DIR$/PIP/android/sub_app/fermat-pip-android-sub-app-developer-bitdubai/fermat-pip-android-sub-app-developer-bitdubai.iml" filepath="$PROJECT_DIR$/PIP/android/sub_app/fermat-pip-android-sub-app-developer-bitdubai/fermat-pip-android-sub-app-developer-bitdubai.iml" />
       <module fileurl="file://$PROJECT_DIR$/PIP/plugin/actor/fermat-pip-plugin-actor-developer-bitdubai/fermat-pip-plugin-actor-developer-bitdubai.iml" filepath="$PROJECT_DIR$/PIP/plugin/actor/fermat-pip-plugin-actor-developer-bitdubai/fermat-pip-plugin-actor-developer-bitdubai.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pip/pip.iml" filepath="$PROJECT_DIR$/pip/pip.iml" />
     </modules>
   </component>
 </project>
