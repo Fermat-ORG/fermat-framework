@@ -34,6 +34,7 @@ import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.DealsWithBitcoin
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantConnectToBitcoinNetwork;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantCreateCryptoWalletException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVault;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantCalculateTransactionConfidenceException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantExecuteQueryException;
@@ -330,10 +331,11 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
      * @param FermatTxId the internal txID set for the transfer protocol
      * @param addressTo the address to
      * @param amount the amount of satoshis
-     * @return the internal transaction id created.
+     * @return the transaction hash created to send bitcoins.
      * @throws com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException
      */
-    public String sendBitcoins(UUID FermatTxId, CryptoAddress addressTo, long amount) throws com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException, InvalidSendToAddressException {
+
+    public String sendBitcoins(UUID FermatTxId, CryptoAddress addressTo, long amount) throws com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException, InvalidSendToAddressException, CouldNotSendMoneyException {
         /**
          * if the transaction was requested before but resend my mistake, Im not going to send it again
          */
@@ -386,7 +388,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
          * I broadcast and wait for the confirmation of the network
          */
         ListenableFuture<Transaction> future = peers.broadcastTransaction(request.tx);
-        UUID txID = null;
+        String txHash=null;
         try {
             future.get();
             /**
@@ -394,25 +396,30 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
              * I will persist it to inform it when the confidence level changes
              */
             Transaction tx = request.tx;
-
+            txHash = tx.getHashAsString();
             /**
              * at this point the transaction is already created and in the network, if there are erros in any other plug in, I can't roll back anything.
              * I will deal with any DB error later when I control the transactions.
              */
-            txID = db.persistNewTransaction(tx.getHash().toString());
+            db.persistNewTransaction(txHash);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            /**
+             * If I have an error sending the money, I will raise it.
+             */
+            throw new CouldNotSendMoneyException();
         } catch (ExecutionException e) {
-            e.printStackTrace();
+            throw new CouldNotSendMoneyException();
         } catch (CantExecuteQueryException e) {
-            e.printStackTrace();
+            /**
+             * if the error was saving the information to the database, I can go on.
+             */
         }
 
         /**
          * returns the created transaction id
          */
         System.out.println("CryptoVault information: bitcoin sent!!!");
-        return txID.toString();
+        return txHash;
     }
 
 
