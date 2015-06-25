@@ -8,8 +8,15 @@ import java.util.List;
  * Created by ciencias on 6/25/15.
  */
 public class DeveloperActorDeveloperDatabaseTableRecord implements DeveloperDatabaseTableRecord {
+
+    private List<String> values;
+
+    public DeveloperActorDeveloperDatabaseTableRecord(List<String> values) {
+        this.values = values;
+    }
+
     @Override
     public List<String> getValues() {
-        return null;
+        return values;
     }
 }
