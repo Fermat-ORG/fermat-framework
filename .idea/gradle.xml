@@ -81,12 +81,17 @@
             <option value="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-event-manager-bitdubai" />
             <option value="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-location-subsystem-bitdubai" />
             <option value="$PROJECT_DIR$/PIP/addon/user/fermat-pip-addon-user-device-user-bitdubai" />
+            <option value="$PROJECT_DIR$/PIP/android/sub_app/fermat-pip-android-sub-app-developer-bitdubai" />
             <option value="$PROJECT_DIR$/PIP/plugin/actor/fermat-pip-plugin-actor-developer-bitdubai" />
             <option value="$PROJECT_DIR$/fermat-android-core" />
             <option value="$PROJECT_DIR$/fermat-api" />
             <option value="$PROJECT_DIR$/fermat-core" />
             <option value="$PROJECT_DIR$/fermat-cry-api" />
             <option value="$PROJECT_DIR$/fermat-p2p-api" />
+            <option value="$PROJECT_DIR$/pip" />
+            <option value="$PROJECT_DIR$/pip/android" />
+            <option value="$PROJECT_DIR$/pip/android/developer" />
+            <option value="$PROJECT_DIR$/pip/android/developer/fermat-pip-android-developer-bitdubai" />
           </set>
         </option>
       </GradleProjectSettings>
