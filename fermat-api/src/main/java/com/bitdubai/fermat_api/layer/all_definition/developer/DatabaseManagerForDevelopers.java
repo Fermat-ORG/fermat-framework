@@ -7,7 +7,6 @@ import java.util.List;
  */
 public interface DatabaseManagerForDevelopers {
 
-
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory);
 
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase);

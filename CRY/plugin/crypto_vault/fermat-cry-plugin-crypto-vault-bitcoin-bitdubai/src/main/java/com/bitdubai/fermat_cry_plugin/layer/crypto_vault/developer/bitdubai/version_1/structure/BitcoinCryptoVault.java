@@ -547,7 +547,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         /**
          * I get the current timestamp
          */
-        tx.
+
 
         return 0;
     }
