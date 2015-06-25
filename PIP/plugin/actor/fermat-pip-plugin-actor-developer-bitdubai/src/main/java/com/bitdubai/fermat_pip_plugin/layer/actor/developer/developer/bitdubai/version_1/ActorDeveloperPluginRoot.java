@@ -5,6 +5,10 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 
 
+import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DealWithDatabaseManagers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DealWithLogManagers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -34,7 +38,7 @@ import java.util.UUID;
  * It is responsible for login in users to the current device.
  */
 
-public class ActorDeveloperPluginRoot implements  DealsWithErrors, DealsWithEvents,DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, ToolManager, Service, Plugin {
+public class ActorDeveloperPluginRoot implements DealWithDatabaseManagers, DealWithLogManagers, DealsWithErrors, DealsWithEvents,DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, ToolManager, Service, Plugin {
 
 
     /**
@@ -146,5 +150,15 @@ public class ActorDeveloperPluginRoot implements  DealsWithErrors, DealsWithEven
     @Override
     public LogTool getLogTool() {
         return null;
+    }
+
+    @Override
+    public void setDatabaseManagers(List<DatabaseManagerForDevelopers> databaseManagers) {
+
+    }
+
+    @Override
+    public void setLogManagers(List<LogManagerForDevelopers> loggingManagers) {
+
     }
 }
