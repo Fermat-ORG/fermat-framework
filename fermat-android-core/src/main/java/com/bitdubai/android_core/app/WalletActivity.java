@@ -57,6 +57,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Fragments;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_network_service.wallet_resources.WalletResourcesManager;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
 import com.bitdubai.fermat_core.CorePlatformContext;
@@ -783,6 +784,8 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
                         break;
 
                     case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_DATABASE_TOOLS:
+                        bitcoinPlatform = new com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform();
+                        bitcoinPlatform.setToolManager((ToolManager) platformContext.getPlugin(Plugins.BITDUBAI_ACTOR_DEVELOPER));
                         currentFragment = DatabaseToolsFragment.newInstance(0);
                         break;
 
