@@ -2,8 +2,8 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.FMPPacketFactory;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.exceptions.CloudConnectionException;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.CloudConnectionManager;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.exceptions.CloudCommunicationException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.CloudConnectionManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket.FMPPacketType;
@@ -79,11 +79,11 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 	}
 
 	@Override
-	public void iterateSelectedKeys(final Selector selector) throws CloudConnectionException {
+	public void iterateSelectedKeys(final Selector selector) throws CloudCommunicationException {
 		try{
 			selector.select(SELECTOR_SELECT_TIMEOUT);
 		} catch(IOException ex){
-			throw new CloudConnectionException(ex.getMessage());
+			throw new CloudCommunicationException(ex.getMessage());
 		}
 		Iterator<SelectionKey> keys = selector.selectedKeys().iterator();
 		while(keys.hasNext()){
@@ -107,7 +107,7 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 	}
 
 	@Override
-	public void acceptKey(final SelectionKey key) throws CloudConnectionException{
+	public void acceptKey(final SelectionKey key) throws CloudCommunicationException {
 		try {
 			ServerSocketChannel serverSocketChannel = extractServerSocketChannel(key);
 			SocketChannel socketChannel = serverSocketChannel.accept();
@@ -116,12 +116,12 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 				socketChannel.register(selector, SelectionKey.OP_READ);
 			}
 		} catch(IOException ex) {
-			throw new CloudConnectionException(ex.getMessage());
+			throw new CloudCommunicationException(ex.getMessage());
 		}
 	}
 
 	@Override
-	public void connectToKey(final SelectionKey key) throws CloudConnectionException{
+	public void connectToKey(final SelectionKey key) throws CloudCommunicationException {
 		try {
 			SocketChannel socketChannel = extractSocketChannel(key);
 			if(socketChannel.isConnectionPending())
@@ -130,12 +130,12 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 			socketChannel.register(selector, SelectionKey.OP_READ);
 			running.set(socketChannel.isConnected());
 		} catch(IOException ex){
-			throw new CloudConnectionException(ex.getMessage());
+			throw new CloudCommunicationException(ex.getMessage());
 		}
 	}
 
 	@Override
-	public synchronized void readFromKey(final SelectionKey key) throws CloudConnectionException{
+	public synchronized void readFromKey(final SelectionKey key) throws CloudCommunicationException {
 		SocketChannel channel = extractSocketChannel(key);
 		ByteBuffer readBuffer = ByteBuffer.allocate(FMPPacket.PACKET_MAX_BYTE_SIZE);
 		readBuffer.clear();
@@ -145,12 +145,12 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 			read = channel.read(readBuffer);
 		}catch(IOException e){
 			closeSocketChannelAndCancelKey(channel, key);
-			throw new CloudConnectionException();
+			throw new CloudCommunicationException();
 		}
 		
 		if(read==-1){
 			closeSocketChannelAndCancelKey(channel, key);
-			throw new CloudConnectionException();
+			throw new CloudCommunicationException();
 		}
 		
 		readBuffer.flip();
@@ -168,9 +168,9 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 	}
 
 	@Override
-	public synchronized void writeToKey(final SelectionKey key) throws CloudConnectionException{
+	public synchronized void writeToKey(final SelectionKey key) throws CloudCommunicationException {
 		if(key.attachment() == null || !(key.attachment() instanceof FMPPacket))
-			throw new CloudConnectionException();
+			throw new CloudCommunicationException();
 		try{
 			SocketChannel channel = extractSocketChannel(key);
 			FMPPacket dataPacket = (FMPPacket) key.attachment();
@@ -178,12 +178,12 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 			channel.write(ByteBuffer.wrap(data));
 			key.interestOps(SelectionKey.OP_READ);
 		}catch(IOException ex){
-			throw new CloudConnectionException(ex.getMessage());
+			throw new CloudCommunicationException(ex.getMessage());
 		}
 	}
 	
 	@Override
-	public void start() throws CloudConnectionException{
+	public void start() throws CloudCommunicationException {
 		if(mode == CloudFMPConnectionManagerMode.FMP_CLIENT){
 			initializeClient();
 			running.set(clientChannel.isConnected());
@@ -196,7 +196,7 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 	}
 
 	@Override
-	public void stop() throws CloudConnectionException{
+	public void stop() throws CloudCommunicationException {
 		running.set(false);
 	}
 
@@ -205,7 +205,7 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 		return running.get();
 	}
 
-	public void processDataPackets() throws CloudConnectionException {
+	public void processDataPackets() throws CloudCommunicationException {
 		try {
 			FMPPacket dataPacket = pendingIncomingMessages.remove();
 			if(dataPacket.getType() == FMPPacketType.CONNECTION_REQUEST)
@@ -225,7 +225,7 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 			if(dataPacket.getType() == FMPPacketType.DATA_TRANSMIT)
 				handleDataTransmit(dataPacket);
 		}catch(FMPException ex){
-			throw new CloudConnectionException(ex.getMessage());
+			throw new CloudCommunicationException(ex.getMessage());
 		}catch(NoSuchElementException ex){
 			return;
 		}
@@ -261,16 +261,16 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 			try{
 				iterateSelectedKeys(selector);
 				processDataPackets();
-			} catch(CloudConnectionException ex){
+			} catch(CloudCommunicationException ex){
 				System.err.println(ex.getMessage());
 				//ex.printStackTrace();
 			}
 		}
 	}
 
-	private void initializeClient() throws CloudConnectionException{
+	private void initializeClient() throws CloudCommunicationException {
 		if(running.get())
-			throw new CloudConnectionException();
+			throw new CloudCommunicationException();
 		try{
 			selector = Selector.open();
 			clientChannel = SocketChannel.open();
@@ -280,13 +280,13 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 			if(clientChannel.isConnectionPending())
 				clientChannel.finishConnect();
 		}catch(IOException ex){
-			throw new CloudConnectionException(ex.getMessage());
+			throw new CloudCommunicationException(ex.getMessage());
 		}		 
 	}
 	
-	private void initializeServer() throws CloudConnectionException{
+	private void initializeServer() throws CloudCommunicationException {
 		if(running.get())
-			throw new CloudConnectionException();
+			throw new CloudCommunicationException();
 		try{
 			selector = Selector.open();
 			serverChannel = ServerSocketChannel.open();
@@ -294,7 +294,7 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 			serverChannel.socket().bind(address.getSocketAddress());
 			serverChannel.register(selector, SelectionKey.OP_ACCEPT);
 		}catch(IOException ex){
-			throw new CloudConnectionException(ex.getMessage());
+			throw new CloudCommunicationException(ex.getMessage());
 		}
 	}
 
@@ -306,12 +306,12 @@ public abstract class CloudFMPConnectionManager implements CloudConnectionManage
 		return (SocketChannel) key.channel();
 	}
 
-	private void closeSocketChannelAndCancelKey(final SocketChannel channel, final SelectionKey key) throws CloudConnectionException{
+	private void closeSocketChannelAndCancelKey(final SocketChannel channel, final SelectionKey key) throws CloudCommunicationException {
 		try {
 			channel.close();
 			key.cancel();
 		} catch(IOException ex) {
-			throw new CloudConnectionException();
+			throw new CloudCommunicationException();
 		}
 	}
 	

@@ -5,7 +5,7 @@ import static com.googlecode.catchexception.CatchException.*;
 
 import org.junit.Test;
 
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.exceptions.CloudConnectionException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.exceptions.CloudCommunicationException;
 
 
 public class RequestConnectionTest extends NetworkServiceClientVPNIntegrationTest {
@@ -23,7 +23,7 @@ public class RequestConnectionTest extends NetworkServiceClientVPNIntegrationTes
 	public void RequestConnection_ConnectionIsAlreadyRequested_ThrowsCloudConnectionException() throws Exception{
 		setUpClient(TCP_PORT_PADDING + 3);
 		catchException(testClient).start();
-		assertThat(caughtException()).isInstanceOf(CloudConnectionException.class);
+		assertThat(caughtException()).isInstanceOf(CloudCommunicationException.class);
 	}
 	
 

@@ -236,7 +236,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
                  * something went wrong creating the db, I can't handle this.
                  */
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-                throw new CantStartPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT);
+                throw new CantStartPluginException(e1, Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT);
             }
 
         } catch (DatabaseNotFoundException e) {
@@ -254,7 +254,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
                  * something went wrong creatig the db, I can't handle this.
                  */
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-                throw new CantStartPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT);
+                throw new CantStartPluginException(e1, Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT);
             }
         }
 
@@ -290,7 +290,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
                  * If I couldnt create the Vault, I cant go on.
                  */
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateCryptoWalletException );
-                throw new CantStartPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT);
+                throw new CantStartPluginException(cantCreateCryptoWalletException, Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT);
             }
 
 

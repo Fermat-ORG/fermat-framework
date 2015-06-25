@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.enums;
+package com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.enums;
 
 /**
  * Created by ciencias on 2/23/15.
