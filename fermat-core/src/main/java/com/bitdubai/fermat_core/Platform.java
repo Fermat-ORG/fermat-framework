@@ -229,7 +229,7 @@ public class Platform  {
         this.locationSystemOs  = locationSystemOs;
     }
 
-    public void start() throws CantStartPlatformException, CantReportCriticalStartingProblem {
+    public void start() throws CantStartPlatformException, CantReportCriticalStartingProblemException {
 
         /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
          * ------------------------------------------------------------------------------------------------------------*
@@ -255,7 +255,7 @@ public class Platform  {
              * the GUI. In this way it can alert the end user of what is going on and provide them with some information.
              * * * *
              */
-            throw new CantReportCriticalStartingProblem();
+            throw new CantReportCriticalStartingProblemException();
         }
 
 

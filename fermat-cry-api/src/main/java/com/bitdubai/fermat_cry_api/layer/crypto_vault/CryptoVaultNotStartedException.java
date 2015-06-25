@@ -1,11 +1,11 @@
 package com.bitdubai.fermat_cry_api.layer.crypto_vault;
 
-import com.bitdubai.fermat_cry_api.FermatCryptoException;
+import com.bitdubai.fermat_cry_api.CryptoException;
 
 /**
  * Created by loui on 21/05/15.
  */
-public class CryptoVaultNotStartedException extends FermatCryptoException {
+public class CryptoVaultNotStartedException extends CryptoException {
 
 	/**
 	 * 

@@ -8,14 +8,28 @@ public class VPNInitializationException extends FMPException {
 	 * 
 	 */
 	private static final long serialVersionUID = 2518028395015785065L;
-	private static String DEFAULT_MESSAGE = "Unable to Initialize VPN Client";
-	
-	public VPNInitializationException(){
-		this("");
+
+	public static final String DEFAULT_MESSAGE = "Unable To Initialize VPN Client";
+
+	public VPNInitializationException(final String message, final Exception cause, final String context, final String possibleReason) {
+		super(message, cause, context, possibleReason);
 	}
-	
-	public VPNInitializationException(final String message){
-		super(DEFAULT_MESSAGE + ": " + message);
+
+	public VPNInitializationException(final String message, final Exception cause) {
+		this(message, cause, "", "");
+	}
+
+	public VPNInitializationException(final String message) {
+		this(message, null);
+	}
+
+	public VPNInitializationException(final Exception exception) {
+		this(exception.getMessage());
+		setStackTrace(exception.getStackTrace());
+	}
+
+	public VPNInitializationException() {
+		this(DEFAULT_MESSAGE);
 	}
 
 }

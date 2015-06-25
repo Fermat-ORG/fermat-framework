@@ -4,7 +4,7 @@ import java.util.concurrent.ExecutorService;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CloudFMPConnectionManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.exceptions.CloudConnectionException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.exceptions.CloudCommunicationException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
 
@@ -69,7 +69,7 @@ public class MockCloudFMPConnectionManagerServer extends
 	}
 
 	@Override
-	public void processDataPackets() throws CloudConnectionException {
+	public void processDataPackets() throws CloudCommunicationException {
 		// TODO Auto-generated method stub
 	}
 

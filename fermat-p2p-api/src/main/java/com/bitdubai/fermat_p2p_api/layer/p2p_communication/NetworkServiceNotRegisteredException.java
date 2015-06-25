@@ -5,18 +5,28 @@ package com.bitdubai.fermat_p2p_api.layer.p2p_communication;
  */
 public class NetworkServiceNotRegisteredException extends CommunicationException {
 
-    private static final String DEFAULT_MESSAGE = "NETWORK SERVICE IS NOT REGISTERED: ";
+    public static final String DEFAULT_MESSAGE = "NETWORK SERVICE IS NOT REGISTERED";
 
-    public NetworkServiceNotRegisteredException(final String message, final Exception cause){
-        super(message, cause);
+    public NetworkServiceNotRegisteredException(final String message, final Exception cause, final String context, final String possibleReason) {
+        super(message, cause, context, possibleReason);
     }
 
-    public NetworkServiceNotRegisteredException(final String message){
+    public NetworkServiceNotRegisteredException(final String message, final Exception cause) {
+        this(message, cause, "", "");
+    }
+
+    public NetworkServiceNotRegisteredException(final String message) {
         this(message, null);
     }
 
-    public NetworkServiceNotRegisteredException(){
-        this("");
+    public NetworkServiceNotRegisteredException(final Exception exception) {
+        this(exception.getMessage());
+        setStackTrace(exception.getStackTrace());
     }
+
+    public NetworkServiceNotRegisteredException() {
+        this(DEFAULT_MESSAGE);
+    }
+
 
 }

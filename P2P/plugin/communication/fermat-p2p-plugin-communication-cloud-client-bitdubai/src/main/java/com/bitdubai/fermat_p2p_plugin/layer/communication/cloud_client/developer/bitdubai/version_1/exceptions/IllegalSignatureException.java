@@ -8,13 +8,28 @@ public class IllegalSignatureException extends FMPException {
 	 * 
 	 */
 	private static final long serialVersionUID = -8291688297061754874L;
-	
-	public IllegalSignatureException(){
-		super();
+
+	public static final String DEFAULT_MESSAGE = "Illegal FMP Packet Signature";
+
+	public IllegalSignatureException(final String message, final Exception cause, final String context, final String possibleReason) {
+		super(message, cause, context, possibleReason);
 	}
-	
-	public IllegalSignatureException(final String message){
-		super(message);
+
+	public IllegalSignatureException(final String message, final Exception cause) {
+		this(message, cause, "", "");
+	}
+
+	public IllegalSignatureException(final String message) {
+		this(message, null);
+	}
+
+	public IllegalSignatureException(final Exception exception) {
+		this(exception.getMessage());
+		setStackTrace(exception.getStackTrace());
+	}
+
+	public IllegalSignatureException() {
+		this(DEFAULT_MESSAGE);
 	}
 
 }

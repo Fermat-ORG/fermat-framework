@@ -6,7 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.exceptions.CloudConnectionException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.exceptions.CloudCommunicationException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket.FMPPacketType;
@@ -69,7 +69,7 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
 	public void handleDataTransmit(final FMPPacket packet) throws FMPException{
 	}
 
-	public void registerNetworkServiceManager(final CloudNetworkServiceManager networkServiceManager) throws CloudConnectionException {
+	public void registerNetworkServiceManager(final CloudNetworkServiceManager networkServiceManager) throws CloudCommunicationException {
 		if(networkServiceManager == null)
 			throw new IllegalArgumentException();
 		if(networkServicesRegistry.containsKey(networkServiceManager.getNetworkService()))
