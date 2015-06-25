@@ -546,8 +546,6 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         /**
          * I get the current timestamp
          */
-
-
-        return 0;
+        return tx.getLockTime();
     }
 }
