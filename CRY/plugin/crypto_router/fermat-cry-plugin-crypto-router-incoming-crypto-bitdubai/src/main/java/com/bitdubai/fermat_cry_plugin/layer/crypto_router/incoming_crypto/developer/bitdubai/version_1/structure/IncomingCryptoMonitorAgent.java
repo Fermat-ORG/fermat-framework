@@ -233,7 +233,7 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
         private void doTheMainTask() {
 
             // TODO: delete this. Every tune registry is initialized we add a new transaction
-            //this.registry.proofTransaction();
+            this.registry.proofTransaction();
 
             IncomingCryptoRegistry.EventWrapper eventWrapper = null;
             try {

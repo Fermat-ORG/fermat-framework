@@ -75,7 +75,7 @@ public class TransactionExecutor implements DealsWithBitcoinWallet, DealsWithWal
 
         switch (platformWalletType) {
             case BASIC_WALLET_BITCOIN_WALLET:
-                //      BitcoinWallet bitcoinWallet = bitcoinWalletManager.loadWallet(walletID);
+                // BitcoinWallet bitcoinWallet = bitcoinWalletManager.loadWallet(walletID);
                 bitcoinWallet.credit(generateBitcoinTransaction(transaction.getInformation()));
                 return;
             default:

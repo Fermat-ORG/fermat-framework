@@ -7,9 +7,11 @@ import java.util.UUID;
 
 import android.content.Context;
 import android.database.DatabaseErrorHandler;
+import android.database.sqlite.SQLiteCantOpenDatabaseException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
@@ -191,35 +193,32 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
      */
 
     public void openDatabase(String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException {
-
-   /**
+        /**
          * First I try to open the database.
          */
+        String databasePath ="";
+        /**
+         * if owner id if null
+         * because it comes from platformdatabase
+         */
+        if(ownerId != null)
+            databasePath =  this.context.getFilesDir().getPath() +  "/databases/" +  ownerId.toString();
+        else
+            databasePath =  this.context.getFilesDir().getPath() + "/databases/";
+
+        databasePath += "/" + databaseName.replace("-","") + ".db";
         try {
-            String databasePath ="";
-            /**
-             * if owner id if null
-             * because it comes from platformdatabase
-             */
-            if(ownerId != null)
-                databasePath =  this.context.getFilesDir().getPath() +  "/databases/" +  ownerId.toString();
-            else
-                databasePath =  this.context.getFilesDir().getPath() + "/databases/";
-
-            databasePath += "/" + databaseName.replace("-","") + ".db";
-
             this.Database = SQLiteDatabase.openDatabase(databasePath,null,0,null);
-
-          }
-        catch (Exception exception) {
+        } catch (SQLiteCantOpenDatabaseException exception) {
         
             /**
              * Probably there is no distinctions between a database that it can not be opened and a one that doesn't not exist.
              * We will assume that if it didn't open it was because it didn't exist.
              * * *
              */
-
-            throw new DatabaseNotFoundException("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaargh#");
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Database Constructed Path: " + databasePath);
+            throw new DatabaseNotFoundException(DatabaseNotFoundException.DEFAULT_MESSAGE, FermatException.wrapException(exception),contextBuffer.toString(), "The Database Could Not Be Found");
             //TODO: NATALIA; Revisa si devuelve la misma exception cuando la base de datos no existe que cuando simplement no la puede abrir por otra razon. Y avisame el resultado de la investigacion esta.
         }
 

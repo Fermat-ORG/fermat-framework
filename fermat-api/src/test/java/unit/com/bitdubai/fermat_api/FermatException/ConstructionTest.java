@@ -7,6 +7,8 @@ import com.bitdubai.fermat_api.FermatException;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
+
 /**
  * Created by jorgegonzalez on 2015.06.24..
  */
@@ -22,7 +24,7 @@ public class ConstructionTest {
     public void setUp(){
         testCause = null;
         testMessage = "TEST MESSAGE";
-        testContext = "A = 1; B = 2";
+        testContext = "A = 1" + FermatException.CONTEXT_CONTENT_SEPARATOR +  "B = 2";
         testPossibleReason = "FERMAT IS WAY TOO COMPLEX FOR THAT";
     }
 
@@ -51,26 +53,38 @@ public class ConstructionTest {
 
     @Test
     public void SimpleConstruction_Printing(){
-        FermatException testCause1 = new FermatException(testMessage+ " Cause 1", null, "WE NEED TO TEST THE CHAIN OF CAUSES", "WE NEED TO TEST THE CHAIN OF CAUSES");
-        FermatException testCause2 = new FermatException(testMessage+ " Cause 2", testCause1, "WE NEED TO TEST THE CHAIN OF CAUSES", "WE NEED TO TEST THE CHAIN OF CAUSES");
-        testCause = new FermatException(testMessage+ " Cause", testCause2, "WE NEED TO TEST THE CHAIN OF CAUSES", "WE NEED TO TEST THE CHAIN OF CAUSES");
+        FermatException testCause1 = FermatException.wrapException(new IOException("THIS IS A TEST"));
+        FermatException testCause2 = new FermatException(testMessage+ " Cause 2", testCause1, "WE NEED TO TEST " + FermatException.CONTEXT_CONTENT_SEPARATOR + "THE CHAIN OF CAUSES", "WE NEED TO TEST THE CHAIN OF CAUSES");
+        testCause = new FermatException(testMessage+ " Cause", testCause2, "WE NEED TO TEST " + FermatException.CONTEXT_CONTENT_SEPARATOR + "THE CHAIN OF CAUSES", "WE NEED TO TEST THE CHAIN OF CAUSES");
         testException = new FermatException(testMessage, testCause, testContext, testPossibleReason);
-        System.out.println("--------------------------------------------------------------------\n" +
-                "Fermat Error Manager - Unexpected Exception Report\n" +
-                "--------------------------------------------------------------------\n");
-        printException(testException, 1);
+        System.out.println(constructErrorReport(testException));
+        //countExceptionDepth(testException);
+
     }
 
-    private int printException(final FermatException exception, final int depth){
-        int printDepth;
-        if(exception.getCause() != null)
-            printDepth = printException(exception.getCause(),depth);
-        else
-            printDepth = depth;
-        System.out.println("Exception #: " + printDepth);
-        System.out.println(exception.toString());
-        System.out.println("--------------------------------------------------------------------");
-        return ++printDepth;
+    private String constructErrorReport(final FermatException exception){
+        StringBuffer buffer = new StringBuffer("========================================================================================================================================================\n" +
+                "Fermat Error Manager * Unexpected Exception Report\n" +
+                "========================================================================================================================================================\n");
+        buffer.append(constructExceptionReport(exception, 1));
+        buffer.append("Exceptions Processed: " + exception.getDepth() + "\n");
+        buffer.append("========================================================================================================================================================\n");
+        return buffer.toString();
+    }
+
+    private String constructExceptionReport(final FermatException exception, final int depth){
+        StringBuffer buffer = new StringBuffer();
+        if (exception.getCause() != null) {
+            buffer.append(constructExceptionReport(exception.getCause(), depth));
+            exception.setDepth(exception.getCause().getDepth()+1);
+        } else {
+            exception.setDepth(depth);
+        }
+        buffer.append("********************************************************************************************************************************************************\n");
+        buffer.append("Exception Number: " + exception.getDepth() + "\n");
+        buffer.append(exception.toString());
+        buffer.append("********************************************************************************************************************************************************\n");
+        return buffer.toString();
     }
 
 }

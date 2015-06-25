@@ -79,8 +79,6 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
         {
             //TODO (LUIS) Ver que se hace acá
         }
-
-
     }
 
     @Override
@@ -103,9 +101,6 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
         {
             //TODO (LUIS) Ver que se hace acá
         }
-        
-        
-
     }
 
     @Override
@@ -150,11 +145,7 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
         {
             //TODO (LUIS) Ver que se hace acá
         }
-        
-
     }
-
-
     /**
      * Service Interface implementation.
      */
@@ -180,8 +171,6 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
         {
             //TODO (LUIS) Ver que se hace acá
         }
-
-
     }
 
     @Override
@@ -210,24 +199,32 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
     }
 
     private void printErrorReport(final FermatException exception){
-        System.out.println("====================================================================\n" +
-                "Fermat Error Manager - Unexpected Exception Report\n" +
-                "====================================================================\n");
-        int depth = printException(exception, 1) - 1;
-        System.out.println("Reported " + depth + " exceptions");
-        System.out.println("====================================================================\n");
+        System.err.println(constructErrorReport(exception));
     }
 
-    private int printException(final FermatException exception, final int depth){
-        int printDepth;
-        if(exception.getCause() != null)
-            printDepth = printException(exception.getCause(),depth);
-        else
-            printDepth = depth;
-        System.out.println("Exception #: " + printDepth);
-        System.out.println(exception.toString());
-        System.out.println("--------------------------------------------------------------------");
-        return ++printDepth;
+    private String constructErrorReport(final FermatException exception){
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("========================================================================================================================================================\n");
+        buffer.append("Fermat Error Manager * Unexpected Exception Report\n");
+        buffer.append("========================================================================================================================================================\n");
+        buffer.append(constructExceptionReport(exception, 1));
+        buffer.append("Exceptions Processed: " + exception.getDepth() + "\n");
+        buffer.append("========================================================================================================================================================\n");
+        return buffer.toString();
     }
 
+    private String constructExceptionReport(final FermatException exception, final int depth){
+        StringBuffer buffer = new StringBuffer();
+        if (exception.getCause() != null) {
+            buffer.append(constructExceptionReport(exception.getCause(), depth));
+            exception.setDepth(exception.getCause().getDepth()+1);
+        } else {
+            exception.setDepth(depth);
+        }
+        buffer.append("********************************************************************************************************************************************************\n");
+        buffer.append("Exception Number: " + exception.getDepth() + "\n");
+        buffer.append(exception.toString());
+        buffer.append("********************************************************************************************************************************************************\n");
+        return buffer.toString();
+    }
 }

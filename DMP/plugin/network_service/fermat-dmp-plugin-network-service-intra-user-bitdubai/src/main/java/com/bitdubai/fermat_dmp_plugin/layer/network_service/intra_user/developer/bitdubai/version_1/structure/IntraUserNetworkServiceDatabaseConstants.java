@@ -18,6 +18,11 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.develope
 public class IntraUserNetworkServiceDatabaseConstants {
 
     /**
+     * Represent the name of the data base
+     */
+    public static final String DATA_BASE_NAME  = "intra_network_service_data_base";
+
+    /**
      * Incoming messages database table definition.
      */
     static final String INCOMING_MESSAGES_TABLE_NAME = "incoming_messages";

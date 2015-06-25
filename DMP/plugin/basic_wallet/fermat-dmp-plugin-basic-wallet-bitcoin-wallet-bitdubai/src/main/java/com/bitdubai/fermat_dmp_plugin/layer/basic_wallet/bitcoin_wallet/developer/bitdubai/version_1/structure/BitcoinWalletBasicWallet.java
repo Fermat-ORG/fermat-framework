@@ -132,7 +132,7 @@ public class BitcoinWalletBasicWallet implements BitcoinWallet ,DealsWithErrors,
         BitcoinWalletDatabaseFactory databaseFactory = new BitcoinWalletDatabaseFactory();
         databaseFactory.setPluginDatabaseSystem(this.pluginDatabaseSystem);
 
-        this.internalWalletId = UUID.randomUUID();
+        this.internalWalletId = UUID.fromString("35f1b7bc-886a-458a-8ae3-51a16a28889a"); //UUID.randomUUID();
 
         /**
          * I will create the database where I am going to store the information of this wallet.
@@ -215,9 +215,9 @@ public class BitcoinWalletBasicWallet implements BitcoinWallet ,DealsWithErrors,
     public long getBalance() throws CantCalculateBalanceException {
         //suma los debitos y los creditos los resta
 
-        bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(errorManager,pluginDatabaseSystem);
+        bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(errorManager,pluginDatabaseSystem,this.database);
 
-      // return bitcoinWalletBasicWalletDao.getBalance();
+        balance = bitcoinWalletBasicWalletDao.getBalance();
 
         return balance;
     }
@@ -233,9 +233,9 @@ public class BitcoinWalletBasicWallet implements BitcoinWallet ,DealsWithErrors,
     @Override
     public void debit(BitcoinTransaction cryptoTransaction) throws CantRegisterDebitDebitException {
 
-       // bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(errorManager,pluginDatabaseSystem);
+        bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(errorManager,pluginDatabaseSystem,this.database);
 
-       // bitcoinWalletBasicWalletDao.addDebit(cryptoTransaction);
+        bitcoinWalletBasicWalletDao.addDebit(cryptoTransaction);
         this.balance -= cryptoTransaction.getAmount();
 
     }
@@ -243,9 +243,9 @@ public class BitcoinWalletBasicWallet implements BitcoinWallet ,DealsWithErrors,
     @Override
     public void credit(BitcoinTransaction cryptoTransaction) throws CantRegisterCreditException {
 
-       // bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(errorManager,pluginDatabaseSystem);
+        bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(errorManager,pluginDatabaseSystem,this.database);
 
-        //bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction);
+        bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction);
 
         this.balance += cryptoTransaction.getAmount();
     }
@@ -253,75 +253,18 @@ public class BitcoinWalletBasicWallet implements BitcoinWallet ,DealsWithErrors,
     @Override
     public List<BitcoinTransaction> getTransactions(int max, int offset) throws CantGetTransactionsException {
 
-        List<BitcoinTransaction> bitcoinTransactionList = new ArrayList<BitcoinTransaction>();
-        BitcoinTransaction bitcoinTransaction = new BitcoinTransaction();
-        CryptoAddress crypoAddress = new CryptoAddress();
-        crypoAddress.setAddress("123456789llllsdasdasdasd00");
-        crypoAddress.setCryptoCurrency(CryptoCurrency.BITCOIN);
-        bitcoinTransaction.setAddressFrom(crypoAddress);
+        bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(errorManager,pluginDatabaseSystem, this.database);
 
-        CryptoAddress crypoAddress2 = new CryptoAddress();
-        crypoAddress2.setAddress("4555123456789llllsdasdasdasd");
-
-        bitcoinTransaction.setAddressTo(crypoAddress2);
-        bitcoinTransaction.setAmount(14);
-        bitcoinTransaction.setMemo("memo 1");
-        bitcoinTransaction.setState(null);
-        bitcoinTransaction.setTimestamp(123456);
-        bitcoinTransaction.setTramsactionHash("123456789");
-        bitcoinTransaction.setType(TransactionType.CREDIT);
-
-        bitcoinTransactionList.add(bitcoinTransaction);
-
-        //----
-
-        bitcoinTransaction = new BitcoinTransaction();
-        crypoAddress = new CryptoAddress();
-        crypoAddress.setAddress("adfg123456789llllsdasd00");
-        crypoAddress.setCryptoCurrency(CryptoCurrency.BITCOIN);
-        bitcoinTransaction.setAddressFrom(crypoAddress);
-
-         crypoAddress2 = new CryptoAddress();
-        crypoAddress2.setAddress("4fge3556789llllsdasdasdasd");
-
-        bitcoinTransaction.setAddressTo(crypoAddress2);
-        bitcoinTransaction.setAmount(14);
-        bitcoinTransaction.setMemo("memo 2");
-        bitcoinTransaction.setState(null);
-        bitcoinTransaction.setTimestamp(1234789);
-        bitcoinTransaction.setTramsactionHash("123456789012");
-        bitcoinTransaction.setType(TransactionType.DEBIT);
-
-        bitcoinTransactionList.add(bitcoinTransaction);
-
-        //----
-
-        bitcoinTransaction = new BitcoinTransaction();
-        crypoAddress = new CryptoAddress();
-        crypoAddress.setAddress("123adfg123456789llllsdasd00");
-        crypoAddress.setCryptoCurrency(CryptoCurrency.BITCOIN);
-        bitcoinTransaction.setAddressFrom(crypoAddress);
-
-        crypoAddress2 = new CryptoAddress();
-        crypoAddress2.setAddress("5789fge3556789llllsdasdasdasd");
-
-        bitcoinTransaction.setAddressTo(crypoAddress2);
-        bitcoinTransaction.setAmount(14);
-        bitcoinTransaction.setMemo("memo 3");
-        bitcoinTransaction.setState(null);
-        bitcoinTransaction.setTimestamp(12347004);
-        bitcoinTransaction.setTramsactionHash("123456789012");
-        bitcoinTransaction.setType(TransactionType.CREDIT);
-
-        bitcoinTransactionList.add(bitcoinTransaction);
-
-
-        return  bitcoinTransactionList;
+        return bitcoinWalletBasicWalletDao.getTransactions(max, offset);
     }
 
     @Override
     public void setDescription(UUID transactionID, String memo) throws CabtStoreMemoException, CantFindTransactionException {
-        //actualizar el memo
+        //update memo field
+
+        bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(errorManager,pluginDatabaseSystem, this.database);
+
+        bitcoinWalletBasicWalletDao.updateMemoFiled(transactionID, memo);
     }
 
     /**
