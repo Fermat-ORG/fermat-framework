@@ -78,6 +78,12 @@ project(':fermat-pip-addon-user-device-user-bitdubai').projectDir = new File('PI
 include ':fermat-pip-plugin-actor-developer-bitdubai'
 project(':fermat-pip-plugin-actor-developer-bitdubai').projectDir = new File('PIP/plugin/actor/fermat-pip-plugin-actor-developer-bitdubai')
 
+// PIP Projects (Android)
+
+include ':fermat-pip-android-sub-app-developer-bitdubai'
+project(':fermat-pip-android-sub-app-developer-bitdubai').projectDir = new File('PIP/android/sub_app/fermat-pip-android-sub-app-developer-bitdubai')
+
+
 
 
 
