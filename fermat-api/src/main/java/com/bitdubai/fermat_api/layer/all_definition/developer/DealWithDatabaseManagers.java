@@ -13,6 +13,6 @@ import java.util.List;
  */
 public interface DealWithDatabaseManagers {
 
-    public void setDatabaseManagers (HashMap<Plugins,Plugin> databaseLstPlugins,HashMap<Addons,Addon> databaseLstAddonds);
+    public void setDatabaseManagers (HashMap<Plugins,Plugin> databaseManagersOnPlugins,HashMap<Addons,Addon> databaseManagersOnAddons);
 
 }
