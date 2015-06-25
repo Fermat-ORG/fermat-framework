@@ -15,7 +15,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.exceptions.CloudConnectionException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.exceptions.CloudCommunicationException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket.FMPPacketType;
@@ -50,7 +50,7 @@ public class CloudClientCommunicationNetworkServiceConnection extends CloudFMPCo
 	}
 	
 	@Override
-	public synchronized void writeToKey(final SelectionKey key) throws CloudConnectionException{
+	public synchronized void writeToKey(final SelectionKey key) throws CloudCommunicationException {
 		try{
 			SocketChannel channel = (SocketChannel) key.channel();
 			FMPPacket dataPacket = pendingMessages.remove();
@@ -62,7 +62,7 @@ public class CloudClientCommunicationNetworkServiceConnection extends CloudFMPCo
 		}catch(NoSuchElementException ex){
 			key.interestOps(SelectionKey.OP_READ);
 		}catch(IOException ex){
-			throw new CloudConnectionException(ex.getMessage());
+			throw new CloudCommunicationException(ex.getMessage());
 		}
 	}
 	
@@ -101,7 +101,7 @@ public class CloudClientCommunicationNetworkServiceConnection extends CloudFMPCo
 			vpnClient.start();
 			activeVPNRegistry.put(dataPacket.getSender(), vpnClient);
 			pendingVPNRequests.remove(dataPacket.getSender());
-		}catch(CloudConnectionException ex){
+		}catch(CloudCommunicationException ex){
 			throw new VPNInitializationException(ex.getMessage());
 		}
 	}
@@ -146,9 +146,9 @@ public class CloudClientCommunicationNetworkServiceConnection extends CloudFMPCo
 	}
 	
 	@Override
-	public void start() throws CloudConnectionException{
+	public void start() throws CloudCommunicationException {
 		if(running.get())
-			throw new CloudConnectionException();
+			throw new CloudCommunicationException();
 		try{
 			selector = Selector.open();
 			clientChannel = SocketChannel.open();
@@ -162,7 +162,7 @@ public class CloudClientCommunicationNetworkServiceConnection extends CloudFMPCo
 			executor.execute(this);
 			requestConnectionToServer();
 		}catch(IOException ex){
-			throw new CloudConnectionException(ex.getMessage());
+			throw new CloudCommunicationException(ex.getMessage());
 		}
 	}
 	
@@ -170,9 +170,9 @@ public class CloudClientCommunicationNetworkServiceConnection extends CloudFMPCo
 		return registeredConnections.containsKey(serverPublicKey);
 	}
 	
-	public void requestVPNConnection(final String peer) throws CloudConnectionException {
+	public void requestVPNConnection(final String peer) throws CloudCommunicationException {
 		if(!isRegistered())
-			throw new CloudConnectionException("Not yet registered");
+			throw new CloudCommunicationException("Not yet registered");
 		
 		String sender = eccPublicKey;
 		String destination = peer;
@@ -184,7 +184,7 @@ public class CloudClientCommunicationNetworkServiceConnection extends CloudFMPCo
 			pendingMessages.add(packet);
 			registeredConnections.get(serverPublicKey).interestOps(SelectionKey.OP_WRITE);
 		}catch(FMPException ex){
-			throw new CloudConnectionException(ex.getMessage());
+			throw new CloudCommunicationException(ex.getMessage());
 		}
 	}
 	
@@ -206,7 +206,7 @@ public class CloudClientCommunicationNetworkServiceConnection extends CloudFMPCo
 		return activeVPNRegistry.get(peer);
 	}
 	
-	private void requestConnectionToServer() throws CloudConnectionException{
+	private void requestConnectionToServer() throws CloudCommunicationException {
 		if(isRegistered())
 			throw new ConnectionAlreadyRegisteredException();
 		if(!requestedConnections.isEmpty())
@@ -224,7 +224,7 @@ public class CloudClientCommunicationNetworkServiceConnection extends CloudFMPCo
 			unregisteredConnections.remove(serverPublicKey);
 			requestedConnections.put(serverPublicKey, serverConnection);
 		} catch(FMPException ex){
-			throw new CloudConnectionException(ex.getMessage());
+			throw new CloudCommunicationException(ex.getMessage());
 		}
 	}
 	

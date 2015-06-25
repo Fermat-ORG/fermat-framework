@@ -5,7 +5,7 @@ import static com.googlecode.catchexception.CatchException.*;
 
 import org.junit.Test;
 
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.exceptions.CloudConnectionException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.exceptions.CloudCommunicationException;
 
 
 public class StartTest extends NetworkServiceClientManagerUnitTest{
@@ -15,7 +15,7 @@ public class StartTest extends NetworkServiceClientManagerUnitTest{
 	public void Start_NoServer_ThrowsCloudConnectionException() throws Exception {
 		setUp(TCP_PORT_PADDING + 1);
 		catchException(testClient).start();
-		assertThat(caughtException()).isInstanceOf(CloudConnectionException.class);
+		assertThat(caughtException()).isInstanceOf(CloudCommunicationException.class);
 	}
 	
 	@Test
@@ -33,7 +33,7 @@ public class StartTest extends NetworkServiceClientManagerUnitTest{
 		testClient.start();
 		Thread.sleep(getThreadSleepMillis());
 		catchException(testClient).start();
-		assertThat(caughtException()).isInstanceOf(CloudConnectionException.class);
+		assertThat(caughtException()).isInstanceOf(CloudCommunicationException.class);
 	}
 
 }

@@ -9,15 +9,28 @@ public class RegisteringAddressHasNotRequestedConnectionException extends
 	 * 
 	 */
 	private static final long serialVersionUID = 5575796475237671382L;
-	
-	private static final String DEFAULT_MESSAGE = "Client Address Has Not Requested a Connection To This Service";
-	
-	public RegisteringAddressHasNotRequestedConnectionException(){
-		this("");
+
+	public static final String DEFAULT_MESSAGE = "CLIENT ADDRESS HAS NOT REQUESTED A CONNECTION TO THIS SERVICE";
+
+	public RegisteringAddressHasNotRequestedConnectionException(final String message, final Exception cause, final String context, final String possibleReason) {
+		super(message, cause, context, possibleReason);
 	}
-	
-	public RegisteringAddressHasNotRequestedConnectionException(final String message){
-		super(DEFAULT_MESSAGE + ": " + message);
+
+	public RegisteringAddressHasNotRequestedConnectionException(final String message, final Exception cause) {
+		this(message, cause, "", "");
+	}
+
+	public RegisteringAddressHasNotRequestedConnectionException(final String message) {
+		this(message, null);
+	}
+
+	public RegisteringAddressHasNotRequestedConnectionException(final Exception exception) {
+		this(exception.getMessage());
+		setStackTrace(exception.getStackTrace());
+	}
+
+	public RegisteringAddressHasNotRequestedConnectionException() {
+		this(DEFAULT_MESSAGE);
 	}
 
 }

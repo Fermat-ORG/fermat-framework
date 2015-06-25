@@ -22,7 +22,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.ConnectionStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.Message;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.ServiceToServiceOnlineConnection;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.exceptions.CloudConnectionException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.exceptions.CloudCommunicationException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket.FMPPacketType;
@@ -58,7 +58,7 @@ public class CloudClientCommunicationNetworkServiceVPN extends CloudFMPConnectio
 	}
 	
 	@Override
-	public synchronized void writeToKey(final SelectionKey key) throws CloudConnectionException{
+	public synchronized void writeToKey(final SelectionKey key) throws CloudCommunicationException {
 		try{
 			SocketChannel channel = (SocketChannel) key.channel();
 			FMPPacket dataPacket = pendingPackets.remove();
@@ -70,7 +70,7 @@ public class CloudClientCommunicationNetworkServiceVPN extends CloudFMPConnectio
 		}catch(NoSuchElementException ex){
 			key.interestOps(SelectionKey.OP_READ);
 		}catch(IOException ex){
-			throw new CloudConnectionException(ex.getMessage());
+			throw new CloudCommunicationException(ex.getMessage());
 		}
 	}
 
@@ -139,9 +139,9 @@ public class CloudClientCommunicationNetworkServiceVPN extends CloudFMPConnectio
 	}
 	
 	@Override
-	public void start() throws CloudConnectionException{
+	public void start() throws CloudCommunicationException {
 		if(running.get())
-			throw new CloudConnectionException();
+			throw new CloudCommunicationException();
 		try{
 			selector = Selector.open();
 			clientChannel = SocketChannel.open();
@@ -155,11 +155,11 @@ public class CloudClientCommunicationNetworkServiceVPN extends CloudFMPConnectio
 			executor.execute(this);
 			requestConnectionToServer();
 		}catch(IOException ex){
-			throw new CloudConnectionException(ex.getMessage());
+			throw new CloudCommunicationException(ex.getMessage());
 		}
 	}
 	
-	private void requestConnectionToServer() throws CloudConnectionException{
+	private void requestConnectionToServer() throws CloudCommunicationException {
 		if(isRegistered())
 			throw new ConnectionAlreadyRegisteredException();
 		if(!requestedConnections.isEmpty())
@@ -178,7 +178,7 @@ public class CloudClientCommunicationNetworkServiceVPN extends CloudFMPConnectio
 			requestedConnections.put(vpnPublicKey, serverConnection);
 			registered.set(true);
 		} catch(FMPException ex){
-			throw new CloudConnectionException(ex.getMessage());
+			throw new CloudCommunicationException(ex.getMessage());
 		}
 	}
 
@@ -194,9 +194,9 @@ public class CloudClientCommunicationNetworkServiceVPN extends CloudFMPConnectio
 		return AsymmectricCryptography.verifyMessageSignature(signature, message, sender);
 	}
 
-	public void sendMessage(String message) throws FMPException, CloudConnectionException{
+	public void sendMessage(String message) throws FMPException, CloudCommunicationException {
 		if(!isRegistered())
-			throw new CloudConnectionException("Aun no estamos conectados");
+			throw new CloudCommunicationException("Aun no estamos conectados");
 		String sender = eccPublicKey;
 		String destination = peerPublicKey;
 		FMPPacketType type = FMPPacketType.DATA_TRANSMIT;

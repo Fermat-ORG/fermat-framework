@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CloudFMPConnectionManager;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.exceptions.CloudConnectionException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.exceptions.CloudCommunicationException;
 
 public class StartClientTest extends CloudFMPConnectionManagerUnitTest {
 	
@@ -42,7 +42,7 @@ public class StartClientTest extends CloudFMPConnectionManagerUnitTest {
 		setUpParameters(tcpPortPadding+2);
 		testClient = new MockCloudFMPConnectionManagerClient(testAddress, testExecutor, testClientPrivateKey, testClientPublicKey);
 		catchException(testClient).start();
-		assertThat(caughtException()).isInstanceOf(CloudConnectionException.class);
+		assertThat(caughtException()).isInstanceOf(CloudCommunicationException.class);
 	}
 	
 }
