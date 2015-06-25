@@ -151,7 +151,7 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
              */
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantInitializeCryptoRegistryException);
             System.err.print("INCOMING CRYPTO: CantInitializeCryptoRegistryException");
-            throw new CantStartPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
+            throw new CantStartPluginException(cantInitializeCryptoRegistryException, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
         }
 
         System.err.println("INCOMING CRYPTO: REGISTRY INITIALIZED");
@@ -173,7 +173,7 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
              * I cant continue if this happens.
              */
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantStartServiceException);
-            throw new CantStartPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
+            throw new CantStartPluginException(cantStartServiceException, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
         }
 
         /**
@@ -200,7 +200,7 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
              */
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantStartAgentException);
 
-            throw new CantStartPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
+            throw new CantStartPluginException(cantStartAgentException, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
         }
 
         /**
@@ -226,7 +226,7 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
              */
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantStartAgentException);
 
-            throw new CantStartPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
+            throw new CantStartPluginException(cantStartAgentException, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
         }
         
         this.serviceStatus = ServiceStatus.STARTED;

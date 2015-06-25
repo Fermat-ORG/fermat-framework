@@ -65,6 +65,9 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
     private DatabaseTransaction databaseTransaction;
     private DatabaseTable databaseTable;
 
+
+    public AndroidDatabase(){
+	}
     // Public constructor declarations.
 
     /**
@@ -223,7 +226,9 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
     }
 
     /**
-     * Delete a specific database file
+     * 
+
+te a specific database file
      * if used by a plugin, It use plugin id to define directory path name
      *
      * @param databaseName name of database to deleted

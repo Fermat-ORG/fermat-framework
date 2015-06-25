@@ -351,10 +351,10 @@
                 <package>com.bitdubai.fermat_p2p_api.layer.all_definition.communication</package>
                 <package>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud</package>
                 <package>com.bitdubai.fermat_p2p_api.layer.p2p_communication</package>
-                <package>com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server</package>
-                <package>com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.enums</package>
-                <package>com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.events</package>
-                <package>com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.exceptions</package>
+                <package>com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud</package>
+                <package>com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.enums</package>
+                <package>com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.events</package>
+                <package>com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.exceptions</package>
                 <package>com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp</package>
                 <package>com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai</package>
                 <package>com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1</package>

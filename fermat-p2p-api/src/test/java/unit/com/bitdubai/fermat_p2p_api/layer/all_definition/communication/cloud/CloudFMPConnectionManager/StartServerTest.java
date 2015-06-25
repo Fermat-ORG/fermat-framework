@@ -5,7 +5,7 @@ import static org.fest.assertions.api.Assertions.*;
 import org.junit.Test;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CloudFMPConnectionManager;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.exceptions.CloudConnectionException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.exceptions.CloudCommunicationException;
 
 
 public class StartServerTest extends CloudFMPConnectionManagerUnitTest {
@@ -23,7 +23,7 @@ public class StartServerTest extends CloudFMPConnectionManagerUnitTest {
 		assertThat(testManager.isRunning()).isTrue();
 	}
 	
-	@Test(expected=CloudConnectionException.class)
+	@Test(expected=CloudCommunicationException.class)
 	public void DoubleStart_Successful_isRunning() throws Exception{
 		setUpParameters(tcpPortPadding+2);
 		testManager = new MockCloudFMPConnectionManagerServer(testAddress, testExecutor, testPrivateKey, testPublicKey);

@@ -161,12 +161,12 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
 
             } catch (CommunicationException e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not register whit the communicationLayerManager. Error reason: "+e.getMessage()));
-                throw new CantStartPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE);
+                throw new CantStartPluginException(e, Plugins.BITDUBAI_USER_NETWORK_SERVICE);
             }
 
         } else {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("No all required resource are injected"));
-            throw new CantStartPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE);
+            throw new CantStartPluginException(new Exception("No all required resource are injected"), Plugins.BITDUBAI_USER_NETWORK_SERVICE);
         }
 
     }

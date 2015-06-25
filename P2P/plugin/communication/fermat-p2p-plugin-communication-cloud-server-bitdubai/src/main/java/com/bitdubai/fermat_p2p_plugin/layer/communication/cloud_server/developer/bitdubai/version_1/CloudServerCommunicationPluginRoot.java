@@ -15,7 +15,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CantConnectToRemoteSe
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannel;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.OnlineChannel;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.ServiceToServiceOnlineConnection;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.enums.RejectConnectionRequestReasons;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.enums.RejectConnectionRequestReasons;
 
 import java.util.ArrayList;
 import java.util.Collection;
