@@ -395,6 +395,10 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
              */
             Transaction tx = request.tx;
 
+            /**
+             * at this point the transaction is already created and in the network, if there are erros in any other plug in, I can't roll back anything.
+             * I will deal with any DB error later when I control the transactions.
+             */
             txID = db.persistNewTransaction(tx.getHash().toString());
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -407,6 +411,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         /**
          * returns the created transaction id
          */
+        System.out.println("CryptoVault information: bitcoin sent!!!");
         return txID.toString();
     }
 
@@ -538,7 +543,11 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
     private long getTransactionTimestampFromVault(String txHash){
         Sha256Hash hash = new Sha256Hash(txHash);
         Transaction tx = vault.getTransaction(hash);
-        //todo this needs to be completed.
+
+        /**
+         * I get the current timestamp
+         */
+        tx.
 
         return 0;
     }
