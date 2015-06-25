@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,6 +36,15 @@ public class CorePlatformContext implements PlatformContext {
 
     public Plugin getPlugin (Plugins descriptor){
         return (Plugin) plugins.get(descriptor);
+    }
+
+
+    public Collection<Addons> getRegisteredAddonsDescriptors(){
+        return addons.keySet();
+    }
+
+    public Collection<Plugins> getRegisteredPluginsDescriptors(){
+        return plugins.keySet();
     }
 
 

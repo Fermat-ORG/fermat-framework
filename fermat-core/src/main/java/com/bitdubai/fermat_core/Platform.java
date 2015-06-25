@@ -6,6 +6,8 @@ import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
 
 
+import com.bitdubai.fermat_api.layer.all_definition.developer.DealWithDatabaseManagers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DealWithLogManagers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -98,11 +100,13 @@ public class Platform  {
     PlatformLayer mNicheWalletTypeLayer = new NicheWalletTypeLayer();
     PlatformLayer mActorLayer = new ActorLayer();
 
-    Map<Plugins, Plugin> dealsWithDatabaseManagersPlugins = new ConcurrentHashMap<Plugins, Plugin>();
-    Map<Plugins, Plugin> dealsWithLogManagersPlugins = new ConcurrentHashMap<Plugins, Plugin>();
 
-    Map<Addons, Addon> dealsWithDatabaseManagersAddons = new ConcurrentHashMap<Addons, Addon>();
-    Map<Addons, Addon> dealsWithLogManagersAddons = new ConcurrentHashMap<Addons, Addon>();
+
+    private Map<Plugins, Plugin> dealsWithDatabaseManagersPlugins = new ConcurrentHashMap<Plugins, Plugin>();
+    private Map<Plugins, Plugin> dealsWithLogManagersPlugins = new ConcurrentHashMap<Plugins, Plugin>();
+
+    private Map<Addons, Addon> dealsWithDatabaseManagersAddons = new ConcurrentHashMap<Addons, Addon>();
+    private Map<Addons, Addon> dealsWithLogManagersAddons = new ConcurrentHashMap<Addons, Addon>();
 
 
     public PlatformLayer getDefinitionLayer() {
@@ -179,6 +183,22 @@ public class Platform  {
         return mActorLayer;
     }
 
+    public Map<Plugins, Plugin> getDealsWithDatabaseManagersPlugins() {
+        return dealsWithDatabaseManagersPlugins;
+    }
+
+    public Map<Plugins, Plugin> getDealsWithLogManagersPlugins() {
+        return dealsWithLogManagersPlugins;
+    }
+
+    public Map<Addons, Addon> getDealsWithDatabaseManagersAddons() {
+        return dealsWithDatabaseManagersAddons;
+    }
+
+    public Map<Addons, Addon> getDealsWithLogManagersAddons() {
+        return dealsWithLogManagersAddons;
+    }
+
     PlatformEventMonitor eventMonitor;
 
     PluginsIdentityManager pluginsIdentityManager;
@@ -240,6 +260,8 @@ public class Platform  {
     public void setLocationSystemOs(LocationSystemOs locationSystemOs) {
         this.locationSystemOs  = locationSystemOs;
     }
+
+
 
     public void start() throws CantStartPlatformException, CantReportCriticalStartingProblemException {
 
@@ -763,6 +785,11 @@ public class Platform  {
         Plugin walletRuntime =  ((ModuleLayer) mModuleLayer).getWalletRuntime();
         setPluginReferencesAndStart(walletRuntime, Plugins.BITDUBAI_WALLET_RUNTIME_MODULE);
 
+        for(Addons registeredDescriptor : corePlatformContext.getRegisteredAddonsDescriptors())
+            checkAddonForDeveloperInterfaces(registeredDescriptor);
+        for(Plugins registeredDescriptor : corePlatformContext.getRegisteredPluginsDescriptors())
+            checkPluginForDeveloperInterfaces(registeredDescriptor);
+
     }
 
     private void setPluginReferencesAndStart(Plugin plugin, Plugins descriptor) {
@@ -850,12 +877,26 @@ public class Platform  {
         }
     }
 
-    private void checkAddon(final Addons descriptor){
+
+
+    private void checkAddonForDeveloperInterfaces(final Addons descriptor){
         Addon addon = corePlatformContext.getAddon(descriptor);
+        if(addon == null)
+            return;
+        if(addon instanceof DealWithDatabaseManagers)
+            dealsWithDatabaseManagersAddons.put(descriptor, addon);
+        if(addon instanceof DealWithLogManagers)
+            dealsWithLogManagersAddons.put(descriptor, addon);
     }
 
-    private void checkPlugin(final Plugins descriptor){
+    private void checkPluginForDeveloperInterfaces(final Plugins descriptor){
         Plugin plugin = corePlatformContext.getPlugin(descriptor);
+        if(plugin == null)
+            return;
+        if(plugin instanceof DealWithDatabaseManagers)
+            dealsWithDatabaseManagersPlugins.put(descriptor, plugin);
+        if(plugin instanceof DealWithLogManagers)
+            dealsWithLogManagersPlugins.put(descriptor, plugin);
     }
 
 }

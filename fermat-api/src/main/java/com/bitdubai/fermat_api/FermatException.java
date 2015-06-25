@@ -90,10 +90,11 @@ public class FermatException extends Exception {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("Exception Type: " + exceptionName + "\n");
 		buffer.append("Exception Message: " + getMessage() + "\n");
-		buffer.append("Exception Possible Cause: " + getPossibleReason() + "\n");
-		buffer.append("Exception Context: \n" );
-		buffer.append(!getFormattedContext().isEmpty() ? "---------------------------------------------------------------------------------\n" : "");
-		buffer.append(getFormattedContext());
+		buffer.append("Exception Possible Cause: ");
+		buffer.append(getPossibleReason().isEmpty() ? "N/A \n" : getPossibleReason() + "\n");
+		buffer.append("Exception Context: " );
+		buffer.append(!getFormattedContext().isEmpty() ? "\n---------------------------------------------------------------------------------\n" : "");
+		buffer.append(getFormattedContext().isEmpty() ? "N/A \n" : getFormattedContext());
 		buffer.append(!getFormattedContext().isEmpty() ? "---------------------------------------------------------------------------------\n" : "");
 		buffer.append("Exception Stack Trace: \n");
 		buffer.append("---------------------------------------------------------------------------------\n");
