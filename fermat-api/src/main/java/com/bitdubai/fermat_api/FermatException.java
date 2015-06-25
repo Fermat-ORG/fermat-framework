@@ -2,6 +2,8 @@ package com.bitdubai.fermat_api;
 
 public class FermatException extends Exception {
 
+	public static final String CONTEXT_CONTENT_SEPARATOR = "&&";
+
 	/**
 	 * 
 	 */
@@ -12,6 +14,7 @@ public class FermatException extends Exception {
 	private final FermatException cause;
 	private final String context;
 	private final String possibleReason;
+	private int depth;
 
 	public FermatException(final String message, final Exception cause, final String context, final String possibleReason){
 		super(message, cause);
@@ -21,6 +24,12 @@ public class FermatException extends Exception {
 			this.cause = null;
 		this.context = context;
 		this.possibleReason = possibleReason;
+	}
+
+	public static FermatException wrapException(final Exception exception){
+		FermatException fermatException = new FermatException(exception.getClass().toString() + " - " + exception.getMessage(), null, "", "");
+		fermatException.setStackTrace(exception.getStackTrace());
+		return fermatException;
 	}
 
 	@Override
@@ -36,14 +45,30 @@ public class FermatException extends Exception {
 		return possibleReason;
 	}
 
+	public void setDepth(final int depth){
+		this.depth = depth;
+	}
+
+	public int getDepth(){
+		return depth;
+	}
+
+	public String getFormattedContext() {
+		StringBuffer buffer = new StringBuffer("");
+		for(String contextPart : context.split(CONTEXT_CONTENT_SEPARATOR))
+			if(!contextPart.isEmpty())
+				buffer.append(contextPart + "\n");
+		return buffer.toString();
+	}
+
 	public String getFormattedTrace() {
 		if(getStackTrace().length == 0)
 			return "";
 
 		StringBuffer buffer = new StringBuffer();
 		for(StackTraceElement element : getStackTrace())
-			if(element.getClassName().contains("com.bitdubai"))
-				buffer.append("Class: " + element.getClassName() + " - Line: " + element.getLineNumber() + "\n");
+			//if(element.getClassName().contains("com.bitdubai"))
+			buffer.append("Class: " + element.getClassName() + " - Line: " + element.getLineNumber() + "\n");
 		return buffer.toString();
 	}
 
@@ -52,7 +77,7 @@ public class FermatException extends Exception {
 		StringBuffer buffer = new StringBuffer();
 		buffer.append("Exception Type: " + getClass().toString() + "\n");
 		buffer.append("Exception Message: " + getMessage() + "\n");
-		buffer.append("Exception Context: " + getContext() + "\n");
+		buffer.append("Exception Context: \n" + getFormattedContext());
 		buffer.append("Exception Possible Cause: " + getPossibleReason() + "\n");
 		buffer.append("Exception Stack Trace: \n" + getFormattedTrace());
 		return buffer.toString();
