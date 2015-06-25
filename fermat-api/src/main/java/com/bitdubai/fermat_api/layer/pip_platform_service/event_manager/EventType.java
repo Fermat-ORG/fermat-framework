@@ -1,19 +1,36 @@
+/*
+ * @#EventType.java - 2015
+ * Copyright bitDubai.com., All rights reserved.
+ * You may not modify, use, reproduce or distribute this software.
+ * BITDUBAI/CONFIDENTIAL
+ */
 package com.bitdubai.fermat_api.layer.pip_platform_service.event_manager;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
 /**
- * Created by ciencias on 24.01.15.
+ * The enum <code>com.bitdubai.fermat_dmp_plugin.layer._11_network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceMessage</code>
+ * represent the different type for the events<p/>
+ *
+ * Created by ciencias on 24/01/15.
+ * Update by Roberto Requena - (rart3001@gmail.com) on 24/06/15.
+ *
+ * @version 1.0
+ * @since Java JDK 1.7
  */
 public enum EventType {
 
+    /**
+     * The enum values
+     */
     DEVICE_USER_CREATED("DUC"),
     DEVICE_USER_LOGGED_IN ("DLI"),
     DEVICE_USER_LOGGED_OUT ("DLO"),
     INTRA_USER_LOGGED_IN ("ILI"),
     INTRA_USER_LOGGED_OUT ("ILO"),
     INTRA_USER_CONTACT_CREATED ("ICC"),
-    INCOMING_NETWORK_SERVICE_CONNECTION_REQUEST ("NCR"),
+    INCOMING_NETWORK_SERVICE_CONNECTION_REQUEST ("INSCR"),
+    ESTABLISHED_NETWORK_SERVICE_CONNECTION("SNSC"),
 
     WALLET_CREATED ("WC1"),
     WALLET_WENT_ONLINE ("WWO"),
@@ -63,15 +80,35 @@ public enum EventType {
     BITCOIN_BLOCKCHAIN_DOWNLOADED ("BBD"),
     BITCOIN_NEW_PEER_CONNECTED_INTRA_USER ("BNPCIU");
 
-
+    /**
+     * Represent the code of the message status
+     */
     private final String code;
 
-    EventType (String Code) {
-        this.code = Code;
+    /**
+     * Constructor whit parameter
+     *
+     * @param code the valid code
+     */
+    EventType (String code) {
+        this.code = code;
     }
 
+    /**
+     * Return a string code
+     *
+     * @return String that represent of the message status
+     */
     public String getCode()   { return this.code ; }
 
+
+    /**
+     * Return the enum by the code
+     *
+     * @param code the valid code
+     * @return EventType enum
+     * @throws InvalidParameterException error with is no a valid code
+     */
     public static EventType getByCode(String code) throws InvalidParameterException {
 
         switch (code) {
@@ -87,8 +124,10 @@ public enum EventType {
                 return EventType.INTRA_USER_LOGGED_OUT;
             case "ICC":
                 return EventType.INTRA_USER_CONTACT_CREATED;
-            case "NCR":
+            case "INSCR":
                 return EventType.INCOMING_NETWORK_SERVICE_CONNECTION_REQUEST;
+            case "SNSC":
+                return EventType.ESTABLISHED_NETWORK_SERVICE_CONNECTION;
 
             case "WC1":
                 return EventType.WALLET_CREATED;
@@ -185,4 +224,13 @@ public enum EventType {
          */
         throw new InvalidParameterException(code);
     };
+
+    /**
+     * (non-Javadoc)
+     * @see Object#toString()
+     */
+    @Override
+    public String toString() {
+        return getCode();
+    }
 }

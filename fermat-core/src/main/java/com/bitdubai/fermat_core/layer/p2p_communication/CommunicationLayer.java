@@ -146,6 +146,17 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
     //TODO: JORGE usar el objeto LayerServiceToServiceOnlineConnection para encapsular la conexion real.
     }
 
+    /**
+     * (non-Javadoc)
+     *
+     * @see CommunicationLayerManager#getNetworkServiceChannelPublicKey(NetworkServices)
+     *
+     */
+    @Override
+    public String getNetworkServiceChannelPublicKey(NetworkServices networkService) throws NetworkServiceNotRegisteredException {
+        return ((CommunicationChannel) mCloudPlugin).getNetworkServiceChannelPublicKey(networkService);
+    }
+
     @Override
     public Collection<String> getActiveNetworkServiceConnectionIdentifiers(NetworkServices networkService) throws CommunicationException{
         return ((CommunicationChannel) mCloudPlugin).getActiveNetworkServiceConnectionIdentifiers(networkService);
@@ -158,8 +169,5 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
     public void requestConnectionTo(NetworkServices networkService, String remoteNetworkService) throws CommunicationException{
         ((CommunicationChannel) mCloudPlugin).requestConnectiontTo(networkService, remoteNetworkService);
     }
-    
-    
-
 
 }

@@ -7,11 +7,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -188,17 +186,16 @@ public class SendFragment extends Fragment implements View.OnClickListener {
 
                 // first i add the contact
                 cryptoWallet.createWalletContact(cryptoAddress, contact_name.getText().toString(), Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
-                // then i send crypto
+
                 cryptoWallet.send(Long.parseLong(amount.getText().toString()), cryptoAddress, wallet_id);
 
                 showMessage("Send OK");
-
-            } catch (CantSendCryptoException e) {
-                e.printStackTrace();
-                showMessage("Error sending satoshis - " + e.getMessage());
             } catch (CantCreateWalletContactException e) {
                 e.printStackTrace();
                 showMessage("Error creating wallet contact - " + e.getMessage());
+            } catch (CantSendCryptoException e) {
+                e.printStackTrace();
+                showMessage("Error send satoshis - " + e.getMessage());
             }
         } catch (Exception e) {
             e.printStackTrace();
