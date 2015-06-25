@@ -209,7 +209,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         this.networkParameters = BitcoinNetworkConfiguration.getNetworkConfiguration();
 
         this.vaultFileName = userId.toString() + ".vault";
-        //todo this needs to be fixed
+        //todo this needs to be fixed. I need to find a better way to get the file
         this.vaultFile = new File("/data/data/com.bitdubai.fermat/files", vaultFileName);
     }
 
@@ -517,8 +517,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         Sha256Hash hash = new Sha256Hash(txHash);
         Transaction tx = vault.getTransaction(hash);
 
-        //String addressTo = tx.getInput(0).getScriptSig().getToAddress(networkParameters).toString();
-        String addressTo = tx.getInput(0).getFromAddress().toString();
+        String addressTo = tx.getOutput(0).getAddressFromP2PKHScript(networkParameters).toString();
         return addressTo;
     }
 
@@ -531,7 +530,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         Sha256Hash hash = new Sha256Hash(txHash);
         Transaction tx = vault.getTransaction(hash);
 
-        String addressFrom = tx.getOutput(0).getAddressFromP2PKHScript(networkParameters).toString();
+        String addressFrom = tx.getInput(0).getFromAddress().toString();
         return addressFrom;
     }
 
