@@ -1,4 +1,4 @@
-include ':fermat-android-core'
+include ':fermat-android-core', ':pip:android', ':pip:android:developer', ':pip:android:developer:fermat-pip-android-developer-bitdubai', ':pip'
 
 include ':fermat-core'
 include ':fermat-api'
