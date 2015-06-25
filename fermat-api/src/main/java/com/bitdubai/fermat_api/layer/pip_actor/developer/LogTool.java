@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_api.layer.pip_actor.developer;
 
-import com.bitdubai.fermat_api.layer.all_definition.developer.LoggingLevel;
+import com.bitdubai.fermat_api.layer.all_definition.developer.LogLevel;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 
@@ -15,11 +15,11 @@ public interface LogTool {
 
     public List<Addons> getAvailableAddonList ();
 
-    public LoggingLevel getLoggingLevel(Plugins plugin);
+    public LogLevel getLogLevel(Plugins plugin);
 
-    public LoggingLevel getLoggingLevel(Addons addon);
+    public LogLevel getLogLevel(Addons addon);
 
-    public void changeLoggingLevel(Plugins plugin, LoggingLevel newLoggingLevel);
+    public void changeLogLevel(Plugins plugin, LogLevel newLogLevel);
 
-    public void changeLoggingLevel(Addons addon, LoggingLevel newLoggingLevel);
+    public void changeLogLevel(Addons addon, LogLevel newLogLevel);
 }
