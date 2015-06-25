@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecord;
@@ -53,5 +54,7 @@ public interface DatabaseTable {
 
     public void setFilterTop(String top);
 
+    public void deleteRecord(DatabaseTableRecord record) throws CantDeleteRecord;
 
+    public DatabaseTableRecord getRecordFromPk(String pk) throws Exception;
 }
