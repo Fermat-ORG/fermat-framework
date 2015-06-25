@@ -317,7 +317,7 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
         try {
             communicationLayerManager.unregisterNetworkService(NetworkServices.INTRA_USER);
         } catch (CommunicationException e) {
-
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("No all required resource are injected"));
         }
 
         /*
