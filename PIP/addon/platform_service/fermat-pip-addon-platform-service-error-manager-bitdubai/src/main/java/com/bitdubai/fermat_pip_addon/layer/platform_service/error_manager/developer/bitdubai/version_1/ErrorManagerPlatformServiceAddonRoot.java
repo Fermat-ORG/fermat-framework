@@ -203,12 +203,13 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
     }
 
     private String constructErrorReport(final FermatException exception){
-        StringBuffer buffer = new StringBuffer("====================================================================\n" +
-                "Fermat Error Manager - Unexpected Exception Report\n" +
-                "====================================================================\n");
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("========================================================================================================================================================\n");
+        buffer.append("Fermat Error Manager * Unexpected Exception Report\n");
+        buffer.append("========================================================================================================================================================\n");
         buffer.append(constructExceptionReport(exception, 1));
         buffer.append("Exceptions Processed: " + exception.getDepth() + "\n");
-        buffer.append("====================================================================\n");
+        buffer.append("========================================================================================================================================================\n");
         return buffer.toString();
     }
 
@@ -220,9 +221,10 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
         } else {
             exception.setDepth(depth);
         }
+        buffer.append("********************************************************************************************************************************************************\n");
         buffer.append("Exception Number: " + exception.getDepth() + "\n");
         buffer.append(exception.toString());
-        buffer.append("--------------------------------------------------------------------\n");
+        buffer.append("********************************************************************************************************************************************************\n");
         return buffer.toString();
     }
 }

@@ -11,6 +11,7 @@ public class FermatException extends Exception {
 	
 	private static final String DEFAULT_MESSAGE = "FERMAT HAS DETECTED AN EXCEPTION: ";
 
+	private final String exceptionName;
 	private final FermatException cause;
 	private final String context;
 	private final String possibleReason;
@@ -22,12 +23,24 @@ public class FermatException extends Exception {
 			this.cause = (FermatException) cause;
 		else
 			this.cause = null;
+		this.exceptionName = getClass().toString();
+		this.context = context;
+		this.possibleReason = possibleReason;
+	}
+
+	private FermatException(final String exceptionName, final String message, final Exception cause, final String context, final String possibleReason){
+		super(message, cause);
+		if(cause instanceof FermatException)
+			this.cause = (FermatException) cause;
+		else
+			this.cause = null;
+		this.exceptionName = exceptionName;
 		this.context = context;
 		this.possibleReason = possibleReason;
 	}
 
 	public static FermatException wrapException(final Exception exception){
-		FermatException fermatException = new FermatException(exception.getClass().toString() + " - " + exception.getMessage(), null, "", "");
+		FermatException fermatException = new FermatException(exception.getClass().toString(), exception.getMessage(), null, "", "");
 		fermatException.setStackTrace(exception.getStackTrace());
 		return fermatException;
 	}
@@ -75,11 +88,17 @@ public class FermatException extends Exception {
 	@Override
 	public String toString(){
 		StringBuffer buffer = new StringBuffer();
-		buffer.append("Exception Type: " + getClass().toString() + "\n");
+		buffer.append("Exception Type: " + exceptionName + "\n");
 		buffer.append("Exception Message: " + getMessage() + "\n");
-		buffer.append("Exception Context: \n" + getFormattedContext());
 		buffer.append("Exception Possible Cause: " + getPossibleReason() + "\n");
-		buffer.append("Exception Stack Trace: \n" + getFormattedTrace());
+		buffer.append("Exception Context: \n" );
+		buffer.append(!getFormattedContext().isEmpty() ? "---------------------------------------------------------------------------------\n" : "");
+		buffer.append(getFormattedContext());
+		buffer.append(!getFormattedContext().isEmpty() ? "---------------------------------------------------------------------------------\n" : "");
+		buffer.append("Exception Stack Trace: \n");
+		buffer.append("---------------------------------------------------------------------------------\n");
+		buffer.append(getFormattedTrace());
+		buffer.append("---------------------------------------------------------------------------------\n");
 		return buffer.toString();
 	}
 }
