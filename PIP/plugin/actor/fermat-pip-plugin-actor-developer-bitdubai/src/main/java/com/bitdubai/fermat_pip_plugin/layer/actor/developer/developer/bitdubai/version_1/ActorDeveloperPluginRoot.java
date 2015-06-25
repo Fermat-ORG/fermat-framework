@@ -30,6 +30,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventLis
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -91,8 +92,10 @@ public class ActorDeveloperPluginRoot implements DealWithDatabaseManagers, DealW
 
 
     //Esto seria lo nuevo
-    private HashMap<Plugins,Plugin> databaseManagersOnPlugins;
-    private HashMap<Addons,Addon> databaseManagersOnAddons;
+    private Map<Plugins,Plugin> databaseManagersOnPlugins;
+    private Map<Plugins,Plugin> logManagersOnPlugins;
+    private Map<Addons,Addon> databaseManagersOnAddons;
+    private Map<Addons,Addon> logManagersOnAddons;
 
     /**
      *DealWithErrors Interface implementation.
@@ -190,14 +193,16 @@ public class ActorDeveloperPluginRoot implements DealWithDatabaseManagers, DealW
 
 
     @Override
-    public void setDatabaseManagers(HashMap<Plugins,Plugin> databaseManagersOnPlugins,HashMap<Addons,Addon> databaseManagersOnAddons) {
+    public void setDatabaseManagers(Map<Plugins,Plugin> databaseManagersOnPlugins,Map<Addons,Addon> databaseManagersOnAddons) {
         this.databaseManagersOnPlugins = databaseManagersOnPlugins;
         this.databaseManagersOnAddons = databaseManagersOnAddons;
     }
 
     @Override
-    public void setLogManagers(List<LogManagerForDevelopers> loggingManagers) {
-        this.loggingManagers=loggingManagers;
+
+    public void setLogManagers (Map<Plugins,Plugin> logManagersOnPlugins,Map<Addons,Addon> logManagersOnAddons){
+        this.logManagersOnPlugins = logManagersOnPlugins;
+        this.logManagersOnAddons = logManagersOnAddons;
     }
 
 
