@@ -433,6 +433,43 @@ public class AndroidDatabaseTable implements  DatabaseTable {
         this.top = top;
     }
 
+
+    //testear haber si funciona así de abstracto o hay que hacerlo más especifico
+    @Override
+    public DatabaseTableRecord getRecordFromPk(String pk) throws Exception {
+
+        Cursor c = database.rawQuery(" SELECT * from "+tableName+" WHERE pk="+pk,null);
+
+        List<String> columns = getColumns();
+        DatabaseTableRecord tableRecord1 = new AndroidDatabaseRecord();
+        if (c.moveToFirst()) {
+                /**
+                 * Get columns name to read values of files
+                 *
+                 */
+
+                List<DatabaseRecord> recordValues = new ArrayList<>();
+
+                for (int i = 0; i < columns.size(); ++i) {
+                    DatabaseRecord recordValue = new AndroidRecord();
+                    recordValue.setName(columns.get(i).toString());
+                    recordValue.setValue(c.getString(c.getColumnIndex(columns.get(i).toString())));
+                    recordValue.setChange(false);
+                    recordValues.add(recordValue);
+                }
+                tableRecord1.setValues(recordValues);
+
+            if(c.moveToNext()){
+                //si pasa esto es porque hay algo mal
+                throw new Exception();
+            }
+
+        }else{
+            return null;
+        }
+        return tableRecord1;
+    }
+
     /**
      *<p>Sets the filter and subgroup to filter for queries with grouped where
      *

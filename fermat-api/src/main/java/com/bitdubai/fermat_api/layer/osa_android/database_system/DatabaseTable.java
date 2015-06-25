@@ -4,12 +4,9 @@ import java.util.List;
 import java.util.UUID;
 
 
-<<<<<<< HEAD
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecord;
-=======
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
->>>>>>> bitDubai/master
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecord;
 
@@ -59,6 +56,8 @@ public interface DatabaseTable {
     public void setFilterOrder(String columnName, DatabaseFilterOrder direction);
 
     public void setFilterTop(String top);
+
+    public List<DatabaseTableRecord> getRecordsFromPk(String pk);
 
 
 }
