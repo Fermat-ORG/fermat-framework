@@ -348,8 +348,22 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
          * */
 
         /**
-         * Wallet Basic definition.
-         * */
+         * Bitcoin Basic Wallet definition.
+         *
+         * Structure:
+         *
+         * TYPE: CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN
+         *
+         * TITLE: Fermat Bitcoin Wallet
+         *
+         * TAB STRIP:
+         *      *BALANCE - CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE
+         *      *SEND - CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND
+         *      *RECEIVE - CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE
+         *      *TRANSACTIONS - CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS
+         *      *CONTACTS - CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS
+         *      *DATABASE TOOLS - CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_DATABASE_TOOLS
+         */
 
 
         runtimeWallet = new RuntimeWallet();
@@ -396,6 +410,14 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS);
         runtimeTabStrip.addTab(runtimeTab);
 
+        runtimeTab = new RuntimeTab();
+        runtimeTab.setLabel("Database Tools");
+        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_DATABASE_TOOLS);
+        runtimeTabStrip.addTab(runtimeTab);
+
+
+
+
         runtimeTabStrip.setDividerColor(0x72af9c);
         //runtimeTabStrip.setBackgroundColor("#72af9c");
         runtimeActivity.setTabStrip(runtimeTabStrip);
@@ -427,186 +449,14 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeActivity.addFragment(runtimeFragment);
         listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS,runtimeFragment);
 
-        //define fragment activities
-
-        //send tab
-        runtimeActivity= new RuntimeActivity();
-        runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_BITCOIN_ALL_CONTACTS_SEND);
-        runtimeWallet.addActivity(runtimeActivity);
-        listActivities.put(Activities.CWP_WALLET_RUNTIME_BITCOIN_ALL_CONTACTS_SEND, runtimeActivity);
-
-        runtimeTitleBar = new RuntimeTitleBar();
-        runtimeTitleBar.setLabel("Send To Contact");
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#8bba9e");
-
-        runtimeTabStrip = new RuntimeTabStrip();
-        runtimeTab = new RuntimeTab();
-        runtimeTab.setLabel("");
-        runtimeTabStrip.addTab(runtimeTab);
-        runtimeActivity.setTabStrip(runtimeTabStrip);
-
         runtimeFragment = new RuntimeFragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS_SEND);
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_DATABASE_TOOLS);
         runtimeActivity.addFragment(runtimeFragment);
-        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS_SEND,runtimeFragment);
+        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_DATABASE_TOOLS,runtimeFragment);
 
-        runtimeActivity= new RuntimeActivity();
-        runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_BITCOIN_ALL_CONTACTS_NEW_SEND);
-        runtimeWallet.addActivity(runtimeActivity);
-        listActivities.put(Activities.CWP_WALLET_RUNTIME_BITCOIN_ALL_CONTACTS_NEW_SEND, runtimeActivity);
-
-        runtimeTitleBar = new RuntimeTitleBar();
-        runtimeTitleBar.setLabel("Send to New Contact");
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#8bba9e");
-
-        runtimeTabStrip = new RuntimeTabStrip();
-        runtimeTab = new RuntimeTab();
-        runtimeTab.setLabel("");
-        runtimeTabStrip.addTab(runtimeTab);
-        runtimeActivity.setTabStrip(runtimeTabStrip);
-
-        runtimeFragment = new RuntimeFragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS_NEW_SEND);
-        runtimeActivity.addFragment(runtimeFragment);
-        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS_NEW_SEND,runtimeFragment);
-
-        //balance tab
-        runtimeActivity= new RuntimeActivity();
-        runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_BITCOIN_ALL_AVAILABLE_BALANCE);
-        runtimeWallet.addActivity(runtimeActivity);
-        listActivities.put(Activities.CWP_WALLET_RUNTIME_BITCOIN_ALL_AVAILABLE_BALANCE, runtimeActivity);
-
-        runtimeTitleBar = new RuntimeTitleBar();
-        runtimeTitleBar.setLabel("Actual Balance");
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#8bba9e");
-
-        runtimeTabStrip = new RuntimeTabStrip();
-        runtimeTab = new RuntimeTab();
-        runtimeTab.setLabel("");
-        runtimeTabStrip.addTab(runtimeTab);
-        runtimeActivity.setTabStrip(runtimeTabStrip);
-
-        runtimeFragment = new RuntimeFragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE);
-        runtimeActivity.addFragment(runtimeFragment);
-        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE,runtimeFragment);
-
-        //transactions tab
-
-        runtimeActivity= new RuntimeActivity();
-        runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_BITCOIN_ALL_TRANSACTIONS);
-        runtimeWallet.addActivity(runtimeActivity);
-        listActivities.put(Activities.CWP_WALLET_RUNTIME_BITCOIN_ALL_TRANSACTIONS, runtimeActivity);
-
-        runtimeTitleBar = new RuntimeTitleBar();
-        runtimeTitleBar.setLabel("Transactions");
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#d07b62");
-
-        runtimeTabStrip = new RuntimeTabStrip();
-        runtimeTab = new RuntimeTab();
-        runtimeTab.setLabel("");
-        runtimeTabStrip.addTab(runtimeTab);
-        runtimeActivity.setTabStrip(runtimeTabStrip);
-
-        runtimeFragment = new RuntimeFragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS);
-        runtimeActivity.addFragment(runtimeFragment);
-        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS,runtimeFragment);
-
-        //contacts tab
-
-        runtimeActivity= new RuntimeActivity();
-        runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_BITCOIN_ALL_CONTACTS);
-        runtimeWallet.addActivity(runtimeActivity);
-        listActivities.put(Activities.CWP_WALLET_RUNTIME_BITCOIN_ALL_CONTACTS, runtimeActivity);
-
-        runtimeTitleBar = new RuntimeTitleBar();
-        runtimeTitleBar.setLabel("Transactions");
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#d07b62");
-
-        runtimeTabStrip = new RuntimeTabStrip();
-        runtimeTab = new RuntimeTab();
-        runtimeTab.setLabel("");
-        runtimeTabStrip.addTab(runtimeTab);
-        runtimeActivity.setTabStrip(runtimeTabStrip);
-
-        runtimeFragment = new RuntimeFragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS);
-        runtimeActivity.addFragment(runtimeFragment);
-        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS,runtimeFragment);
-
-        //balance tab
-        runtimeActivity= new RuntimeActivity();
-        runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_BITCOIN_ALL_AVAILABLE_BALANCE);
-        runtimeWallet.addActivity(runtimeActivity);
-        listActivities.put(Activities.CWP_WALLET_RUNTIME_BITCOIN_ALL_AVAILABLE_BALANCE, runtimeActivity);
-
-        runtimeTitleBar = new RuntimeTitleBar();
-        runtimeTitleBar.setLabel("Actual Balance");
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#8bba9e");
-
-        runtimeTabStrip = new RuntimeTabStrip();
-        runtimeTab = new RuntimeTab();
-        runtimeTab.setLabel("");
-        runtimeTabStrip.addTab(runtimeTab);
-        runtimeActivity.setTabStrip(runtimeTabStrip);
-
-        runtimeFragment = new RuntimeFragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE);
-        runtimeActivity.addFragment(runtimeFragment);
-        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE,runtimeFragment);
-
-        //receive tab
-        runtimeActivity= new RuntimeActivity();
-        runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_BITCOIN_ALL_CONTACTS_RECEIVE);
-        runtimeWallet.addActivity(runtimeActivity);
-        listActivities.put(Activities.CWP_WALLET_RUNTIME_BITCOIN_ALL_CONTACTS_RECEIVE, runtimeActivity);
-
-        runtimeTitleBar = new RuntimeTitleBar();
-        runtimeTitleBar.setLabel("Receive from Contact");
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#8bba9e");
-
-        runtimeTabStrip = new RuntimeTabStrip();
-        runtimeTab = new RuntimeTab();
-        runtimeTab.setLabel("");
-        runtimeTabStrip.addTab(runtimeTab);
-        runtimeActivity.setTabStrip(runtimeTabStrip);
-
-        runtimeFragment = new RuntimeFragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS_RECEIVE);
-        runtimeActivity.addFragment(runtimeFragment);
-        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS_RECEIVE,runtimeFragment);
-
-        runtimeActivity= new RuntimeActivity();
-        runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_BITCOIN_ALL_CONTACTS_NEW_RECEIVE);
-        runtimeWallet.addActivity(runtimeActivity);
-        listActivities.put(Activities.CWP_WALLET_RUNTIME_BITCOIN_ALL_CONTACTS_NEW_RECEIVE, runtimeActivity);
-
-        runtimeTitleBar = new RuntimeTitleBar();
-        runtimeTitleBar.setLabel("Receive form New Contact");
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#8bba9e");
-
-        runtimeTabStrip = new RuntimeTabStrip();
-        runtimeTab = new RuntimeTab();
-        runtimeTab.setLabel("");
-        runtimeTabStrip.addTab(runtimeTab);
-        runtimeActivity.setTabStrip(runtimeTabStrip);
-
-        runtimeFragment = new RuntimeFragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS_NEW_RECEIVE);
-        runtimeActivity.addFragment(runtimeFragment);
-        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS_NEW_RECEIVE,runtimeFragment);
         /**
          * End of Wallet basic fragments.
-         * */
+         */
 
         // Wallet adults
 
