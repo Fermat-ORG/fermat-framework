@@ -27,6 +27,7 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.develo
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.ExpectedTransactionNotFoundException;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -378,7 +379,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
                 TransactionStatus.RESPONSIBLE.getCode(),
                 DatabaseFilterType.EQUAL
         );
-        registryTable.setStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName ,
+        registryTable.setStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName,
                 ProtocolStatus.NO_ACTION_REQUIRED.getCode(),
                 DatabaseFilterType.EQUAL
         );
@@ -458,14 +459,14 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
     }
 
     // Da los Specialist de las que están en TBN y SN
-    public List<Specialist> getSpecialists() throws InvalidParameterException {//throws CantReadSpecialistsException
+    public EnumSet<Specialist> getSpecialists() throws InvalidParameterException {//throws CantReadSpecialistsException
 
         DatabaseTable registryTable = this.database.getTable(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NAME);
         DatabaseTableRecord r;
 
         List<Transaction<CryptoTransaction>> transactionList = getResponsibleTransactionsPendingAction();
 
-        List<Specialist> specialistList = new ArrayList<>();
+        EnumSet<Specialist> specialistEnumSet = EnumSet.noneOf(Specialist.class);
 
 
         for(Transaction<CryptoTransaction> transaction : transactionList) {
@@ -487,13 +488,13 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
                 //TODO: MANAGE EXCEPTION
             } else {
                 r = records.get(0);
-                specialistList.add(Specialist.getByCode(r.getStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_SPECIALIST_COLUMN.columnName)));
+                specialistEnumSet.add(Specialist.getByCode(r.getStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_SPECIALIST_COLUMN.columnName)));
             }
 
             registryTable.clearAllFilters();
         }
 
-        return specialistList;
+        return specialistEnumSet;
     }
 
     // Pasa las que son TBN a SN
@@ -563,6 +564,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
             }
 
         }
+
         registryTable.clearAllFilters();
         System.out.println("TTF - INCOMING CRYPTO: RECEPTION CONFIRMED BY SPECIALIST");
     }
@@ -574,6 +576,8 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
 
         DatabaseTable registryTable = this.database.getTable(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NAME);
         registryTable.setStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName,ProtocolStatus.SENDING_NOTIFIED.getCode(),DatabaseFilterType.EQUAL);
+        registryTable.setStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_TRANSACTION_STATUS_COLUMN.columnName, TransactionStatus.RESPONSIBLE.getCode(), DatabaseFilterType.EQUAL);
+
         registryTable.setStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_SPECIALIST_COLUMN.columnName,specialist.getCode(),DatabaseFilterType.EQUAL);
 
         try {
