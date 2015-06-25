@@ -15,8 +15,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableCo
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilterGroup;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecord;
@@ -52,10 +50,6 @@ public class AndroidDatabaseTable implements  DatabaseTable {
     private String top = "";
     private DatabaseTableFilterGroup tableFilterGroup;
 
-
-
-    public AndroidDatabaseTable(){
-    }
     // Public constructor declarations.
 
     /**
@@ -65,9 +59,6 @@ public class AndroidDatabaseTable implements  DatabaseTable {
      * @param database name database to use
      * @param tableName name table to use
      */
-
-
-
 
     public AndroidDatabaseTable (Context context,SQLiteDatabase database, String tableName){
         this.tableName = tableName;
@@ -230,7 +221,10 @@ public class AndroidDatabaseTable implements  DatabaseTable {
              List<DatabaseRecord> records =  record.getValues();
 
 
+            ContentValues initialValues = new ContentValues();
+
             for (int i = 0; i < records.size(); ++i) {
+                initialValues.put(records.get(i).getName(),records.get(i).getValue());
 
                 if(strRecords.length() > 0 )
                     strRecords.append (",");
@@ -242,6 +236,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
                 strValues.append ("'" + records.get(i).getValue() + "'");
             }
 
+           // this.database.insert(tableName, null, initialValues);
 
             this.database.execSQL("INSERT INTO " + tableName + "(" + strRecords + ")" + " VALUES (" +  strValues + ")");
         }
@@ -250,43 +245,6 @@ public class AndroidDatabaseTable implements  DatabaseTable {
           }
 
 
-    }
-
-    @Override
-    public void deleteRecord(DatabaseTableRecord record) throws CantDeleteRecord {
-        try{
-
-
-                List<DatabaseRecord> records =  record.getValues();
-
-                String queryWhereClause="";
-
-                if(!records.isEmpty()) {
-                    for (int i = 0; i < records.size(); ++i) {
-
-                        if (queryWhereClause.length() > 0) {
-                            queryWhereClause += " and ";
-                            queryWhereClause += records.get(i).getName();
-                        } else
-                            queryWhereClause += records.get(i).getName();
-
-                        queryWhereClause += "=";
-                        queryWhereClause += records.get(i).getValue();
-                    }
-                }else{
-                    queryWhereClause=null;
-                }
-
-
-                if(queryWhereClause!=null){
-                    this.database.execSQL("DELETE FROM " + tableName + " WHERE " + queryWhereClause);
-                }else{
-                    this.database.execSQL("DELETE FROM " + tableName);
-                }
-
-        }catch (Exception exception) {
-            throw new CantDeleteRecord();
-        }
     }
 
     /**
@@ -431,43 +389,6 @@ public class AndroidDatabaseTable implements  DatabaseTable {
     @Override
     public void setFilterTop(String top){
         this.top = top;
-    }
-
-
-    //testear haber si funciona así de abstracto o hay que hacerlo más especifico
-    @Override
-    public DatabaseTableRecord getRecordFromPk(String pk) throws Exception {
-
-        Cursor c = database.rawQuery(" SELECT * from "+tableName+" WHERE pk="+pk,null);
-
-        List<String> columns = getColumns();
-        DatabaseTableRecord tableRecord1 = new AndroidDatabaseRecord();
-        if (c.moveToFirst()) {
-                /**
-                 * Get columns name to read values of files
-                 *
-                 */
-
-                List<DatabaseRecord> recordValues = new ArrayList<>();
-
-                for (int i = 0; i < columns.size(); ++i) {
-                    DatabaseRecord recordValue = new AndroidRecord();
-                    recordValue.setName(columns.get(i).toString());
-                    recordValue.setValue(c.getString(c.getColumnIndex(columns.get(i).toString())));
-                    recordValue.setChange(false);
-                    recordValues.add(recordValue);
-                }
-                tableRecord1.setValues(recordValues);
-
-            if(c.moveToNext()){
-                //si pasa esto es porque hay algo mal
-                throw new Exception();
-            }
-
-        }else{
-            return null;
-        }
-        return tableRecord1;
     }
 
     /**

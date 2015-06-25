@@ -21,7 +21,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransac
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotOpenException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerId;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
@@ -208,8 +207,6 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
 
             this.Database = SQLiteDatabase.openDatabase(databasePath,null,0,null);
 
-
-
           }
         catch (Exception exception) {
         
@@ -219,26 +216,9 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
              * * *
              */
 
-            throw new DatabaseNotFoundException();
+            throw new DatabaseNotFoundException("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaargh#");
             //TODO: NATALIA; Revisa si devuelve la misma exception cuando la base de datos no existe que cuando simplement no la puede abrir por otra razon. Y avisame el resultado de la investigacion esta.
         }
-
-    }
-    /**
-     * Close connection
-     * if used by a plugin, method close active connection
-     *
-     * @throws DatabaseNotOpenException
-     */
-
-    public void closeDatabase()throws DatabaseNotOpenException{  //throws CantOpenDatabaseException, DatabaseNotFoundException {
-
-        /**
-         * First I try to open the database.
-         */
-            if(!Database.isOpen()) throw new DatabaseNotOpenException();
-
-        this.Database.close();
 
     }
 
