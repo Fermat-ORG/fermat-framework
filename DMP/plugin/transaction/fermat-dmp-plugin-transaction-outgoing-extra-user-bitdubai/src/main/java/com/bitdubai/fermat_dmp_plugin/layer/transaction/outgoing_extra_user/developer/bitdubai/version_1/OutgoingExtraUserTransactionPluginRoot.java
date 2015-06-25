@@ -1,14 +1,20 @@
 package com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.OutgoingExtraUserManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.TransactionManager;
+import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.exceptions.CantGetTransactionManagerException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventHandler;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
@@ -17,6 +23,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFile
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.exceptions.CantInitializeDaoException;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.structure.OutgoingExtraUserDao;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.structure.OutgoingExtraUserTransactionManager;
 
 import java.util.ArrayList;
@@ -26,44 +34,62 @@ import java.util.UUID;
 /**
  * Created by loui on 20/02/15.
  */
-public class OutgoingExtraUserTransactionPluginRoot implements Service,DealsWithBitcoinWallet, DealsWithCryptoVault, OutgoingExtraUserManager, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, Plugin {
-
-    OutgoingExtraUserTransactionManager transactionManager;
+public class OutgoingExtraUserTransactionPluginRoot implements DealsWithBitcoinWallet, DealsWithCryptoVault, DealsWithErrors, DealsWithEvents, DealsWithPluginDatabaseSystem, OutgoingExtraUserManager, Plugin, Service {
 
 
     /**
-     * PlatformService Interface member variables.
+     * DealsWithBitcoinWallet Interface member variables.
      */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
-    List<EventListener> listenersAdded = new ArrayList<>();
+    private BitcoinWalletManager bitcoinWalletManager;
 
     /**
-     * UsesFileSystem Interface member variables.
+     * DealsWithCryptoVault Interface member variables.
      */
-    PluginFileSystem pluginFileSystem;
+    private CryptoVaultManager cryptoVaultManager;
+
+
+    /**
+     * DealWithErrors Interface member variables.
+     */
+    private ErrorManager errorManager;
 
     /**
      * DealWithEvents Interface member variables.
      */
-    EventManager eventManager;
+    private EventManager eventManager;
+
+    /**
+     * DealsWithPluginDatabaseSystem Interface member variables.
+     */
+    private PluginDatabaseSystem pluginDatabaseSystem;
 
     /**
      * Plugin Interface member variables.
      */
     UUID pluginId;
 
+
     /**
-     * PlatformService Interface implementation.
+     * Service Interface member variables.
      */
+    ServiceStatus serviceStatus = ServiceStatus.CREATED;
+    List<EventListener> listenersAdded = new ArrayList<>();
 
-
+    /**
+     * Service Interface implementation.
+     */
     @Override
-    public void start() {
+    public void start() throws CantStartPluginException  {
 
-        this.transactionManager = new OutgoingExtraUserTransactionManager();
-        this.transactionManager.setCryptoVaultManager(this.cryptoVaultManager);
-        this.transactionManager.setBitcoinWalletManager(this.bitcoinWalletManager);
-
+        OutgoingExtraUserDao dao = new OutgoingExtraUserDao();
+        dao.setErrorManager(this.errorManager);
+        dao.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+        try {
+            dao.initialize(this.pluginId);
+        } catch (CantInitializeDaoException e) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,e);
+            throw new CantStartPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION);
+        }
         /**
          * I will initialize the handling of com.bitdubai.platform events.
          */
@@ -108,20 +134,6 @@ public class OutgoingExtraUserTransactionPluginRoot implements Service,DealsWith
         return this.serviceStatus;
     }
 
-    public void createFiatTransaction (/*TODO:ExtraUser,Wallet, Account, fiatAmount*/){
-        
-        
-    }
-    
-
-    /**
-     * UsesFileSystem Interface implementation.
-     */
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
-    }
-
     /**
      * DealWithEvents Interface implementation.
      */
@@ -136,7 +148,7 @@ public class OutgoingExtraUserTransactionPluginRoot implements Service,DealsWith
      */
     @Override
     public void setErrorManager(ErrorManager errorManager) {
-
+        this.errorManager = errorManager;
     }
 
     /**
@@ -151,22 +163,35 @@ public class OutgoingExtraUserTransactionPluginRoot implements Service,DealsWith
 
 
     @Override
-    public TransactionManager getTransactionManager() {
-        // TODO: ADD CORRESPONDING MODULE
-        return this.transactionManager;
+    public TransactionManager getTransactionManager() throws CantGetTransactionManagerException{
+        OutgoingExtraUserTransactionManager transactionManager = new OutgoingExtraUserTransactionManager();
+        transactionManager.setBitcoinWalletManager(this.bitcoinWalletManager);
+        transactionManager.setCryptoVaultManager(this.cryptoVaultManager);
+        transactionManager.setErrorManager(this.errorManager);
+        transactionManager.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+        transactionManager.setPluginId(this.pluginId);
+        try {
+            transactionManager.initialize();
+        } catch (CantInitializeDaoException e) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            throw new CantGetTransactionManagerException();
+        }
+        return transactionManager;
     }
 
-    private BitcoinWalletManager bitcoinWalletManager;
 
     @Override
     public void setBitcoinWalletManager(BitcoinWalletManager bitcoinWalletManager) {
         this.bitcoinWalletManager = bitcoinWalletManager;
     }
 
-    private CryptoVaultManager cryptoVaultManager;
-
     @Override
     public void setCryptoVaultManager(CryptoVaultManager cryptoVaultManager) {
         this.cryptoVaultManager = cryptoVaultManager;
+    }
+
+    @Override
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 }

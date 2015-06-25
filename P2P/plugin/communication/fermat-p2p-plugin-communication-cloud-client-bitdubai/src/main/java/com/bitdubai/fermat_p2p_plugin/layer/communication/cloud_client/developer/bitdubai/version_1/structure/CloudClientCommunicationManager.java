@@ -14,6 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.exceptions.CloudCommunicationException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
@@ -167,8 +168,9 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 			unregisteredConnections.put(serverPublicKey, serverConnection);
 			executor.execute(this);
 		} catch(IOException ex){
-			NIOSocketException cause = new NIOSocketException(ex);
-			throw new ClientInitializationException(ClientInitializationException.DEFAULT_MESSAGE, cause, address.toString(), "Check if there is a server listening at the configured host and port");
+			StringBuffer contextBuffer = new StringBuffer();
+			contextBuffer.append(address.toString());
+			throw new ClientInitializationException(ClientInitializationException.DEFAULT_MESSAGE, FermatException.wrapException(ex), contextBuffer.toString() , "Check if there is a server listening at the configured host and port");
 		}
 	}
 	

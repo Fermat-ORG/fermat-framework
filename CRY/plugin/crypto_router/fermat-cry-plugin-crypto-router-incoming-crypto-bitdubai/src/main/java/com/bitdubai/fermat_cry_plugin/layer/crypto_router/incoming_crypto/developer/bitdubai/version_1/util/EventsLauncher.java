@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventMan
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventSource;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventType;
 
+import java.util.EnumSet;
 import java.util.List;
 
 /**
@@ -23,7 +24,7 @@ public class EventsLauncher implements DealsWithEvents {
      */
     private EventManager eventManager;
 
-    public void sendEvents(List<Specialist> specialists){
+    public void sendEvents(EnumSet<Specialist> specialists){
         for(Specialist specialist : specialists) {
 
             switch (specialist) {
