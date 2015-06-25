@@ -78,11 +78,17 @@ dependencies {
 
     */
     // DMP Projects (Sub APPs)
+
     compile project(':fermat-dmp-android-sub-app-wallet-manager-bitdubai')
     compile project(':fermat-dmp-android-sub-app-wallet-factory-bitdubai')
     compile project(':fermat-dmp-android-sub-app-wallet-store-bitdubai')
     compile project(':fermat-dmp-android-sub-app-wallet-publisher-bitdubai')
     compile project(':fermat-dmp-android-sub-app-shop-manager-bitdubai')
+
+    // PIP Projects (Sub APPs)
+
+    compile project(':fermat-pip-android-sub-app-developer-bitdubai')
+
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.android.support:support-v4:21.0.3'

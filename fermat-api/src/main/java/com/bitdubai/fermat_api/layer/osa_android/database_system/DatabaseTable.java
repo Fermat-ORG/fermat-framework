@@ -35,7 +35,12 @@ public interface DatabaseTable {
     public List<DatabaseTableFilter> getFilters();
 
     public DatabaseTableFilterGroup getFilterGroup();
-    
+
+    public DatabaseTableFilter getEmptyTableFilter();
+
+    public DatabaseTableFilterGroup getEmptyTableFilterGroup();
+
+
     public void updateRecord (DatabaseTableRecord record) throws CantUpdateRecord;
 
     public void insertRecord (DatabaseTableRecord record) throws CantInsertRecordException;
@@ -54,7 +59,11 @@ public interface DatabaseTable {
 
     public void setFilterTop(String top);
 
+    public void setFilterOffSet(String offset);
+
     public void deleteRecord(DatabaseTableRecord record) throws CantDeleteRecord;
 
     public DatabaseTableRecord getRecordFromPk(String pk) throws Exception;
+
+
 }
