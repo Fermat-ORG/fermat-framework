@@ -67,7 +67,7 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
         parameters = parameters.concat("MESSAGE="+exception.getMessage()+"&");
         System.out.println(parameters);
         if(exception instanceof FermatException)
-            printErrorReport(parameters, (FermatException) exception);
+            printErrorReport((FermatException) exception);
 
         try {
             //I need the timestamp when the Exception occurred
@@ -96,7 +96,7 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
         parameters = parameters.concat("MESSAGE="+exception.getMessage()+"&");
         System.out.println(parameters);
         if(exception instanceof FermatException)
-            printErrorReport(parameters, (FermatException) exception);
+            printErrorReport((FermatException) exception);
 
         try {
             //I need the timestamp when the Exception occurred
@@ -126,7 +126,7 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
         parameters = parameters.concat("MESSAGE="+exception.getMessage()+"&");
         System.out.println(parameters);
         if(exception instanceof FermatException)
-            printErrorReport(parameters, (FermatException) exception);
+            printErrorReport((FermatException) exception);
 
         try {
             //I need the timestamp when the Exception occurred
@@ -154,7 +154,7 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
         parameters = parameters.concat("MESSAGE="+exception.getMessage()+"&");
         System.out.println(parameters);
         if(exception instanceof FermatException)
-            printErrorReport(parameters, (FermatException) exception);
+            printErrorReport((FermatException) exception);
 
         try {
             //I need the timestamp when the Exception occurred
@@ -230,12 +230,10 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
         return serviceStatus;
     }
 
-    private void printErrorReport(final String parameters, final FermatException exception){
+    private void printErrorReport(final FermatException exception){
         System.out.println("====================================================================\n" +
                 "Fermat Error Manager - Unexpected Exception Report\n" +
                 "====================================================================\n");
-        System.out.println(parameters + "\n");
-        System.out.println("--------------------------------------------------------------------\n");
         int depth = printException(exception, 1) - 1;
         System.out.println("Reported " + depth + " exceptions");
         System.out.println("====================================================================\n");

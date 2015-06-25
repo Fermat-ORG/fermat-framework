@@ -18,55 +18,21 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="9e272ac5-dce7-49ac-8f58-3eeba2d13321" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fermat-api/src/test/java/unit/com/bitdubai/fermat_api/FermatException/ConstructionTest.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fermat-cry-api/src/main/java/com/bitdubai/fermat_cry_api/FermatCryptoException.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/PIPException.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-cry-api/src/main/java/com/bitdubai/fermat_cry_api/layer/crypto_network/bitcoin/exceptions/CantConnectToBitcoinNetwork.java" afterPath="$PROJECT_DIR$/fermat-cry-api/src/main/java/com/bitdubai/fermat_cry_api/layer/crypto_network/bitcoin/exceptions/CantConnectToBitcoinNetwork.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-cry-api/src/main/java/com/bitdubai/fermat_cry_api/layer/crypto_network/bitcoin/exceptions/CantCreateCryptoWalletException.java" afterPath="$PROJECT_DIR$/fermat-cry-api/src/main/java/com/bitdubai/fermat_cry_api/layer/crypto_network/bitcoin/exceptions/CantCreateCryptoWalletException.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/pip_user/extra_user/exceptions/CantCreateExtraUserRegistry.java" afterPath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/pip_user/extra_user/exceptions/CantCreateExtraUserRegistry.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/pip_user/intra_user/exceptions/CantCreateIntraUserException.java" afterPath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/pip_user/intra_user/exceptions/CantCreateIntraUserException.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-cry-api/src/main/java/com/bitdubai/fermat_cry_api/layer/crypto_network/bitcoin/exceptions/CantDownloadBlockchain.java" afterPath="$PROJECT_DIR$/fermat-cry-api/src/main/java/com/bitdubai/fermat_cry_api/layer/crypto_network/bitcoin/exceptions/CantDownloadBlockchain.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-cry-api/src/main/java/com/bitdubai/fermat_cry_api/layer/crypto_module/actor_address_book/exceptions/CantGetActorAddressBook.java" afterPath="$PROJECT_DIR$/fermat-cry-api/src/main/java/com/bitdubai/fermat_cry_api/layer/crypto_module/actor_address_book/exceptions/CantGetActorAddressBook.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-cry-api/src/main/java/com/bitdubai/fermat_cry_api/layer/crypto_module/actor_address_book/exceptions/CantGetActorAddressBookRegistryException.java" afterPath="$PROJECT_DIR$/fermat-cry-api/src/main/java/com/bitdubai/fermat_cry_api/layer/crypto_module/actor_address_book/exceptions/CantGetActorAddressBookRegistryException.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/pip_user/extra_user/exceptions/CantGetExtraUserRegistry.java" afterPath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/pip_user/extra_user/exceptions/CantGetExtraUserRegistry.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/dmp_network_service/CantGetResourcesException.java" afterPath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/dmp_network_service/CantGetResourcesException.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-cry-api/src/main/java/com/bitdubai/fermat_cry_api/layer/crypto_module/wallet_address_book/exceptions/CantGetWalletAddressBookRegistryException.java" afterPath="$PROJECT_DIR$/fermat-cry-api/src/main/java/com/bitdubai/fermat_cry_api/layer/crypto_module/wallet_address_book/exceptions/CantGetWalletAddressBookRegistryException.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-cry-api/src/main/java/com/bitdubai/fermat_cry_api/layer/crypto_module/wallet_address_book/exceptions/CantGetWalletCryptoAddressBookException.java" afterPath="$PROJECT_DIR$/fermat-cry-api/src/main/java/com/bitdubai/fermat_cry_api/layer/crypto_module/wallet_address_book/exceptions/CantGetWalletCryptoAddressBookException.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CRY/plugin/crypto_module/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_module/actor_address_book/developer/bitdubai/version_1/exceptions/CantInitializeActorAddressBookException.java" afterPath="$PROJECT_DIR$/CRY/plugin/crypto_module/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/src/main/java/com/bitdubai/fermat_cry_plugin/layer/crypto_module/actor_address_book/developer/bitdubai/version_1/exceptions/CantInitializeActorAddressBookException.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/pip_user/extra_user/exceptions/CantInitializeExtraUserRegistryException.java" afterPath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/pip_user/extra_user/exceptions/CantInitializeExtraUserRegistryException.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/osa_android/database_system/exceptions/CantInsertRecordException.java" afterPath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/osa_android/database_system/exceptions/CantInsertRecordException.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/pip_user/device_user/exceptions/CantLoadDeviceUserException.java" afterPath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/pip_user/device_user/exceptions/CantLoadDeviceUserException.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/osa_android/database_system/exceptions/CantLoadTableToMemory.java" afterPath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/osa_android/database_system/exceptions/CantLoadTableToMemory.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/osa_android/database_system/exceptions/CantOpenDatabaseException.java" afterPath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/osa_android/database_system/exceptions/CantOpenDatabaseException.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/osa_android/file_system/exceptions/CantOpenDatabaseException.java" afterPath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/osa_android/file_system/exceptions/CantOpenDatabaseException.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/pip_user/device_user/exceptions/CantPersistDeviceUserException.java" afterPath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/pip_user/device_user/exceptions/CantPersistDeviceUserException.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-cry-api/src/main/java/com/bitdubai/fermat_cry_api/layer/crypto_module/actor_address_book/exceptions/CantRegisterActorAddressBook.java" afterPath="$PROJECT_DIR$/fermat-cry-api/src/main/java/com/bitdubai/fermat_cry_api/layer/crypto_module/actor_address_book/exceptions/CantRegisterActorAddressBook.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/CantStartLayerException.java" afterPath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/CantStartLayerException.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/pip_platform_service/CantStartSubsystemException.java" afterPath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/pip_platform_service/CantStartSubsystemException.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-cry-api/src/main/java/com/bitdubai/fermat_cry_api/layer/crypto_module/CantStartSubsystemException.java" afterPath="$PROJECT_DIR$/fermat-cry-api/src/main/java/com/bitdubai/fermat_cry_api/layer/crypto_module/CantStartSubsystemException.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-cry-api/src/main/java/com/bitdubai/fermat_cry_api/layer/crypto_network/CantStartSubsystemException.java" afterPath="$PROJECT_DIR$/fermat-cry-api/src/main/java/com/bitdubai/fermat_cry_api/layer/crypto_network/CantStartSubsystemException.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-cry-api/src/main/java/com/bitdubai/fermat_cry_api/layer/crypto_router/CantStartSubsystemException.java" afterPath="$PROJECT_DIR$/fermat-cry-api/src/main/java/com/bitdubai/fermat_cry_api/layer/crypto_router/CantStartSubsystemException.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-cry-api/src/main/java/com/bitdubai/fermat_cry_api/layer/crypto_vault/CantStartSubsystemException.java" afterPath="$PROJECT_DIR$/fermat-cry-api/src/main/java/com/bitdubai/fermat_cry_api/layer/crypto_vault/CantStartSubsystemException.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/osa_android/database_system/exceptions/CantUpdateRecord.java" afterPath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/osa_android/database_system/exceptions/CantUpdateRecord.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/communication/cloud_client/developer/bitdubai/version_1/structure/CloudClientCommunicationManager.java" afterPath="$PROJECT_DIR$/P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/communication/cloud_client/developer/bitdubai/version_1/structure/CloudClientCommunicationManager.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-p2p-api/src/main/java/com/bitdubai/fermat_p2p_api/layer/all_definition/communication/cloud/CloudConnectionAddress.java" afterPath="$PROJECT_DIR$/fermat-p2p-api/src/main/java/com/bitdubai/fermat_p2p_api/layer/all_definition/communication/cloud/CloudConnectionAddress.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-p2p-api/src/main/java/com/bitdubai/fermat_p2p_api/layer/p2p_communication/cloud_server/exceptions/CloudConnectionException.java" afterPath="$PROJECT_DIR$/fermat-p2p-api/src/main/java/com/bitdubai/fermat_p2p_api/layer/p2p_communication/cloud_server/exceptions/CloudConnectionException.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-p2p-api/src/main/java/com/bitdubai/fermat_p2p_api/layer/p2p_communication/CommunicationException.java" afterPath="$PROJECT_DIR$/fermat-p2p-api/src/main/java/com/bitdubai/fermat_p2p_api/layer/p2p_communication/CommunicationException.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-cry-api/src/main/java/com/bitdubai/fermat_cry_api/layer/crypto_network/bitcoin/exceptions/CryptoNetworkNotStartedException.java" afterPath="$PROJECT_DIR$/fermat-cry-api/src/main/java/com/bitdubai/fermat_cry_api/layer/crypto_network/bitcoin/exceptions/CryptoNetworkNotStartedException.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-cry-api/src/main/java/com/bitdubai/fermat_cry_api/layer/crypto_module/CryptoNotStartedException.java" afterPath="$PROJECT_DIR$/fermat-cry-api/src/main/java/com/bitdubai/fermat_cry_api/layer/crypto_module/CryptoNotStartedException.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-cry-api/src/main/java/com/bitdubai/fermat_cry_api/layer/crypto_vault/CryptoVaultNotStartedException.java" afterPath="$PROJECT_DIR$/fermat-cry-api/src/main/java/com/bitdubai/fermat_cry_api/layer/crypto_vault/CryptoVaultNotStartedException.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/pip_platform_service/error_manager/ErrorManager.java" afterPath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/pip_platform_service/error_manager/ErrorManager.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai/src/test/java/unit/com/bitdubai/fermat_pip_addon/layer/platform_service/error_manager/developer/bitdubai/version_1/structure/ErrorManagerRegistry/ConstructionTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai/src/test/java/unit/com/bitdubai/fermat_pip_addon/layer/platform_service/error_manager/developer/bitdubai/version_1/structure/ErrorManagerRegistry/CreateNewErrorRegistryTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai/src/test/java/unit/com/bitdubai/fermat_pip_addon/layer/platform_service/error_manager/developer/bitdubai/version_1/structure/ErrorManagerRegistry/InitializeTest.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai/src/test/java/unit/com/bitdubai/fermat_pip_addon/layer/platform_service/error_manager/developer/bitdubai/version_1/ErrorManagerPlatformServiceAddonRoot/ReportUnexpectedPluginExceptionTest.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/platform_service/error_manager/developer/bitdubai/version_1/ErrorManagerPlatformServiceAddonRoot.java" afterPath="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/platform_service/error_manager/developer/bitdubai/version_1/ErrorManagerPlatformServiceAddonRoot.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/platform_service/error_manager/developer/bitdubai/version_1/structure/ErrorManagerRegistry.java" afterPath="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/platform_service/error_manager/developer/bitdubai/version_1/structure/ErrorManagerRegistry.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/FermatException.java" afterPath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/FermatException.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-cry-api/src/main/java/com/bitdubai/fermat_cry_api/layer/crypto_vault/exceptions/InsufficientMoneyException.java" afterPath="$PROJECT_DIR$/fermat-cry-api/src/main/java/com/bitdubai/fermat_cry_api/layer/crypto_vault/exceptions/InsufficientMoneyException.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/osa_android/database_system/exceptions/InvalidOwnerId.java" afterPath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/osa_android/database_system/exceptions/InvalidOwnerId.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-cry-api/src/main/java/com/bitdubai/fermat_cry_api/layer/crypto_vault/exceptions/LimitReachedTransactionNotificationAgentException.java" afterPath="$PROJECT_DIR$/fermat-cry-api/src/main/java/com/bitdubai/fermat_cry_api/layer/crypto_vault/exceptions/LimitReachedTransactionNotificationAgentException.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/pip_user/device_user/exceptions/LoginFailedException.java" afterPath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/pip_user/device_user/exceptions/LoginFailedException.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/osa_android/OsaAndroidException.java" afterPath="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/osa_android/OsaAndroidException.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/android/reference_niche_wallet/fermat-dmp-android-reference-niche-wallet-age-kids-boys-bitdubai/src/main/java/com/bitdubai/reference_niche_wallet/age/kids/boys/fragments/TicketFragment.java" afterPath="$PROJECT_DIR$/DMP/android/reference_niche_wallet/fermat-dmp-android-reference-niche-wallet-age-kids-boys-bitdubai/src/main/java/com/bitdubai/reference_niche_wallet/age/kids/boys/fragments/TicketFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/android/reference_niche_wallet/fermat-dmp-android-reference-niche-wallet-age-kids-boys-bitdubai/src/main/java/com/bitdubai/reference_niche_wallet/age/kids/boys/fragments/UsdBalanceFragment.java" afterPath="$PROJECT_DIR$/DMP/android/reference_niche_wallet/fermat-dmp-android-reference-niche-wallet-age-kids-boys-bitdubai/src/main/java/com/bitdubai/reference_niche_wallet/age/kids/boys/fragments/UsdBalanceFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/fermat-android-core.iml" afterPath="$PROJECT_DIR$/fermat-android-core/fermat-android-core.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-api/fermat-api.iml" afterPath="$PROJECT_DIR$/fermat-api/fermat-api.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/android/reference_niche_wallet/fermat-dmp-android-reference-niche-wallet-age-kids-boys-bitdubai/fermat-dmp-android-reference-niche-wallet-age-kids-boys-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/android/reference_niche_wallet/fermat-dmp-android-reference-niche-wallet-age-kids-boys-bitdubai/fermat-dmp-android-reference-niche-wallet-age-kids-boys-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/android/reference_niche_wallet/fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai/fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/android/reference_niche_wallet/fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai/fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-shop-manager-bitdubai/fermat-dmp-android-sub-app-shop-manager-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-shop-manager-bitdubai/fermat-dmp-android-sub-app-shop-manager-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-factory-bitdubai/fermat-dmp-android-sub-app-wallet-factory-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-factory-bitdubai/fermat-dmp-android-sub-app-wallet-factory-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-manager-bitdubai/fermat-dmp-android-sub-app-wallet-manager-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-manager-bitdubai/fermat-dmp-android-sub-app-wallet-manager-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-publisher-bitdubai/fermat-dmp-android-sub-app-wallet-publisher-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-publisher-bitdubai/fermat-dmp-android-sub-app-wallet-publisher-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-store-bitdubai/fermat-dmp-android-sub-app-wallet-store-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-store-bitdubai/fermat-dmp-android-sub-app-wallet-store-bitdubai.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/gradle.xml" afterPath="$PROJECT_DIR$/.idea/gradle.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="fermat.iws" />
@@ -406,31 +372,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="CloudClientCommunicationManager.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/communication/cloud_client/developer/bitdubai/version_1/structure/CloudClientCommunicationManager.java">
+      <file leaf-file-name="ErrorManagerRegistry.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/platform_service/error_manager/developer/bitdubai/version_1/structure/ErrorManagerRegistry.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="165" column="188" selection-start-line="165" selection-start-column="188" selection-end-line="165" selection-end-column="188" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="CloudClientCommunicationChannelPluginRoot.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/communication/cloud_client/developer/bitdubai/version_1/CloudClientCommunicationChannelPluginRoot.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="247" column="38" selection-start-line="247" selection-start-column="38" selection-end-line="247" selection-end-column="38" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ErrorManager.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/pip_platform_service/error_manager/ErrorManager.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="16" column="16" selection-start-line="16" selection-start-column="16" selection-end-line="16" selection-end-column="16" />
+              <caret line="34" column="13" selection-start-line="34" selection-start-column="13" selection-end-line="34" selection-end-column="13" />
               <folding />
             </state>
           </provider>
@@ -439,28 +385,18 @@
       <file leaf-file-name="ErrorManagerPlatformServiceAddonRoot.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/platform_service/error_manager/developer/bitdubai/version_1/ErrorManagerPlatformServiceAddonRoot.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="3.080645">
-              <caret line="240" column="51" selection-start-line="240" selection-start-column="51" selection-end-line="240" selection-end-column="51" />
+            <state vertical-scroll-proportion="-0.21604939">
+              <caret line="83" column="9" selection-start-line="83" selection-start-column="9" selection-end-line="83" selection-end-column="9" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ConstructionTest.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/fermat-api/src/test/java/unit/com/bitdubai/fermat_api/FermatException/ConstructionTest.java">
+      <file leaf-file-name="ReportUnexpectedPluginExceptionTest.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai/src/test/java/unit/com/bitdubai/fermat_pip_addon/layer/platform_service/error_manager/developer/bitdubai/version_1/ErrorManagerPlatformServiceAddonRoot/ReportUnexpectedPluginExceptionTest.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="73" column="5" selection-start-line="63" selection-start-column="5" selection-end-line="73" selection-end-column="5" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="FermatException.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/FermatException.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="51" column="47" selection-start-line="51" selection-start-column="47" selection-end-line="51" selection-end-column="47" />
+              <caret line="5" column="48" selection-start-line="5" selection-start-column="48" selection-end-line="5" selection-end-column="48" />
               <folding />
             </state>
           </provider>
@@ -22189,10 +22125,10 @@
       <sortByType />
     </navigator>
     <panes>
-      <pane id="Scratches" />
-      <pane id="Scope" />
       <pane id="AndroidView" />
       <pane id="PackagesPane" />
+      <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -22208,340 +22144,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="P2P" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="plugin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="communication" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="P2P" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="plugin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="communication" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="P2P" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="plugin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="communication" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="test" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="unit" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bitdubai" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat_p2p_plugin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="layer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="P2P" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="plugin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="communication" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="test" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="P2P" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="plugin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="communication" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat-p2p-plugin-communication-cloud-client-bitdubai" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bitdubai" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat_p2p_plugin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="layer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="communication" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="cloud_client" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="developer" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bitdubai" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat-api" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat-api" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="test" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="unit" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bitdubai" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat_api" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat-api" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="test" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="unit" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="bitdubai" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat_api" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="FermatException" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat-api" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -22903,7 +22505,13 @@
       <option name="project" value="LOCAL" />
       <updated>1435162533610</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Merge branch 'master' of https://github.com/bitDubai/fermat&#10;&#10;Conflicts:&#10;&#9;.idea/workspace.xml&#10;">
+      <created>1435180000204</created>
+      <option name="number" value="00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1435180000204</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -22911,12 +22519,11 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="-4" width="1855" height="1084" extended-state="6" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290461" sideWeight="0.5" order="14" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290461" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32690248" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4426581" sideWeight="0.50193477" order="8" side_tool="true" content_ui="tabs" />
@@ -22925,7 +22532,7 @@
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4426581" sideWeight="0.50193477" order="0" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290461" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2743837" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.76848876" sideWeight="0.49806523" order="13" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.44694534" sideWeight="0.49806523" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32946378" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -22939,13 +22546,22 @@
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Memory Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="12" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290461" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="PlantUML" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
     </layout>
+  </component>
+  <component name="Vcs.Log.UiProperties">
+    <option name="RECENTLY_FILTERED_USER_GROUPS">
+      <collection />
+    </option>
+    <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+      <collection />
+    </option>
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
@@ -22959,7 +22575,8 @@
     <MESSAGE value="Nuevo sistema de excepciones incluido el pase para la capa de NetworkServices" />
     <MESSAGE value="Tests agregadas al ErrorManager" />
     <MESSAGE value="errorManagerProject" />
-    <option name="LAST_COMMIT_MESSAGE" value="errorManagerProject" />
+    <MESSAGE value="Merge branch 'master' of https://github.com/bitDubai/fermat&#10;&#10;Conflicts:&#10;&#9;.idea/workspace.xml&#10;" />
+    <option name="LAST_COMMIT_MESSAGE" value="Merge branch 'master' of https://github.com/bitDubai/fermat&#10;&#10;Conflicts:&#10;&#9;.idea/workspace.xml&#10;" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -23027,27 +22644,10 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/fermat-cry-api/src/main/java/com/bitdubai/fermat_cry_api/layer/crypto_network/bitcoin/exceptions/CantDownloadBlockchain.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="7" column="65" selection-start-line="7" selection-start-column="65" selection-end-line="7" selection-end-column="65" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/fermat-cry-api/src/main/java/com/bitdubai/fermat_cry_api/layer/crypto_network/bitcoin/exceptions/CryptoNetworkNotStartedException.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.11627907">
-          <caret line="7" column="75" selection-start-line="7" selection-start-column="75" selection-end-line="7" selection-end-column="75" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/fermat-cry-api/src/main/java/com/bitdubai/fermat_cry_api/layer/crypto_router/CantStartSubsystemException.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="7" column="70" selection-start-line="7" selection-start-column="70" selection-end-line="7" selection-end-column="70" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23055,7 +22655,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="7" column="73" selection-start-line="7" selection-start-column="73" selection-end-line="7" selection-end-column="73" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23063,7 +22662,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="7" column="70" selection-start-line="7" selection-start-column="70" selection-end-line="7" selection-end-column="70" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23071,7 +22669,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="7" column="69" selection-start-line="7" selection-start-column="69" selection-end-line="7" selection-end-column="69" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23079,7 +22676,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="7" column="92" selection-start-line="7" selection-start-column="92" selection-end-line="7" selection-end-column="92" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23087,7 +22683,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="7" column="66" selection-start-line="7" selection-start-column="66" selection-end-line="7" selection-end-column="66" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23095,7 +22690,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23103,7 +22697,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.24475524">
           <caret line="7" column="82" selection-start-line="7" selection-start-column="82" selection-end-line="7" selection-end-column="82" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23111,7 +22704,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="68" column="23" selection-start-line="68" selection-start-column="23" selection-end-line="68" selection-end-column="23" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23119,7 +22711,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="12" column="53" selection-start-line="12" selection-start-column="53" selection-end-line="12" selection-end-column="53" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23127,7 +22718,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="7" column="64" selection-start-line="7" selection-start-column="64" selection-end-line="7" selection-end-column="64" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23135,7 +22725,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23143,7 +22732,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="87" column="30" selection-start-line="87" selection-start-column="30" selection-end-line="87" selection-end-column="30" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23151,7 +22739,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="7" column="70" selection-start-line="7" selection-start-column="70" selection-end-line="7" selection-end-column="70" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23159,7 +22746,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.10190217">
           <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23167,7 +22753,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.10190217">
           <caret line="5" column="59" selection-start-line="5" selection-start-column="59" selection-end-line="5" selection-end-column="59" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23175,7 +22760,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.10190217">
           <caret line="5" column="70" selection-start-line="5" selection-start-column="70" selection-end-line="5" selection-end-column="70" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23183,7 +22767,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.10190217">
           <caret line="5" column="66" selection-start-line="5" selection-start-column="66" selection-end-line="5" selection-end-column="66" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23191,7 +22774,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.10190217">
           <caret line="5" column="70" selection-start-line="5" selection-start-column="70" selection-end-line="5" selection-end-column="70" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23199,7 +22781,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="5" column="61" selection-start-line="5" selection-start-column="61" selection-end-line="5" selection-end-column="61" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23207,7 +22788,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.10190217">
           <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23215,7 +22795,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="24" column="34" selection-start-line="24" selection-start-column="34" selection-end-line="24" selection-end-column="34" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23223,7 +22802,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="23" column="23" selection-start-line="23" selection-start-column="23" selection-end-line="23" selection-end-column="23" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23231,7 +22809,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="7" column="61" selection-start-line="7" selection-start-column="61" selection-end-line="7" selection-end-column="61" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23239,7 +22816,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="7" column="64" selection-start-line="7" selection-start-column="64" selection-end-line="7" selection-end-column="64" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23247,7 +22823,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="7" column="55" selection-start-line="7" selection-start-column="55" selection-end-line="7" selection-end-column="55" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23255,7 +22830,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="125" column="32" selection-start-line="125" selection-start-column="32" selection-end-line="125" selection-end-column="32" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23263,7 +22837,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="7" column="61" selection-start-line="7" selection-start-column="61" selection-end-line="7" selection-end-column="61" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23271,7 +22844,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="7" column="58" selection-start-line="7" selection-start-column="58" selection-end-line="7" selection-end-column="58" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23279,7 +22851,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="7" column="74" selection-start-line="7" selection-start-column="74" selection-end-line="7" selection-end-column="74" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23287,7 +22858,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.14266305">
           <caret line="7" column="62" selection-start-line="7" selection-start-column="62" selection-end-line="7" selection-end-column="62" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23295,7 +22865,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.14266305">
           <caret line="7" column="61" selection-start-line="7" selection-start-column="61" selection-end-line="7" selection-end-column="61" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23303,7 +22872,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="144" column="49" selection-start-line="144" selection-start-column="49" selection-end-line="144" selection-end-column="49" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23311,7 +22879,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.10190217">
           <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23319,7 +22886,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.24489796">
           <caret line="8" column="49" selection-start-line="8" selection-start-column="49" selection-end-line="8" selection-end-column="49" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23327,12 +22893,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.21428572">
           <caret line="9" column="49" selection-start-line="9" selection-start-column="49" selection-end-line="9" selection-end-column="49" />
-          <folding>
-            <element signature="e#822#823#0" expanded="true" />
-            <element signature="e#848#849#0" expanded="true" />
-            <element signature="e#883#884#0" expanded="true" />
-            <element signature="e#898#899#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -23340,7 +22900,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="32" column="13" selection-start-line="32" selection-start-column="13" selection-end-line="32" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23348,7 +22907,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.12244898">
           <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23356,7 +22914,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33333334">
           <caret line="352" column="18" selection-start-line="352" selection-start-column="18" selection-end-line="352" selection-end-column="18" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23364,7 +22921,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="77" column="34" selection-start-line="77" selection-start-column="34" selection-end-line="77" selection-end-column="34" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23372,7 +22928,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.19933555">
           <caret line="35" column="35" selection-start-line="35" selection-start-column="35" selection-end-line="35" selection-end-column="35" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23380,7 +22935,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.11627907">
           <caret line="7" column="35" selection-start-line="7" selection-start-column="35" selection-end-line="7" selection-end-column="35" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23388,31 +22942,13 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.06644518">
           <caret line="4" column="13" selection-start-line="4" selection-start-column="13" selection-end-line="4" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/communication/cloud_client/developer/bitdubai/version_1/structure/CloudClientCommunicationManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="165" column="188" selection-start-line="165" selection-start-column="188" selection-end-line="165" selection-end-column="188" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/FermatException.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="51" column="47" selection-start-line="51" selection-start-column="47" selection-end-line="51" selection-end-column="47" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/pip_platform_service/error_manager/ErrorManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
+        <state vertical-scroll-proportion="0.32315978">
           <caret line="16" column="16" selection-start-line="16" selection-start-column="16" selection-end-line="16" selection-end-column="16" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -23420,22 +22956,50 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="247" column="38" selection-start-line="247" selection-start-column="38" selection-end-line="247" selection-end-column="38" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/fermat-api/src/test/java/unit/com/bitdubai/fermat_api/FermatException/ConstructionTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
+        <state vertical-scroll-proportion="0.75763017">
           <caret line="73" column="5" selection-start-line="63" selection-start-column="5" selection-end-line="73" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/FermatException.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.59605026">
+          <caret line="51" column="47" selection-start-line="51" selection-start-column="47" selection-end-line="51" selection-end-column="47" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/src/main/java/com/bitdubai/fermat_p2p_plugin/layer/communication/cloud_client/developer/bitdubai/version_1/structure/CloudClientCommunicationManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.48833033">
+          <caret line="209" column="26" selection-start-line="209" selection-start-column="26" selection-end-line="209" selection-end-column="26" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/platform_service/error_manager/developer/bitdubai/version_1/structure/ErrorManagerRegistry.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="34" column="13" selection-start-line="34" selection-start-column="13" selection-end-line="34" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai/src/test/java/unit/com/bitdubai/fermat_pip_addon/layer/platform_service/error_manager/developer/bitdubai/version_1/ErrorManagerPlatformServiceAddonRoot/ReportUnexpectedPluginExceptionTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="5" column="48" selection-start-line="5" selection-start-column="48" selection-end-line="5" selection-end-column="48" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai/src/main/java/com/bitdubai/fermat_pip_addon/layer/platform_service/error_manager/developer/bitdubai/version_1/ErrorManagerPlatformServiceAddonRoot.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="3.080645">
-          <caret line="240" column="51" selection-start-line="240" selection-start-column="51" selection-end-line="240" selection-end-column="51" />
+        <state vertical-scroll-proportion="-0.21604939">
+          <caret line="83" column="9" selection-start-line="83" selection-start-column="9" selection-end-line="83" selection-end-column="9" />
           <folding />
         </state>
       </provider>
