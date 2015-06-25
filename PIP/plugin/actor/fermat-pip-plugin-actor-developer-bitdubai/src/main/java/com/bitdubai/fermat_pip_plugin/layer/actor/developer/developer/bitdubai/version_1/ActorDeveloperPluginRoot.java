@@ -26,12 +26,11 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorMan
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
-import com.bitdubai.fermat_pip_plugin.layer.actor.developer.developer.bitdubai.version_1.structure.DeveloperActorDatabaseTool;
-import com.bitdubai.fermat_pip_plugin.layer.actor.developer.developer.bitdubai.version_1.structure.DeveloperActorLogTool;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -81,17 +80,22 @@ public class ActorDeveloperPluginRoot implements DealWithDatabaseManagers, DealW
     private UUID pluginId;
 
 
-    /*
-        Database Managers
+    /**
+     * List of databases
      */
-    private HashMap<Plugins,Plugin> databaseLstPlugins;
-    private HashMap<Addons,Addon> databaseLstAddonds;
+    private List<DatabaseManagerForDevelopers> databaseManagers;
 
     /**
-     *  Logging Managers
+     * List of Loggins
      */
-    private HashMap<Plugins,Plugin> LoggingLstPlugin;
-    private HashMap<Addons,Addon> LoggingLstAddonds;
+    private List<LogManagerForDevelopers> loggingManagers;
+
+
+    //Esto seria lo nuevo
+    private Map<Plugins,Plugin> databaseManagersOnPlugins;
+    private Map<Plugins,Plugin> logManagersOnPlugins;
+    private Map<Addons,Addon> databaseManagersOnAddons;
+    private Map<Addons,Addon> logManagersOnAddons;
 
     /**
      *DealWithErrors Interface implementation.
@@ -189,14 +193,16 @@ public class ActorDeveloperPluginRoot implements DealWithDatabaseManagers, DealW
 
 
     @Override
-    public void setDatabaseManagers(HashMap<Plugins,Plugin> databaseLstPlugins,HashMap<Addons,Addon> databaseLstAddonds) {
-        this.databaseLstPlugins=databaseLstPlugins;
-        this.databaseLstAddonds=databaseLstAddonds;
+    public void setDatabaseManagers(Map<Plugins,Plugin> databaseManagersOnPlugins,Map<Addons,Addon> databaseManagersOnAddons) {
+        this.databaseManagersOnPlugins = databaseManagersOnPlugins;
+        this.databaseManagersOnAddons = databaseManagersOnAddons;
     }
 
     @Override
-    public void setLogManagers(HashMap<Plugins,Plugin> LoggingLstPlugins,HashMap<Addons,Addon> LoggingLstAddonds) {
 
+    public void setLogManagers (Map<Plugins,Plugin> logManagersOnPlugins,Map<Addons,Addon> logManagersOnAddons){
+        this.logManagersOnPlugins = logManagersOnPlugins;
+        this.logManagersOnAddons = logManagersOnAddons;
     }
 
 
