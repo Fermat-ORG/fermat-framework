@@ -1,9 +1,11 @@
 package com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions;
 
+import com.bitdubai.fermat_cry_api.CryptoException;
+
 /**
  * Created by toshiba on 30/03/2015.
  */
-public class CantGetActorAddressBook extends Exception {
+public class CantGetActorAddressBook extends CryptoException {
 
 	/**
 	 * 

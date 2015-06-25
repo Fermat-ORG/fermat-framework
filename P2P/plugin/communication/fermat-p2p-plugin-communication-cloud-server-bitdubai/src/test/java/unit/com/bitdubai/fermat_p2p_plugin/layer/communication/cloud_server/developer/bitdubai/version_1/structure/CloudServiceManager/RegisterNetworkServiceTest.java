@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.CommunicationChannelAddressFactory;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.exceptions.CloudConnectionException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.exceptions.CloudCommunicationException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.CloudServiceManager;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.ECCKeyPair;
@@ -75,7 +75,7 @@ public class RegisterNetworkServiceTest {
 		testNetworkServiceManager = createNetworkServiceManager(3);
 		testManager.registerNetworkServiceManager(testNetworkServiceManager);
 		catchException(testManager).registerNetworkServiceManager(testNetworkServiceManager);
-		assertThat(caughtException()).isInstanceOf(CloudConnectionException.class);
+		assertThat(caughtException()).isInstanceOf(CloudCommunicationException.class);
 	}
 	
 

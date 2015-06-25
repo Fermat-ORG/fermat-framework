@@ -34,6 +34,7 @@ import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.DealsWithBitcoin
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantConnectToBitcoinNetwork;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantCreateCryptoWalletException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVault;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantCalculateTransactionConfidenceException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantExecuteQueryException;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -332,7 +333,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
      * @return the internal transaction id created.
      * @throws com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException
      */
-    public String sendBitcoins(UUID FermatTxId, CryptoAddress addressTo, long amount) throws com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException{
+    public String sendBitcoins(UUID FermatTxId, CryptoAddress addressTo, long amount) throws com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException, InvalidSendToAddressException {
         /**
          * if the transaction was requested before but resend my mistake, Im not going to send it again
          */
@@ -355,9 +356,9 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
             address = new Address(this.networkParameters, addressTo.getAddress());
         } catch (AddressFormatException e) {
             /**
-             * If the address is incorrectly formated, then I will throw the exception
+             * If the address is incorrectly formated, then I will throw the exception so that other plug ins can handle it.
              */
-            e.printStackTrace();
+            throw new InvalidSendToAddressException();
         }
 
         /**
@@ -369,9 +370,8 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
             vault.completeTx(request);
         } catch (InsufficientMoneyException e) {
             /**
-             * this shouldn't happen because the money is checked by previois modules, but if it does...
+             * this shouldn't happen because the money is checked by previois modules, but if it does I will throw it so that the user can handle this.
              */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException();
         }
 
@@ -395,6 +395,10 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
              */
             Transaction tx = request.tx;
 
+            /**
+             * at this point the transaction is already created and in the network, if there are erros in any other plug in, I can't roll back anything.
+             * I will deal with any DB error later when I control the transactions.
+             */
             txID = db.persistNewTransaction(tx.getHash().toString());
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -407,6 +411,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         /**
          * returns the created transaction id
          */
+        System.out.println("CryptoVault information: bitcoin sent!!!");
         return txID.toString();
     }
 
@@ -530,10 +535,19 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         return addressFrom;
     }
 
+    /**
+     * Get the timestamp of the transaction
+     * @param txHash
+     * @return
+     */
     private long getTransactionTimestampFromVault(String txHash){
         Sha256Hash hash = new Sha256Hash(txHash);
         Transaction tx = vault.getTransaction(hash);
-        //todo this needs to be completed.
+
+        /**
+         * I get the current timestamp
+         */
+
 
         return 0;
     }

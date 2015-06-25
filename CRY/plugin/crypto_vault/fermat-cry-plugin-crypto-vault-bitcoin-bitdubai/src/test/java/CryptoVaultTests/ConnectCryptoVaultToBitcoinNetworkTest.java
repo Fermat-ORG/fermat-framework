@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.DealsWithBitcoinCryptoNetwork;
+import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantConnectToBitcoinNetwork;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantCreateCryptoWalletException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.BitcoinCryptoVault;
 
@@ -30,7 +31,7 @@ public class ConnectCryptoVaultToBitcoinNetworkTest implements DealsWithBitcoinC
 
 
     @Test
-    public void connectToBitcoinTes() throws CantCreateCryptoWalletException {
+    public void connectToBitcoinTes() throws CantCreateCryptoWalletException, CantConnectToBitcoinNetwork {
         userId = UUID.randomUUID();
         BitcoinCryptoVault vault = new BitcoinCryptoVault(userId);
         vault.setErrorManager(errorManager);

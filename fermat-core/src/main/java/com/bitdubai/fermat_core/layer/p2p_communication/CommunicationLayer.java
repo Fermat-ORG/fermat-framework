@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.PlatformLayer;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.*;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.enums.RejectConnectionRequestReasons;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.enums.RejectConnectionRequestReasons;
 import com.bitdubai.fermat_core.layer.p2p_communication.cloud_client.CloudClientSubsystem;
 import com.bitdubai.fermat_core.layer.p2p_communication.cloud_server.CloudServerSubsystem;
 
@@ -146,6 +146,17 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
     //TODO: JORGE usar el objeto LayerServiceToServiceOnlineConnection para encapsular la conexion real.
     }
 
+    /**
+     * (non-Javadoc)
+     *
+     * @see CommunicationLayerManager#getNetworkServiceChannelPublicKey(NetworkServices)
+     *
+     */
+    @Override
+    public String getNetworkServiceChannelPublicKey(NetworkServices networkService) throws NetworkServiceNotRegisteredException {
+        return ((CommunicationChannel) mCloudPlugin).getNetworkServiceChannelPublicKey(networkService);
+    }
+
     @Override
     public Collection<String> getActiveNetworkServiceConnectionIdentifiers(NetworkServices networkService) throws CommunicationException{
         return ((CommunicationChannel) mCloudPlugin).getActiveNetworkServiceConnectionIdentifiers(networkService);
@@ -158,8 +169,5 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
     public void requestConnectionTo(NetworkServices networkService, String remoteNetworkService) throws CommunicationException{
         ((CommunicationChannel) mCloudPlugin).requestConnectiontTo(networkService, remoteNetworkService);
     }
-    
-    
-
 
 }

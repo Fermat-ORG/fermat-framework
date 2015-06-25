@@ -270,7 +270,6 @@ public class TransactionNotificationAgent implements Agent,DealsWithEvents,Deals
                 PlatformEvent event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE);
                 event.setSource(EventSource.CRYPTO_VAULT);
 
-
                 System.out.println("Found transactions pending to be notified! Raising INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE event.");
                 eventManager.raiseEvent(event);
 
@@ -281,7 +280,7 @@ public class TransactionNotificationAgent implements Agent,DealsWithEvents,Deals
                 int iterations = db.updateTransactionProtocolStatus(true);
                 System.out.println("Transaction Protocol Notification Agent: iteration number " + iterations + " without other plugins consuming transaction.");
                 if (ITERATIONS_THRESHOLD < iterations){
-                    System.out.println("Transaction Protocol Notification Agent: reached threshold of maximun iterations without any plugin consuming transactions.");
+                    System.err.println("Transaction Protocol Notification Agent: reached threshold of maximun iterations without any plugin consuming transactions.");
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new LimitReachedTransactionNotificationAgentException());
                 }
 

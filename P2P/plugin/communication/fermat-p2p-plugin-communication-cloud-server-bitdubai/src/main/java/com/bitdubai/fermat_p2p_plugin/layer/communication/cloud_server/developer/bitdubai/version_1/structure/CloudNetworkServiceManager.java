@@ -12,7 +12,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.exceptions.CloudConnectionException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.exceptions.CloudCommunicationException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket.FMPPacketType;
@@ -160,7 +160,7 @@ public class CloudNetworkServiceManager extends CloudFMPConnectionManager {
 		
 	}
 	
-	private void processVPNRequest(final FMPPacket packet) throws FMPException, CloudConnectionException {
+	private void processVPNRequest(final FMPPacket packet) throws FMPException, CloudCommunicationException {
 		Integer vpnPort = availableVPNPorts.remove();
 		CommunicationChannelAddress vpnAddress = CommunicationChannelAddressFactory.constructCloudAddress(address.getHost(), vpnPort);
 		Set<String> vpnParticipants = new HashSet<String>();

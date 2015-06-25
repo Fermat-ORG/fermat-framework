@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.Transact
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
 
 import java.util.UUID;
 
@@ -36,6 +37,8 @@ public class OutgoingExtraUserTransactionManager implements DealsWithBitcoinWall
         try {
             this.cryptoVaultManager.sendBitcoins(walletID, UUID.randomUUID(), destinationAddress, cryptoAmount);
         } catch (InsufficientMoneyException e) {
+            e.printStackTrace();
+        } catch (InvalidSendToAddressException e) {
             e.printStackTrace();
         }
 

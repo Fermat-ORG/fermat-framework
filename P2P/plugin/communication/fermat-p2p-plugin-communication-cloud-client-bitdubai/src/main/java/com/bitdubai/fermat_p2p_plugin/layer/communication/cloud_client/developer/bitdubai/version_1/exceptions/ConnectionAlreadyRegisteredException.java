@@ -1,9 +1,9 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions;
 
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.exceptions.CloudConnectionException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.exceptions.CloudCommunicationException;
 
 public class ConnectionAlreadyRegisteredException extends
-		CloudConnectionException {
+		CloudCommunicationException {
 	
 	/**
 	 * 
@@ -11,15 +11,25 @@ public class ConnectionAlreadyRegisteredException extends
 	private static final long serialVersionUID = -7916961691657131265L;
 	
 	public static final String DEFAULT_MESSAGE = "CONNECTION IS ALREADY REGISTERED";
-	
-	public ConnectionAlreadyRegisteredException(){
-		super(DEFAULT_MESSAGE);
-	}
-	
-	public ConnectionAlreadyRegisteredException(final String message){
-		super(DEFAULT_MESSAGE + ": " + message);
+
+	public ConnectionAlreadyRegisteredException(final String message, final Exception cause, final String context, final String possibleReason) {
+		super(message, cause, context, possibleReason);
 	}
 
+	public ConnectionAlreadyRegisteredException(final String message, final Exception cause) {
+		this(message, cause, "", "");
+	}
 
-	//TODO: JORGE Estandarizar lo que va en las excepciones.
+	public ConnectionAlreadyRegisteredException(final String message) {
+		this(message, null);
+	}
+
+	public ConnectionAlreadyRegisteredException(final Exception exception) {
+		this(exception.getMessage());
+		setStackTrace(exception.getStackTrace());
+	}
+
+	public ConnectionAlreadyRegisteredException() {
+		this(DEFAULT_MESSAGE);
+	}
 }

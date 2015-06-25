@@ -10,10 +10,13 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.develope
 
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.Message;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesTypes;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.UUID;
+
+import sun.misc.resources.Messages;
 
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer._11_network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceMessage</code>
@@ -53,7 +56,7 @@ public class IntraUserNetworkServiceMessage implements Message, Serializable {
     /**
      * Represent the type of the message
      */
-    private String typeMessage;
+    private MessagesTypes messageType;
 
     /**
      * Represent the shipping timestamp of the message
@@ -83,13 +86,13 @@ public class IntraUserNetworkServiceMessage implements Message, Serializable {
         this.shippingTimestamp = new Timestamp(System.currentTimeMillis())  ;
         this.status       = null;
         this.textContent  = null;
-        this.typeMessage  = null;
+        this.messageType = null;
     }
 
     /**
      * Constructor whit parameters
      */
-    public IntraUserNetworkServiceMessage(Timestamp deliveryTimestamp, Long id, UUID receiver, UUID sender, Timestamp shippingTimestamp, MessagesStatus status, String textContent, String typeMessage) {
+    public IntraUserNetworkServiceMessage(Timestamp deliveryTimestamp, Long id, UUID receiver, UUID sender, Timestamp shippingTimestamp, MessagesStatus status, String textContent, MessagesTypes messageType) {
         super();
         this.deliveryTimestamp = deliveryTimestamp;
         this.id           = id;
@@ -98,7 +101,7 @@ public class IntraUserNetworkServiceMessage implements Message, Serializable {
         this.shippingTimestamp = shippingTimestamp;
         this.status       = status;
         this.textContent  = textContent;
-        this.typeMessage  = typeMessage;
+        this.messageType = messageType;
     }
 
     /**
@@ -235,15 +238,15 @@ public class IntraUserNetworkServiceMessage implements Message, Serializable {
      *
      * @return the textContent
      */
-    public String getTypeMessage() {
-        return typeMessage;
+    public MessagesTypes getMessageType() {
+        return messageType;
     }
 
     /**
      * Set the type message
-     * @param typeMessage the type message
+     * @param messageType the type message
      */
-    public void setTypeMessage(String typeMessage) {
-        this.typeMessage = typeMessage;
+    public void setMessageType(MessagesTypes messageType) {
+        this.messageType = messageType;
     }
 }

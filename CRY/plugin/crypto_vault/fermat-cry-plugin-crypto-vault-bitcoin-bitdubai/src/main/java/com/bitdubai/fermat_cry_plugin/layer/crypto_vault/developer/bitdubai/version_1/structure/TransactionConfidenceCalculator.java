@@ -93,7 +93,7 @@ public class TransactionConfidenceCalculator {
                  * If BUILDING, then the transaction is included in the best chain and your confidence in it is increasing.
                  * Depending of how deep is the transaction in blocks, the status will be RECEIVED or CONFIRMED.
                  */
-                int height = transaction.getConfidence().getAppearedAtChainHeight();
+                int height = transaction.getConfidence().getDepthInBlocks();
 
                 /**
                  * if the depth is one block, then the status is RECEIVED

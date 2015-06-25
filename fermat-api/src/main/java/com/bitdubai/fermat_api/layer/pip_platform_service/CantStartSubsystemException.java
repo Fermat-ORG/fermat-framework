@@ -1,9 +1,11 @@
 package com.bitdubai.fermat_api.layer.pip_platform_service;
 
+import com.bitdubai.fermat_api.layer.PIPException;
+
 /**
  * Created by ciencias on 23.01.15.
  */
-public class CantStartSubsystemException extends Exception {
+public class CantStartSubsystemException extends PIPException {
 
 	/**
 	 * 

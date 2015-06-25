@@ -1,3 +1,9 @@
+/*
+ * @#IntraUserNetworkServicePluginRoot.java - 2015
+ * Copyright bitDubai.com., All rights reserved.
+ * You may not modify, use, reproduce or distribute this software.
+ * BITDUBAI/CONFIDENTIAL
+ */
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
@@ -18,12 +24,11 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventLis
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventType;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.IntraUserIncomingNetworkServiceConnectionRequestHandler;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.IntraUserEstablishedRequestedNetworkServiceConnectionHandler;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationLayerManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.DealsWithCommunicationLayerManager;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.NetworkServiceNotRegisteredException;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.NetworkServiceNotSupportedException;
 
 
 import java.util.ArrayList;
@@ -34,7 +39,7 @@ import java.util.UUID;
 
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer._11_network_service.intra_user.developer.bitdubai.version_1.IntraUserNetworkServicePluginRoot</code> is
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.IntraUserNetworkServicePluginRoot</code> is
  * the responsible to initialize all component to work together, and hold all resources they needed.
  * <p/>
  *
@@ -51,7 +56,7 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
     private CommunicationLayerManager communicationLayerManager;
 
     /**
-     * Represent the status of the service
+     * Represent the status of the network service
      */
     private ServiceStatus serviceStatus;
 
@@ -74,6 +79,11 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
      * DealsWithPluginIdentity Interface member variables.
      */
     private UUID pluginId;
+
+    /**
+     * Represent the publicKey of the network service
+     */
+    private String publicKey;
 
     /**
      * Hold the listeners references
@@ -100,13 +110,21 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
     private void initializeListener(IntraUserNetworkServiceManager intraUserNetworkServiceManager){
 
         /*
-         * Listen and handle incoming network service connection request in event
+         * Listen and handle incoming network service connection request event
          */
         EventListener eventListener = eventManager.getNewListener(EventType.INCOMING_NETWORK_SERVICE_CONNECTION_REQUEST);
         eventListener.setEventHandler(new IntraUserIncomingNetworkServiceConnectionRequestHandler(this));
         eventManager.addListener(eventListener);
         listenersAdded.add(eventListener);
 
+
+        /*
+         * Listen and handle established network service connection event
+         */
+        eventListener = eventManager.getNewListener(EventType.ESTABLISHED_NETWORK_SERVICE_CONNECTION);
+        eventListener.setEventHandler(new IntraUserEstablishedRequestedNetworkServiceConnectionHandler(this));
+        eventManager.addListener(eventListener);
+        listenersAdded.add(eventListener);
     }
 
     /**
@@ -127,27 +145,36 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
              * Register this network service whit the communicationLayerManager
              */
             try {
+
                 communicationLayerManager.registerNetworkService(NetworkServices.INTRA_USER);
+
+                /*
+                 * Obtain the public key generate for this network service at register
+                 */
+                publicKey = communicationLayerManager.getNetworkServiceChannelPublicKey(NetworkServices.INTRA_USER);
+
+                /*
+                 * Its all ok, set the new status
+                */
+                this.serviceStatus = ServiceStatus.STARTED;
+
+
             } catch (CommunicationException e) {
-
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not register whit the communicationLayerManager. Error reason: "+e.getMessage()));
+                throw new CantStartPluginException(e, Plugins.BITDUBAI_USER_NETWORK_SERVICE);
             }
-
-            /*
-             * Its all ok, set the new status
-            */
-            this.serviceStatus = ServiceStatus.STARTED;
-
 
         } else {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("No all required resource are injected"));
-            throw new CantStartPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE);
+            throw new CantStartPluginException(new Exception("No all required resource are injected"), Plugins.BITDUBAI_USER_NETWORK_SERVICE);
         }
-
-
 
     }
 
-
+    /**
+     * (non-Javadoc)
+     * @see Service#pause()
+     */
     @Override
     public void pause() {
 
@@ -158,6 +185,10 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
 
     }
 
+    /**
+     * (non-Javadoc)
+     * @see Service#resume()
+     */
     @Override
     public void resume() {
 
@@ -168,6 +199,10 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
 
     }
 
+    /**
+     * (non-Javadoc)
+     * @see Service#stop()
+     */
     @Override
     public void stop() {
 

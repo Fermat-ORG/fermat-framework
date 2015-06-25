@@ -10,7 +10,7 @@ public class OsaAndroidException extends FermatException {
     private static final String DEFAULT_MESSAGE = "THE OS ANDROID SUBSYSTEM HAS THROWN AN EXCEPTION: ";
 
     public OsaAndroidException(final String message, final Exception cause){
-        super(DEFAULT_MESSAGE + message, cause);
+        super(DEFAULT_MESSAGE + message, cause, "", "");
     }
 
     public OsaAndroidException(final String message){

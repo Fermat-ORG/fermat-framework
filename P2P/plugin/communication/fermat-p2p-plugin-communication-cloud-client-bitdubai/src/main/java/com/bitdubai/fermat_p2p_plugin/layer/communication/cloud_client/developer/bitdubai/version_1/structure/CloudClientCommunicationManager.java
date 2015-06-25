@@ -2,6 +2,8 @@ package com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.develope
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.channels.ClosedChannelException;
+import java.nio.channels.IllegalBlockingModeException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
@@ -13,7 +15,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.exceptions.CloudConnectionException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.exceptions.CloudCommunicationException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket.FMPPacketType;
@@ -22,10 +24,12 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.FMPPacketF
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CloudFMPConnectionManager;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
+import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.ClientInitializationException;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.ConnectionAlreadyRegisteredException;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.ConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.IllegalPacketSenderException;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.IllegalSignatureException;
+import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.NIOSocketException;
 
 public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 	
@@ -46,7 +50,7 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 	}
 	
 	@Override
-	public synchronized void writeToKey(final SelectionKey key) throws CloudConnectionException{
+	public synchronized void writeToKey(final SelectionKey key) throws CloudCommunicationException {
 		try{
 			SocketChannel channel = (SocketChannel) key.channel();
 			FMPPacket dataPacket = pendingOutgoingMessages.remove();
@@ -58,7 +62,7 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 		}catch(NoSuchElementException ex){
 			key.interestOps(SelectionKey.OP_READ);
 		}catch(IOException ex){
-			throw new CloudConnectionException(ex.getMessage());
+			throw new CloudCommunicationException(ex.getMessage());
 		}
 	}
 	
@@ -104,7 +108,7 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 		CloudClientCommunicationNetworkServiceConnection networkServiceClient = new CloudClientCommunicationNetworkServiceConnection(networkServiceServerAddress, executor, AsymmectricCryptography.createPrivateKey(), networkServiceServerPublicKey, networkService);
 		try{
 			networkServiceClient.start();
-		}catch(CloudConnectionException ex){
+		}catch(CloudCommunicationException ex){
 			ex.printStackTrace();
 		}
 		networkServiceRegistry.put(networkService, networkServiceClient);
@@ -148,9 +152,9 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 	}
 	
 	@Override
-	public void start() throws CloudConnectionException{
+	public void start() throws CloudCommunicationException {
 		if(running.get())
-			throw new CloudConnectionException();
+			throw new CloudCommunicationException();
 		try{
 			selector = Selector.open();
 			clientChannel = SocketChannel.open();
@@ -162,12 +166,13 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 			running.set(clientChannel.isConnected());
 			unregisteredConnections.put(serverPublicKey, serverConnection);
 			executor.execute(this);
-		}catch(IOException ex){
-			throw new CloudConnectionException(ex.getMessage(), ex);
+		} catch(IOException ex){
+			NIOSocketException cause = new NIOSocketException(ex);
+			throw new ClientInitializationException(ClientInitializationException.DEFAULT_MESSAGE, cause, address.toString(), "Check if there is a server listening at the configured host and port");
 		}
 	}
 	
-	public void requestConnectionToServer() throws CloudConnectionException{
+	public void requestConnectionToServer() throws CloudCommunicationException {
 		if(isRegistered())
 			throw new ConnectionAlreadyRegisteredException();
 		if(!requestedConnections.isEmpty())
@@ -185,11 +190,11 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 			unregisteredConnections.remove(serverPublicKey);
 			requestedConnections.put(serverPublicKey, serverConnection);
 		} catch(FMPException ex){
-			throw new CloudConnectionException(ex.getMessage(), ex);
+			throw new CloudCommunicationException(ex.getMessage(), ex);
 		}
 	}
 	
-	public void registerNetworkService(final NetworkServices networkService) throws CloudConnectionException {
+	public void registerNetworkService(final NetworkServices networkService) throws CloudCommunicationException {
 		String sender = eccPublicKey;
 		String destination = serverPublicKey;
 		FMPPacketType type = FMPPacketType.CONNECTION_REQUEST;
@@ -201,11 +206,11 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 			SelectionKey serverConnection = registeredConnections.get(serverPublicKey);
 			serverConnection.interestOps(SelectionKey.OP_WRITE);
 		} catch(FMPException ex){
-			throw new CloudConnectionException(ex.getMessage());
+			throw new CloudCommunicationException(ex.getMessage());
 		}
 	}
 	
-	public CloudClientCommunicationNetworkServiceConnection getNetworkServiceClient(final NetworkServices networkService) throws CloudConnectionException {
+	public CloudClientCommunicationNetworkServiceConnection getNetworkServiceClient(final NetworkServices networkService) throws CloudCommunicationException {
 		return networkServiceRegistry.get(networkService);
 	}
 

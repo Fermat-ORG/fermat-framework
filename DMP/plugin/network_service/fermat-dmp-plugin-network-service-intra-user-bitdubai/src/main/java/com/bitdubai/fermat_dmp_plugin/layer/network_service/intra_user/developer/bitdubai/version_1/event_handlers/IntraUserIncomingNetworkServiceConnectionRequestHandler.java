@@ -11,8 +11,8 @@ import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.IntraUserMan
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventHandler;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.events.IncomingNetworkServiceConnectionRequestEvent;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.IntraUserNetworkServicePluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceManager;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.events.IncomingNetworkServiceConnectionRequestEvent;
 
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.event_handlers.IntraUserIncomingNetworkServiceConnectionRequestHandler</code>
@@ -55,8 +55,8 @@ public class IntraUserIncomingNetworkServiceConnectionRequestHandler implements 
              *  IntraUserManager make the job
              */
             IncomingNetworkServiceConnectionRequestEvent incomingNetworkServiceConnectionRequestEvent = (IncomingNetworkServiceConnectionRequestEvent) platformEvent;
-           // ((IntraUserNetworkServicePluginRoot) this.intraUserManager).acceptIncomingNetworkServiceConnectionRequest(incomingNetworkServiceConnectionRequestEvent.getCommunicationChannels(),
-            //                                                                                                          incomingNetworkServiceConnectionRequestEvent.getRemoteNetworkService());
+            ((IntraUserNetworkServiceManager) this.intraUserManager).acceptIncomingNetworkServiceConnectionRequest(incomingNetworkServiceConnectionRequestEvent.getCommunicationChannels(),
+                                                                                                                      incomingNetworkServiceConnectionRequestEvent.getRemoteNetworkServicePublicKey());
 
         }
     }

@@ -10,14 +10,27 @@ public class CantConnectToRemoteServiceException extends CommunicationException 
 	 */
 	private static final long serialVersionUID = 898045857824423781L;
 	
-	private static final String DEFAULT_MESSAGE = "CAN'T CONNECT TO REMOTE SERVICE";
-	
-	public CantConnectToRemoteServiceException() {
-		this("");
+	public static final String DEFAULT_MESSAGE = "CAN'T CONNECT TO REMOTE SERVICE";
+
+	public CantConnectToRemoteServiceException(final String message, final Exception cause, final String context, final String possibleReason) {
+		super(message, cause, context, possibleReason);
 	}
-	
-	public CantConnectToRemoteServiceException(final String message){
-		super(DEFAULT_MESSAGE + ": " + message);
+
+	public CantConnectToRemoteServiceException(final String message, final Exception cause) {
+		this(message, cause, "", "");
+	}
+
+	public CantConnectToRemoteServiceException(final String message) {
+		this(message, null);
+	}
+
+	public CantConnectToRemoteServiceException(final Exception exception) {
+		this(exception.getMessage());
+		setStackTrace(exception.getStackTrace());
+	}
+
+	public CantConnectToRemoteServiceException() {
+		this(DEFAULT_MESSAGE);
 	}
 	
 }
