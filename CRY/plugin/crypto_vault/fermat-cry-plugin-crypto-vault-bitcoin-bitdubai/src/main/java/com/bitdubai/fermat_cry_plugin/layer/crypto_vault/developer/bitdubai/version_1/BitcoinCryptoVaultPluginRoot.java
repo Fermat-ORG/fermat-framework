@@ -134,7 +134,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
         List<DeveloperDatabaseTable> tables = new ArrayList<DeveloperDatabaseTable>();
-        
+
         return null;
     }
 
