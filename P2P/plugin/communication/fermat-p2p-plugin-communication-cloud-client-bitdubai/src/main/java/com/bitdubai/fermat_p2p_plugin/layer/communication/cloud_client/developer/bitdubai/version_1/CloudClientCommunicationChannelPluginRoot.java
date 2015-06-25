@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
@@ -247,8 +248,9 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
     		this.serviceStatus = ServiceStatus.STARTED;
     	} catch(CommunicationException ex){
 			StringBuilder contextBuilder = new StringBuilder();
-			contextBuilder.append("Client Public Key: " + cloudClient.getPublicKey() + " ");
-			contextBuilder.append("Server Address: " + cloudClient.getAddress().toString()+ " ");
+			contextBuilder.append("Client Public Key: " + cloudClient.getPublicKey());
+			contextBuilder.append(FermatException.CONTEXT_CONTENT_SEPARATOR);
+			contextBuilder.append("Server Address: " + cloudClient.getAddress().toString());
 
 			CantStartPluginException pluginException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, ex, contextBuilder.toString(), "The Cloud Client Failed To Initialize");
 

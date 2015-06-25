@@ -19,6 +19,7 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.develo
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.util.EventsLauncher;
 
+import java.util.EnumSet;
 import java.util.List;
 
 /**
@@ -286,9 +287,9 @@ public class IncomingCryptoRelayAgent implements DealsWithActorAddressBook , Dea
             Por cada Specialist registrado en el recorrido anterior lanza el evento correspondiente (IncomingCryptTransactionsWaitingTransferenceSpecalistEvent)
             */
             //
-            List<Specialist> specialistList;
+            EnumSet<Specialist> specialistSet;
             try {
-                specialistList = this.registry.getSpecialists();
+                specialistSet = this.registry.getSpecialists();
             } catch (InvalidParameterException e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 System.out.println("TTF - INCOMING CRYPTO RELAY: GETSPECIALISTS FAILED");
@@ -296,10 +297,10 @@ public class IncomingCryptoRelayAgent implements DealsWithActorAddressBook , Dea
             }
 
             System.out.println("TTF - INCOMING CRYPTO RELAY: SPECIALIST LIST CALCULATED");
-            System.out.println("TTF - INCOMING CRYPTO RELAY: " + specialistList.size() + " SPECIALIST(s) TO CALL");
+            System.out.println("TTF - INCOMING CRYPTO RELAY: " + specialistSet.size() + " SPECIALIST(s) TO CALL");
 
 
-            this.eventsLauncher.sendEvents(specialistList);
+            this.eventsLauncher.sendEvents(specialistSet);
 
             System.out.println("TTF - INCOMING CRYPTO RELAY: SPECIALIST(s) INFORMED");
 
