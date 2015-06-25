@@ -15,12 +15,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableCo
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilterGroup;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-<<<<<<< HEAD
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecord;
-=======
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
->>>>>>> bitDubai/master
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecord;
 
@@ -55,6 +52,10 @@ public class AndroidDatabaseTable implements  DatabaseTable {
     private String top = "";
     private DatabaseTableFilterGroup tableFilterGroup;
 
+
+
+    public AndroidDatabaseTable(){
+    }
     // Public constructor declarations.
 
     /**
@@ -64,6 +65,9 @@ public class AndroidDatabaseTable implements  DatabaseTable {
      * @param database name database to use
      * @param tableName name table to use
      */
+
+
+
 
     public AndroidDatabaseTable (Context context,SQLiteDatabase database, String tableName){
         this.tableName = tableName;
