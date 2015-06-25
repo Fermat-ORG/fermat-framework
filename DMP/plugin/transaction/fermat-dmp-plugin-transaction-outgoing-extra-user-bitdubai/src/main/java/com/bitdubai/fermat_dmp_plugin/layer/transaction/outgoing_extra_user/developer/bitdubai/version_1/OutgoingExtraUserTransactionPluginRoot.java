@@ -167,19 +167,14 @@ public class OutgoingExtraUserTransactionPluginRoot implements DealsWithBitcoinW
 
 
     @Override
-    public TransactionManager getTransactionManager() throws CantGetTransactionManagerException{
+    public TransactionManager getTransactionManager() {
         OutgoingExtraUserTransactionManager transactionManager = new OutgoingExtraUserTransactionManager();
         transactionManager.setBitcoinWalletManager(this.bitcoinWalletManager);
         transactionManager.setCryptoVaultManager(this.cryptoVaultManager);
         transactionManager.setErrorManager(this.errorManager);
         transactionManager.setPluginDatabaseSystem(this.pluginDatabaseSystem);
         transactionManager.setPluginId(this.pluginId);
-        try {
-            transactionManager.initialize();
-        } catch (CantInitializeDaoException e) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
-            throw new CantGetTransactionManagerException();
-        }
+
         return transactionManager;
     }
 

@@ -17,11 +17,13 @@ import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.exceptio
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.exceptions.InsufficientFundsException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.exceptions.CantInitializeDaoException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
@@ -59,21 +61,6 @@ public class OutgoingExtraUserTransactionManager implements DealsWithBitcoinWall
      */
      private  UUID pluginId;
 
-    /*
-     * OutgoingExtraUserTransactionManager member variables
-     */
-    private OutgoingExtraUserDao dao;
-
-    /*
-     * OutgoingExtraUserTransactionManager Constructor
-     */
-    public OutgoingExtraUserTransactionManager() {
-
-    }
-
-    public void initialize() throws CantInitializeDaoException{
-
-    }
 
     /*
      * DealsWithBitcoinWallet Interface methods implementation
@@ -135,6 +122,9 @@ public class OutgoingExtraUserTransactionManager implements DealsWithBitcoinWall
             dao.registerNewTransaction(walletID, destinationAddress, cryptoAmount);
         } catch (CantRegisterNewTransactionException e) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+            throw new CantSendFundsException();
+        } catch (CantInsertRecordException e) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantSendFundsException();
         }
     }
