@@ -3,6 +3,7 @@ package com.bitdubai.fermat_core.layer.pip_actor;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
+import com.bitdubai.fermat_api.layer.pip_actor.ActorSubsystem;
 import com.bitdubai.fermat_api.layer.pip_actor.CantStartSubsystemException;
 import com.bitdubai.fermat_core.layer.pip_actor.actor_developer.ActorDeveloperSubsystem;
 
@@ -23,7 +24,7 @@ public class ActorLayer implements PlatformLayer {
     @Override
     public void start() throws CantStartLayerException {
 
-        ActorDeveloperSubsystem actorDeveloperSubsystemType = new ActorDeveloperSubsystem();
+        ActorSubsystem actorDeveloperSubsystemType = new ActorDeveloperSubsystem();
 
         try {
             actorDeveloperSubsystemType.start();
