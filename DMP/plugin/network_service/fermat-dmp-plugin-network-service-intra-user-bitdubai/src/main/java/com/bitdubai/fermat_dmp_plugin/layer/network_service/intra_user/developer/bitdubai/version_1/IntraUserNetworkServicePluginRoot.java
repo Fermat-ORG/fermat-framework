@@ -196,6 +196,9 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
     @Override
     public void start() throws CantStartPluginException {
 
+        if (true)
+            return;
+
         /*
          * If all resources are inject
          */
