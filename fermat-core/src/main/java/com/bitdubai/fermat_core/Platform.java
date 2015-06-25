@@ -169,7 +169,7 @@ public class Platform  {
         return mNicheWalletTypeLayer;
     }
 
-    public PlatformLayer getmActorLayer() {
+    public PlatformLayer getActorLayer() {
         return mActorLayer;
     }
 
@@ -321,6 +321,7 @@ public class Platform  {
             mTransactionLayer.start();
             mBasicWalletLayer.start();
             mNicheWalletTypeLayer.start();
+            mActorLayer.start();
         } catch (CantStartLayerException cantStartLayerException) {
             ((ErrorManager) errorManager).reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ALL_THE_PLATFORM, cantStartLayerException);
             throw new CantStartPlatformException();
