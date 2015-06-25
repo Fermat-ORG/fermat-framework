@@ -16,39 +16,48 @@ import java.util.List;
 public class DeveloperActorDatabaseTool implements DatabaseTool {
 
 
-    // La verdad algo no me queda claro, de donde saco los plugins, yo pensaba que esto se conectaba al root y el root te lo
-    //devolvia de algún lado como interfaz pero es al reves, esto se tiene que conectar con algo del fermat-api
-    // para que devuelva las cosas no?
-    //
-    ActorDeveloperPluginRoot root;
+    private List<Plugins> lstPlugins;
+    private List<Addons> lstAddons;
+    private List<DeveloperDatabase> lstDevelopersDatabase;
+    private List<DeveloperDatabaseTable> lstDevelopersDatabaseTable;
+    private List<DeveloperDatabaseTableRecord> lstDevelopersDatabaseTableRecord;
 
-    DeveloperActorDatabaseTool(ActorDeveloperPluginRoot actorDeveloperPluginRoot){
-        //this.actorDeveloperPluginRoot=actorDeveloperPluginRoot;
+    public DeveloperActorDatabaseTool(List<Plugins> lstPlugins, List<Addons> lstAddons,
+                                      List<DeveloperDatabase> lstDevelopersDatabase,
+                                      List<DeveloperDatabaseTable> lstDevelopersDatabaseTable,
+                                      List<DeveloperDatabaseTableRecord> lstDevelopersDatabaseTableRecord
+    ){
+
+        this.lstPlugins=lstPlugins;
+        this.lstAddons=lstAddons;
+        this.lstDevelopersDatabase=lstDevelopersDatabase;
+        this.lstDevelopersDatabaseTable=lstDevelopersDatabaseTable;
+        this.lstDevelopersDatabaseTableRecord=lstDevelopersDatabaseTableRecord;
     }
 
     @Override
     public List<Plugins> getAvailablePluginList() {
-
-        //por lo que me dijiste y entendí acá tengo que devolver la lista del hashMap
-        //root.get
-        return null;
+        return lstPlugins;
     }
 
     @Override
     public List<Addons> getAvailableAddonList() {
-        return null;
+        return lstAddons;
     }
 
     @Override
+    //hashmap enum,plugin
     public List<DeveloperDatabase> getDatabaseListFromPlugin(Plugins plugin) {
+        List<DeveloperDatabase> lstDevDatabase;
+        for(DeveloperDatabase d: lstDevelopersDatabase){
+            //d.
+        }
         return null;
     }
-    //voy a buscar en el hashMap la referencia
-    //DatabaseManagersForDevelopers
 
     @Override
     public List<DeveloperDatabase> getDatabaseListFromAddon(Addons Addon) {
-
+        return null;
     }
 
     @Override

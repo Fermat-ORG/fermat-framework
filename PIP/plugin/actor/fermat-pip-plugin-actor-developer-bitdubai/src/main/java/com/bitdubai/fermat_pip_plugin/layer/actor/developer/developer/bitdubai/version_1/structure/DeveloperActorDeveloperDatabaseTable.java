@@ -8,13 +8,22 @@ import java.util.List;
  * Created by ciencias on 6/25/15.
  */
 public class DeveloperActorDeveloperDatabaseTable implements DeveloperDatabaseTable {
+
+    private String name;
+    private List<String> fieldNames;
+
+    DeveloperActorDeveloperDatabaseTable(String name,List<String> fieldNames){
+        this.name=name;
+        this.fieldNames=fieldNames;
+    }
+
     @Override
     public String getName() {
-        return null;
+        return name;
     }
 
     @Override
     public List<String> getFieldNames() {
-        return null;
+        return fieldNames;
     }
 }

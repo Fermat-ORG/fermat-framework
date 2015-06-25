@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_pip_plugin.layer.actor.developer.developer.bitdubai.version_1;
 
 
+import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 
@@ -90,6 +91,11 @@ public class ActorDeveloperPluginRoot implements DealWithDatabaseManagers, DealW
      */
     private List<LogManagerForDevelopers> loggingManagers;
 
+
+    //Esto seria lo nuevo
+    private HashMap<Plugins,Plugin> databaseLstPlugins;
+    private HashMap<Addons,Addon> databaseLstAddonds;
+
     /**
      *DealWithErrors Interface implementation.
      */
@@ -174,18 +180,21 @@ public class ActorDeveloperPluginRoot implements DealWithDatabaseManagers, DealW
 
     @Override
     public DatabaseTool getDatabaseTool() {
-        return new DeveloperActorDatabaseTool();
+        //return new DeveloperActorDatabaseTool();
+        return null;
     }
 
     @Override
     public LogTool getLogTool() {
-        return new DeveloperActorLogTool();
+        /*return new DeveloperActorLogTool();*/
+        return null;
     }
 
-    //Aca entran dos HashMap con los Plugins y las keys
+
     @Override
-    public void setDatabaseManagers(HashMap<Plugins,String> databaseLstPlugins,HashMap<Addons,String> databaseLstAddonds) {
-        this.databaseManagers=databaseManagers;
+    public void setDatabaseManagers(HashMap<Plugins,Plugin> databaseLstPlugins,HashMap<Addons,Addon> databaseLstAddonds) {
+        this.databaseLstPlugins=databaseLstPlugins;
+        this.databaseLstAddonds=databaseLstAddonds;
     }
 
     @Override
@@ -193,8 +202,5 @@ public class ActorDeveloperPluginRoot implements DealWithDatabaseManagers, DealW
         this.loggingManagers=loggingManagers;
     }
 
-    @Override
-    public void setDatabaseManagers(List<DatabaseManagerForDevelopers> databaseManagers) {
 
-    }
 }
