@@ -35,6 +35,7 @@ import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantC
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantCreateCryptoWalletException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVault;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.VaultNotConnectedToNetworkException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.event_handlers.BitcoinCoinsReceivedEventHandler;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.BitcoinCryptoVault;
@@ -371,7 +372,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DealsWi
     }
 
     @Override
-    public void sendBitcoins(UUID walletId, UUID FermatTrId, CryptoAddress addressTo, long satothis) throws com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException{
+    public void sendBitcoins(UUID walletId, UUID FermatTrId, CryptoAddress addressTo, long satothis) throws com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException, InvalidSendToAddressException{
         vault.sendBitcoins(FermatTrId, addressTo, satothis);
     }
 
