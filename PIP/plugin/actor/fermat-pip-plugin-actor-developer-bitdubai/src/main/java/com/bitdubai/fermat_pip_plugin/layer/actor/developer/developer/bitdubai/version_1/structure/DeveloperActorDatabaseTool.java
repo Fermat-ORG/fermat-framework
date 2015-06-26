@@ -56,22 +56,22 @@ public class DeveloperActorDatabaseTool implements DatabaseTool {
     @Override
     //hashmap enum,plugin
     public List<DeveloperDatabase> getDatabaseListFromPlugin(Plugins plugins) {
-        return ((DatabaseManagerForDevelopers)databaseLstPlugins.get(plugins)).getDatabaseList(new DeveloperActorDatabaseObjectFactory(plugins.getDeveloper().name(),plugins.getKey()));
+        return ((DatabaseManagerForDevelopers)databaseLstPlugins.get(plugins)).getDatabaseList(new DeveloperActorDatabaseObjectFactory());
 
     }
 
     @Override
     public List<DeveloperDatabase> getDatabaseListFromAddon(Addons addons) {
-        return ((DatabaseManagerForDevelopers)databaseLstAddonds.get(addons)).getDatabaseList(new DeveloperActorDatabaseObjectFactory(addons.name(),addons.getKey()));
+        return ((DatabaseManagerForDevelopers)databaseLstAddonds.get(addons)).getDatabaseList(new DeveloperActorDatabaseObjectFactory());
     }
 
     @Override
     public List<DeveloperDatabaseTable> getTableListFromDatabase(DeveloperDatabase developerDatabase) {
-      return  ((DatabaseManagerForDevelopers)developerDatabase).getDatabaseTableList(new DeveloperActorDatabaseObjectFactory(developerDatabase.getName(), developerDatabase.getId()),developerDatabase);
+      return  ((DatabaseManagerForDevelopers)developerDatabase).getDatabaseTableList(new DeveloperActorDatabaseObjectFactory(),developerDatabase);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getTableContent(DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-     return   ((DatabaseManagerForDevelopers)developerDatabase).getDatabaseTableContent(new DeveloperActorDatabaseObjectFactory(developerDatabase.getName(), developerDatabase.getId()),developerDatabase,developerDatabaseTable);
+     return   ((DatabaseManagerForDevelopers)developerDatabase).getDatabaseTableContent(new DeveloperActorDatabaseObjectFactory(),developerDatabase,developerDatabaseTable);
     }
 }
