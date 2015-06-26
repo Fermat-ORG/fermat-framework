@@ -233,7 +233,7 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
         private void doTheMainTask() {
 
             // TODO: delete this. Every tune registry is initialized we add a new transaction
-            this.registry.proofTransaction();
+            // this.registry.proofTransaction();
 
             IncomingCryptoRegistry.EventWrapper eventWrapper = null;
             try {
@@ -241,6 +241,7 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
             } catch (CantReadEvent cantReadEvent) {
                 // we can report the exception and try again in next call.
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantReadEvent);
+                return;
             }
             if(eventWrapper != null){
                 System.out.println("TTF - INCOMING CRYPTO MONITOR: NEW EVENT READ");
@@ -253,6 +254,7 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
                     source = this.sourceAdministrator.getSourceAdministrator(EventSource.getByCode(eventWrapper.eventSource));
                 } catch (InvalidParameterException e) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    //if somethig wrong happenned we try in the next round
                     return;
                 }
 
@@ -277,7 +279,8 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
 
                 } else {
                   // if sombething failed we try in next round
-                  return;
+                    //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, );
+                    return;
                 }
 
                 // Now we take all the transactions in state (ACKNOWLEDGE,TO_BE_NOTIFIED)

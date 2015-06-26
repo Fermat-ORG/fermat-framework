@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -153,11 +154,11 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
                 this.database = databaseFactory.createDatabase(pluginId, IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_DATABASE);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
-                throw new CantInitializeCryptoRegistryException();
+                throw new CantInitializeCryptoRegistryException("Failed attempt to create IncomingCrypto database",cantCreateDatabaseException,"Database Name: "+IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_DATABASE,"");
             }
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
-            throw new CantInitializeCryptoRegistryException();
+            throw new CantInitializeCryptoRegistryException("Failed attempt to open IncomingCrypto database",cantOpenDatabaseException,"Database Name: "+IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_DATABASE,"");
         }
     }
 
@@ -200,18 +201,17 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
     }
 
     EventWrapper getNextPendingEvent() throws CantReadEvent {
-        try {
+
             DatabaseTable eventsTable = this.database.getTable(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_NAME);
             eventsTable.setStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_EVENTS_RECORDED_TABLE_STATUS_COLUMN.columnName, "PENDING", DatabaseFilterType.EQUAL);
             try {
                 eventsTable.loadToMemory();
             } catch (CantLoadTableToMemory cantLoadTableToMemory) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
-                throw new CantReadEvent();
+                throw new CantReadEvent("Failed Attempt to read event",cantLoadTableToMemory,"","");
             }
 
             List<DatabaseTableRecord> events = eventsTable.getRecords();
-
             if (events != null && !events.isEmpty()) {
                 DatabaseTableRecord event = events.get(0);
                 return new EventWrapper(
@@ -223,10 +223,6 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
                 );
             }
             return null;
-        } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
-            throw new CantReadEvent();
-        }
     }
 
     void disableEvent(UUID eventId) throws CantReadEvent, CantSaveEvent {
@@ -238,14 +234,15 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
                 eventsTable.loadToMemory();
             } catch (CantLoadTableToMemory cantLoadTableToMemory) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
-                throw new CantReadEvent();
+                throw new CantReadEvent("Failed attempt to read event",cantLoadTableToMemory,"","");
             }
             List<DatabaseTableRecord> records = eventsTable.getRecords();
             if (records == null || records.isEmpty()) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception(String.format("I could not find the event with Id: %s", eventId)));
-                throw new CantReadEvent();
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantReadEvent("", null,"",String.format("I could not find the event with Id: %s", eventId));
             } else if (records.size() > 1) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception(String.format("More than one event with Id: %s", eventId)));
+                Exception e = new Exception(String.format("More than one event with Id: %s", eventId))
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantSaveEvent();
             }
 
