@@ -26,6 +26,8 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorMan
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
+import com.bitdubai.fermat_pip_plugin.layer.actor.developer.developer.bitdubai.version_1.structure.DeveloperActorDatabaseTool;
+import com.bitdubai.fermat_pip_plugin.layer.actor.developer.developer.bitdubai.version_1.structure.DeveloperActorLogTool;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -182,13 +184,13 @@ public class ActorDeveloperPluginRoot implements DealWithDatabaseManagers, DealW
     @Override
     public DatabaseTool getDatabaseTool() {
         //return new DeveloperActorDatabaseTool();
-        return null;
+        return new DeveloperActorDatabaseTool(this.databaseManagersOnPlugins,this.databaseManagersOnAddons);
     }
 
     @Override
     public LogTool getLogTool() {
         /*return new DeveloperActorLogTool();*/
-        return null;
+        return new DeveloperActorLogTool(logManagersOnPlugins,logManagersOnAddons);
     }
 
 
