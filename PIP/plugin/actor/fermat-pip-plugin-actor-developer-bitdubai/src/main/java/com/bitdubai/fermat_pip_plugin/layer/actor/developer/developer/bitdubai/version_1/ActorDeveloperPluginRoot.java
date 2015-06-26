@@ -26,10 +26,13 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorMan
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
+import com.bitdubai.fermat_pip_plugin.layer.actor.developer.developer.bitdubai.version_1.structure.DeveloperActorDatabaseTool;
+import com.bitdubai.fermat_pip_plugin.layer.actor.developer.developer.bitdubai.version_1.structure.DeveloperActorLogTool;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -91,8 +94,10 @@ public class ActorDeveloperPluginRoot implements DealWithDatabaseManagers, DealW
 
 
     //Esto seria lo nuevo
-    private HashMap<Plugins,Plugin> databaseManagersOnPlugins;
-    private HashMap<Addons,Addon> databaseManagersOnAddons;
+    private Map<Plugins,Plugin> databaseManagersOnPlugins;
+    private Map<Plugins,Plugin> logManagersOnPlugins;
+    private Map<Addons,Addon> databaseManagersOnAddons;
+    private Map<Addons,Addon> logManagersOnAddons;
 
     /**
      *DealWithErrors Interface implementation.
@@ -179,26 +184,35 @@ public class ActorDeveloperPluginRoot implements DealWithDatabaseManagers, DealW
     @Override
     public DatabaseTool getDatabaseTool() {
         //return new DeveloperActorDatabaseTool();
-        return null;
+        return new DeveloperActorDatabaseTool(this.databaseManagersOnPlugins,this.databaseManagersOnAddons);
     }
 
     @Override
     public LogTool getLogTool() {
         /*return new DeveloperActorLogTool();*/
-        return null;
+        return new DeveloperActorLogTool(logManagersOnPlugins,logManagersOnAddons);
     }
 
 
     @Override
-    public void setDatabaseManagers(HashMap<Plugins,Plugin> databaseManagersOnPlugins,HashMap<Addons,Addon> databaseManagersOnAddons) {
+    public void setDatabaseManagers(Map<Plugins,Plugin> databaseManagersOnPlugins,Map<Addons,Addon> databaseManagersOnAddons) {
         this.databaseManagersOnPlugins = databaseManagersOnPlugins;
         this.databaseManagersOnAddons = databaseManagersOnAddons;
     }
 
     @Override
-    public void setLogManagers(List<LogManagerForDevelopers> loggingManagers) {
-        this.loggingManagers=loggingManagers;
+    public void setLogManagers(LogManagerForDevelopers logManagerForDevelopers) {
+
     }
 
+    /*
+    MAtias te lo comento para que compile. Cuando te conestes lo vemos.
+    @Override
+
+    public void setLogManagers (Map<Plugins,Plugin> logManagersOnPlugins,Map<Addons,Addon> logManagersOnAddons){
+        this.logManagersOnPlugins = logManagersOnPlugins;
+        this.logManagersOnAddons = logManagersOnAddons;
+    }
+*/
 
 }

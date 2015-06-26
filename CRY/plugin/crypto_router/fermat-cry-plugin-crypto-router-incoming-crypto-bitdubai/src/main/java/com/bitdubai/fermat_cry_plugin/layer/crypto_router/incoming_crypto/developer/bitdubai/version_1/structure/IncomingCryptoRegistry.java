@@ -74,11 +74,11 @@ import java.util.UUID;
 
 public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginDatabaseSystem, TransactionProtocolManager<CryptoTransaction> {
 
-    static int flag = 1;
+    static int flag = 0;
 
     public void proofTransaction() {
 
-        if(this.flag == 5)
+        if(this.flag == 0)
             return;
 
         this.flag++;
@@ -90,6 +90,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
                 CryptoCurrency.BITCOIN, 1, CryptoStatus.CONFIRMED
         );
         /*
+        Campos del BitcoinTransaction
         String transactionHash,
         CryptoAddress addressFrom,
         CryptoAddress addressTo,

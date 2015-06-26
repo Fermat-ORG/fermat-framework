@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
@@ -11,6 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogLevel;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -48,6 +50,7 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.vers
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -216,17 +219,19 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
     }
 
     /**
-     * DealsWithLogManager implementation
-     * @param loggingManagers
+     * DealsWithLogManager
+     * @param logManagerForDevelopers
      */
     @Override
-    public void setLogManagers(List<LogManagerForDevelopers> loggingManagers) {
-        this.logManagerForDevelopers = loggingManagers.get(0);
+    public void setLogManagers(LogManagerForDevelopers logManagerForDevelopers) {
+        this.logManagerForDevelopers = logManagerForDevelopers;
     }
-
 
     @Override
     public void start() throws CantStartPluginException {
+        /**
+         * Log manager implementation
+         */
         logManagerForDevelopers.changeLoggingLevel(LogLevel.MODERATE_LOGGING);
         logManagerForDevelopers.Log("CryptoVault starting...");
 

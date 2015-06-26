@@ -6,6 +6,8 @@ import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
 
 
+import com.bitdubai.fermat_api.layer.all_definition.developer.DealWithDatabaseManagers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DealWithLogManagers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -68,14 +70,14 @@ import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.IncomingC
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
 
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by ciencias on 20.01.15.
  */
 public class Platform  {
-
-
 
     PlatformLayer mDefinitionLayer = new DefinitionLayer();
     PlatformLayer mPlatformServiceLayer = new PlatformServiceLayer();
@@ -97,6 +99,14 @@ public class Platform  {
     PlatformLayer mBasicWalletLayer = new BasicWalletLayer();
     PlatformLayer mNicheWalletTypeLayer = new NicheWalletTypeLayer();
     PlatformLayer mActorLayer = new ActorLayer();
+
+
+
+    private Map<Plugins, Plugin> dealsWithDatabaseManagersPlugins = new ConcurrentHashMap<Plugins, Plugin>();
+    private Map<Plugins, Plugin> dealsWithLogManagersPlugins = new ConcurrentHashMap<Plugins, Plugin>();
+
+    private Map<Addons, Addon> dealsWithDatabaseManagersAddons = new ConcurrentHashMap<Addons, Addon>();
+    private Map<Addons, Addon> dealsWithLogManagersAddons = new ConcurrentHashMap<Addons, Addon>();
 
 
     public PlatformLayer getDefinitionLayer() {
@@ -173,6 +183,22 @@ public class Platform  {
         return mActorLayer;
     }
 
+    public Map<Plugins, Plugin> getDealsWithDatabaseManagersPlugins() {
+        return dealsWithDatabaseManagersPlugins;
+    }
+
+    public Map<Plugins, Plugin> getDealsWithLogManagersPlugins() {
+        return dealsWithLogManagersPlugins;
+    }
+
+    public Map<Addons, Addon> getDealsWithDatabaseManagersAddons() {
+        return dealsWithDatabaseManagersAddons;
+    }
+
+    public Map<Addons, Addon> getDealsWithLogManagersAddons() {
+        return dealsWithLogManagersAddons;
+    }
+
     PlatformEventMonitor eventMonitor;
 
     PluginsIdentityManager pluginsIdentityManager;
@@ -234,6 +260,8 @@ public class Platform  {
     public void setLocationSystemOs(LocationSystemOs locationSystemOs) {
         this.locationSystemOs  = locationSystemOs;
     }
+
+
 
     public void start() throws CantStartPlatformException, CantReportCriticalStartingProblemException {
 
@@ -757,6 +785,15 @@ public class Platform  {
         Plugin walletRuntime =  ((ModuleLayer) mModuleLayer).getWalletRuntime();
         setPluginReferencesAndStart(walletRuntime, Plugins.BITDUBAI_WALLET_RUNTIME_MODULE);
 
+        for(Addons registeredDescriptor : corePlatformContext.getRegisteredAddonsDescriptors())
+            checkAddonForDeveloperInterfaces(registeredDescriptor);
+        for(Plugins registeredDescriptor : corePlatformContext.getRegisteredPluginsDescriptors())
+            checkPluginForDeveloperInterfaces(registeredDescriptor);
+
+        ((DealWithDatabaseManagers) actorDeveloper).setDatabaseManagers(dealsWithDatabaseManagersPlugins, dealsWithDatabaseManagersAddons);
+        //todo revisar con Matias
+        //((DealWithLogManagers) actorDeveloper).setLogManagers(dealsWithLogManagersPlugins, dealsWithLogManagersAddons);
+
     }
 
     private void setPluginReferencesAndStart(Plugin plugin, Plugins descriptor) {
@@ -843,4 +880,27 @@ public class Platform  {
             pluginNotRecognizedException.printStackTrace();
         }
     }
+
+
+
+    private void checkAddonForDeveloperInterfaces(final Addons descriptor){
+        Addon addon = corePlatformContext.getAddon(descriptor);
+        if(addon == null)
+            return;
+        if(addon instanceof DealWithDatabaseManagers)
+            dealsWithDatabaseManagersAddons.put(descriptor, addon);
+        if(addon instanceof DealWithLogManagers)
+            dealsWithLogManagersAddons.put(descriptor, addon);
+    }
+
+    private void checkPluginForDeveloperInterfaces(final Plugins descriptor){
+        Plugin plugin = corePlatformContext.getPlugin(descriptor);
+        if(plugin == null)
+            return;
+        if(plugin instanceof DealWithDatabaseManagers)
+            dealsWithDatabaseManagersPlugins.put(descriptor, plugin);
+        if(plugin instanceof DealWithLogManagers)
+            dealsWithLogManagersPlugins.put(descriptor, plugin);
+    }
+
 }

@@ -46,11 +46,6 @@ import java.util.UUID;
 public class IncomingMessageDataAccessObject {
 
     /**
-     *  Represent the Plugin Database.
-     */
-    private PluginDatabaseSystem pluginDatabaseSystem = null;
-
-    /**
      * Represent the dataBase
      */
     private Database dataBase;
@@ -63,66 +58,13 @@ public class IncomingMessageDataAccessObject {
     /**
      * Constructor with parameters
      *
-     * @param pluginDatabaseSystem
+     * @param dataBase
      * @param errorManager
      */
-    public IncomingMessageDataAccessObject(PluginDatabaseSystem pluginDatabaseSystem, ErrorManager errorManager) {
+    public IncomingMessageDataAccessObject(Database dataBase, ErrorManager errorManager) {
         super();
         this.errorManager = errorManager;
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    /**
-     * This method initialize the database
-     *
-     * @param ownerId
-     * @param networkIntraUserId
-     * @throws CantInitializeNetworkIntraUserDataBaseException
-     */
-    public void initializeDb(UUID ownerId, UUID networkIntraUserId) throws CantInitializeNetworkIntraUserDataBaseException {
-
-
-        try {
-
-            /*
-             * Open new database connection
-             */
-            this.dataBase = this.pluginDatabaseSystem.openDatabase(ownerId, networkIntraUserId.toString());
-
-        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-
-            /*
-             * The database exists but cannot be open. I can not handle this situation.
-             */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_COINAPULT_WORLD, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
-            throw new CantInitializeNetworkIntraUserDataBaseException(cantOpenDatabaseException.getLocalizedMessage());
-
-        } catch (DatabaseNotFoundException e) {
-
-            /*
-             * The database no exist may be the first time the plugin is running on this device,
-             * We need to create the new database
-             */
-            IntraUserNetworkServiceDatabaseFactory intraUserNetworkServiceDatabaseFactory = new IntraUserNetworkServiceDatabaseFactory(pluginDatabaseSystem);
-
-            try {
-
-                /*
-                 * We create the new database
-                 */
-                this.dataBase = intraUserNetworkServiceDatabaseFactory.createDatabase(ownerId, networkIntraUserId);
-
-            } catch (CantCreateDatabaseException cantOpenDatabaseException) {
-
-                /*
-                 * The database cannot be created. I can not handle this situation.
-                 */
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
-                throw new CantInitializeNetworkIntraUserDataBaseException(cantOpenDatabaseException.getLocalizedMessage());
-
-            }
-        }
-
+        this.dataBase = dataBase;
     }
 
     /**
@@ -249,6 +191,75 @@ public class IncomingMessageDataAccessObject {
     };
 
 
+    /** Method that list the all entities on the data base. The valid value of
+     * the column name are the att of the <code>IntraUserNetworkServiceDatabaseConstants</code>
+     *
+     *  @see IntraUserNetworkServiceDatabaseConstants
+     *  @return All IncomingIntraUserNetworkServiceMessage.
+     */
+    public List<IncomingIntraUserNetworkServiceMessage> findAll (String columnName, String columnValue) {
+
+        if (columnName == null ||
+                columnName.isEmpty() ||
+                    columnValue == null ||
+                        columnValue.isEmpty()){
+
+            throw new IllegalArgumentException("The filter are required, can not be null or empty");
+        }
+
+
+        List<IncomingIntraUserNetworkServiceMessage> list = null;
+
+        try {
+
+            /*
+             * 1 - load the data base to memory with filters
+             */
+            DatabaseTable networkIntraUserTable =  getDatabaseTable();
+            networkIntraUserTable.setStringFilter(columnName, columnValue, DatabaseFilterType.EQUAL);
+            networkIntraUserTable.loadToMemory();
+
+            /*
+             * 2 - read all records
+             */
+            List<DatabaseTableRecord> records = networkIntraUserTable.getRecords();
+
+            /*
+             * 3 - Create a list of IncomingIntraUserNetworkServiceMessage objects
+             */
+            list = new ArrayList<>();
+            list.clear();
+
+            /*
+             * 4 - Convert into IncomingIntraUserNetworkServiceMessage objects
+             */
+            for (DatabaseTableRecord record : records){
+
+                /*
+                 * 4.1 - Create and configure a  IncomingIntraUserNetworkServiceMessage
+                 */
+                IncomingIntraUserNetworkServiceMessage incomingIntraUserNetworkServiceMessage = constructFrom(record);
+
+                /*
+                 * 4.2 - Add to the list
+                 */
+                list.add(incomingIntraUserNetworkServiceMessage);
+
+            }
+
+        } catch (CantLoadTableToMemory cantLoadTableToMemory) {
+            // Register the failure.
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
+            return null;
+        }
+
+        /*
+         * return the list
+         */
+        return list;
+    };
+
+
     /**
      * Method that list the all entities on the data base. The valid value of
      * the key are the att of the <code>IntraUserNetworkServiceDatabaseConstants</code>
@@ -271,7 +282,7 @@ public class IncomingMessageDataAccessObject {
         try {
 
 
-            /**
+            /*
              * 1- Prepare the filters
              */
             for (String key: filters.keySet()){
@@ -413,7 +424,7 @@ public class IncomingMessageDataAccessObject {
 
         try {
 
-            /**
+            /*
              * Create a new transaction and execute
              */
             DatabaseTransaction transaction = getDataBase().newTransaction();

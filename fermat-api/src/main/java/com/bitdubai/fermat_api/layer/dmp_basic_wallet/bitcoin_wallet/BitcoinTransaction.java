@@ -9,85 +9,37 @@ import java.util.UUID;
 /**
  * Created by eze on 2015.06.17..
  */
-public class BitcoinTransaction {
+public interface BitcoinTransaction {
 
-    private String transactionHash;
+    public CryptoAddress getAddressFrom();
 
-    private CryptoAddress addressFrom;
+    public void setAddressFrom(CryptoAddress addressFrom);
 
-    private CryptoAddress addressTo;
+    public CryptoAddress getAddressTo();
 
-    private long amount;
+    public void setAddressTo(CryptoAddress addressTo);
 
-    private TransactionType type;
+    public long getAmount();
 
-    private TransactionState state;
+    public void setAmount(long amount);
 
-    private long timestamp;
+    public TransactionType getType();
 
-    private String memo;
+    public void setType(TransactionType type);
 
-    public CryptoAddress getAddressFrom() {
-        return addressFrom;
-    }
+    public TransactionState getState();
 
-    public void setAddressFrom(CryptoAddress addressFrom) {
-        this.addressFrom = addressFrom;
-    }
+    public void setState(TransactionState state);
 
-    public CryptoAddress getAddressTo() {
-        return addressTo;
-    }
+    public long getTimestamp();
 
-    public void setAddressTo(CryptoAddress addressTo) {
-        this.addressTo = addressTo;
-    }
+    public void setTimestamp(long timestamp);
 
-    public long getAmount() {
-        return amount;
-    }
+    public String getMemo();
 
-    public void setAmount(long amount) {
-        this.amount = amount;
-    }
+    public void setMemo(String memo);
 
-    public TransactionType getType() {
-        return type;
-    }
+    public String getTramsactionHash();
 
-    public void setType(TransactionType type) {
-        this.type = type;
-    }
-
-    public TransactionState getState() {
-        return state;
-    }
-
-    public void setState(TransactionState state) {
-        this.state = state;
-    }
-
-    public long getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(long timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public String getMemo() {
-        return memo;
-    }
-
-    public void setMemo(String memo) {
-        this.memo = memo;
-    }
-
-    public String getTramsactionHash() {
-        return transactionHash;
-    }
-
-    public void setTramsactionHash(String tramsactionHash) {
-        this.transactionHash = tramsactionHash;
-    }
+    public void setTramsactionHash(String tramsactionHash);
 }
