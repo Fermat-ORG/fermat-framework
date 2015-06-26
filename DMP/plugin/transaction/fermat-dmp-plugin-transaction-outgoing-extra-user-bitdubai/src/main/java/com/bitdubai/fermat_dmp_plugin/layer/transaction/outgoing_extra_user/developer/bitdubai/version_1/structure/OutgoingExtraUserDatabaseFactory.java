@@ -64,13 +64,16 @@ public class OutgoingExtraUserDatabaseFactory implements DealsWithPluginDatabase
              */
             table = ((DatabaseFactory) database).newTableFactory(ownerId, OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_NAME);
 
-            table.addColumn(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_WALLET_ID_TO_DEBIT_COLUMN_NAME, DatabaseDataType.STRING, 36,true);
-            table.addColumn(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_ID_COLUMN_NAME, DatabaseDataType.STRING, 36,false);
+            table.addColumn(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_ID_COLUMN_NAME, DatabaseDataType.STRING, 36,true);
+            table.addColumn(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_WALLET_ID_TO_DEBIT_COLUMN_NAME, DatabaseDataType.STRING, 36,false);
             table.addColumn(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_HASH_COLUMN_NAME, DatabaseDataType.STRING, 64,false);
+            table.addColumn(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ADDRESS_FROM_COLUMN_NAME, DatabaseDataType.STRING, 34,false);
             table.addColumn(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ADDRESS_TO_COLUMN_NAME, DatabaseDataType.STRING, 34,false);
             table.addColumn(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_CRYPTO_CURRENY_COLUMN_NAME, DatabaseDataType.STRING, 3,false);
             table.addColumn(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_CRYPTO_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
-            table.addColumn(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_STATUS_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 10,false);
+            table.addColumn(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 10,false);
+            table.addColumn(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
+
 
             try {
                 ((DatabaseFactory) database).createTable(ownerId, table);
