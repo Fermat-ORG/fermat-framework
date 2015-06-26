@@ -140,7 +140,7 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
 
             listView.setAdapter(adapter);
         } catch (Exception e) {
-            showMessage("DatabaseTools Fragment onCreateView Exception - " + e.getMessage());
+            showMessage("DatabaseTools Database Table List Fragment onCreateView Exception - " + e.getMessage());
             e.printStackTrace();
         }
         return rootView;

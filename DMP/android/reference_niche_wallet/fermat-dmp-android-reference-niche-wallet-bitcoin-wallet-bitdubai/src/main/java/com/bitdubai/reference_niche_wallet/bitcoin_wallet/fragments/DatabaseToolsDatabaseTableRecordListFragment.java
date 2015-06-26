@@ -4,21 +4,18 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentTabHost;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.DatabaseTool;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,7 +33,6 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
     View rootView;
 
     private DatabaseTool databaseTools;
-
     private DeveloperDatabase developerDatabase;
     private DeveloperDatabaseTable developerDatabaseTable;
 
@@ -48,7 +44,7 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
         this.developerDatabaseTable = developerDatabaseTable;
     }
 
-    List<DeveloperDatabaseTable> developerDatabaseTableList;
+    List<DeveloperDatabaseTableRecord> developerDatabaseTableRecordList;
 
     private static Platform platform = new Platform();
 
@@ -63,7 +59,6 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 /*
         try {
             ToolManager toolManager = platform.getToolManager();
@@ -84,87 +79,14 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        rootView = inflater.inflate(R.layout.fragment_database_tools, container, false);
-
+        rootView = inflater.inflate(R.layout.fragment_database_tools_table_tabs, container, false);
         try {
-            //developerDatabaseTableList = databaseTools.getTableListFromDatabase(developerDatabase);
+            //developerDatabaseTableRecordList = databaseTools.getTableContent(developerDatabase, developerDatabaseTable);
         } catch (Exception e) {
             System.out.println("***********************hasta la vaina, baby");
         }
 
-        try {
-            // Get ListView object from xml
-            final ListView listView = (ListView) rootView.findViewById(R.id.lista1);
-
-
-            developerDatabaseTableList = new ArrayList<>();
-
-            developerDatabaseTableList.add(new DeveloperDatabaseTableTest("incoming_crypto_transaction", null));
-            developerDatabaseTableList.add(new DeveloperDatabaseTableTest("outgoing_crypto_transaction", null));
-            developerDatabaseTableList.add(new DeveloperDatabaseTableTest("crypto_transaction", null));
-            developerDatabaseTableList.add(new DeveloperDatabaseTableTest("wallet_crypto_address", null));
-
-            final List<DeveloperDatabaseTable> developerDatabaseTableList2 = developerDatabaseTableList;
-
-            String[] availableResources;
-            if (developerDatabaseTableList.size() > 0) {
-                availableResources = new String[developerDatabaseTableList.size()];
-                for(int i = 0; i < developerDatabaseTableList.size() ; i++) {
-                    availableResources[i] = developerDatabaseTableList.get(i).getName();
-                }
-            } else {
-                availableResources = new String[0];
-            }
-
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity().getApplicationContext(),
-                    android.R.layout.simple_list_item_1, android.R.id.text1, availableResources);
-
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String item = (String) listView.getItemAtPosition(position);
-
-                    for (DeveloperDatabaseTable devDBTable : developerDatabaseTableList2) {
-                        if (devDBTable.getName().equals(item)) {
-                            DatabaseToolsDatabaseTableRecordListFragment databaseToolsDatabaseTableListFragment = new DatabaseToolsDatabaseTableRecordListFragment();
-                            databaseToolsDatabaseTableListFragment.setDeveloperDatabase(developerDatabase);
-
-                            FragmentTransaction FT = getFragmentManager().beginTransaction();
-
-                            FT.replace(R.id.hola, databaseToolsDatabaseTableListFragment);
-
-                            FT.commit();
-                        }
-                    }
-
-                }
-            });
-
-            listView.setAdapter(adapter);
-        } catch (Exception e) {
-            showMessage("DatabaseTools Fragment onCreateView Exception - " + e.getMessage());
-            e.printStackTrace();
-        }
         return rootView;
-    }
-
-    public class DeveloperDatabaseTableTest implements DeveloperDatabaseTable {
-        String name;
-        List<String> fieldsNames;
-
-        DeveloperDatabaseTableTest(String name, List<String> fieldsNames) {
-            this.name = name;
-            this.fieldsNames = fieldsNames;
-        }
-
-        @Override
-        public String getName() {
-            return name;
-        }
-
-        @Override
-        public List<String> getFieldNames() {
-            return fieldsNames;
-        }
     }
 
     //show alert
