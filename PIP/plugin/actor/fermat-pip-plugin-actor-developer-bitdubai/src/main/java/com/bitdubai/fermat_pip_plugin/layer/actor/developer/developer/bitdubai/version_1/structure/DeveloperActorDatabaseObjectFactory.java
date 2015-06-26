@@ -12,16 +12,6 @@ import java.util.List;
  */
 public class DeveloperActorDatabaseObjectFactory implements DeveloperObjectFactory {
 
-    private String name;
-    private String Id;
-
-    public DeveloperActorDatabaseObjectFactory(String name, String id) {
-        this.name = name;
-        Id = id;
-    }
-    //TODO: Este constructor parece estar de mas, no?? Luis.
-
-
 
     @Override
     public DeveloperDatabase getNewDeveloperDatabase(String name, String Id) {
