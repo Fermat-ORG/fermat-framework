@@ -203,28 +203,23 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
     }
 
     private String constructErrorReport(final FermatException exception){
-        StringBuffer buffer = new StringBuffer();
-        buffer.append("========================================================================================================================================================\n");
+        StringBuffer buffer = new StringBuffer("========================================================================================================================================================\n");
         buffer.append("Fermat Error Manager * Unexpected Exception Report\n");
         buffer.append("========================================================================================================================================================\n");
-        buffer.append(constructExceptionReport(exception, 1));
+        buffer.append(constructExceptionReport(exception));
         buffer.append("Exceptions Processed: " + exception.getDepth() + "\n");
         buffer.append("========================================================================================================================================================\n");
         return buffer.toString();
     }
 
-    private String constructExceptionReport(final FermatException exception, final int depth){
-        StringBuffer buffer = new StringBuffer();
-        if (exception.getCause() != null) {
-            buffer.append(constructExceptionReport(exception.getCause(), depth));
-            exception.setDepth(exception.getCause().getDepth()+1);
-        } else {
-            exception.setDepth(depth);
-        }
+    private String constructExceptionReport(final FermatException exception){
+        if(exception == null)
+            return "";
+        StringBuffer buffer = new StringBuffer(constructExceptionReport(exception.getCause()));
         buffer.append("********************************************************************************************************************************************************\n");
-        buffer.append("Exception Number: " + exception.getDepth() + "\n");
         buffer.append(exception.toString());
         buffer.append("********************************************************************************************************************************************************\n");
         return buffer.toString();
     }
+
 }

@@ -22,6 +22,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorMan
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.*;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.*;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantGetRecordException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantInitializeCryptoRegistryException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantReadEvent;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantSaveEvent;
@@ -147,6 +148,8 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
         try {
             this.database = this.pluginDatabaseSystem.openDatabase(pluginId, IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_DATABASE);
         } catch (DatabaseNotFoundException e) {
+
+            // If the database does not exist it means that this is the first time we run this plugin. So we just create it
             IncomingCryptoDataBaseFactory databaseFactory = new IncomingCryptoDataBaseFactory();
             databaseFactory.setPluginDatabaseSystem(this.pluginDatabaseSystem);
 
@@ -195,8 +198,8 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
             dbTrx.addRecordToInsert(eventsTable, eventRecord);
             this.database.executeTransaction(dbTrx);
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, databaseTransactionFailedException);
-            throw new CantSaveEvent();
+            // The monitor Agent will manage this exception
+            throw new CantSaveEvent("Database Transaction Failed",databaseTransactionFailedException,"","");
         }
     }
 
@@ -238,12 +241,10 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
             }
             List<DatabaseTableRecord> records = eventsTable.getRecords();
             if (records == null || records.isEmpty()) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantReadEvent("", null,"",String.format("I could not find the event with Id: %s", eventId));
+                throw new CantReadEvent("I could not find the event with Id", null,String.format("Id: %s", eventId),"");
             } else if (records.size() > 1) {
-                Exception e = new Exception(String.format("More than one event with Id: %s", eventId))
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantSaveEvent();
+                //
+                throw new CantSaveEvent("More than one event with the same Id",null,String.format("Id: %s", eventId),"");
             }
 
             DatabaseTableRecord eventRecord = records.get(0);
@@ -252,7 +253,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
             this.database.executeTransaction(dbTrx);
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, databaseTransactionFailedException);
-            throw new CantSaveEvent();
+            throw new CantSaveEvent("Database Transaction failed",databaseTransactionFailedException,"","");
         }
     }
 
@@ -297,7 +298,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
     }
 
     // Retorna las que están en (A,TBN)
-    List<Transaction<CryptoTransaction>> getAcknowledgedTransactions() {//throws CantGetTransactionsException
+    List<Transaction<CryptoTransaction>> getAcknowledgedTransactions() throws InvalidParameterException {//throws CantGetTransactionsException
 
         DatabaseTable registryTable = this.database.getTable(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NAME);
         registryTable.setStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_TRANSACTION_STATUS_COLUMN.columnName ,
@@ -343,7 +344,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
 
         List<DatabaseTableRecord> records = registryTable.getRecords();
         if (records.size() != 1) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new ExpectedTransactionNotFoundException());
+            //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new ExpectedTransactionNotFoundException());
             //TODO: MANAGE EXCEPTION
         } else {
             DatabaseTableRecord recordToUpdate = records.get(0);
@@ -369,7 +370,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
 
     // Used by Relay Agent
     // Retorna las (R,NAR)
-    List<Transaction<CryptoTransaction>> getResponsibleNARTransactions() { //throws CantAccessTransactionsException
+    List<Transaction<CryptoTransaction>> getResponsibleNARTransactions() throws InvalidParameterException { //throws CantAccessTransactionsException
 
         DatabaseTable registryTable = this.database.getTable(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NAME);
 
@@ -417,12 +418,9 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
         }
 
         List<DatabaseTableRecord> records = registryTable.getRecords();
-        if(records == null)
-            return;
-
 
         if (records.size() != 1) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new ExpectedTransactionNotFoundException());
+            //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new ExpectedTransactionNotFoundException());
             //TODO: MANAGE EXCEPTION
         } else {
             DatabaseTableRecord recordToUpdate = records.get(0);
@@ -447,7 +445,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
     }
 
     // La lista de (R,TBN) o (R,SN)
-    private List<Transaction<CryptoTransaction>> getResponsibleTransactionsPendingAction() {//throws CantAccessTransactionsException;
+    private List<Transaction<CryptoTransaction>> getResponsibleTransactionsPendingAction() throws InvalidParameterException {//throws CantAccessTransactionsException;
         List<Transaction<CryptoTransaction>> tbnList = getAllTransactionsInState(TransactionStatus.RESPONSIBLE, ProtocolStatus.TO_BE_NOTIFIED);
         List<Transaction<CryptoTransaction>> snList = getAllTransactionsInState(TransactionStatus.RESPONSIBLE, ProtocolStatus.SENDING_NOTIFIED);
         List<Transaction<CryptoTransaction>> concatenatedList = new ArrayList<>();
@@ -482,7 +480,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
 
             List<DatabaseTableRecord> records = registryTable.getRecords();
             if (records.size() != 1) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new ExpectedTransactionNotFoundException());
+                //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new ExpectedTransactionNotFoundException());
                 //TODO: MANAGE EXCEPTION
             } else {
                 r = records.get(0);
@@ -537,7 +535,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
 
         List<DatabaseTableRecord> records = registryTable.getRecords();
         if (records.size() != 1) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new ExpectedTransactionNotFoundException());
+            //errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new ExpectedTransactionNotFoundException());
             //TODO: MANAGE EXCEPTION
         } else {
             recordToUpdate = records.get(0);
@@ -573,7 +571,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
     public List<Transaction<CryptoTransaction>> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
 
         DatabaseTable registryTable = this.database.getTable(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NAME);
-        registryTable.setStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName,ProtocolStatus.SENDING_NOTIFIED.getCode(),DatabaseFilterType.EQUAL);
+        registryTable.setStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName, ProtocolStatus.SENDING_NOTIFIED.getCode(), DatabaseFilterType.EQUAL);
         registryTable.setStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_TRANSACTION_STATUS_COLUMN.columnName, TransactionStatus.RESPONSIBLE.getCode(), DatabaseFilterType.EQUAL);
 
         registryTable.setStringFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_SPECIALIST_COLUMN.columnName,specialist.getCode(),DatabaseFilterType.EQUAL);
@@ -582,7 +580,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
             registryTable.loadToMemory();
         } catch (CantLoadTableToMemory cantLoadTableToMemory) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
-            throw new CantDeliverPendingTransactionsException();//TODO: MANAGE EXCEPTION
+            throw new CantDeliverPendingTransactionsException("I could not load records from memory",cantLoadTableToMemory,"","");
         }
 
 
@@ -590,15 +588,40 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
 
         List<DatabaseTableRecord> records = registryTable.getRecords();
 
-        for(DatabaseTableRecord r : records)
-            returnList.add(getTransactionFromRecord(r));
+        try {
+            for(DatabaseTableRecord r : records)
+                returnList.add(getTransactionFromRecord(r));
+        } catch (InvalidParameterException e) {
+            throw new CantDeliverPendingTransactionsException("Invalid Parameter detected",e,"","");
+        }
 
         System.out.println("TTF - INCOMING CRYPTO PENDING TRANSACTIONS METHOD CALLED");
         return returnList;
     }
 
 
+   /************************************************************
+    *     1Private methods, from more basic to more complex    *
+    ************************************************************/
 
+
+    private DatabaseTableRecord getRecordByPrimaryKey(UUID transactionId) throws CantGetRecordException {
+
+        DatabaseTable registryTable = this.database.getTable(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_NAME);
+        registryTable.setUUIDFilter(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ID_COLUMN.columnName, transactionId, DatabaseFilterType.EQUAL);
+
+        try {
+            registryTable.loadToMemory();
+        } catch (CantLoadTableToMemory cantLoadTableToMemory) {
+            throw new CantGetRecordException("O can't load record",cantLoadTableToMemory,"","");
+        }
+
+        List<DatabaseTableRecord> records = registryTable.getRecords();
+        if (records.size() != 1) {
+            throw new CantGetRecordException("Inconsistent number of records with given ID", null, "Number of records" + records.size(),"");
+        } else
+            return records.get(0);
+    }
 
     private void fillRegistryTableRecord(DatabaseTableRecord databaseTableRecord,
                                          Transaction<CryptoTransaction> transaction,
@@ -624,7 +647,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
 
     }
 
-    private Transaction<CryptoTransaction> getTransactionFromRecord(DatabaseTableRecord databaseTableRecord){
+    private Transaction<CryptoTransaction> getTransactionFromRecord(DatabaseTableRecord databaseTableRecord) throws InvalidParameterException {
         CryptoAddress cryptoAddressFrom = new CryptoAddress();
         cryptoAddressFrom.setAddress(databaseTableRecord.getStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ADDRESS_FROM_COLUMN.columnName));
         cryptoAddressFrom.setCryptoCurrency(CryptoCurrency.getByCode(databaseTableRecord.getStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_CRYPTO_CURRENCY_COLUMN.columnName)));
@@ -632,13 +655,8 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
         cryptoAddressTo.setAddress(databaseTableRecord.getStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ADDRESS_TO_COLUMN.columnName));
         cryptoAddressTo.setCryptoCurrency(CryptoCurrency.BITCOIN);
 
-        CryptoStatus cryptoStatus = null;
-        try {
-            cryptoStatus = CryptoStatus.getByCode(databaseTableRecord.getStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_CRYPTO_STATUS_COLUMN.columnName));
-        } catch (InvalidParameterException e) {
-            // TODO: Manage exception
-            e.printStackTrace();
-        }
+        CryptoStatus cryptoStatus = CryptoStatus.getByCode(databaseTableRecord.getStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_CRYPTO_STATUS_COLUMN.columnName));
+
 
         CryptoTransaction cryptoTransaction = new CryptoTransaction(
                   databaseTableRecord.getStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_TRANSACTION_HASH_COLUMN.columnName),
@@ -648,13 +666,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
                   databaseTableRecord.getLongValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_CRYPTO_AMOUNT_COLUMN.columnName),
                   cryptoStatus
                                                                      );
-        Action action = null;
-        try {
-            action = Action.getByCode(databaseTableRecord.getStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ACTION_COLUMN.columnName));
-        } catch (InvalidParameterException e) {
-            // Manage Exceotion
-            e.printStackTrace();
-        }
+        Action action  = Action.getByCode(databaseTableRecord.getStringValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ACTION_COLUMN.columnName));
 
         return new Transaction<>(
                   databaseTableRecord.getUUIDValue(IncomingCryptoDataBaseConstants.INCOMING_CRYPTO_REGISTRY_TABLE_ID_COLUMN.columnName),
@@ -690,7 +702,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
         return registryTable.getRecords();
     }
 
-    private List<Transaction<CryptoTransaction>> getAllTransactionsInState(TransactionStatus transactionStatus, ProtocolStatus protocolStatus) {
+    private List<Transaction<CryptoTransaction>> getAllTransactionsInState(TransactionStatus transactionStatus, ProtocolStatus protocolStatus) throws InvalidParameterException {
 
         List<Transaction<CryptoTransaction>> returnList = new ArrayList<>();
 

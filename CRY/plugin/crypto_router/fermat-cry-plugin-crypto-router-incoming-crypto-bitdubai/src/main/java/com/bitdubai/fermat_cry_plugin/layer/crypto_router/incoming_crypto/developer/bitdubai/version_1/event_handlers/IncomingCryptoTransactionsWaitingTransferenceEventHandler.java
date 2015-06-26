@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.event_handlers;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionServiceNotStartedException;
@@ -40,12 +41,6 @@ public class IncomingCryptoTransactionsWaitingTransferenceEventHandler implement
             }
             catch (CantSaveEvent cantSaveEvent)
             {
-                /**
-                 * The main module could not handle this exception. Me neither. Will throw it again.
-                 */
-                System.err.println("CantSaveEvent: "+ cantSaveEvent.getMessage());
-                cantSaveEvent.printStackTrace();
-
                 throw  cantSaveEvent;
             }
             catch (ClassCastException classCastException)
@@ -53,10 +48,7 @@ public class IncomingCryptoTransactionsWaitingTransferenceEventHandler implement
                 /**
                  * The main module could not handle this exception. Me neither. Will throw it again.
                  */
-                System.err.println("ClassCastException: "+ classCastException.getMessage());
-                classCastException.printStackTrace();
-
-                throw  new CantSaveEvent();
+                throw  new CantSaveEvent("classCastException found", FermatException.wrapException(classCastException),"","");
             }
         }
         else

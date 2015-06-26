@@ -11,7 +11,6 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
-import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionSender;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
@@ -21,7 +20,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.Unexpect
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventSource;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
-import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.IncomingCryptoTransactionPluginRoot;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantIdentifyEventSourceException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantReadEvent;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.interfaces.DealsWithRegistry;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.interfaces.TransactionAgent;
@@ -118,8 +117,7 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
             this.agentThread.start();
         }
         catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
-            throw new CantStartAgentException();
+            throw new CantStartAgentException("Agent failed to start",exception,"","");
         }
 
     }
@@ -254,7 +252,9 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
                     source = this.sourceAdministrator.getSourceAdministrator(EventSource.getByCode(eventWrapper.eventSource));
                 } catch (InvalidParameterException e) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                    //if somethig wrong happenned we try in the next round
+                    return;
+                } catch (CantIdentifyEventSourceException e) {
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                     return;
                 }
 
@@ -287,7 +287,13 @@ public class IncomingCryptoMonitorAgent implements DealsWithCryptoVault , DealsW
                 // Remember that this list can be more extensive than the one we saved, this is
                 // because the system could have shut down in this step of the protocol making old
                 // transactions to be stored but not precessed.
-                List<Transaction<CryptoTransaction>> acknowledgedTransactions = this.registry.getAcknowledgedTransactions();
+                List<Transaction<CryptoTransaction>> acknowledgedTransactions = null;
+                try {
+                    acknowledgedTransactions = this.registry.getAcknowledgedTransactions();
+                } catch (InvalidParameterException e) {
+                    this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+                    return;
+                }
 
 
                 // An finally, for each transaction we confirm it and then register responsibility.

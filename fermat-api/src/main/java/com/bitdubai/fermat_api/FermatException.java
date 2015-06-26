@@ -9,34 +9,38 @@ public class FermatException extends Exception {
 	 */
 	private static final long serialVersionUID = 6066719615565752788L;
 	
-	private static final String DEFAULT_MESSAGE = "FERMAT HAS DETECTED AN EXCEPTION: ";
+	public static final String DEFAULT_MESSAGE = "FERMAT HAS DETECTED AN EXCEPTION: ";
+
 
 	private final String exceptionName;
 	private final FermatException cause;
 	private final String context;
 	private final String possibleReason;
-	private int depth;
-
-	public FermatException(final String message, final Exception cause, final String context, final String possibleReason){
-		super(message, cause);
-		if(cause instanceof FermatException)
-			this.cause = (FermatException) cause;
-		else
-			this.cause = null;
-		this.exceptionName = getClass().toString();
-		this.context = context;
-		this.possibleReason = possibleReason;
-	}
+	private final Integer depth;
 
 	private FermatException(final String exceptionName, final String message, final Exception cause, final String context, final String possibleReason){
 		super(message, cause);
-		if(cause instanceof FermatException)
-			this.cause = (FermatException) cause;
-		else
-			this.cause = null;
 		this.exceptionName = exceptionName;
+		this.cause = (cause instanceof FermatException) ? (FermatException) cause : null;
 		this.context = context;
 		this.possibleReason = possibleReason;
+		this.depth = (this.cause == null) ? Integer.valueOf(1) : Integer.valueOf(this.cause.getDepth() + 1);
+	}
+
+	/**
+	 * This is the constructor that every inherited FermatException must implement
+	 * @param message the short description of the why this exception happened, there is a public static constant called DEFAULT_MESSAGE that can be used here
+	 * @param cause the exception that triggered the throwing of the current exception, if there are no other exceptions to be declared here, the cause should be null
+	 * @param context a String that provides the values of the variables that could have affected the exception
+	 * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
+	 */
+	public FermatException(final String message, final Exception cause, final String context, final String possibleReason){
+		super(message, cause);
+		this.exceptionName = getClass().toString();
+		this.cause = (cause instanceof FermatException) ? (FermatException) cause : null;
+		this.context = context;
+		this.possibleReason = possibleReason;
+		this.depth = (this.cause == null) ? Integer.valueOf(1) : Integer.valueOf(this.cause.getDepth() + 1);
 	}
 
 	public static FermatException wrapException(final Exception exception){
@@ -58,12 +62,8 @@ public class FermatException extends Exception {
 		return possibleReason;
 	}
 
-	public void setDepth(final int depth){
-		this.depth = depth;
-	}
-
 	public int getDepth(){
-		return depth;
+		return depth.intValue();
 	}
 
 	public String getFormattedContext() {
@@ -75,9 +75,6 @@ public class FermatException extends Exception {
 	}
 
 	public String getFormattedTrace() {
-		if(getStackTrace().length == 0)
-			return "";
-
 		StringBuffer buffer = new StringBuffer();
 		for(StackTraceElement element : getStackTrace())
 			//if(element.getClassName().contains("com.bitdubai"))
@@ -88,6 +85,7 @@ public class FermatException extends Exception {
 	@Override
 	public String toString(){
 		StringBuffer buffer = new StringBuffer();
+		buffer.append("Exception Number: " + depth.toString() + "\n");
 		buffer.append("Exception Type: " + exceptionName + "\n");
 		buffer.append("Exception Message: " + getMessage() + "\n");
 		buffer.append("Exception Possible Cause: ");

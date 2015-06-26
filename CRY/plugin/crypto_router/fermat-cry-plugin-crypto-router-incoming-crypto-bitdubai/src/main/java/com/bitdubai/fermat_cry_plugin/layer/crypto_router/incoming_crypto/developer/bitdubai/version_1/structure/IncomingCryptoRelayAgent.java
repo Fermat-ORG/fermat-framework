@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.Unexpect
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.DealsWithActorAddressBook;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.SpecialistNotRegisteredException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.interfaces.DealsWithRegistry;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.interfaces.TransactionAgent;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.util.SpecialistSelector;
@@ -128,9 +129,7 @@ public class IncomingCryptoRelayAgent implements DealsWithActorAddressBook , Dea
             this.agentThread.start();
         }
         catch (Exception exception) {
-            System.out.println("Exception: " + exception.getMessage());
-            exception.printStackTrace();
-            throw new CantStartAgentException();
+            throw new CantStartAgentException("Agent failed to start",exception,"","");
         }
 
     }
@@ -261,7 +260,13 @@ public class IncomingCryptoRelayAgent implements DealsWithActorAddressBook , Dea
             /*
             El RelayAgent del IncomingCrypto analizará las transacciones con estado (RESPONSIBLE,NO_ACTION_REQUIRED).
             */
-            List<Transaction<CryptoTransaction>> responsibleTransactionList = this.registry.getResponsibleNARTransactions();
+            List<Transaction<CryptoTransaction>> responsibleTransactionList = null;
+            try {
+                responsibleTransactionList = this.registry.getResponsibleNARTransactions();
+            } catch (InvalidParameterException e) {
+                this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+                return;
+            }
 
             if(responsibleTransactionList.isEmpty())
                 return;
@@ -300,7 +305,12 @@ public class IncomingCryptoRelayAgent implements DealsWithActorAddressBook , Dea
             System.out.println("TTF - INCOMING CRYPTO RELAY: " + specialistSet.size() + " SPECIALIST(s) TO CALL");
 
 
-            this.eventsLauncher.sendEvents(specialistSet);
+            try {
+                this.eventsLauncher.sendEvents(specialistSet);
+            } catch (SpecialistNotRegisteredException e) {
+                this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+                return;
+            }
 
             System.out.println("TTF - INCOMING CRYPTO RELAY: SPECIALIST(s) INFORMED");
 

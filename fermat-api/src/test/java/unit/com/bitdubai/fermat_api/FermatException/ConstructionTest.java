@@ -58,30 +58,23 @@ public class ConstructionTest {
         testCause = new FermatException(testMessage+ " Cause", testCause2, "WE NEED TO TEST " + FermatException.CONTEXT_CONTENT_SEPARATOR + "THE CHAIN OF CAUSES", "WE NEED TO TEST THE CHAIN OF CAUSES");
         testException = new FermatException(testMessage, testCause, testContext, testPossibleReason);
         System.out.println(constructErrorReport(testException));
-        //countExceptionDepth(testException);
-
     }
 
     private String constructErrorReport(final FermatException exception){
-        StringBuffer buffer = new StringBuffer("========================================================================================================================================================\n" +
-                "Fermat Error Manager * Unexpected Exception Report\n" +
-                "========================================================================================================================================================\n");
-        buffer.append(constructExceptionReport(exception, 1));
+        StringBuffer buffer = new StringBuffer("========================================================================================================================================================\n");
+        buffer.append("Fermat Error Manager * Unexpected Exception Report\n");
+        buffer.append("========================================================================================================================================================\n");
+        buffer.append(constructExceptionReport(exception));
         buffer.append("Exceptions Processed: " + exception.getDepth() + "\n");
         buffer.append("========================================================================================================================================================\n");
         return buffer.toString();
     }
 
-    private String constructExceptionReport(final FermatException exception, final int depth){
-        StringBuffer buffer = new StringBuffer();
-        if (exception.getCause() != null) {
-            buffer.append(constructExceptionReport(exception.getCause(), depth));
-            exception.setDepth(exception.getCause().getDepth()+1);
-        } else {
-            exception.setDepth(depth);
-        }
+    private String constructExceptionReport(final FermatException exception){
+        if(exception == null)
+            return "";
+        StringBuffer buffer = new StringBuffer(constructExceptionReport(exception.getCause()));
         buffer.append("********************************************************************************************************************************************************\n");
-        buffer.append("Exception Number: " + exception.getDepth() + "\n");
         buffer.append(exception.toString());
         buffer.append("********************************************************************************************************************************************************\n");
         return buffer.toString();
