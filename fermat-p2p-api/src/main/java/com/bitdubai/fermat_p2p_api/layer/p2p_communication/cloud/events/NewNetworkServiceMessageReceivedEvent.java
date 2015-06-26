@@ -52,13 +52,11 @@ public class NewNetworkServiceMessageReceivedEvent implements PlatformEvent {
      *
      * @param eventSource the event source
      * @param eventType   the event type
-     * @param message received
      */
-    public NewNetworkServiceMessageReceivedEvent(EventSource eventSource, EventType eventType, Message message) {
+    public NewNetworkServiceMessageReceivedEvent(EventSource eventSource, EventType eventType) {
 
         this.eventSource = eventSource;
         this.eventType   = eventType;
-        this.message     = message;
     }
 
     /**
@@ -98,5 +96,12 @@ public class NewNetworkServiceMessageReceivedEvent implements PlatformEvent {
      */
     public Message getMessage() {
         return message;
+    }
+
+    /**
+     * Set the message received
+     */
+    public void setMessage(Message message) {
+        this.message = message;
     }
 }
