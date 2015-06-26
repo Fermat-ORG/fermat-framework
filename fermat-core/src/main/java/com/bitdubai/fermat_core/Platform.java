@@ -791,7 +791,8 @@ public class Platform  {
             checkPluginForDeveloperInterfaces(registeredDescriptor);
 
         ((DealWithDatabaseManagers) actorDeveloper).setDatabaseManagers(dealsWithDatabaseManagersPlugins, dealsWithDatabaseManagersAddons);
-        ((DealWithLogManagers) actorDeveloper).setLogManagers(dealsWithLogManagersPlugins, dealsWithLogManagersAddons);
+        //todo revisar con Matias
+        //((DealWithLogManagers) actorDeveloper).setLogManagers(dealsWithLogManagersPlugins, dealsWithLogManagersAddons);
 
     }
 
