@@ -19,7 +19,11 @@
         <option name="ALLOW_USER_CONFIGURATION" value="false" />
         <option name="MANIFEST_FILE_RELATIVE_PATH" value="/src/main/AndroidManifest.xml" />
         <option name="RES_FOLDER_RELATIVE_PATH" value="/src/main/structured_res/app/shell/version_1" />
+<<<<<<< HEAD
         <option name="RES_FOLDERS_RELATIVE_PATH" value="file://$MODULE_DIR$/src/main/structured_res/app/subapp/shop/version_1;file://$MODULE_DIR$/src/main/structured_res/app/subapp/wallet_runtime/wallet_framework/version_1;file://$MODULE_DIR$/src/main/structured_res/app/shell/version_1;file://$MODULE_DIR$/src/main/res;file://$MODULE_DIR$/src/main/structured_res/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1" />
+=======
+        <option name="RES_FOLDERS_RELATIVE_PATH" value="file://$MODULE_DIR$/src/main/res;file://$MODULE_DIR$/src/main/structured_res/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1;file://$MODULE_DIR$/src/main/structured_res/app/subapp/wallet_runtime/wallet_framework/version_1;file://$MODULE_DIR$/src/main/structured_res/app/subapp/shop/version_1;file://$MODULE_DIR$/src/main/structured_res/app/shell/version_1" />
+>>>>>>> remotes/newbranch/master
         <option name="ASSETS_FOLDER_RELATIVE_PATH" value="/src/main/assets" />
       </configuration>
     </facet>
@@ -140,8 +144,8 @@
     <orderEntry type="module" module-name="fermat-dmp-plugin-world-blockchain-info-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-app-runtime-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-p2p-plugin-communication-cloud-client-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-wallet-store-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-transaction-inter-wallet-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-wallet-store-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-actor-extra-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-intra-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-cry-plugin-crypto-module-actor-address-book-bitdubai" exported="" />
@@ -168,27 +172,30 @@
     <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-bank-notes-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-transaction-incoming-device-user-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-dmp-plugin-world-crypto-index-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-plugin-world-crypto-index-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-platform-service-location-subsystem-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-osa-addon-android-file-system-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-platform-service-error-manager-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-money-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-hardware-local-device-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-money-request-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-bank-notes-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-android-reference-niche-wallet-age-kids-boys-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-android-sub-app-wallet-factory-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-pip-addon-platform-service-event-manager-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-module-wallet-runtime-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-pip-addon-platform-service-event-manager-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-p2p-api" exported="" />
-    <orderEntry type="module" module-name="fermat-dmp-android-sub-app-wallet-store-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-android-sub-app-wallet-store-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-niche-wallet-type-bank-notes-wallet-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-pip-addon-user-device-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai" exported="" />
+<<<<<<< HEAD
+=======
+    <orderEntry type="module" module-name="fermat-pip-addon-user-device-user-bitdubai" exported="" />
+>>>>>>> remotes/newbranch/master
     <orderEntry type="module" module-name="fermat-dmp-addon-license-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-niche-wallet-type-crypto-loss-protected-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai" exported="" />

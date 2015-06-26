@@ -5,28 +5,29 @@
     android:orientation="vertical"
     android:background="#fbf7ed"
     >
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingLeft="7dip" >
+        android:paddingTop="6dip"
+        android:paddingBottom="3dip"
+        android:paddingLeft="7dip"
+        android:paddingRight="7dip">
         <EditText android:id="@+id/contact_name"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:gravity="center_vertical"
-            android:textColor="#FF666666"
             android:textSize="20sp"
+            android:background="#8bba9e"
             android:textStyle="normal"
             android:hint="Name"
+            android:textColor="#FFFFFF"
             android:paddingTop="7dip"
             android:paddingLeft="7dip"
             android:paddingRight="7dip"
             android:paddingBottom="7dip"
             android:layout_gravity="end"
             android:layout_weight="1"/>
-
     </LinearLayout>
     <LinearLayout
         android:id="@+id/linear_address"
@@ -34,15 +35,19 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:paddingLeft="7dip"
+        android:paddingBottom="3dip"
+        android:paddingTop="3dip"
+        android:paddingRight="7dip"
         android:visibility="invisible">
         <EditText android:id="@+id/address"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:gravity="center_vertical"
-            android:textColor="#FF666666"
             android:textSize="20sp"
             android:textStyle="normal"
             android:hint="Wallet Address"
+            android:background="#8bba9e"
+            android:textColor="#FFFFFF"
             android:paddingTop="7dip"
             android:paddingLeft="7dip"
             android:paddingRight="7dip"
@@ -50,23 +55,20 @@
             android:layout_gravity="end"
             android:layout_weight="1"
             />
-
         <ImageView
             android:id="@+id/scan_qr"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_action_camera_grey"
             android:padding="3dp"/>
-
     </LinearLayout>
-
-
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="7dip"
+        android:paddingBottom="3dip"
+        android:paddingTop="3dip"
+        android:paddingRight="7dip"
         android:id="@+id/linear_amount"
         android:visibility="invisible"
         >
@@ -79,7 +81,8 @@
             android:paddingRight="7dip"
             android:paddingTop="7dip"
             android:paddingBottom="7dip"
-            android:textColor="#FF666666"
+            android:background="#8bba9e"
+            android:textColor="#FFFFFF"
             android:textSize="20sp"
             android:textStyle="normal"
             android:hint="BTC 0.0000"
@@ -87,13 +90,13 @@
             android:inputType="number"
             android:state_selected = "true"
             />
-
     </LinearLayout>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="7dip"
+        android:paddingBottom="3dip"
+        android:paddingTop="3dip"
         android:paddingRight="7dip"
         android:id="@+id/linear_notes"
         android:visibility="invisible"
@@ -103,11 +106,12 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:gravity="center_vertical"
-            android:textColor="#FF666666"
             android:textSize="20sp"
             android:textStyle="normal"
             android:hint="Notes"
             android:paddingTop="7dip"
+            android:background="#8bba9e"
+            android:textColor="#FFFFFF"
             android:paddingLeft="14dip"
             android:paddingRight="14dip"
             android:paddingBottom="7dip"
@@ -118,6 +122,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="7dip"
+        android:paddingBottom="3dip"
+        android:paddingTop="3dip"
         android:paddingRight="7dip"
         android:id="@+id/linear_send"
         android:visibility="invisible"

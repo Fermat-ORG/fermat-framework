@@ -790,6 +790,10 @@ public class Platform  {
         for(Plugins registeredDescriptor : corePlatformContext.getRegisteredPluginsDescriptors())
             checkPluginForDeveloperInterfaces(registeredDescriptor);
 
+        ((DealWithDatabaseManagers) actorDeveloper).setDatabaseManagers(dealsWithDatabaseManagersPlugins, dealsWithDatabaseManagersAddons);
+        //todo revisar con Matias
+        //((DealWithLogManagers) actorDeveloper).setLogManagers(dealsWithLogManagersPlugins, dealsWithLogManagersAddons);
+
     }
 
     private void setPluginReferencesAndStart(Plugin plugin, Plugins descriptor) {

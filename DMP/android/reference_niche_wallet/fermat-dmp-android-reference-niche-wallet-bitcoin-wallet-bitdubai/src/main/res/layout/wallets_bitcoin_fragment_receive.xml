@@ -5,21 +5,20 @@
     android:orientation="vertical"
     android:background="#fbf7ed"
     android:weightSum="1">
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="3dip"
-        android:paddingRight="3dip"
+        android:paddingLeft="8dip"
+        android:paddingRight="8dip"
+        android:paddingTop="6dip"
         android:orientation="vertical">
-
         <EditText
             android:id="@+id/contact_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#424242"
+            android:background="#8bba9e"
             android:textColor="#FFFFFF"
-            android:textSize="20sp"
+            android:textSize="22sp"
             android:textStyle="normal"
             android:hint="Name"
             android:paddingTop="7dip"
@@ -28,44 +27,48 @@
             android:paddingBottom="7dip"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true" />
-
     </RelativeLayout>
-
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="fill_parent"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
-
+        android:orientation="horizontal"
+        android:paddingLeft="4dip"
+        android:paddingRight="4dip">
         <Button
             android:id="@+id/request_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Give me an Address!" />
-
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/green"
+            android:text="Give me an Address!"
+            android:textColor="#FFFFFF"
+            android:layout_weight="1"
+            android:layout_margin="2dip"/>
         <Button
             android:id="@+id/share_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:text="Share"
+            android:background="@color/green"
             android:layout_alignParentRight="true"
-            android:visibility="invisible"/>
-    </RelativeLayout>
-
+            android:textColor="#FFFFFF"
+            android:visibility="invisible"
+            android:layout_weight="1"
+            android:layout_margin="2dip"/>
+    </LinearLayout>
     <TextView
         android:id="@+id/string_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:visibility="invisible"
+        android:textColor="#000000"
         android:layout_alignBottom="@+id/request_btn"
         android:layout_weight="0.17" />
-
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:gravity="center">
-
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -75,6 +78,4 @@
             android:layout_centerHorizontal="true"
             android:layout_alignBottom="@+id/string_address" />
     </LinearLayout>
-
-
 </LinearLayout>
