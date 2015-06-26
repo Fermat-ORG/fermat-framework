@@ -496,7 +496,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
 
             return txs;
         } catch (Exception e){
-            throw new CantDeliverPendingTransactionsException();
+            throw new CantDeliverPendingTransactionsException("I couldn't deliver pending transactions",e,"","");
         }
     }
 

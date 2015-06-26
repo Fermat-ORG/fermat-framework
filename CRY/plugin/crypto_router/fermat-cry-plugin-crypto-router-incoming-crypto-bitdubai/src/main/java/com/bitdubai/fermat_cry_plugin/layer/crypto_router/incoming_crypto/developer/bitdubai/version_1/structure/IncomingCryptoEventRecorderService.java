@@ -73,7 +73,7 @@ public class IncomingCryptoEventRecorderService implements DealsWithEvents, Deal
      */
     public void incomingCryptoWaitingTransference(IncomingCryptoTransactionsWaitingTransferenceEvent event) throws CantSaveEvent {
         this.registry.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
-        System.out.println("TTF - INCOMING CRYPTO EVENTRECORDER: NEW EVENT REGISTERED");
+        //System.out.println("TTF - INCOMING CRYPTO EVENTRECORDER: NEW EVENT REGISTERED");
     }
 
 
