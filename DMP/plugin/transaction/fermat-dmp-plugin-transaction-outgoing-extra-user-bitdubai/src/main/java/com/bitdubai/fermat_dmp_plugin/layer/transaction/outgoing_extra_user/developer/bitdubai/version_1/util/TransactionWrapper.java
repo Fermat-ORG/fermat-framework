@@ -34,6 +34,8 @@ public class TransactionWrapper implements BitcoinTransaction {
     /*
      * TransactionWrapper member variables
      */
+    private UUID walletId;
+
     private UUID transactionId;
 
     /*
@@ -126,5 +128,13 @@ public class TransactionWrapper implements BitcoinTransaction {
 
     public void setTransactionId(UUID transactionId) {
         this.transactionId = transactionId;
+    }
+
+    public UUID getWalletId() {
+        return walletId;
+    }
+
+    public void setWalletId(UUID walletId) {
+        this.walletId = walletId;
     }
 }
