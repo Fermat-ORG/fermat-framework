@@ -4,13 +4,11 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.events;
+package com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events;
 
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventSource;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventType;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.Message;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud_server.events.NewNetworkServiceMessageReceivedEvent</code> represent the event
@@ -34,9 +32,9 @@ public class NewNetworkServiceMessageReceivedEvent implements PlatformEvent {
     private EventSource eventSource;
 
     /**
-     *  Represent the message
+     *  Represent the data
      */
-    private Message message;
+    private Object data;
 
     /**
      * Constructor with parameter
@@ -90,18 +88,18 @@ public class NewNetworkServiceMessageReceivedEvent implements PlatformEvent {
     }
 
     /**
-     * Return the message received
+     * Return the data object that contains message received
      *
      * @return message received
      */
-    public Message getMessage() {
-        return message;
+    public Object getData() {
+        return data;
     }
 
     /**
-     * Set the message received
+     * Set data object that contains the message received
      */
-    public void setMessage(Message message) {
-        this.message = message;
+    public void setData(Object data) {
+        this.data = data;
     }
 }
