@@ -13,6 +13,6 @@ import java.util.Map;
  */
 public interface DealWithLogManagers {
 
-    public void setLogManagers (Map<Plugins,Plugin> logManagersOnPlugins,Map<Addons,Addon> logManagersOnAddons);
+    public void setLogManagers (LogManagerForDevelopers logManagerForDevelopers);
 
 }

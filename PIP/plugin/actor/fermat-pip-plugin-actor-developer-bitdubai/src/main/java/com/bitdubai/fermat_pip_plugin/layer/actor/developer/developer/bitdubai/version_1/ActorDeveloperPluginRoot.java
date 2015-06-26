@@ -201,11 +201,18 @@ public class ActorDeveloperPluginRoot implements DealWithDatabaseManagers, DealW
     }
 
     @Override
+    public void setLogManagers(LogManagerForDevelopers logManagerForDevelopers) {
+
+    }
+
+    /*
+    MAtias te lo comento para que compile. Cuando te conestes lo vemos.
+    @Override
 
     public void setLogManagers (Map<Plugins,Plugin> logManagersOnPlugins,Map<Addons,Addon> logManagersOnAddons){
         this.logManagersOnPlugins = logManagersOnPlugins;
         this.logManagersOnAddons = logManagersOnAddons;
     }
-
+*/
 
 }
