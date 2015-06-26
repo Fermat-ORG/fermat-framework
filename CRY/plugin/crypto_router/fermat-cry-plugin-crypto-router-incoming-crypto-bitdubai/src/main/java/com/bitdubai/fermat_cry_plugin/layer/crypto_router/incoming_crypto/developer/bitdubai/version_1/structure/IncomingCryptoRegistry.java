@@ -74,11 +74,11 @@ import java.util.UUID;
 
 public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginDatabaseSystem, TransactionProtocolManager<CryptoTransaction> {
 
-    static int flag = 1;
+    static int flag = 0;
 
     public void proofTransaction() {
 
-        if(this.flag == 1)
+        if(this.flag == 0)
             return;
 
         this.flag++;

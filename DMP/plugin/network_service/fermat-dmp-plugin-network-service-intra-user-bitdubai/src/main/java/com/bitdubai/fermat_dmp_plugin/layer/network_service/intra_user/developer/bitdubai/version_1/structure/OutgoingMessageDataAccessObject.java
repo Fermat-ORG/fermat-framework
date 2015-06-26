@@ -1,5 +1,5 @@
 /*
- * @#IncomingMessageDataAccessObject.java - 2015
+ * @#OutgoingMessageDataAccessObject.java - 2015
  * Copyright bitDubai.com., All rights reserved.
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
@@ -16,14 +16,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFi
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemory;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantInitializeNetworkIntraUserDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesTypes;
 
@@ -34,16 +30,16 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.IncomingMessageDataAccessObject</code> have
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.OutgoingMessageDataAccessObject</code> have
  * all methods implementation to access the data base (CRUD)
  * <p/>
  *
- * Created by Roberto Requena - (rart3001@gmail.com) on 24/06/15.
+ * Created by Roberto Requena - (rart3001@gmail.com) on 25/06/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class IncomingMessageDataAccessObject {
+public class OutgoingMessageDataAccessObject {
 
     /**
      * Represent the dataBase
@@ -61,7 +57,7 @@ public class IncomingMessageDataAccessObject {
      * @param dataBase
      * @param errorManager
      */
-    public IncomingMessageDataAccessObject(Database dataBase, ErrorManager errorManager) {
+    public OutgoingMessageDataAccessObject(Database dataBase, ErrorManager errorManager) {
         super();
         this.errorManager = errorManager;
         this.dataBase = dataBase;
@@ -80,22 +76,22 @@ public class IncomingMessageDataAccessObject {
      * @return DatabaseTable
      */
     DatabaseTable getDatabaseTable() {
-        return getDataBase().getTable(IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_NAME);
+        return getDataBase().getTable(IntraUserNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME);
     }
 
     /**
-     * Method that find an IncomingIntraUserNetworkServiceMessage by id in the data base.
+     * Method that find an OutgoingIntraUserNetworkServiceMessage by id in the data base.
      *
      *  @param id Long id.
-     *  @return IncomingIntraUserNetworkServiceMessage found.
+     *  @return OutgoingIntraUserNetworkServiceMessage found.
      */
-    public IncomingIntraUserNetworkServiceMessage findById (String id){
+    public OutgoingIntraUserNetworkServiceMessage findById (String id){
 
         if (id == null){
             throw new IllegalArgumentException("The id is required, can not be null");
         }
 
-        IncomingIntraUserNetworkServiceMessage incomingIntraUserNetworkServiceMessage = null;
+        OutgoingIntraUserNetworkServiceMessage incomingIntraUserNetworkServiceMessage = null;
 
         try {
 
@@ -113,12 +109,12 @@ public class IncomingMessageDataAccessObject {
 
 
             /*
-             * 3 - Convert into IncomingIntraUserNetworkServiceMessage objects
+             * 3 - Convert into OutgoingIntraUserNetworkServiceMessage objects
              */
             for (DatabaseTableRecord record : records){
 
                 /*
-                 * 3.1 - Create and configure a  IncomingIntraUserNetworkServiceMessage
+                 * 3.1 - Create and configure a  OutgoingIntraUserNetworkServiceMessage
                  */
                 incomingIntraUserNetworkServiceMessage = constructFrom(record);
             }
@@ -135,12 +131,12 @@ public class IncomingMessageDataAccessObject {
     /**
      * Method that list the all entities on the data base.
      *
-     *  @return All IncomingIntraUserNetworkServiceMessage.
+     *  @return All OutgoingIntraUserNetworkServiceMessage.
      */
-    public List<IncomingIntraUserNetworkServiceMessage> findAll () {
+    public List<OutgoingIntraUserNetworkServiceMessage> findAll () {
 
 
-        List<IncomingIntraUserNetworkServiceMessage> list = null;
+        List<OutgoingIntraUserNetworkServiceMessage> list = null;
 
         try {
 
@@ -156,20 +152,20 @@ public class IncomingMessageDataAccessObject {
             List<DatabaseTableRecord> records = networkIntraUserTable.getRecords();
 
             /*
-             * 3 - Create a list of IncomingIntraUserNetworkServiceMessage objects
+             * 3 - Create a list of OutgoingIntraUserNetworkServiceMessage objects
              */
             list = new ArrayList<>();
             list.clear();
 
             /*
-             * 4 - Convert into IncomingIntraUserNetworkServiceMessage objects
+             * 4 - Convert into OutgoingIntraUserNetworkServiceMessage objects
              */
             for (DatabaseTableRecord record : records){
 
                 /*
-                 * 4.1 - Create and configure a  IncomingIntraUserNetworkServiceMessage
+                 * 4.1 - Create and configure a  OutgoingIntraUserNetworkServiceMessage
                  */
-                IncomingIntraUserNetworkServiceMessage incomingIntraUserNetworkServiceMessage = constructFrom(record);
+                OutgoingIntraUserNetworkServiceMessage incomingIntraUserNetworkServiceMessage = constructFrom(record);
 
                 /*
                  * 4.2 - Add to the list
@@ -195,9 +191,9 @@ public class IncomingMessageDataAccessObject {
      * the column name are the att of the <code>IntraUserNetworkServiceDatabaseConstants</code>
      *
      *  @see IntraUserNetworkServiceDatabaseConstants
-     *  @return All IncomingIntraUserNetworkServiceMessage.
+     *  @return All OutgoingIntraUserNetworkServiceMessage.
      */
-    public List<IncomingIntraUserNetworkServiceMessage> findAll (String columnName, String columnValue) {
+    public List<OutgoingIntraUserNetworkServiceMessage> findAll (String columnName, String columnValue) {
 
         if (columnName == null ||
                 columnName.isEmpty() ||
@@ -208,7 +204,7 @@ public class IncomingMessageDataAccessObject {
         }
 
 
-        List<IncomingIntraUserNetworkServiceMessage> list = null;
+        List<OutgoingIntraUserNetworkServiceMessage> list = null;
 
         try {
 
@@ -225,20 +221,20 @@ public class IncomingMessageDataAccessObject {
             List<DatabaseTableRecord> records = networkIntraUserTable.getRecords();
 
             /*
-             * 3 - Create a list of IncomingIntraUserNetworkServiceMessage objects
+             * 3 - Create a list of OutgoingIntraUserNetworkServiceMessage objects
              */
             list = new ArrayList<>();
             list.clear();
 
             /*
-             * 4 - Convert into IncomingIntraUserNetworkServiceMessage objects
+             * 4 - Convert into OutgoingIntraUserNetworkServiceMessage objects
              */
             for (DatabaseTableRecord record : records){
 
                 /*
-                 * 4.1 - Create and configure a  IncomingIntraUserNetworkServiceMessage
+                 * 4.1 - Create and configure a  OutgoingIntraUserNetworkServiceMessage
                  */
-                IncomingIntraUserNetworkServiceMessage incomingIntraUserNetworkServiceMessage = constructFrom(record);
+                OutgoingIntraUserNetworkServiceMessage incomingIntraUserNetworkServiceMessage = constructFrom(record);
 
                 /*
                  * 4.2 - Add to the list
@@ -265,9 +261,9 @@ public class IncomingMessageDataAccessObject {
      * the key are the att of the <code>IntraUserNetworkServiceDatabaseConstants</code>
      *
      *  @see IntraUserNetworkServiceDatabaseConstants
-     *  @return All IncomingIntraUserNetworkServiceMessage.
+     *  @return All OutgoingIntraUserNetworkServiceMessage.
      */
-    public List<IncomingIntraUserNetworkServiceMessage> findAll (Map<String, Object> filters) {
+    public List<OutgoingIntraUserNetworkServiceMessage> findAll (Map<String, Object> filters) {
 
         if (filters == null ||
                 filters.isEmpty()){
@@ -276,7 +272,7 @@ public class IncomingMessageDataAccessObject {
         }
 
 
-        List<IncomingIntraUserNetworkServiceMessage> list = null;
+        List<OutgoingIntraUserNetworkServiceMessage> list = null;
         List<DatabaseTableFilter> filtersTable = new ArrayList<>();
 
         try {
@@ -309,20 +305,20 @@ public class IncomingMessageDataAccessObject {
             List<DatabaseTableRecord> records = networkIntraUserTable.getRecords();
 
             /*
-             * 4 - Create a list of IncomingIntraUserNetworkServiceMessage objects
+             * 4 - Create a list of OutgoingIntraUserNetworkServiceMessage objects
              */
             list = new ArrayList<>();
             list.clear();
 
             /*
-             * 5 - Convert into IncomingIntraUserNetworkServiceMessage objects
+             * 5 - Convert into OutgoingIntraUserNetworkServiceMessage objects
              */
             for (DatabaseTableRecord record : records){
 
                 /*
-                 * 5.1 - Create and configure a  IncomingIntraUserNetworkServiceMessage
+                 * 5.1 - Create and configure a  OutgoingIntraUserNetworkServiceMessage
                  */
-                IncomingIntraUserNetworkServiceMessage incomingIntraUserNetworkServiceMessage = constructFrom(record);
+                OutgoingIntraUserNetworkServiceMessage incomingIntraUserNetworkServiceMessage = constructFrom(record);
 
                 /*
                  * 5.2 - Add to the list
@@ -346,9 +342,9 @@ public class IncomingMessageDataAccessObject {
     /**
      * Method that create a new entity in the data base.
      *
-     *  @param entity IncomingIntraUserNetworkServiceMessage to create.
+     *  @param entity OutgoingIntraUserNetworkServiceMessage to create.
      */
-    public boolean create (IncomingIntraUserNetworkServiceMessage entity){
+    public boolean create (OutgoingIntraUserNetworkServiceMessage entity){
 
         if (entity == null){
             throw new IllegalArgumentException("The entity is required, can not be null");
@@ -361,7 +357,7 @@ public class IncomingMessageDataAccessObject {
              */
             DatabaseTableRecord entityRecord = constructFrom(entity);
 
-            /**
+            /*
              * 2.- Create a new transaction and execute
              */
             DatabaseTransaction transaction = getDataBase().newTransaction();
@@ -380,9 +376,9 @@ public class IncomingMessageDataAccessObject {
     /**
      * Method that update an entity in the data base.
      *
-     *  @param entity IncomingIntraUserNetworkServiceMessage to update.
+     *  @param entity OutgoingIntraUserNetworkServiceMessage to update.
      */
-    public boolean update(IncomingIntraUserNetworkServiceMessage entity){
+    public boolean update(OutgoingIntraUserNetworkServiceMessage entity){
 
         if (entity == null){
             throw new IllegalArgumentException("The entity is required, can not be null");
@@ -395,7 +391,7 @@ public class IncomingMessageDataAccessObject {
              */
             DatabaseTableRecord entityRecord = constructFrom(entity);
 
-            /**
+            /*
              * 2.- Create a new transaction and execute
              */
             DatabaseTransaction transaction = getDataBase().newTransaction();
@@ -446,22 +442,22 @@ public class IncomingMessageDataAccessObject {
     /**
      *
      * @param record with values from the table
-     * @return IncomingIntraUserNetworkServiceMessage setters the values from table
+     * @return OutgoingIntraUserNetworkServiceMessage setters the values from table
      */
-    private IncomingIntraUserNetworkServiceMessage constructFrom(DatabaseTableRecord record){
+    private OutgoingIntraUserNetworkServiceMessage constructFrom(DatabaseTableRecord record){
 
-        IncomingIntraUserNetworkServiceMessage incomingIntraUserNetworkServiceMessage = new IncomingIntraUserNetworkServiceMessage();
+        OutgoingIntraUserNetworkServiceMessage outgoingIntraUserNetworkServiceMessage = new OutgoingIntraUserNetworkServiceMessage();
 
         try {
 
-            incomingIntraUserNetworkServiceMessage.setId(record.getLongValue(IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_ID_COLUMN_NAME));
-            incomingIntraUserNetworkServiceMessage.setSender(UUID.fromString(record.getStringValue(IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SENDER_ID_COLUMN_NAME)));
-            incomingIntraUserNetworkServiceMessage.setReceiver(UUID.fromString(record.getStringValue(IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_RECEIVER_ID_COLUMN_NAME)));;
-            incomingIntraUserNetworkServiceMessage.setTextContent(record.getStringValue(IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TEXT_CONTENT_COLUMN_NAME));
-            incomingIntraUserNetworkServiceMessage.setMessageType(MessagesTypes.getByCode(record.getStringValue(IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TYPE_COLUMN_NAME)));
-            incomingIntraUserNetworkServiceMessage.setShippingTimestamp(new Timestamp(record.getLongValue(IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SHIPPING_TIMESTAMP_COLUMN_NAME)));
-            incomingIntraUserNetworkServiceMessage.setDeliveryTimestamp(new Timestamp(record.getLongValue(IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_DELIVERY_TIMESTAMP_COLUMN_NAME)));;
-            incomingIntraUserNetworkServiceMessage.setStatus(MessagesStatus.getByCode(record.getStringValue(IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_STATUS_COLUMN_NAME)));
+            outgoingIntraUserNetworkServiceMessage.setId(record.getLongValue(IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_ID_COLUMN_NAME));
+            outgoingIntraUserNetworkServiceMessage.setSender(UUID.fromString(record.getStringValue(IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SENDER_ID_COLUMN_NAME)));
+            outgoingIntraUserNetworkServiceMessage.setReceiver(UUID.fromString(record.getStringValue(IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_RECEIVER_ID_COLUMN_NAME)));;
+            outgoingIntraUserNetworkServiceMessage.setTextContent(record.getStringValue(IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TEXT_CONTENT_COLUMN_NAME));
+            outgoingIntraUserNetworkServiceMessage.setMessageType(MessagesTypes.getByCode(record.getStringValue(IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_TYPE_COLUMN_NAME)));
+            outgoingIntraUserNetworkServiceMessage.setShippingTimestamp(new Timestamp(record.getLongValue(IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_SHIPPING_TIMESTAMP_COLUMN_NAME)));
+            outgoingIntraUserNetworkServiceMessage.setDeliveryTimestamp(new Timestamp(record.getLongValue(IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_DELIVERY_TIMESTAMP_COLUMN_NAME)));;
+            outgoingIntraUserNetworkServiceMessage.setStatus(MessagesStatus.getByCode(record.getStringValue(IntraUserNetworkServiceDatabaseConstants.INCOMING_MESSAGES_TABLE_STATUS_COLUMN_NAME)));
 
         } catch (InvalidParameterException e) {
 
@@ -469,7 +465,7 @@ public class IncomingMessageDataAccessObject {
             return null;
         }
 
-        return incomingIntraUserNetworkServiceMessage;
+        return outgoingIntraUserNetworkServiceMessage;
     }
 
     /**
@@ -479,7 +475,7 @@ public class IncomingMessageDataAccessObject {
      * @param incomingIntraUserNetworkServiceMessage the contains the values
      * @return DatabaseTableRecord whit the values
      */
-    private DatabaseTableRecord constructFrom(IncomingIntraUserNetworkServiceMessage incomingIntraUserNetworkServiceMessage){
+    private DatabaseTableRecord constructFrom(OutgoingIntraUserNetworkServiceMessage incomingIntraUserNetworkServiceMessage){
 
         /*
          * Create the record to the entity

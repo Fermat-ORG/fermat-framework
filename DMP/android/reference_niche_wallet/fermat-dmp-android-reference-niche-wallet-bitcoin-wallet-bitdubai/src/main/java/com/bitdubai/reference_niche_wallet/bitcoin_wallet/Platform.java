@@ -3,14 +3,17 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet;
 /**
  * Created by Natalia on 4/4/15.
  */
+
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.DealsWithNicheWalletTypeCryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_api.layer.pip_actor.developer.DealsWithToolManager;
+import com.bitdubai.fermat_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 
-public class Platform  implements DealsWithNicheWalletTypeCryptoWallet,DealsWithErrors, DealsWithEvents {
+public class Platform implements DealsWithErrors, DealsWithEvents, DealsWithNicheWalletTypeCryptoWallet, DealsWithToolManager {
 
     /**
      * DealsWithWalletContacts Interface member variables.
@@ -28,22 +31,32 @@ public class Platform  implements DealsWithNicheWalletTypeCryptoWallet,DealsWith
     private EventManager eventManager;
 
     /**
+     * DealsWithToolManager Interface member variables.
+     */
+    private ToolManager toolManager;
+
+    /**
      * Platform class member variables.
      */
 
-    private  static int tagId;
+    private static int tagId;
     private static int id;
-    private static  String ticketId;
-
-
+    private static String ticketId;
 
 
     /**
      * DealsWithWalletContacts Interface implementation.
      */
-
-    public void setNicheWalletTypeCryptoWalletManager(CryptoWalletManager cryptoWalletManager){
+    public void setNicheWalletTypeCryptoWalletManager(CryptoWalletManager cryptoWalletManager) {
         this.cryptoWalletManager = cryptoWalletManager;
+    }
+
+    /**
+     * DealsWithToolManager Interface implementation.
+     */
+    @Override
+    public void setToolManager(ToolManager toolManager) {
+        this.toolManager = toolManager;
     }
 
 
@@ -51,14 +64,12 @@ public class Platform  implements DealsWithNicheWalletTypeCryptoWallet,DealsWith
      * DealsWithErrors Interface implementation.
      */
 
-    public ErrorManager getErrorManager(){
+    public ErrorManager getErrorManager() {
         return errorManager;
     }
 
 
-
-
-    public EventManager getEventManager(){
+    public EventManager getEventManager() {
         return eventManager;
     }
 
@@ -79,13 +90,15 @@ public class Platform  implements DealsWithNicheWalletTypeCryptoWallet,DealsWith
     }
 
 
-
     /**
-     * PlatForm Class implementation.
+     * Platform Class implementation.
      */
 
     public CryptoWalletManager getCryptoWalletManager() {
-
         return this.cryptoWalletManager;
+    }
+
+    public ToolManager getToolManager() {
+        return this.toolManager;
     }
 }

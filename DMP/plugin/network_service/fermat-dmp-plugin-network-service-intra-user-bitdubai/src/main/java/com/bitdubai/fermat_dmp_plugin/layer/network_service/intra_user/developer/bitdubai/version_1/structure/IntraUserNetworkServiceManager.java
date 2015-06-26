@@ -10,6 +10,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.develope
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.IntraUserManager;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -35,11 +36,6 @@ import java.util.Map;
 public class IntraUserNetworkServiceManager implements IntraUserManager {
 
     /**
-     * Represent the intraUserNetworkServicePluginRoot
-     */
-    IntraUserNetworkServicePluginRoot intraUserNetworkServicePluginRoot;
-
-    /**
      * Represent the communicationLayerManager
      */
     private CommunicationLayerManager communicationLayerManager;
@@ -48,11 +44,6 @@ public class IntraUserNetworkServiceManager implements IntraUserManager {
      * DealsWithErrors Interface member variables.
      */
     private ErrorManager errorManager;
-
-    /**
-     * DealsWithPluginDatabaseSystem Interface member variable
-     */
-    private PluginDatabaseSystem pluginDatabaseSystem;
 
     /**
      * Holds all references to the intra user network service locals
@@ -64,20 +55,29 @@ public class IntraUserNetworkServiceManager implements IntraUserManager {
      */
     private Map<String, IntraUserNetworkServiceRemoteAgent> intraUserNetworkServiceRemoteAgentsCache;
 
+    /**
+     * Represent the incomingMessageDataAccessObject
+     */
+    private IncomingMessageDataAccessObject incomingMessageDataAccessObject;
+
+    /**
+     * Represent the outgoingMessageDataAccessObject
+     */
+    private OutgoingMessageDataAccessObject outgoingMessageDataAccessObject;
+
 
     /**
      * Constructor with parameters
      *
      * @param communicationLayerManager a communicationLayerManager instance
-     * @param pluginDatabaseSystem a pluginDatabaseSystem instance
      * @param errorManager a errorManager instance
      */
-    public IntraUserNetworkServiceManager(IntraUserNetworkServicePluginRoot intraUserNetworkServicePluginRoot, CommunicationLayerManager communicationLayerManager, PluginDatabaseSystem pluginDatabaseSystem, ErrorManager errorManager) {
+    public IntraUserNetworkServiceManager(CommunicationLayerManager communicationLayerManager, Database dataBase, ErrorManager errorManager ) {
         super();
-        this.intraUserNetworkServicePluginRoot        = intraUserNetworkServicePluginRoot;
         this.communicationLayerManager                = communicationLayerManager;
-        this.pluginDatabaseSystem                     = pluginDatabaseSystem;
         this.errorManager                             = errorManager;
+        this.incomingMessageDataAccessObject          = new IncomingMessageDataAccessObject(dataBase, errorManager);
+        this.outgoingMessageDataAccessObject          = new OutgoingMessageDataAccessObject(dataBase, errorManager);
         this.intraUserNetworkServiceLocalsCache       = new HashMap<>();
         this.intraUserNetworkServiceRemoteAgentsCache = new HashMap<>();
     }
@@ -154,15 +154,15 @@ public class IntraUserNetworkServiceManager implements IntraUserManager {
             if (serviceToServiceOnlineConnection != null &&
                     serviceToServiceOnlineConnection.getStatus() == ConnectionStatus.CONNECTED) {
 
-                 /*
+                /*
                  * Instantiate the local reference
                  */
-                IntraUserNetworkServiceLocal intraUserNetworkServiceLocal = new IntraUserNetworkServiceLocal(remoteNetworkServicePublicKey, errorManager, pluginDatabaseSystem);
+                IntraUserNetworkServiceLocal intraUserNetworkServiceLocal = new IntraUserNetworkServiceLocal(remoteNetworkServicePublicKey, errorManager, outgoingMessageDataAccessObject);
 
                 /*
                  * Instantiate the remote reference
                  */
-                IntraUserNetworkServiceRemoteAgent intraUserNetworkServiceRemoteAgent = new IntraUserNetworkServiceRemoteAgent(serviceToServiceOnlineConnection, pluginDatabaseSystem, errorManager);
+                IntraUserNetworkServiceRemoteAgent intraUserNetworkServiceRemoteAgent = new IntraUserNetworkServiceRemoteAgent(serviceToServiceOnlineConnection, errorManager, incomingMessageDataAccessObject, outgoingMessageDataAccessObject);
 
                 /*
                  * Register the observer to the observable agent
@@ -211,12 +211,12 @@ public class IntraUserNetworkServiceManager implements IntraUserManager {
                  /*
                  * Instantiate the local reference
                  */
-                IntraUserNetworkServiceLocal intraUserNetworkServiceLocal = new IntraUserNetworkServiceLocal(remoteNetworkServicePublicKey, errorManager, pluginDatabaseSystem);
+                IntraUserNetworkServiceLocal intraUserNetworkServiceLocal = new IntraUserNetworkServiceLocal(remoteNetworkServicePublicKey, errorManager, outgoingMessageDataAccessObject);
 
                 /*
                  * Instantiate the remote reference
                  */
-                IntraUserNetworkServiceRemoteAgent intraUserNetworkServiceRemoteAgent = new IntraUserNetworkServiceRemoteAgent(serviceToServiceOnlineConnection, pluginDatabaseSystem, errorManager);
+                IntraUserNetworkServiceRemoteAgent intraUserNetworkServiceRemoteAgent = new IntraUserNetworkServiceRemoteAgent(serviceToServiceOnlineConnection, errorManager, incomingMessageDataAccessObject, outgoingMessageDataAccessObject);
 
                 /*
                  * Register the observer to the observable agent
@@ -251,6 +251,32 @@ public class IntraUserNetworkServiceManager implements IntraUserManager {
 
         //return the instance
         return intraUserNetworkServiceLocalsCache.get(remoteNetworkServicePublicKey);
+    }
+
+    /**
+     * Pause the manager
+     */
+    public void pause(){
+
+        for (String key : intraUserNetworkServiceRemoteAgentsCache.keySet()) {
+
+            //Remove the instance and stop his threads
+            intraUserNetworkServiceRemoteAgentsCache.get(key).pause();
+        }
+
+    }
+
+    /**
+     * Resume the manager
+     */
+    public void resume(){
+
+        for (String key : intraUserNetworkServiceRemoteAgentsCache.keySet()) {
+
+            //Remove the instance and stop his threads
+            intraUserNetworkServiceRemoteAgentsCache.get(key).resume();
+        }
+
     }
 
 }

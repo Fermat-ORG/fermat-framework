@@ -6,6 +6,7 @@
  */
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.Message;
@@ -39,21 +40,21 @@ public class IntraUserNetworkServiceLocal implements Observer{
     private ErrorManager errorManager;
 
     /**
-     * DealsWithPluginDatabaseSystem Interface member variable
+     * Represent the outgoingMessageDataAccessObject
      */
-    private PluginDatabaseSystem pluginDatabaseSystem;
+    private OutgoingMessageDataAccessObject outgoingMessageDataAccessObject;
 
     /**
      * Constructor with parameters
      *
      * @param remoteNetworkServicePublicKey
-     * @param errorManager the errorManager instance
-     * @param pluginDatabaseSystem the pluginDatabaseSystem instance
+     * @param errorManager instance
+     * @param outgoingMessageDataAccessObject instance
      */
-    public IntraUserNetworkServiceLocal(String remoteNetworkServicePublicKey, ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem) {
+    public IntraUserNetworkServiceLocal(String remoteNetworkServicePublicKey, ErrorManager errorManager, OutgoingMessageDataAccessObject outgoingMessageDataAccessObject) {
         this.remoteNetworkServicePublicKey = remoteNetworkServicePublicKey;
         this.errorManager = errorManager;
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
+        this.outgoingMessageDataAccessObject = outgoingMessageDataAccessObject;
     }
 
 

@@ -94,6 +94,8 @@ public class OutgoingExtraUserTransactionPluginRoot implements DealsWithBitcoinW
         }
 
         this.transactionProcessorAgent = new OutgoingExtraUserTransactionProcessorAgent();
+        this.transactionProcessorAgent.setBitcoinWalletManager(this.bitcoinWalletManager);
+        this.transactionProcessorAgent.setCryptoVaultManager(this.cryptoVaultManager);
         this.transactionProcessorAgent.setErrorManager(this.errorManager);
         this.transactionProcessorAgent.setOutgoingExtraUserDao(dao);
         try {
@@ -168,6 +170,7 @@ public class OutgoingExtraUserTransactionPluginRoot implements DealsWithBitcoinW
 
     @Override
     public TransactionManager getTransactionManager() {
+
         OutgoingExtraUserTransactionManager transactionManager = new OutgoingExtraUserTransactionManager();
         transactionManager.setBitcoinWalletManager(this.bitcoinWalletManager);
         transactionManager.setCryptoVaultManager(this.cryptoVaultManager);

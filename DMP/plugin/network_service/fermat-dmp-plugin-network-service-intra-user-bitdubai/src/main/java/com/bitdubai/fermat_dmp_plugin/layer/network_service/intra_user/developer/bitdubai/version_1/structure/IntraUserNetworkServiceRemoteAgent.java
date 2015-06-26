@@ -7,19 +7,17 @@
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure;
 
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CantSendMessageException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.ConnectionStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.Message;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.ServiceToServiceOnlineConnection;
 
-import java.security.KeyPair;
+import java.util.List;
 import java.util.Observable;
-import java.util.UUID;
 
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer._11_network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceRemoteAgent</code>
@@ -53,19 +51,19 @@ public class IntraUserNetworkServiceRemoteAgent extends Observable {
     private ErrorManager errorManager;
 
     /**
-     * DealsWithPluginDatabaseSystem Interface member variable
+     * Represent the incomingMessageDataAccessObject
      */
-    private PluginDatabaseSystem pluginDatabaseSystem;
+    private IncomingMessageDataAccessObject incomingMessageDataAccessObject;
 
     /**
-     * Represent is the tread is active
+     * Represent the outgoingMessageDataAccessObject
      */
-    private Boolean active;
+    private OutgoingMessageDataAccessObject outgoingMessageDataAccessObject;
 
     /**
-     * Represent is the keyPair
+     * Represent is the tread is running
      */
-    private KeyPair keyPair;
+    private Boolean running;
 
     /**
      * Represent the read messages tread of this IntraUserNetworkServiceRemoteAgent
@@ -81,21 +79,24 @@ public class IntraUserNetworkServiceRemoteAgent extends Observable {
      * Constructor with parameters
      *
      * @param serviceToServiceOnlineConnection  the serviceToServiceOnlineConnection instance
-     * @param pluginDatabaseSystem the pluginDatabaseSystem instance
-     * @param errorManager  the errorManager instance
+     * @param errorManager  instance
+     * @param incomingMessageDataAccessObject instance
+     * @param outgoingMessageDataAccessObject instance
      */
-    public IntraUserNetworkServiceRemoteAgent(ServiceToServiceOnlineConnection serviceToServiceOnlineConnection, PluginDatabaseSystem pluginDatabaseSystem, ErrorManager errorManager) {
+    public IntraUserNetworkServiceRemoteAgent(ServiceToServiceOnlineConnection serviceToServiceOnlineConnection, ErrorManager errorManager, IncomingMessageDataAccessObject incomingMessageDataAccessObject, OutgoingMessageDataAccessObject outgoingMessageDataAccessObject) {
 
         super();
         this.serviceToServiceOnlineConnection = serviceToServiceOnlineConnection;
-        this.pluginDatabaseSystem             = pluginDatabaseSystem;
         this.errorManager                     = errorManager;
+        this.running                          = Boolean.FALSE;
+        this.incomingMessageDataAccessObject  = incomingMessageDataAccessObject;
+        this.outgoingMessageDataAccessObject  = outgoingMessageDataAccessObject;
 
         //Create a thread to receive the messages
         this.toReceive = new Thread(new Runnable() {
             @Override
             public void run() {
-                while (active)
+                while (running)
                     processMessageReceived();
             }
         });
@@ -104,7 +105,7 @@ public class IntraUserNetworkServiceRemoteAgent extends Observable {
         this.toSend = new Thread(new Runnable() {
             @Override
             public void run() {
-                while (active)
+                while (running)
                     processMessageToSend();
             }
         });
@@ -116,10 +117,27 @@ public class IntraUserNetworkServiceRemoteAgent extends Observable {
      */
     public void start(){
 
+        //Set to running
+        this.running  = Boolean.TRUE;
+
         //Start the Threads
         toReceive.start();
         toSend.start();
 
+    }
+
+    /**
+     * Pause the internal threads
+     */
+    public void pause(){
+        this.running  = Boolean.FALSE;
+    }
+
+    /**
+     * Resume the internal threads
+     */
+    public void resume(){
+        this.running  = Boolean.TRUE;
     }
 
     /**
@@ -154,12 +172,26 @@ public class IntraUserNetworkServiceRemoteAgent extends Observable {
                  */
                 for (int i = 0; i < serviceToServiceOnlineConnection.getUnreadMessagesCount(); i++) {
 
+                    /*
+                     * Read the next message in the queue
+                     */
                     Message message = serviceToServiceOnlineConnection.readNextMessage();
 
-                    //Cast the message to IntraUserNetworkServiceMessage
-                    IntraUserNetworkServiceMessage intraUserNetworkServiceMessage = (IntraUserNetworkServiceMessage) message;
+                    /*
+                     *  Cast the message to IncomingIntraUserNetworkServiceMessage
+                     */
+                    IncomingIntraUserNetworkServiceMessage incomingIntraUserNetworkServiceMessage = (IncomingIntraUserNetworkServiceMessage) message;
+                    incomingIntraUserNetworkServiceMessage.setStatus(MessagesStatus.SENT); //validar el estatus que debe tener al recibirlo
 
-                    //Save to the data base table
+                    /*
+                     * Save to the data base table
+                     */
+                    incomingMessageDataAccessObject.create(incomingIntraUserNetworkServiceMessage);
+
+                    /*
+                     * Remove the message from the queue
+                     */
+                    serviceToServiceOnlineConnection.clearMessage(message);
 
                     /**
                      * Notify all observer of this agent that Received a new message
@@ -190,30 +222,33 @@ public class IntraUserNetworkServiceRemoteAgent extends Observable {
 
             if (serviceToServiceOnlineConnection.getStatus() == ConnectionStatus.CONNECTED) {
 
-                //Estos valores deben tomarse de la base de datos
-                UUID remoteNetworkService = UUID.randomUUID();
-                String msjTextContent = "Prueba";
-
                 try {
 
-                    //Read all message from database
-                    //Falta implementar la lectura de la base de datos
+                    /*
+                     * Read all pending message from database
+                     */
+                    List<OutgoingIntraUserNetworkServiceMessage> messages = outgoingMessageDataAccessObject.findAll(IntraUserNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_STATUS_COLUMN_NAME,
+                                                                                                                  MessagesStatus.PENDING_TO_SEND.getCode());
+                    /*
+                     * For each message
+                     */
+                    for (OutgoingIntraUserNetworkServiceMessage message: messages){
 
+                        /*
+                         * Send the message
+                         */
+                        serviceToServiceOnlineConnection.sendMessage(message);
 
-                    //Create a new message to send
-                    IntraUserNetworkServiceMessage message = new IntraUserNetworkServiceMessage();
+                        /*
+                         * Change the message and update in the data base
+                         */
+                        message.setStatus(MessagesStatus.SENT);
+                        outgoingMessageDataAccessObject.update(message);
+                    }
 
-                    //Encrypt the message text content
-                    message.setTextContent(AsymmectricCryptography.encryptMessagePublicKey(msjTextContent, keyPair.getPublic().toString()));
-
-                    //Sing the encrypt message
-                    //message.setSignature(AsymmectricCryptography.createMessageSignature(message.getTextContent(), keyPair.getPrivate().toString()));
-
-                    //Send the message
-                    serviceToServiceOnlineConnection.sendMessage(message);
 
                 } catch (CantSendMessageException e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not send message to remote network service " + remoteNetworkService));
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not send message to remote network service "));
                 }
 
             }

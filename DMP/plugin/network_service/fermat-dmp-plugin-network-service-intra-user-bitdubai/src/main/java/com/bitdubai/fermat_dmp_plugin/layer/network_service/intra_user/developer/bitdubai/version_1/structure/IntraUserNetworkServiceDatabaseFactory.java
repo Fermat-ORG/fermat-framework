@@ -35,7 +35,7 @@ public class IntraUserNetworkServiceDatabaseFactory {
     /**
      * Constructor with parameter
      *
-     * @param pluginDatabaseSystem
+     * @param pluginDatabaseSystem the instance
      */
     public IntraUserNetworkServiceDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
@@ -45,11 +45,10 @@ public class IntraUserNetworkServiceDatabaseFactory {
      * Create the data base
      *
      * @param ownerId the owner id
-     * @param networkIntraUserId the intra user id
-     * @return Database
-     * @throws CantCreateDatabaseException
+     * @return Database object reference
+     * @throws CantCreateDatabaseException error
      */
-    protected Database createDatabase(UUID ownerId, UUID networkIntraUserId) throws CantCreateDatabaseException {
+    public Database createDatabase(UUID ownerId) throws CantCreateDatabaseException {
 
         Database database;
 
@@ -58,7 +57,7 @@ public class IntraUserNetworkServiceDatabaseFactory {
          */
         try {
 
-            database = this.pluginDatabaseSystem.createDatabase(ownerId, networkIntraUserId.toString());
+            database = this.pluginDatabaseSystem.createDatabase(ownerId, IntraUserNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
         }
         catch (CantCreateDatabaseException cantCreateDatabaseException){

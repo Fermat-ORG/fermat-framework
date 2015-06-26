@@ -34,25 +34,25 @@ public class OutgoingExtraUserTransactionProcessorAgent implements DealsWithBitc
     /**
      * DealsWithBitcoinWallet Interface member variables.
      */
-    BitcoinWalletManager bitcoinWalletManager;
+    private BitcoinWalletManager bitcoinWalletManager;
 
     /**
      * DealsWithCryptoVault Interface member variables.
      */
-    CryptoVaultManager cryptoVaultManager;
+    private CryptoVaultManager cryptoVaultManager;
 
     /**
      * DealsWithEvents Interface member variables.
      */
-    ErrorManager errorManager;
+    private ErrorManager errorManager;
 
 
     /**
      * TransactionAgent Member Variables.
      */
-    Thread agentThread;
-    TransactionProcessorAgent transactionProcessorAgent;
-    OutgoingExtraUserDao dao;
+    private Thread agentThread;
+    private TransactionProcessorAgent transactionProcessorAgent;
+    private OutgoingExtraUserDao dao;
 
 
 
@@ -101,7 +101,7 @@ public class OutgoingExtraUserTransactionProcessorAgent implements DealsWithBitc
             throw new CantStartAgentException();
         }
 
-        this.agentThread = new Thread(new TransactionProcessorAgent());
+        this.agentThread = new Thread(this.transactionProcessorAgent);
         this.agentThread.start();
 
     }
@@ -193,6 +193,8 @@ public class OutgoingExtraUserTransactionProcessorAgent implements DealsWithBitc
             BitcoinWallet bitcoinWallet = null;
 
             UUID temporalId = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
+
+
             try {
                 bitcoinWallet = this.bitcoinWalletManager.loadWallet(temporalId);
             } catch (CantLoadWalletException e) {
