@@ -16,13 +16,10 @@ import android.widget.TextView;
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.DatabaseTool;
+import com.bitdubai.fermat_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -63,7 +60,6 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-/*
         try {
             ToolManager toolManager = platform.getToolManager();
             try {
@@ -76,8 +72,6 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
             showMessage("Unexpected error get Transactions - " + ex.getMessage());
             ex.printStackTrace();
         }
-
-        */
     }
 
     @Override
@@ -86,7 +80,7 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_database_tools, container, false);
 
         try {
-            //developerDatabaseTableList = databaseTools.getTableListFromDatabase(developerDatabase);
+            developerDatabaseTableList = databaseTools.getTableListFromDatabase(developerDatabase);
         } catch (Exception e) {
             System.out.println("***********************hasta la vaina, baby");
         }
@@ -96,14 +90,7 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
             final ListView listView = (ListView) rootView.findViewById(R.id.lista1);
 
             TextView labelDatabase = (TextView) rootView.findViewById(R.id.labelDatabase);
-            labelDatabase.setText("Click on a Table");
-
-            developerDatabaseTableList = new ArrayList<>();
-
-            developerDatabaseTableList.add(new DeveloperDatabaseTableTest("incoming_crypto_transaction", null));
-            developerDatabaseTableList.add(new DeveloperDatabaseTableTest("outgoing_crypto_transaction", null));
-            developerDatabaseTableList.add(new DeveloperDatabaseTableTest("crypto_transaction", null));
-            developerDatabaseTableList.add(new DeveloperDatabaseTableTest("wallet_crypto_address", null));
+            labelDatabase.setText(developerDatabase.getName()+" - Tables List");
 
             final List<DeveloperDatabaseTable> developerDatabaseTableList2 = developerDatabaseTableList;
 
@@ -134,6 +121,8 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
 
                             FT.replace(R.id.hola, databaseToolsDatabaseTableRecordListFragment);
 
+                            FT.addToBackStack(null);
+
                             FT.commit();
                         }
                     }
@@ -143,30 +132,10 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
 
             listView.setAdapter(adapter);
         } catch (Exception e) {
-            showMessage("DatabaseTools Fragment onCreateView Exception - " + e.getMessage());
+            showMessage("DatabaseTools Database Table List Fragment onCreateView Exception - " + e.getMessage());
             e.printStackTrace();
         }
         return rootView;
-    }
-
-    public class DeveloperDatabaseTableTest implements DeveloperDatabaseTable {
-        String name;
-        List<String> fieldsNames;
-
-        DeveloperDatabaseTableTest(String name, List<String> fieldsNames) {
-            this.name = name;
-            this.fieldsNames = fieldsNames;
-        }
-
-        @Override
-        public String getName() {
-            return name;
-        }
-
-        @Override
-        public List<String> getFieldNames() {
-            return fieldsNames;
-        }
     }
 
     //show alert

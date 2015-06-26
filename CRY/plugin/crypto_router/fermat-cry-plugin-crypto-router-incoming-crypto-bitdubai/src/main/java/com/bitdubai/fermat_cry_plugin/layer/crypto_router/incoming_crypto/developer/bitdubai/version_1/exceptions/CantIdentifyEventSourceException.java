@@ -3,9 +3,9 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.devel
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by ciencias on 3/30/15.
+ * Created by eze on 2015.06.26..
  */
-public class CantStartServiceException extends FermatException {
+public class CantIdentifyEventSourceException extends FermatException{
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -14,7 +14,7 @@ public class CantStartServiceException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantStartServiceException(String message, Exception cause, String context, String possibleReason) {
+    public CantIdentifyEventSourceException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }
