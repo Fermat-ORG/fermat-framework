@@ -15,4 +15,5 @@ public interface LogManagerForDevelopers {
 
     public void changeLoggingLevel(LogLevel newLoggingLevel);
 
+    public void Log(String message);
 }
