@@ -48,13 +48,15 @@ public class SpecialistSelector implements DealsWithActorAddressBook {
         try {
             actorsRegistry = this.actorAddressBook.getActorAddressBookRegistry();
         } catch (CantGetActorAddressBookRegistryException e) {
-            //TODO: Manage Exception
-            //e.printStackTrace();
+            // This exception will be managed by the relay agent
+            throw new CantSelectSpecialistException("Can't get actor address book registry",e,"","");
         }
+
+        ActorAddressBookRecord actor = null;
 
         if (actorsRegistry != null) {
             try {
-                ActorAddressBookRecord actor = actorsRegistry.getActorAddressBookByCryptoAddress(cryptoAddress);
+                actor = actorsRegistry.getActorAddressBookByCryptoAddress(cryptoAddress);
                 switch (actor.getActorType()) {
                     case DEVICE_USER:
                         return Specialist.DEVICE_USER_SPECIALIST;
@@ -64,14 +66,14 @@ public class SpecialistSelector implements DealsWithActorAddressBook {
                         return Specialist.EXTRA_USER_SPECIALIST;
                 }
             } catch (CantGetActorAddressBook cantGetActorAddressBook) {
-                //TODO: Manage Exception
-                cantGetActorAddressBook.printStackTrace();
+                // This exception will be managed by the relay agent
+                throw new CantSelectSpecialistException("Can't get actor address from registry",cantGetActorAddressBook,"CryptoAddress: "+ cryptoAddress.getAddress(),"Address not stored");
             }
         }
 
 
         // Here we have a serious problem
-        throw new CantSelectSpecialistException();
+        throw new CantSelectSpecialistException("NO SPECIALIST FOUND",null,"Actor: " + actor.getActorType() + " with code " + actor.getActorType().getCode(),"Actor not considered in switch statement");
 
     }
 }
