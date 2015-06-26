@@ -11,11 +11,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.DatabaseTool;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform;
 
@@ -110,6 +110,8 @@ public class DatabaseToolsFragment extends Fragment {
 
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    TextView labelDatabase = (TextView) rootView.findViewById(R.id.labelDatabase);
+                    labelDatabase.setVisibility(View.GONE);
                     String item = (String) listView.getItemAtPosition(position);
 
                     DatabaseToolsDatabaseListFragment databaseToolsDatabaseListFragment = new DatabaseToolsDatabaseListFragment ();
