@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.dev
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.BitcoinTransaction;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionState;
@@ -100,15 +101,15 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
 
     }
 
-    public List<TransactionWrapper> getNewTransactions() throws CantLoadTableToMemory {
+    public List<TransactionWrapper> getNewTransactions() throws CantLoadTableToMemory, InvalidParameterException {
         return getAllInState(TransactionStatus.NEW);
     }
 
-    public List<TransactionWrapper> getPersistedInWalletTransactions() throws CantLoadTableToMemory {
+    public List<TransactionWrapper> getPersistedInWalletTransactions() throws CantLoadTableToMemory, InvalidParameterException {
         return getAllInState(TransactionStatus.PERSISTED_IN_WALLET);
     }
 
-    public List<TransactionWrapper> getSentToCryptoVaultTransactions() throws CantLoadTableToMemory {
+    public List<TransactionWrapper> getSentToCryptoVaultTransactions() throws CantLoadTableToMemory, InvalidParameterException {
         return getAllInState(TransactionStatus.SENT_TO_CRYPTO_VOULT);
     }
 
@@ -172,7 +173,7 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
         return records.get(0);
     }
 
-    private List<TransactionWrapper> getAllInState(TransactionStatus transactionState) throws CantLoadTableToMemory {
+    private List<TransactionWrapper> getAllInState(TransactionStatus transactionState) throws CantLoadTableToMemory, InvalidParameterException {
 
         DatabaseTable transactionTable = this.database.getTable(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_NAME);
         List<DatabaseTableRecord> records;
@@ -186,9 +187,10 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
 
     }
 
-    private TransactionWrapper convertToBT(DatabaseTableRecord record) {
+    private TransactionWrapper convertToBT(DatabaseTableRecord record) throws InvalidParameterException {
         TransactionWrapper bitcoinTransaction = new TransactionWrapper();
 
+        UUID walletId = record.getUUIDValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_WALLET_ID_TO_DEBIT_COLUMN_NAME);
         UUID transactionId = record.getUUIDValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_ID_COLUMN_NAME);
         String transactionHash = record.getStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_HASH_COLUMN_NAME);
         CryptoAddress addressFrom = new CryptoAddress(
@@ -201,10 +203,11 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
         );
         long amount = record.getLongValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_CRYPTO_AMOUNT_COLUMN_NAME);
         TransactionType type = TransactionType.DEBIT;
-        TransactionState state = null;
+        TransactionState state = TransactionState.getByCode(record.getStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_STATUS_COLUMN_NAME));
         long timestamp = record.getLongValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TIMESTAMP_COLUMN_NAME);
         String memo = "";
 
+        bitcoinTransaction.setWalletId(walletId);
         bitcoinTransaction.setTransactionId(transactionId);
         bitcoinTransaction.setTramsactionHash(transactionHash);
         bitcoinTransaction.setAddressFrom(addressFrom);
@@ -230,7 +233,7 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
     }
 
     // Apply convertToBT to all the elements in a list
-    private List<TransactionWrapper> mapConvertToBT(List<DatabaseTableRecord> transactions){
+    private List<TransactionWrapper> mapConvertToBT(List<DatabaseTableRecord> transactions) throws InvalidParameterException {
         List<TransactionWrapper> bitcoinTransactionList = new ArrayList<>();
 
         for(DatabaseTableRecord record : transactions)
