@@ -11,13 +11,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.DatabaseTool;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform;
 
@@ -33,19 +30,30 @@ import java.util.List;
  *
  * @version 1.0
  */
-public class DatabaseToolsDatabaseListFragment extends Fragment {
+public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
 
     private static final String ARG_POSITION = "position";
     View rootView;
 
     private DatabaseTool databaseTools;
 
-    List<DeveloperDatabase> developerDatabaseList;
+    private DeveloperDatabase developerDatabase;
+    private DeveloperDatabaseTable developerDatabaseTable;
+
+    public void setDeveloperDatabase(DeveloperDatabase developerDatabase) {
+        this.developerDatabase = developerDatabase;
+    }
+
+    public void setDeveloperDatabaseTable(DeveloperDatabaseTable developerDatabaseTable) {
+        this.developerDatabaseTable = developerDatabaseTable;
+    }
+
+    List<DeveloperDatabaseTable> developerDatabaseTableList;
 
     private static Platform platform = new Platform();
 
-    public static DatabaseToolsDatabaseListFragment newInstance(int position) {
-        DatabaseToolsDatabaseListFragment f = new DatabaseToolsDatabaseListFragment();
+    public static DatabaseToolsDatabaseTableRecordListFragment newInstance(int position) {
+        DatabaseToolsDatabaseTableRecordListFragment f = new DatabaseToolsDatabaseTableRecordListFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -79,43 +87,30 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_database_tools, container, false);
 
         try {
-            String item = getArguments().getString("resource");
-            String name = item.split(" - ")[0];
-            String type = item.split(" - ")[1];
-            if (type.equals("Addon")) {
-                Addons addon = Addons.getByKey(name);
-                //this.developerDatabaseList = databaseTools.getDatabaseListFromAddon(addon);
-            } else if (type.equals("Plugin")) {
-                Plugins plugin = Plugins.getByKey(name);
-                //this.developerDatabaseList = databaseTools.getDatabaseListFromPlugin(plugin);
-            }
-        } catch (InvalidParameterException invalidParameterException) {
-            System.out.println("******************* estas hasta la vaina");
-            showMessage(invalidParameterException.getMessage());
+            //developerDatabaseTableList = databaseTools.getTableListFromDatabase(developerDatabase);
+        } catch (Exception e) {
+            System.out.println("***********************hasta la vaina, baby");
         }
 
         try {
-
             // Get ListView object from xml
             final ListView listView = (ListView) rootView.findViewById(R.id.lista1);
 
-            TextView labelDatabase = (TextView) rootView.findViewById(R.id.labelDatabase);
-            labelDatabase.setText("Click on a Database");
 
-            List<DeveloperDatabase> developerDatabaseList = new ArrayList<>();
+            developerDatabaseTableList = new ArrayList<>();
 
-            developerDatabaseList.add(new DeveloperDatabaseTest("wallet_resources", "1"));
-            developerDatabaseList.add(new DeveloperDatabaseTest("wallet_address_book", "2"));
-            developerDatabaseList.add(new DeveloperDatabaseTest("hola_como_estas", "3"));
-            developerDatabaseList.add(new DeveloperDatabaseTest("rapido_y_furioso", "4"));
+            developerDatabaseTableList.add(new DeveloperDatabaseTableTest("incoming_crypto_transaction", null));
+            developerDatabaseTableList.add(new DeveloperDatabaseTableTest("outgoing_crypto_transaction", null));
+            developerDatabaseTableList.add(new DeveloperDatabaseTableTest("crypto_transaction", null));
+            developerDatabaseTableList.add(new DeveloperDatabaseTableTest("wallet_crypto_address", null));
 
-            final List<DeveloperDatabase> developerDatabaseList2 = developerDatabaseList;
+            final List<DeveloperDatabaseTable> developerDatabaseTableList2 = developerDatabaseTableList;
 
             String[] availableResources;
-            if (developerDatabaseList.size() > 0) {
-                availableResources = new String[developerDatabaseList.size()];
-                for(int i = 0; i < developerDatabaseList.size() ; i++) {
-                    availableResources[i] = developerDatabaseList.get(i).getName();
+            if (developerDatabaseTableList.size() > 0) {
+                availableResources = new String[developerDatabaseTableList.size()];
+                for(int i = 0; i < developerDatabaseTableList.size() ; i++) {
+                    availableResources[i] = developerDatabaseTableList.get(i).getName();
                 }
             } else {
                 availableResources = new String[0];
@@ -126,12 +121,12 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
 
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    String item = (String) listView.getItemAtPosition(position);
+                String item = (String) listView.getItemAtPosition(position);
 
-                    for (DeveloperDatabase devDB : developerDatabaseList2) {
-                        if (devDB.getName().equals(item)) {
-                            DatabaseToolsDatabaseTableListFragment databaseToolsDatabaseTableListFragment = new DatabaseToolsDatabaseTableListFragment();
-                            databaseToolsDatabaseTableListFragment.setDeveloperDatabase(devDB);
+                    for (DeveloperDatabaseTable devDBTable : developerDatabaseTableList2) {
+                        if (devDBTable.getName().equals(item)) {
+                            DatabaseToolsDatabaseTableRecordListFragment databaseToolsDatabaseTableListFragment = new DatabaseToolsDatabaseTableRecordListFragment();
+                            databaseToolsDatabaseTableListFragment.setDeveloperDatabase(developerDatabase);
 
                             FragmentTransaction FT = getFragmentManager().beginTransaction();
 
@@ -152,13 +147,13 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
         return rootView;
     }
 
-    public class DeveloperDatabaseTest implements DeveloperDatabase {
+    public class DeveloperDatabaseTableTest implements DeveloperDatabaseTable {
         String name;
-        String id;
+        List<String> fieldsNames;
 
-        DeveloperDatabaseTest(String name, String id) {
+        DeveloperDatabaseTableTest(String name, List<String> fieldsNames) {
             this.name = name;
-            this.id = id;
+            this.fieldsNames = fieldsNames;
         }
 
         @Override
@@ -167,8 +162,8 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
         }
 
         @Override
-        public String getId() {
-            return id;
+        public List<String> getFieldNames() {
+            return fieldsNames;
         }
     }
 
