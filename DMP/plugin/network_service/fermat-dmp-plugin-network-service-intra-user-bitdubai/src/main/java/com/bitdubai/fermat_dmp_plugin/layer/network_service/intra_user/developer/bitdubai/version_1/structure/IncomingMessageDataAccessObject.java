@@ -288,9 +288,11 @@ public class IncomingMessageDataAccessObject {
             /*
              * 1- Prepare the filters
              */
+            DatabaseTable networkIntraUserTable =  getDatabaseTable();
+
             for (String key: filters.keySet()){
 
-                DatabaseTableFilter newFilter = null; // new AndroidDataBaseFilter();
+                DatabaseTableFilter newFilter = networkIntraUserTable.getEmptyTableFilter();
                 newFilter.setType(DatabaseFilterType.EQUAL);
                 newFilter.setColumn(key);
                 newFilter.setValue((String) filters.get(key));
@@ -302,8 +304,7 @@ public class IncomingMessageDataAccessObject {
             /*
              * 2 - load the data base to memory with filters
              */
-            DatabaseTable networkIntraUserTable =  getDatabaseTable();
-            networkIntraUserTable.setFilterGroup(filtersTable, null, DatabaseFilterOperator.OR); //Verificar si es la forma correcta de usar
+            networkIntraUserTable.setFilterGroup(filtersTable, null, DatabaseFilterOperator.OR);
             networkIntraUserTable.loadToMemory();
 
             /*
