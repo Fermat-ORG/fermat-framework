@@ -7,6 +7,6 @@ import java.util.List;
  */
 public interface DealWithLogManagers {
 
-    public void setLogManagers (List<LogManagerForDevelopers> loggingManagers);
+    public void setLogManagers(List<LogManagerForDevelopers> loggingManagers);
 
 }

@@ -4,10 +4,13 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DealWithLogManagers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.developer.LogLevel;
+import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -50,7 +53,7 @@ import java.util.UUID;
 /**
  * Created by loui on 08/06/15.
  */
-public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DatabaseManagerForDevelopers, DealsWithBitcoinCryptoNetwork, DealsWithEvents, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithDeviceUsers, DealsWithPluginFileSystem, Plugin, Service {
+public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DatabaseManagerForDevelopers, DealsWithBitcoinCryptoNetwork, DealsWithEvents, DealsWithErrors, DealWithLogManagers,DealsWithPluginDatabaseSystem, DealsWithDeviceUsers, DealsWithPluginFileSystem, Plugin, Service {
 
     /**
      * BitcoinCryptoVaultPluginRoot member variables
@@ -79,6 +82,11 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
      * DealsWithErrors interface member variable
      */
     ErrorManager errorManager;
+
+    /**
+     * DealsWithLogManager interface variable
+     */
+    LogManagerForDevelopers logManagerForDevelopers;
 
     /**
      * DealsWithPluginDatabaseSystem interface member variable
@@ -207,9 +215,21 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
         this.pluginFileSystem = pluginFileSystem;
     }
 
+    /**
+     * DealsWithLogManager implementation
+     * @param loggingManagers
+     */
+    @Override
+    public void setLogManagers(List<LogManagerForDevelopers> loggingManagers) {
+        this.logManagerForDevelopers = loggingManagers.get(0);
+    }
+
+
     @Override
     public void start() throws CantStartPluginException {
-        System.out.println("Starting CryptoVault...");
+        logManagerForDevelopers.changeLoggingLevel(LogLevel.MODERATE_LOGGING);
+        logManagerForDevelopers.Log("CryptoVault starting...");
+
         /**
          * I get the userId from the deviceUserManager
          */
