@@ -56,9 +56,7 @@ public class IncomingCryptoSampleAgent implements DealsWithErrors, TransactionAg
             /**
              * I cant continue if this happens.
              */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantInitializeCryptoRegistryException);
-
-            throw new CantStartAgentException();
+            throw new CantStartAgentException("Agent failed to start",cantInitializeCryptoRegistryException,"","");
         }
 
         this.agentThread = new Thread(new MonitorAgent());

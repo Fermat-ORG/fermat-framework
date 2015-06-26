@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventSource;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantIdentifyEventSourceException;
 
 /**
  * Created by eze on 11/06/15.
@@ -25,8 +26,12 @@ public class SourceAdministrator implements DealsWithCryptoVault {
     this.cryptoVaultManager = cryptoVaultManager;
   }
 
-  public TransactionProtocolManager<CryptoTransaction> getSourceAdministrator(EventSource eventSource){
+  public TransactionProtocolManager<CryptoTransaction> getSourceAdministrator(EventSource eventSource) throws CantIdentifyEventSourceException {
         // This method will select the correct sender according to the specified source,
-        return cryptoVaultManager.getTransactionManager();
+        switch (eventSource) {
+          case CRYPTO_VAULT: return cryptoVaultManager.getTransactionManager();
+          default:
+            throw new CantIdentifyEventSourceException("I could not determine the transaction manager of this source",null,"Source: " +eventSource.name()+"with code: "+eventSource.getCode(),"Source not considered in switch statement");
+        }
   }
 }

@@ -6,9 +6,9 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWit
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventSource;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventType;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.SpecialistNotRegisteredException;
 
 import java.util.EnumSet;
-import java.util.List;
 
 /**
  * Created by eze on 12/06/15.
@@ -24,7 +24,7 @@ public class EventsLauncher implements DealsWithEvents {
      */
     private EventManager eventManager;
 
-    public void sendEvents(EnumSet<Specialist> specialists){
+    public void sendEvents(EnumSet<Specialist> specialists) throws SpecialistNotRegisteredException {
         for(Specialist specialist : specialists) {
 
             switch (specialist) {
@@ -35,12 +35,10 @@ public class EventsLauncher implements DealsWithEvents {
                     System.out.println("TTF - INCOMING CRYPTO RELAY: EVENTSLAUNCHER - EVENTS RAISED");
                     break;
                 default:
-                    //TODO: Manage this case with a proper exception
-                    break;
+                    throw new SpecialistNotRegisteredException("I could not found the event for this specialist", null,"Soecialist: " + specialist.name() +" with code: " + specialist.getCode(),"Specialist not considered in switch statement");
             }
         }
-
-    };
+    }
 
     /*
      * DealsWithEvents Interface methods implementation
