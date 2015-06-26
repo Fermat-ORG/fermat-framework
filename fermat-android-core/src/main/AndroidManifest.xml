@@ -41,6 +41,8 @@
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyDr98sVKnkeB-C26gU3Yu0HHpoVHETwdKo" />
+
+
         <activity
             android:name="com.bitdubai.android_core.app.StartActivity"
             android:icon="@drawable/fermat"

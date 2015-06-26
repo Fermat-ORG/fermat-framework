@@ -112,7 +112,7 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
      */
     public IntraUserNetworkServicePluginRoot() {
         super();
-        this.listenersAdded                       = new ArrayList<>();
+        this.listenersAdded = new ArrayList<>();
         this.intraUserNetworkServiceManagersCache = new HashMap<>();
     }
 
@@ -129,7 +129,6 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
         eventManager.addListener(eventListener);
         listenersAdded.add(eventListener);
 
-
         /*
          * Listen and handle established network service connection event
          */
@@ -145,10 +144,7 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
      * @throws CantInitializeNetworkIntraUserDataBaseException
      */
     private void initializeDb() throws CantInitializeNetworkIntraUserDataBaseException {
-
-
         try {
-
             /*
              * Open new database connection
              */
@@ -195,37 +191,50 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
      */
     @Override
     public void start() throws CantStartPluginException {
-
-        if (true)
-            return;
-
         /*
          * If all resources are inject
          */
-        if (communicationLayerManager != null &&
-                pluginDatabaseSystem  != null &&
-                    errorManager      != null &&
-                        eventManager  != null) {
-
+        if (communicationLayerManager != null && pluginDatabaseSystem != null && errorManager != null && eventManager  != null) {
             try {
-
                 /*
                  * Initialize the data base
                  */
                 initializeDb();
+            } catch (CantInitializeNetworkIntraUserDataBaseException exception) {
+                /*
+                 * We are going to throw a CantStartPluginException which is inherited from FermatException
+                 * We need to setup a context and a possible cause of execution for this exception so that the errorManager can build a good log
+                 */
 
+                /*
+                 * The StringBuffer is a thread safe builder for Strings, we use it to capture the values that could have triggered the exception
+                 * We use the constant CONTEXT_CONTENT_SEPARATORx to separate the different values in the context.
+                 * These values get split in the toString() method of the exception used in the ErrorManager to generate the log of the exception
+                 */
+                StringBuffer contextBuffer = new StringBuffer();
+                contextBuffer.append("Plugin ID: " + pluginId);
+                contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+                contextBuffer.append("Database Name: " + IntraUserNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+
+                String context = contextBuffer.toString();
+                String possibleCause = "The IntraUser Database triggered an unexpected problem that wasn't able to solve by itself";
+                CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
+
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INTRAUSER_NETWORK_SERVICE,UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+                throw pluginStartException;
+            }
+
+            try{
                 /*
                  * Register this network service whit the communicationLayerManager
                  */
-
-
                 communicationLayerManager.registerNetworkService(NetworkServices.INTRA_USER);
 
                 /*
                  * Obtain the public key generate for this network service at register
                  */
-                publicKey = communicationLayerManager.getNetworkServiceChannelPublicKey(NetworkServices.INTRA_USER);
-
+                // this method might work here because the asynchronous call might not be yet processed
+                // publicKey = communicationLayerManager.getNetworkServiceChannelPublicKey(NetworkServices.INTRA_USER);
 
                 /*
                  * Its all ok, set the new status
@@ -234,12 +243,9 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
 
 
             } catch (CommunicationException e) {
-
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not register whit the communicationLayerManager. Error reason: "+e.getMessage()));
                 throw new CantStartPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE);
 
-            } catch (CantInitializeNetworkIntraUserDataBaseException e) {
-                e.printStackTrace();
             }
 
         } else {
