@@ -122,20 +122,6 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
          */
         PluginTextFile walletIdsFile;
 
-        BitcoinWalletBasicWallet bitcoinWallet = new BitcoinWalletBasicWallet(this.pluginId);
-
-        bitcoinWallet.setPluginFileSystem(pluginFileSystem);
-        bitcoinWallet.setPluginDatabaseSystem(pluginDatabaseSystem);
-        bitcoinWallet.setErrorManager(errorManager);
-        try {
-            bitcoinWallet.create(UUID.fromString("25428311-deb3-4064-93b2-69093e859871"));
-        }
-        catch (CantCreateWalletException cantCreateWalletException)
-        {
-
-        }
-
-
         try {
 
             try{
@@ -319,6 +305,7 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
         BitcoinWalletBasicWallet bitcoinWallet = new BitcoinWalletBasicWallet(this.pluginId);
         bitcoinWallet.setErrorManager(this.errorManager);
         bitcoinWallet.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+        bitcoinWallet.setPluginFileSystem(this.pluginFileSystem);
 
 
         try {

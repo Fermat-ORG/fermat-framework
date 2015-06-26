@@ -88,8 +88,6 @@ public class BitcoinWalletBasicWallet implements BitcoinWallet ,DealsWithErrors,
          */
 
         this.pluginId = pluginId;
-
-
     }
 
     //metodo create para crear la base de datos
