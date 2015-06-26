@@ -407,7 +407,7 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
         /*
          * Create a new instance
          */
-        IntraUserNetworkServiceManager manager = new IntraUserNetworkServiceManager(communicationLayerManager, dataBase, errorManager);
+        IntraUserNetworkServiceManager manager = new IntraUserNetworkServiceManager(communicationLayerManager, dataBase, errorManager, eventManager);
 
         /*
          * Initialize the manager to listener the events
