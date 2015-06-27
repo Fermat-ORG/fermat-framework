@@ -331,6 +331,8 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
             case INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE_EXTRA_USER:
                 return new IncomingCryptoTransactionsWaitingTransferenceExtraUserEvent(EventType.INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE_EXTRA_USER);
 
+            case NEW_NETWORK_SERVICE_MESSAGE_RECEIVE:
+                return new NewNetworkServiceMessageReceivedEvent(EventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE);
 
         }
         return null;
