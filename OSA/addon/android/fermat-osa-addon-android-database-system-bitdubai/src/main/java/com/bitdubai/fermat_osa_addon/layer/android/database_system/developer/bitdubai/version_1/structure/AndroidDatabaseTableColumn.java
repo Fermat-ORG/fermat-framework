@@ -109,4 +109,9 @@ public class AndroidDatabaseTableColumn implements DatabaseTableColumn {
     public boolean getPrimaryKey (){
         return primaryKey;
     }
+
+    @Override
+    public String toString(){
+        return type.toString() + " " + name;
+    }
 }

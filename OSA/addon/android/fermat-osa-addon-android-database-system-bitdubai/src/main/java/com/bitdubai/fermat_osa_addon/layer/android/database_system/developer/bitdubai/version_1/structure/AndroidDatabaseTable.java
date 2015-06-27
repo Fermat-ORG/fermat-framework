@@ -710,6 +710,11 @@ public class AndroidDatabaseTable implements  DatabaseTable {
         return tableRecord1;
     }
 
+    @Override
+    public String toString(){
+        return tableName;
+    }
+
 
 }
 

@@ -83,4 +83,9 @@ public class AndroidRecord implements DatabaseRecord {
     public void setChange (boolean change){
         this.recordChange = change;
     }
+
+    @Override
+    public String toString(){
+        return recordName + "=" + recordValue;
+    }
 }

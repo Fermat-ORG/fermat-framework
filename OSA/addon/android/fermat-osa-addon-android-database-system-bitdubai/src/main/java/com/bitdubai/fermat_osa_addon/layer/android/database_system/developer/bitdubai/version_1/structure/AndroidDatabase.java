@@ -169,12 +169,19 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
 
             this.Database.setTransactionSuccessful();
             this.Database.endTransaction();
-        }catch(Exception e)
-        {
+        }catch(Exception exception) {
+
             /**
              * for error not complete transaction
              */
-            throw new DatabaseTransactionFailedException();
+            String message = DatabaseTransactionFailedException.DEFAULT_MESSAGE;
+            FermatException cause = exception instanceof FermatException ? (FermatException) exception : FermatException.wrapException(exception);
+            String context = "Dabatase Name: " + databaseName;
+            context += DatabaseTransactionFailedException.CONTEXT_CONTENT_SEPARATOR;
+            context += transaction.toString();
+            String possibleReason = "The most reasonable thing to do here is check the cause as this is a triggered exception that can come from many situations";
+
+            throw new DatabaseTransactionFailedException(message, cause, context, possibleReason);
         }
     }
 
@@ -216,9 +223,11 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
              * We will assume that if it didn't open it was because it didn't exist.
              * * *
              */
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Constructed Path: " + databasePath);
-            throw new DatabaseNotFoundException(DatabaseNotFoundException.DEFAULT_MESSAGE, FermatException.wrapException(exception),contextBuffer.toString(), "The Database Could Not Be Found");
+            String message = DatabaseNotFoundException.DEFAULT_MESSAGE;
+            FermatException cause = FermatException.wrapException(exception);
+            String context = "Database Constructed Path: " + databasePath;
+            String possibleReason = "Check if the constructed path is valid";
+            throw new DatabaseNotFoundException(message, cause, context, possibleReason);
             //TODO: NATALIA; Revisa si devuelve la misma exception cuando la base de datos no existe que cuando simplement no la puede abrir por otra razon. Y avisame el resultado de la investigacion esta.
         }
 
