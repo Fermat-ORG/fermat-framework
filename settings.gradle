@@ -1,4 +1,4 @@
-include ':fermat-android-core', ':pip:android', ':pip:android:developer', ':pip:android:developer:fermat-pip-android-developer-bitdubai', ':pip'
+include ':fermat-android-core', ':pip:android', ':pip:android:developer', ':pip:android:developer:fermat-pip-android-developer-bitdubai'
 
 include ':fermat-core'
 include ':fermat-api'
@@ -277,7 +277,3 @@ project(':fermat-dmp-android-sub-app-wallet-publisher-bitdubai').projectDir = ne
 
 include ':fermat-dmp-android-sub-app-shop-manager-bitdubai'
 project(':fermat-dmp-android-sub-app-shop-manager-bitdubai').projectDir = new File('DMP/android/sub_app/fermat-dmp-android-sub-app-shop-manager-bitdubai')
-include 'fermat-cry-api'
-include 'pip:android:developer:fermat-pip-android-developer-bitdubai'
-findProject(':pip:android:developer:fermat-pip-android-developer-bitdubai')?.name = 'fermat-pip-android-developer-bitdubai'
-
