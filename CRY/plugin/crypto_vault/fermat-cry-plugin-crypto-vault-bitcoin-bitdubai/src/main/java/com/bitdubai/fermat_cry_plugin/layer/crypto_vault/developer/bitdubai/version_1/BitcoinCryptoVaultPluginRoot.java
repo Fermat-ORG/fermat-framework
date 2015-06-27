@@ -56,7 +56,7 @@ import java.util.UUID;
 /**
  * Created by loui on 08/06/15.
  */
-public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DatabaseManagerForDevelopers, DealsWithBitcoinCryptoNetwork, DealsWithEvents, DealsWithErrors, DealWithLogManagers,DealsWithPluginDatabaseSystem, DealsWithDeviceUsers, DealsWithPluginFileSystem, Plugin, Service {
+public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DatabaseManagerForDevelopers, DealsWithBitcoinCryptoNetwork, DealsWithEvents, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithDeviceUsers, DealsWithPluginFileSystem, Plugin, Service {
 
     /**
      * BitcoinCryptoVaultPluginRoot member variables
@@ -218,22 +218,14 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
         this.pluginFileSystem = pluginFileSystem;
     }
 
-    /**
-     * DealsWithLogManager
-     * @param logManagerForDevelopers
-     */
-    @Override
-    public void setLogManagers(LogManagerForDevelopers logManagerForDevelopers) {
-        this.logManagerForDevelopers = logManagerForDevelopers;
-    }
 
     @Override
     public void start() throws CantStartPluginException {
         /**
          * Log manager implementation
          */
-        logManagerForDevelopers.changeLoggingLevel(LogLevel.MODERATE_LOGGING);
-        logManagerForDevelopers.Log("CryptoVault starting...");
+        System.out.println("CryptoVault Starting...");
+
 
         /**
          * I get the userId from the deviceUserManager

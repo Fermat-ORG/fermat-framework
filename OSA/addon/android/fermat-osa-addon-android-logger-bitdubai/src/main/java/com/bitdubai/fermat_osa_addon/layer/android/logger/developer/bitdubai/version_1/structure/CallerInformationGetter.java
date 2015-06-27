@@ -33,7 +33,7 @@ class CallerInformationGetter {
         StackTraceElement[] stacktrace = Thread.currentThread().getStackTrace();
         StackTraceElement e = stacktrace[4];//maybe this number needs to be corrected
 
-        list.add("Class name:" + e.toString());
+        list.add("Class name:" + e.getClassName());
         try {
              Class c = Class.forName(e.getClassName());
             list.add("Package: " + c.getPackage().getName());
@@ -43,7 +43,8 @@ class CallerInformationGetter {
              */
         }
         list.add("File name: " + e.getFileName());
-        list.add(e.toString());
+
+        list.add("Method:" + e.toString());
         return list;
     }
 }
