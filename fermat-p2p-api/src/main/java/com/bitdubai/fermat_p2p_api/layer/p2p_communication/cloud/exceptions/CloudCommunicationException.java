@@ -19,22 +19,4 @@ public class CloudCommunicationException extends CommunicationException {
 		super(message, cause, context, possibleReason);
 	}
 
-	public CloudCommunicationException(final String message, final Exception cause) {
-		this(message, cause, "", "");
-	}
-
-	public CloudCommunicationException(final String message) {
-		this(message, null);
-	}
-
-	public CloudCommunicationException(final Exception exception) {
-		this(exception.getMessage());
-		setStackTrace(exception.getStackTrace());
-	}
-
-	public CloudCommunicationException() {
-		this(DEFAULT_MESSAGE);
-	}
-
-
 }

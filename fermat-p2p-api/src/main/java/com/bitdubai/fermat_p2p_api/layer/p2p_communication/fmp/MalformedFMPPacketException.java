@@ -12,16 +12,5 @@ public class MalformedFMPPacketException extends FMPException {
 	public MalformedFMPPacketException(final String message, final Exception cause, final String context, final String possibleReason){
 		super(message, cause, context, possibleReason);
 	}
-	public MalformedFMPPacketException(final String message, final Exception cause){
-		this(message, cause, "", "");
-	}
-
-	public MalformedFMPPacketException(final String message){
-		this(message, null);
-	}
-
-	public MalformedFMPPacketException(){
-		this(DEFAULT_MESSAGE);
-	}
 	
 }

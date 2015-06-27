@@ -23,7 +23,7 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.Asymmectri
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.exceptions.IncorrectFMPPacketDestinationException;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.exceptions.RegisteringAddressHasNotRequestedConnectionException;
-import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.exceptions.WrongFMPPacketEncryptionException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.WrongFMPPacketEncryptionException;
 
 
 public class CloudNetworkServiceManager extends CloudFMPConnectionManager {
@@ -84,7 +84,7 @@ public class CloudNetworkServiceManager extends CloudFMPConnectionManager {
 		if(unregisteredConnections.containsKey(packet.getSender()))
 			registerConnection(packet);
 		else
-			throw new RegisteringAddressHasNotRequestedConnectionException(packet.getSender());
+			throw constructRegisteringAddressHasNotRequestedConnectionException(packet);
 	}
 
 	@Override
@@ -125,8 +125,7 @@ public class CloudNetworkServiceManager extends CloudFMPConnectionManager {
 		try{
 			decryptedMessage = AsymmectricCryptography.decryptMessagePrivateKey(packet.getMessage(), eccPrivateKey);
 		}catch(Exception ex){
-			FMPException exception = new WrongFMPPacketEncryptionException(ex.getMessage());
-			denyConnectionRequest(packet, exception.getMessage()); 
+			denyConnectionRequest(packet, ex.getMessage());
 			return;
 		}
 		if(decryptedMessage.equals("VPN"))
@@ -142,14 +141,13 @@ public class CloudNetworkServiceManager extends CloudFMPConnectionManager {
 	
 	private void requestUnregisteredConnection(final FMPPacket packet) throws FMPException {
 		if(!packet.getDestination().equals(getPublicKey()))
-			throw new IncorrectFMPPacketDestinationException();
+			throw new IncorrectFMPPacketDestinationException(IncorrectFMPPacketDestinationException.DEFAULT_MESSAGE, null, "Packet Data: " + packet.toString(), "The Destination of the Packet is not the server");
 		
 		NetworkServices networkService;
 		try{
 			networkService = NetworkServices.valueOf(AsymmectricCryptography.decryptMessagePrivateKey(packet.getMessage(), eccPrivateKey));
 		} catch(Exception ex){
-			FMPException exception = new WrongFMPPacketEncryptionException(ex.getMessage());
-			denyConnectionRequest(packet, exception.getMessage());
+			denyConnectionRequest(packet, ex.getMessage());
 			return;
 		}
 		
@@ -250,5 +248,19 @@ public class CloudNetworkServiceManager extends CloudFMPConnectionManager {
 	private void writeToConnection(final FMPPacket packet, final SelectionKey connection){
 		connection.attach(packet);
 		connection.interestOps(SelectionKey.OP_WRITE);
+	}
+
+	private RegisteringAddressHasNotRequestedConnectionException constructRegisteringAddressHasNotRequestedConnectionException(final FMPPacket packet){
+		String message = RegisteringAddressHasNotRequestedConnectionException.DEFAULT_MESSAGE;
+		String possibleReason = "This can happen whenever we receive a CONNECTION_REGISTER packet before a CONNECTION_REQUEST packet";
+		possibleReason += " even though this might be due to improper client message flow, it can also be a threading problem";
+		possibleReason += " as we can process a register packet for a connection that has already been registered, we need to improve this";
+
+		String context = "Packet Data: " + packet.toString();
+		context += RegisteringAddressHasNotRequestedConnectionException.CONTEXT_CONTENT_SEPARATOR;
+		context += "Is this connection already registered? " + registeredConnections.containsKey(packet.getSender());
+
+		return new RegisteringAddressHasNotRequestedConnectionException(message, null, context, possibleReason);
+
 	}
 }

@@ -136,8 +136,21 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 	public void requestConnectiontTo(NetworkServices networkServices, String remoteNetworkService) throws CantConnectToRemoteServiceException {
 		try {
 			cloudClient.getNetworkServiceClient(networkServices).requestVPNConnection(remoteNetworkService);
-		} catch (CloudCommunicationException e) {
-			throw new CantConnectToRemoteServiceException(e.getMessage());
+		} catch (CloudCommunicationException ex) {
+			String message = CantConnectToRemoteServiceException.DEFAULT_MESSAGE;
+			FermatException cause = ex;
+			StringBuffer contextBuffer = new StringBuffer();
+			contextBuffer.append("Server Address: " + serverAddress.toString());
+			contextBuffer.append(CantConnectToRemoteServiceException.CONTEXT_CONTENT_SEPARATOR);
+			contextBuffer.append("Network Service: " + networkServices.toString());
+			contextBuffer.append(CantConnectToRemoteServiceException.CONTEXT_CONTENT_SEPARATOR);
+			contextBuffer.append("Remote Service Public Key: " + remoteNetworkService);
+			StringBuffer possibleReasonBuffer = new StringBuffer();
+			possibleReasonBuffer.append("There are several reasons why this can happen: ");
+			possibleReasonBuffer.append("The Local NetworkService might not have been registered, ");
+			possibleReasonBuffer.append("The Remote NetworkService is not registered in the server");
+			possibleReasonBuffer.append(" or maybe the Server Connection is no longer active");
+			throw new CantConnectToRemoteServiceException(message, cause, contextBuffer.toString(), possibleReasonBuffer.toString());
 		}
 	}
 

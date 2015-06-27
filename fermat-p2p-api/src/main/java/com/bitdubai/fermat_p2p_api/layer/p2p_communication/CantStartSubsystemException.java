@@ -13,17 +13,5 @@ public class CantStartSubsystemException extends CommunicationException {
 	public CantStartSubsystemException(final String message, final Exception cause, final String context, final String possibleReason){
 		super(message, cause, context, possibleReason);
 	}
-	public CantStartSubsystemException(final String message, final Exception cause){
-		this(message, cause, "", "");
-	}
-
-	public CantStartSubsystemException(final String message){
-		this(message, null);
-	}
-
-	public CantStartSubsystemException(){
-		this(DEFAULT_MESSAGE);
-	}
-
 
 }
