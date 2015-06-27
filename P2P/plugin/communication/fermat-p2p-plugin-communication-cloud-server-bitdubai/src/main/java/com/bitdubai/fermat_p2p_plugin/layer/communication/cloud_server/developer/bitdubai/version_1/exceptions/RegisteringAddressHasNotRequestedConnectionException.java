@@ -16,21 +16,4 @@ public class RegisteringAddressHasNotRequestedConnectionException extends
 		super(message, cause, context, possibleReason);
 	}
 
-	public RegisteringAddressHasNotRequestedConnectionException(final String message, final Exception cause) {
-		this(message, cause, "", "");
-	}
-
-	public RegisteringAddressHasNotRequestedConnectionException(final String message) {
-		this(message, null);
-	}
-
-	public RegisteringAddressHasNotRequestedConnectionException(final Exception exception) {
-		this(exception.getMessage());
-		setStackTrace(exception.getStackTrace());
-	}
-
-	public RegisteringAddressHasNotRequestedConnectionException() {
-		this(DEFAULT_MESSAGE);
-	}
-
 }

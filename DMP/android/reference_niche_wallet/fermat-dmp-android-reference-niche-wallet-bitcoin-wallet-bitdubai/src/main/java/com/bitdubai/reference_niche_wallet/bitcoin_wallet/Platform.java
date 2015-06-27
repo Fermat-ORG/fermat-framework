@@ -33,7 +33,7 @@ public class Platform implements DealsWithErrors, DealsWithEvents, DealsWithNich
     /**
      * DealsWithToolManager Interface member variables.
      */
-    private ToolManager toolManager;
+    private static ToolManager toolManager;
 
     /**
      * Platform class member variables.

@@ -11,22 +11,4 @@ public class NetworkServiceNotRegisteredException extends CommunicationException
         super(message, cause, context, possibleReason);
     }
 
-    public NetworkServiceNotRegisteredException(final String message, final Exception cause) {
-        this(message, cause, "", "");
-    }
-
-    public NetworkServiceNotRegisteredException(final String message) {
-        this(message, null);
-    }
-
-    public NetworkServiceNotRegisteredException(final Exception exception) {
-        this(exception.getMessage());
-        setStackTrace(exception.getStackTrace());
-    }
-
-    public NetworkServiceNotRegisteredException() {
-        this(DEFAULT_MESSAGE);
-    }
-
-
 }

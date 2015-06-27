@@ -28,7 +28,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFi
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 
 
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemory;
 
@@ -59,24 +58,16 @@ public class BitcoinWalletBasicWalletDao {
      */
     ErrorManager errorManager;
 
-    /**
-     * DealsWithDatabaseSystem Interface member variables.
-     */
-    PluginDatabaseSystem pluginDatabaseSystem;
-
-
 
     /**
      * Constructor.
      */
-    public BitcoinWalletBasicWalletDao(ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem, Database database){
+    public BitcoinWalletBasicWalletDao(ErrorManager errorManager, Database database){
         /**
          * The only one who can set the pluginId is the Plugin Root.
          */
-        this.errorManager = errorManager;       ;
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
+        this.errorManager = errorManager;
         this.database = database;
-
     }
 
     /**
@@ -289,7 +280,7 @@ public class BitcoinWalletBasicWalletDao {
 
         }
 
-        List<BitcoinTransaction> bitcoinTransactionList = new ArrayList<BitcoinTransaction>();
+        List<BitcoinTransaction> bitcoinTransactionList = new ArrayList<>();
 
 
             // Read record data and create transactions list

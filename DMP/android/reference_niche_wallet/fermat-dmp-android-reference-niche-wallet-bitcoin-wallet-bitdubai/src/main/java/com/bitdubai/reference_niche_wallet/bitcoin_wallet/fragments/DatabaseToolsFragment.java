@@ -11,12 +11,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.DatabaseTool;
+import com.bitdubai.fermat_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform;
 
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ public class DatabaseToolsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-/*
+
         try {
             ToolManager toolManager = platform.getToolManager();
             try {
@@ -61,11 +62,9 @@ public class DatabaseToolsFragment extends Fragment {
                 e.printStackTrace();
             }
         } catch (Exception ex) {
-            showMessage("Unexpected error get Transactions - " + ex.getMessage());
+            showMessage("Unexpected error get tool manager - " + ex.getMessage());
             ex.printStackTrace();
         }
-
-        */
     }
 
     @Override
@@ -75,20 +74,8 @@ public class DatabaseToolsFragment extends Fragment {
             // Get ListView object from xml
             final ListView listView = (ListView) rootView.findViewById(R.id.lista1);
 
-            //List<Plugins> plugins = databaseTools.getAvailablePluginList();
-           // List<Addons> addons = databaseTools.getAvailableAddonList();
-
-            List<Plugins> plugins = new ArrayList<>();
-            List<Addons> addons = new ArrayList<>();
-
-            plugins.add(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
-            plugins.add(Plugins.BITDUBAI_BANK_NOTES_NETWORK_SERVICE);
-            plugins.add(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT);
-            plugins.add(Plugins.BITDUBAI_CLOUD_CHANNEL);
-
-            addons.add(Addons.DEVICE_USER);
-            addons.add(Addons.EXTRA_USER);
-            addons.add(Addons.INTRA_USER);
+            List<Plugins> plugins = databaseTools.getAvailablePluginList();
+            List<Addons> addons = databaseTools.getAvailableAddonList();
 
             List<String> list = new ArrayList<>();
 
@@ -110,12 +97,13 @@ public class DatabaseToolsFragment extends Fragment {
 
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    TextView labelDatabase = (TextView) rootView.findViewById(R.id.labelDatabase);
+                    labelDatabase.setVisibility(View.GONE);
                     String item = (String) listView.getItemAtPosition(position);
 
                     DatabaseToolsDatabaseListFragment databaseToolsDatabaseListFragment = new DatabaseToolsDatabaseListFragment ();
-                    Bundle args = new Bundle();
-                    args.putString("resource", item);
-                    databaseToolsDatabaseListFragment.setArguments(args);
+
+                    databaseToolsDatabaseListFragment.setResource(item);
 
                     FragmentTransaction FT = getFragmentManager().beginTransaction();
 
