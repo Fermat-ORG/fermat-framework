@@ -12,21 +12,4 @@ public class DatabaseSystemException extends OsaAndroidException {
     public DatabaseSystemException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
     }
-
-    public DatabaseSystemException(final String message, final Exception cause) {
-        this(message, cause, "", "");
-    }
-
-    public DatabaseSystemException(final String message) {
-        this(message, null);
-    }
-
-    public DatabaseSystemException(final Exception exception) {
-        this(exception.getMessage());
-        setStackTrace(exception.getStackTrace());
-    }
-
-    public DatabaseSystemException() {
-        this(DEFAULT_MESSAGE);
-    }
 }

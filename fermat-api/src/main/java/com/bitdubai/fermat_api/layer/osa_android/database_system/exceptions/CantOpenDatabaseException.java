@@ -9,18 +9,27 @@ public class CantOpenDatabaseException extends DatabaseSystemException {
 	 * 
 	 */
 	private static final long serialVersionUID = 4736497835462025622L;
-	
-	private static final String DEFAULT_MESSAGE = "CAN'T CREATE THE DATABASE: ";
-	
-	public CantOpenDatabaseException(final String message, final Exception cause){
-		super(DEFAULT_MESSAGE + message, cause);
+
+	public static final String DEFAULT_MESSAGE = "CAN'T OPEN THE DATABASE";
+
+	public CantOpenDatabaseException(final String message, final Exception cause, final String context, final String possibleReason) {
+		super(message, cause, context, possibleReason);
 	}
-	
-	public CantOpenDatabaseException(final String message){
+
+	public CantOpenDatabaseException(final String message, final Exception cause) {
+		this(message, cause, "", "");
+	}
+
+	public CantOpenDatabaseException(final String message) {
 		this(message, null);
 	}
-	
-	public CantOpenDatabaseException(){
-		this("");
+
+	public CantOpenDatabaseException(final Exception exception) {
+		this(exception.getMessage());
+		setStackTrace(exception.getStackTrace());
+	}
+
+	public CantOpenDatabaseException() {
+		this(DEFAULT_MESSAGE);
 	}
 }
