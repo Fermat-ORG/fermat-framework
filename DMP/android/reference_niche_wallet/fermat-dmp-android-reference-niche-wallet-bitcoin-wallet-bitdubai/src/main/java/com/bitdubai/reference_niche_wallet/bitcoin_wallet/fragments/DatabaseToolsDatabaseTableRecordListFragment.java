@@ -15,6 +15,8 @@ import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.DatabaseTool;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform;
@@ -36,6 +38,8 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
     View rootView;
 
     private DatabaseTool databaseTools;
+
+    private String resource;
     private DeveloperDatabase developerDatabase;
     private DeveloperDatabaseTable developerDatabaseTable;
 
@@ -74,13 +78,17 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         rootView = inflater.inflate(R.layout.fragment_database_tools, container, false);
         try {
-            developerDatabaseTableRecordList = databaseTools.getTableContent(developerDatabase, developerDatabaseTable);
-        } catch (Exception e) {
-            System.out.println("***********************hasta la vaina, baby");
-        }
+            String name = resource.split(" - ")[0];
+            String type = resource.split(" - ")[1];
+            if (type.equals("Addon")) {
+                Addons addon = Addons.getByKey(name);
+                this.developerDatabaseTableRecordList = databaseTools.getAddonTableContent(addon, developerDatabase, developerDatabaseTable);
+            } else if (type.equals("Plugin")) {
+                Plugins plugin = Plugins.getByKey(name);
+                this.developerDatabaseTableRecordList = databaseTools.getPluginTableContent(plugin, developerDatabase, developerDatabaseTable);
+            }
 
-        List<String> columnNames = developerDatabaseTable.getFieldNames();
-        try {
+            List<String> columnNames = developerDatabaseTable.getFieldNames();
             // Get ListView object from xml
             final ListView listView = (ListView) rootView.findViewById(R.id.lista1);
 
@@ -132,6 +140,10 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
         });
         //alertDialog.setIcon(R.drawable.icon);
         alertDialog.show();
+    }
+
+    public void setResource(String resource) {
+        this.resource = resource;
     }
 
     public void setDeveloperDatabase(DeveloperDatabase developerDatabase) {
