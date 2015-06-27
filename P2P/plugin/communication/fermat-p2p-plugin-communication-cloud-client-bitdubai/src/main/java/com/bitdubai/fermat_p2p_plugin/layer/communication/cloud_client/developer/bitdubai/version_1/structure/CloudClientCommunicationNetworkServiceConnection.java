@@ -107,8 +107,7 @@ public class CloudClientCommunicationNetworkServiceConnection extends CloudFMPCo
 		}catch(CloudCommunicationException ex){
 			String message = VPNInitializationException.DEFAULT_MESSAGE;
 			FermatException cause = ex;
-			String context = new String();
-			context += "VPN Address Info: " + vpnAddress.toString();
+			String context = "VPN Address Info: " + vpnAddress.toString();
 			context += VPNInitializationException.CONTEXT_CONTENT_SEPARATOR;
 			context += "VPN Public Key: " + vpnPublicKey;
 			context += VPNInitializationException.CONTEXT_CONTENT_SEPARATOR;
@@ -265,14 +264,12 @@ public class CloudClientCommunicationNetworkServiceConnection extends CloudFMPCo
 
 	private IllegalPacketSenderException constructIllegalPacketSenderException(final FMPPacket packet){
 		String message = IllegalPacketSenderException.DEFAULT_MESSAGE;
-		String context = new String();
-		context += "Server Public Key: " + serverPublicKey;
+		String context = "Server Public Key: " + serverPublicKey;
 		context += IllegalPacketSenderException.CONTEXT_CONTENT_SEPARATOR;
 		context += "Client Public Key: " + eccPublicKey;
 		context += IllegalPacketSenderException.CONTEXT_CONTENT_SEPARATOR;
 		context += "Packet Sender: " + packet.getSender();
-		String possibleReason = new String();
-		possibleReason += "This is a problem of the flow of the packets, this might be accidental or some echo loop.";
+		String possibleReason = "This is a problem of the flow of the packets, this might be accidental or some echo loop.";
 		possibleReason += "This can also be an unexpected attack from an unexpected sender.";
 		return new IllegalPacketSenderException(message, null, context, possibleReason);
 	}

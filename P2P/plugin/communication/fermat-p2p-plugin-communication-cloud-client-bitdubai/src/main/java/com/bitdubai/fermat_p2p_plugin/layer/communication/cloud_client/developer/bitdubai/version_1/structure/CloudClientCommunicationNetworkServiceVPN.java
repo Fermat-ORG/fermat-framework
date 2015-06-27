@@ -269,14 +269,12 @@ public class CloudClientCommunicationNetworkServiceVPN extends CloudFMPConnectio
 
 	private IllegalPacketSenderException constructIllegalPacketSenderException(final FMPPacket packet){
 		String message = IllegalPacketSenderException.DEFAULT_MESSAGE;
-		String context = new String();
-		context += "Server Public Key: " + vpnPublicKey;
+		String context = "Server Public Key: " + vpnPublicKey;
 		context += IllegalPacketSenderException.CONTEXT_CONTENT_SEPARATOR;
 		context += "Client Public Key: " + eccPublicKey;
 		context += IllegalPacketSenderException.CONTEXT_CONTENT_SEPARATOR;
 		context += "Packet Sender: " + packet.getSender();
-		String possibleReason = new String();
-		possibleReason += "This is a problem of the flow of the packets, this might be accidental or some echo loop.";
+		String possibleReason = "This is a problem of the flow of the packets, this might be accidental or some echo loop.";
 		possibleReason += "This can also be an unexpected attack from an unexpected sender.";
 		return new IllegalPacketSenderException(message, null, context, possibleReason);
 	}
