@@ -16,6 +16,8 @@ import android.widget.TextView;
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.DatabaseTool;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform;
@@ -36,13 +38,11 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
     private static final String ARG_POSITION = "position";
     View rootView;
 
+    private String resource;
+
     private DatabaseTool databaseTools;
 
     private DeveloperDatabase developerDatabase;
-
-    public void setDeveloperDatabase(DeveloperDatabase developerDatabase) {
-        this.developerDatabase = developerDatabase;
-    }
 
     List<DeveloperDatabaseTable> developerDatabaseTableList;
 
@@ -80,12 +80,16 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_database_tools, container, false);
 
         try {
-            developerDatabaseTableList = databaseTools.getTableListFromDatabase(developerDatabase);
-        } catch (Exception e) {
-            System.out.println("***********************hasta la vaina, baby");
-        }
+            String name = resource.split(" - ")[0];
+            String type = resource.split(" - ")[1];
+            if (type.equals("Addon")) {
+                Addons addon = Addons.getByKey(name);
+                this.developerDatabaseTableList = databaseTools.getAddonTableListFromDatabase(addon, developerDatabase);
+            } else if (type.equals("Plugin")) {
+                Plugins plugin = Plugins.getByKey(name);
+                this.developerDatabaseTableList = databaseTools.getPluginTableListFromDatabase(plugin, developerDatabase);
+            }
 
-        try {
             // Get ListView object from xml
             final ListView listView = (ListView) rootView.findViewById(R.id.lista1);
 
@@ -111,21 +115,22 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String item = (String) listView.getItemAtPosition(position);
 
-                    for (DeveloperDatabaseTable devDBTable : developerDatabaseTableList2) {
-                        if (devDBTable.getName().equals(item)) {
-                            DatabaseToolsDatabaseTableRecordListFragment databaseToolsDatabaseTableRecordListFragment = new DatabaseToolsDatabaseTableRecordListFragment();
-                            databaseToolsDatabaseTableRecordListFragment.setDeveloperDatabase(developerDatabase);
-                            databaseToolsDatabaseTableRecordListFragment.setDeveloperDatabaseTable(devDBTable);
+                for (DeveloperDatabaseTable devDBTable : developerDatabaseTableList2) {
+                    if (devDBTable.getName().equals(item)) {
+                        DatabaseToolsDatabaseTableRecordListFragment databaseToolsDatabaseTableRecordListFragment = new DatabaseToolsDatabaseTableRecordListFragment();
+                        databaseToolsDatabaseTableRecordListFragment.setResource(resource);
+                        databaseToolsDatabaseTableRecordListFragment.setDeveloperDatabase(developerDatabase);
+                        databaseToolsDatabaseTableRecordListFragment.setDeveloperDatabaseTable(devDBTable);
 
-                            FragmentTransaction FT = getFragmentManager().beginTransaction();
+                        FragmentTransaction FT = getFragmentManager().beginTransaction();
 
-                            FT.replace(R.id.hola, databaseToolsDatabaseTableRecordListFragment);
+                        FT.replace(R.id.hola, databaseToolsDatabaseTableRecordListFragment);
 
-                            FT.addToBackStack(null);
+                        FT.addToBackStack(null);
 
-                            FT.commit();
-                        }
+                        FT.commit();
                     }
+                }
 
                 }
             });
@@ -150,5 +155,13 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
         });
         //alertDialog.setIcon(R.drawable.icon);
         alertDialog.show();
+    }
+
+    public void setDeveloperDatabase(DeveloperDatabase developerDatabase) {
+        this.developerDatabase = developerDatabase;
+    }
+
+    public void setResource(String resource) {
+        this.resource = resource;
     }
 }
