@@ -69,7 +69,7 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
 
     List<Wallet> userWallets;
 
-    private Map<UUID, UUID> walletIds =  new HashMap();
+    private Map<UUID, UUID> walletIds =  new HashMap<>();
 
     /**
      * DealsWithBitcoinWallet Interface member variables.
@@ -314,6 +314,9 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
             try {
                 walletIdsFile.loadFromMedia();
 
+                /*
+                 * TODO: This can't stay in a file. A user id will be assign to many walletIds
+                 */
                 /**
                  * Now I read the content of the file and place it in memory.
                  */
@@ -321,7 +324,7 @@ public class WalletManagerModulePluginRoot implements Service, WalletManager, De
 
                 for (String stringWalletId : stringWalletIds ) {
 
-                    if(stringWalletId != "")
+                    if(!stringWalletId.equals(""))
                     {
                         /**
                          * Each record in the file has to values: the first is the external id of the wallet, and the
