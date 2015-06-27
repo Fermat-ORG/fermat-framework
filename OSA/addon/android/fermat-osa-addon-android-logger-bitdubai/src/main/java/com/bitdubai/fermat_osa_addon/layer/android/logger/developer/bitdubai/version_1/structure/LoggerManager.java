@@ -1,17 +1,20 @@
 package com.bitdubai.fermat_osa_addon.layer.android.logger.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogLevel;
+import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by rodrigo on 2015.06.25..
  */
-public class LoggerManager {
+public class LoggerManager implements LogManagerForDevelopers {
     LogLevel logLevel;
     StringBuilder outputMessage;
     CallerInformationGetter callerInformationGetter;
     String message;
+    UUID pluginId;
 
     /**
      * Constructor
@@ -92,4 +95,31 @@ public class LoggerManager {
         outputMessage.append(System.lineSeparator());
     }
 
+    /**
+     * LogManagerForDevelopers interface implementation
+     * @return the actual loggin level
+     */
+    @Override
+    public LogLevel getLoggingLevel() {
+        return this.logLevel;
+    }
+
+    /**
+     * LogManagerForDevelopers interface implementation
+     * @param newLoggingLevel
+     */
+    @Override
+    public void changeLoggingLevel(LogLevel newLoggingLevel) {
+        this.logLevel = newLoggingLevel;
+
+    }
+
+    /**
+     * LogManagerForDevelopers interface implementation
+     * @param pluginId
+     */
+    @Override
+    public void setPluginId(UUID pluginId) {
+        this.pluginId = pluginId;
+    }
 }
