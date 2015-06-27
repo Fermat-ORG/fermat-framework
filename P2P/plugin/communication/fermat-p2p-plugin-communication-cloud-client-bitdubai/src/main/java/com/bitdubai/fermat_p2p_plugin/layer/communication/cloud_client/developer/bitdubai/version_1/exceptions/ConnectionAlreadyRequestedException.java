@@ -16,21 +16,4 @@ public class ConnectionAlreadyRequestedException extends
 		super(message, cause, context, possibleReason);
 	}
 
-	public ConnectionAlreadyRequestedException(final String message, final Exception cause) {
-		this(message, cause, "", "");
-	}
-
-	public ConnectionAlreadyRequestedException(final String message) {
-		this(message, null);
-	}
-
-	public ConnectionAlreadyRequestedException(final Exception exception) {
-		this(exception.getMessage());
-		setStackTrace(exception.getStackTrace());
-	}
-
-	public ConnectionAlreadyRequestedException() {
-		this(DEFAULT_MESSAGE);
-	}
-
 }

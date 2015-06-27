@@ -19,6 +19,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.DatabaseTool;
+import com.bitdubai.fermat_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform;
 
 import java.util.ArrayList;
@@ -56,7 +57,6 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-/*
         try {
             ToolManager toolManager = platform.getToolManager();
             try {
@@ -69,25 +69,23 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
             showMessage("Unexpected error get Transactions - " + ex.getMessage());
             ex.printStackTrace();
         }
-
-        */
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         rootView = inflater.inflate(R.layout.fragment_database_tools, container, false);
-
+        String item = null;
         try {
-            String item = getArguments().getString("resource");
+            item = getArguments().getString("resource");
             String name = item.split(" - ")[0];
             String type = item.split(" - ")[1];
             if (type.equals("Addon")) {
                 Addons addon = Addons.getByKey(name);
-                //this.developerDatabaseList = databaseTools.getDatabaseListFromAddon(addon);
+                this.developerDatabaseList = databaseTools.getDatabaseListFromAddon(addon);
             } else if (type.equals("Plugin")) {
                 Plugins plugin = Plugins.getByKey(name);
-                //this.developerDatabaseList = databaseTools.getDatabaseListFromPlugin(plugin);
+                this.developerDatabaseList = databaseTools.getDatabaseListFromPlugin(plugin);
             }
         } catch (InvalidParameterException invalidParameterException) {
             System.out.println("******************* estas hasta la vaina");
@@ -100,14 +98,7 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
             final ListView listView = (ListView) rootView.findViewById(R.id.lista1);
 
             TextView labelDatabase = (TextView) rootView.findViewById(R.id.labelDatabase);
-            labelDatabase.setText("Click on a Database");
-
-            List<DeveloperDatabase> developerDatabaseList = new ArrayList<>();
-
-            developerDatabaseList.add(new DeveloperDatabaseTest("wallet_resources", "1"));
-            developerDatabaseList.add(new DeveloperDatabaseTest("wallet_address_book", "2"));
-            developerDatabaseList.add(new DeveloperDatabaseTest("hola_como_estas", "3"));
-            developerDatabaseList.add(new DeveloperDatabaseTest("rapido_y_furioso", "4"));
+            labelDatabase.setText(item+" - Databases List");
 
             final List<DeveloperDatabase> developerDatabaseList2 = developerDatabaseList;
 
@@ -137,6 +128,8 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
 
                             FT.replace(R.id.hola, databaseToolsDatabaseTableListFragment);
 
+                            FT.addToBackStack(null);
+
                             FT.commit();
                         }
                     }
@@ -146,30 +139,10 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
 
             listView.setAdapter(adapter);
         } catch (Exception e) {
-            showMessage("DatabaseTools Fragment onCreateView Exception - " + e.getMessage());
+            showMessage("DatabaseTools Database List onCreateView Exception - " + e.getMessage());
             e.printStackTrace();
         }
         return rootView;
-    }
-
-    public class DeveloperDatabaseTest implements DeveloperDatabase {
-        String name;
-        String id;
-
-        DeveloperDatabaseTest(String name, String id) {
-            this.name = name;
-            this.id = id;
-        }
-
-        @Override
-        public String getName() {
-            return name;
-        }
-
-        @Override
-        public String getId() {
-            return id;
-        }
     }
 
     //show alert

@@ -7,15 +7,10 @@ public class CommunicationChannelNotImplementedException extends CommunicationEx
 	
 	private static final long serialVersionUID = 4150733208425549872L;
 
-	private static final String DEFAULT_MESSAGE = "COMMUNICATION CHANNEL NOT IMPLEMENTED";
+	public static final String DEFAULT_MESSAGE = "COMMUNICATION CHANNEL NOT IMPLEMENTED";
 
-	public CommunicationChannelNotImplementedException(final String message){
-		super(DEFAULT_MESSAGE + ": " + message);
+	public CommunicationChannelNotImplementedException(final String message, final Exception cause, final String context, final String possibleReason) {
+		super(message, cause, context, possibleReason);
 	}
-
-	public CommunicationChannelNotImplementedException(){
-		this("");
-	}
-
 
 }

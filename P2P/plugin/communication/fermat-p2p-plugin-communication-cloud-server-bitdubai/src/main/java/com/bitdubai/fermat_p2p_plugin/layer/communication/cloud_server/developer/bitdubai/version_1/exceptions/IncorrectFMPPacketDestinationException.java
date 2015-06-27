@@ -15,21 +15,4 @@ public class IncorrectFMPPacketDestinationException extends FMPException {
 		super(message, cause, context, possibleReason);
 	}
 
-	public IncorrectFMPPacketDestinationException(final String message, final Exception cause) {
-		this(message, cause, "", "");
-	}
-
-	public IncorrectFMPPacketDestinationException(final String message) {
-		this(message, null);
-	}
-
-	public IncorrectFMPPacketDestinationException(final Exception exception) {
-		this(exception.getMessage());
-		setStackTrace(exception.getStackTrace());
-	}
-
-	public IncorrectFMPPacketDestinationException() {
-		this(DEFAULT_MESSAGE);
-	}
-
 }

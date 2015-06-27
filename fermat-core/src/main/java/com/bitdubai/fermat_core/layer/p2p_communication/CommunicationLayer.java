@@ -124,7 +124,7 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
                 return;
         }
         
-        throw new CommunicationChannelNotImplementedException();
+        throw new CommunicationChannelNotImplementedException(CommunicationChannelNotImplementedException.DEFAULT_MESSAGE, null, "Communication Channel: " + communicationChannel.toString(), "This Channel might not be working on the switch statement");
     }
 
     @Override
@@ -137,7 +137,7 @@ public class CommunicationLayer implements PlatformLayer, CommunicationLayerMana
 
         }
 
-        throw new CommunicationChannelNotImplementedException();
+        throw new CommunicationChannelNotImplementedException(CommunicationChannelNotImplementedException.DEFAULT_MESSAGE, null, "Communication Channel: " + communicationChannel.toString(), "This Channel might not be working on the switch statement");
     }
 
     @Override

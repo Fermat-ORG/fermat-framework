@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.exceptions.CloudCommunicationException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
@@ -20,7 +21,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer
 
 public class CloudServiceManager extends CloudFMPConnectionManager {
 	
-	private Map<NetworkServices, CloudNetworkServiceManager> networkServicesRegistry = new ConcurrentHashMap<NetworkServices, CloudNetworkServiceManager>();
+	private final Map<NetworkServices, CloudNetworkServiceManager> networkServicesRegistry = new ConcurrentHashMap<NetworkServices, CloudNetworkServiceManager>();
 
 	public CloudServiceManager(final CommunicationChannelAddress address, final ExecutorService executor, final ECCKeyPair keyPair) throws IllegalArgumentException{
 		super(address, executor, keyPair.getPrivateKey(), keyPair.getPublicKey(), CloudFMPConnectionManagerMode.FMP_SERVER);
@@ -42,13 +43,12 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
 	@Override
 	public void handleConnectionRequest(final FMPPacket packet) throws FMPException{
 		if(!packet.getDestination().equals(getPublicKey()))
-			throw new IncorrectFMPPacketDestinationException();
-		System.out.println(packet);
+			throw constructIncorrectFMPPacketDestinationException(packet, eccPublicKey);
+
 		if(registeredConnections.containsKey(packet.getSender()))
 			processNetworkServiceConnectionRequest(registeredConnections.get(packet.getSender()), packet);
 		else
 			processConnectionRequest(unregisteredConnections.get(packet.getSender()), packet);
-		
 	}	
 	
 	@Override
@@ -73,7 +73,7 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
 		if(networkServiceManager == null)
 			throw new IllegalArgumentException();
 		if(networkServicesRegistry.containsKey(networkServiceManager.getNetworkService()))
-			throw new NetworkServiceAlreadyRegisteredException();
+			throw constructNetworkServiceAlreadyRegistered(networkServiceManager.getNetworkService());
 		if(!networkServiceManager.isRunning())
 			networkServiceManager.start();
 		networkServicesRegistry.put(networkServiceManager.getNetworkService(), networkServiceManager);
@@ -136,5 +136,22 @@ public class CloudServiceManager extends CloudFMPConnectionManager {
 		FMPPacket responsePacket = FMPPacketFactory.constructCloudPacket(sender, destination, type, messageHash, signature);		
 		connection.attach(responsePacket);
 		connection.interestOps(SelectionKey.OP_WRITE);
+	}
+
+	private IncorrectFMPPacketDestinationException constructIncorrectFMPPacketDestinationException(final FMPPacket packet, final String supposedDestination) {
+		String message = IncorrectFMPPacketDestinationException.DEFAULT_MESSAGE;
+		FermatException cause = null;
+		String context = "Supposed Destination: " + supposedDestination;
+		context += "Packet Info: " + packet.toString();
+		String possibleReason = "This is a very weird error, we should check the sender to see if it's registered, we should be aware of this";
+		return new IncorrectFMPPacketDestinationException(message, cause, context, possibleReason);
+	}
+
+	private NetworkServiceAlreadyRegisteredException constructNetworkServiceAlreadyRegistered(final NetworkServices networkService){
+		String message = NetworkServiceAlreadyRegisteredException.DEFAULT_MESSAGE;
+		FermatException cause = null;
+		String context = "Network Service: " + networkService.toString();
+		String possibleReason = "We are registring a NetworkService that has already been registered, check the invocations to this method";
+		return new NetworkServiceAlreadyRegisteredException(message, cause, context, possibleReason);
 	}
 }

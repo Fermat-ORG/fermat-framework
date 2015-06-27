@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_core.layer.p2p_communication.cloud_client;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CantStartSubsystemException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationSubsystem;
@@ -28,10 +29,13 @@ public class CloudClientSubsystem implements CommunicationSubsystem {
             DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
             plugin = developerBitDubai.getPlugin();
         }
-        catch (Exception e)
+        catch (Exception exception)
         {
-            System.err.println("Exception: " + e.getMessage());
-            throw new CantStartSubsystemException();
+            String message = CantStartSubsystemException.DEFAULT_MESSAGE;
+            FermatException cause = (exception instanceof FermatException) ? (FermatException) exception : FermatException.wrapException(exception);
+            String context = "Plugin: " + plugin.getClass();
+            String possibleReason = "This vary between plugins, you have to check the cause of this exception to rally determine the reason";
+            throw new CantStartSubsystemException(message, cause, context, possibleReason);
         }
 
     }

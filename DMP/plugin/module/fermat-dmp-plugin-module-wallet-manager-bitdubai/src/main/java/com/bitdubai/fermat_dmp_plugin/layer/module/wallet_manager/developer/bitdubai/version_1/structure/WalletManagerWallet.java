@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.module.wallet_manager.developer.bit
 
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.NicheWalletType;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.Wallet;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletStatus;
@@ -10,6 +11,11 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantLo
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.CantPersistWalletException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.exceptions.OpenFailedException;
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 
@@ -55,6 +61,8 @@ public class WalletManagerWallet implements Wallet, DealsWithEvents, DealsWithPl
      * This method is to be used for creating a new wallet.
      */
 
+
+
     public void createWallet(NicheWalletType nicheWalletType) throws CantCreateWalletException {
         this.walletId = UUID.randomUUID();
         this.status = WalletStatus.CLOSED;
@@ -77,10 +85,10 @@ public class WalletManagerWallet implements Wallet, DealsWithEvents, DealsWithPl
          * Now I fire the Wallet Created  event.
          */
 
-        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.WALLET_CREATED);
-        ((WalletCreatedEvent) platformEvent).setWalletId(this.walletId);
-        platformEvent.setSource(EventSource.MODULE_WALLET_MANAGER_PLUGIN);
-        eventManager.raiseEvent(platformEvent);
+        //PlatformEvent platformEvent = eventManager.getNewEvent(EventType.WALLET_CREATED);
+        //((WalletCreatedEvent) platformEvent).setWalletId(this.walletId);
+        //platformEvent.setSource(EventSource.MODULE_WALLET_MANAGER_PLUGIN);
+       // eventManager.raiseEvent(platformEvent);
 
     }
 
@@ -191,31 +199,43 @@ public class WalletManagerWallet implements Wallet, DealsWithEvents, DealsWithPl
 
 
     private void persist() throws CantPersistWalletException {
-/*
-        PluginFile file = this.pluginFileSystem.createFile(
-                pluginId,
-                DeviceDirectory.LOCAL_WALLETS.getName(),
-                this.walletId.toString(),
-                FilePrivacy.PRIVATE,
-                FileLifeSpan.PERMANENT
-        );
 
-        file.setContent(this.walletName + ";" + this.nicheWalletType.getTypeName());
+        try{
+            PluginTextFile file = this.pluginFileSystem.createTextFile(
+                    pluginId,
+                    DeviceDirectory.LOCAL_WALLETS.getName(),
+                    this.walletId.toString(),
+                    FilePrivacy.PRIVATE,
+                    FileLifeSpan.PERMANENT
+            );
 
-        try {
-            file.persistToMedia();
+            file.setContent(this.walletName + ";" + this.nicheWalletType.getTypeName());
+
+            try {
+                file.persistToMedia();
+            }
+            catch (CantPersistFileException cantPersistFileException) {
+
+                /**
+                 * This is bad, but lets handle it...
+                 */
+
+                System.err.println("CantPersistFileException: " + cantPersistFileException.getMessage());
+                throw new CantPersistWalletException();
+            }
+
         }
-        catch (CantPersistFileException cantPersistFileException) {
-*/
+        catch (CantCreateFileException cantCreateFileException ) {
+
             /**
-             * This is bad, but lets handle it...
+             * If I can not save this file, then this plugin shouldn't be running at all.
              */
-/*
-            System.err.println("CantPersistFileException: " + cantPersistFileException.getMessage());
-            cantPersistFileException.printStackTrace();
+            System.err.println("cantCreateFileException: " + cantCreateFileException.getMessage());
             throw new CantPersistWalletException();
         }
-*/
+
+
+
     }
 
     private void load() throws CantLoadWalletException {
