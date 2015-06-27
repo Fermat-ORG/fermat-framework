@@ -22,8 +22,6 @@ import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
-import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.exceptions.CantStartAgentException;
-import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.exceptions.CantStartTransactionProcessorAgentException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.exceptions.InconsistentTableStateException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.interfaces.TransactionAgent;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.util.TransactionWrapper;
@@ -90,23 +88,11 @@ public class OutgoingExtraUserTransactionProcessorAgent implements DealsWithBitc
      * TransactionAgent Interface implementation.
      */
     @Override
-    public void start() throws CantStartAgentException {
+    public void start() {
 
         this.transactionProcessorAgent = new TransactionProcessorAgent();
         this.transactionProcessorAgent.setErrorManager(this.errorManager);
-
-        try {
-            this.transactionProcessorAgent.initialize(this.dao,this.bitcoinWalletManager,this.cryptoVaultManager);
-        }
-        catch (CantStartTransactionProcessorAgentException e) {
-            /**
-             * I cant continue if this happens.
-             */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-
-            throw new CantStartAgentException();
-        }
-
+        this.transactionProcessorAgent.initialize(this.dao,this.bitcoinWalletManager,this.cryptoVaultManager);
         this.agentThread = new Thread(this.transactionProcessorAgent);
         this.agentThread.start();
 
@@ -149,7 +135,7 @@ public class OutgoingExtraUserTransactionProcessorAgent implements DealsWithBitc
         /**
          * MonitorAgent interface implementation.
          */
-        private void initialize (OutgoingExtraUserDao dao, BitcoinWalletManager bitcoinWalletManager, CryptoVaultManager cryptoVaultManager) throws CantStartTransactionProcessorAgentException {
+        private void initialize (OutgoingExtraUserDao dao, BitcoinWalletManager bitcoinWalletManager, CryptoVaultManager cryptoVaultManager) {
             this.dao = dao;
             this.bitcoinWalletManager = bitcoinWalletManager;
             this.cryptoVaultManager = cryptoVaultManager;
@@ -244,8 +230,25 @@ public class OutgoingExtraUserTransactionProcessorAgent implements DealsWithBitc
                     this.cryptoVaultManager.sendBitcoins(transaction.getWalletId(), transaction.getTransactionId(), transaction.getAddressTo(), transaction.getAmount());
                     dao.setToSTCV(transaction);
                 } catch (InsufficientMoneyException e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    /*
+                     * TODO: THEN RAISE EVENT TO INFORM THE SITUATION
+                     */
+                    try {
+                        dao.cancelTransaction(transaction);
+                    } catch (CantUpdateRecord cantUpdateRecord) {
+                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantUpdateRecord);
+                        return;
+                    } catch (InconsistentTableStateException e1) {
+                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                        return;
+                    } catch (CantLoadTableToMemory cantLoadTableToMemory) {
+                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
+                        return;
+                    }
+                    Exception inconsistentFundsException = new InconsistentFundsException();
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, inconsistentFundsException);
                     return;
+
                 } catch (InvalidSendToAddressException e) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                     return;
