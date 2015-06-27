@@ -10,17 +10,26 @@ public class CantCreateTableException extends DatabaseSystemException {
 	 */
 	private static final long serialVersionUID = -5641418231316021954L;
 	
-	private static final String DEFAULT_MESSAGE = "CAN'T CREATE THE TABLE: ";
-	
-	public CantCreateTableException(final String message, final Exception cause){
-		super(DEFAULT_MESSAGE + message, cause);
+	public static final String DEFAULT_MESSAGE = "CAN'T CREATE THE TABLE";
+
+	public CantCreateTableException(final String message, final Exception cause, final String context, final String possibleReason) {
+		super(message, cause, context, possibleReason);
 	}
-	
-	public CantCreateTableException(final String message){
+
+	public CantCreateTableException(final String message, final Exception cause) {
+		this(message, cause, "", "");
+	}
+
+	public CantCreateTableException(final String message) {
 		this(message, null);
 	}
-	
-	public CantCreateTableException(){
-		this("");
+
+	public CantCreateTableException(final Exception exception) {
+		this(exception.getMessage());
+		setStackTrace(exception.getStackTrace());
+	}
+
+	public CantCreateTableException() {
+		this(DEFAULT_MESSAGE);
 	}
 }
