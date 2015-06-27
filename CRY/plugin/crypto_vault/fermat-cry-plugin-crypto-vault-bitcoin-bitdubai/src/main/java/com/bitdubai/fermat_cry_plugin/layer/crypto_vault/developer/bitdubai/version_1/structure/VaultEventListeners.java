@@ -15,10 +15,19 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.vers
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantExecuteQueryException;
 
 import org.bitcoinj.core.AbstractWalletEventListener;
+import org.bitcoinj.core.Block;
 import org.bitcoinj.core.Coin;
+import org.bitcoinj.core.GetDataMessage;
+import org.bitcoinj.core.Message;
+import org.bitcoinj.core.Peer;
+import org.bitcoinj.core.PeerEventListener;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionConfidence;
 import org.bitcoinj.core.Wallet;
+
+import java.util.List;
+
+import javax.annotation.Nullable;
 
 /**
  * Created by rodrigo on 11/06/15.
@@ -110,6 +119,8 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
 
     @Override
     public void onTransactionConfidenceChanged(Wallet wallet, Transaction tx) {
+        System.out.println("CryptoVault: Transaction confidence changed for transaction " + tx.toString());
+
         TransactionConfidenceCalculator transactionConfidenceCalculator = new TransactionConfidenceCalculator(tx, wallet);
         CryptoStatus cryptoStatus;
         try {

@@ -48,6 +48,8 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.vers
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.events.TransactionNotificationAgent;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.developerUtils.*;
 
+import org.bitcoinj.core.Wallet;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -293,6 +295,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
 
                 vault.loadOrCreateVault();
                 System.out.println("CryptoVault - Valid receive address for the vault is: " + vault.getAddress().getAddress());
+
 
                 /**
                  * Once the vault is loaded or created, I will connect it to Bitcoin network to recieve pending transactions
