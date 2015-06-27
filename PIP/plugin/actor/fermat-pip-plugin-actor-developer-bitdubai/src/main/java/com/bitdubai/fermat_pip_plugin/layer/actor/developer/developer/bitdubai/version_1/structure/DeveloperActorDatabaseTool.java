@@ -6,7 +6,9 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerFor
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.DatabaseTool;
 import com.bitdubai.fermat_pip_plugin.layer.actor.developer.developer.bitdubai.version_1.ActorDeveloperPluginRoot;
@@ -54,24 +56,40 @@ public class DeveloperActorDatabaseTool implements DatabaseTool {
     }
 
     @Override
-    //hashmap enum,plugin
-    public List<DeveloperDatabase> getDatabaseListFromPlugin(Plugins plugins) {
-        return ((DatabaseManagerForDevelopers)databaseLstPlugins.get(plugins)).getDatabaseList(new DeveloperActorDatabaseObjectFactory());
+    public List<DeveloperDatabase> getDatabaseListFromPlugin(Plugins plugin) {
+        DatabaseManagerForDevelopers databaseManagerForDevelopers = (DatabaseManagerForDevelopers) databaseLstPlugins.get(plugin);
+        return databaseManagerForDevelopers.getDatabaseList(new DeveloperActorDatabaseObjectFactory());
 
     }
 
     @Override
-    public List<DeveloperDatabase> getDatabaseListFromAddon(Addons addons) {
-        return ((DatabaseManagerForDevelopers)databaseLstAddonds.get(addons)).getDatabaseList(new DeveloperActorDatabaseObjectFactory());
+    public List<DeveloperDatabase> getDatabaseListFromAddon(Addons addon) {
+        DatabaseManagerForDevelopers databaseManagerForDevelopers = (DatabaseManagerForDevelopers) databaseLstAddonds.get(addon);
+        return databaseManagerForDevelopers.getDatabaseList(new DeveloperActorDatabaseObjectFactory());
     }
 
     @Override
-    public List<DeveloperDatabaseTable> getTableListFromDatabase(DeveloperDatabase developerDatabase) {
-      return  ((DatabaseManagerForDevelopers)developerDatabase).getDatabaseTableList(new DeveloperActorDatabaseObjectFactory(),developerDatabase);
+    public List<DeveloperDatabaseTable> getPluginTableListFromDatabase(Plugins plugin, DeveloperDatabase developerDatabase) {
+        DatabaseManagerForDevelopers databaseManagerForDevelopers = (DatabaseManagerForDevelopers) databaseLstPlugins.get(plugin);
+        return databaseManagerForDevelopers.getDatabaseTableList(new DeveloperActorDatabaseObjectFactory(), developerDatabase);
     }
 
     @Override
-    public List<DeveloperDatabaseTableRecord> getTableContent(DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-     return   ((DatabaseManagerForDevelopers)developerDatabase).getDatabaseTableContent(new DeveloperActorDatabaseObjectFactory(),developerDatabase,developerDatabaseTable);
+    public List<DeveloperDatabaseTable> getAddonTableListFromDatabase(Addons addon, DeveloperDatabase developerDatabase) {
+        DatabaseManagerForDevelopers databaseManagerForDevelopers = (DatabaseManagerForDevelopers) databaseLstAddonds.get(addon);
+        return databaseManagerForDevelopers.getDatabaseTableList(new DeveloperActorDatabaseObjectFactory(), developerDatabase);
+    }
+
+
+    @Override
+    public List<DeveloperDatabaseTableRecord> getPluginTableContent(Plugins plugin, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+        DatabaseManagerForDevelopers databaseManagerForDevelopers = (DatabaseManagerForDevelopers) databaseLstPlugins.get(plugin);
+        return databaseManagerForDevelopers.getDatabaseTableContent(new DeveloperActorDatabaseObjectFactory(), developerDatabase, developerDatabaseTable);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTableRecord> getAddonTableContent(Addons addon, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+        DatabaseManagerForDevelopers databaseManagerForDevelopers = (DatabaseManagerForDevelopers) databaseLstAddonds.get(addon);
+        return databaseManagerForDevelopers.getDatabaseTableContent(new DeveloperActorDatabaseObjectFactory(), developerDatabase, developerDatabaseTable);
     }
 }

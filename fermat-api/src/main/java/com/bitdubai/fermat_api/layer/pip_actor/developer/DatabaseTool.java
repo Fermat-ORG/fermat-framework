@@ -13,16 +13,20 @@ import java.util.List;
  */
 public interface DatabaseTool {
 
-    public List<Plugins> getAvailablePluginList ();
+    List<Plugins> getAvailablePluginList();
 
-    public List<Addons> getAvailableAddonList ();
+    List<Addons> getAvailableAddonList();
 
-    public List<DeveloperDatabase> getDatabaseListFromPlugin (Plugins plugin);
+    List<DeveloperDatabase> getDatabaseListFromPlugin(Plugins plugin);
 
-    public List<DeveloperDatabase>  getDatabaseListFromAddon (Addons Addon);
+    List<DeveloperDatabase>  getDatabaseListFromAddon(Addons Addon);
 
-    public List<DeveloperDatabaseTable>  getTableListFromDatabase (DeveloperDatabase developerDatabase);
+    List<DeveloperDatabaseTable> getPluginTableListFromDatabase(Plugins plugin, DeveloperDatabase developerDatabase);
 
-    public List<DeveloperDatabaseTableRecord>  getTableContent (DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable);
+    List<DeveloperDatabaseTable> getAddonTableListFromDatabase(Addons addon, DeveloperDatabase developerDatabase);
+
+    List<DeveloperDatabaseTableRecord>  getPluginTableContent(Plugins plugin, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable);
+
+    List<DeveloperDatabaseTableRecord>  getAddonTableContent(Addons addon, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable);
 
 }

@@ -254,6 +254,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         try {
             vault = Wallet.loadFromFile(vaultFile);
             System.out.println("Vault loaded from file " + vaultFile.getAbsoluteFile().toString());
+            System.out.println("CryptoVault current balance: " + vault.getBalance().getValue());
 
             /**
              * If I couldn't load it I can't go on.
@@ -344,7 +345,9 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
 
         try {
             if (!db.isNewFermatTransaction(FermatTxId))
-                return "";
+                return null;
+            else
+                db.persistnewFermatTransaction(FermatTxId.toString());
         } catch (CantExecuteQueryException e) {
             return "";
         }

@@ -102,9 +102,8 @@ public class DatabaseToolsFragment extends Fragment {
                     String item = (String) listView.getItemAtPosition(position);
 
                     DatabaseToolsDatabaseListFragment databaseToolsDatabaseListFragment = new DatabaseToolsDatabaseListFragment ();
-                    Bundle args = new Bundle();
-                    args.putString("resource", item);
-                    databaseToolsDatabaseListFragment.setArguments(args);
+
+                    databaseToolsDatabaseListFragment.setResource(item);
 
                     FragmentTransaction FT = getFragmentManager().beginTransaction();
 
