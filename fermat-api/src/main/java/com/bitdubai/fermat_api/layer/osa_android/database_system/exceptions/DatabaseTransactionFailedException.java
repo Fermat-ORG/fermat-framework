@@ -10,17 +10,26 @@ public class DatabaseTransactionFailedException extends DatabaseSystemException 
 	 */
 	private static final long serialVersionUID = 1431539427032863967L;
 
-	private static final String DEFAULT_MESSAGE = "THE TRANSACTION HAS FAILED: ";
+	public static final String DEFAULT_MESSAGE = "DATABASE TRANSACTION HAS FAILED";
 
-	public DatabaseTransactionFailedException(final String message, final Exception cause){
-		super(DEFAULT_MESSAGE + message, cause);
+	public DatabaseTransactionFailedException(final String message, final Exception cause, final String context, final String possibleReason) {
+		super(message, cause, context, possibleReason);
 	}
 
-	public DatabaseTransactionFailedException(final String message){
+	public DatabaseTransactionFailedException(final String message, final Exception cause) {
+		this(message, cause, "", "");
+	}
+
+	public DatabaseTransactionFailedException(final String message) {
 		this(message, null);
 	}
 
-	public DatabaseTransactionFailedException(){
-		this("");
+	public DatabaseTransactionFailedException(final Exception exception) {
+		this(exception.getMessage());
+		setStackTrace(exception.getStackTrace());
+	}
+
+	public DatabaseTransactionFailedException() {
+		this(DEFAULT_MESSAGE);
 	}
 }
