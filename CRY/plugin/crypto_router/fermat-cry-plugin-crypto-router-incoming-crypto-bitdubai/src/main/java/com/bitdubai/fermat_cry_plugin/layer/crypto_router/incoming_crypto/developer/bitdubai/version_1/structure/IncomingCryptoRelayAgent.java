@@ -291,7 +291,6 @@ public class IncomingCryptoRelayAgent implements DealsWithActorAddressBook , Dea
             Cuando termina de recorrer la lista recorre ahora todas las que están con TransactonStatus RESPONSIBLE y ProtocolStatus TO_BE_NOTIFIED o SENDING_NOTIFIED. Registra todos los especialistas que vio en este recoorido (no intentar optimizar usando el recorrido anterior porque puede perderse si el sistema se cae) y realiza los siguente pasos en el orden enunciado:
             Por cada Specialist registrado en el recorrido anterior lanza el evento correspondiente (IncomingCryptTransactionsWaitingTransferenceSpecalistEvent)
             */
-            //
             EnumSet<Specialist> specialistSet;
             try {
                 specialistSet = this.registry.getSpecialists();
