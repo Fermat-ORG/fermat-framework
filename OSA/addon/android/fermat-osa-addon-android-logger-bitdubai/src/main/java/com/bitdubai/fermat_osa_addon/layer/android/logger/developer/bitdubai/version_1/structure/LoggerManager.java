@@ -122,4 +122,13 @@ public class LoggerManager implements LogManagerForDevelopers {
     public void setPluginId(UUID pluginId) {
         this.pluginId = pluginId;
     }
+
+    public UUID getPluginId(){
+        return this.pluginId;
+    }
+
+
+    public String getOutputMessage(){
+        return outputMessage.toString();
+    }
 }

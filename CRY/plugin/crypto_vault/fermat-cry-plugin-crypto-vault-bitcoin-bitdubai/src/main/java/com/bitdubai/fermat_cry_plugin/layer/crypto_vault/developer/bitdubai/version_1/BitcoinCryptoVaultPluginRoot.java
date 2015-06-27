@@ -56,7 +56,7 @@ import java.util.UUID;
 /**
  * Created by loui on 08/06/15.
  */
-public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DatabaseManagerForDevelopers, DealsWithBitcoinCryptoNetwork, DealsWithEvents, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithDeviceUsers, DealsWithPluginFileSystem, Plugin, Service {
+public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DatabaseManagerForDevelopers, DealsWithBitcoinCryptoNetwork, DealsWithEvents, DealsWithErrors, DealsWithPluginDatabaseSystem, DealWithLogManagers, DealsWithDeviceUsers, DealsWithPluginFileSystem, Plugin, Service {
 
     /**
      * BitcoinCryptoVaultPluginRoot member variables
@@ -377,6 +377,12 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
+    @Override
+    public void setLogManagers(LogManagerForDevelopers logManagerForDevelopers) {
+        this.logManagerForDevelopers = logManagerForDevelopers;
+        logManagerForDevelopers.setPluginId(this.pluginId);
+        logManagerForDevelopers.changeLoggingLevel(LogLevel.AGGRESSIVE_LOGGING);
+    }
 
     /**
      * CryptoVaultManager interface implementation
