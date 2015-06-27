@@ -344,7 +344,9 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
 
         try {
             if (!db.isNewFermatTransaction(FermatTxId))
-                return "";
+                return null;
+            else
+                db.persistnewFermatTransaction(FermatTxId.toString());
         } catch (CantExecuteQueryException e) {
             return "";
         }
