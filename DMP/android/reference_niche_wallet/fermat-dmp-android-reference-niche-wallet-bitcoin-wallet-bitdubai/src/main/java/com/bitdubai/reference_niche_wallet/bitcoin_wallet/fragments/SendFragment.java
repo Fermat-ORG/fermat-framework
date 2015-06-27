@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
@@ -25,6 +26,8 @@ import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.excepti
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantSendCryptoException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.IntentIntegrator;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.IntentResult;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform;
 
 import java.util.UUID;
@@ -43,6 +46,8 @@ public class SendFragment extends Fragment implements View.OnClickListener {
     private static CryptoWalletManager cryptoWalletManager;
     private static Platform platform = new Platform();
     CryptoWallet cryptoWallet;
+
+    private TextView txtAddress;
 
     public static SendFragment newInstance(int position) {
         SendFragment f = new SendFragment();
@@ -128,15 +133,22 @@ public class SendFragment extends Fragment implements View.OnClickListener {
                 public void onTextChanged(CharSequence s, int start, int before, int count) {}
             });
 
+
+
+            txtAddress = (EditText) rootView.findViewById(R.id.address);
+
             //define icon event to scan Qr code - wallet address
             ImageView scanImage = (ImageView) rootView.findViewById(R.id.scan_qr);
 
             scanImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent("com.google.zxing.client.android.SCAN");
-                    intent.putExtra("com.google.zxing.client.android.SCAN.SCAN_MODE", "QR_CODE_MODE");
-                    startActivityForResult(intent, 0);
+                    //Intent intent = new Intent("com.google.zxing.client.android.SCAN");
+                    //intent.putExtra("com.google.zxing.client.android.SCAN.SCAN_MODE", "QR_CODE_MODE");
+                    //startActivityForResult(intent, 0);
+                    IntentIntegrator integrator = new IntentIntegrator(getActivity());
+                    integrator.initiateScan();
+
                 }
             });
 
@@ -154,18 +166,38 @@ public class SendFragment extends Fragment implements View.OnClickListener {
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 0) {
-            if (intent != null) {
+            if (data != null) {
                 // Handle successful scan
-                String contents = intent.getStringExtra("SCAN_RESULT");
-                String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
+                //String contents = intent.getStringExtra("SCAN_RESULT");
+                //String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
                 //put code in file wallet address
 
-                TextView tv;
+                //TextView tv;
 
-                tv = (EditText) rootView.findViewById(R.id.address);
-                tv.setText(contents);
+                //tv = (EditText) rootView.findViewById(R.id.address);
+                //tv.setText(contents);
+                IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+                if (scanResult != null) {
+
+                    // handle scan result
+                    String contantsString =  scanResult.getContents()==null?"0":scanResult.getContents();
+                    if (contantsString.equalsIgnoreCase("0")) {
+                        Toast.makeText(this.getActivity(), "Problem to get the  contant Number", Toast.LENGTH_LONG).show();
+
+                    }else {
+                        //load into text address
+                        txtAddress.setText(contantsString);
+                        //Toast.makeText(this.getActivity(), contantsString, Toast.LENGTH_LONG).show();
+
+                    }
+
+                }
+                else{
+                    Toast.makeText(this.getActivity(), "Problem to scan the barcode.", Toast.LENGTH_LONG).show();
+                }
+
             }
 
         }

@@ -315,6 +315,7 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
         BitcoinWalletBasicWallet bitcoinWallet = new BitcoinWalletBasicWallet(this.pluginId);
         bitcoinWallet.setErrorManager(this.errorManager);
         bitcoinWallet.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+        bitcoinWallet.setPluginFileSystem(this.pluginFileSystem);
 
         UUID internalWalletId;
         try {
