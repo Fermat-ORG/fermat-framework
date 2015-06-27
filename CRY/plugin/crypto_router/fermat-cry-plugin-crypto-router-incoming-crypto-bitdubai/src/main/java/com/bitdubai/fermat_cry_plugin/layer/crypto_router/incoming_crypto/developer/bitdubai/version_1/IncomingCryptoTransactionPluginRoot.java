@@ -84,6 +84,23 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
     private TransactionService eventRecorder;
 
 
+    /*
+     * DealsWithActorAddressBook Interface implementation.
+     */
+    @Override
+    public void setActorAddressBookManager(ActorAddressBookManager actorAddressBook) {
+        this.actorAddressBook = actorAddressBook;
+    }
+
+
+    /**
+     * DealsWithCryptoVault Interface implementation.
+     */
+    @Override
+    public void setCryptoVaultManager(CryptoVaultManager cryptoVaultManager) {
+        this.cryptoVaultManager = cryptoVaultManager;
+    }
+
     /**
      *DealsWithErrors Interface implementation.
      */
@@ -149,13 +166,10 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
             /**
              * If I can not initialize the Registry then I can not start the service.
              */
+            this.serviceStatus = ServiceStatus.STARTED;
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantInitializeCryptoRegistryException);
-            System.err.print("INCOMING CRYPTO: CantInitializeCryptoRegistryException");
-            throw new CantStartPluginException(cantInitializeCryptoRegistryException, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
+            throw new CantStartPluginException("Registry failed to start",cantInitializeCryptoRegistryException, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION.getKey(),"");
         }
-
-        System.err.println("INCOMING CRYPTO: REGISTRY INITIALIZED");
-
 
         /**
          * I will start the Event Recorder.
@@ -172,8 +186,9 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
             /**
              * I cant continue if this happens.
              */
+            this.serviceStatus = ServiceStatus.STARTED;
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantStartServiceException);
-            throw new CantStartPluginException(cantStartServiceException, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
+            throw new CantStartPluginException("Event Recorded could not be started",cantStartServiceException, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION.getKey(),"");
         }
 
         /**
@@ -198,9 +213,10 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
             /**
              * I cant continue if this happens.
              */
+            this.serviceStatus = ServiceStatus.STARTED;
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantStartAgentException);
 
-            throw new CantStartPluginException(cantStartAgentException, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
+            throw new CantStartPluginException("Relay Agent could not be started",cantStartAgentException, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION.getKey(),"");
         }
 
         /**
@@ -224,9 +240,10 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
             /**
              * I cant continue if this happens.
              */
+            this.serviceStatus = ServiceStatus.STARTED;
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantStartAgentException);
 
-            throw new CantStartPluginException(cantStartAgentException, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION);
+            throw new CantStartPluginException("Monitor agent could not be started",cantStartAgentException, Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION.getKey(),"");
         }
         
         this.serviceStatus = ServiceStatus.STARTED;
@@ -261,28 +278,4 @@ public class IncomingCryptoTransactionPluginRoot implements IncomingCryptoManage
     public ServiceStatus getStatus() {
         return this.serviceStatus;
     }
-
-    @Override
-    public void setActorAddressBookManager(ActorAddressBookManager actorAddressBook) {
-        this.actorAddressBook = actorAddressBook;
-    }
-
-    @Override
-    public void setCryptoVaultManager(CryptoVaultManager cryptoVaultManager) {
-        this.cryptoVaultManager = cryptoVaultManager;
-    }
-
-
-    /**
-     * TransactionManager interface implementation.
-
-    @Override
-    public UUID getNextPendingTransactionByDestination (UUID destinationId) throws CantSearchForTransactionsException {
-        return ((TransactionManager) this.registry).getNextPendingTransactionByDestination(destinationId);
-    }
-    public boolean releaseTransaction (UUID trxID) throws CantReleaseTransactionException {
-        return ((TransactionManager) this.registry).releaseTransaction(trxID);
-    }
-     */
-
 }

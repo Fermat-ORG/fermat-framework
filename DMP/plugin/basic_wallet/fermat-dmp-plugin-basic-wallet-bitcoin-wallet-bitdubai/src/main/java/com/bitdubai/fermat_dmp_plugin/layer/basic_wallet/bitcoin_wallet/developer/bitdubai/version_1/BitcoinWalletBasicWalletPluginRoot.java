@@ -41,19 +41,17 @@ import java.util.UUID;
 public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager, DealsWithErrors,DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem,Service, Plugin {
 
     private final String WALLET_IDS_FILE_NAME = "walletsIds";
-    private Map<UUID, UUID> walletIds =  new HashMap();
-    // No tocar
-    BitcoinWalletBasicWallet bitcoinWalletTemporal = new BitcoinWalletBasicWallet(UUID.randomUUID());
+    private Map<UUID, UUID> walletIds =  new HashMap<>();
 
     /**
      * DealsWithErrors Interface member variables.
      */
-    ErrorManager errorManager;
+    private ErrorManager errorManager;
 
     /**
      * DealsWithDatabaseSystem Interface member variables.
      */
-    PluginDatabaseSystem pluginDatabaseSystem;
+    private PluginDatabaseSystem pluginDatabaseSystem;
 
     /**
      * DealsWithPluginFileSystem Interface member variables.
@@ -69,8 +67,8 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
     /**
      * Service Interface member variables.
      */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
-    List<EventListener> listenersAdded = new ArrayList<>();
+    private ServiceStatus serviceStatus = ServiceStatus.CREATED;
+    private List<EventListener> listenersAdded = new ArrayList<>();
 
 
     /**
@@ -113,7 +111,7 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
      * Service Interface implementation.
      */
     @Override
-    public void start() throws CantStartPluginException{
+    public void start() throws CantStartPluginException {
 
         /**
          * Check if this is the first time this plugin starts. To do so I check if the file containing all the wallets
@@ -121,20 +119,6 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
          * * *
          */
         PluginTextFile walletIdsFile;
-
-        BitcoinWalletBasicWallet bitcoinWallet = new BitcoinWalletBasicWallet(this.pluginId);
-
-        bitcoinWallet.setPluginFileSystem(pluginFileSystem);
-        bitcoinWallet.setPluginDatabaseSystem(pluginDatabaseSystem);
-        bitcoinWallet.setErrorManager(errorManager);
-        try {
-            bitcoinWallet.create(UUID.fromString("25428311-deb3-4064-93b2-69093e859871"));
-        }
-        catch (CantCreateWalletException cantCreateWalletException)
-        {
-
-        }
-
 
         try {
 
@@ -146,10 +130,9 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
                 /**
                  * If I can not save this file, then this plugin shouldn't be running at all.
                  */
-                System.err.println("cantCreateFileException: " + cantCreateFileException.getMessage());
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateFileException);
 
-                throw new CantStartPluginException(cantCreateFileException, Plugins.BITDUBAI_DISCOUNT_WALLET_BASIC_WALLET);
+                throw new CantStartPluginException("I could not get file",cantCreateFileException, "File name: "+ WALLET_IDS_FILE_NAME,"");
             }
             try {
                 walletIdsFile.loadFromMedia();
@@ -161,8 +144,7 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
 
                 for (String stringWalletId : stringWalletIds ) {
 
-                    if(stringWalletId != "")
-                    {
+                    if(!stringWalletId.equals("")) {
                         /**
                          * Each record in the file has to values: the first is the external id of the wallet, and the
                          * second is the internal id of the wallet.
@@ -170,7 +152,7 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
                          */
                         String[] idPair = stringWalletId.split(",", -1);
 
-                        walletIds.put( UUID.fromString(idPair[0]),  UUID.fromString(idPair[1]));
+                        walletIds.put(UUID.fromString(idPair[0]),  UUID.fromString(idPair[1]));
 
                         /**
                          * Great, now the wallet list is in memory.
@@ -187,10 +169,9 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
                  * In the future there should be implemented a method to deal with this situation.
                  * * * *
                  */
-                System.err.println("CantLoadFileException: " + cantLoadFileException.getMessage());
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantLoadFileException);
 
-                throw new CantStartPluginException(cantLoadFileException, Plugins.BITDUBAI_DISCOUNT_WALLET_BASIC_WALLET);
+                throw new CantStartPluginException("Can't load file content from media",cantLoadFileException,"","");
             }
         }
         catch (FileNotFoundException fileNotFoundException) {
@@ -211,9 +192,8 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
                 /**
                  * If I can not save this file, then this plugin shouldn't be running at all.
                  */
-                System.err.println("cantCreateFileException: " + cantCreateFileException.getMessage());
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateFileException);
-                throw new CantStartPluginException(cantCreateFileException, Plugins.BITDUBAI_DISCOUNT_WALLET_BASIC_WALLET);
+                throw new CantStartPluginException("I can't create file",cantCreateFileException,"File name: " + WALLET_IDS_FILE_NAME,"");
             }
             try {
                 walletIdsFile.persistToMedia();
@@ -223,11 +203,33 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
                 /**
                  * If I can not save this file, then this plugin shouldn't be running at all.
                  */
-                System.err.println("CantPersistFileException: " + cantPersistFileException.getMessage());
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantPersistFileException);
-                throw new CantStartPluginException(cantPersistFileException, Plugins.BITDUBAI_DISCOUNT_WALLET_BASIC_WALLET);
+                throw new CantStartPluginException("I couldn't save the file",cantPersistFileException, "FIleName: "+ WALLET_IDS_FILE_NAME,"");
             }
         }
+
+
+
+        /* TODO: Delete this wallet creation
+         *       The next wallet is created because the Wallet Manager is not
+         *       doing it yet for us.
+         */
+        BitcoinWalletBasicWallet bitcoinWallet = new BitcoinWalletBasicWallet(this.pluginId);
+
+        bitcoinWallet.setPluginFileSystem(pluginFileSystem);
+        bitcoinWallet.setPluginDatabaseSystem(pluginDatabaseSystem);
+        bitcoinWallet.setErrorManager(errorManager);
+        try {
+            UUID internalWalletId;
+            internalWalletId = bitcoinWallet.create(UUID.fromString("25428311-deb3-4064-93b2-69093e859871"));
+            this.walletIds.put(UUID.fromString("25428311-deb3-4064-93b2-69093e859871"), internalWalletId);
+        }
+        catch (CantCreateWalletException cantCreateWalletException)
+        {
+
+        }
+
+
         /**
          * I will initialize the handling of com.bitdubai.platform events.
          */
@@ -256,15 +258,12 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
 
     @Override
     public void stop() {
-
-
         /**
          * I will remove all the event listeners registered with the event manager.
          */
 
         listenersAdded.clear();
         this.serviceStatus = ServiceStatus.STOPPED;
-
     }
 
     @Override
@@ -286,31 +285,28 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
        try {
 
            //get internal wallet id asociate with this wallet id
-            UUID internalWalletId = null;
+           UUID internalWalletId;
+           internalWalletId = walletIds.get(walletId);
 
+           /*
            Iterator iterator = walletIds.entrySet().iterator();
 
            while (iterator.hasNext()) {
                Map.Entry mapEntry = (Map.Entry) iterator.next();
-              if( mapEntry.getKey().toString().equals(walletId.toString()))
+               if(mapEntry.getKey().toString().equals(walletId.toString()))
                   internalWalletId = UUID.fromString(mapEntry.getValue().toString());
-           }
+           }*/
 
             //open wallet database
             bitcoinWallet.initialize(internalWalletId);
 
-        }catch(CantInitializeBitcoinWalletBasicException CantInitializeBitcoinWallet)
-        {
-           errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, CantInitializeBitcoinWallet);
-           throw new CantLoadWalletException();
+       }catch(CantInitializeBitcoinWalletBasicException cantInitializeBitcoinWallet){
+           errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantInitializeBitcoinWallet);
+           throw new CantLoadWalletException("I can't initialize wallet",cantInitializeBitcoinWallet,"","");
        }
 
-
-         return bitcoinWallet;
+        return bitcoinWallet;
         //return this.bitcoinWalletTemporal;
-
-
-
     }
 
     @Override
@@ -319,15 +315,17 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
         BitcoinWalletBasicWallet bitcoinWallet = new BitcoinWalletBasicWallet(this.pluginId);
         bitcoinWallet.setErrorManager(this.errorManager);
         bitcoinWallet.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+        bitcoinWallet.setPluginFileSystem(this.pluginFileSystem);
 
-
+        UUID internalWalletId;
         try {
-            bitcoinWallet.create(walletId);
-        }catch(CantCreateWalletException CantInitializeBitcoinWallet)
+            internalWalletId = bitcoinWallet.create(walletId);
+        }catch(CantCreateWalletException cantInitializeBitcoinWallet)
         {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, CantInitializeBitcoinWallet);
-            throw new CantCreateWalletException();
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantInitializeBitcoinWallet);
+            throw new CantCreateWalletException("Wallet Creation Failed",cantInitializeBitcoinWallet,"walletId: "+walletId.toString(),"");
         }
+        this.walletIds.put(walletId,internalWalletId);
     }
 }
 

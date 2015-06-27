@@ -1,29 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#000000">
+    android:background="#000000"
+    android:id="@+id/hola">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/labelDatabase"
         android:layout_width="match_parent"
-        android:layout_height="68dp"
-        android:orientation="horizontal"
-        android:gravity="center">
-
-        <TextView
-            android:id="@+id/labelbalance"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingLeft="7dip"
-            android:paddingRight="7dip"
-            android:paddingTop="3dip"
-            android:paddingBottom="3dip"
-            android:textColor="#FF666666"
-            android:textSize="30sp"
-            android:text="Click on a Resource"/>
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingLeft="7dip"
+        android:paddingRight="7dip"
+        android:paddingTop="3dip"
+        android:paddingBottom="3dip"
+        android:textColor="#FF666666"
+        android:textSize="30sp"
+        android:text="Click on a Resource"/>
 
     <ListView
         android:id="@+id/lista1"

@@ -1,13 +1,18 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DealWithLogManagers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.developer.LogLevel;
+import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -45,12 +50,13 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.vers
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
  * Created by loui on 08/06/15.
  */
-public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DatabaseManagerForDevelopers, DealsWithBitcoinCryptoNetwork, DealsWithEvents, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithDeviceUsers, DealsWithPluginFileSystem, Plugin, Service {
+public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DatabaseManagerForDevelopers, DealsWithBitcoinCryptoNetwork, DealsWithEvents, DealsWithErrors, DealWithLogManagers,DealsWithPluginDatabaseSystem, DealsWithDeviceUsers, DealsWithPluginFileSystem, Plugin, Service {
 
     /**
      * BitcoinCryptoVaultPluginRoot member variables
@@ -79,6 +85,11 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
      * DealsWithErrors interface member variable
      */
     ErrorManager errorManager;
+
+    /**
+     * DealsWithLogManager interface variable
+     */
+    LogManagerForDevelopers logManagerForDevelopers;
 
     /**
      * DealsWithPluginDatabaseSystem interface member variable
@@ -207,9 +218,23 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
         this.pluginFileSystem = pluginFileSystem;
     }
 
+    /**
+     * DealsWithLogManager
+     * @param logManagerForDevelopers
+     */
+    @Override
+    public void setLogManagers(LogManagerForDevelopers logManagerForDevelopers) {
+        this.logManagerForDevelopers = logManagerForDevelopers;
+    }
+
     @Override
     public void start() throws CantStartPluginException {
-        System.out.println("Starting CryptoVault...");
+        /**
+         * Log manager implementation
+         */
+        logManagerForDevelopers.changeLoggingLevel(LogLevel.MODERATE_LOGGING);
+        logManagerForDevelopers.Log("CryptoVault starting...");
+
         /**
          * I get the userId from the deviceUserManager
          */
