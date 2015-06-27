@@ -15,21 +15,4 @@ public class NetworkServiceAlreadyRegisteredException extends
 	public NetworkServiceAlreadyRegisteredException(final String message, final Exception cause, final String context, final String possibleReason) {
 		super(message, cause, context, possibleReason);
 	}
-
-	public NetworkServiceAlreadyRegisteredException(final String message, final Exception cause) {
-		this(message, cause, "", "");
-	}
-
-	public NetworkServiceAlreadyRegisteredException(final String message) {
-		this(message, null);
-	}
-
-	public NetworkServiceAlreadyRegisteredException(final Exception exception) {
-		this(exception.getMessage());
-		setStackTrace(exception.getStackTrace());
-	}
-
-	public NetworkServiceAlreadyRegisteredException() {
-		this(DEFAULT_MESSAGE);
-	}
 }

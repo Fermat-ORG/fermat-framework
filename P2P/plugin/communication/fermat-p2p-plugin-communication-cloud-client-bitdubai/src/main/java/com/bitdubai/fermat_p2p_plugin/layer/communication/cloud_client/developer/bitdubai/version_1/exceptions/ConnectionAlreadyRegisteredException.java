@@ -16,20 +16,4 @@ public class ConnectionAlreadyRegisteredException extends
 		super(message, cause, context, possibleReason);
 	}
 
-	public ConnectionAlreadyRegisteredException(final String message, final Exception cause) {
-		this(message, cause, "", "");
-	}
-
-	public ConnectionAlreadyRegisteredException(final String message) {
-		this(message, null);
-	}
-
-	public ConnectionAlreadyRegisteredException(final Exception exception) {
-		this(exception.getMessage());
-		setStackTrace(exception.getStackTrace());
-	}
-
-	public ConnectionAlreadyRegisteredException() {
-		this(DEFAULT_MESSAGE);
-	}
 }

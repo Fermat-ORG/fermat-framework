@@ -30,10 +30,11 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.FMPPacketF
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CloudFMPConnectionManager;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
+import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.CloudFMPClientStartFailedException;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.ConnectionAlreadyRegisteredException;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.ConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.IllegalPacketSenderException;
-import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.IllegalSignatureException;
+import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.IllegalPacketSignatureException;
 
 public class CloudClientCommunicationNetworkServiceVPN extends CloudFMPConnectionManager implements ServiceToServiceOnlineConnection {
 	
@@ -70,16 +71,16 @@ public class CloudClientCommunicationNetworkServiceVPN extends CloudFMPConnectio
 		}catch(NoSuchElementException ex){
 			key.interestOps(SelectionKey.OP_READ);
 		}catch(IOException ex){
-			throw new CloudCommunicationException(ex.getMessage());
+			throw wrapNIOSocketIOException(ex);
 		}
 	}
 
 	@Override
 	public void handleConnectionAccept(final FMPPacket dataPacket) throws FMPException {
 		if(!vpnPublicKey.equals(dataPacket.getSender()))
-			throw new IllegalPacketSenderException("should be " + vpnPublicKey + " but is " + dataPacket.getSender());
+			throw constructIllegalPacketSenderException(dataPacket);
 		if(!validatePacketSignature(dataPacket))
-			throw new IllegalSignatureException("bad signature for the packet: \n"+dataPacket.toString());
+			throw constructIllegalPacketSignatureException(dataPacket);
 		if(requestedConnections.isEmpty())
 			return;
 		
@@ -141,7 +142,7 @@ public class CloudClientCommunicationNetworkServiceVPN extends CloudFMPConnectio
 	@Override
 	public void start() throws CloudCommunicationException {
 		if(running.get())
-			throw new CloudCommunicationException();
+			throw new CloudFMPClientStartFailedException(CloudFMPClientStartFailedException.DEFAULT_MESSAGE, null, address.toString(), "The FMP Client is already running");
 		try{
 			selector = Selector.open();
 			clientChannel = SocketChannel.open();
@@ -155,15 +156,15 @@ public class CloudClientCommunicationNetworkServiceVPN extends CloudFMPConnectio
 			executor.execute(this);
 			requestConnectionToServer();
 		}catch(IOException ex){
-			throw new CloudCommunicationException(ex.getMessage());
+			throw wrapNIOSocketIOException(ex);
 		}
 	}
 	
 	private void requestConnectionToServer() throws CloudCommunicationException {
 		if(isRegistered())
-			throw new ConnectionAlreadyRegisteredException();
+			throw new ConnectionAlreadyRegisteredException(ConnectionAlreadyRegisteredException.DEFAULT_MESSAGE, null, getClass().toString(), "We've already registered our connection in the Server");
 		if(!requestedConnections.isEmpty())
-			throw new ConnectionAlreadyRequestedException();
+			throw new ConnectionAlreadyRequestedException(ConnectionAlreadyRequestedException.DEFAULT_MESSAGE, null, getClass().toString(), "We've already requested a connection to the FMP Server");
 		String sender = eccPublicKey;
 		String destination = peerPublicKey;
 		FMPPacketType type = FMPPacketType.CONNECTION_REQUEST;
@@ -178,7 +179,7 @@ public class CloudClientCommunicationNetworkServiceVPN extends CloudFMPConnectio
 			requestedConnections.put(vpnPublicKey, serverConnection);
 			registered.set(true);
 		} catch(FMPException ex){
-			throw new CloudCommunicationException(ex.getMessage());
+			throw wrapFMPException(sender, destination, type.toString(), message, signature, ex);
 		}
 	}
 
@@ -196,7 +197,7 @@ public class CloudClientCommunicationNetworkServiceVPN extends CloudFMPConnectio
 
 	public void sendMessage(String message) throws FMPException, CloudCommunicationException {
 		if(!isRegistered())
-			throw new CloudCommunicationException("Aun no estamos conectados");
+			throw new CloudCommunicationException(CloudCommunicationException.DEFAULT_MESSAGE, null, "", "We haven't registered the connection to the server");
 		String sender = eccPublicKey;
 		String destination = peerPublicKey;
 		FMPPacketType type = FMPPacketType.DATA_TRANSMIT;
@@ -218,7 +219,7 @@ public class CloudClientCommunicationNetworkServiceVPN extends CloudFMPConnectio
 		try{
 			start();
 		} catch(Exception ex){
-			throw new CantConnectToRemoteServiceException(ex.getMessage());
+			throw new CantConnectToRemoteServiceException(CantConnectToRemoteServiceException.DEFAULT_MESSAGE, ex, address.toString(), "The Reconnection Failed, check the cause");
 		}
 	}
 
@@ -244,7 +245,7 @@ public class CloudClientCommunicationNetworkServiceVPN extends CloudFMPConnectio
 		try{
 			sendMessage(message.getTextContent());
 		}catch(Exception ex){
-			throw new CantSendMessageException(ex.getMessage());
+			throw new CantSendMessageException(CantSendMessageException.DEFAULT_MESSAGE, ex, "Message Content:" + message.getTextContent(), "There was an errror sending the message, check the cause");
 		}
 	}
 
@@ -264,6 +265,43 @@ public class CloudClientCommunicationNetworkServiceVPN extends CloudFMPConnectio
 		if(pendingMessages.isEmpty()|| !pendingMessages.contains(message.getTextContent()))
 			throw new IllegalArgumentException("Message not in the stack");
 		pendingMessages.remove(message.getTextContent());
+	}
+
+	private IllegalPacketSenderException constructIllegalPacketSenderException(final FMPPacket packet){
+		String message = IllegalPacketSenderException.DEFAULT_MESSAGE;
+		String context = new String();
+		context += "Server Public Key: " + vpnPublicKey;
+		context += IllegalPacketSenderException.CONTEXT_CONTENT_SEPARATOR;
+		context += "Client Public Key: " + eccPublicKey;
+		context += IllegalPacketSenderException.CONTEXT_CONTENT_SEPARATOR;
+		context += "Packet Sender: " + packet.getSender();
+		String possibleReason = new String();
+		possibleReason += "This is a problem of the flow of the packets, this might be accidental or some echo loop.";
+		possibleReason += "This can also be an unexpected attack from an unexpected sender.";
+		return new IllegalPacketSenderException(message, null, context, possibleReason);
+	}
+
+	private IllegalPacketSignatureException constructIllegalPacketSignatureException(final FMPPacket packet){
+		String message = IllegalPacketSignatureException.DEFAULT_MESSAGE;
+		String context = "Data Packet Information: " + packet.toString();
+		String possibleReason = "There was an improper signature associated with this packet; check if you're using the standard Asymmetric Cryptography Signature method";
+		return new IllegalPacketSignatureException(message, null, context, possibleReason);
+	}
+
+	private CloudCommunicationException wrapFMPException(final String sender, final String destination, final String type, final String messageHash, final String signature, final FMPException cause){
+		String message = CloudCommunicationException.DEFAULT_MESSAGE;
+		String context = "Sender: " + sender;
+		context += CloudCommunicationException.CONTEXT_CONTENT_SEPARATOR;
+		context += "Destination: " + destination;
+		context += CloudCommunicationException.CONTEXT_CONTENT_SEPARATOR;
+		context += "Type: " + type;
+		context += CloudCommunicationException.CONTEXT_CONTENT_SEPARATOR;
+		context += "Message Hash: " + messageHash;
+		context += CloudCommunicationException.CONTEXT_CONTENT_SEPARATOR;
+		context += "Signature: " + signature;
+		String possibleReason = "The FMP Packet construction failed, check the cause and the values in the context";
+
+		return new CloudCommunicationException(message, cause, context, possibleReason);
 	}
 	
 }

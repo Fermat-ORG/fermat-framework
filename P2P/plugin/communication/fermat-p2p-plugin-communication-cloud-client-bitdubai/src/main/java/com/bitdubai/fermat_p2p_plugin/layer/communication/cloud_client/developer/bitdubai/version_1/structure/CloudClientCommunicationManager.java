@@ -2,8 +2,6 @@ package com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.develope
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.channels.ClosedChannelException;
-import java.nio.channels.IllegalBlockingModeException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
@@ -25,12 +23,11 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.FMPPacketF
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CloudFMPConnectionManager;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
-import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.ClientInitializationException;
+import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.CloudFMPClientStartFailedException;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.ConnectionAlreadyRegisteredException;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.ConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.IllegalPacketSenderException;
-import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.IllegalSignatureException;
-import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.NIOSocketException;
+import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.exceptions.IllegalPacketSignatureException;
 
 public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 	
@@ -63,16 +60,16 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 		}catch(NoSuchElementException ex){
 			key.interestOps(SelectionKey.OP_READ);
 		}catch(IOException ex){
-			throw new CloudCommunicationException(ex.getMessage());
+			throw wrapNIOSocketIOException(ex);
 		}
 	}
 	
 	@Override
 	public void handleConnectionAccept(final FMPPacket dataPacket) throws FMPException {
 		if(!serverPublicKey.equals(dataPacket.getSender()))
-			throw new IllegalPacketSenderException("should be " + serverPublicKey + " but is " + dataPacket.getSender());
+			throw constructIllegalPacketSenderException(dataPacket);
 		if(!validatePacketSignature(dataPacket))
-			throw new IllegalSignatureException("bad signature for the packet: \n"+dataPacket.toString());
+			throw constructIllegalPacketSignatureException(dataPacket);
 		if(requestedConnections.isEmpty())
 			return;
 		String serverAddress = dataPacket.getSender();
@@ -155,7 +152,7 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 	@Override
 	public void start() throws CloudCommunicationException {
 		if(running.get())
-			throw new CloudCommunicationException();
+			throw new CloudFMPClientStartFailedException(CloudFMPClientStartFailedException.DEFAULT_MESSAGE, null, address.toString(), "The FMP Client is already running");
 		try{
 			selector = Selector.open();
 			clientChannel = SocketChannel.open();
@@ -168,31 +165,29 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 			unregisteredConnections.put(serverPublicKey, serverConnection);
 			executor.execute(this);
 		} catch(IOException ex){
-			StringBuffer contextBuffer = new StringBuffer();
-			contextBuffer.append(address.toString());
-			throw new ClientInitializationException(ClientInitializationException.DEFAULT_MESSAGE, FermatException.wrapException(ex), contextBuffer.toString() , "Check if there is a server listening at the configured host and port");
+			throw wrapNIOSocketIOException(ex);
 		}
 	}
 	
 	public void requestConnectionToServer() throws CloudCommunicationException {
 		if(isRegistered())
-			throw new ConnectionAlreadyRegisteredException();
+			throw new ConnectionAlreadyRegisteredException(ConnectionAlreadyRegisteredException.DEFAULT_MESSAGE, null, getClass().toString(), "We've already registered our connection in the Server");
 		if(!requestedConnections.isEmpty())
-			throw new ConnectionAlreadyRequestedException();
+			throw new ConnectionAlreadyRequestedException(ConnectionAlreadyRequestedException.DEFAULT_MESSAGE, null, getClass().toString(), "We've already requested a connection to the FMP Server");
 		String sender = eccPublicKey;
 		String destination = serverPublicKey;
 		FMPPacketType type = FMPPacketType.CONNECTION_REQUEST;
-		String message = eccPublicKey;
-		String signature = AsymmectricCryptography.createMessageSignature(message, eccPrivateKey);
+		String messageHash = eccPublicKey;
+		String signature = AsymmectricCryptography.createMessageSignature(messageHash, eccPrivateKey);
 		try{
-			FMPPacket packet = FMPPacketFactory.constructCloudPacket(sender, destination, type, message, signature);
+			FMPPacket packet = FMPPacketFactory.constructCloudPacket(sender, destination, type, messageHash, signature);
 			pendingOutgoingMessages.add(packet);
 			SelectionKey serverConnection = unregisteredConnections.get(serverPublicKey);
 			serverConnection.interestOps(SelectionKey.OP_WRITE);
 			unregisteredConnections.remove(serverPublicKey);
 			requestedConnections.put(serverPublicKey, serverConnection);
 		} catch(FMPException ex){
-			throw new CloudCommunicationException(ex.getMessage(), ex);
+			throw wrapFMPException(sender, destination, type.toString(), messageHash, signature, ex);
 		}
 	}
 	
@@ -208,7 +203,7 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 			SelectionKey serverConnection = registeredConnections.get(serverPublicKey);
 			serverConnection.interestOps(SelectionKey.OP_WRITE);
 		} catch(FMPException ex){
-			throw new CloudCommunicationException(ex.getMessage());
+			throw wrapFMPException(sender, destination, type.toString(), messageHash, signature, ex);
 		}
 	}
 	
@@ -226,5 +221,43 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 		String sender = dataPacket.getSender();
 		return AsymmectricCryptography.verifyMessageSignature(signature, message, sender);
 	}
+
+	private IllegalPacketSenderException constructIllegalPacketSenderException(final FMPPacket packet){
+		String message = IllegalPacketSenderException.DEFAULT_MESSAGE;
+		String context = new String();
+		context += "Server Public Key: " + serverPublicKey;
+		context += IllegalPacketSenderException.CONTEXT_CONTENT_SEPARATOR;
+		context += "Client Public Key: " + eccPublicKey;
+		context += IllegalPacketSenderException.CONTEXT_CONTENT_SEPARATOR;
+		context += "Packet Sender: " + packet.getSender();
+		String possibleReason = new String();
+		possibleReason += "This is a problem of the flow of the packets, this might be accidental or some echo loop.";
+		possibleReason += "This can also be an unexpected attack from an unexpected sender.";
+		return new IllegalPacketSenderException(message, null, context, possibleReason);
+	}
+
+	private IllegalPacketSignatureException constructIllegalPacketSignatureException(final FMPPacket packet){
+		String message = IllegalPacketSignatureException.DEFAULT_MESSAGE;
+		String context = "Data Packet Information: " + packet.toString();
+		String possibleReason = "There was an improper signature associated with this packet; check if you're using the standard Asymmetric Cryptography Signature method";
+		return new IllegalPacketSignatureException(message, null, context, possibleReason);
+	}
+
+	private CloudCommunicationException wrapFMPException(final String sender, final String destination, final String type, final String messageHash, final String signature, final FMPException cause){
+		String message = CloudCommunicationException.DEFAULT_MESSAGE;
+		String context = "Sender: " + sender;
+		context += CloudCommunicationException.CONTEXT_CONTENT_SEPARATOR;
+		context += "Destination: " + destination;
+		context += CloudCommunicationException.CONTEXT_CONTENT_SEPARATOR;
+		context += "Type: " + type;
+		context += CloudCommunicationException.CONTEXT_CONTENT_SEPARATOR;
+		context += "Message Hash: " + messageHash;
+		context += CloudCommunicationException.CONTEXT_CONTENT_SEPARATOR;
+		context += "Signature: " + signature;
+		String possibleReason = "The FMP Packet construction failed, check the cause and the values in the context";
+
+		return new CloudCommunicationException(message, cause, context, possibleReason);
+	}
+
 	
 }

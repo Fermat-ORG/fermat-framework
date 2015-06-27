@@ -15,22 +15,5 @@ public class CantConnectToRemoteServiceException extends CommunicationException 
 	public CantConnectToRemoteServiceException(final String message, final Exception cause, final String context, final String possibleReason) {
 		super(message, cause, context, possibleReason);
 	}
-
-	public CantConnectToRemoteServiceException(final String message, final Exception cause) {
-		this(message, cause, "", "");
-	}
-
-	public CantConnectToRemoteServiceException(final String message) {
-		this(message, null);
-	}
-
-	public CantConnectToRemoteServiceException(final Exception exception) {
-		this(exception.getMessage());
-		setStackTrace(exception.getStackTrace());
-	}
-
-	public CantConnectToRemoteServiceException() {
-		this(DEFAULT_MESSAGE);
-	}
 	
 }
