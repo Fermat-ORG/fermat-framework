@@ -16,22 +16,4 @@ public class CantSendMessageException extends CommunicationException {
 		super(message, cause, context, possibleReason);
 	}
 
-	public CantSendMessageException(final String message, final Exception cause) {
-		this(message, cause, "", "");
-	}
-
-	public CantSendMessageException(final String message) {
-		this(message, null);
-	}
-
-	public CantSendMessageException(final Exception exception) {
-		this(exception.getMessage());
-		setStackTrace(exception.getStackTrace());
-	}
-
-	public CantSendMessageException() {
-		this(DEFAULT_MESSAGE);
-	}
-	
-	
 }

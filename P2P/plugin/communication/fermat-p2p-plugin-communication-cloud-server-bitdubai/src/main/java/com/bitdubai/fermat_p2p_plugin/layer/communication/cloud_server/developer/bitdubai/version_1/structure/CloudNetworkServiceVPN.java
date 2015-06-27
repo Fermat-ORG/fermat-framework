@@ -15,7 +15,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket.FMPPacketType;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.exceptions.RegisteringAddressHasNotRequestedConnectionException;
-import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.exceptions.WrongFMPPacketEncryptionException;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.WrongFMPPacketEncryptionException;
 
 public class CloudNetworkServiceVPN extends CloudFMPConnectionManager {
 
@@ -62,7 +62,7 @@ public class CloudNetworkServiceVPN extends CloudFMPConnectionManager {
 		if(unregisteredConnections.containsKey(packet.getSender()))
 			registerConnection(packet);
 		else
-			throw new RegisteringAddressHasNotRequestedConnectionException(packet.getSender());
+			throw constructRegisteringAddressHasNotRequestedConnectionException(packet);
 	}
 
 	@Override
@@ -119,8 +119,7 @@ public class CloudNetworkServiceVPN extends CloudFMPConnectionManager {
 		try{
 			networkService = NetworkServices.valueOf(AsymmectricCryptography.decryptMessagePrivateKey(packet.getMessage(), eccPrivateKey));
 		} catch(Exception ex){
-			FMPException exception = new WrongFMPPacketEncryptionException(ex.getMessage());
-			denyConnectionRequest(packet, exception.getMessage());
+			denyConnectionRequest(packet, ex.getMessage());
 			return;
 		}
 		
@@ -181,6 +180,20 @@ public class CloudNetworkServiceVPN extends CloudFMPConnectionManager {
 	private void writeToConnection(final FMPPacket packet, final SelectionKey connection){
 		connection.attach(packet);
 		connection.interestOps(SelectionKey.OP_WRITE);
+	}
+
+	private RegisteringAddressHasNotRequestedConnectionException constructRegisteringAddressHasNotRequestedConnectionException(final FMPPacket packet){
+		String message = RegisteringAddressHasNotRequestedConnectionException.DEFAULT_MESSAGE;
+		String possibleReason = "This can happen whenever we receive a CONNECTION_REGISTER packet before a CONNECTION_REQUEST packet";
+		possibleReason += " even though this might be due to improper client message flow, it can also be a threading problem";
+		possibleReason += " as we can process a register packet for a connection that has already been registered, we need to improve this";
+
+		String context = "Packet Data: " + packet.toString();
+		context += RegisteringAddressHasNotRequestedConnectionException.CONTEXT_CONTENT_SEPARATOR;
+		context += "Is this connection already registered? " + registeredConnections.containsKey(packet.getSender());
+
+		return new RegisteringAddressHasNotRequestedConnectionException(message, null, context, possibleReason);
+
 	}
 
 }

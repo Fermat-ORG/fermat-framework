@@ -108,14 +108,14 @@ public class CloudFMPPacket implements FMPPacket {
 	*/
 	private String[] validatePacketDataString(final String packetData) throws FMPException {
 		if(packetData == null)
-			throw new MalformedFMPPacketException("null string");
+			throw new MalformedFMPPacketException(MalformedFMPPacketException.DEFAULT_MESSAGE, null, "", "The packet data is null");
 		if(packetData.isEmpty())
-			throw new MalformedFMPPacketException("empty string");
+			throw new MalformedFMPPacketException(MalformedFMPPacketException.DEFAULT_MESSAGE, null, "", "The packet data is empty");
 		String[] splitData = packetData.split(PACKET_SEPARATOR);
 		if(splitData.length < PACKET_SEPARATOR_PARTS)
-			throw new MalformedFMPPacketException(packetData);
+			throw new MalformedFMPPacketException(MalformedFMPPacketException.DEFAULT_MESSAGE, null, packetData, "The packet data is not properly assembled");
 		if(splitData.length > PACKET_SEPARATOR_PARTS)
-			throw new MalformedFMPPacketException(packetData);
+			throw new MalformedFMPPacketException(MalformedFMPPacketException.DEFAULT_MESSAGE, null, packetData, "The packet data is not properly assembled");
 		return splitData;
 	}
 

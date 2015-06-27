@@ -15,19 +15,8 @@ public abstract class FMPException extends FermatException {
 
 	private static final String DEFAULT_MESSAGE = "THE FERMAT MESSAGING PROTOCOL HAS THROWN AN EXCEPTION";
 
-	public FMPException(final String message, final Exception cause, final String context, final String possibleReason){
+	public FMPException(final String message, final Exception cause, final String context, final String possibleReason) {
 		super(message, cause, context, possibleReason);
-	}
-	public FMPException(final String message, final Exception cause){
-		this(message, cause, "", "");
-	}
-
-	public FMPException(final String message){
-		this(message, null);
-	}
-
-	public FMPException(){
-		this(DEFAULT_MESSAGE);
 	}
 
 }
