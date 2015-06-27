@@ -41,6 +41,8 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
 
     private DatabaseTool databaseTools;
 
+    private String resource;
+
     List<DeveloperDatabase> developerDatabaseList;
 
     private static Platform platform = new Platform();
@@ -75,11 +77,9 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         rootView = inflater.inflate(R.layout.fragment_database_tools, container, false);
-        String item = null;
         try {
-            item = getArguments().getString("resource");
-            String name = item.split(" - ")[0];
-            String type = item.split(" - ")[1];
+            String name = resource.split(" - ")[0];
+            String type = resource.split(" - ")[1];
             if (type.equals("Addon")) {
                 Addons addon = Addons.getByKey(name);
                 this.developerDatabaseList = databaseTools.getDatabaseListFromAddon(addon);
@@ -87,18 +87,12 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
                 Plugins plugin = Plugins.getByKey(name);
                 this.developerDatabaseList = databaseTools.getDatabaseListFromPlugin(plugin);
             }
-        } catch (InvalidParameterException invalidParameterException) {
-            System.out.println("******************* estas hasta la vaina");
-            showMessage(invalidParameterException.getMessage());
-        }
-
-        try {
 
             // Get ListView object from xml
             final ListView listView = (ListView) rootView.findViewById(R.id.lista1);
 
             TextView labelDatabase = (TextView) rootView.findViewById(R.id.labelDatabase);
-            labelDatabase.setText(item+" - Databases List");
+            labelDatabase.setText(resource+" - Databases List");
 
             final List<DeveloperDatabase> developerDatabaseList2 = developerDatabaseList;
 
@@ -122,6 +116,7 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
                     for (DeveloperDatabase devDB : developerDatabaseList2) {
                         if (devDB.getName().equals(item)) {
                             DatabaseToolsDatabaseTableListFragment databaseToolsDatabaseTableListFragment = new DatabaseToolsDatabaseTableListFragment();
+                            databaseToolsDatabaseTableListFragment.setResource(resource);
                             databaseToolsDatabaseTableListFragment.setDeveloperDatabase(devDB);
 
                             FragmentTransaction FT = getFragmentManager().beginTransaction();
@@ -157,5 +152,9 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
         });
         //alertDialog.setIcon(R.drawable.icon);
         alertDialog.show();
+    }
+
+    public void setResource(String resource) {
+        this.resource = resource;
     }
 }
