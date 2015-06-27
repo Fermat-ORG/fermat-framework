@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.CantStartLayerException;
 import com.bitdubai.fermat_api.layer.PlatformLayer;
 
 
+import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DealWithDatabaseManagers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DealWithLogManagers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -887,7 +888,7 @@ public class Platform  {
         Addon addon = corePlatformContext.getAddon(descriptor);
         if(addon == null)
             return;
-        if(addon instanceof DealWithDatabaseManagers)
+        if(addon instanceof DatabaseManagerForDevelopers)
             dealsWithDatabaseManagersAddons.put(descriptor, addon);
         if(addon instanceof DealWithLogManagers)
             dealsWithLogManagersAddons.put(descriptor, addon);
@@ -897,7 +898,7 @@ public class Platform  {
         Plugin plugin = corePlatformContext.getPlugin(descriptor);
         if(plugin == null)
             return;
-        if(plugin instanceof DealWithDatabaseManagers)
+        if(plugin instanceof DatabaseManagerForDevelopers)
             dealsWithDatabaseManagersPlugins.put(descriptor, plugin);
         if(plugin instanceof DealWithLogManagers)
             dealsWithLogManagersPlugins.put(descriptor, plugin);
