@@ -61,8 +61,8 @@ public class TransactionExecutor implements DealsWithBitcoinWallet, DealsWithWal
 
         UUID temporalId = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
 
-        BitcoinWallet bitcoinWallet = bitcoinWalletManager.loadWallet(temporalId);
-        bitcoinWallet.credit(generateBitcoinTransaction(transaction.getInformation()));
+        BitcoinWallet bitcoinWallet2 = bitcoinWalletManager.loadWallet(temporalId);
+        bitcoinWallet2.credit(generateBitcoinTransaction(transaction.getInformation()));
         if (true)
           return;
 
@@ -79,7 +79,7 @@ public class TransactionExecutor implements DealsWithBitcoinWallet, DealsWithWal
 
         switch (platformWalletType) {
             case BASIC_WALLET_BITCOIN_WALLET:
-                // BitcoinWallet bitcoinWallet = bitcoinWalletManager.loadWallet(walletID);
+                BitcoinWallet bitcoinWallet = bitcoinWalletManager.loadWallet(walletID);
                 bitcoinWallet.credit(generateBitcoinTransaction(transaction.getInformation()));
                 return;
             default:

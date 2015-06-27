@@ -285,7 +285,7 @@ public class IncomingExtraUserTransactionPluginRoot implements DealsWithBitcoinW
         }
 
         this.serviceStatus = ServiceStatus.STARTED;
-
+        System.out.println("IncomingExtraUser Plugin Started");
     }
 
     @Override
