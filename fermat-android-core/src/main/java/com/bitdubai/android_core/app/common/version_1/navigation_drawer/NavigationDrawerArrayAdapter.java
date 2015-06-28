@@ -1,4 +1,4 @@
-package com.bitdubai.android_core.app.common.version_1.classes;
+package com.bitdubai.android_core.app.common.version_1.navigation_drawer;
 
 import android.content.Context;
 import android.view.LayoutInflater;

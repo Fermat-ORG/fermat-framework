@@ -16,10 +16,11 @@ import android.view.Window;
 import android.widget.TextView;
 
 import com.bitdubai.fermat.R;
-import com.bitdubai.android_core.app.common.version_1.classes.PagerSlidingTabStrip;
 
 //import com.astuetz.PagerSlidingTabStrip;
 //import com.astuetz.PagerSlidingTabStrip.IconTabProvider;
+
+// TODO: RAul; Estas tres clases son la implemtacion de este tipo de tabs que la sacamos de algun lado. No hay mucho que hacer mas que ponerlas mas prolijas y ver si hace falta mejorar el reporte de excepciones.
 
 public class TabbedDialogFragment extends DialogFragment {
 

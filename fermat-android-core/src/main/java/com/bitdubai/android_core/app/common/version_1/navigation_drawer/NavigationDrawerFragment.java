@@ -33,13 +33,15 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.fermat.R;
-import com.bitdubai.android_core.app.common.version_1.classes.NavigationDrawerArrayAdapter;
 import com.bitdubai.sub_app.wallet_factory.fragment.version_3.activity.FactoryActivity;
 import com.bitdubai.sub_app.wallet_publisher.activity.PublisherActivity;
 import com.bitdubai.sub_app.wallet_publisher.activity.ShopsActivity;
 
 
 import java.util.List;
+
+
+// TODO; RAUL;  Esta clase fue tomada de algun lado para implementar el navigation drawer. Me imagino que no hay mucho que tocar, quizas ponerla mas prolija, ver el tema de las excepciones, etc.
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.

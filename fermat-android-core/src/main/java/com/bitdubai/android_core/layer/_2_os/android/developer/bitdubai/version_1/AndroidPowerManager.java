@@ -1,4 +1,4 @@
-package com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.device_power;
+package com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.layer.osa_android.device_power.PlugType;
 import com.bitdubai.fermat_api.layer.osa_android.device_power.PowerManager;

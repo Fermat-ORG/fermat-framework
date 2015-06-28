@@ -9,6 +9,8 @@ import android.support.v4.app.FragmentPagerAdapter;
  */
 public class PagerAdapter extends FragmentPagerAdapter {
 
+    // TODO Raul: Fijarse en que se usa esto y donde deberia quedar si es que se usa
+
     private List<Fragment> fragments;
     /**
      * @param fm

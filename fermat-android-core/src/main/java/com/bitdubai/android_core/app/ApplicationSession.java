@@ -18,7 +18,7 @@ import android.view.Window;
 import android.widget.TextView;
 
 import com.bitdubai.android_core.app.common.version_1.classes.MyTypefaceSpan;
-import com.bitdubai.android_core.app.common.version_1.classes.PagerSlidingTabStrip;
+import com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.AppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.TitleBar;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime.WalletRuntimeManager;
