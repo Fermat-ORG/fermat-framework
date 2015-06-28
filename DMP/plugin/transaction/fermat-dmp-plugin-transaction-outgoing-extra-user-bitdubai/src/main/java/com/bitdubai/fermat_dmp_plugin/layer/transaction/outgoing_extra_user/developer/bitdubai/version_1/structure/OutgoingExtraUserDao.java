@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.BitcoinTransaction;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionState;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
+import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.exceptions.InsufficientFundsException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -24,7 +25,6 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorMan
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.enums.TransactionStatus;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.exceptions.CantInitializeDaoException;
-import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.exceptions.CantRegisterNewTransactionException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.exceptions.InconsistentTableStateException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.util.TransactionWrapper;
 
@@ -72,25 +72,25 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
     public void initialize(UUID pluginId) throws CantInitializeDaoException {
 
         try {
-            this.database = this.pluginDatabaseSystem.openDatabase(pluginId, OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_DATABASE_TABLE_NAME);
+            this.database = this.pluginDatabaseSystem.openDatabase(pluginId, OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_DATABASE_NAME);
         } catch (DatabaseNotFoundException e) {
 
             OutgoingExtraUserDatabaseFactory databaseFactory = new OutgoingExtraUserDatabaseFactory();
             databaseFactory.setPluginDatabaseSystem(this.pluginDatabaseSystem);
 
             try {
-                this.database = databaseFactory.createDatabase(pluginId, OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_DATABASE_TABLE_NAME);
+                this.database = databaseFactory.createDatabase(pluginId, OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_DATABASE_NAME);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
-                throw new CantInitializeDaoException();
+                throw new CantInitializeDaoException("I couldn't create the database",cantCreateDatabaseException,"Database Name: "+OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_DATABASE_NAME,"");
             }
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
-            throw new CantInitializeDaoException();
+            throw new CantInitializeDaoException("I couldn't open the database",cantOpenDatabaseException,"Database Name: "+OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_DATABASE_NAME,"");
         }
     }
 
-    public void registerNewTransaction(UUID walletID, CryptoAddress destinationAddress, long cryptoAmount) throws CantRegisterNewTransactionException, CantInsertRecordException {
+    public void registerNewTransaction(UUID walletID, CryptoAddress destinationAddress, long cryptoAmount) throws CantInsertRecordException {
         DatabaseTable transactionTable = this.database.getTable(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_NAME);
 
         DatabaseTableRecord recordToInsert = transactionTable.getEmptyRecord();
@@ -111,6 +111,10 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
 
     public List<TransactionWrapper> getSentToCryptoVaultTransactions() throws CantLoadTableToMemory, InvalidParameterException {
         return getAllInState(TransactionStatus.SENT_TO_CRYPTO_VOULT);
+    }
+
+    public void cancelTransaction(TransactionWrapper bitcoinTransaction) throws CantUpdateRecord, InconsistentTableStateException, CantLoadTableToMemory {
+        setToState(bitcoinTransaction, TransactionStatus.CANCELED);
     }
 
     public void setToNew(TransactionWrapper bitcoinTransaction) throws CantUpdateRecord, InconsistentTableStateException, CantLoadTableToMemory {
@@ -168,7 +172,7 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
         records = transactionTable.getRecords();
 
         if(records.size() != 1)
-            throw new InconsistentTableStateException();
+            throw new InconsistentTableStateException("The number of records with a primary key is different thatn one ",null,"The id is: "+id.toString(),"");
 
         return records.get(0);
     }
