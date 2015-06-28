@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.fermat.R;
-import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 
 
 /**
@@ -92,20 +92,20 @@ public class ReceiveFromContactFragment  extends android.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.wallets_teens_fragment_receive_from_contact, container, false);
 
-        String[] tagId = MyApplication.getChildId().split("-");
+        String[] tagId = ApplicationSession.getChildId().split("-");
         TextView tv;
 
         tv = (TextView) rootView.findViewById(R.id.notes);
-        tv.setTypeface(MyApplication.getDefaultTypeface());
+        tv.setTypeface(ApplicationSession.getDefaultTypeface());
         tv.setText(transactions[Integer.parseInt(tagId[0])][Integer.parseInt(tagId[1])]);
 
         tv = (TextView) rootView.findViewById(R.id.amount);
-        tv.setTypeface(MyApplication.getDefaultTypeface());
+        tv.setTypeface(ApplicationSession.getDefaultTypeface());
         tv.setText(transactions_amounts[Integer.parseInt(tagId[0])][Integer.parseInt(tagId[1])]);
         tv.requestFocus();
 
         tv = (TextView) rootView.findViewById(R.id.contact_name);
-        tv.setTypeface(MyApplication.getDefaultTypeface());
+        tv.setTypeface(ApplicationSession.getDefaultTypeface());
         tv.setText(contacts[Integer.parseInt(tagId[0])]);
 
         ImageView profile_picture = (ImageView) rootView.findViewById(R.id.profile_picture);

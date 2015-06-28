@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.android_core.app.SubAppActivity;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.AppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Activities;
@@ -21,8 +22,6 @@ import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.fermat.R;
 
-
-import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -259,7 +258,7 @@ public class ShopFragment extends Fragment {
                // intent = new Intent(getActivity(), ShopActivity.class);
                 //startActivity(intent);
 
-                Platform platform = MyApplication.getFermatPlatform();
+                Platform platform = ApplicationSession.getFermatPlatform();
                 CorePlatformContext platformContext = platform.getCorePlatformContext();
 
                 AppRuntimeManager appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
@@ -377,12 +376,12 @@ public class ShopFragment extends Fragment {
             holder.timeToArrive.setText( position + " min");
 
 
-            holder.openHours.setTypeface(MyApplication.getDefaultTypeface());
-            holder.timeToArrive.setTypeface(MyApplication.getDefaultTypeface());
-            holder.titleTextView.setTypeface(MyApplication.getDefaultTypeface());
-            holder.companyTextView.setTypeface(MyApplication.getDefaultTypeface());
-            holder.companyDescription.setTypeface(MyApplication.getDefaultTypeface());
-            holder.valueTextView.setTypeface(MyApplication.getDefaultTypeface());
+            holder.openHours.setTypeface(ApplicationSession.getDefaultTypeface());
+            holder.timeToArrive.setTypeface(ApplicationSession.getDefaultTypeface());
+            holder.titleTextView.setTypeface(ApplicationSession.getDefaultTypeface());
+            holder.companyTextView.setTypeface(ApplicationSession.getDefaultTypeface());
+            holder.companyDescription.setTypeface(ApplicationSession.getDefaultTypeface());
+            holder.valueTextView.setTypeface(ApplicationSession.getDefaultTypeface());
 
             if (item.rate >= 0)
             {

@@ -11,10 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.fermat.R;
-import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
-
-
 
 
 public  class SendToContactFragment extends android.app.Fragment {
@@ -44,7 +42,7 @@ public  class SendToContactFragment extends android.app.Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        MyApplication.changeColor(Color.parseColor("#F0E173"), super.getActivity().getResources());
+        ApplicationSession.changeColor(Color.parseColor("#F0E173"), super.getActivity().getResources());
         contacts = new String[]{ "", "Guillermo Villanueva", "Luis Fernando Molina", "Pedro Perrotta", "Mariana Duyos"};
         amounts = new String[]{ "", "$1,400.00", "$325.00", "$0.50", "$25.00"};
         whens = new String[]{ "", "2 hours ago", "3 min ago", "today 9:24 AM", "yesterday"};
@@ -88,15 +86,15 @@ public  class SendToContactFragment extends android.app.Fragment {
         rootView = inflater.inflate(R.layout.wallets_teens_fragment_send_to_contact, container, false);
 
 
-        String[] tagId = MyApplication.getChildId().split("\\|");
+        String[] tagId = ApplicationSession.getChildId().split("\\|");
         TextView tv;
 //if tagId[1] = -1 no show data
        if (Integer.parseInt(tagId[1]) == -1) {
             tv = (TextView) rootView.findViewById(R.id.notes);
-            tv.setTypeface(MyApplication.getDefaultTypeface());
+            tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
             tv = (TextView) rootView.findViewById(R.id.amount);
-            tv.setTypeface(MyApplication.getDefaultTypeface());
+            tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
 //add listener text change, to update discount
 
@@ -137,26 +135,26 @@ public  class SendToContactFragment extends android.app.Fragment {
            });
            tv.requestFocus();
             tv = (TextView) rootView.findViewById(R.id.contact_name);
-            tv.setTypeface(MyApplication.getDefaultTypeface());
+            tv.setTypeface(ApplicationSession.getDefaultTypeface());
            tv.setText(contacts[Integer.parseInt(tagId[0])]);
 
             tv = (TextView) rootView.findViewById(R.id.percentage);
-            tv.setTypeface(MyApplication.getDefaultTypeface());
+            tv.setTypeface(ApplicationSession.getDefaultTypeface());
            int porcen = (int )(Math.random() * 15 + 1);
            tv.setText(String.valueOf(porcen) + "%");
 
             tv = (TextView) rootView.findViewById(R.id.discounted);
-            tv.setTypeface(MyApplication.getDefaultTypeface());
+            tv.setTypeface(ApplicationSession.getDefaultTypeface());
             tv.setText("$0.00");
         }
         else {
             tv = (TextView) rootView.findViewById(R.id.notes);
-            tv.setTypeface(MyApplication.getDefaultTypeface());
+            tv.setTypeface(ApplicationSession.getDefaultTypeface());
                 tv.setText(transactions[Integer.parseInt(tagId[0])][Integer.parseInt(tagId[1])]);
             tv.setSelected(false);
 
             tv = (TextView) rootView.findViewById(R.id.amount);
-            tv.setTypeface(MyApplication.getDefaultTypeface());
+            tv.setTypeface(ApplicationSession.getDefaultTypeface());
                 tv.setText(transactions_amounts[Integer.parseInt(tagId[0])][Integer.parseInt(tagId[1])]);
 
            //add listener text change, to update discount
@@ -216,15 +214,15 @@ public  class SendToContactFragment extends android.app.Fragment {
            });
            tv.requestFocus();
             tv = (TextView) rootView.findViewById(R.id.contact_name);
-            tv.setTypeface(MyApplication.getDefaultTypeface());
+            tv.setTypeface(ApplicationSession.getDefaultTypeface());
            tv.setText(contacts[Integer.parseInt(tagId[0])]);
             tv = (TextView) rootView.findViewById(R.id.percentage);
-            tv.setTypeface(MyApplication.getDefaultTypeface());
+            tv.setTypeface(ApplicationSession.getDefaultTypeface());
           //  tv.setText(Percentage[Integer.parseInt(tagId[0])]);
            int porcen = (int )(Math.random() * 15 + 1);
            tv.setText(String.valueOf(porcen) + "%");
             tv = (TextView) rootView.findViewById(R.id.discounted);
-            tv.setTypeface(MyApplication.getDefaultTypeface());
+            tv.setTypeface(ApplicationSession.getDefaultTypeface());
            double discount = (porcen * Double.parseDouble(transactions_amounts[Integer.parseInt(tagId[0])][Integer.parseInt(tagId[1])].toString().replace("$", ""))) / 100;
 
             tv.setText("$" + String.valueOf(discount));

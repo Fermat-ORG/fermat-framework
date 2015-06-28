@@ -11,8 +11,8 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.fermat.R;
-import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 
 
 public  class ShopChatFragment extends Fragment {
@@ -214,13 +214,13 @@ public  class ShopChatFragment extends Fragment {
 
                 amount = new ViewHolder();
                 amount.text = (TextView) convertView.findViewById(R.id.amount);
-                amount.text.setTypeface(MyApplication.getDefaultTypeface());
+                amount.text.setTypeface(ApplicationSession.getDefaultTypeface());
                 amount.text.setText(transactions_amounts[groupPosition][childPosition].toString());
 
 
                 when = new ViewHolder();
                 when.text = (TextView) convertView.findViewById(R.id.when);
-                when.text.setTypeface(MyApplication.getDefaultTypeface());
+                when.text.setTypeface(ApplicationSession.getDefaultTypeface());
                 when.text.setText(transactions_whens[groupPosition][childPosition].toString());
 
                 ImageView send_to_contact =  (ImageView) convertView.findViewById(R.id.icon_send_to_contact);
@@ -253,19 +253,19 @@ public  class ShopChatFragment extends Fragment {
                 TextView tv;
 
                 tv = (TextView) convertView.findViewById(R.id.notes);
-                tv.setTypeface(MyApplication.getDefaultTypeface());
+                tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
                 tv = (TextView) convertView.findViewById(R.id.amount);
-                tv.setTypeface(MyApplication.getDefaultTypeface());
+                tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
                 tv = (TextView) convertView.findViewById(R.id.new_contact_name);
-                tv.setTypeface(MyApplication.getDefaultTypeface());
+                tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
                 tv = (TextView) convertView.findViewById(R.id.when);
-                tv.setTypeface(MyApplication.getDefaultTypeface());
+                tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
                 tv = (TextView) convertView.findViewById(R.id.contact_name);
-                tv.setTypeface(MyApplication.getDefaultTypeface());
+                tv.setTypeface(ApplicationSession.getDefaultTypeface());
                 tv.setText("Send to new contact");
 
 
@@ -326,32 +326,32 @@ public  class ShopChatFragment extends Fragment {
 
                     holder = new ViewHolder();
                     holder.text = (TextView) view.findViewById(R.id.contact_name);
-                    holder.text.setTypeface(MyApplication.getDefaultTypeface());
+                    holder.text.setTypeface(ApplicationSession.getDefaultTypeface());
                     view.setTag(holder);
 
 
                     chat = new ViewHolder();
                     chat.text = (TextView) view.findViewById(R.id.title);
-                    chat.text.setTypeface(MyApplication.getDefaultTypeface());
+                    chat.text.setTypeface(ApplicationSession.getDefaultTypeface());
                     chat.text.setText(chats[groupPosition].toString());
 
 
                     chat_a = new ViewHolder();
                     chat_a.text = (TextView) view.findViewById(R.id.title_a);
-                    chat_a.text.setTypeface(MyApplication.getDefaultTypeface());
+                    chat_a.text.setTypeface(ApplicationSession.getDefaultTypeface());
                     chat_a.text.setText(chats_a[groupPosition].toString());
 
 
                     when = new ViewHolder();
                     when.text = (TextView) view.findViewById(R.id.hour);
-                    when.text.setTypeface(MyApplication.getDefaultTypeface());
+                    when.text.setTypeface(ApplicationSession.getDefaultTypeface());
 
                     when.text.setText(whens[groupPosition].toString());
 
 
                     when_a = new ViewHolder();
                     when_a.text = (TextView) view.findViewById(R.id.hour_a);
-                    when_a.text.setTypeface(MyApplication.getDefaultTypeface());
+                    when_a.text.setTypeface(ApplicationSession.getDefaultTypeface());
 
                     when_a.text.setText(whens_a[groupPosition].toString());
                     //expand icon

@@ -12,8 +12,8 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.fermat.R;
-import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 
 
 /**
@@ -231,23 +231,23 @@ public class ReviewsFragment extends Fragment {
 
                 holder = new ViewHolder();
                 holder.text = (TextView) convertView.findViewById(R.id.contact_name);
-                holder.text.setTypeface(MyApplication.getDefaultTypeface());
+                holder.text.setTypeface(ApplicationSession.getDefaultTypeface());
                 convertView.setTag(holder);
 
                 review = new ViewHolder();
                 review.text = (TextView) convertView.findViewById(R.id.review);
-                review.text.setTypeface(MyApplication.getDefaultTypeface());
+                review.text.setTypeface(ApplicationSession.getDefaultTypeface());
 
                 review.text.setText(reviews[groupPosition].toString());
 
                 like = new ViewHolder();
                 like.text = (TextView) convertView.findViewById(R.id.like_amount);
-                like.text.setTypeface(MyApplication.getDefaultTypeface());
+                like.text.setTypeface(ApplicationSession.getDefaultTypeface());
                 like.text.setText(likes[groupPosition].toString());
 
                 dislike = new ViewHolder();
                 dislike.text = (TextView) convertView.findViewById(R.id.dislike_amount);
-                dislike.text.setTypeface(MyApplication.getDefaultTypeface());
+                dislike.text.setTypeface(ApplicationSession.getDefaultTypeface());
                 dislike.text.setText(dislikes[groupPosition].toString());
 
                 star1 = (ImageView) convertView.findViewById(R.id.star_1);

@@ -10,8 +10,8 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.fermat.R;
-import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 
 /**
  * Created by Natalia on 08/01/2015.
@@ -74,7 +74,7 @@ public class ChatOverTransactionFragment extends android.app.Fragment {
                 {"today 9:24 AM"},
                 {"yesterday"}
         };
-        String[] tagId = MyApplication.getChildId().split("\\|");
+        String[] tagId = ApplicationSession.getChildId().split("\\|");
 
 
         final ViewGroup actionBarLayout = (ViewGroup) getActivity().getLayoutInflater().inflate(
@@ -92,7 +92,7 @@ public class ChatOverTransactionFragment extends android.app.Fragment {
         TextView tv;
 
         tv = (TextView) actionBarLayout.findViewById(R.id.contact_name);
-        tv.setTypeface(MyApplication.getDefaultTypeface());
+        tv.setTypeface(ApplicationSession.getDefaultTypeface());
         tv.setText(contactsheader[Integer.parseInt(tagId[0])].toString());
 
 
@@ -117,15 +117,15 @@ public class ChatOverTransactionFragment extends android.app.Fragment {
         }
 
         tv = (TextView) actionBarLayout.findViewById(R.id.notes);
-        tv.setTypeface(MyApplication.getDefaultTypeface());
+        tv.setTypeface(ApplicationSession.getDefaultTypeface());
         tv.setText(transactionsheader[Integer.parseInt(tagId[0])][Integer.parseInt(tagId[1])]);
 
         tv = (TextView) actionBarLayout.findViewById(R.id.amount);
-        tv.setTypeface(MyApplication.getDefaultTypeface());
+        tv.setTypeface(ApplicationSession.getDefaultTypeface());
         tv.setText(transactions_amountsheader[Integer.parseInt(tagId[0])][Integer.parseInt(tagId[1])]);;
 
         tv = (TextView) actionBarLayout.findViewById(R.id.when);
-        tv.setTypeface(MyApplication.getDefaultTypeface());
+        tv.setTypeface(ApplicationSession.getDefaultTypeface());
         tv.setText(transactions_whensheader[Integer.parseInt(tagId[0])][Integer.parseInt(tagId[1])]);
 
         this.contacts = new String[]{"","","","","","","","","","","","",""};
@@ -160,10 +160,10 @@ public class ChatOverTransactionFragment extends android.app.Fragment {
         TextView button;
 
         userInput = ((TextView)rootView.findViewById(R.id.edit_text));
-        userInput.setTypeface(MyApplication.getDefaultTypeface());
+        userInput.setTypeface(ApplicationSession.getDefaultTypeface());
 
         button = ((TextView)rootView.findViewById(R.id.send_message_button));
-        button.setTypeface(MyApplication.getDefaultTypeface());
+        button.setTypeface(ApplicationSession.getDefaultTypeface());
 
         return rootView;
     }
@@ -239,7 +239,7 @@ public class ChatOverTransactionFragment extends android.app.Fragment {
                 holder = new ViewHolder();
 
                 holder.text = (TextView) convertView.findViewById(R.id.city);
-                holder.text.setTypeface(MyApplication.getDefaultTypeface());
+                holder.text.setTypeface(ApplicationSession.getDefaultTypeface());
                 convertView.setTag(holder);
 
 
@@ -277,7 +277,7 @@ public class ChatOverTransactionFragment extends android.app.Fragment {
                         view = inf.inflate(R.layout.wallets_teens_fragment_shop_chat_date, parent, false);
                         dates = ((TextView)view.findViewById(R.id.date));
                         dates.setText("4 jan 2015");
-                        dates.setTypeface(MyApplication.getDefaultTypeface());
+                        dates.setTypeface(ApplicationSession.getDefaultTypeface());
                         break;
 
                     case 1:
@@ -285,12 +285,12 @@ public class ChatOverTransactionFragment extends android.app.Fragment {
 
                         tv = ((TextView)view.findViewById(R.id.title));
                         tv.setText("Hi, did you receive the payment ok?");
-                        tv.setTypeface(MyApplication.getDefaultTypeface());
+                        tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
 
                         hours = ((TextView)view.findViewById(R.id.hour));
                         hours.setText("19:43");
-                        hours.setTypeface(MyApplication.getDefaultTypeface());
+                        hours.setTypeface(ApplicationSession.getDefaultTypeface());
 
                         break;
 
@@ -299,12 +299,12 @@ public class ChatOverTransactionFragment extends android.app.Fragment {
 
                         tv = ((TextView)view.findViewById(R.id.title));
                         tv.setText("Hello, yes it's confirmed.");
-                        tv.setTypeface(MyApplication.getDefaultTypeface());
+                        tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
 
                         hours = ((TextView)view.findViewById(R.id.hour));
                         hours.setText("19:50");
-                        hours.setTypeface(MyApplication.getDefaultTypeface());
+                        hours.setTypeface(ApplicationSession.getDefaultTypeface());
 
                         break;
 
@@ -313,13 +313,13 @@ public class ChatOverTransactionFragment extends android.app.Fragment {
 
                         tv = ((TextView)view.findViewById(R.id.title));
                         tv.setText("Ok, but I wanted to tell you I've got a problem.");
-                        tv.setTypeface(MyApplication.getDefaultTypeface());
+                        tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
 
 
                         hours = ((TextView)view.findViewById(R.id.hour));
                         hours.setText("19:52");
-                        hours.setTypeface(MyApplication.getDefaultTypeface());
+                        hours.setTypeface(ApplicationSession.getDefaultTypeface());
 
                         break;
 
@@ -328,12 +328,12 @@ public class ChatOverTransactionFragment extends android.app.Fragment {
 
                         tv = ((TextView)view.findViewById(R.id.title));
                         tv.setText("Since this morning that i don't have water or electricity.");
-                        tv.setTypeface(MyApplication.getDefaultTypeface());
+                        tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
 
                         hours = ((TextView)view.findViewById(R.id.hour));
                         hours.setText("19:53");
-                        hours.setTypeface(MyApplication.getDefaultTypeface());
+                        hours.setTypeface(ApplicationSession.getDefaultTypeface());
 
                         break;
 
@@ -342,12 +342,12 @@ public class ChatOverTransactionFragment extends android.app.Fragment {
 
                         tv = ((TextView)view.findViewById(R.id.title));
                         tv.setText("Oh, I see, I will see what's happening.");
-                        tv.setTypeface(MyApplication.getDefaultTypeface());
+                        tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
 
                         hours = ((TextView)view.findViewById(R.id.hour));
                         hours.setText("19:55");
-                        hours.setTypeface(MyApplication.getDefaultTypeface());
+                        hours.setTypeface(ApplicationSession.getDefaultTypeface());
 
                         break;
                     case 6:
@@ -355,12 +355,12 @@ public class ChatOverTransactionFragment extends android.app.Fragment {
 
                         tv = ((TextView)view.findViewById(R.id.title));
                         tv.setText("Ok, thanks you.");
-                        tv.setTypeface(MyApplication.getDefaultTypeface());
+                        tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
 
                         hours = ((TextView)view.findViewById(R.id.hour));
                         hours.setText("19:56");
-                        hours.setTypeface(MyApplication.getDefaultTypeface());
+                        hours.setTypeface(ApplicationSession.getDefaultTypeface());
 
                         break;
                     case 7:
@@ -368,35 +368,35 @@ public class ChatOverTransactionFragment extends android.app.Fragment {
 
                         tv = ((TextView)view.findViewById(R.id.title));
                         tv.setText("Tessa, there was a problem with one of the building's pipes and it's all flooded, so for security the suspended the light.");
-                        tv.setTypeface(MyApplication.getDefaultTypeface());
+                        tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
 
                         hours = ((TextView)view.findViewById(R.id.hour));
                         hours.setText("20:43");
-                        hours.setTypeface(MyApplication.getDefaultTypeface());
+                        hours.setTypeface(ApplicationSession.getDefaultTypeface());
 
                         break;
                     case 8:
                         view = inf.inflate(R.layout.wallets_teens_fragment_shop_chat_right, parent, false);
                         tv = ((TextView)view.findViewById(R.id.title));
                         tv.setText("Ah, maybe that's why the electricity company truck is parked outside.");
-                        tv.setTypeface(MyApplication.getDefaultTypeface());
+                        tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
                         hours = ((TextView)view.findViewById(R.id.hour));
                         hours.setText("20: 45");
-                        hours.setTypeface(MyApplication.getDefaultTypeface());
+                        hours.setTypeface(ApplicationSession.getDefaultTypeface());
 
                         break;
                     case 9:
                         view = inf.inflate(R.layout.wallets_teens_fragment_shop_chat_left, parent, false);
                         tv = ((TextView)view.findViewById(R.id.title));
                         tv.setText("Yes, that's why they are there");
-                        tv.setTypeface(MyApplication.getDefaultTypeface());
+                        tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
 
                         hours = ((TextView)view.findViewById(R.id.hour));
                         hours.setText("20:45");
-                        hours.setTypeface(MyApplication.getDefaultTypeface());
+                        hours.setTypeface(ApplicationSession.getDefaultTypeface());
 
                         break;
 
@@ -404,12 +404,12 @@ public class ChatOverTransactionFragment extends android.app.Fragment {
                         view = inf.inflate(R.layout.wallets_teens_fragment_shop_chat_left, parent, false);
                         tv = ((TextView)view.findViewById(R.id.title));
                         tv.setText("As you don't have water neither light to use the heating system.");
-                        tv.setTypeface(MyApplication.getDefaultTypeface());
+                        tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
 
                         hours = ((TextView)view.findViewById(R.id.hour));
                         hours.setText("20:46");
-                        hours.setTypeface(MyApplication.getDefaultTypeface());
+                        hours.setTypeface(ApplicationSession.getDefaultTypeface());
 
                         break;
 
@@ -418,12 +418,12 @@ public class ChatOverTransactionFragment extends android.app.Fragment {
                         view = inf.inflate(R.layout.wallets_teens_fragment_shop_chat_left, parent, false);
                         tv = ((TextView)view.findViewById(R.id.title));
                         tv.setText("I suggest you staying the night in the hotel down the street, and don't worry i will pay for it.");
-                        tv.setTypeface(MyApplication.getDefaultTypeface());
+                        tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
 
                         hours = ((TextView)view.findViewById(R.id.hour));
                         hours.setText("20:46");
-                        hours.setTypeface(MyApplication.getDefaultTypeface());
+                        hours.setTypeface(ApplicationSession.getDefaultTypeface());
 
                         break;
 
@@ -431,12 +431,12 @@ public class ChatOverTransactionFragment extends android.app.Fragment {
                         view = inf.inflate(R.layout.wallets_teens_fragment_shop_chat_right, parent, false);
                         tv = ((TextView)view.findViewById(R.id.title));
                         tv.setText("Ok, thanks you for your kindness.");
-                        tv.setTypeface(MyApplication.getDefaultTypeface());
+                        tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
 
                         hours = ((TextView)view.findViewById(R.id.hour));
                         hours.setText("20:47");
-                        hours.setTypeface(MyApplication.getDefaultTypeface());
+                        hours.setTypeface(ApplicationSession.getDefaultTypeface());
                 }
                 return view;
             }

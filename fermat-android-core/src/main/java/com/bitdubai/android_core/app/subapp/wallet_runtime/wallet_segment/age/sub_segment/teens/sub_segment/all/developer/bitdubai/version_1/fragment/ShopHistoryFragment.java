@@ -10,8 +10,8 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.fermat.R;
-import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 
 /**
  * Created by Natalia on 19/12/2014.
@@ -261,23 +261,23 @@ public class ShopHistoryFragment extends Fragment {
                 holder = new ViewHolder();
 
                 holder.text = (TextView) convertView.findViewById(R.id.notes);
-                holder.text.setTypeface(MyApplication.getDefaultTypeface());
+                holder.text.setTypeface(ApplicationSession.getDefaultTypeface());
                 convertView.setTag(holder);
 
                 amount = new ViewHolder();
                 amount.text = (TextView) convertView.findViewById(R.id.amount);
-                amount.text.setTypeface(MyApplication.getDefaultTypeface());
+                amount.text.setTypeface(ApplicationSession.getDefaultTypeface());
 
                 amount.text.setText(transactions_amounts[groupPosition][childPosition].toString());
 
                 name = new ViewHolder();
                 name.text = (TextView) convertView.findViewById(R.id.contact_name);
-                name.text.setTypeface(MyApplication.getDefaultTypeface());
+                name.text.setTypeface(ApplicationSession.getDefaultTypeface());
                 name.text.setText(names[groupPosition][childPosition].toString());
 
                 item = new ViewHolder();
                 item.text = (TextView) convertView.findViewById(R.id.name);
-                item.text.setTypeface(MyApplication.getDefaultTypeface());
+                item.text.setTypeface(ApplicationSession.getDefaultTypeface());
                 item.text.setText(items[groupPosition][childPosition].toString());
 
 
@@ -313,37 +313,37 @@ public class ShopHistoryFragment extends Fragment {
 
                     holder = new ViewHolder();
                     holder.text = (TextView) convertView.findViewById(R.id.contact_name);
-                    holder.text.setTypeface(MyApplication.getDefaultTypeface());
+                    holder.text.setTypeface(ApplicationSession.getDefaultTypeface());
                     convertView.setTag(holder);
 
                     date = new ViewHolder();
                     date.text = (TextView) convertView.findViewById(R.id.date);
-                    date.text.setTypeface(MyApplication.getDefaultTypeface());
+                    date.text.setTypeface(ApplicationSession.getDefaultTypeface());
                     date.text.setText(dates[groupPosition].toString());
 
                     amount = new ViewHolder();
                     amount.text = (TextView) convertView.findViewById(R.id.amount);
-                    amount.text.setTypeface(MyApplication.getDefaultTypeface());
+                    amount.text.setTypeface(ApplicationSession.getDefaultTypeface());
                     amount.text.setText(amounts[groupPosition].toString());
 
                     when = new ViewHolder();
                     when.text = (TextView) convertView.findViewById(R.id.when);
-                    when.text.setTypeface(MyApplication.getDefaultTypeface());
+                    when.text.setTypeface(ApplicationSession.getDefaultTypeface());
                     when.text.setText(whens[groupPosition].toString());
 
                     total = new ViewHolder();
                     total.text = (TextView) convertView.findViewById(R.id.total_amount);
-                    total.text.setTypeface(MyApplication.getDefaultTypeface());
+                    total.text.setTypeface(ApplicationSession.getDefaultTypeface());
                     total.text.setText(totalAmount[groupPosition].toString());
 
                     history = new ViewHolder();
                     history.text = (TextView) convertView.findViewById(R.id.history_count);
-                    history.text.setTypeface(MyApplication.getDefaultTypeface());
+                    history.text.setTypeface(ApplicationSession.getDefaultTypeface());
                     history.text.setText(historyCount[groupPosition].toString());
 
                     note = new ViewHolder();
                     note.text = (TextView) convertView.findViewById(R.id.notes);
-                    note.text.setTypeface(MyApplication.getDefaultTypeface());
+                    note.text.setTypeface(ApplicationSession.getDefaultTypeface());
                     note.text.setText(notes[groupPosition].toString());
 
                 } else {

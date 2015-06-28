@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
+import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.fermat.R;
-import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 
 
 public  class ReceiveFromNewContactFragment extends android.app.Fragment {
@@ -89,12 +89,12 @@ public  class ReceiveFromNewContactFragment extends android.app.Fragment {
         rootView = inflater.inflate(R.layout.wallets_teens_fragment_receive_from_new_contact, container, false);
         TextView tv;
         tv = (TextView) rootView.findViewById(R.id.notes);
-        tv.setTypeface(MyApplication.getDefaultTypeface());
+        tv.setTypeface(ApplicationSession.getDefaultTypeface());
         tv = (TextView) rootView.findViewById(R.id.amount);
-        tv.setTypeface(MyApplication.getDefaultTypeface());
+        tv.setTypeface(ApplicationSession.getDefaultTypeface());
         tv.requestFocus();
         tv = (TextView) rootView.findViewById(R.id.contact_name);
-        tv.setTypeface(MyApplication.getDefaultTypeface());
+        tv.setTypeface(ApplicationSession.getDefaultTypeface());
         return rootView;
     }
 

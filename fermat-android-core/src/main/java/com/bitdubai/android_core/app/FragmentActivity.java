@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 import com.bitdubai.android_core.app.common.version_1.classes.PagerSlidingTabStrip;
 
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.AvailableBalanceFragment;
@@ -70,7 +69,7 @@ public class FragmentActivity  extends Activity {
     private String walletStyle = "";
     private TabStrip tabs;
     private TitleBar titleBar; // Comment
-    private String tagParam  = MyApplication.getChildId(); //get param with data for fragment
+    private String tagParam  = ApplicationSession.getChildId(); //get param with data for fragment
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,19 +78,19 @@ public class FragmentActivity  extends Activity {
         try{
             // get instances of Runtime middleware object
 
-            this.appRuntimeMiddleware =  MyApplication.getAppRuntime(); //(AppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
+            this.appRuntimeMiddleware =  ApplicationSession.getAppRuntime(); //(AppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
 
             this.app = appRuntimeMiddleware.getLastApp();
             this.subApp = appRuntimeMiddleware.getLastSubApp();
 
-            walletRuntimeMiddleware = MyApplication.getwalletRuntime();
+            walletRuntimeMiddleware = ApplicationSession.getwalletRuntime();
 
             //get actual activity to execute
             this.activity = walletRuntimeMiddleware.getLasActivity();
 
 
             // Fragment fragment = appRuntimeMiddleware.getLastFragment();
-            MyApplication.setActivityId(activity.getType().getKey());
+            ApplicationSession.setActivityId(activity.getType().getKey());
 
             //get activity settings
             this.tabs = activity.getTabStrip();
@@ -205,7 +204,7 @@ public class FragmentActivity  extends Activity {
             int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
             this.abTitle = (TextView) findViewById(titleId);
 
-            MyApplication.setActivityProperties(this, getWindow(),getResources(),tabStrip,getActionBar(), titleBar,abTitle,Title);
+            ApplicationSession.setActivityProperties(this, getWindow(), getResources(), tabStrip, getActionBar(), titleBar, abTitle, Title);
 
         }
         catch (Exception e)

@@ -10,7 +10,6 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.Toast;
 
-import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsDataBaseSystem;
 import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsFileSystem;
 import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsLocationSystem;
@@ -127,7 +126,7 @@ public class StartActivity extends FragmentActivity {
             Context context = getApplicationContext();
 
 
-            platform = MyApplication.getFermatPlatform();
+            platform = ApplicationSession.getFermatPlatform();
 
 
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -172,11 +171,11 @@ public class StartActivity extends FragmentActivity {
             walletRuntimeMiddleware = (WalletRuntimeManager) platformContext.getPlugin(Plugins.BITDUBAI_WALLET_RUNTIME_MODULE);
 
             //save object on global class
-            MyApplication.setAppRuntime(appRuntimeMiddleware);
-            MyApplication.setWalletRuntime(walletRuntimeMiddleware);
+            ApplicationSession.setAppRuntime(appRuntimeMiddleware);
+            ApplicationSession.setWalletRuntime(walletRuntimeMiddleware);
 
             errorManager = (ErrorManager) platformContext.getAddon(Addons.ERROR_MANAGER);
-            MyApplication.setErrorManager(errorManager);
+            ApplicationSession.setErrorManager(errorManager);
 
             /** Download wallet images **/
 

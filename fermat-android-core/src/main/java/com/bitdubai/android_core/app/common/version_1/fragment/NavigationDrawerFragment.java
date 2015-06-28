@@ -22,6 +22,7 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 
+import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.android_core.app.SubAppActivity;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.SideMenu;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.App;
@@ -32,7 +33,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.fermat.R;
-import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 import com.bitdubai.android_core.app.common.version_1.classes.NavigationDrawerArrayAdapter;
 import com.bitdubai.sub_app.wallet_factory.fragment.version_3.activity.FactoryActivity;
 import com.bitdubai.sub_app.wallet_publisher.activity.PublisherActivity;
@@ -139,7 +139,7 @@ public class NavigationDrawerFragment extends Fragment {
             });
 
             //create menu option based activity submenu definition
-            Platform platform = MyApplication.getFermatPlatform();
+            Platform platform = ApplicationSession.getFermatPlatform();
 
             this.platformContext = platform.getCorePlatformContext();
 
@@ -151,12 +151,12 @@ public class NavigationDrawerFragment extends Fragment {
                     getActivity(),
                     menuOption));
 
-       /* if (MyApplication.getActivityId() == "DesktopActivity") {
+       /* if (ApplicationSession.getActivityId() == "DesktopActivity") {
 
 
 
         }
-        else if (MyApplication.getActivityId() == "PublisherActivity"){
+        else if (ApplicationSession.getActivityId() == "PublisherActivity"){
             mDrawerListView.setAdapter(new NavigationDrawerArrayAdapter(
                     getActivity(),
                     new String[]{
@@ -314,7 +314,7 @@ public class NavigationDrawerFragment extends Fragment {
         if (mCallbacks != null) {
             mCallbacks.onNavigationDrawerItemSelected(position);
         }
-        if(MyApplication.getActivityId()=="DesktopActivity") {
+        if(ApplicationSession.getActivityId()=="DesktopActivity") {
 
             //Factory projects
             if (position == 3) {
@@ -346,7 +346,7 @@ public class NavigationDrawerFragment extends Fragment {
 
             }
 
-        }else if(MyApplication.getActivityId()=="PublisherActivity") {
+        }else if(ApplicationSession.getActivityId()=="PublisherActivity") {
             if (position == 1)
             {
                 Intent intent;
@@ -354,7 +354,7 @@ public class NavigationDrawerFragment extends Fragment {
                 startActivity(intent);
             }
         }else {
-            if(MyApplication.getActivityId()=="FactoryActivity") {
+            if(ApplicationSession.getActivityId()=="FactoryActivity") {
 
                 if (position == 3) {
                     Intent intent;

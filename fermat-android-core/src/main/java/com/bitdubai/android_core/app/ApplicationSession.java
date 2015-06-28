@@ -1,4 +1,4 @@
-package com.bitdubai.android_core.app.common.version_1.classes;
+package com.bitdubai.android_core.app;
 
 
 import android.app.ActionBar;
@@ -17,6 +17,8 @@ import android.text.SpannableString;
 import android.view.Window;
 import android.widget.TextView;
 
+import com.bitdubai.android_core.app.common.version_1.classes.MyTypefaceSpan;
+import com.bitdubai.android_core.app.common.version_1.classes.PagerSlidingTabStrip;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.AppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.TitleBar;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime.WalletRuntimeManager;
@@ -33,7 +35,7 @@ import com.bitdubai.fermat_core.Platform;
  */
 
 
-public class MyApplication extends android.support.multidex.MultiDexApplication {
+public class ApplicationSession extends android.support.multidex.MultiDexApplication {
 
     private final static Handler handler = new Handler();
     public static Typeface mDefaultTypeface;
@@ -66,7 +68,7 @@ public class MyApplication extends android.support.multidex.MultiDexApplication 
         return actionBar;
     }
     public static void setActionBar(ActionBar actionBar) {
-        MyApplication.actionBar = actionBar;
+        ApplicationSession.actionBar = actionBar;
     }
     public static void setWalletId(int WalletId) {
         mWalletId = WalletId;
@@ -132,7 +134,7 @@ public class MyApplication extends android.support.multidex.MultiDexApplication 
         return fermatPlatform;
     }
 
-    public MyApplication () {
+    public ApplicationSession() {
         super();
 
         fermatPlatform = new Platform();
@@ -160,7 +162,7 @@ public class MyApplication extends android.support.multidex.MultiDexApplication 
 
                 if(abTitle !=null) {
                     abTitle.setTextColor(Color.WHITE);
-                    abTitle.setTypeface(MyApplication.getDefaultTypeface());
+                    abTitle.setTypeface(ApplicationSession.getDefaultTypeface());
                 }
                 actionBar.setTitle(Title);
                 actionBar.show();

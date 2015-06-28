@@ -33,7 +33,7 @@
         android:maxSdkVersion="18" />
 
     <application
-        android:name="com.bitdubai.android_core.app.common.version_1.classes.MyApplication"
+        android:name="com.bitdubai.android_core.app.ApplicationSession"
         android:allowBackup="true" >
 
 

@@ -12,9 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.fermat.R;
-
-import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -266,12 +265,12 @@ public class RefillFragment extends Fragment {
             holder.timeToArrive.setText( position + " min");
 
 
-            holder.openHours.setTypeface(MyApplication.getDefaultTypeface());
-            holder.timeToArrive.setTypeface(MyApplication.getDefaultTypeface());
-            holder.titleTextView.setTypeface(MyApplication.getDefaultTypeface());
-            holder.companyTextView.setTypeface(MyApplication.getDefaultTypeface());
-            holder.companyDescription.setTypeface(MyApplication.getDefaultTypeface());
-            holder.percentageAmount.setTypeface(MyApplication.getDefaultTypeface());
+            holder.openHours.setTypeface(ApplicationSession.getDefaultTypeface());
+            holder.timeToArrive.setTypeface(ApplicationSession.getDefaultTypeface());
+            holder.titleTextView.setTypeface(ApplicationSession.getDefaultTypeface());
+            holder.companyTextView.setTypeface(ApplicationSession.getDefaultTypeface());
+            holder.companyDescription.setTypeface(ApplicationSession.getDefaultTypeface());
+            holder.percentageAmount.setTypeface(ApplicationSession.getDefaultTypeface());
 
 
             if (item.favorite > 2)

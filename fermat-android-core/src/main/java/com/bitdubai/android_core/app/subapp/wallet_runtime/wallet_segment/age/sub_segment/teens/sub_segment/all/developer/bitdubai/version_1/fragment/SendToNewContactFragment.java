@@ -9,10 +9,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
+import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.fermat.R;
-import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
-
-
 
 
 public  class   SendToNewContactFragment extends android.app.Fragment {
@@ -95,17 +93,17 @@ public  class   SendToNewContactFragment extends android.app.Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.wallets_teens_fragment_send_to_new_contact, container, false);
 
-        int tagId = MyApplication.getTagId();
+        int tagId = ApplicationSession.getTagId();
         TextView tv;
 
         tv = (TextView) rootView.findViewById(R.id.notes);
-        tv.setTypeface(MyApplication.getDefaultTypeface());
+        tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
         tv = (TextView) rootView.findViewById(R.id.address);
-        tv.setTypeface(MyApplication.getDefaultTypeface());
+        tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
         tv = (EditText) rootView.findViewById(R.id.amount);
-        tv.setTypeface(MyApplication.getDefaultTypeface());
+        tv.setTypeface(ApplicationSession.getDefaultTypeface());
         tv.requestFocus();
         //add listener text change, to update discount
      /*   tv.setOnTouchListener(new View.OnTouchListener() {
@@ -150,16 +148,16 @@ public  class   SendToNewContactFragment extends android.app.Fragment {
         });
 
         tv = (TextView) rootView.findViewById(R.id.percentage);
-        tv.setTypeface(MyApplication.getDefaultTypeface());
+        tv.setTypeface(ApplicationSession.getDefaultTypeface());
         int porcen = (int )(Math.random() * 15 + 1);
         tv.setText(String.valueOf(porcen) + "%");
 
         tv = (TextView) rootView.findViewById(R.id.discounted);
-        tv.setTypeface(MyApplication.getDefaultTypeface());
+        tv.setTypeface(ApplicationSession.getDefaultTypeface());
         tv.setText(Discounted[tagId]);
 
         tv = (TextView) rootView.findViewById(R.id.contact_name);
-        tv.setTypeface(MyApplication.getDefaultTypeface());
+        tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
         return rootView;
     }

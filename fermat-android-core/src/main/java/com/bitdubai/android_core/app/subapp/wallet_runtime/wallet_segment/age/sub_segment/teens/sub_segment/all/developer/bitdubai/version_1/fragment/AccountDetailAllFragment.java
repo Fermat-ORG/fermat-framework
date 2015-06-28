@@ -11,7 +11,7 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.bitdubai.fermat.R;
-import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
+import com.bitdubai.android_core.app.ApplicationSession;
 
 import java.util.ArrayList;
 
@@ -293,21 +293,21 @@ String debits = "";
 
                 type = new ViewHolder();
                 type.text = (TextView) convertView.findViewById(R.id.type);
-                type.text.setTypeface(MyApplication.getDefaultTypeface());
+                type.text.setTypeface(ApplicationSession.getDefaultTypeface());
 
                 holder.text = (TextView) convertView.findViewById(R.id.notes);
-                holder.text.setTypeface(MyApplication.getDefaultTypeface());
+                holder.text.setTypeface(ApplicationSession.getDefaultTypeface());
                 convertView.setTag(holder);
 
                 amount = new ViewHolder();
                 amount.text = (TextView) convertView.findViewById(R.id.amount);
-                amount.text.setTypeface(MyApplication.getDefaultTypeface());
+                amount.text.setTypeface(ApplicationSession.getDefaultTypeface());
 
                 amount.text.setText(transactions_amounts[groupPosition][childPosition].toString());
 
                 when = new ViewHolder();
                 when.text = (TextView) convertView.findViewById(R.id.when);
-                when.text.setTypeface(MyApplication.getDefaultTypeface());
+                when.text.setTypeface(ApplicationSession.getDefaultTypeface());
 
                 when.text.setText(transactions_whens[groupPosition][childPosition].toString());
 
@@ -409,28 +409,28 @@ String debits = "";
 
                 holder = new ViewHolder();
                 holder.text = (TextView) convertView.findViewById(R.id.contact_name);
-                holder.text.setTypeface(MyApplication.getDefaultTypeface());
+                holder.text.setTypeface(ApplicationSession.getDefaultTypeface());
                 convertView.setTag(holder);
 
                 amount = new ViewHolder();
                 amount.text = (TextView) convertView.findViewById(R.id.amount);
-                amount.text.setTypeface(MyApplication.getDefaultTypeface());
+                amount.text.setTypeface(ApplicationSession.getDefaultTypeface());
 
                 amount.text.setText(amounts[groupPosition].toString());
 
                 type = new ViewHolder();
                 type.text = (TextView) convertView.findViewById(R.id.type);
-                type.text.setTypeface(MyApplication.getDefaultTypeface());
+                type.text.setTypeface(ApplicationSession.getDefaultTypeface());
                 type.text.setText(types[groupPosition].toString());
 
                 when = new ViewHolder();
                 when.text = (TextView) convertView.findViewById(R.id.when);
-                when.text.setTypeface(MyApplication.getDefaultTypeface());
+                when.text.setTypeface(ApplicationSession.getDefaultTypeface());
                 when.text.setText(whens[groupPosition].toString());
 
                 note = new ViewHolder();
                 note.text = (TextView) convertView.findViewById(R.id.notes);
-                note.text.setTypeface(MyApplication.getDefaultTypeface());
+                note.text.setTypeface(ApplicationSession.getDefaultTypeface());
 
                 note.text.setText(notes[groupPosition].toString());
 

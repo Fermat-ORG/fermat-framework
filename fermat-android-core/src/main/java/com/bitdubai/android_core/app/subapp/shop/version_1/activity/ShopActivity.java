@@ -25,12 +25,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.fermat.R;
 import com.bitdubai.android_core.app.common.version_1.fragment.NavigationDrawerFragment;
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopChatFragment;
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyLayoutInflaterFactory;
 
-import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 import com.bitdubai.android_core.app.common.version_1.classes.PagerSlidingTabStrip;
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopHistoryFragment;
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopReviewsFragment;
@@ -68,7 +68,7 @@ public class ShopActivity  extends FragmentActivity implements NavigationDrawerF
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        MyApplication.setActivityId("ShopActivity");
+        ApplicationSession.setActivityId("ShopActivity");
         setContentView(R.layout.shop_activity_shop);
 
         // I get the action bar title id and put it on a text view in order to later change its color
@@ -90,7 +90,7 @@ public class ShopActivity  extends FragmentActivity implements NavigationDrawerF
         tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
 
 
-        //((MyApplication) this.getApplication()).setActionBarProperties(this, getWindow(), tabs, getActionBar(), getResources(), abTitle, mTitle.toString());
+        //((ApplicationSession) this.getApplication()).setActionBarProperties(this, getWindow(), tabs, getActionBar(), getResources(), abTitle, mTitle.toString());
         //super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_main);
 
@@ -108,7 +108,7 @@ public class ShopActivity  extends FragmentActivity implements NavigationDrawerF
         tabs.setViewPager(pager);
 
         Typeface tf = Typeface.createFromAsset(getAssets(), "fonts/CaviarDreams.ttf");
-        ((MyApplication) this.getApplication()).setDefaultTypeface(tf);
+        ((ApplicationSession) this.getApplication()).setDefaultTypeface(tf);
         tabs.setTypeface(tf, 1);
         //changeColor(currentColor);
 
@@ -119,9 +119,9 @@ public class ShopActivity  extends FragmentActivity implements NavigationDrawerF
         tabs.setTextColor(0xFFFFFFFF);
 
         String color = "#76dc4a";
-        MyApplication.setActionBar(getActionBar());
-        MyApplication.setDefaultTypeface(MyApplication.getDefaultTypeface());
-        ((MyApplication) this.getApplication()).changeColor(Color.parseColor(color), getResources());
+        ApplicationSession.setActionBar(getActionBar());
+        ApplicationSession.setDefaultTypeface(ApplicationSession.getDefaultTypeface());
+        ((ApplicationSession) this.getApplication()).changeColor(Color.parseColor(color), getResources());
 
 
         ActionBar actionBar = getActionBar();
@@ -129,7 +129,7 @@ public class ShopActivity  extends FragmentActivity implements NavigationDrawerF
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
         actionBar.setIcon(R.drawable.store_icon);
-        abTitle.setTypeface(MyApplication.getDefaultTypeface());
+        abTitle.setTypeface(ApplicationSession.getDefaultTypeface());
     }
 
 

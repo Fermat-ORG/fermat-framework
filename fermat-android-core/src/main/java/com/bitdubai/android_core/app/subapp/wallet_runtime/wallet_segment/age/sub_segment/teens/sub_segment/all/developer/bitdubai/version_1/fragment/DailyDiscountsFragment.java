@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bitdubai.fermat.R;
-import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
+import com.bitdubai.android_core.app.ApplicationSession;
 
 /**
  * Created by Natalia on 22/12/2014.
@@ -187,21 +187,21 @@ public class DailyDiscountsFragment extends android.app.Fragment {
 
                 date= new ViewHolder();
                 date.text = (TextView) convertView.findViewById(R.id.date);
-                date.text.setTypeface(MyApplication.getDefaultTypeface());
+                date.text.setTypeface(ApplicationSession.getDefaultTypeface());
                 date.text.setText(dates[groupPosition].toString());
 
                 Average = new ViewHolder();
                 Average.text = (TextView) convertView.findViewById(R.id.average);
-                Average.text.setTypeface(MyApplication.getDefaultTypeface());
+                Average.text.setTypeface(ApplicationSession.getDefaultTypeface());
 
                 count = new ViewHolder();
                 count.text = (TextView) convertView.findViewById(R.id.discount_count);
-                count.text.setTypeface(MyApplication.getDefaultTypeface());
+                count.text.setTypeface(ApplicationSession.getDefaultTypeface());
                 count.text.setText(adiscount_count[groupPosition].toString() + "%");
 
                 savedMoney = new ViewHolder();
                 savedMoney.text = (TextView) convertView.findViewById(R.id.money_saved);
-                savedMoney.text.setTypeface(MyApplication.getDefaultTypeface());
+                savedMoney.text.setTypeface(ApplicationSession.getDefaultTypeface());
                 savedMoney.text.setText(saved_money[groupPosition].toString());
 
             } else {

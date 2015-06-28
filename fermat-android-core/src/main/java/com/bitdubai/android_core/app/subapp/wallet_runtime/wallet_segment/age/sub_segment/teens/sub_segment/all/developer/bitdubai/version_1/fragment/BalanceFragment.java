@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.android_core.app.SubAppActivity;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.AppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Activities;
@@ -26,8 +27,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.fermat.R;
-
-import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 
 
 public class BalanceFragment extends ListFragment implements LoaderManager.LoaderCallbacks<List<BalanceFragment.Model>> {
@@ -73,8 +72,8 @@ public class BalanceFragment extends ListFragment implements LoaderManager.Loade
         Intent intent;
         View clickedView = v;
 
-        MyApplication.setTagId(position);
-        Platform platform = MyApplication.getFermatPlatform();
+        ApplicationSession.setTagId(position);
+        Platform platform = ApplicationSession.getFermatPlatform();
         CorePlatformContext platformContext = platform.getCorePlatformContext();
 
         AppRuntimeManager appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
@@ -302,20 +301,20 @@ public class BalanceFragment extends ListFragment implements LoaderManager.Loade
 
             tv = ((TextView)view.findViewById(R.id.balance));
             tv.setText(balances[position]);
-            tv.setTypeface(MyApplication.getDefaultTypeface());
+            tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
             tv = ((TextView)view.findViewById(R.id.balance_available));
             tv.setText(balances_available[position]);
-            tv.setTypeface(MyApplication.getDefaultTypeface());
+            tv.setTypeface(ApplicationSession.getDefaultTypeface());
             tv.setTag("AvailableBalanceActivity");
 
             tv = ((TextView)view.findViewById(R.id.account_alias));
             tv.setText(account_aliases[position]);
-            tv.setTypeface(MyApplication.getDefaultTypeface());
+            tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
             tv = ((TextView)view.findViewById(R.id.account_type));
             tv.setText(account_types[position]);
-            tv.setTypeface(MyApplication.getDefaultTypeface());
+            tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
             return view;
         }
