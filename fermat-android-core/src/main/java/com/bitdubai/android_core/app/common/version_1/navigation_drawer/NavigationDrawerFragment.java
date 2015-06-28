@@ -1,4 +1,4 @@
-package com.bitdubai.android_core.app.common.version_1.fragment;
+package com.bitdubai.android_core.app.common.version_1.navigation_drawer;
 
 import android.app.ActionBar;
 import android.app.Activity;

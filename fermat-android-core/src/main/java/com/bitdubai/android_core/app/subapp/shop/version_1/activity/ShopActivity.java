@@ -27,7 +27,7 @@ import android.widget.TextView;
 
 import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.fermat.R;
-import com.bitdubai.android_core.app.common.version_1.fragment.NavigationDrawerFragment;
+import com.bitdubai.android_core.app.common.version_1.navigation_drawer.NavigationDrawerFragment;
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopChatFragment;
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_framework.version_1.classes.MyLayoutInflaterFactory;
 

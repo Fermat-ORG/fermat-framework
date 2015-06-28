@@ -1,4 +1,4 @@
-package com.bitdubai.android_core.app.common.version_1.fragment;
+package com.bitdubai.android_core.app.common.version_1.tabbed_dialog;
 
 /**
  * Created by ciencias on 25.11.14.

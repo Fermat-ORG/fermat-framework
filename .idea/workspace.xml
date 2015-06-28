@@ -18,55 +18,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ba5a87a3-42ea-4caf-9d7e-1a856a8fd118" name="Default" comment="">
-      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/common/version_1/classes/MyApplication.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/ApplicationSession.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/AccountDetailAccountFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/AccountDetailAccountFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/AccountDetailAllFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/AccountDetailAllFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/AccountDetailCreditsFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/AccountDetailCreditsFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/AccountDetailDebitsFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/AccountDetailDebitsFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/AccountDetailFiltersFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/AccountDetailFiltersFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/AndroidManifest.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/AvailableBalanceFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/AvailableBalanceFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/BalanceFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/BalanceFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/ChatOverReceiveTrxFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/ChatOverReceiveTrxFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/ChatOverTransactionFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/ChatOverTransactionFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/ChatWithContactFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/ChatWithContactFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/ContactsFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/ContactsFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/DailyDiscountsFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/DailyDiscountsFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/DiscountsFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/DiscountsFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/FragmentActivity.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/FragmentActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/HomeFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/HomeFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/MonthlyDiscountsFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/MonthlyDiscountsFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_framework/version_1/classes/MyLayoutInflaterFactory.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_framework/version_1/classes/MyLayoutInflaterFactory.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/common/version_1/classes/NavigationDrawerArrayAdapter.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/common/version_1/classes/NavigationDrawerArrayAdapter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/common/version_1/fragment/NavigationDrawerFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/common/version_1/fragment/NavigationDrawerFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/ReceiveAllFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/ReceiveAllFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/ReceiveFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/ReceiveFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/ReceiveFromContactFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/ReceiveFromContactFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/ReceiveFromNewContactFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/ReceiveFromNewContactFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/RefillFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/RefillFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/RequestsReceivedFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/RequestsReceivedFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/RequestsSentFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/RequestsSentFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/ReviewsFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/ReviewsFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/SendAllFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/SendAllFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/SendFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/SendFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/SendToContactFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/SendToContactFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/SendToNewContactFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/SendToNewContactFragment.java" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/common/_Definition" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/common/version_1/_Definition" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/openGL/MainActivity.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/openGL/MainRenderer.java" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/openGL/MainSurfaceView.java" afterPath="" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/common/version_1/fragment/NavigationDrawerFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/common/version_1/navigation_drawer/NavigationDrawerFragment.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/common/version_1/fragment/TabbedDialogEmptyFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/common/version_1/tabbed_dialog/TabbedDialogEmptyFragment.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/common/version_1/fragment/TabbedDialogFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/common/version_1/tabbed_dialog/TabbedDialogFragment.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/shop/version_1/activity/ShopActivity.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/shop/version_1/activity/ShopActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/shop/version_1/fragment/ShopChatFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/shop/version_1/fragment/ShopChatFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/ShopChatFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/ShopChatFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/shop/version_1/fragment/ShopFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/shop/version_1/fragment/ShopFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/ShopFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/ShopFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/shop/version_1/fragment/ShopHistoryFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/shop/version_1/fragment/ShopHistoryFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/ShopHistoryFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/ShopHistoryFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/shop/version_1/fragment/ShopProductsFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/shop/version_1/fragment/ShopProductsFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/ShopProductsFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/ShopProductsFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/shop/version_1/fragment/ShopReviewsFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/shop/version_1/fragment/ShopReviewsFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/shop/version_1/fragment/ShopShopFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/shop/version_1/fragment/ShopShopFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/ShopShopFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/ShopShopFragment.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/StartActivity.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/StartActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/SubAppActivity.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/SubAppActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/WalletActivity.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/WalletActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/WeeklyDiscountsFragment.java" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1/fragment/WeeklyDiscountsFragment.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/structured_res/app/shell/version_1/layout/runtime_app_activity_runtime.xml" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/structured_res/app/shell/version_1/layout/runtime_app_activity_runtime.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/structured_res/app/shell/version_1/layout/runtime_app_wallet_runtime.xml" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/structured_res/app/shell/version_1/layout/runtime_app_wallet_runtime.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/structured_res/app/shell/version_1/layout/shell_activity_wallet_desktop.xml" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/structured_res/app/shell/version_1/layout/shell_activity_wallet_desktop.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/structured_res/app/subapp/shop/version_1/layout/shop_activity_shop.xml" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/structured_res/app/subapp/shop/version_1/layout/shop_activity_shop.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/src/main/structured_res/app/subapp/wallet_runtime/wallet_framework/version_1/layout/wallet_framework_activity_framework.xml" afterPath="$PROJECT_DIR$/fermat-android-core/src/main/structured_res/app/subapp/wallet_runtime/wallet_framework/version_1/layout/wallet_framework_activity_framework.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="fermat.iws" />
@@ -305,114 +272,35 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="wallets_bitcoin_fragment_balance.xml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/DMP/android/reference_niche_wallet/fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai/src/main/res/layout/wallets_bitcoin_fragment_balance.xml">
-          <provider editor-type-id="android-designer">
-            <state />
-          </provider>
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="16" column="43" selection-start-line="16" selection-start-column="43" selection-end-line="16" selection-end-column="43" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="tabs_pattern_diagonal.png" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/DMP/android/reference_niche_wallet/fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai/src/main/res/drawable/tabs_pattern_diagonal.png">
-          <provider selected="true" editor-type-id="images">
-            <state />
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="BalanceFragment.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/DMP/android/reference_niche_wallet/fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai/src/main/java/com/bitdubai/reference_niche_wallet/bitcoin_wallet/fragments/BalanceFragment.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="1.2317518">
-              <caret line="159" column="14" selection-start-line="159" selection-start-column="14" selection-end-line="159" selection-end-column="14" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Platform.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/DMP/android/reference_niche_wallet/fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai/src/main/java/com/bitdubai/reference_niche_wallet/bitcoin_wallet/Platform.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="15" column="13" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
-              <folding>
-                <element signature="imports" expanded="false" />
-                <element signature="e#1951#1952#0" expanded="false" />
-                <element signature="e#1997#1998#0" expanded="false" />
-                <element signature="e#2109#2110#0" expanded="false" />
-                <element signature="e#2144#2145#0" expanded="false" />
-                <element signature="e#2190#2191#0" expanded="false" />
-                <element signature="e#2225#2226#0" expanded="false" />
-                <element signature="e#2366#2367#0" expanded="false" />
-                <element signature="e#2414#2415#0" expanded="false" />
-                <element signature="e#2555#2556#0" expanded="false" />
-                <element signature="e#2603#2604#0" expanded="false" />
-                <element signature="e#2718#2719#0" expanded="false" />
-                <element signature="e#2765#2766#0" expanded="false" />
-                <element signature="e#2808#2809#0" expanded="false" />
-                <element signature="e#2847#2848#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="ApplicationSession.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/ApplicationSession.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="336" column="10" selection-start-line="336" selection-start-column="10" selection-end-line="336" selection-end-column="87" />
+              <caret line="109" column="28" selection-start-line="109" selection-start-column="25" selection-end-line="109" selection-end-column="36" />
               <folding>
-                <element signature="imports" expanded="false" />
-                <element signature="e#2224#2225#0" expanded="false" />
-                <element signature="e#2258#2259#0" expanded="false" />
-                <element signature="e#2297#2298#0" expanded="false" />
-                <element signature="e#2329#2330#0" expanded="false" />
-                <element signature="e#2374#2375#0" expanded="false" />
-                <element signature="e#2406#2407#0" expanded="false" />
-                <element signature="e#2465#2466#0" expanded="false" />
-                <element signature="e#2521#2522#0" expanded="false" />
-                <element signature="e#2572#2573#0" expanded="false" />
-                <element signature="e#2608#2609#0" expanded="false" />
-                <element signature="e#2677#2678#0" expanded="false" />
-                <element signature="e#2726#2727#0" expanded="false" />
-                <element signature="e#2781#2782#0" expanded="false" />
-                <element signature="e#2824#2825#0" expanded="false" />
-                <element signature="e#2903#2904#0" expanded="false" />
-                <element signature="e#2958#2959#0" expanded="false" />
-                <element signature="e#3027#3028#0" expanded="false" />
-                <element signature="e#3070#3071#0" expanded="false" />
-                <element signature="e#3122#3123#0" expanded="false" />
-                <element signature="e#3157#3158#0" expanded="false" />
-                <element signature="e#3219#3220#0" expanded="false" />
-                <element signature="e#3265#3266#0" expanded="false" />
-                <element signature="e#3316#3317#0" expanded="false" />
-                <element signature="e#3355#3356#0" expanded="false" />
-                <element signature="e#3390#3391#0" expanded="false" />
-                <element signature="e#3419#3420#0" expanded="false" />
-                <element signature="e#3451#3452#0" expanded="false" />
-                <element signature="e#3477#3478#0" expanded="false" />
-                <element signature="e#3518#3519#0" expanded="false" />
-                <element signature="e#3550#3551#0" expanded="false" />
-                <element signature="e#3590#3591#0" expanded="false" />
-                <element signature="e#3621#3622#0" expanded="false" />
-                <element signature="e#3661#3662#0" expanded="false" />
-                <element signature="e#3692#3693#0" expanded="false" />
-                <element signature="e#4204#4205#0" expanded="false" />
-                <element signature="e#4254#4255#0" expanded="false" />
-                <element signature="e#4351#4352#0" expanded="false" />
-                <element signature="e#4388#4389#0" expanded="false" />
-                <element signature="e#15357#15358#0" expanded="false" />
-                <element signature="e#15417#15418#0" expanded="false" />
-                <element signature="e#15515#15516#0" expanded="false" />
-                <element signature="e#15569#15570#0" expanded="false" />
-                <element signature="e#15658#15659#0" expanded="false" />
-                <element signature="e#15711#15712#0" expanded="false" />
+                <element signature="e#3518#3519#0" expanded="true" />
+                <element signature="e#3550#3551#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AndroidManifest.xml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/fermat-android-core/src/main/AndroidManifest.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="19" column="54" selection-start-line="19" selection-start-column="54" selection-end-line="19" selection-end-column="54" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="StartActivity.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/StartActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.19966722">
+              <caret line="41" column="13" selection-start-line="41" selection-start-column="13" selection-end-line="41" selection-end-column="13" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -23605,132 +23493,6 @@
               <option name="myItemId" value="src" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="android_core" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="common" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat-android-core" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="android_core" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="common" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="version_1" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat-android-core" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="android_core" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="app" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="common" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="version_1" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="classes" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat-android-core" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
@@ -24089,7 +23851,7 @@
       <option name="number" value="Default" />
       <updated>1435314050840</updated>
       <workItem from="1435398743911" duration="9055000" />
-      <workItem from="1435490645249" duration="1098000" />
+      <workItem from="1435490645249" duration="1471000" />
     </task>
     <task id="LOCAL-00001" summary="remove pip folder | Compiling &amp; Running">
       <created>1435399454789</created>
@@ -24109,11 +23871,17 @@
       <option name="project" value="LOCAL" />
       <updated>1435492076237</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Fermat Core cleaning part 2 | Compiling &amp; Running">
+      <created>1435492379231</created>
+      <option name="number" value="00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1435492379231</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="10153000" />
+    <option name="totallyTimeSpent" value="10526000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="-4" width="1855" height="1084" extended-state="6" />
@@ -24133,14 +23901,14 @@
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32916668" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.0" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.39791667" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.34270832" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="PlantUML" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.37810946" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.29463792" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.328125" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Memory Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
@@ -24170,7 +23938,8 @@
     <MESSAGE value="remove pip folder | Compiling &amp; Running" />
     <MESSAGE value="smart wallet refactored for fermat | Compiling &amp; Running" />
     <MESSAGE value="Fermat Core cleaning part 1 | Compiling &amp; Running" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fermat Core cleaning part 1 | Compiling &amp; Running" />
+    <MESSAGE value="Fermat Core cleaning part 2 | Compiling &amp; Running" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fermat Core cleaning part 2 | Compiling &amp; Running" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -24234,51 +24003,8 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="334" column="10" selection-start-line="334" selection-start-column="10" selection-end-line="334" selection-end-column="87" />
           <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#2224#2225#0" expanded="false" />
-            <element signature="e#2258#2259#0" expanded="false" />
-            <element signature="e#2297#2298#0" expanded="false" />
-            <element signature="e#2329#2330#0" expanded="false" />
-            <element signature="e#2374#2375#0" expanded="false" />
-            <element signature="e#2406#2407#0" expanded="false" />
-            <element signature="e#2465#2466#0" expanded="false" />
-            <element signature="e#2521#2522#0" expanded="false" />
-            <element signature="e#2572#2573#0" expanded="false" />
-            <element signature="e#2608#2609#0" expanded="false" />
-            <element signature="e#2677#2678#0" expanded="false" />
-            <element signature="e#2726#2727#0" expanded="false" />
-            <element signature="e#2781#2782#0" expanded="false" />
-            <element signature="e#2824#2825#0" expanded="false" />
-            <element signature="e#2903#2904#0" expanded="false" />
-            <element signature="e#2958#2959#0" expanded="false" />
-            <element signature="e#3027#3028#0" expanded="false" />
-            <element signature="e#3070#3071#0" expanded="false" />
-            <element signature="e#3122#3123#0" expanded="false" />
-            <element signature="e#3157#3158#0" expanded="false" />
-            <element signature="e#3219#3220#0" expanded="false" />
-            <element signature="e#3265#3266#0" expanded="false" />
-            <element signature="e#3316#3317#0" expanded="false" />
-            <element signature="e#3355#3356#0" expanded="false" />
-            <element signature="e#3390#3391#0" expanded="false" />
-            <element signature="e#3419#3420#0" expanded="false" />
-            <element signature="e#3451#3452#0" expanded="false" />
-            <element signature="e#3477#3478#0" expanded="false" />
-            <element signature="e#3518#3519#0" expanded="false" />
-            <element signature="e#3550#3551#0" expanded="false" />
-            <element signature="e#3590#3591#0" expanded="false" />
-            <element signature="e#3621#3622#0" expanded="false" />
-            <element signature="e#3661#3662#0" expanded="false" />
-            <element signature="e#3692#3693#0" expanded="false" />
-            <element signature="e#4204#4205#0" expanded="false" />
-            <element signature="e#4254#4255#0" expanded="false" />
-            <element signature="e#4351#4352#0" expanded="false" />
-            <element signature="e#4388#4389#0" expanded="false" />
-            <element signature="e#15357#15358#0" expanded="false" />
-            <element signature="e#15417#15418#0" expanded="false" />
-            <element signature="e#15515#15516#0" expanded="false" />
-            <element signature="e#15569#15570#0" expanded="false" />
-            <element signature="e#15658#15659#0" expanded="false" />
-            <element signature="e#15711#15712#0" expanded="false" />
+            <element signature="e#3518#3519#0" expanded="true" />
+            <element signature="e#3550#3551#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -24451,14 +24177,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/fermat-android-core/src/main/AndroidManifest.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.02347418">
-          <caret line="19" column="54" selection-start-line="19" selection-start-column="54" selection-end-line="19" selection-end-column="54" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/pip_actor/developer/DatabaseTool.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.4225352">
@@ -24520,60 +24238,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/ApplicationSession.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="336" column="10" selection-start-line="336" selection-start-column="10" selection-end-line="336" selection-end-column="87" />
-          <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#2224#2225#0" expanded="false" />
-            <element signature="e#2258#2259#0" expanded="false" />
-            <element signature="e#2297#2298#0" expanded="false" />
-            <element signature="e#2329#2330#0" expanded="false" />
-            <element signature="e#2374#2375#0" expanded="false" />
-            <element signature="e#2406#2407#0" expanded="false" />
-            <element signature="e#2465#2466#0" expanded="false" />
-            <element signature="e#2521#2522#0" expanded="false" />
-            <element signature="e#2572#2573#0" expanded="false" />
-            <element signature="e#2608#2609#0" expanded="false" />
-            <element signature="e#2677#2678#0" expanded="false" />
-            <element signature="e#2726#2727#0" expanded="false" />
-            <element signature="e#2781#2782#0" expanded="false" />
-            <element signature="e#2824#2825#0" expanded="false" />
-            <element signature="e#2903#2904#0" expanded="false" />
-            <element signature="e#2958#2959#0" expanded="false" />
-            <element signature="e#3027#3028#0" expanded="false" />
-            <element signature="e#3070#3071#0" expanded="false" />
-            <element signature="e#3122#3123#0" expanded="false" />
-            <element signature="e#3157#3158#0" expanded="false" />
-            <element signature="e#3219#3220#0" expanded="false" />
-            <element signature="e#3265#3266#0" expanded="false" />
-            <element signature="e#3316#3317#0" expanded="false" />
-            <element signature="e#3355#3356#0" expanded="false" />
-            <element signature="e#3390#3391#0" expanded="false" />
-            <element signature="e#3419#3420#0" expanded="false" />
-            <element signature="e#3451#3452#0" expanded="false" />
-            <element signature="e#3477#3478#0" expanded="false" />
-            <element signature="e#3518#3519#0" expanded="false" />
-            <element signature="e#3550#3551#0" expanded="false" />
-            <element signature="e#3590#3591#0" expanded="false" />
-            <element signature="e#3621#3622#0" expanded="false" />
-            <element signature="e#3661#3662#0" expanded="false" />
-            <element signature="e#3692#3693#0" expanded="false" />
-            <element signature="e#4204#4205#0" expanded="false" />
-            <element signature="e#4254#4255#0" expanded="false" />
-            <element signature="e#4351#4352#0" expanded="false" />
-            <element signature="e#4388#4389#0" expanded="false" />
-            <element signature="e#15357#15358#0" expanded="false" />
-            <element signature="e#15417#15418#0" expanded="false" />
-            <element signature="e#15515#15516#0" expanded="false" />
-            <element signature="e#15569#15570#0" expanded="false" />
-            <element signature="e#15658#15659#0" expanded="false" />
-            <element signature="e#15711#15712#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-publisher-bitdubai/src/main/java/com/bitdubai/sub_app/wallet_publisher/activity/ShopActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.6551724">
@@ -24583,8 +24247,35 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/DMP/android/reference_niche_wallet/fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai/src/main/java/com/bitdubai/reference_niche_wallet/bitcoin_wallet/fragments/BalanceFragment.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.2317518">
+        <state vertical-scroll-proportion="0.0">
           <caret line="159" column="14" selection-start-line="159" selection-start-column="14" selection-end-line="159" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/ApplicationSession.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="109" column="28" selection-start-line="109" selection-start-column="25" selection-end-line="109" selection-end-column="36" />
+          <folding>
+            <element signature="e#3518#3519#0" expanded="true" />
+            <element signature="e#3550#3551#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-android-core/src/main/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="19" column="54" selection-start-line="19" selection-start-column="54" selection-end-line="19" selection-end-column="54" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/StartActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.19966722">
+          <caret line="41" column="13" selection-start-line="41" selection-start-column="13" selection-end-line="41" selection-end-column="13" />
           <folding />
         </state>
       </provider>

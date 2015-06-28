@@ -25,7 +25,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import com.bitdubai.android_core.app.common.PagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.classes.PagerSlidingTabStrip;
-import com.bitdubai.android_core.app.common.version_1.fragment.NavigationDrawerFragment;
+import com.bitdubai.android_core.app.common.version_1.navigation_drawer.NavigationDrawerFragment;
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopChatFragment;
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopHistoryFragment;
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopMapFragment;
@@ -85,7 +85,7 @@ import com.bitdubai.fermat.R;
 /**
  * Created by natalia on 22/06/15.
  */
-public class WalletActivity extends FragmentActivity implements com.bitdubai.android_core.app.common.version_1.fragment.NavigationDrawerFragment.NavigationDrawerCallbacks{
+public class WalletActivity extends FragmentActivity implements com.bitdubai.android_core.app.common.version_1.navigation_drawer.NavigationDrawerFragment.NavigationDrawerCallbacks{
 
     private NavigationDrawerFragment NavigationDrawerFragment;
 

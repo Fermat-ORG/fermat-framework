@@ -20,7 +20,7 @@ import android.view.MenuItem;
 
 import com.bitdubai.android_core.app.common.version_1.classes.PagerSlidingTabStrip;
 
-import com.bitdubai.android_core.app.common.version_1.fragment.NavigationDrawerFragment;
+import com.bitdubai.android_core.app.common.version_1.navigation_drawer.NavigationDrawerFragment;
 
 import com.bitdubai.android_core.app.common.PagerAdapter;
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopChatFragment;
