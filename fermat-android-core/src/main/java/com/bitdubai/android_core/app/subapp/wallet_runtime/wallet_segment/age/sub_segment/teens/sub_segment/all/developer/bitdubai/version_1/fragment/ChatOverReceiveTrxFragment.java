@@ -8,7 +8,7 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 
-import com.bitdubai.smartwallet.R;
+import com.bitdubai.fermat.R;
 import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 
 /**

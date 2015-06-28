@@ -16,7 +16,7 @@ import com.bitdubai.android_core.app.common.PagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.fragment.NavigationDrawerFragment;
 import com.bitdubai.android_core.app.subapp.shop.version_1.activity.ShopActivity;
 
-import com.bitdubai.smartwallet.R;
+import com.bitdubai.fermat.R;
 import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 
 import com.bitdubai.sub_app.wallet_manager.fragment.WalletDesktopFragment;

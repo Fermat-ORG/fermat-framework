@@ -11,7 +11,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bitdubai.smartwallet.R;
+import com.bitdubai.fermat.R;
 
 import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 
