@@ -7,7 +7,7 @@ public class OutgoingExtraUserDatabaseConstants {
     /**
      * Outgoing Extra User database table definition.
      */
-    static final String OUTGOING_EXTRA_USER_DATABASE_TABLE_NAME = "OutgoingExtraUserDatabaseTable";
+    static final String OUTGOING_EXTRA_USER_DATABASE_NAME = "OutgoingExtraUserDatabaseTable";
     static final String OUTGOING_EXTRA_USER_TABLE_NAME = "OutgoingExtraUserTable";
 
     static final String OUTGOING_EXTRA_USER_TABLE_TRANSACTION_ID_COLUMN_NAME = "TransactionId";
