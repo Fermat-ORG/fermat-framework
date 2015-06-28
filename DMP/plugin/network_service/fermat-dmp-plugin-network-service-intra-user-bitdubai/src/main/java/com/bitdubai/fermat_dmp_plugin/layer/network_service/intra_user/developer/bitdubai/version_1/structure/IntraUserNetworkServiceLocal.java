@@ -6,17 +6,24 @@
  */
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventSource;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventType;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.NewNetworkServiceMessageReceivedEvent;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.Message;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 
 import java.util.Observable;
 import java.util.Observer;
-import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_dmp_plugin.layer._11_network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceRemoteAgent</code>
+ * The Class <code>com.bitdubai.fermat_dmp_plugin.layer._11_network_service.intra_user.developer.bitdubai.version_1.structure.IntraUserNetworkServiceRemoteAgent</code> represent
+ * the remote network services locally
  *
  * This class extend of the <code>java.util.Observer</code> class,  its used on the software design pattern called: The observer pattern,
  * for more info see @link https://en.wikipedia.org/wiki/Observer_pattern
@@ -40,6 +47,11 @@ public class IntraUserNetworkServiceLocal implements Observer{
     private ErrorManager errorManager;
 
     /**
+     * DealWithEvents Interface member variables.
+     */
+    private EventManager eventManager;
+
+    /**
      * Represent the outgoingMessageDataAccessObject
      */
     private OutgoingMessageDataAccessObject outgoingMessageDataAccessObject;
@@ -51,42 +63,62 @@ public class IntraUserNetworkServiceLocal implements Observer{
      * @param errorManager instance
      * @param outgoingMessageDataAccessObject instance
      */
-    public IntraUserNetworkServiceLocal(String remoteNetworkServicePublicKey, ErrorManager errorManager, OutgoingMessageDataAccessObject outgoingMessageDataAccessObject) {
-        this.remoteNetworkServicePublicKey = remoteNetworkServicePublicKey;
-        this.errorManager = errorManager;
+    public IntraUserNetworkServiceLocal(String remoteNetworkServicePublicKey, ErrorManager errorManager, EventManager eventManager, OutgoingMessageDataAccessObject outgoingMessageDataAccessObject) {
+        this.remoteNetworkServicePublicKey   = remoteNetworkServicePublicKey;
+        this.errorManager                    = errorManager;
+        this.eventManager                    = eventManager;
         this.outgoingMessageDataAccessObject = outgoingMessageDataAccessObject;
     }
 
 
     /**
-     * This method encrypt the content of the message to send and save on the
-     * data base in the table <code>outbox_messages</code>
+     * This method prepare the message to send and save on the
+     * data base in the table <code>outgoing_messages</code>
      *
      * @param message the message to send
      */
     public void sendMessage(Message message){
 
+        try {
 
-        //Cast the message to IntraUserNetworkServiceMessage
-        IntraUserNetworkServiceMessage intraUserNetworkServiceMessage = (IntraUserNetworkServiceMessage) message;
+            /*
+             * Cast the message to OutgoingIntraUserNetworkServiceMessage
+             */
+                OutgoingIntraUserNetworkServiceMessage outgoingIntraUserNetworkServiceMessage = (OutgoingIntraUserNetworkServiceMessage) message;
 
+            /*
+             * Configure the correct status
+             */
+                outgoingIntraUserNetworkServiceMessage.setStatus(MessagesStatus.PENDING_TO_SEND);
 
-        //Save to the data base table
+            /*
+             * Save to the data base table
+             */
+            outgoingMessageDataAccessObject.create(outgoingIntraUserNetworkServiceMessage);
+
+        } catch (CantInsertRecordDataBaseException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not send message. Error reason: " + e.getMessage()));
+        }
 
     }
 
 
 
     /**
-     * Notify the client when a incoming message is receive by the IntraUserNetworkServiceRemoteAgent
+     * Notify the client when a incoming message is receive by the incomingIntraUserNetworkServiceMessage
      * ant fire a new event
+     *
+     * @param incomingIntraUserNetworkServiceMessage received
      */
-    private void onMessageReceived(IntraUserNetworkServiceMessage intraUserNetworkServiceMessage){
-
+    private void onMessageReceived(IncomingIntraUserNetworkServiceMessage incomingIntraUserNetworkServiceMessage){
 
         /**
-         * Put the message on and event and fire new event
+         * Put the message on a event and fire new event
          */
+        PlatformEvent platformEvent = eventManager.getNewEvent(EventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE);
+        platformEvent.setSource(EventSource.NETWORK_SERVICE_INTRA_USER_PLUGIN);
+        ((NewNetworkServiceMessageReceivedEvent) platformEvent).setData(incomingIntraUserNetworkServiceMessage); //VALIDAR CON LUIS ESTE ATTRIBUTO
+        eventManager.raiseEvent(platformEvent);
 
     }
 
@@ -100,8 +132,9 @@ public class IntraUserNetworkServiceLocal implements Observer{
     @Override
     public void update(Observable observable, Object data) {
 
-        if (data instanceof IntraUserNetworkServiceMessage)
-            onMessageReceived((IntraUserNetworkServiceMessage) data);
+        //Validate and process
+        if (data instanceof IncomingIntraUserNetworkServiceMessage)
+            onMessageReceived((IncomingIntraUserNetworkServiceMessage) data);
     }
 
     /**

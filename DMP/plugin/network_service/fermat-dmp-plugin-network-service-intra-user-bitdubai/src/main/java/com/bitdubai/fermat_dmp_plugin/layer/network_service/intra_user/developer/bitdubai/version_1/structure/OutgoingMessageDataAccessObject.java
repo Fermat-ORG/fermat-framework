@@ -20,6 +20,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantDeleteRecordDataBaseException;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesTypes;
 
@@ -271,7 +274,6 @@ public class OutgoingMessageDataAccessObject {
             throw new IllegalArgumentException("The filters are required, can not be null or empty");
         }
 
-
         List<OutgoingIntraUserNetworkServiceMessage> list = null;
         List<DatabaseTableFilter> filtersTable = new ArrayList<>();
 
@@ -281,9 +283,11 @@ public class OutgoingMessageDataAccessObject {
             /*
              * 1- Prepare the filters
              */
+            DatabaseTable networkIntraUserTable =  getDatabaseTable();
+
             for (String key: filters.keySet()){
 
-                DatabaseTableFilter newFilter = null; // new AndroidDataBaseFilter();
+                DatabaseTableFilter newFilter = networkIntraUserTable.getEmptyTableFilter();
                 newFilter.setType(DatabaseFilterType.EQUAL);
                 newFilter.setColumn(key);
                 newFilter.setValue((String) filters.get(key));
@@ -291,12 +295,10 @@ public class OutgoingMessageDataAccessObject {
                 filtersTable.add(newFilter);
             }
 
-
             /*
              * 2 - load the data base to memory with filters
              */
-            DatabaseTable networkIntraUserTable =  getDatabaseTable();
-            networkIntraUserTable.setFilterGroup(filtersTable, null, DatabaseFilterOperator.OR); //Verificar si es la forma correcta de usar
+            networkIntraUserTable.setFilterGroup(filtersTable, null, DatabaseFilterOperator.OR);
             networkIntraUserTable.loadToMemory();
 
             /*
@@ -344,7 +346,7 @@ public class OutgoingMessageDataAccessObject {
      *
      *  @param entity OutgoingIntraUserNetworkServiceMessage to create.
      */
-    public boolean create (OutgoingIntraUserNetworkServiceMessage entity){
+    public void create (OutgoingIntraUserNetworkServiceMessage entity) throws CantInsertRecordDataBaseException {
 
         if (entity == null){
             throw new IllegalArgumentException("The entity is required, can not be null");
@@ -367,10 +369,9 @@ public class OutgoingMessageDataAccessObject {
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
             // Register the failure.
             errorManager.reportUnexpectedPluginException (Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, databaseTransactionFailedException);
-            return  Boolean.FALSE;
+            throw new CantInsertRecordDataBaseException();
         }
 
-        return Boolean.FALSE;
     }
 
     /**
@@ -378,7 +379,7 @@ public class OutgoingMessageDataAccessObject {
      *
      *  @param entity OutgoingIntraUserNetworkServiceMessage to update.
      */
-    public boolean update(OutgoingIntraUserNetworkServiceMessage entity){
+    public void update(OutgoingIntraUserNetworkServiceMessage entity) throws CantUpdateRecordDataBaseException {
 
         if (entity == null){
             throw new IllegalArgumentException("The entity is required, can not be null");
@@ -401,10 +402,9 @@ public class OutgoingMessageDataAccessObject {
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
             // Register the failure.
             errorManager.reportUnexpectedPluginException (Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, databaseTransactionFailedException);
-            return  Boolean.FALSE;
+            throw  new CantUpdateRecordDataBaseException();
         }
 
-        return Boolean.FALSE;
     }
 
     /**
@@ -412,7 +412,7 @@ public class OutgoingMessageDataAccessObject {
      *
      *  @param id Long id.
      * */
-    public boolean delete (Long id){
+    public void delete (Long id) throws CantDeleteRecordDataBaseException {
 
         if (id == null){
             throw new IllegalArgumentException("The id is required can not be null");
@@ -432,10 +432,9 @@ public class OutgoingMessageDataAccessObject {
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
             // Register the failure.
             errorManager.reportUnexpectedPluginException (Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, databaseTransactionFailedException);
-            return  Boolean.FALSE;
+            throw new CantDeleteRecordDataBaseException();
         }
 
-        return Boolean.FALSE;
     }
 
 
