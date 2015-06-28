@@ -28,7 +28,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bitdubai.smartwallet.R;
+import com.bitdubai.fermat.R;
 
 import java.util.Locale;
 

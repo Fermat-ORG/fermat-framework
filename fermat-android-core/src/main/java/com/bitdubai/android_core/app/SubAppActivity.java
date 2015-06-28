@@ -1,10 +1,7 @@
 package com.bitdubai.android_core.app;
 
-import android.app.ActionBar;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.*;
 import android.support.v4.view.MenuItemCompat;
@@ -16,7 +13,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 //import android.support.v7.widget.SearchView;
-import android.widget.SearchView;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -44,9 +40,6 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ReceiveFragm
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.*;
 import com.bitdubai.sub_app.shop_manager.fragment.ShopDesktopFragment;
 
-import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsDataBaseSystem;
-import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsFileSystem;
-import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsLocationSystem;
 import com.bitdubai.sub_app.wallet_store.fragment.AllFragment;
 import com.bitdubai.sub_app.wallet_store.fragment.FreeFragment;
 
@@ -73,7 +66,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Activities
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_core.Platform;
-import com.bitdubai.smartwallet.R;
+import com.bitdubai.fermat.R;
 
 
 import com.bitdubai.fermat_core.CorePlatformContext;

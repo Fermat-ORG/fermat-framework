@@ -15,7 +15,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.TextView;
 
-import com.bitdubai.smartwallet.R;
+import com.bitdubai.fermat.R;
 import com.bitdubai.android_core.app.common.version_1.classes.PagerSlidingTabStrip;
 
 //import com.astuetz.PagerSlidingTabStrip;

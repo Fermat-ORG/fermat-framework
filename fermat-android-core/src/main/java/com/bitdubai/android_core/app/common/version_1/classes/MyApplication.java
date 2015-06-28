@@ -21,7 +21,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.AppRuntimeManage
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.TitleBar;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.smartwallet.R;
+import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_core.Platform;
 
 

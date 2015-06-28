@@ -7,9 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bitdubai.smartwallet.R;
+import com.bitdubai.fermat.R;
 
 
 public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {

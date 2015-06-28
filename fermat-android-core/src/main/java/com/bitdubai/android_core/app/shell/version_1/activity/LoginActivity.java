@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import com.bitdubai.smartwallet.R;
+import com.bitdubai.fermat.R;
 
 
 public class LoginActivity extends Activity {

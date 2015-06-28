@@ -31,7 +31,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Activities
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.fermat_core.Platform;
-import com.bitdubai.smartwallet.R;
+import com.bitdubai.fermat.R;
 import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
 import com.bitdubai.android_core.app.common.version_1.classes.NavigationDrawerArrayAdapter;
 import com.bitdubai.sub_app.wallet_factory.fragment.version_3.activity.FactoryActivity;
