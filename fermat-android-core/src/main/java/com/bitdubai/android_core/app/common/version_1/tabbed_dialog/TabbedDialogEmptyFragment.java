@@ -1,4 +1,4 @@
-package com.bitdubai.android_core.app.common.version_1.fragment;
+package com.bitdubai.android_core.app.common.version_1.tabbed_dialog;
 
 /**
  * Created by ciencias on 25.11.14.
@@ -13,7 +13,7 @@ import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.TextView;
 
-import com.bitdubai.smartwallet.R;
+import com.bitdubai.fermat.R;
 
 public class TabbedDialogEmptyFragment extends Fragment {
 

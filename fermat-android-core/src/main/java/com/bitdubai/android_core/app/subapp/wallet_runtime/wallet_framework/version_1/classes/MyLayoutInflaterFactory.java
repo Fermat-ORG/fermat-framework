@@ -10,8 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import com.bitdubai.smartwallet.R;
-import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
+import com.bitdubai.android_core.app.ApplicationSession;
+import com.bitdubai.fermat.R;
 
 /**
  * Created by ciencias on 01.12.14.
@@ -36,7 +36,7 @@ public class MyLayoutInflaterFactory implements LayoutInflater.Factory {
                         ((TextView) view).setTextSize(20);
 
                         // set the text color
-                        Typeface face = MyApplication.getDefaultTypeface();
+                        Typeface face = ApplicationSession.getDefaultTypeface();
                         ((TextView) view).setTypeface(face);
                         ((TextView) view).setTextColor(Color.WHITE);
                     }

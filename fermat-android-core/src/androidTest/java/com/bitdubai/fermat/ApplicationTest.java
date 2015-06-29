@@ -1,4 +1,4 @@
-package com.bitdubai.smartwallet;
+package com.bitdubai.fermat;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

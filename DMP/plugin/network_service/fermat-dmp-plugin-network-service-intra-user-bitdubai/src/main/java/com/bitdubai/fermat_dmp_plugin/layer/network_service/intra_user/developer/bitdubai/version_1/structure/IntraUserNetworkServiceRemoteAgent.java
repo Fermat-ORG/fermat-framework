@@ -10,6 +10,8 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.develope
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CantSendMessageException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.ConnectionStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.Message;
@@ -207,6 +209,8 @@ public class IntraUserNetworkServiceRemoteAgent extends Observable {
 
         } catch (InterruptedException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not sleep"));
+        } catch (CantInsertRecordDataBaseException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process message received. Error reason: "+e.getMessage()));
         }
 
     }
@@ -249,6 +253,8 @@ public class IntraUserNetworkServiceRemoteAgent extends Observable {
 
                 } catch (CantSendMessageException e) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not send message to remote network service "));
+                } catch (CantUpdateRecordDataBaseException e) {
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception("Can not process messages to send. Error reason: "+e.getMessage()));
                 }
 
             }

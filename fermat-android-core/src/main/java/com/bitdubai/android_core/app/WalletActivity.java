@@ -24,9 +24,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.bitdubai.android_core.app.common.PagerAdapter;
-import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
-import com.bitdubai.android_core.app.common.version_1.classes.PagerSlidingTabStrip;
-import com.bitdubai.android_core.app.common.version_1.fragment.NavigationDrawerFragment;
+import com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip;
+import com.bitdubai.android_core.app.common.version_1.navigation_drawer.NavigationDrawerFragment;
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopChatFragment;
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopHistoryFragment;
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopMapFragment;
@@ -81,12 +80,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-import com.bitdubai.smartwallet.R;
+import com.bitdubai.fermat.R;
 
 /**
  * Created by natalia on 22/06/15.
  */
-public class WalletActivity extends FragmentActivity implements com.bitdubai.android_core.app.common.version_1.fragment.NavigationDrawerFragment.NavigationDrawerCallbacks{
+public class WalletActivity extends FragmentActivity implements com.bitdubai.android_core.app.common.version_1.navigation_drawer.NavigationDrawerFragment.NavigationDrawerCallbacks{
 
     private NavigationDrawerFragment NavigationDrawerFragment;
 
@@ -132,7 +131,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
             //init runtime app
 
             //get platform object
-            platform = MyApplication.getFermatPlatform();
+            platform = ApplicationSession.getFermatPlatform();
             this.platformContext = platform.getCorePlatformContext();
 
             setContentView(R.layout.runtime_app_wallet_runtime);
@@ -140,9 +139,9 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
             Context context = this.getApplicationContext();
 
             // get instances of Runtime middleware object
-            this.appRuntimeMiddleware = MyApplication.getAppRuntime();
-            this.walletRuntimeMiddleware = MyApplication.getwalletRuntime();
-            this.errorManager = MyApplication.getErrorManager();
+            this.appRuntimeMiddleware = ApplicationSession.getAppRuntime();
+            this.walletRuntimeMiddleware = ApplicationSession.getwalletRuntime();
+            this.errorManager = ApplicationSession.getErrorManager();
 
             //load wallet UI
             NavigateWallet();
@@ -165,7 +164,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
             this.activity = walletRuntimeMiddleware.getLasActivity();
 
 
-            MyApplication.setActivityId(activity.getType().getKey());
+            ApplicationSession.setActivityId(activity.getType().getKey());
 
 
             this.tabs = activity.getTabStrip();
@@ -187,7 +186,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
             this.abTitle = (TextView) findViewById(titleId);
 
 
-            MyApplication.setActivityProperties(this, getWindow(), getResources(), tabStrip, getActionBar(), titleBar, abTitle, Title);
+            ApplicationSession.setActivityProperties(this, getWindow(), getResources(), tabStrip, getActionBar(), titleBar, abTitle, Title);
 
             if(sidemenu != null)
             {
@@ -222,7 +221,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
 
                 String color = activity.getColor();
                 if (color != null)
-                    ((MyApplication) this.getApplication()).changeColor(Color.parseColor(color), getResources());
+                    ((ApplicationSession) this.getApplication()).changeColor(Color.parseColor(color), getResources());
 
             }
         }
@@ -384,7 +383,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
                 case CWP_WALLET_STORE_MAIN:
                     break;
                 case CWP_WALLET_ADULTS_ALL_MAIN:
-                    int walletId = ((MyApplication) this.getApplication()).getWalletId();
+                    int walletId = ((ApplicationSession) this.getApplication()).getWalletId();
                     if (walletId == 1 || walletId == 2)
                         inflater.inflate(R.menu.wallet_framework_activity_framework_menu2, menu);
                     else
@@ -473,7 +472,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
 
             if (id == R.id.action_search) {
 
-                    /*((MyApplication) this.getApplication()).setWalletId(0);
+                    /*((ApplicationSession) this.getApplication()).setWalletId(0);
                     this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_STORE_MAIN);
                     NavigateActivity();
 
@@ -488,7 +487,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
 
             if (id == R.id.action_requests_sent){
                 Intent intent;
-                MyApplication.setChildId("1|1");
+                ApplicationSession.setChildId("1|1");
                 activity = this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_ADULTS_ALL_CHAT_TRX);
                 intent = new Intent(this, com.bitdubai.android_core.app.FragmentActivity.class);
                 startActivity(intent);
@@ -498,7 +497,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
 
             if (id == R.id.action_requests_received){
                 Intent intent;
-                MyApplication.setChildId("1|1");
+                ApplicationSession.setChildId("1|1");
                 activity = this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_ADULTS_ALL_CHAT_TRX);
                 intent = new Intent(this, com.bitdubai.android_core.app.FragmentActivity.class);
                 startActivity(intent);
@@ -527,7 +526,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
 
         try
         {
-              MyApplication.setContact("");
+              ApplicationSession.setContact("");
             String tagId = v.getTag().toString();
             String activityKey="";
             String paramId="0";
@@ -600,8 +599,8 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
     @Override
     public void onBackPressed() {
         // set Desktop current activity
-        MyApplication.setActivityId("DesktopActivity");
-        ((MyApplication) this.getApplication()).setWalletId(0);
+        ApplicationSession.setActivityId("DesktopActivity");
+        ((ApplicationSession) this.getApplication()).setWalletId(0);
         if (activity.getType() != Activities.CWP_WALLET_MANAGER_MAIN){
             activity = this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_MANAGER_MAIN);
             cleanWindows();

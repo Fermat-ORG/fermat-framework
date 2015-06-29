@@ -7,6 +7,9 @@ import android.text.TextPaint;
 import android.text.style.MetricAffectingSpan;
 import android.util.LruCache;
 
+
+// TODO: Raul; Esta cuestion está relacionada a la posibilidad de usar tipos de letra que no vienen por defecto en Android. Pegarle una revisadita, quizas ponerlo mas prolijo, etc.
+
 /*
  * Style a {@link Spannable} with a custom {@link Typeface}.
  *

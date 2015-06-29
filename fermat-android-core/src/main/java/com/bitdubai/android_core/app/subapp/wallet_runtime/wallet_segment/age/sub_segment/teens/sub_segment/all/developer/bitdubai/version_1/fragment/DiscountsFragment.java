@@ -19,12 +19,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.AppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_core.Platform;
-import com.bitdubai.smartwallet.R;
-import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
+import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_core.CorePlatformContext;
 
 
@@ -70,7 +70,7 @@ public class DiscountsFragment extends ListFragment implements LoaderManager.Loa
     public void onListItemClick(ListView l, View v, int position, long id) {
 
         Intent intent;
-        Platform platform = MyApplication.getFermatPlatform();
+        Platform platform = ApplicationSession.getFermatPlatform();
         CorePlatformContext platformContext = platform.getCorePlatformContext();
 
         AppRuntimeManager appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
@@ -316,17 +316,17 @@ public class DiscountsFragment extends ListFragment implements LoaderManager.Loa
 
             tv = ((TextView)view.findViewById(R.id.balance));
             tv.setText(balances[position]);
-            tv.setTypeface(MyApplication.getDefaultTypeface());
+            tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
             tv = ((TextView)view.findViewById(R.id.balance_available));
             tv.setText(balances_available[position]);
-            tv.setTypeface(MyApplication.getDefaultTypeface());
+            tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
 
 
             tv = ((TextView)view.findViewById(R.id.account_type));
             tv.setText(account_types[position]);
-            tv.setTypeface(MyApplication.getDefaultTypeface());
+            tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
             return view;
         }

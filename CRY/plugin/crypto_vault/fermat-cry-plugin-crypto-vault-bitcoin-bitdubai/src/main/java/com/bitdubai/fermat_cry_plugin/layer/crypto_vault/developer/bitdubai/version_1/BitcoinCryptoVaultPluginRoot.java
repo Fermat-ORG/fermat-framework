@@ -48,6 +48,8 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.vers
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.events.TransactionNotificationAgent;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.developerUtils.*;
 
+import org.bitcoinj.core.Wallet;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +58,7 @@ import java.util.UUID;
 /**
  * Created by loui on 08/06/15.
  */
-public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DatabaseManagerForDevelopers, DealsWithBitcoinCryptoNetwork, DealsWithEvents, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithDeviceUsers, DealsWithPluginFileSystem, Plugin, Service {
+public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DatabaseManagerForDevelopers, DealsWithBitcoinCryptoNetwork, DealsWithEvents, DealsWithErrors, DealsWithPluginDatabaseSystem, DealWithLogManagers, DealsWithDeviceUsers, DealsWithPluginFileSystem, Plugin, Service {
 
     /**
      * BitcoinCryptoVaultPluginRoot member variables
@@ -294,6 +296,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
                 vault.loadOrCreateVault();
                 System.out.println("CryptoVault - Valid receive address for the vault is: " + vault.getAddress().getAddress());
 
+
                 /**
                  * Once the vault is loaded or created, I will connect it to Bitcoin network to recieve pending transactions
                  */
@@ -377,6 +380,12 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
         this.serviceStatus = ServiceStatus.STOPPED;
     }
 
+    @Override
+    public void setLogManagers(LogManagerForDevelopers logManagerForDevelopers) {
+        this.logManagerForDevelopers = logManagerForDevelopers;
+        logManagerForDevelopers.setPluginId(this.pluginId);
+        logManagerForDevelopers.changeLoggingLevel(LogLevel.AGGRESSIVE_LOGGING);
+    }
 
     /**
      * CryptoVaultManager interface implementation

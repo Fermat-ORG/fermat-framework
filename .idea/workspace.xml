@@ -1,91 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AndroidConfiguredLogFilters">
+    <filters>
+      <filter>
+        <option name="name" value="app: com.bitdubai.fermat" />
+        <option name="packageNamePattern" value="com.bitdubai.fermat" />
+      </filter>
+    </filters>
+  </component>
+  <component name="AndroidLayouts">
+    <shared>
+      <config />
+    </shared>
+  </component>
+  <component name="AndroidLogFilters">
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="app: com.bitdubai.fermat" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="ba5a87a3-42ea-4caf-9d7e-1a856a8fd118" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/pip/android/android.iml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/pip/android/developer/developer.iml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/pip/android/developer/fermat-pip-android-developer-bitdubai/fermat-pip-android-developer-bitdubai.iml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/pip/pip.iml" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-android-core/fermat-android-core.iml" afterPath="$PROJECT_DIR$/fermat-android-core/fermat-android-core.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-api/fermat-api.iml" afterPath="$PROJECT_DIR$/fermat-api/fermat-api.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-core/fermat-core.iml" afterPath="$PROJECT_DIR$/fermat-core/fermat-core.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-cry-api/fermat-cry-api.iml" afterPath="$PROJECT_DIR$/fermat-cry-api/fermat-cry-api.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CRY/plugin/crypto_module/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai.iml" afterPath="$PROJECT_DIR$/CRY/plugin/crypto_module/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai/fermat-cry-plugin-crypto-module-actor-address-book-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CRY/plugin/crypto_module/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai.iml" afterPath="$PROJECT_DIR$/CRY/plugin/crypto_module/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai/fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CRY/plugin/crypto_network/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/fermat-cry-plugin-crypto-network-bitcoin-bitdubai.iml" afterPath="$PROJECT_DIR$/CRY/plugin/crypto_network/fermat-cry-plugin-crypto-network-bitcoin-bitdubai/fermat-cry-plugin-crypto-network-bitcoin-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CRY/plugin/crypto_router/fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai/fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai.iml" afterPath="$PROJECT_DIR$/CRY/plugin/crypto_router/fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai/fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai.iml" afterPath="$PROJECT_DIR$/CRY/plugin/crypto_vault/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai/fermat-cry-plugin-crypto-vault-bitcoin-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/addon/license/fermat-dmp-addon-license-wallet-bitdubai/fermat-dmp-addon-license-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/addon/license/fermat-dmp-addon-license-wallet-bitdubai/fermat-dmp-addon-license-wallet-bitdubai.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/android/reference_niche_wallet/fermat-dmp-android-reference-niche-wallet-age-kids-boys-bitdubai/fermat-dmp-android-reference-niche-wallet-age-kids-boys-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/android/reference_niche_wallet/fermat-dmp-android-reference-niche-wallet-age-kids-boys-bitdubai/fermat-dmp-android-reference-niche-wallet-age-kids-boys-bitdubai.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/android/reference_niche_wallet/fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai/fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/android/reference_niche_wallet/fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai/fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-shop-manager-bitdubai/fermat-dmp-android-sub-app-shop-manager-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-shop-manager-bitdubai/fermat-dmp-android-sub-app-shop-manager-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-factory-bitdubai/fermat-dmp-android-sub-app-wallet-factory-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-factory-bitdubai/fermat-dmp-android-sub-app-wallet-factory-bitdubai.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-manager-bitdubai/fermat-dmp-android-sub-app-wallet-manager-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-manager-bitdubai/fermat-dmp-android-sub-app-wallet-manager-bitdubai.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-publisher-bitdubai/fermat-dmp-android-sub-app-wallet-publisher-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-publisher-bitdubai/fermat-dmp-android-sub-app-wallet-publisher-bitdubai.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-store-bitdubai/fermat-dmp-android-sub-app-wallet-store-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-store-bitdubai/fermat-dmp-android-sub-app-wallet-store-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/actor/fermat-dmp-plugin-actor-extra-user-bitdubai/fermat-dmp-plugin-actor-extra-user-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/actor/fermat-dmp-plugin-actor-extra-user-bitdubai/fermat-dmp-plugin-actor-extra-user-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/basic_wallet/fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai/fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/basic_wallet/fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai/fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/basic_wallet/fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai/fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/basic_wallet/fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai/fermat-dmp-plugin-basic-wallet-discount-wallet-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/composite_wallet/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/composite_wallet/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai/fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai/fermat-dmp-plugin-identity-intra-user-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/identity/fermat-dmp-plugin-identity-intra-user-bitdubai/fermat-dmp-plugin-identity-intra-user-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/middleware/fermat-dmp-plugin-middleware-app-runtime-bitdubai/fermat-dmp-plugin-middleware-app-runtime-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/middleware/fermat-dmp-plugin-middleware-app-runtime-bitdubai/fermat-dmp-plugin-middleware-app-runtime-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/middleware/fermat-dmp-plugin-middleware-bank-notes-bitdubai/fermat-dmp-plugin-middleware-bank-notes-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/middleware/fermat-dmp-plugin-middleware-bank-notes-bitdubai/fermat-dmp-plugin-middleware-bank-notes-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/middleware/fermat-dmp-plugin-middleware-money-request-bitdubai/fermat-dmp-plugin-middleware-money-request-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/middleware/fermat-dmp-plugin-middleware-money-request-bitdubai/fermat-dmp-plugin-middleware-money-request-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-contacts-bitdubai/fermat-dmp-plugin-middleware-wallet-contacts-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-contacts-bitdubai/fermat-dmp-plugin-middleware-wallet-contacts-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/module/fermat-dmp-plugin-module-wallet-factory-bitdubai/fermat-dmp-plugin-module-wallet-factory-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/module/fermat-dmp-plugin-module-wallet-factory-bitdubai/fermat-dmp-plugin-module-wallet-factory-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/module/fermat-dmp-plugin-module-wallet-manager-bitdubai/fermat-dmp-plugin-module-wallet-manager-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/module/fermat-dmp-plugin-module-wallet-manager-bitdubai/fermat-dmp-plugin-module-wallet-manager-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/module/fermat-dmp-plugin-module-wallet-publisher-bitdubai/fermat-dmp-plugin-module-wallet-publisher-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/module/fermat-dmp-plugin-module-wallet-publisher-bitdubai/fermat-dmp-plugin-module-wallet-publisher-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/module/fermat-dmp-plugin-module-wallet-runtime-bitdubai/fermat-dmp-plugin-module-wallet-runtime-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/module/fermat-dmp-plugin-module-wallet-runtime-bitdubai/fermat-dmp-plugin-module-wallet-runtime-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/module/fermat-dmp-plugin-module-wallet-store-bitdubai/fermat-dmp-plugin-module-wallet-store-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/module/fermat-dmp-plugin-module-wallet-store-bitdubai/fermat-dmp-plugin-module-wallet-store-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-bank-notes-bitdubai/fermat-dmp-plugin-network-service-bank-notes-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-bank-notes-bitdubai/fermat-dmp-plugin-network-service-bank-notes-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-crypto-addresses-bitdubai/fermat-dmp-plugin-network-service-crypto-addresses-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-crypto-addresses-bitdubai/fermat-dmp-plugin-network-service-crypto-addresses-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-intra-user-bitdubai/fermat-dmp-plugin-network-service-intra-user-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-intra-user-bitdubai/fermat-dmp-plugin-network-service-intra-user-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-money-bitdubai/fermat-dmp-plugin-network-service-money-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-money-bitdubai/fermat-dmp-plugin-network-service-money-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-money-request-bitdubai/fermat-dmp-plugin-network-service-money-request-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-money-request-bitdubai/fermat-dmp-plugin-network-service-money-request-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-community-bitdubai/fermat-dmp-plugin-network-service-wallet-community-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-community-bitdubai/fermat-dmp-plugin-network-service-wallet-community-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-resources-bitdubai/fermat-dmp-plugin-network-service-wallet-resources-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-resources-bitdubai/fermat-dmp-plugin-network-service-wallet-resources-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/fermat-dmp-plugin-network-service-wallet-store-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-store-bitdubai/fermat-dmp-plugin-network-service-wallet-store-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-bank-notes-wallet-bitdubai/fermat-dmp-plugin-niche-wallet-type-bank-notes-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-bank-notes-wallet-bitdubai/fermat-dmp-plugin-niche-wallet-type-bank-notes-wallet-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-crypto-loss-protected-wallet-bitdubai/fermat-dmp-plugin-niche-wallet-type-crypto-loss-protected-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-crypto-loss-protected-wallet-bitdubai/fermat-dmp-plugin-niche-wallet-type-crypto-loss-protected-wallet-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai/fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai/fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-discount-wallet-bitdubai/fermat-dmp-plugin-niche-wallet-type-discount-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-discount-wallet-bitdubai/fermat-dmp-plugin-niche-wallet-type-discount-wallet-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-bitdubai/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-bitdubai/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai/fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai/fermat-dmp-plugin-niche-wallet-type-multi-account-wallet-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-device-user-bitdubai/fermat-dmp-plugin-transaction-incoming-device-user-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-device-user-bitdubai/fermat-dmp-plugin-transaction-incoming-device-user-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai/fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai/fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai/fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-inter-wallet-bitdubai/fermat-dmp-plugin-transaction-inter-wallet-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-inter-wallet-bitdubai/fermat-dmp-plugin-transaction-inter-wallet-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-device-user-bitdubai/fermat-dmp-plugin-transaction-outgoing-device-user-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-device-user-bitdubai/fermat-dmp-plugin-transaction-outgoing-device-user-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai/fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai/fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai/fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai/fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-blockchain-info-bitdubai/fermat-dmp-plugin-world-blockchain-info-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-blockchain-info-bitdubai/fermat-dmp-plugin-world-blockchain-info-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-coinapult-bitdubai/fermat-dmp-plugin-world-coinapult-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-coinapult-bitdubai/fermat-dmp-plugin-world-coinapult-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-coinbase-bitdubai/fermat-dmp-plugin-world-coinbase-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-coinbase-bitdubai/fermat-dmp-plugin-world-coinbase-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-crypto-index-bitdubai/fermat-dmp-plugin-world-crypto-index-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-crypto-index-bitdubai/fermat-dmp-plugin-world-crypto-index-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-location-bitdubai/fermat-dmp-plugin-world-location-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-location-bitdubai/fermat-dmp-plugin-world-location-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-shape-shift-bitdubai/fermat-dmp-plugin-world-shape-shift-bitdubai.iml" afterPath="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-shape-shift-bitdubai/fermat-dmp-plugin-world-shape-shift-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-database-system-bitdubai/fermat-osa-addon-android-database-system-bitdubai.iml" afterPath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-database-system-bitdubai/fermat-osa-addon-android-database-system-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai/fermat-osa-addon-android-device-connectivity-bitdubai.iml" afterPath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai/fermat-osa-addon-android-device-connectivity-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-device-location-bitdubai/fermat-osa-addon-android-device-location-bitdubai.iml" afterPath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-device-location-bitdubai/fermat-osa-addon-android-device-location-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-device-power-bitdubai/fermat-osa-addon-android-device-power-bitdubai.iml" afterPath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-device-power-bitdubai/fermat-osa-addon-android-device-power-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-file-system-bitdubai/fermat-osa-addon-android-file-system-bitdubai.iml" afterPath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-file-system-bitdubai/fermat-osa-addon-android-file-system-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-logger-bitdubai/fermat-osa-addon-android-logger-bitdubai.iml" afterPath="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-logger-bitdubai/fermat-osa-addon-android-logger-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OSA/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/fermat-osa-addon-multi-os-database-system-bitdubai.iml" afterPath="$PROJECT_DIR$/OSA/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/fermat-osa-addon-multi-os-database-system-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/OSA/addon/multi_os/fermat-osa-addon-multi-os-file-system-bitdubai/fermat-osa-addon-multi-os-file-system-bitdubai.iml" afterPath="$PROJECT_DIR$/OSA/addon/multi_os/fermat-osa-addon-multi-os-file-system-bitdubai/fermat-osa-addon-multi-os-file-system-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat-p2p-api/fermat-p2p-api.iml" afterPath="$PROJECT_DIR$/fermat-p2p-api/fermat-p2p-api.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/fermat-p2p-plugin-communication-cloud-client-bitdubai.iml" afterPath="$PROJECT_DIR$/P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai/fermat-p2p-plugin-communication-cloud-client-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/fermat-p2p-plugin-communication-cloud-server-bitdubai.iml" afterPath="$PROJECT_DIR$/P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai/fermat-p2p-plugin-communication-cloud-server-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PIP/addon/hardware/fermat-pip-addon-hardware-local-device-bitdubai/fermat-pip-addon-hardware-local-device-bitdubai.iml" afterPath="$PROJECT_DIR$/PIP/addon/hardware/fermat-pip-addon-hardware-local-device-bitdubai/fermat-pip-addon-hardware-local-device-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PIP/addon/hardware/fermat-pip-addon-hardware-remote-device-bitdubai/fermat-pip-addon-hardware-remote-device-bitdubai.iml" afterPath="$PROJECT_DIR$/PIP/addon/hardware/fermat-pip-addon-hardware-remote-device-bitdubai/fermat-pip-addon-hardware-remote-device-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai/fermat-pip-addon-platform-service-error-manager-bitdubai.iml" afterPath="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai/fermat-pip-addon-platform-service-error-manager-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-event-manager-bitdubai/fermat-pip-addon-platform-service-event-manager-bitdubai.iml" afterPath="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-event-manager-bitdubai/fermat-pip-addon-platform-service-event-manager-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-location-subsystem-bitdubai/fermat-pip-addon-platform-service-location-subsystem-bitdubai.iml" afterPath="$PROJECT_DIR$/PIP/addon/platform_service/fermat-pip-addon-platform-service-location-subsystem-bitdubai/fermat-pip-addon-platform-service-location-subsystem-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PIP/addon/user/fermat-pip-addon-user-device-user-bitdubai/fermat-pip-addon-user-device-user-bitdubai.iml" afterPath="$PROJECT_DIR$/PIP/addon/user/fermat-pip-addon-user-device-user-bitdubai/fermat-pip-addon-user-device-user-bitdubai.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PIP/android/sub_app/fermat-pip-android-sub-app-developer-bitdubai/fermat-pip-android-sub-app-developer-bitdubai.iml" afterPath="$PROJECT_DIR$/PIP/android/sub_app/fermat-pip-android-sub-app-developer-bitdubai/fermat-pip-android-sub-app-developer-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/PIP/plugin/actor/fermat-pip-plugin-actor-developer-bitdubai/fermat-pip-plugin-actor-developer-bitdubai.iml" afterPath="$PROJECT_DIR$/PIP/plugin/actor/fermat-pip-plugin-actor-developer-bitdubai/fermat-pip-plugin-actor-developer-bitdubai.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/fermat.iml" afterPath="$PROJECT_DIR$/fermat.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/gradle.xml" afterPath="$PROJECT_DIR$/.idea/gradle.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/settings.gradle" afterPath="$PROJECT_DIR$/settings.gradle" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -300,6 +240,7 @@
     <ignored path="$PROJECT_DIR$/PIP/plugin/actor/fermat-pip-plugin-actor-developer-bitdubai/build/" />
     <ignored path="$PROJECT_DIR$/pip/.gradle/" />
     <ignored path="$PROJECT_DIR$/pip/build/" />
+    <ignored path=".idea/dataSources.local.xml" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -324,91 +265,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-shop-manager-bitdubai/build.gradle">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="fermat-dmp-android-sub-app-shop-manager-bitdubai.iml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-shop-manager-bitdubai/fermat-dmp-android-sub-app-shop-manager-bitdubai.iml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="96" column="9" selection-start-line="96" selection-start-column="9" selection-end-line="96" selection-end-column="9" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="fermat-dmp-android-sub-app-wallet-factory-bitdubai.iml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-factory-bitdubai/fermat-dmp-android-sub-app-wallet-factory-bitdubai.iml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="97" column="9" selection-start-line="97" selection-start-column="9" selection-end-line="97" selection-end-column="9" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="fermat-dmp-android-sub-app-wallet-manager-bitdubai.iml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-manager-bitdubai/fermat-dmp-android-sub-app-wallet-manager-bitdubai.iml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="96" column="9" selection-start-line="96" selection-start-column="9" selection-end-line="96" selection-end-column="9" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="fermat-dmp-android-sub-app-wallet-publisher-bitdubai.iml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-publisher-bitdubai/fermat-dmp-android-sub-app-wallet-publisher-bitdubai.iml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="161" column="0" selection-start-line="161" selection-start-column="0" selection-end-line="161" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="fermat-dmp-android-sub-app-wallet-store-bitdubai.iml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-store-bitdubai/fermat-dmp-android-sub-app-wallet-store-bitdubai.iml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="168" column="0" selection-start-line="168" selection-start-column="0" selection-end-line="168" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="fermat-osa-addon-multi-os-database-system-bitdubai.iml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/OSA/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/fermat-osa-addon-multi-os-database-system-bitdubai.iml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-11.0">
-              <caret line="22" column="1" selection-start-line="22" selection-start-column="1" selection-end-line="22" selection-end-column="1" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="settings.gradle" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/settings.gradle">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.9032258">
-              <caret line="279" column="0" selection-start-line="279" selection-start-column="0" selection-end-line="279" selection-end-column="0" />
+            <state vertical-scroll-proportion="1.3225807">
+              <caret line="304" column="0" selection-start-line="304" selection-start-column="0" selection-end-line="304" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="dmp_android_niche_wallet_fermat-dmp-android-niche-wallet-bitcoin-loss-protected-wallet-bitdubai.iml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/DMP/android/reference_niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-loss-protected-wallet-bitdubai/dmp_android_niche_wallet_fermat-dmp-android-niche-wallet-bitcoin-loss-protected-wallet-bitdubai.iml">
+      <file leaf-file-name="build.gradle" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/fermat-core/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <caret line="53" column="0" selection-start-line="53" selection-start-column="0" selection-end-line="53" selection-end-column="37" />
               <folding />
             </state>
           </provider>
@@ -417,6 +288,7 @@
     </leaf>
   </component>
   <component name="Git.Settings">
+    <option name="UPDATE_TYPE" value="MERGE" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="GradleLocalSettings">
@@ -468,20 +340,12 @@
                 <option name="path" value="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-bank-notes-wallet-bitdubai" />
               </ExternalProjectPojo>
               <ExternalProjectPojo>
-                <option name="name" value=":fermat-dmp-plugin-world-crypto-index-bitdubai" />
-                <option name="path" value="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-crypto-index-bitdubai" />
-              </ExternalProjectPojo>
-              <ExternalProjectPojo>
                 <option name="name" value=":fermat-osa-addon-android-file-system-bitdubai" />
                 <option name="path" value="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-file-system-bitdubai" />
               </ExternalProjectPojo>
               <ExternalProjectPojo>
                 <option name="name" value=":fermat-pip-plugin-actor-developer-bitdubai" />
                 <option name="path" value="$PROJECT_DIR$/PIP/plugin/actor/fermat-pip-plugin-actor-developer-bitdubai" />
-              </ExternalProjectPojo>
-              <ExternalProjectPojo>
-                <option name="name" value=":fermat-dmp-plugin-world-coinbase-bitdubai" />
-                <option name="path" value="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-coinbase-bitdubai" />
               </ExternalProjectPojo>
               <ExternalProjectPojo>
                 <option name="name" value=":fermat-cry-plugin-crypto-network-bitcoin-bitdubai" />
@@ -498,10 +362,6 @@
               <ExternalProjectPojo>
                 <option name="name" value=":fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai" />
                 <option name="path" value="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai" />
-              </ExternalProjectPojo>
-              <ExternalProjectPojo>
-                <option name="name" value=":fermat-osa-addon-multi-os-database-system-bitdubai" />
-                <option name="path" value="$PROJECT_DIR$/OSA/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai" />
               </ExternalProjectPojo>
               <ExternalProjectPojo>
                 <option name="name" value=":fermat-osa-addon-android-device-connectivity-bitdubai" />
@@ -536,20 +396,12 @@
                 <option name="path" value="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-incoming-intra-user-bitdubai" />
               </ExternalProjectPojo>
               <ExternalProjectPojo>
-                <option name="name" value=":pip:android:developer:fermat-pip-android-developer-bitdubai" />
-                <option name="path" value="$PROJECT_DIR$/pip/android/developer/fermat-pip-android-developer-bitdubai" />
-              </ExternalProjectPojo>
-              <ExternalProjectPojo>
                 <option name="name" value=":fermat-api" />
                 <option name="path" value="$PROJECT_DIR$/fermat-api" />
               </ExternalProjectPojo>
               <ExternalProjectPojo>
                 <option name="name" value=":fermat-dmp-plugin-transaction-inter-wallet-bitdubai" />
                 <option name="path" value="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-inter-wallet-bitdubai" />
-              </ExternalProjectPojo>
-              <ExternalProjectPojo>
-                <option name="name" value=":fermat-osa-addon-multi-os-file-system-bitdubai" />
-                <option name="path" value="$PROJECT_DIR$/OSA/addon/multi_os/fermat-osa-addon-multi-os-file-system-bitdubai" />
               </ExternalProjectPojo>
               <ExternalProjectPojo>
                 <option name="name" value=":fermat-p2p-plugin-communication-cloud-server-bitdubai" />
@@ -586,10 +438,6 @@
               <ExternalProjectPojo>
                 <option name="name" value=":fermat-dmp-addon-license-wallet-bitdubai" />
                 <option name="path" value="$PROJECT_DIR$/DMP/addon/license/fermat-dmp-addon-license-wallet-bitdubai" />
-              </ExternalProjectPojo>
-              <ExternalProjectPojo>
-                <option name="name" value=":pip:android" />
-                <option name="path" value="$PROJECT_DIR$/pip/android" />
               </ExternalProjectPojo>
               <ExternalProjectPojo>
                 <option name="name" value=":fermat-dmp-plugin-identity-intra-user-bitdubai" />
@@ -668,10 +516,6 @@
                 <option name="path" value="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-money-bitdubai" />
               </ExternalProjectPojo>
               <ExternalProjectPojo>
-                <option name="name" value=":fermat-dmp-plugin-world-blockchain-info-bitdubai" />
-                <option name="path" value="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-blockchain-info-bitdubai" />
-              </ExternalProjectPojo>
-              <ExternalProjectPojo>
                 <option name="name" value=":fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai" />
                 <option name="path" value="$PROJECT_DIR$/DMP/plugin/niche_wallet_type/fermat-dmp-plugin-niche-wallet-type-fiat-over-crypto-loss-protected-wallet-bitdubai" />
               </ExternalProjectPojo>
@@ -696,10 +540,6 @@
                 <option name="path" value="$PROJECT_DIR$/PIP/addon/user/fermat-pip-addon-user-device-user-bitdubai" />
               </ExternalProjectPojo>
               <ExternalProjectPojo>
-                <option name="name" value=":fermat-dmp-plugin-world-coinapult-bitdubai" />
-                <option name="path" value="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-coinapult-bitdubai" />
-              </ExternalProjectPojo>
-              <ExternalProjectPojo>
                 <option name="name" value=":fermat-pip-addon-hardware-remote-device-bitdubai" />
                 <option name="path" value="$PROJECT_DIR$/PIP/addon/hardware/fermat-pip-addon-hardware-remote-device-bitdubai" />
               </ExternalProjectPojo>
@@ -720,20 +560,12 @@
                 <option name="path" value="$PROJECT_DIR$/DMP/plugin/network_service/fermat-dmp-plugin-network-service-wallet-resources-bitdubai" />
               </ExternalProjectPojo>
               <ExternalProjectPojo>
-                <option name="name" value=":fermat-dmp-plugin-world-location-bitdubai" />
-                <option name="path" value="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-location-bitdubai" />
-              </ExternalProjectPojo>
-              <ExternalProjectPojo>
                 <option name="name" value=":fermat-osa-addon-android-device-power-bitdubai" />
                 <option name="path" value="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-device-power-bitdubai" />
               </ExternalProjectPojo>
               <ExternalProjectPojo>
                 <option name="name" value=":fermat-dmp-plugin-middleware-wallet-contacts-bitdubai" />
                 <option name="path" value="$PROJECT_DIR$/DMP/plugin/middleware/fermat-dmp-plugin-middleware-wallet-contacts-bitdubai" />
-              </ExternalProjectPojo>
-              <ExternalProjectPojo>
-                <option name="name" value=":fermat-dmp-plugin-world-shape-shift-bitdubai" />
-                <option name="path" value="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-shape-shift-bitdubai" />
               </ExternalProjectPojo>
               <ExternalProjectPojo>
                 <option name="name" value=":fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai" />
@@ -750,14 +582,6 @@
               <ExternalProjectPojo>
                 <option name="name" value=":fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai" />
                 <option name="path" value="$PROJECT_DIR$/CRY/plugin/crypto_router/fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai" />
-              </ExternalProjectPojo>
-              <ExternalProjectPojo>
-                <option name="name" value=":pip:android:developer" />
-                <option name="path" value="$PROJECT_DIR$/pip/android/developer" />
-              </ExternalProjectPojo>
-              <ExternalProjectPojo>
-                <option name="name" value=":pip" />
-                <option name="path" value="$PROJECT_DIR$/pip" />
               </ExternalProjectPojo>
               <ExternalProjectPojo>
                 <option name="name" value=":fermat-pip-addon-hardware-local-device-bitdubai" />
@@ -16239,52 +16063,6 @@
             </list>
           </value>
         </entry>
-        <entry key="$PROJECT_DIR$/pip">
-          <value>
-            <list>
-              <ExternalTaskPojo>
-                <option name="description" value="Displays the components produced by project ':pip'. [incubating]" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/pip" />
-                <option name="name" value="components" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Displays all dependencies declared in project ':pip'." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/pip" />
-                <option name="name" value="dependencies" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Displays the insight into a specific dependency in project ':pip'." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/pip" />
-                <option name="name" value="dependencyInsight" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Displays a help message." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/pip" />
-                <option name="name" value="help" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Displays the configuration model of project ':pip'. [incubating]" />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/pip" />
-                <option name="name" value="model" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Displays the sub-projects of project ':pip'." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/pip" />
-                <option name="name" value="projects" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Displays the properties of project ':pip'." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/pip" />
-                <option name="name" value="properties" />
-              </ExternalTaskPojo>
-              <ExternalTaskPojo>
-                <option name="description" value="Displays the tasks runnable from project ':pip' (some of the displayed tasks may belong to subprojects)." />
-                <option name="linkedExternalProjectPath" value="$PROJECT_DIR$/pip" />
-                <option name="name" value="tasks" />
-              </ExternalTaskPojo>
-            </list>
-          </value>
-        </entry>
         <entry key="$PROJECT_DIR$/pip/android">
           <value>
             <list>
@@ -16427,7 +16205,7 @@
     </option>
     <option name="modificationStamps">
       <map>
-        <entry key="$PROJECT_DIR$" value="114831898323192" />
+        <entry key="$PROJECT_DIR$" value="103360873659642" />
       </map>
     </option>
     <option name="projectBuildClasspath">
@@ -23415,6 +23193,27 @@
         <option value="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-publisher-bitdubai/fermat-dmp-android-sub-app-wallet-publisher-bitdubai.iml" />
         <option value="$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-store-bitdubai/fermat-dmp-android-sub-app-wallet-store-bitdubai.iml" />
         <option value="$PROJECT_DIR$/OSA/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/fermat-osa-addon-multi-os-database-system-bitdubai.iml" />
+        <option value="$PROJECT_DIR$/fermat-android-core/src/main/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/pip_actor/developer/DatabaseTool.java" />
+        <option value="$PROJECT_DIR$/DMP/android/reference_niche_wallet/fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai/src/main/res/layout/wallets_bitcoin_fragment_balance.xml" />
+        <option value="$PROJECT_DIR$/DMP/android/reference_niche_wallet/fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai/src/main/java/com/bitdubai/reference_niche_wallet/bitcoin_wallet/fragments/BalanceFragment.java" />
+        <option value="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/FragmentActivity.java" />
+        <option value="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/common/version_1/navigation_drawer/NavigationDrawerFragment.java" />
+        <option value="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/common/version_1/tabbed_dialog/TabbedDialogFragment.java" />
+        <option value="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/common/version_1/classes/MyTypefaceSpan.java" />
+        <option value="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/common/PagerAdapter.java" />
+        <option value="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/layer/_2_os/android/developer/bitdubai/version_1/Notas para Raul" />
+        <option value="$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/Notas para Raul" />
+        <option value="$PROJECT_DIR$/fermat-android-core/build.gradle" />
+        <option value="$PROJECT_DIR$/fermat-core/build.gradle" />
+        <option value="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/PluginsIdentityManager.java" />
+        <option value="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_world/blockchain_info/BlockchainInfoWorldSubsystem.java" />
+        <option value="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_world/coinapult/CoinapultWorldSubsystem.java" />
+        <option value="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_world/location/LocationWorldSubsystem.java" />
+        <option value="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_world/shape_shift/ShapeShiftWorldSubsystem.java" />
+        <option value="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_world/crypto_index/CryptoIndexWorldSubsystem.java" />
+        <option value="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_world/coinbase/CoinbaseWorldSubsystem.java" />
+        <option value="$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/Platform.java" />
         <option value="$PROJECT_DIR$/settings.gradle" />
       </list>
     </option>
@@ -23435,9 +23234,9 @@
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="65" />
-    <option name="y" value="-4" />
+    <option name="y" value="24" />
     <option name="width" value="1855" />
-    <option name="height" value="1084" />
+    <option name="height" value="1056" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -23462,6 +23261,8 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -23480,171 +23281,9 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="PIP" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="PIP" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="addon" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="PIP" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="addon" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="platform_service" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="PIP" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="addon" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="hardware" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="OSA" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="addon" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="multi_os" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="OSA" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="addon" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="CRY" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="plugin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="crypto_vault" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="fermat" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="CRY" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="plugin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
       <pane id="Scratches" />
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="AndroidView">
         <subPane>
           <PATH>
@@ -23663,8 +23302,13 @@
     <property name="dynamic.classpath" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_SERIALS" value="03157df30d5b9d18" />
+    <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_AVD" value="Nexus_5_API_21_x86" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.0" />
+    <property name="project.structure.side.proportion" value="0.0" />
   </component>
-  <component name="RunManager" selected="JUnit.GenerateLoggingTest">
+  <component name="RunManager" selected="Android Application.fermat-android-core">
     <configuration default="false" name="GenerateLoggingTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea">
         <pattern>
@@ -23761,6 +23405,74 @@
       <envs />
       <method />
     </configuration>
+    <configuration default="true" type="CucumberJavaRunConfigurationType" factoryName="Cucumber java">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <option name="myFilePath" />
+      <option name="GLUE" />
+      <option name="myNameFilter" />
+      <option name="myGeneratedName" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="FlashRunConfigurationType" factoryName="Flash App">
+      <option name="BCName" value="" />
+      <option name="IOSSimulatorSdkPath" value="" />
+      <option name="adlOptions" value="" />
+      <option name="airProgramParameters" value="" />
+      <option name="appDescriptorForEmulator" value="Android" />
+      <option name="debugTransport" value="USB" />
+      <option name="debuggerSdkRaw" value="BC SDK" />
+      <option name="emulator" value="NexusOne" />
+      <option name="emulatorAdlOptions" value="" />
+      <option name="fastPackaging" value="true" />
+      <option name="fullScreenHeight" value="0" />
+      <option name="fullScreenWidth" value="0" />
+      <option name="launchUrl" value="false" />
+      <option name="launcherParameters">
+        <LauncherParameters>
+          <option name="browser" value="a7bb68e0-33c0-4d6f-a81a-aac1fdb870c8" />
+          <option name="launcherType" value="OSDefault" />
+          <option name="newPlayerInstance" value="false" />
+          <option name="playerPath" value="/usr/bin/flashplayerdebugger" />
+        </LauncherParameters>
+      </option>
+      <option name="mobileRunTarget" value="Emulator" />
+      <option name="moduleName" value="" />
+      <option name="overriddenMainClass" value="" />
+      <option name="overriddenOutputFileName" value="" />
+      <option name="overrideMainClass" value="false" />
+      <option name="runTrusted" value="true" />
+      <option name="screenDpi" value="0" />
+      <option name="screenHeight" value="0" />
+      <option name="screenWidth" value="0" />
+      <option name="url" value="http://" />
+      <option name="usbDebugPort" value="7936" />
+      <method />
+    </configuration>
+    <configuration default="true" type="FlexUnitRunConfigurationType" factoryName="FlexUnit" appDescriptorForEmulator="Android" class_name="" emulatorAdlOptions="" method_name="" package_name="" scope="Class">
+      <option name="BCName" value="" />
+      <option name="launcherParameters">
+        <LauncherParameters>
+          <option name="browser" value="a7bb68e0-33c0-4d6f-a81a-aac1fdb870c8" />
+          <option name="launcherType" value="OSDefault" />
+          <option name="newPlayerInstance" value="false" />
+          <option name="playerPath" value="/usr/bin/flashplayerdebugger" />
+        </LauncherParameters>
+      </option>
+      <option name="moduleName" value="" />
+      <option name="trusted" value="true" />
+      <method />
+    </configuration>
     <configuration default="true" type="GradleRunConfiguration" factoryName="Gradle">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -23775,6 +23487,16 @@
         </option>
         <option name="vmOptions" />
       </ExternalSystemSettings>
+      <method />
+    </configuration>
+    <configuration default="true" type="GrailsRunConfigurationType" factoryName="Grails">
+      <module name="" />
+      <setting name="vmparams" value="" />
+      <setting name="cmdLine" value="run-app" />
+      <setting name="depsClasspath" value="false" />
+      <setting name="passParentEnv" value="true" />
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <setting name="launchBrowser" value="false" />
       <method />
     </configuration>
     <configuration default="true" type="JUnit" factoryName="JUnit">
@@ -23803,12 +23525,21 @@
       <envs />
       <method />
     </configuration>
+    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
+      <method />
+    </configuration>
     <configuration default="true" type="Remote" factoryName="Remote">
       <option name="USE_SOCKET_TRANSPORT" value="true" />
       <option name="SERVER_MODE" value="false" />
       <option name="SHMEM_ADDRESS" value="javadebug" />
       <option name="HOST" value="localhost" />
       <option name="PORT" value="5005" />
+      <method />
+    </configuration>
+    <configuration default="true" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <envs />
       <method />
     </configuration>
     <configuration default="true" type="TestNG" factoryName="TestNG">
@@ -23839,6 +23570,34 @@
       <listeners />
       <method />
     </configuration>
+    <configuration default="true" type="executeSpecs" factoryName="Gauge Execution">
+      <setting name="environment" value="" />
+      <setting name="specsToExecute" value="" />
+      <setting name="tags" value="" />
+      <setting name="parallelNodes" value="" />
+      <setting name="execInParallel" value="false" />
+      <setting name="programParameters" value="" />
+      <setting name="workingDirectory" value="" />
+      <setting name="moduleName" value="" />
+      <envMap />
+      <setting name="rowsRange" value="" />
+      <method />
+    </configuration>
+    <configuration default="true" type="js.build_tools.gulp" factoryName="Gulp.js">
+      <node-options />
+      <gulpfile />
+      <tasks />
+      <arguments />
+      <pass-parent-envs>true</pass-parent-envs>
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="osgi.bnd.run" factoryName="Run Launcher">
+      <method />
+    </configuration>
+    <configuration default="true" type="osgi.bnd.run" factoryName="Test Launcher (JUnit)">
+      <method />
+    </configuration>
     <configuration default="false" name="fermat-android-core" type="AndroidRunConfigurationType" factoryName="Android Application">
       <module name="fermat-android-core" />
       <option name="ACTIVITY_CLASS" value="" />
@@ -23846,7 +23605,7 @@
       <option name="DEPLOY" value="true" />
       <option name="ARTIFACT_NAME" value="" />
       <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
-      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="true" />
       <option name="PREFERRED_AVD" value="" />
       <option name="USE_COMMAND_LINE" value="true" />
       <option name="COMMAND_LINE" value="" />
@@ -23879,46 +23638,105 @@
       <created>1435314050840</created>
       <option name="number" value="Default" />
       <updated>1435314050840</updated>
-      <workItem from="1435398743911" duration="631000" />
+      <workItem from="1435398743911" duration="9055000" />
+      <workItem from="1435490645249" duration="2824000" />
+      <workItem from="1435567530084" duration="1133000" />
+      <workItem from="1435568785593" duration="6487000" />
     </task>
+    <task id="LOCAL-00001" summary="remove pip folder | Compiling &amp; Running">
+      <created>1435399454789</created>
+      <option name="number" value="00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1435399454789</updated>
+    </task>
+    <task id="LOCAL-00002" summary="smart wallet refactored for fermat | Compiling &amp; Running">
+      <created>1435486388034</created>
+      <option name="number" value="00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1435486388034</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Fermat Core cleaning part 1 | Compiling &amp; Running">
+      <created>1435492076237</created>
+      <option name="number" value="00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1435492076237</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Fermat Core cleaning part 2 | Compiling &amp; Running">
+      <created>1435492379231</created>
+      <option name="number" value="00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1435492379231</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Fermat Core cleaning part 3 | Compiling &amp; Running">
+      <created>1435492751903</created>
+      <option name="number" value="00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1435492751903</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Remove &quot;pip&quot; from Setting.Gradle | Compiling &amp; Running">
+      <created>1435569760687</created>
+      <option name="number" value="00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1435569760687</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Remove &quot;pip&quot; from directory | Compiling &amp; Running">
+      <created>1435569951923</created>
+      <option name="number" value="00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1435569951923</updated>
+    </task>
+    <task id="LOCAL-00008" summary="OSA Multi OS plugins removed from Compiling List | Compiling &amp; Running">
+      <created>1435570339133</created>
+      <option name="number" value="00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1435570339133</updated>
+    </task>
+    <task id="LOCAL-00009" summary="World layer Plugins commented out to lower compilation time | Compiling &amp; Running">
+      <created>1435571967481</created>
+      <option name="number" value="00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1435571967481</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="631000" />
+    <option name="totallyTimeSpent" value="19499000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="65" y="-4" width="1855" height="1084" extended-state="6" />
-    <editor active="true" />
+    <frame x="65" y="24" width="1855" height="1056" extended-state="6" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32916668" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.0" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39375" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.30520833" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="PlantUML" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="false" content_ui="tabs" />
+      <window_info id="PlantUML" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2896628" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Memory Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="-1" side_tool="true" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23217247" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17916666" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Memory Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3290461" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.290625" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
@@ -23934,6 +23752,20 @@
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_NEW_TODO" value="false" />
+    <MESSAGE value="remove pip folder | Compiling &amp; Running" />
+    <MESSAGE value="smart wallet refactored for fermat | Compiling &amp; Running" />
+    <MESSAGE value="Fermat Core cleaning part 1 | Compiling &amp; Running" />
+    <MESSAGE value="Fermat Core cleaning part 2 | Compiling &amp; Running" />
+    <MESSAGE value="Fermat Core cleaning part 3 | Compiling &amp; Running" />
+    <MESSAGE value="Remove &quot;pip&quot; from Setting.Gradle | Compiling &amp; Running" />
+    <MESSAGE value="Remove &quot;pip&quot; from directory | Compiling &amp; Running" />
+    <MESSAGE value="OSA Multi OS plugins removed from Compiling List | Compiling &amp; Running" />
+    <MESSAGE value="World layer Plugins commented out to lower compilation time | Compiling &amp; Running" />
+    <option name="LAST_COMMIT_MESSAGE" value="World layer Plugins commented out to lower compilation time | Compiling &amp; Running" />
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
     <watches-manager />
@@ -23946,88 +23778,7 @@
     <entry file="file://$PROJECT_DIR$/DMP/android/reference_niche_wallet/fermat-dmp-android-reference-niche-wallet-age-kids-boys-bitdubai/fermat-dmp-android-reference-niche-wallet-age-kids-boys-bitdubai.iml">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="98" column="9" selection-start-line="98" selection-start-column="9" selection-end-line="98" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DMP/android/reference_niche_wallet/fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai/fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai.iml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="94" column="0" selection-start-line="94" selection-start-column="0" selection-end-line="94" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-shop-manager-bitdubai/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-shop-manager-bitdubai/fermat-dmp-android-sub-app-shop-manager-bitdubai.iml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="97" column="9" selection-start-line="97" selection-start-column="9" selection-end-line="97" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-factory-bitdubai/fermat-dmp-android-sub-app-wallet-factory-bitdubai.iml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="98" column="9" selection-start-line="98" selection-start-column="9" selection-end-line="98" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-manager-bitdubai/fermat-dmp-android-sub-app-wallet-manager-bitdubai.iml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="97" column="9" selection-start-line="97" selection-start-column="9" selection-end-line="97" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-publisher-bitdubai/fermat-dmp-android-sub-app-wallet-publisher-bitdubai.iml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="164" column="0" selection-start-line="164" selection-start-column="0" selection-end-line="164" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-store-bitdubai/fermat-dmp-android-sub-app-wallet-store-bitdubai.iml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="168" column="0" selection-start-line="168" selection-start-column="0" selection-end-line="168" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/OSA/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/fermat-osa-addon-multi-os-database-system-bitdubai.iml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="32" column="0" selection-start-line="32" selection-start-column="0" selection-end-line="32" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DMP/android/reference_niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-loss-protected-wallet-bitdubai/dmp_android_niche_wallet_fermat-dmp-android-niche-wallet-bitcoin-loss-protected-wallet-bitdubai.iml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DMP/android/reference_niche_wallet/fermat-dmp-android-reference-niche-wallet-age-kids-boys-bitdubai/fermat-dmp-android-reference-niche-wallet-age-kids-boys-bitdubai.iml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
           <caret line="95" column="9" selection-start-line="95" selection-start-column="9" selection-end-line="95" selection-end-column="9" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -24035,7 +23786,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="92" column="0" selection-start-line="92" selection-start-column="0" selection-end-line="92" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -24043,7 +23793,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -24051,7 +23800,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="96" column="9" selection-start-line="96" selection-start-column="9" selection-end-line="96" selection-end-column="9" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -24059,7 +23807,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="97" column="9" selection-start-line="97" selection-start-column="9" selection-end-line="97" selection-end-column="9" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -24067,7 +23814,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="96" column="9" selection-start-line="96" selection-start-column="9" selection-end-line="96" selection-end-column="9" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -24075,7 +23821,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="161" column="0" selection-start-line="161" selection-start-column="0" selection-end-line="161" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -24083,23 +23828,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="168" column="0" selection-start-line="168" selection-start-column="0" selection-end-line="168" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/OSA/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/fermat-osa-addon-multi-os-database-system-bitdubai.iml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-11.0">
-          <caret line="22" column="1" selection-start-line="22" selection-start-column="1" selection-end-line="22" selection-end-column="1" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/DMP/android/reference_niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-loss-protected-wallet-bitdubai/dmp_android_niche_wallet_fermat-dmp-android-niche-wallet-bitcoin-loss-protected-wallet-bitdubai.iml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -24107,17 +23835,466 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DMP/android/reference_niche_wallet/fermat-dmp-android-niche-wallet-bitcoin-loss-protected-wallet-bitdubai/dmp_android_niche_wallet_fermat-dmp-android-niche-wallet-bitcoin-loss-protected-wallet-bitdubai.iml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/pip_actor/developer/ToolManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.11737089">
+          <caret line="5" column="17" selection-start-line="5" selection-start-column="17" selection-end-line="5" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/all_definition/developer/DatabaseManagerForDevelopers.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="13" column="17" selection-start-line="13" selection-start-column="17" selection-end-line="13" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/pip_actor/developer/DatabaseTool.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.4225352">
+          <caret line="24" column="0" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DMP/android/reference_niche_wallet/fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai/src/main/res/drawable/tabs_pattern_diagonal.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DMP/android/reference_niche_wallet/fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai/src/main/res/layout/wallets_bitcoin_fragment_balance.xml">
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="16" column="43" selection-start-line="16" selection-start-column="43" selection-end-line="16" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-api/src/main/java/com/bitdubai/fermat_api/layer/dmp_niche_wallet_type/crypto_wallet/interfaces/CryptoWalletManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.2188329">
+          <caret line="24" column="17" selection-start-line="24" selection-start-column="17" selection-end-line="24" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-factory-bitdubai/src/main/java/com/bitdubai/sub_app/wallet_factory/common/MyApplication.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="240" column="49" selection-start-line="240" selection-start-column="49" selection-end-line="240" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-publisher-bitdubai/src/main/java/com/bitdubai/sub_app/wallet_publisher/activity/ShopActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.6551724">
+          <caret line="122" column="0" selection-start-line="122" selection-start-column="0" selection-end-line="122" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DMP/android/reference_niche_wallet/fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai/src/main/java/com/bitdubai/reference_niche_wallet/bitcoin_wallet/fragments/BalanceFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="159" column="14" selection-start-line="159" selection-start-column="14" selection-end-line="159" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-android-core/src/main/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="19" column="54" selection-start-line="19" selection-start-column="54" selection-end-line="19" selection-end-column="54" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/StartActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="41" column="13" selection-start-line="41" selection-start-column="13" selection-end-line="41" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/FragmentActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="69" column="30" selection-start-line="69" selection-start-column="30" selection-end-line="69" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/common/version_1/navigation_drawer/NavigationDrawerFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="43" column="194" selection-start-line="43" selection-start-column="194" selection-end-line="43" selection-end-column="194" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/common/version_1/tabbed_dialog/TabbedDialogEmptyFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="17" column="13" selection-start-line="17" selection-start-column="13" selection-end-line="17" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/common/version_1/tabbed_dialog/TabbedDialogFragment.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-14.0">
+          <caret line="43" column="67" selection-start-line="43" selection-start-column="67" selection-end-line="43" selection-end-column="67" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/common/version_1/classes/MyTypefaceSpan.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="36" column="9" selection-start-line="36" selection-start-column="9" selection-end-line="36" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/common/PagerAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.66820276">
+          <caret line="37" column="1" selection-start-line="37" selection-start-column="1" selection-end-line="37" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/layer/_2_os/android/developer/bitdubai/version_1/Notas para Raul">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="6" column="15" selection-start-line="6" selection-start-column="15" selection-end-line="6" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/subapp/Notas para Raul">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.074875206">
+          <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-android-core/src/main/java/com/bitdubai/android_core/app/ApplicationSession.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="109" column="28" selection-start-line="109" selection-start-column="25" selection-end-line="109" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/DMP/android/reference_niche_wallet/fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai/src/main/java/com/bitdubai/reference_niche_wallet/bitcoin_wallet/Platform.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-0.0">
+          <caret line="15" column="13" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/OSA/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/DataBaseSystemOsAddonRoot.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="27" column="7" selection-start-line="27" selection-start-column="7" selection-end-line="27" selection-end-column="7" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#2094#2095#0" expanded="false" />
+            <element signature="e#2142#2143#0" expanded="false" />
+            <element signature="e#2220#2221#0" expanded="false" />
+            <element signature="e#2270#2271#0" expanded="false" />
+            <element signature="e#3041#3042#0" expanded="false" />
+            <element signature="e#3077#3078#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/OSA/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/DeveloperBitDubai.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="11" column="7" selection-start-line="11" selection-start-column="7" selection-end-line="11" selection-end-column="7" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#437#438#0" expanded="false" />
+            <element signature="e#465#466#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/OSA/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/desktop/database/bridge/Utils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="11" column="7" selection-start-line="11" selection-start-column="7" selection-end-line="11" selection-end-column="7" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/OSA/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/desktop/database/bridge/DesktopDatabaseBridge.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="27" column="7" selection-start-line="27" selection-start-column="7" selection-end-line="27" selection-end-column="7" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#1032#1033#0" expanded="false" />
+            <element signature="e#1078#1079#0" expanded="false" />
+            <element signature="e#4370#4371#0" expanded="false" />
+            <element signature="e#4395#4396#0" expanded="false" />
+            <element signature="e#4788#4789#0" expanded="false" />
+            <element signature="e#4833#4834#0" expanded="false" />
+            <element signature="e#6092#6093#0" expanded="false" />
+            <element signature="e#6129#6130#0" expanded="false" />
+            <marker date="1435567518434" expanded="true" signature="-1:-1" placeholder="UPDATE missi..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/OSA/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/DesktopDatabaseTransaction.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="19" column="7" selection-start-line="19" selection-start-column="7" selection-end-line="19" selection-end-column="7" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#2415#2416#0" expanded="false" />
+            <element signature="e#2450#2451#0" expanded="false" />
+            <element signature="e#2940#2941#0" expanded="false" />
+            <element signature="e#2975#2976#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/OSA/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/DesktopDatabaseTableFilter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="15" column="7" selection-start-line="15" selection-start-column="7" selection-end-line="15" selection-end-column="7" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="e#912#913#0" expanded="false" />
+            <element signature="e#948#949#0" expanded="false" />
+            <element signature="e#1167#1168#0" expanded="false" />
+            <element signature="e#1199#1200#0" expanded="false" />
+            <element signature="e#1371#1372#0" expanded="false" />
+            <element signature="e#1403#1404#0" expanded="false" />
+            <element signature="e#1592#1593#0" expanded="false" />
+            <element signature="e#1626#1627#0" expanded="false" />
+            <element signature="e#1786#1787#0" expanded="false" />
+            <element signature="e#1819#1820#0" expanded="false" />
+            <element signature="e#1989#1990#0" expanded="false" />
+            <element signature="e#2023#2024#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/OSA/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/desktop/database/bridge/EnviromentVariables.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="4" column="30" selection-start-line="4" selection-start-column="30" selection-end-line="4" selection-end-column="30" />
+          <folding>
+            <element signature="e#1274#1275#0" expanded="false" />
+            <element signature="e#1326#1327#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/OSA/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/structure/DesktopPluginDatabaseSystem.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="27" column="7" selection-start-line="27" selection-start-column="7" selection-end-line="27" selection-end-column="7" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/OSA/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai/src/main/java/com/bitdubai/android_fermat_pip_addon_layer_2_os_file_system/version_1/interfaces/DatabaseTable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="43" column="0" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-android-core/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-7.0">
+          <caret line="71" column="0" selection-start-line="71" selection-start-column="0" selection-end-line="71" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_world/coinbase/CoinbaseWorldSubsystem.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5322581">
+          <caret line="35" column="2" selection-start-line="35" selection-start-column="2" selection-end-line="35" selection-end-column="2" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_world/crypto_index/CryptoIndexWorldSubsystem.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5322581">
+          <caret line="35" column="2" selection-start-line="35" selection-start-column="2" selection-end-line="35" selection-end-column="2" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_world/shape_shift/ShapeShiftWorldSubsystem.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5322581">
+          <caret line="35" column="2" selection-start-line="35" selection-start-column="2" selection-end-line="35" selection-end-column="2" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_world/location/LocationWorldSubsystem.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5322581">
+          <caret line="35" column="2" selection-start-line="35" selection-start-column="2" selection-end-line="35" selection-end-column="2" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_world/coinapult/CoinapultWorldSubsystem.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.4032258">
+          <caret line="27" column="12" selection-start-line="27" selection-start-column="12" selection-end-line="27" selection-end-column="12" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/layer/dmp_world/blockchain_info/BlockchainInfoWorldSubsystem.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.08064516">
+          <caret line="5" column="2" selection-start-line="5" selection-start-column="2" selection-end-line="5" selection-end-column="2" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/PluginsIdentityManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.22580644">
+          <caret line="711" column="0" selection-start-line="711" selection-start-column="0" selection-end-line="711" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-core/build.gradle">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="53" column="0" selection-start-line="53" selection-start-column="0" selection-end-line="53" selection-end-column="37" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/fermat-core/src/main/java/com/bitdubai/fermat_core/Platform.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="508" column="9" selection-start-line="508" selection-start-column="9" selection-end-line="508" selection-end-column="9" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/settings.gradle">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.9032258">
-          <caret line="279" column="0" selection-start-line="279" selection-start-column="0" selection-end-line="279" selection-end-column="0" />
+        <state vertical-scroll-proportion="1.3225807">
+          <caret line="304" column="0" selection-start-line="304" selection-start-column="0" selection-end-line="304" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>Android</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>1.7</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>fermat-p2p-api</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.33308825" />
+                <option value="0.6" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>android-4.1.1.4</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
   </component>
 </project>

@@ -31,6 +31,7 @@ public enum EventType {
     INTRA_USER_CONTACT_CREATED ("ICC"),
     INCOMING_NETWORK_SERVICE_CONNECTION_REQUEST ("INSCR"),
     ESTABLISHED_NETWORK_SERVICE_CONNECTION("SNSC"),
+    NEW_NETWORK_SERVICE_MESSAGE_RECEIVE("NNSMR"),
 
     WALLET_CREATED ("WC1"),
     WALLET_WENT_ONLINE ("WWO"),
@@ -128,6 +129,8 @@ public enum EventType {
                 return EventType.INCOMING_NETWORK_SERVICE_CONNECTION_REQUEST;
             case "SNSC":
                 return EventType.ESTABLISHED_NETWORK_SERVICE_CONNECTION;
+            case "NNSMR":
+                return EventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE;
 
             case "WC1":
                 return EventType.WALLET_CREATED;

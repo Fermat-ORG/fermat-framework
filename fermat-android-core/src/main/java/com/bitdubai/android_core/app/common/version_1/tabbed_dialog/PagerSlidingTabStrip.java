@@ -1,4 +1,4 @@
-package com.bitdubai.android_core.app.common.version_1.classes;
+package com.bitdubai.android_core.app.common.version_1.tabbed_dialog;
 
 /**
  * Created by ciencias on 25.11.14.
@@ -28,7 +28,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bitdubai.smartwallet.R;
+import com.bitdubai.fermat.R;
 
 import java.util.Locale;
 

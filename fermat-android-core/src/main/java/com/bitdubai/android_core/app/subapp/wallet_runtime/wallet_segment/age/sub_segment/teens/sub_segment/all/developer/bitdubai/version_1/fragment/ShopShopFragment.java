@@ -12,9 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bitdubai.smartwallet.R;
-
-import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
+import com.bitdubai.android_core.app.ApplicationSession;
+import com.bitdubai.fermat.R;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -413,15 +412,15 @@ public class ShopShopFragment extends Fragment {
             holder.timeToArrive.setText( position + " min");
 
 
-            holder.openHours.setTypeface(MyApplication.getDefaultTypeface());
-            holder.timeToArrive.setTypeface(MyApplication.getDefaultTypeface());
-            holder.titleTextView.setTypeface(MyApplication.getDefaultTypeface());
-            holder.companyTextView.setTypeface(MyApplication.getDefaultTypeface());
-            holder.likeAmount.setTypeface(MyApplication.getDefaultTypeface());
-            holder.dislikeAmount.setTypeface(MyApplication.getDefaultTypeface());
-            holder.companyDescription.setTypeface(MyApplication.getDefaultTypeface());
-            holder.companyAddress.setTypeface(MyApplication.getDefaultTypeface());
-            holder.valueTextView.setTypeface(MyApplication.getDefaultTypeface());
+            holder.openHours.setTypeface(ApplicationSession.getDefaultTypeface());
+            holder.timeToArrive.setTypeface(ApplicationSession.getDefaultTypeface());
+            holder.titleTextView.setTypeface(ApplicationSession.getDefaultTypeface());
+            holder.companyTextView.setTypeface(ApplicationSession.getDefaultTypeface());
+            holder.likeAmount.setTypeface(ApplicationSession.getDefaultTypeface());
+            holder.dislikeAmount.setTypeface(ApplicationSession.getDefaultTypeface());
+            holder.companyDescription.setTypeface(ApplicationSession.getDefaultTypeface());
+            holder.companyAddress.setTypeface(ApplicationSession.getDefaultTypeface());
+            holder.valueTextView.setTypeface(ApplicationSession.getDefaultTypeface());
 
             if (item.rate >= 0)
             {

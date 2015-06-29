@@ -3,7 +3,7 @@ package com.bitdubai.fermat_core.layer.dmp_world.crypto_index;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.dmp_module.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.dmp_world.WorldSubsystem;
-import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.DeveloperBitDubai;
+//import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by loui on 12/02/15.
@@ -23,7 +23,7 @@ public class CryptoIndexWorldSubsystem implements WorldSubsystem {
          * I will choose from the different Developers available which implementation to use. Right now there is only
          * one, so it is not difficult to choose.
          */
-        
+        /*
         try {
             DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
             plugin = developerBitDubai.getPlugin();
@@ -33,6 +33,6 @@ public class CryptoIndexWorldSubsystem implements WorldSubsystem {
             System.err.println("Exception: " + e.getMessage());
             throw new CantStartSubsystemException();
         }
-
+*/
     }
 }

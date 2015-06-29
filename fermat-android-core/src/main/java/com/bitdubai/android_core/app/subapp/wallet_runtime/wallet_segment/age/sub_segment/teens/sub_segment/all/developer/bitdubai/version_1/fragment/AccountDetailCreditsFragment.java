@@ -12,13 +12,13 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.AppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.fermat_core.Platform;
-import com.bitdubai.smartwallet.R;
-import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
+import com.bitdubai.fermat.R;
 
 
 import java.util.ArrayList;
@@ -184,7 +184,7 @@ public  class AccountDetailCreditsFragment extends Fragment {
 
                 if (groupPosition == 0) {
                     Intent intent;
-                    Platform platform = MyApplication.getFermatPlatform();
+                    Platform platform = ApplicationSession.getFermatPlatform();
                     CorePlatformContext platformContext = platform.getCorePlatformContext();
 
                     AppRuntimeManager appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
@@ -270,21 +270,21 @@ public  class AccountDetailCreditsFragment extends Fragment {
 
                 type = new ViewHolder();
                 type.text = (TextView) convertView.findViewById(R.id.type);
-                type.text.setTypeface(MyApplication.getDefaultTypeface());
+                type.text.setTypeface(ApplicationSession.getDefaultTypeface());
 
                 holder.text = (TextView) convertView.findViewById(R.id.notes);
-                holder.text.setTypeface(MyApplication.getDefaultTypeface());
+                holder.text.setTypeface(ApplicationSession.getDefaultTypeface());
                 convertView.setTag(holder);
 
                 amount = new ViewHolder();
                 amount.text = (TextView) convertView.findViewById(R.id.amount);
-                amount.text.setTypeface(MyApplication.getDefaultTypeface());
+                amount.text.setTypeface(ApplicationSession.getDefaultTypeface());
 
                 amount.text.setText(transactions_amounts[groupPosition][childPosition].toString());
 
                 when = new ViewHolder();
                 when.text = (TextView) convertView.findViewById(R.id.when);
-                when.text.setTypeface(MyApplication.getDefaultTypeface());
+                when.text.setTypeface(ApplicationSession.getDefaultTypeface());
 
                 when.text.setText(transactions_whens[groupPosition][childPosition].toString());
 
@@ -353,28 +353,28 @@ public  class AccountDetailCreditsFragment extends Fragment {
 
                 holder = new ViewHolder();
                 holder.text = (TextView) convertView.findViewById(R.id.contact_name);
-                holder.text.setTypeface(MyApplication.getDefaultTypeface());
+                holder.text.setTypeface(ApplicationSession.getDefaultTypeface());
                 convertView.setTag(holder);
 
                 amount = new ViewHolder();
                 amount.text = (TextView) convertView.findViewById(R.id.amount);
-                amount.text.setTypeface(MyApplication.getDefaultTypeface());
+                amount.text.setTypeface(ApplicationSession.getDefaultTypeface());
 
                 amount.text.setText(amounts[groupPosition].toString());
 
                 type = new ViewHolder();
                 type.text = (TextView) convertView.findViewById(R.id.type);
-                type.text.setTypeface(MyApplication.getDefaultTypeface());
+                type.text.setTypeface(ApplicationSession.getDefaultTypeface());
                 type.text.setText(types[groupPosition].toString());
 
                 when = new ViewHolder();
                 when.text = (TextView) convertView.findViewById(R.id.when);
-                when.text.setTypeface(MyApplication.getDefaultTypeface());
+                when.text.setTypeface(ApplicationSession.getDefaultTypeface());
                 when.text.setText(whens[groupPosition].toString());
 
                 note = new ViewHolder();
                 note.text = (TextView) convertView.findViewById(R.id.notes);
-                note.text.setTypeface(MyApplication.getDefaultTypeface());
+                note.text.setTypeface(ApplicationSession.getDefaultTypeface());
 
                 note.text.setText(notes[groupPosition].toString());
 

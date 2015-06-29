@@ -11,8 +11,8 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bitdubai.smartwallet.R;
-import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
+import com.bitdubai.android_core.app.ApplicationSession;
+import com.bitdubai.fermat.R;
 
 
 /**
@@ -55,17 +55,17 @@ public class SendAllFragment extends android.app.Fragment {
         // Set up your ActionBar
 
 
-        int tagId = MyApplication.getTagId();
+        int tagId = ApplicationSession.getTagId();
         TextView tv;
 
         tv = (TextView) actionBarLayout.findViewById(R.id.contact_name);
-        tv.setTypeface(MyApplication.getDefaultTypeface());
+        tv.setTypeface(ApplicationSession.getDefaultTypeface());
         tv.setText(contacts[tagId].toString());
 
         tv = (TextView) actionBarLayout.findViewById(R.id.activity_name);
-        tv.setTypeface(MyApplication.getDefaultTypeface());
+        tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
-        MyApplication.changeColor(Color.parseColor("#F0E173"), super.getActivity().getResources());
+        ApplicationSession.changeColor(Color.parseColor("#F0E173"), super.getActivity().getResources());
 
         ImageView profile_picture = (ImageView) actionBarLayout.findViewById(R.id.profile_picture);
         switch (tagId)
@@ -120,7 +120,7 @@ public class SendAllFragment extends android.app.Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.wallets_teens_fragment_send_all, container, false);
-        int tagId = MyApplication.getTagId();
+        int tagId = ApplicationSession.getTagId();
 
         amounts = transactions_amounts[tagId];
         whens = transactions_whens[tagId];
@@ -200,7 +200,7 @@ public class SendAllFragment extends android.app.Fragment {
             ViewHolder when;
             ViewHolder note;
 
-            int tagId = MyApplication.getTagId();
+            int tagId = ApplicationSession.getTagId();
             if (groupPosition == 0)
             {
                 convertView = inf.inflate(R.layout.wallets_teens_fragment_send_all_list_header, parent, false);
@@ -214,19 +214,19 @@ public class SendAllFragment extends android.app.Fragment {
 
                 amount = new ViewHolder();
                 amount.text = (TextView) convertView.findViewById(R.id.amount);
-                amount.text.setTypeface(MyApplication.getDefaultTypeface());
+                amount.text.setTypeface(ApplicationSession.getDefaultTypeface());
 
                 amount.text.setText(amounts[groupPosition].toString());
 
                 when = new ViewHolder();
                 when.text = (TextView) convertView.findViewById(R.id.when);
-                when.text.setTypeface(MyApplication.getDefaultTypeface());
+                when.text.setTypeface(ApplicationSession.getDefaultTypeface());
 
                 when.text.setText(whens[groupPosition].toString());
 
                 note = new ViewHolder();
                 note.text = (TextView) convertView.findViewById(R.id.notes);
-                note.text.setTypeface(MyApplication.getDefaultTypeface());
+                note.text.setTypeface(ApplicationSession.getDefaultTypeface());
 
 
 
@@ -248,19 +248,19 @@ public class SendAllFragment extends android.app.Fragment {
 
                     amount = new ViewHolder();
                     amount.text = (TextView) convertView.findViewById(R.id.amount);
-                    amount.text.setTypeface(MyApplication.getDefaultTypeface());
+                    amount.text.setTypeface(ApplicationSession.getDefaultTypeface());
 
                     amount.text.setText(amounts[groupPosition].toString());
 
                     when = new ViewHolder();
                     when.text = (TextView) convertView.findViewById(R.id.when);
-                    when.text.setTypeface(MyApplication.getDefaultTypeface());
+                    when.text.setTypeface(ApplicationSession.getDefaultTypeface());
 
                     when.text.setText(whens[groupPosition].toString());
 
                     note = new ViewHolder();
                     note.text = (TextView) convertView.findViewById(R.id.notes);
-                    note.text.setTypeface(MyApplication.getDefaultTypeface());
+                    note.text.setTypeface(ApplicationSession.getDefaultTypeface());
 
                     note.text.setText(notes[groupPosition]);
 

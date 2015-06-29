@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.IntraUserNetworkServicePluginRoot;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannels;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationException;
@@ -46,6 +47,11 @@ public class IntraUserNetworkServiceManager implements IntraUserManager {
     private ErrorManager errorManager;
 
     /**
+     * DealWithEvents Interface member variables.
+     */
+    private EventManager eventManager;
+
+    /**
      * Holds all references to the intra user network service locals
      */
     private Map<String, IntraUserNetworkServiceLocal> intraUserNetworkServiceLocalsCache;
@@ -72,10 +78,11 @@ public class IntraUserNetworkServiceManager implements IntraUserManager {
      * @param communicationLayerManager a communicationLayerManager instance
      * @param errorManager a errorManager instance
      */
-    public IntraUserNetworkServiceManager(CommunicationLayerManager communicationLayerManager, Database dataBase, ErrorManager errorManager ) {
+    public IntraUserNetworkServiceManager(CommunicationLayerManager communicationLayerManager, Database dataBase, ErrorManager errorManager, EventManager eventManager) {
         super();
         this.communicationLayerManager                = communicationLayerManager;
         this.errorManager                             = errorManager;
+        this.eventManager                             = eventManager;
         this.incomingMessageDataAccessObject          = new IncomingMessageDataAccessObject(dataBase, errorManager);
         this.outgoingMessageDataAccessObject          = new OutgoingMessageDataAccessObject(dataBase, errorManager);
         this.intraUserNetworkServiceLocalsCache       = new HashMap<>();
@@ -157,7 +164,7 @@ public class IntraUserNetworkServiceManager implements IntraUserManager {
                 /*
                  * Instantiate the local reference
                  */
-                IntraUserNetworkServiceLocal intraUserNetworkServiceLocal = new IntraUserNetworkServiceLocal(remoteNetworkServicePublicKey, errorManager, outgoingMessageDataAccessObject);
+                IntraUserNetworkServiceLocal intraUserNetworkServiceLocal = new IntraUserNetworkServiceLocal(remoteNetworkServicePublicKey, errorManager, eventManager, outgoingMessageDataAccessObject);
 
                 /*
                  * Instantiate the remote reference
@@ -211,7 +218,7 @@ public class IntraUserNetworkServiceManager implements IntraUserManager {
                  /*
                  * Instantiate the local reference
                  */
-                IntraUserNetworkServiceLocal intraUserNetworkServiceLocal = new IntraUserNetworkServiceLocal(remoteNetworkServicePublicKey, errorManager, outgoingMessageDataAccessObject);
+                IntraUserNetworkServiceLocal intraUserNetworkServiceLocal = new IntraUserNetworkServiceLocal(remoteNetworkServicePublicKey, errorManager, eventManager, outgoingMessageDataAccessObject);
 
                 /*
                  * Instantiate the remote reference

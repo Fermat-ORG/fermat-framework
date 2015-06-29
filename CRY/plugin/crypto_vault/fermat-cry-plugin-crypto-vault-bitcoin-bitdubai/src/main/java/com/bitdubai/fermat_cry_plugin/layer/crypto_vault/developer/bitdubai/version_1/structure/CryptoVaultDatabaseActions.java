@@ -434,4 +434,24 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
         }
     }
 
+    /**
+     * Insert a new Fermat transaction in the database
+     * @param txId
+     * @throws CantExecuteQueryException
+     */
+    public void persistnewFermatTransaction(String txId) throws CantExecuteQueryException {
+        DatabaseTable fermatTable;
+        fermatTable = database.getTable(CryptoVaultDatabaseConstants.FERMAT_TRANSACTIONS_TABLE_NAME);
+        DatabaseTableRecord insert = fermatTable.getEmptyRecord();
+        insert.setStringValue(CryptoVaultDatabaseConstants.FERMAT_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, txId);
+        DatabaseTransaction dbTx = database.newTransaction();
+        dbTx.addRecordToInsert(fermatTable, insert);
+        try {
+            database.executeTransaction(dbTx);
+        } catch (DatabaseTransactionFailedException e) {
+            throw  new CantExecuteQueryException();
+        }
+
+    }
+
 }
