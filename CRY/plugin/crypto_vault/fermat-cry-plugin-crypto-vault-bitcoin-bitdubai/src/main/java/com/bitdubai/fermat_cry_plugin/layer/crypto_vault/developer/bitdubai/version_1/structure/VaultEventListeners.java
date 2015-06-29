@@ -126,6 +126,7 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
         try {
             cryptoStatus = transactionConfidenceCalculator.getCryptoStatus();
         } catch (CantCalculateTransactionConfidenceException e) {
+            //todo need to check this, because the transaction doesn't seems to change the confidence from IDENTIFIED.
             cryptoStatus = CryptoStatus.IDENTIFIED;
         }
 

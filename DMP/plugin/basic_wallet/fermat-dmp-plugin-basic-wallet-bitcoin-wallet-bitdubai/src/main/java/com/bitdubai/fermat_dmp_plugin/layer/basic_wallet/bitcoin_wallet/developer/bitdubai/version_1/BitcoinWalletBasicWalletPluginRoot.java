@@ -1,8 +1,14 @@
 package com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantCreateWalletException;
@@ -10,8 +16,10 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWallet;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -19,6 +27,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
@@ -26,9 +35,12 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorMan
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventHandler;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
+import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.developerUtils.DeveloperDatabaseFactory;
+import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure.BitcoinWalletBasicWallet;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -38,10 +50,11 @@ import java.util.UUID;
 /**
  * Created by loui on 30/04/15.
  */
-public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager, DealsWithErrors,DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem,Service, Plugin {
+public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,DatabaseManagerForDevelopers,DealsWithErrors,DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem,Service, Plugin {
 
     private final String WALLET_IDS_FILE_NAME = "walletsIds";
     private Map<UUID, UUID> walletIds =  new HashMap<>();
+
 
     /**
      * DealsWithErrors Interface member variables.
@@ -69,6 +82,48 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
      */
     private ServiceStatus serviceStatus = ServiceStatus.CREATED;
     private List<EventListener> listenersAdded = new ArrayList<>();
+
+
+
+    /*
+     * DatabaseManagerForDevelopers methods implementation
+     */
+    @Override
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+        List<String> databasesNames = new ArrayList<>();
+        Collection<UUID> ids = this.walletIds.values();
+        for(UUID id : ids)
+            databasesNames.add(id.toString());
+        DeveloperDatabaseFactory dbFactory = new DeveloperDatabaseFactory(this.pluginId.toString(),databasesNames);
+        return dbFactory.getDatabaseList(developerObjectFactory);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+        return DeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+        Database database;
+        try {
+            database = this.pluginDatabaseSystem.openDatabase(this.pluginId, developerDatabase.getName());
+            return DeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database , developerDatabaseTable);
+        }
+        catch (CantOpenDatabaseException cantOpenDatabaseException){
+            /**
+             * The database exists but cannot be open. I can not handle this situation.
+             */
+            FermatException e = new CantDeliverDatabaseException("I can't open database",cantOpenDatabaseException,"WalletId: " + developerDatabase.getName(),"");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+        }
+        catch (DatabaseNotFoundException databaseNotFoundException) {
+            FermatException e = new CantDeliverDatabaseException("Database does not exists",databaseNotFoundException,"WalletId: " + developerDatabase.getName(),"");
+            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+        }
+        // If we are here the database could not be opened, so we return an empry list
+        return new ArrayList<>();
+    }
 
 
     /**
@@ -184,7 +239,6 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
              */
 
             try{
-
                 walletIdsFile = pluginFileSystem.createTextFile(pluginId, "", WALLET_IDS_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             }
             catch (CantCreateFileException cantCreateFileException ) {
@@ -207,8 +261,6 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
                 throw new CantStartPluginException("I couldn't save the file",cantPersistFileException, "FIleName: "+ WALLET_IDS_FILE_NAME,"");
             }
         }
-
-
 
         /* TODO: Delete this wallet creation
          *       The next wallet is created because the Wallet Manager is not

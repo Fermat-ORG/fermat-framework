@@ -10,6 +10,7 @@ import android.database.DatabaseErrorHandler;
 import android.database.sqlite.SQLiteCantOpenDatabaseException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.provider.ContactsContract;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -23,6 +24,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransac
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseSystemException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerId;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
@@ -153,6 +155,9 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
         List<DatabaseTableRecord> updateRecords = transaction.getRecordsToUpdate();
         List<DatabaseTableRecord> insertRecords = transaction.getRecordsToInsert();
         try{
+            if(!this.Database.isOpen())
+                openDatabase(databaseName);
+
             this.Database.beginTransaction(); // EXCLUSIVE
 
             //update
@@ -169,12 +174,20 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
 
             this.Database.setTransactionSuccessful();
             this.Database.endTransaction();
-        }catch(Exception e)
-        {
+            closeDatabase();
+        }catch(Exception exception) {
+
             /**
              * for error not complete transaction
              */
-            throw new DatabaseTransactionFailedException();
+            String message = DatabaseTransactionFailedException.DEFAULT_MESSAGE;
+            FermatException cause = exception instanceof FermatException ? (FermatException) exception : FermatException.wrapException(exception);
+            String context = "Dabatase Name: " + databaseName;
+            context += DatabaseTransactionFailedException.CONTEXT_CONTENT_SEPARATOR;
+            context += transaction.toString();
+            String possibleReason = "The most reasonable thing to do here is check the cause as this is a triggered exception that can come from many situations";
+
+            throw new DatabaseTransactionFailedException(message, cause, context, possibleReason);
         }
     }
 
@@ -207,19 +220,29 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
             databasePath =  this.context.getFilesDir().getPath() + "/databases/";
 
         databasePath += "/" + databaseName.replace("-","") + ".db";
+
+        if(!(new File(databasePath)).exists()){
+            String message = DatabaseNotFoundException.DEFAULT_MESSAGE;
+            FermatException cause = null;
+            String context = "Database Constructed Path: " + databasePath;
+            String possibleReason = "Check if the constructed path is valid";
+            throw new DatabaseNotFoundException(message, cause, context, possibleReason);
+        }
+
         try {
             this.Database = SQLiteDatabase.openDatabase(databasePath,null,0,null);
-        } catch (SQLiteCantOpenDatabaseException exception) {
+        } catch (SQLiteException exception) {
         
             /**
              * Probably there is no distinctions between a database that it can not be opened and a one that doesn't not exist.
              * We will assume that if it didn't open it was because it didn't exist.
              * * *
              */
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Constructed Path: " + databasePath);
-            throw new DatabaseNotFoundException(DatabaseNotFoundException.DEFAULT_MESSAGE, FermatException.wrapException(exception),contextBuffer.toString(), "The Database Could Not Be Found");
-            //TODO: NATALIA; Revisa si devuelve la misma exception cuando la base de datos no existe que cuando simplement no la puede abrir por otra razon. Y avisame el resultado de la investigacion esta.
+            String message = CantOpenDatabaseException.DEFAULT_MESSAGE;
+            FermatException cause = FermatException.wrapException(exception);
+            String context = "Database Constructed Path: " + databasePath;
+            String possibleReason = "Check the cause for this error as we have already checked that the database exists";
+            throw new CantOpenDatabaseException(message, cause, context, possibleReason);
         }
 
     }
@@ -238,39 +261,41 @@ te a specific database file
 
     public void deleteDatabase(String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException {
 
+        // determine directry path name
+        String databasePath ="";
 
-        try {
-            // determine directry path name
-            String databasePath ="";
+        if(ownerId != null)
+            databasePath =  this.context.getFilesDir().getPath() +  "/databases/" +  ownerId.toString();
+        else
+            databasePath =  this.context.getFilesDir().getPath() + "/databases/";
+
+        databasePath += "/" + databaseName.replace("-","") + ".db";
+
+
             /**
              * if owner id if null
              * because it comes from platformdatabase
              */
-            if(ownerId != null)
-                databasePath =  this.context.getFilesDir().getPath() +  "/databases/" +  ownerId.toString();
-            else
-                databasePath =  this.context.getFilesDir().getPath() + "/databases/";
+        File databaseFile = new File(databasePath);
 
-            databasePath += "/" + databaseName.replace("-","") + ".db";
-            File databaseFile = new File(databasePath);
+        if(SQLiteDatabase.deleteDatabase(databaseFile))
+            return;
 
-             SQLiteDatabase.deleteDatabase(databaseFile);
-
-        }
-        catch (Exception exception) {
-
-            /**
-             * unexpected error deleting the database
-             * * *
-             */
-
-            throw new DatabaseNotFoundException();
-        }
+        /**
+         * unexpected error deleting the database
+         * * *
+         */
+        String message = "SOMETHING UNEXPECTED HAS HAPPENED";
+        FermatException cause = null;
+        String context = "Constructed Database Path: " + databasePath;
+        String possibleCause = "The most probable reason is that the database path could not be found";
+        throw new DatabaseNotFoundException(message, cause, context, possibleCause);
 
     }
 
-
-
+    public void closeDatabase(){
+        this.Database.close();
+    }
 
     /**
      * DatabaseFactory interface implementation.
@@ -286,52 +311,48 @@ te a specific database file
     @Override
     public void createDatabase(String databaseName) throws CantCreateDatabaseException {
 
+        String databasePath ="";
+        /**
+         * if owner id if null
+         * because it comes from platformdatabase
+         */
+        if(ownerId != null)
+            databasePath =  this.context.getFilesDir().getPath() +   "/databases/" +   ownerId.toString();
+        else
+            databasePath =  this.context.getFilesDir().getPath() +  "/databases/" ;
+
+        File storagePath = new File(databasePath);
+        if (!storagePath.exists())
+            storagePath.mkdirs();
 
         /**
-         * First I try to open the database.
+         * Hash data base name
          */
-        try {
+        File databaseFile = new File(storagePath.getPath() + "/" + databaseName.replace("-","") + ".db");
 
-
-
-            String databasePath ="";
-            /**
-             * if owner id if null
-             * because it comes from platformdatabase
-             */
-            if(ownerId != null)
-                databasePath =  this.context.getFilesDir().getPath() +   "/databases/" +   ownerId.toString();
-            else
-                databasePath =  this.context.getFilesDir().getPath() +  "/databases/" ;
-
-            File storagePath = new File(databasePath);
-            if (!storagePath.exists() && storagePath.mkdirs()){
-                	storagePath = null;
-            }
-
-            /**
-             * Hash data base name
-             */
-
-            databasePath += "/" + databaseName.replace("-","") + ".db";
-            File databaseFile = new File(databasePath);
+        if(databaseFile.exists()){
+            String message = CantCreateDatabaseException.DEFAULT_MESSAGE;
+            FermatException cause = null;
+            String context = "Database File: " + databaseFile.getPath();
+            String possibleReasons = "This happens if the Database has already been created";
+            throw new CantCreateDatabaseException(message, cause, context, possibleReasons);
+        }
+        /**
+         * This call opens or creates the Database, it doesn't throw a determined exception, but we'll try to emulate one in the tests
+         */
+        try{
             this.Database = SQLiteDatabase.openOrCreateDatabase(databaseFile,null);
-
-
+            this.Database.close();
+        } catch (SQLiteException ex){
+            String message = CantCreateDatabaseException.DEFAULT_MESSAGE;
+            FermatException cause = FermatException.wrapException(ex);
+            String context = "Storage Path: " + storagePath.getPath();
+            context += CantCreateDatabaseException.CONTEXT_CONTENT_SEPARATOR;
+            context += "Database Name: " + databaseName;
+            String possibleReasons = "This can happen if the Database File where we wanted to create the Database can't be created";
+            throw new CantCreateDatabaseException(message, cause, context, possibleReasons);
         }
-        catch (Exception exception) {
-
-
-            /**
-             * Probably there is no distinctions between a database that it can not be opened and a one that doesn't not exist.
-             * We will assume that if it didn't open it was because it didn't exist.
-             * * *
-             */
-            throw new CantCreateDatabaseException();
-        }
-
     }
-
 
     /**
      * This method creates a new table into the database based on the definition received.
@@ -349,7 +370,31 @@ te a specific database file
          * I check that the owner id is the same I currently have..
          */
         if (this.ownerId != ownerId) {
-            throw new InvalidOwnerId();
+            String message = InvalidOwnerId.DEFAULT_MESSAGE;
+            String context = "Database Owner Id: " + this.ownerId;
+            FermatException cause = null;
+            context += InvalidOwnerId.CONTEXT_CONTENT_SEPARATOR;
+            context += "Owner Id in the method invocation: " + ownerId;
+            String possibleReason = "The owner Id passed in the Invocation doesn't belong to the Android Database Owner, maybe this was a passed object";
+            throw new InvalidOwnerId(message, cause, context, possibleReason);
+        }
+
+        if(table == null){
+            String message = CantCreateTableException.DEFAULT_MESSAGE;
+            FermatException cause = null;
+            String context = "Owner Id : " + ownerId.toString();
+            String possibleReason = "DatabaseTableFactory can't be null.";
+            throw new CantCreateTableException(message, cause, context, possibleReason);
+        }
+
+        if(getTable(table.getTableName()).isTableExists()){
+            String message = CantCreateTableException.DEFAULT_MESSAGE;
+            FermatException cause =null;
+            String context = "Owner Id : " + ownerId.toString();
+            context += CantCreateTableException.CONTEXT_CONTENT_SEPARATOR;
+            context += "DatabaseTableFactory Info: " + table.toString();
+            String possibleReason = "The table already exists.";
+            throw new CantCreateTableException(message, cause, context, possibleReason);
         }
         
          /**
@@ -372,6 +417,8 @@ te a specific database file
 
             this.query += ")";
 
+            if(!Database.isOpen())
+                openDatabase(databaseName);
 
             executeQuery();
 
@@ -380,14 +427,18 @@ te a specific database file
              */
             if(table.getIndex() != null && !table.getIndex().isEmpty ()) {
                 this.query = " CREATE INDEX IF NOT EXISTS " + table.getIndex() + "_idx ON " + table.getTableName() + " (" + table.getIndex() + ")";
-
                 executeQuery();
             }
 
-        }catch (Exception e)
-        {
-            //e.printStackTrace();
-        	throw new CantCreateTableException();
+            closeDatabase();
+        }catch (Exception ex) {
+            String message = CantCreateTableException.DEFAULT_MESSAGE;
+            FermatException cause = ex instanceof FermatException ? (FermatException) ex : FermatException.wrapException(ex);
+            String context = "Owner Id : " + ownerId.toString();
+            context += CantCreateTableException.CONTEXT_CONTENT_SEPARATOR;
+            context += "DatabaseTableFactory Info: " + table.toString();
+            String possibleReason = "Check the cause for the reason we are getting this error.";
+            throw new CantCreateTableException(message, cause, context, possibleReason);
         }
 
 
@@ -398,61 +449,15 @@ te a specific database file
      * Create  primary keys and index if defined
      *
      * @param table DatabaseTableFactory object containing the definition of the table
-     * @throws InvalidOwnerId
      * @throws CantCreateTableException
      */
     @Override
     public void createTable(DatabaseTableFactory table) throws CantCreateTableException {
-
-         /**
-         * Get the columns of the table and write the query to create it
-         */
-        try
-        {
-            String primaryKey = "";
-            this.query ="CREATE TABLE IF NOT EXISTS " + table.getTableName() + " (";
-            ArrayList<DatabaseTableColumn> tableColumns = table.getColumns();
-
-            for (int i = 0; i < tableColumns.size(); i++) {
-
-                this.query += tableColumns.get(i).getName() +" " +  tableColumns.get(i).getType().name();
-
-                if(tableColumns.get(i).getType() == DatabaseDataType.STRING)
-                    this.query +="("+ String.valueOf(tableColumns.get(i).getDataTypeSize()) + ")";
-
-                if(tableColumns.get(i).getPrimaryKey())
-                    primaryKey = tableColumns.get(i).getName();
-                if(i < tableColumns.size()-1)
-                    this.query +=",";
-
-
-            }
-
-            /**
-             * add primary key
-             */
-            if(!primaryKey.isEmpty())
-                this.query += ", PRIMARY KEY ("+primaryKey+") ";
-
-            this.query += ")";
-            executeQuery();
-            /**
-             * get index column
-             */
-            if(table.getIndex() != null && !table.getIndex().isEmpty ()) {
-                this.query = " CREATE INDEX IF NOT EXISTS " + table.getIndex() + "_idx ON " + table.getTableName() + " (" + table.getIndex() + ")";
-                executeQuery();
-            }
-
-
-
-        }catch (Exception e)
-        {
-            //e.printStackTrace();
-        	throw new CantCreateTableException();
+        try{
+            createTable(ownerId, table);
+        } catch (InvalidOwnerId ex){
+            throw new CantCreateTableException(CantCreateDatabaseException.DEFAULT_MESSAGE, ex, "Database Owner Id: " + this.ownerId, "This error is strange and shouldn't ever happen");
         }
-
-
     }
 
 
@@ -487,7 +492,6 @@ te a specific database file
      */
     @Override
     public DatabaseTableFactory newTableFactory(String tableName) {
-
              return new AndroidDatabaseTableFactory(tableName);
     }
 

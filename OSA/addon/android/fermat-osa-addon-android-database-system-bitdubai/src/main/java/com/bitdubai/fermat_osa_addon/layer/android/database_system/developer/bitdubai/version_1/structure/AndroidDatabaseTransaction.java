@@ -112,4 +112,25 @@ public class AndroidDatabaseTransaction implements DatabaseTransaction {
         return insertTables;
     }
 
+    @Override
+    public String toString(){
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("INSERT TABLES:");
+        for(DatabaseTable table : insertTables)
+            buffer.append(" " + table.toString());
+        buffer.append("\n");
+        buffer.append("INSERT RECORDS:");
+        for(DatabaseTableRecord record : insertRecords)
+            buffer.append(" " + record.toString());
+        buffer.append("\n");
+        buffer.append("UPDATE TABLES:");
+        for(DatabaseTable table : updateTables)
+            buffer.append(" " + table.toString());
+        buffer.append("\n");
+        buffer.append("UPDATE RECORDS:");
+        for(DatabaseTableRecord record : updateRecords)
+            buffer.append(" " + record.toString());
+        return buffer.toString();
+    }
+
 }

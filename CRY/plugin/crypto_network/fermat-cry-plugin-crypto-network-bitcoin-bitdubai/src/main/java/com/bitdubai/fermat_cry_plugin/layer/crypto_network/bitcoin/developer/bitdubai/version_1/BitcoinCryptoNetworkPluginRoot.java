@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.Unexpect
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantConnectToBitcoinNetwork;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVault;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantCreateBlockStoreFileException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure.BitcoinCryptoNetworkMonitoringAgent;
 import org.bitcoinj.core.Wallet;
 
@@ -138,10 +139,22 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManag
         bitcoinCryptoNetworkMonitoringAgent.setPluginId(pluginId);
 
         try {
+            bitcoinCryptoNetworkMonitoringAgent.configureBlockChain();
+        } catch (CantCreateBlockStoreFileException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantConnectToBitcoinNetwork("Couldn't connect to Bitcoin Network.", e,"UserId : " + cryptoVault.getUserId().toString(), "Blockchain not saved " +
+                    "on disk.");
+
+
+        }
+
+        bitcoinCryptoNetworkMonitoringAgent.configurePeers();
+
+        try {
             bitcoinCryptoNetworkMonitoringAgent.start();
         } catch (CantStartAgentException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantConnectToBitcoinNetwork();
+            throw new CantConnectToBitcoinNetwork("Couldn't connect to Bitcoin Network.", e,"UserId : " + cryptoVault.getUserId().toString(), "Error starting Agent.");
         }
     }
 

@@ -255,6 +255,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
             vault = Wallet.loadFromFile(vaultFile);
             System.out.println("Vault loaded from file " + vaultFile.getAbsoluteFile().toString());
             System.out.println("CryptoVault current balance: " + vault.getBalance().getValue());
+            System.out.println("CryptoVault estimated current balance: " + vault.getBalance(Wallet.BalanceType.ESTIMATED).value);
 
             /**
              * If I couldn't load it I can't go on.
@@ -309,9 +310,10 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
      * @throws CantCreateCryptoWalletException
      */
     private void configureVault() throws CantCreateCryptoWalletException {
-        vault.autosaveToFile(vaultFile, 0, TimeUnit.SECONDS, null);
+        vault.autosaveToFile(vaultFile, 0, TimeUnit.NANOSECONDS, null);
         vaultEventListeners = new VaultEventListeners(database, errorManager, eventManager);
         vault.addEventListener(vaultEventListeners);
+
     }
 
 
