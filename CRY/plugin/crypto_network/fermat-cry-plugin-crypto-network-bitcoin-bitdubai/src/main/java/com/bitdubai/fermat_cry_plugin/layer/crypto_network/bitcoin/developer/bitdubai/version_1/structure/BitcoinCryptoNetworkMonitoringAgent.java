@@ -198,8 +198,10 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
         /**
          * I define the peers information that I will be connecting to.
          */
+        storedBlockChain.getBlockChain().addWallet(wallet);
         peers = new PeerGroup(this.networkParameters, storedBlockChain.getBlockChain());
         peers.addWallet(wallet);
+
         peers.setUserAgent(BitcoinManager.FERMAT_AGENT_NAME, BitcoinManager.FERMAT_AGENT_VERSION);
         peers.setUseLocalhostPeerWhenPossible(true);
         /**
@@ -209,6 +211,7 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
         {
             InetSocketAddress regtestSocketAddress = new InetSocketAddress(REGTEST_SERVER_ADDRESS, REGTEST_SERVER_PORT);
             peers.connectTo(regtestSocketAddress);
+            peers.connectToLocalHost();
             System.out.println("CryptoNetwork information: Using RegTest. Connected to " + regtestSocketAddress.toString());
         }
         else
