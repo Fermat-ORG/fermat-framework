@@ -207,7 +207,7 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
          */
         if (networkParameters == RegTestParams.get())
         {
-            InetSocketAddress regtestSocketAddress = new InetSocketAddress(REGTEST_SERVER_ADDRESS, 9050);
+            InetSocketAddress regtestSocketAddress = new InetSocketAddress(REGTEST_SERVER_ADDRESS, REGTEST_SERVER_PORT);
             peers.connectTo(regtestSocketAddress);
             System.out.println("CryptoNetwork information: Using RegTest. Connected to " + regtestSocketAddress.toString());
         }
@@ -216,7 +216,7 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
          * If it is not RegTest, then I will get the Peers by DNSDiscovery
          */
         {
-            System.out.println("CryptoNetwork inforamtion: Using " + networkParameters.toString() + " network.");
+            System.out.println("CryptoNetwork information: Using " + networkParameters.toString() + " network.");
             peers.addPeerDiscovery(new DnsDiscovery(this.networkParameters));
         }
 
