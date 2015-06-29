@@ -47,6 +47,14 @@ public class AndroidPluginTextFile implements PluginTextFile {
      */
     
     private Context context;
+
+    private String directoryName;
+    private String fileName;
+    private FilePrivacy privacyLevel;
+    private FileLifeSpan lifeSpan;
+    private UUID ownerId;
+    private String content = "";
+
     public FileLifeSpan getLifeSpan() {
 		return lifeSpan;
 	}
@@ -56,8 +64,6 @@ public class AndroidPluginTextFile implements PluginTextFile {
 	}
 
 
-	private String content = "";
-    private String fileName;
     public Context getContext() {
 		return context;
 	}
@@ -99,10 +105,6 @@ public class AndroidPluginTextFile implements PluginTextFile {
 	}
 
 
-	private FilePrivacy privacyLevel;
-    private FileLifeSpan lifeSpan;
-    private String directoryName;
-    private UUID ownerId;
 
 
     // Public constructor declarations.

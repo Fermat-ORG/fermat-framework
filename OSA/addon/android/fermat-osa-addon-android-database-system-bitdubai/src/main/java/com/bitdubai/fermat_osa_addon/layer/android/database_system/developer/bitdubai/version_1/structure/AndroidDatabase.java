@@ -174,7 +174,6 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
 
             this.Database.setTransactionSuccessful();
             this.Database.endTransaction();
-            closeDatabase();
         }catch(Exception exception) {
 
             /**
@@ -342,7 +341,6 @@ te a specific database file
          */
         try{
             this.Database = SQLiteDatabase.openOrCreateDatabase(databaseFile,null);
-            this.Database.close();
         } catch (SQLiteException ex){
             String message = CantCreateDatabaseException.DEFAULT_MESSAGE;
             FermatException cause = FermatException.wrapException(ex);
@@ -430,7 +428,6 @@ te a specific database file
                 executeQuery();
             }
 
-            closeDatabase();
         }catch (Exception ex) {
             String message = CantCreateTableException.DEFAULT_MESSAGE;
             FermatException cause = ex instanceof FermatException ? (FermatException) ex : FermatException.wrapException(ex);
