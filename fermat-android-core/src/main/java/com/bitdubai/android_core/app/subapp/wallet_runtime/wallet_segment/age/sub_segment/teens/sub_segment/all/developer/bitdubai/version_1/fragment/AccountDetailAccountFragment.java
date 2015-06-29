@@ -7,10 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
-import com.bitdubai.smartwallet.R;
-import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
-
-
+import com.bitdubai.android_core.app.ApplicationSession;
+import com.bitdubai.fermat.R;
 
 
 public  class AccountDetailAccountFragment extends Fragment {
@@ -103,16 +101,16 @@ public  class AccountDetailAccountFragment extends Fragment {
            TextView tv;
 
         tv = (TextView) rootView.findViewById(R.id.account_type);
-        tv.setTypeface(MyApplication.getDefaultTypeface());
+        tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
         tv = (TextView) rootView.findViewById(R.id.balance);
-        tv.setTypeface(MyApplication.getDefaultTypeface());
+        tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
         tv = (TextView) rootView.findViewById(R.id.balance_available);
-        tv.setTypeface(MyApplication.getDefaultTypeface());
+        tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
         tv = (TextView) rootView.findViewById(R.id.account_alias);
-        tv.setTypeface(MyApplication.getDefaultTypeface());
+        tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
         return rootView;
     }

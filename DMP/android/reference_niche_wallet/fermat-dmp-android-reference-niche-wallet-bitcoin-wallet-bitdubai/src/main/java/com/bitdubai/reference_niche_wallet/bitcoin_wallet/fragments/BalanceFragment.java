@@ -3,6 +3,7 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -76,7 +77,7 @@ public class BalanceFragment extends  Fragment {
 
         try{
 
-         balance = "BTC 0.0000";
+         balance = "0 bits";
         cryptoWalletManager = platform.getCryptoWalletManager();
 
         try {
@@ -90,8 +91,9 @@ public class BalanceFragment extends  Fragment {
         try {
             long lngBalance = cryptoWallet.getBalance(wallet_id);
 
-            balance = "BTC " + String.valueOf(lngBalance);
+            balance = (int) (lngBalance / 100) + " bits";
 
+            //String.valueOf
         } catch (CantGetBalanceException e) {
             showMessage("CantGetBalanceException- " + e.getMessage());
             e.printStackTrace();
@@ -99,7 +101,7 @@ public class BalanceFragment extends  Fragment {
         }
     }
     catch(Exception ex) {
-        showMessage("Unexpected error get Balance - " + ex.getMessage());
+        showMessage("Unexpected error getting the balance - " + ex.getMessage());
         ex.printStackTrace();
     }
 
@@ -133,6 +135,7 @@ public class BalanceFragment extends  Fragment {
         rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_balance, container, false);
         TextView tv = ((TextView)rootView.findViewById(R.id.balance));
         tv.setText(balance);
+
 
         return rootView;
     }

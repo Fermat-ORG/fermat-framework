@@ -9,11 +9,8 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bitdubai.smartwallet.R;
-import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
-
-
-
+import com.bitdubai.android_core.app.ApplicationSession;
+import com.bitdubai.fermat.R;
 
 
 public  class ContactsFragment extends android.app.Fragment {
@@ -169,7 +166,7 @@ public  class ContactsFragment extends android.app.Fragment {
                 holder = new ViewHolder();
 
                 holder.text = (TextView) convertView.findViewById(R.id.city);
-                holder.text.setTypeface(MyApplication.getDefaultTypeface());
+                holder.text.setTypeface(ApplicationSession.getDefaultTypeface());
                 convertView.setTag(holder);
 
 
@@ -308,25 +305,25 @@ public  class ContactsFragment extends android.app.Fragment {
 
                 city= new ViewHolder();
                 city.text = (TextView) convertView.findViewById(R.id.city);
-                city.text.setTypeface(MyApplication.getDefaultTypeface());
+                city.text.setTypeface(ApplicationSession.getDefaultTypeface());
                 city.text.setText(cities[groupPosition].toString());
 
 
                 country = new ViewHolder();
                 country.text = (TextView) convertView.findViewById(R.id.country);
-                country.text.setTypeface(MyApplication.getDefaultTypeface());
+                country.text.setTypeface(ApplicationSession.getDefaultTypeface());
                 country.text.setText(countries[groupPosition].toString());
 
 
                 state = new ViewHolder();
                 state.text = (TextView) convertView.findViewById(R.id.state);
-                state.text.setTypeface(MyApplication.getDefaultTypeface());
+                state.text.setTypeface(ApplicationSession.getDefaultTypeface());
                 state.text.setText(states[groupPosition].toString());
 
 
                 holder = new ViewHolder();
                 holder.text = (TextView) convertView.findViewById(R.id.contact_name);
-                holder.text.setTypeface(MyApplication.getDefaultTypeface());
+                holder.text.setTypeface(ApplicationSession.getDefaultTypeface());
                 convertView.setTag(holder);
 
 

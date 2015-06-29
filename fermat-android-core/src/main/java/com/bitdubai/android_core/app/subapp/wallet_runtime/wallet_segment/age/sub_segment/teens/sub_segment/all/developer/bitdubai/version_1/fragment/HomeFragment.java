@@ -10,8 +10,8 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.bitdubai.smartwallet.R;
-import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
+import com.bitdubai.android_core.app.ApplicationSession;
+import com.bitdubai.fermat.R;
 
 
 public class HomeFragment extends  Fragment {
@@ -53,7 +53,7 @@ public class HomeFragment extends  Fragment {
         balances = new String[]{"$5,693.50"};
         balances_available = new String[]{"$1,970.00 available"};
 
-        MyApplication.changeColor(Color.parseColor("#F0E173"), super.getActivity().getResources());
+        ApplicationSession.changeColor(Color.parseColor("#F0E173"), super.getActivity().getResources());
 
     }
 
@@ -173,7 +173,7 @@ public class HomeFragment extends  Fragment {
 
                 tv = ((TextView)convertView.findViewById(R.id.title));
                 tv.setText("Total balance in all accounts");
-                tv.setTypeface(MyApplication.getDefaultTypeface());
+                tv.setTypeface(ApplicationSession.getDefaultTypeface());
             }
             else
             {
@@ -188,17 +188,17 @@ public class HomeFragment extends  Fragment {
 
                             tv = ((TextView)convertView.findViewById(R.id.balance));
                             tv.setText(balances[groupPosition-1]);
-                            tv.setTypeface(MyApplication.getDefaultTypeface());
+                            tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
                             tv = ((TextView)convertView.findViewById(R.id.balance_available));
                             tv.setText(balances_available[groupPosition-1]);
-                            tv.setTypeface(MyApplication.getDefaultTypeface());
+                            tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
 
 
                             tv = ((TextView)convertView.findViewById(R.id.account_type));
                             tv.setText(account_types[groupPosition-1]);
-                            tv.setTypeface(MyApplication.getDefaultTypeface());
+                            tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
                             break;
 
@@ -207,7 +207,7 @@ public class HomeFragment extends  Fragment {
 
                             tv = ((TextView)convertView.findViewById(R.id.title));
                             tv.setText("Requests received waiting to be accepted");
-                            tv.setTypeface(MyApplication.getDefaultTypeface());
+                            tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
                             break;
 
@@ -219,24 +219,24 @@ public class HomeFragment extends  Fragment {
 
                         holder = new ViewHolder();
                         holder.text = (TextView) convertView.findViewById(R.id.contact_name);
-                        holder.text.setTypeface(MyApplication.getDefaultTypeface());
+                        holder.text.setTypeface(ApplicationSession.getDefaultTypeface());
                         holder.text.setText(contacts[groupPosition].toString());
 
                         amount = new ViewHolder();
                         amount.text = (TextView) convertView.findViewById(R.id.amount);
-                        amount.text.setTypeface(MyApplication.getDefaultTypeface());
+                        amount.text.setTypeface(ApplicationSession.getDefaultTypeface());
 
                         amount.text.setText(amounts[groupPosition].toString());
 
                         when = new ViewHolder();
                         when.text = (TextView) convertView.findViewById(R.id.when);
-                        when.text.setTypeface(MyApplication.getDefaultTypeface());
+                        when.text.setTypeface(ApplicationSession.getDefaultTypeface());
 
                         when.text.setText(whens[groupPosition].toString());
 
                         note = new ViewHolder();
                         note.text = (TextView) convertView.findViewById(R.id.notes);
-                        note.text.setTypeface(MyApplication.getDefaultTypeface());
+                        note.text.setTypeface(ApplicationSession.getDefaultTypeface());
 
                         note.text.setText(notes[groupPosition].toString());
 
@@ -272,7 +272,7 @@ public class HomeFragment extends  Fragment {
                             convertView = inf.inflate(R.layout.wallets_teens_multiple_fragments_titles_list_item, parent, false);
                             tv = ((TextView)convertView.findViewById(R.id.title));
                             tv.setText("Requests sent waiting to be accepted");
-                            tv.setTypeface(MyApplication.getDefaultTypeface());
+                            tv.setTypeface(ApplicationSession.getDefaultTypeface());
                             break;
                     }
                 }

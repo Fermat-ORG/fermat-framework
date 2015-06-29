@@ -9,8 +9,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
-import com.bitdubai.android_core.app.common.version_1.classes.PagerSlidingTabStrip;
+import com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip;
 
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.AvailableBalanceFragment;
 import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ChatOverTransactionFragment;
@@ -35,7 +34,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Fragments;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_runtime.developer.bitdubai.version_1.structure.RuntimeFragment;
-import com.bitdubai.smartwallet.R;
+import com.bitdubai.fermat.R;
 
 import java.util.Iterator;
 import java.util.List;
@@ -47,6 +46,8 @@ import java.util.Vector;
  */
 public class FragmentActivity  extends Activity {
 
+
+    // TODO: Raul: Esto no se de donde salio y para que se usa. Posiblemente tenga que volar .. Luis.
 
     public CharSequence Title;
     private Menu menu;
@@ -70,7 +71,7 @@ public class FragmentActivity  extends Activity {
     private String walletStyle = "";
     private TabStrip tabs;
     private TitleBar titleBar; // Comment
-    private String tagParam  = MyApplication.getChildId(); //get param with data for fragment
+    private String tagParam  = ApplicationSession.getChildId(); //get param with data for fragment
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,19 +80,19 @@ public class FragmentActivity  extends Activity {
         try{
             // get instances of Runtime middleware object
 
-            this.appRuntimeMiddleware =  MyApplication.getAppRuntime(); //(AppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
+            this.appRuntimeMiddleware =  ApplicationSession.getAppRuntime(); //(AppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
 
             this.app = appRuntimeMiddleware.getLastApp();
             this.subApp = appRuntimeMiddleware.getLastSubApp();
 
-            walletRuntimeMiddleware = MyApplication.getwalletRuntime();
+            walletRuntimeMiddleware = ApplicationSession.getwalletRuntime();
 
             //get actual activity to execute
             this.activity = walletRuntimeMiddleware.getLasActivity();
 
 
             // Fragment fragment = appRuntimeMiddleware.getLastFragment();
-            MyApplication.setActivityId(activity.getType().getKey());
+            ApplicationSession.setActivityId(activity.getType().getKey());
 
             //get activity settings
             this.tabs = activity.getTabStrip();
@@ -205,7 +206,7 @@ public class FragmentActivity  extends Activity {
             int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
             this.abTitle = (TextView) findViewById(titleId);
 
-            MyApplication.setActivityProperties(this, getWindow(),getResources(),tabStrip,getActionBar(), titleBar,abTitle,Title);
+            ApplicationSession.setActivityProperties(this, getWindow(), getResources(), tabStrip, getActionBar(), titleBar, abTitle, Title);
 
         }
         catch (Exception e)

@@ -12,14 +12,13 @@
         <option name="SELECTED_TEST_ARTIFACT" value="_android_test_" />
         <option name="ASSEMBLE_TASK_NAME" value="assembleDebug" />
         <option name="COMPILE_JAVA_TASK_NAME" value="compileDebugSources" />
-        <option name="SOURCE_GEN_TASK_NAME" value="generateDebugSources" />
         <option name="ASSEMBLE_TEST_TASK_NAME" value="assembleDebugAndroidTest" />
-        <option name="COMPILE_JAVA_TEST_TASK_NAME" value="compileDebugAndroidTestSources" />
+        <option name="SOURCE_GEN_TASK_NAME" value="generateDebugSources" />
         <option name="TEST_SOURCE_GEN_TASK_NAME" value="generateDebugAndroidTestSources" />
         <option name="ALLOW_USER_CONFIGURATION" value="false" />
         <option name="MANIFEST_FILE_RELATIVE_PATH" value="/src/main/AndroidManifest.xml" />
         <option name="RES_FOLDER_RELATIVE_PATH" value="/src/main/structured_res/app/shell/version_1" />
-        <option name="RES_FOLDERS_RELATIVE_PATH" value="file://$MODULE_DIR$/src/main/structured_res/app/subapp/shop/version_1;file://$MODULE_DIR$/src/main/structured_res/app/subapp/wallet_runtime/wallet_framework/version_1;file://$MODULE_DIR$/src/main/structured_res/app/shell/version_1;file://$MODULE_DIR$/src/main/res;file://$MODULE_DIR$/src/main/structured_res/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1" />
+        <option name="RES_FOLDERS_RELATIVE_PATH" value="file://$MODULE_DIR$/src/main/res;file://$MODULE_DIR$/src/main/structured_res/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1;file://$MODULE_DIR$/src/main/structured_res/app/subapp/wallet_runtime/wallet_framework/version_1;file://$MODULE_DIR$/src/main/structured_res/app/shell/version_1;file://$MODULE_DIR$/src/main/structured_res/app/subapp/shop/version_1" />
         <option name="ASSETS_FOLDER_RELATIVE_PATH" value="/src/main/assets" />
       </configuration>
     </facet>
@@ -81,8 +80,6 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/dependency-cache" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/dex" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/dex-cache" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.android.support/multidex/1.0.1/jars" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/exploded-aar/com.google.android.gms/play-services/6.5.87/jars" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/incremental" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/jacoco" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/javaResources" />
@@ -98,7 +95,7 @@
       <excludeFolder url="file://$MODULE_DIR$/build/outputs" />
       <excludeFolder url="file://$MODULE_DIR$/build/tmp" />
     </content>
-    <orderEntry type="jdk" jdkName="Android API 21 Platform" jdkType="Android SDK" />
+    <orderEntry type="jdk" jdkName="Android API 21 Platform (1)" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="prov-1.50.0.0" level="project" />
     <orderEntry type="library" exported="" name="play-services-6.5.87" level="project" />
@@ -107,8 +104,8 @@
     <orderEntry type="library" exported="" name="google-oauth-client-1.18.0-rc" level="project" />
     <orderEntry type="library" exported="" name="jcip-annotations-1.0" level="project" />
     <orderEntry type="library" exported="" name="multidex-1.0.1" level="project" />
-    <orderEntry type="library" exported="" name="guava-16.0.1" level="project" />
     <orderEntry type="library" exported="" name="jackson-annotations-2.1.2" level="project" />
+    <orderEntry type="library" exported="" name="guava-16.0.1" level="project" />
     <orderEntry type="library" exported="" name="appcompat-v7-21.0.3" level="project" />
     <orderEntry type="library" exported="" name="bcprov-jdk15on-1.52" level="project" />
     <orderEntry type="library" exported="" name="core-3.2.0" level="project" />
@@ -153,15 +150,15 @@
     <orderEntry type="module" module-name="fermat-dmp-plugin-world-coinbase-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-android-sub-app-shop-manager-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-cry-api" exported="" />
-    <orderEntry type="module" module-name="fermat-pip-plugin-actor-developer-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-wallet-contacts-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-pip-plugin-actor-developer-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-transaction-outgoing-device-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-android-sub-app-wallet-publisher-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-dmp-plugin-niche-wallet-type-discount-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-plugin-niche-wallet-type-discount-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-crypto-addresses-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-hardware-remote-device-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-android-sub-app-developer-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-bank-notes-bitdubai" exported="" />
@@ -174,8 +171,8 @@
     <orderEntry type="module" module-name="fermat-pip-addon-platform-service-error-manager-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-osa-addon-android-file-system-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-money-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-hardware-local-device-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-money-request-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-bank-notes-bitdubai" exported="" />
@@ -184,13 +181,13 @@
     <orderEntry type="module" module-name="fermat-dmp-plugin-module-wallet-runtime-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-platform-service-event-manager-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-p2p-api" exported="" />
-    <orderEntry type="module" module-name="fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-android-sub-app-wallet-store-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-cry-plugin-crypto-vault-bitcoin-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-niche-wallet-type-bank-notes-wallet-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-user-device-user-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-dmp-plugin-niche-wallet-type-crypto-loss-protected-wallet-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-plugin-niche-wallet-type-crypto-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-addon-license-wallet-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-plugin-niche-wallet-type-crypto-loss-protected-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-world-location-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-cry-plugin-crypto-module-wallet-address-book-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-identity-intra-user-bitdubai" exported="" />

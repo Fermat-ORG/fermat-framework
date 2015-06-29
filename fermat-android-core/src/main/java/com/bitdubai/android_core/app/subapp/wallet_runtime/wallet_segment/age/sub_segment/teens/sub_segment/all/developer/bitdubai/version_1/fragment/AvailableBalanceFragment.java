@@ -13,8 +13,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.bitdubai.smartwallet.R;
-import com.bitdubai.android_core.app.common.version_1.classes.MyApplication;
+import com.bitdubai.android_core.app.ApplicationSession;
+import com.bitdubai.fermat.R;
 
 
 public  class AvailableBalanceFragment extends android.app.Fragment {
@@ -95,18 +95,18 @@ public  class AvailableBalanceFragment extends android.app.Fragment {
          TextView tv;
 
          tv = (TextView) actionBarLayout.findViewById(R.id.account_type);
-         tv.setTypeface(MyApplication.getDefaultTypeface());
+         tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
 
          tv = (TextView) actionBarLayout.findViewById(R.id.balance);
-         tv.setTypeface(MyApplication.getDefaultTypeface());
+         tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
          tv = (TextView) actionBarLayout.findViewById(R.id.balance_available);
-         tv.setTypeface(MyApplication.getDefaultTypeface());
+         tv.setTypeface(ApplicationSession.getDefaultTypeface());
 
          tv = (TextView) actionBarLayout.findViewById(R.id.account_alias);
-         tv.setTypeface(MyApplication.getDefaultTypeface());
-         MyApplication.changeColor(Color.parseColor("#F0E173"), super.getActivity().getResources());
+         tv.setTypeface(ApplicationSession.getDefaultTypeface());
+         ApplicationSession.changeColor(Color.parseColor("#F0E173"), super.getActivity().getResources());
 
     }
 
@@ -220,18 +220,18 @@ public  class AvailableBalanceFragment extends android.app.Fragment {
                 holder = new ViewHolder();
 
                 holder.text = (TextView) convertView.findViewById(R.id.notes);
-                holder.text.setTypeface(MyApplication.getDefaultTypeface());
+                holder.text.setTypeface(ApplicationSession.getDefaultTypeface());
                 convertView.setTag(holder);
 
                 amount = new ViewHolder();
                 amount.text = (TextView) convertView.findViewById(R.id.amount);
-                amount.text.setTypeface(MyApplication.getDefaultTypeface());
+                amount.text.setTypeface(ApplicationSession.getDefaultTypeface());
 
                 amount.text.setText(transactions_amounts[groupPosition][childPosition].toString());
 
                 when = new ViewHolder();
                 when.text = (TextView) convertView.findViewById(R.id.when);
-                when.text.setTypeface(MyApplication.getDefaultTypeface());
+                when.text.setTypeface(ApplicationSession.getDefaultTypeface());
 
                 when.text.setText(transactions_whens[groupPosition][childPosition].toString());
 
@@ -294,12 +294,12 @@ public  class AvailableBalanceFragment extends android.app.Fragment {
 
                 holder = new ViewHolder();
                 holder.text = (TextView) convertView.findViewById(R.id.contact_name);
-                holder.text.setTypeface(MyApplication.getDefaultTypeface());
+                holder.text.setTypeface(ApplicationSession.getDefaultTypeface());
                 convertView.setTag(holder);
 
                 amount = new ViewHolder();
                 amount.text = (TextView) convertView.findViewById(R.id.amount);
-                amount.text.setTypeface(MyApplication.getDefaultTypeface());
+                amount.text.setTypeface(ApplicationSession.getDefaultTypeface());
 
                 amount.text.setText(amounts[groupPosition].toString());
 
@@ -307,23 +307,23 @@ public  class AvailableBalanceFragment extends android.app.Fragment {
 
                 type = new ViewHolder();
                 type.text = (TextView) convertView.findViewById(R.id.type);
-                type.text.setTypeface(MyApplication.getDefaultTypeface());
+                type.text.setTypeface(ApplicationSession.getDefaultTypeface());
                 type.text.setText(types[groupPosition].toString());
 
                 crypto_amount = new ViewHolder();
                 crypto_amount.text = (TextView) convertView.findViewById(R.id.crypto_amount);
-                crypto_amount.text.setTypeface(MyApplication.getDefaultTypeface());
+                crypto_amount.text.setTypeface(ApplicationSession.getDefaultTypeface());
                 crypto_amount.text.setText(crypto_amounts[groupPosition].toString());
 
                 when = new ViewHolder();
                 when.text = (TextView) convertView.findViewById(R.id.when);
-                when.text.setTypeface(MyApplication.getDefaultTypeface());
+                when.text.setTypeface(ApplicationSession.getDefaultTypeface());
 
                 when.text.setText(whens[groupPosition].toString());
 
                 note = new ViewHolder();
                 note.text = (TextView) convertView.findViewById(R.id.notes);
-                note.text.setTypeface(MyApplication.getDefaultTypeface());
+                note.text.setTypeface(ApplicationSession.getDefaultTypeface());
 
                 note.text.setText(notes[groupPosition].toString());
 
@@ -334,7 +334,7 @@ public  class AvailableBalanceFragment extends android.app.Fragment {
 
                 percentage = new ViewHolder();
                 percentage.text = (TextView) convertView.findViewById(R.id.availability);
-                percentage.text.setTypeface(MyApplication.getDefaultTypeface());
+                percentage.text.setTypeface(ApplicationSession.getDefaultTypeface());
                 percentage.text.setText(availabilities[groupPosition].toString());
 
                 frame_tx_record = (ImageView) convertView.findViewById(R.id.frame_tx_record);
@@ -345,19 +345,19 @@ public  class AvailableBalanceFragment extends android.app.Fragment {
                     case 2:case 3:case 5:case 7:case 8:
                     frame_tx_record.setBackgroundResource(R.drawable.object_frame_3x1_frozen);
                     holder.text.setTextColor(Color.WHITE);
-                    holder.text.setTypeface(MyApplication.getDefaultTypeface(),1);
+                    holder.text.setTypeface(ApplicationSession.getDefaultTypeface(),1);
                     amount.text.setTextColor(Color.WHITE);
-                    amount.text.setTypeface(MyApplication.getDefaultTypeface(),1);
+                    amount.text.setTypeface(ApplicationSession.getDefaultTypeface(),1);
                     percentage.text.setTextColor(Color.WHITE);
-                    percentage.text.setTypeface(MyApplication.getDefaultTypeface(),1);
+                    percentage.text.setTypeface(ApplicationSession.getDefaultTypeface(),1);
                     type.text.setTextColor(Color.WHITE);
-                    type.text.setTypeface(MyApplication.getDefaultTypeface(),1);
+                    type.text.setTypeface(ApplicationSession.getDefaultTypeface(),1);
                     crypto_amount.text.setTextColor(Color.WHITE);
-                    crypto_amount.text.setTypeface(MyApplication.getDefaultTypeface(),1);
+                    crypto_amount.text.setTypeface(ApplicationSession.getDefaultTypeface(),1);
                     when.text.setTextColor(Color.WHITE);
-                    when.text.setTypeface(MyApplication.getDefaultTypeface(),1);
+                    when.text.setTypeface(ApplicationSession.getDefaultTypeface(),1);
                     note.text.setTextColor(Color.WHITE);
-                    note.text.setTypeface(MyApplication.getDefaultTypeface(),1);
+                    note.text.setTypeface(ApplicationSession.getDefaultTypeface(),1);
                     break;
 
                 }

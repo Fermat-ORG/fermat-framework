@@ -33,7 +33,7 @@
         android:layout_height="match_parent"
 
         >
-        <com.bitdubai.android_core.app.common.version_1.classes.PagerSlidingTabStrip
+        <com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip
             android:id="@+id/tabs"
             android:layout_width="match_parent"
             android:layout_height="48dip"
@@ -65,7 +65,7 @@
         android:layout_width="@dimen/navigation_drawer_width"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:name="com.bitdubai.android_core.app.common.version_1.fragment.NavigationDrawerFragment"
+        android:name="com.bitdubai.android_core.app.common.version_1.navigation_drawer.NavigationDrawerFragment"
         tools:layout="@layout/wallet_framework_fragment_navigation_drawer"
         />
 

@@ -1,4 +1,4 @@
-package com.bitdubai.android_core.app.common.version_1.classes;
+package com.bitdubai.android_core.app.common.version_1.navigation_drawer;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,9 +7,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bitdubai.smartwallet.R;
+import com.bitdubai.android_core.app.ApplicationSession;
+import com.bitdubai.fermat.R;
 
 
 public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
@@ -45,7 +45,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
 
 
                 LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                switch (MyApplication.getActivityId())
+                switch (ApplicationSession.getActivityId())
                 {
                     case "DesktopActivity":
                         rowView = inflater.inflate(R.layout.wallet_manager_desktop_activity_navigation_drawer_first_row, parent, false);
@@ -64,7 +64,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                 if(rowView.findViewById(R.id.label) != null){
                     TextView textView = (TextView) rowView.findViewById(R.id.label);
 
-                    textView.setTypeface(MyApplication.getDefaultTypeface(), 1);
+                    textView.setTypeface(ApplicationSession.getDefaultTypeface(), 1);
 
                     ImageView imageView = (ImageView) rowView.findViewById(R.id.icon);
                     textView.setText("Tessa Crankston");
@@ -87,7 +87,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                         .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 rowView = inflater.inflate(R.layout.wallet_framework_activity_framework_navigation_drawer_row_layout, parent, false);
 
-                switch (MyApplication.getActivityId()) {
+                switch (ApplicationSession.getActivityId()) {
                     case "DesktopActivity":
                         rowView = inflater.inflate(R.layout.wallet_manager_desktop_activity_framework_navigation_drawer_row_layout, parent, false);
                         break;
@@ -109,13 +109,13 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                 if(rowView.findViewById(R.id.label) != null)
                 {
                     TextView textView = (TextView) rowView.findViewById(R.id.label);
-                    textView.setTypeface(MyApplication.getDefaultTypeface(), 1);
+                    textView.setTypeface(ApplicationSession.getDefaultTypeface(), 1);
                     imageView = (ImageView) rowView.findViewById(R.id.icon);
                     textView.setText(values[position]);
                 }
 
 
-                if (MyApplication.getActivityId() == "DesktopActivity") {
+                if (ApplicationSession.getActivityId() == "DesktopActivity") {
 
                     switch (position) {
                         case 1:
@@ -139,7 +139,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                             break;
                     }
 
-                }else if (MyApplication.getActivityId() == "PublisherActivity"){
+                }else if (ApplicationSession.getActivityId() == "PublisherActivity"){
                     switch (position)
                     {
                         case 1:
