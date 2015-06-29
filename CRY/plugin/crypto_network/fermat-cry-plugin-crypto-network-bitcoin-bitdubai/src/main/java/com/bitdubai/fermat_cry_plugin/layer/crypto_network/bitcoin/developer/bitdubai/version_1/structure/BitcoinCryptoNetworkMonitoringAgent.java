@@ -19,8 +19,11 @@ import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.PeerGroup;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.net.discovery.DnsDiscovery;
+import org.bitcoinj.params.RegTestParams;
 import org.bitcoinj.store.BlockStoreException;
 
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -133,7 +136,23 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
         peers = new PeerGroup(this.networkParameters, storedBlockChain.getBlockChain());
         peers.addWallet(wallet);
         peers.setUserAgent(BitcoinManager.FERMAT_AGENT_NAME, BitcoinManager.FERMAT_AGENT_VERSION);
-        peers.addPeerDiscovery(new DnsDiscovery(this.networkParameters));
+        peers.setUseLocalhostPeerWhenPossible(true);
+        /**
+         * If we are using RegTest network, we will connect to local server
+         */
+        if (networkParameters == RegTestParams.get())
+        {
+            InetSocketAddress regtestSocketAddress = new InetSocketAddress(REGTEST_SERVER_ADDRESS, 9050);
+            peers.connectTo(regtestSocketAddress);
+            System.out.println("CryptoNetwork information: Using RegTest. Connected to " + regtestSocketAddress.toString());
+        }
+
+        else
+        {
+            System.out.println("CryptoNetwork inforamtion: Using " + networkParameters.toString() + " network.");
+            peers.addPeerDiscovery(new DnsDiscovery(this.networkParameters));
+        }
+
 
         myListeners = new BitcoinEventListeners();
         peers.addEventListener(myListeners);

@@ -294,6 +294,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
                 vault.setPluginId(pluginId);
 
                 vault.loadOrCreateVault();
+
                 System.out.println("CryptoVault - Valid receive address for the vault is: " + vault.getAddress().getAddress());
 
 
