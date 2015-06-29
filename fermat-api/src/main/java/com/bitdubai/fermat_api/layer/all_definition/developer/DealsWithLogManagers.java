@@ -11,8 +11,8 @@ import java.util.Map;
 /**
  * Created by ciencias on 6/25/15.
  */
-public interface DealWithLogManagers {
+public interface DealsWithLogManagers {
 
-    public void setLogManagers (LogManagerForDevelopers logManagerForDevelopers);
+    public void setLogManagers (Map<Plugins,Plugin> logManagersOnPlugins,Map<Addons,Addon> logManagersOnAddons);
 
 }

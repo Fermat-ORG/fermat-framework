@@ -68,6 +68,7 @@ import com.bitdubai.reference_niche_wallet.age.kids.boys.fragments.UsdBalanceFra
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.BalanceFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ContactsFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.DatabaseToolsFragment;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.LogToolsFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ReceiveFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.SendFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.TransactionsFragment;
@@ -786,6 +787,12 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
                         bitcoinPlatform = new com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform();
                         bitcoinPlatform.setToolManager((ToolManager) platformContext.getPlugin(Plugins.BITDUBAI_ACTOR_DEVELOPER));
                         currentFragment = DatabaseToolsFragment.newInstance(0);
+                        break;
+
+                    case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_LOG_TOOLS:
+                        bitcoinPlatform = new com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform();
+                        bitcoinPlatform.setToolManager((ToolManager) platformContext.getPlugin(Plugins.BITDUBAI_ACTOR_DEVELOPER));
+                        currentFragment = LogToolsFragment.newInstance(0);
                         break;
 
                     case CWP_SHOP_MANAGER_ACCEPTED_NEARBY:
