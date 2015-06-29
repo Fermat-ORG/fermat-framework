@@ -324,7 +324,7 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
         runtimeSubApp = new RuntimeSubApp();
         runtimeSubApp.setType(SubApps.CWP_SHELL);
         runtimeApp.addSubApp(runtimeSubApp);
-        listSubApp.put(SubApps.CWP_SHELL,runtimeSubApp);
+        listSubApp.put(SubApps.CWP_SHELL, runtimeSubApp);
 
         runtimeActivity= new RuntimeActivity();
         runtimeActivity.setType(Activities.CWP_SHELL_LOGIN);
@@ -407,12 +407,19 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_MANAGER_MAIN);
         runtimeActivity.addFragment(runtimeFragment);
-        listFragments.put(Fragments.CWP_WALLET_MANAGER_MAIN,runtimeFragment);
+        listFragments.put(Fragments.CWP_WALLET_MANAGER_MAIN, runtimeFragment);
 
+        //Desktop page My Shop
+      //  runtimeFragment = new RuntimeFragment();
+       // runtimeFragment.setType(Fragments.CWP_WALLET_MANAGER_SHOP);
+       // runtimeActivity.addFragment(runtimeFragment);
+      //  listFragments.put(Fragments.CWP_WALLET_MANAGER_SHOP,runtimeFragment);
+
+        //Desktop page Developer sub App
         runtimeFragment = new RuntimeFragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_MANAGER_SHOP);
+        runtimeFragment.setType(Fragments.CWP_SUB_APP_DEVELOPER);
         runtimeActivity.addFragment(runtimeFragment);
-        listFragments.put(Fragments.CWP_WALLET_MANAGER_SHOP,runtimeFragment);
+        listFragments.put(Fragments.CWP_SUB_APP_DEVELOPER,runtimeFragment);
 
 
         runtimeSubApp = new RuntimeSubApp();
@@ -437,7 +444,9 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
         listFragments.put(Fragments.CWP_WALLET_STORE_MAIN,runtimeFragment);
 
 
-
+        /**
+         * Definition of Shop Manager
+         */
 
         runtimeActivity= new RuntimeActivity();
         runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_SHOPS);
@@ -519,6 +528,43 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
         /**
          * End of SHOPS tabs.
          */
+
+
+        /**
+         * Definition of Developer Manager
+         */
+
+        runtimeActivity= new RuntimeActivity();
+        runtimeActivity.setType(Activities.CWP_SUP_APP_ALL_DEVELOPER);
+        runtimeActivity.setColor("#d07b62");
+        runtimeSubApp.addActivity(runtimeActivity);
+        listActivities.put(Activities.CWP_SUP_APP_ALL_DEVELOPER, runtimeActivity);
+
+
+
+        runtimeTitleBar = new RuntimeTitleBar();
+        runtimeTitleBar.setLabel("DeveloperApp");
+
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+
+        runtimeTabStrip = new RuntimeTabStrip();
+        runtimeTab = new RuntimeTab();
+        runtimeTab.setLabel("DataBase Tools");
+        runtimeTab.setFragment(Fragments.CWP_SUB_APP_DEVELOPER_MAIN);
+        runtimeTabStrip.addTab(runtimeTab);
+
+        runtimeActivity.setTabStrip(runtimeTabStrip);
+
+        runtimeFragment = new RuntimeFragment();
+        runtimeFragment.setType(Fragments.CWP_SUB_APP_DEVELOPER_MAIN);
+        runtimeActivity.addFragment(runtimeFragment);
+        listFragments.put(Fragments.CWP_SUB_APP_DEVELOPER_MAIN,runtimeFragment);
+
+        /**
+         * End of Developer tabs.
+         */
+
 
         /*-- wallet store --*/
         runtimeActivity= new RuntimeActivity();
