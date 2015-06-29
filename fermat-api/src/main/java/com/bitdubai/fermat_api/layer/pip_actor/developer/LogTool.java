@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_api.layer.pip_actor.developer;
 
-import com.bitdubai.fermat_api.layer.all_definition.developer.LogLevel;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 

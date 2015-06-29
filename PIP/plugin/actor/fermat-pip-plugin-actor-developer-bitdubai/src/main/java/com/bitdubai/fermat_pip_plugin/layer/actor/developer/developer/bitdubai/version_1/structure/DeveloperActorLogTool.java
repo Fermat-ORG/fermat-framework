@@ -2,7 +2,7 @@ package com.bitdubai.fermat_pip_plugin.layer.actor.developer.developer.bitdubai.
 
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.layer.all_definition.developer.LogLevel;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -19,11 +19,11 @@ public class DeveloperActorLogTool implements LogTool {
 
 
     private Map<Plugins,Plugin> LoggingLstPlugins;
-    private Map<Addons,Addon> LoggingLstAddonds;
+    private Map<Addons,Addon> LoggingLstAddons;
 
-    public DeveloperActorLogTool(Map<Plugins, Plugin> LoggingLstPlugins, Map<Addons, Addon> LoggingLstAddonds) {
+    public DeveloperActorLogTool(Map<Plugins, Plugin> LoggingLstPlugins, Map<Addons, Addon> LoggingLstAddons) {
         this.LoggingLstPlugins = LoggingLstPlugins;
-        this.LoggingLstAddonds = LoggingLstAddonds;
+        this.LoggingLstAddons = LoggingLstAddons;
     }
 
     @Override
@@ -39,7 +39,7 @@ public class DeveloperActorLogTool implements LogTool {
     @Override
     public List<Addons> getAvailableAddonList() {
         List<Addons> lstAddons=new ArrayList<Addons>();
-        for(Map.Entry<Addons, Addon> entry : LoggingLstAddonds.entrySet()) {
+        for(Map.Entry<Addons, Addon> entry : LoggingLstAddons.entrySet()) {
             Addons key = entry.getKey();
             lstAddons.add(key);
         }
@@ -53,7 +53,7 @@ public class DeveloperActorLogTool implements LogTool {
 
     @Override
     public LogLevel getLogLevel(Addons addon) {
-        return ((LogManagerForDevelopers)this.LoggingLstAddonds.get(addon)).getLoggingLevel();
+        return ((LogManagerForDevelopers)this.LoggingLstAddons.get(addon)).getLoggingLevel();
     }
 
     @Override
@@ -63,6 +63,6 @@ public class DeveloperActorLogTool implements LogTool {
 
     @Override
     public void setLogLevel(Addons addon, LogLevel newLogLevel) {
-        ((LogManagerForDevelopers)this.LoggingLstAddonds.get(addon)).changeLoggingLevel(newLogLevel);
+        ((LogManagerForDevelopers)this.LoggingLstAddons.get(addon)).changeLoggingLevel(newLogLevel);
     }
 }

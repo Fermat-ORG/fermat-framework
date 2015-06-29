@@ -1,18 +1,16 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1;
 
-import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
-import com.bitdubai.fermat_api.layer.all_definition.developer.DealWithLogManagers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
-import com.bitdubai.fermat_api.layer.all_definition.developer.LogLevel;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -33,6 +31,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.Unexpect
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_api.layer.pip_user.device_user.DealsWithDeviceUsers;
 import com.bitdubai.fermat_api.layer.pip_user.device_user.DeviceUserManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
@@ -48,17 +47,14 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.vers
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.events.TransactionNotificationAgent;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.developerUtils.*;
 
-import org.bitcoinj.core.Wallet;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 /**
  * Created by loui on 08/06/15.
  */
-public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DatabaseManagerForDevelopers, DealsWithBitcoinCryptoNetwork, DealsWithEvents, DealsWithErrors, DealsWithPluginDatabaseSystem, DealWithLogManagers, DealsWithDeviceUsers, DealsWithPluginFileSystem, Plugin, Service {
+public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DatabaseManagerForDevelopers, DealsWithBitcoinCryptoNetwork, DealsWithEvents, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithDeviceUsers, DealsWithLogger, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service {
 
     /**
      * BitcoinCryptoVaultPluginRoot member variables
@@ -66,7 +62,6 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
     BitcoinCryptoVault vault;
     UUID userId;
     TransactionNotificationAgent transactionNotificationAgent;
-
 
     /**
      * DealsWithBitcoinCryptoNetwork interface member variable
@@ -89,20 +84,26 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
     ErrorManager errorManager;
 
     /**
-     * DealsWithLogManager interface variable
-     */
-    LogManagerForDevelopers logManagerForDevelopers;
-
-    /**
      * DealsWithPluginDatabaseSystem interface member variable
      */
     PluginDatabaseSystem pluginDatabaseSystem;
     Database database;
 
     /**
+     * DealsWithLogger interface member variable
+     */
+    LogManager logManager;
+
+    /**
      * DealsWithDeviceUsers interface member variable
      */
     DeviceUserManager deviceUserManager;
+
+    /**
+     * LogManagerForDevelopers member variables
+     */
+    LogLevel logLevel;
+
 
     /**
      * DealsWithPluginFileSystem interface member variable
@@ -124,6 +125,16 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
     @Override
     public void setBitcoinCryptoNetworkManager(BitcoinCryptoNetworkManager bitcoinCryptoNetworkManager) {
         this.bitcoinCryptoNetworkManager = bitcoinCryptoNetworkManager;
+    }
+
+    @Override
+    public LogLevel getLoggingLevel() {
+        return logLevel;
+    }
+
+    @Override
+    public void changeLoggingLevel(LogLevel newLoggingLevel) {
+        this.logLevel = newLoggingLevel;
     }
 
     /**
@@ -158,6 +169,12 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
         return DeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable);
+    }
+
+    @Override
+    public void setLogManager(LogLevel logLevel, LogManager logManager) {
+        this.logLevel = logLevel;
+        this.logManager = logManager;
     }
 
     /**
@@ -379,13 +396,6 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
         transactionNotificationAgent.stop();
 
         this.serviceStatus = ServiceStatus.STOPPED;
-    }
-
-    @Override
-    public void setLogManagers(LogManagerForDevelopers logManagerForDevelopers) {
-        this.logManagerForDevelopers = logManagerForDevelopers;
-        logManagerForDevelopers.setPluginId(this.pluginId);
-        logManagerForDevelopers.changeLoggingLevel(LogLevel.AGGRESSIVE_LOGGING);
     }
 
     /**

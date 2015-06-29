@@ -1,70 +1,56 @@
 package com.bitdubai.fermat_osa_addon.layer.android.logger.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.all_definition.developer.LogLevel;
-import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
-
-import java.util.Map;
-import java.util.UUID;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 
 /**
  * Created by rodrigo on 2015.06.25..
  */
-public class LoggerManager implements LogManagerForDevelopers {
-    LogLevel logLevel;
+public class LoggerManager implements LogManager {
+
     StringBuilder outputMessage;
     CallerInformationGetter callerInformationGetter;
-    String message;
-    UUID pluginId;
 
     /**
      * Constructor
-     * @param logLevel
      */
-    public LoggerManager(LogLevel logLevel) {
-        this.logLevel = logLevel;
+    public LoggerManager() {
         outputMessage = new StringBuilder("");
         callerInformationGetter = new CallerInformationGetter();
-    }
-
-    /**
-     * sets the new log level
-     * @param logLevel
-     */
-    public void setLogLevel(LogLevel logLevel){
-        this.logLevel = logLevel;
     }
 
 
     /**
      * executes the log
-     * @param message
+     * @param logLevel
+     * @param minimalLogging
+     * @param moderateLogging
+     * @param aggressiveLogging
      */
-    public void Log(String message){
+    public void log(LogLevel logLevel, String minimalLogging, String moderateLogging, String aggressiveLogging) {
 
-        this.message = message;
+        /**
+         * Minimal logging level includes only the sent message
+         */
+        if (logLevel == LogLevel.MINIMAL_LOGGING){
+            setMinimalLogging(minimalLogging);
+        }
 
         /**
          * Moderate loggin level logs current class and method information + minimal level.
          */
-        if (this.logLevel == LogLevel.MODERATE_LOGGING){
-            setModerateLogging();
-            setMinimalLogging();
+        if (logLevel == LogLevel.MODERATE_LOGGING){
+            setModerateLogging(moderateLogging);
+            setMinimalLogging(minimalLogging);
         }
 
         /**
          * Agressive logging level includes moderate and minimal + Thread information.
          */
-        if (this.logLevel == LogLevel.AGGRESSIVE_LOGGING){
-            setAggressiveLogging();
-            setModerateLogging();
-            setMinimalLogging();
-        }
-
-        /**
-         * Minimal logging level includes only the sent message
-         */
-        if (this.logLevel == LogLevel.MINIMAL_LOGGING){
-            setMinimalLogging();
+        if (logLevel == LogLevel.AGGRESSIVE_LOGGING){
+            setAggressiveLogging(aggressiveLogging);
+            setModerateLogging(moderateLogging);
+            setMinimalLogging(minimalLogging);
         }
 
         /**
@@ -75,59 +61,38 @@ public class LoggerManager implements LogManagerForDevelopers {
     }
 
 
-    private void setAggressiveLogging(){
+    private void setAggressiveLogging(String message){
         for (String property : callerInformationGetter.getCurrentThreadInformation()){
+            if (message != null) {
+                outputMessage.append("Message: " + message);
+                outputMessage.append(System.lineSeparator());
+            }
+
             outputMessage.append(property);
             outputMessage.append(System.lineSeparator());
         }
     }
 
-    private void setModerateLogging(){
+    private void setModerateLogging(String message){
         for (String property : callerInformationGetter.getCurrentMethodInformation()){
+            if (message != null) {
+                outputMessage.append("Message: " + message);
+                outputMessage.append(System.lineSeparator());
+            }
             outputMessage.append(property);
             outputMessage.append(System.lineSeparator());
         }
 
     }
 
-    private void setMinimalLogging(){
-        outputMessage.append("Message:" + message);
-        outputMessage.append(System.lineSeparator());
+    private void setMinimalLogging(String message){
+        if (message != null) {
+            outputMessage.append("Message: " + message);
+            outputMessage.append(System.lineSeparator());
+        }
     }
 
-    /**
-     * LogManagerForDevelopers interface implementation
-     * @return the actual loggin level
-     */
     @Override
-    public LogLevel getLoggingLevel() {
-        return this.logLevel;
-    }
-
-    /**
-     * LogManagerForDevelopers interface implementation
-     * @param newLoggingLevel
-     */
-    @Override
-    public void changeLoggingLevel(LogLevel newLoggingLevel) {
-        this.logLevel = newLoggingLevel;
-
-    }
-
-    /**
-     * LogManagerForDevelopers interface implementation
-     * @param pluginId
-     */
-    @Override
-    public void setPluginId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
-
-    public UUID getPluginId(){
-        return this.pluginId;
-    }
-
-
     public String getOutputMessage(){
         return outputMessage.toString();
     }
