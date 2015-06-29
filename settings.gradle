@@ -1,4 +1,4 @@
-include ':fermat-android-core', ':pip:android', ':pip:android:developer', ':pip:android:developer:fermat-pip-android-developer-bitdubai'
+include ':fermat-android-core'
 
 include ':fermat-core'
 include ':fermat-api'
@@ -44,14 +44,15 @@ project(':fermat-osa-addon-android-device-power-bitdubai').projectDir = new File
 include ':fermat-osa-addon-android-logger-bitdubai'
 project(':fermat-osa-addon-android-logger-bitdubai').projectDir = new File('OSA/addon/android/fermat-osa-addon-android-logger-bitdubai')
 
-// OSA Projects (Android)
+// OSA Projects (Multi OS)
 
+/*
 include ':fermat-osa-addon-multi-os-database-system-bitdubai'
 project(':fermat-osa-addon-multi-os-database-system-bitdubai').projectDir = new File('OSA/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai')
 
 include ':fermat-osa-addon-multi-os-file-system-bitdubai'
 project(':fermat-osa-addon-multi-os-file-system-bitdubai').projectDir = new File('OSA/addon/multi_os/fermat-osa-addon-multi-os-file-system-bitdubai')
-
+*/
 
 // PIP Projects (Addons)
 
@@ -263,6 +264,12 @@ Wallets on the pipeline:
 
 // DMP Projects (Sub APPs)
 
+/*
+
+Sub APPs on the pipeline:
+
+ */
+
 include ':fermat-dmp-android-sub-app-wallet-manager-bitdubai'
 project(':fermat-dmp-android-sub-app-wallet-manager-bitdubai').projectDir = new File('DMP/android/sub_app/fermat-dmp-android-sub-app-wallet-manager-bitdubai')
 
@@ -277,3 +284,4 @@ project(':fermat-dmp-android-sub-app-wallet-publisher-bitdubai').projectDir = ne
 
 include ':fermat-dmp-android-sub-app-shop-manager-bitdubai'
 project(':fermat-dmp-android-sub-app-shop-manager-bitdubai').projectDir = new File('DMP/android/sub_app/fermat-dmp-android-sub-app-shop-manager-bitdubai')
+

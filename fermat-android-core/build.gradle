@@ -79,11 +79,19 @@ dependencies {
     */
     // DMP Projects (Sub APPs)
 
+    /*
+
+    Sub APPs on the pipeline
+
+    */
+
     compile project(':fermat-dmp-android-sub-app-wallet-manager-bitdubai')
     compile project(':fermat-dmp-android-sub-app-wallet-factory-bitdubai')
     compile project(':fermat-dmp-android-sub-app-wallet-store-bitdubai')
     compile project(':fermat-dmp-android-sub-app-wallet-publisher-bitdubai')
     compile project(':fermat-dmp-android-sub-app-shop-manager-bitdubai')
+
+
 
     // PIP Projects (Sub APPs)
 
