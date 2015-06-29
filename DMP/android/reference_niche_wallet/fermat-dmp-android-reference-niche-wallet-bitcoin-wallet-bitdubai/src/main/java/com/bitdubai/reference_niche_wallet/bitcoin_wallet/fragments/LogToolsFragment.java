@@ -124,7 +124,7 @@ public class LogToolsFragment extends Fragment {
 
             FragmentTransaction FT = getFragmentManager().beginTransaction();
 
-            FT.replace(R.id.hola, logToolsFragment);
+            FT.replace(R.id.logContainer, logToolsFragment);
 
             FT.commit();
         } catch (Exception e) {
@@ -137,7 +137,7 @@ public class LogToolsFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_log_tools, container, false);
         try {
             // Get ListView object from xml
-            final ListView listView = (ListView) rootView.findViewById(R.id.lista1);
+            final ListView listView = (ListView) rootView.findViewById(R.id.listaLogResources);
 
             List<Plugins> plugins = logTool.getAvailablePluginList();
             List<Addons> addons = logTool.getAvailableAddonList();
