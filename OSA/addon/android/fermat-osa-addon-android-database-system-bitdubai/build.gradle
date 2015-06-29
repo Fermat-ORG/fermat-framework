@@ -9,8 +9,6 @@ apply plugin: 'eclipse'
 sourceCompatibility = 1.7
 version = '1.0.0'
 
-apply plugin: 'com.android.library'
-
 android {
 
     compileSdkVersion 21
