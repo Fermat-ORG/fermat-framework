@@ -67,8 +67,8 @@ import com.bitdubai.reference_niche_wallet.age.kids.boys.fragments.ProfileCardFr
 import com.bitdubai.reference_niche_wallet.age.kids.boys.fragments.UsdBalanceFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.BalanceFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ContactsFragment;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.DatabaseToolsFragment;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.LogToolsFragment;
+import com.bitdubai.sub_app.developer.fragment.DatabaseToolsFragment;
+import com.bitdubai.sub_app.developer.fragment.LogToolsFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ReceiveFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.SendFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.TransactionsFragment;
@@ -709,6 +709,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
         public android.support.v4.app.Fragment getItem(int position) {
             com.bitdubai.reference_niche_wallet.age.kids.boys.Platform kidsplatform = null;
             com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform bitcoinPlatform = null;
+            com.bitdubai.sub_app.developer.fragment.Platform developerPlatform = null;
 
             android.support.v4.app.Fragment currentFragment = null;
             Fragments fragmentType = Fragments.CWP_SHELL_LOGIN;
@@ -745,6 +746,22 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
                     case CWP_SHOP_MANAGER_PAID:
                         currentFragment =  AllFragment.newInstance(2);
                         break;
+
+                    case CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS:
+                        developerPlatform = new com.bitdubai.sub_app.developer.fragment.Platform();
+                        developerPlatform.setErrorManager((ErrorManager) platformContext.getAddon(Addons.ERROR_MANAGER));
+                        developerPlatform.setToolManager((ToolManager) platformContext.getPlugin(Plugins.BITDUBAI_ACTOR_DEVELOPER));
+
+                        currentFragment = DatabaseToolsFragment.newInstance(position);
+                        break;
+
+                    case CWP_SUB_APP_DEVELOPER_LOG_TOOLS:
+                        developerPlatform = new com.bitdubai.sub_app.developer.fragment.Platform();
+                         developerPlatform.setErrorManager((ErrorManager) platformContext.getAddon(Addons.ERROR_MANAGER));
+                        developerPlatform.setToolManager((ToolManager) platformContext.getPlugin(Plugins.BITDUBAI_ACTOR_DEVELOPER));
+                        currentFragment = LogToolsFragment.newInstance(0);
+                        break;
+
 
                     /**
                      * Executing fragments for BITCOIN WALLET.
@@ -783,17 +800,6 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
                         currentFragment =  ContactsFragment.newInstance(0);
                         break;
 
-                    case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_DATABASE_TOOLS:
-                        bitcoinPlatform = new com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform();
-                        bitcoinPlatform.setToolManager((ToolManager) platformContext.getPlugin(Plugins.BITDUBAI_ACTOR_DEVELOPER));
-                        currentFragment = DatabaseToolsFragment.newInstance(0);
-                        break;
-
-                    case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_LOG_TOOLS:
-                        bitcoinPlatform = new com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform();
-                        bitcoinPlatform.setToolManager((ToolManager) platformContext.getPlugin(Plugins.BITDUBAI_ACTOR_DEVELOPER));
-                        currentFragment = LogToolsFragment.newInstance(0);
-                        break;
 
                     case CWP_SHOP_MANAGER_ACCEPTED_NEARBY:
                         currentFragment =  AllFragment.newInstance(3);

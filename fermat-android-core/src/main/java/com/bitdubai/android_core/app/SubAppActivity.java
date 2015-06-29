@@ -38,6 +38,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ReceiveFragm
 
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.*;
 import com.bitdubai.sub_app.developer.fragment.DatabaseToolsFragment;
+import com.bitdubai.sub_app.manager.fragment.SubAppDesktopFragment;
 import com.bitdubai.sub_app.shop_manager.fragment.ShopDesktopFragment;
 
 import com.bitdubai.sub_app.wallet_store.fragment.AllFragment;
@@ -508,8 +509,11 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                 case CWP_SUP_APP_ALL_DEVELOPER: //Developer manager
                     ((ApplicationSession) this.getApplication()).setWalletId(0);
 
-                    activity = this.appRuntimeMiddleware.getActivity(Activities.CWP_SUP_APP_ALL_DEVELOPER);
-                    NavigateActivity();
+                    this.activity = this.walletRuntimeMiddleware.getActivity(Activities.CWP_SUP_APP_ALL_DEVELOPER);
+                    //execute NavigateWallet to go wallet activity
+                    intent = new Intent(this, com.bitdubai.android_core.app.WalletActivity.class);
+                    startActivity(intent);
+
 
                 case CWP_WALLET_MANAGER_MAIN:
 
@@ -795,14 +799,11 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                         case CWP_WALLET_MANAGER_SHOP:
                             currentFragment = ShopDesktopFragment.newInstance(position);
                             break;
-                        case CWP_SUB_APP_DEVELOPER_MAIN:
-                            developerPlatform = new com.bitdubai.sub_app.developer.fragment.Platform();
-                            developerPlatform.setNicheWalletTypeCryptoWalletManager((CryptoWalletManager) platformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE));
-                            developerPlatform.setErrorManager((ErrorManager) platformContext.getAddon(Addons.ERROR_MANAGER));
-                            developerPlatform.setToolManager((ToolManager) platformContext.getPlugin(Plugins.BITDUBAI_ACTOR_DEVELOPER));
 
-                            currentFragment = DatabaseToolsFragment.newInstance(position);
+                        case CWP_SUB_APP_DEVELOPER:
+                            currentFragment = SubAppDesktopFragment.newInstance(position);
                             break;
+
                         case CWP_SHOP_MANAGER_MAIN:
                             currentFragment = AllFragment.newInstance(0);
                             break;

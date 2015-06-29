@@ -530,40 +530,7 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
          */
 
 
-        /**
-         * Definition of Developer Manager
-         */
 
-        runtimeActivity= new RuntimeActivity();
-        runtimeActivity.setType(Activities.CWP_SUP_APP_ALL_DEVELOPER);
-        runtimeActivity.setColor("#d07b62");
-        runtimeSubApp.addActivity(runtimeActivity);
-        listActivities.put(Activities.CWP_SUP_APP_ALL_DEVELOPER, runtimeActivity);
-
-
-
-        runtimeTitleBar = new RuntimeTitleBar();
-        runtimeTitleBar.setLabel("DeveloperApp");
-
-        runtimeActivity.setTitleBar(runtimeTitleBar);
-
-
-        runtimeTabStrip = new RuntimeTabStrip();
-        runtimeTab = new RuntimeTab();
-        runtimeTab.setLabel("DataBase Tools");
-        runtimeTab.setFragment(Fragments.CWP_SUB_APP_DEVELOPER_MAIN);
-        runtimeTabStrip.addTab(runtimeTab);
-
-        runtimeActivity.setTabStrip(runtimeTabStrip);
-
-        runtimeFragment = new RuntimeFragment();
-        runtimeFragment.setType(Fragments.CWP_SUB_APP_DEVELOPER_MAIN);
-        runtimeActivity.addFragment(runtimeFragment);
-        listFragments.put(Fragments.CWP_SUB_APP_DEVELOPER_MAIN,runtimeFragment);
-
-        /**
-         * End of Developer tabs.
-         */
 
 
         /*-- wallet store --*/

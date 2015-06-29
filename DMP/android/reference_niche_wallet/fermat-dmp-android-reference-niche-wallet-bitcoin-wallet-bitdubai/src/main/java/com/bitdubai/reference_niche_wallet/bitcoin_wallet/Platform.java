@@ -15,7 +15,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventMan
 
 import java.io.Serializable;
 
-public class Platform implements DealsWithErrors, DealsWithEvents, DealsWithNicheWalletTypeCryptoWallet, DealsWithToolManager, Serializable {
+public class Platform implements DealsWithErrors, DealsWithEvents, DealsWithNicheWalletTypeCryptoWallet,  Serializable {
 
     /**
      * DealsWithWalletContacts Interface member variables.
@@ -51,14 +51,6 @@ public class Platform implements DealsWithErrors, DealsWithEvents, DealsWithNich
      */
     public void setNicheWalletTypeCryptoWalletManager(CryptoWalletManager cryptoWalletManager) {
         this.cryptoWalletManager = cryptoWalletManager;
-    }
-
-    /**
-     * DealsWithToolManager Interface implementation.
-     */
-    @Override
-    public void setToolManager(ToolManager toolManager) {
-        this.toolManager = toolManager;
     }
 
 
@@ -100,7 +92,5 @@ public class Platform implements DealsWithErrors, DealsWithEvents, DealsWithNich
         return this.cryptoWalletManager;
     }
 
-    public ToolManager getToolManager() {
-        return this.toolManager;
-    }
+
 }
