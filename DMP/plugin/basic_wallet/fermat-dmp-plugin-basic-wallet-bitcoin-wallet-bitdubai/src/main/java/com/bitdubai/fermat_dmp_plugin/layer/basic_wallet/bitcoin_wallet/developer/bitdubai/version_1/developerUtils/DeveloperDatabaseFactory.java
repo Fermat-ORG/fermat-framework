@@ -45,7 +45,6 @@ public class DeveloperDatabaseFactory {
         /*
          * We only have one table in each database, let's complete it
          */
-
         List<String> basicWalletBitcoinWalletColumns = new ArrayList<>();
         basicWalletBitcoinWalletColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ID_COLUMN_NAME);
         basicWalletBitcoinWalletColumns.add(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ADDRESS_FROM_COLUMN_NAME);
