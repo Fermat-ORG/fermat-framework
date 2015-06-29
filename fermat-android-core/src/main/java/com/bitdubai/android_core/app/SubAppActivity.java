@@ -1,5 +1,4 @@
 package com.bitdubai.android_core.app;
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -31,11 +30,14 @@ import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopReviewsF
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopShopFragment;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ReceiveFragment;
 
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.*;
+import com.bitdubai.sub_app.developer.fragment.DatabaseToolsFragment;
 import com.bitdubai.sub_app.shop_manager.fragment.ShopDesktopFragment;
 
 import com.bitdubai.sub_app.wallet_store.fragment.AllFragment;
@@ -176,6 +178,10 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                     case CWP_WALLET_MANAGER_SHOP:
                         fragments.add(android.support.v4.app.Fragment.instantiate(this, ShopDesktopFragment.class.getName()));
                         break;
+                    case CWP_SUB_APP_DEVELOPER:
+                        fragments.add(android.support.v4.app.Fragment.instantiate(this, com.bitdubai.sub_app.manager.fragment.SubAppDesktopFragment.class.getName()));
+                        break;
+
                     case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE:
                         fragments.add(android.support.v4.app.Fragment.instantiate(this, ReceiveFragment.class.getName()));
                         break;
@@ -499,6 +505,12 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                 case CWP_SHOP_MANAGER_MAIN:
 
                     break;
+                case CWP_SUP_APP_ALL_DEVELOPER: //Developer manager
+                    ((ApplicationSession) this.getApplication()).setWalletId(0);
+
+                    activity = this.appRuntimeMiddleware.getActivity(Activities.CWP_SUP_APP_ALL_DEVELOPER);
+                    NavigateActivity();
+
                 case CWP_WALLET_MANAGER_MAIN:
 
 
@@ -769,6 +781,8 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                     }
                 }
 
+                com.bitdubai.sub_app.developer.fragment.Platform developerPlatform;
+
                 //execute current activity fragments
                 try {
                     switch (fragmentType) {
@@ -780,6 +794,14 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                             break;
                         case CWP_WALLET_MANAGER_SHOP:
                             currentFragment = ShopDesktopFragment.newInstance(position);
+                            break;
+                        case CWP_SUB_APP_DEVELOPER_MAIN:
+                            developerPlatform = new com.bitdubai.sub_app.developer.fragment.Platform();
+                            developerPlatform.setNicheWalletTypeCryptoWalletManager((CryptoWalletManager) platformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE));
+                            developerPlatform.setErrorManager((ErrorManager) platformContext.getAddon(Addons.ERROR_MANAGER));
+                            developerPlatform.setToolManager((ToolManager) platformContext.getPlugin(Plugins.BITDUBAI_ACTOR_DEVELOPER));
+
+                            currentFragment = DatabaseToolsFragment.newInstance(position);
                             break;
                         case CWP_SHOP_MANAGER_MAIN:
                             currentFragment = AllFragment.newInstance(0);
