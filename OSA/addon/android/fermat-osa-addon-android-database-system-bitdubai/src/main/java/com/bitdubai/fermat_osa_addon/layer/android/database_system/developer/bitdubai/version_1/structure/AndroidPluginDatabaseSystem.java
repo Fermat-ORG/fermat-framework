@@ -3,6 +3,7 @@ package com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bi
 import android.content.Context;
 import android.util.Base64;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -55,10 +56,12 @@ public class AndroidPluginDatabaseSystem  implements PluginDatabaseSystem{
             database.openDatabase(hasDBName);
 
             return database;
-        }
-        catch (NoSuchAlgorithmException e)
-        {
-            throw new CantOpenDatabaseException();
+        } catch (NoSuchAlgorithmException e) {
+            String message = CantOpenDatabaseException.DEFAULT_MESSAGE;
+            FermatException cause = FermatException.wrapException(e);
+            String context = "Database Name : " + databaseName;
+            String possibleReason = "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name";
+            throw new CantOpenDatabaseException(message, cause, context, possibleReason);
         }
 
     }
@@ -79,12 +82,12 @@ public class AndroidPluginDatabaseSystem  implements PluginDatabaseSystem{
             String hasDBName = hashDataBaseName(databaseName);
             database = new AndroidDatabase(this.Context, ownerId, hasDBName);
             database.deleteDatabase(hasDBName);
-
-
-        }
-        catch (NoSuchAlgorithmException e)
-        {
-            throw new CantOpenDatabaseException();
+        } catch (NoSuchAlgorithmException e){
+            String message = CantOpenDatabaseException.DEFAULT_MESSAGE;
+            FermatException cause = FermatException.wrapException(e);
+            String context = "Database Name : " + databaseName;
+            String possibleReason = "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name";
+            throw new CantOpenDatabaseException(message, cause, context, possibleReason);
         }
 
     }
@@ -109,7 +112,11 @@ public class AndroidPluginDatabaseSystem  implements PluginDatabaseSystem{
             return database;
         }
         catch (NoSuchAlgorithmException e){
-            throw new CantCreateDatabaseException();
+            String message = CantCreateDatabaseException.DEFAULT_MESSAGE;
+            FermatException cause = FermatException.wrapException(e);
+            String context = "Database Name : " + databaseName;
+            String possibleReason = "This is a hash failure, we have to check the hashing algorithm used for the generation of the Hashed Database Name";
+            throw new CantCreateDatabaseException(message, cause, context, possibleReason);
         }
 
     }

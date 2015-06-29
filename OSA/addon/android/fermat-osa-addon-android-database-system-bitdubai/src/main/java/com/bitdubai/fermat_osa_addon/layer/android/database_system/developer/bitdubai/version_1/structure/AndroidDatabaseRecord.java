@@ -260,6 +260,14 @@ public class AndroidDatabaseRecord implements DatabaseTableRecord {
        this.values = values;
     }
 
-
+    @Override
+    public String toString(){
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("[");
+        for(DatabaseRecord record : values)
+            buffer.append(" " + record.toString() + ",");
+        buffer.append("]");
+        return buffer.toString();
+    }
 
 }

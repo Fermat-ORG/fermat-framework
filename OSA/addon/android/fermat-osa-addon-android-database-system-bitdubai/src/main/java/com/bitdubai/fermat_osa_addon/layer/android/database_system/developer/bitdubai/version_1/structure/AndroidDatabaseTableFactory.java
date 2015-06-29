@@ -102,5 +102,19 @@ public class AndroidDatabaseTableFactory implements DatabaseTableFactory {
         return this.tableColumns;
     }
 
+    @Override
+    public String toString(){
+        StringBuffer buffer = new StringBuffer();
+        buffer.append(tableName + "(");
+        for(DatabaseTableColumn column : tableColumns){
+            if(buffer.charAt(buffer.length()-1) != '(')
+                buffer.append(", ");
+            buffer.append(column.toString());
+        }
+        buffer.append(")");
+
+        return buffer.toString();
+    }
+
 
 }
