@@ -70,6 +70,8 @@
             <option value="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-device-power-bitdubai" />
             <option value="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-file-system-bitdubai" />
             <option value="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-logger-bitdubai" />
+            <option value="$PROJECT_DIR$/OSA/addon/multi_os/fermat-osa-addon-multi-os-database-system-bitdubai" />
+            <option value="$PROJECT_DIR$/OSA/addon/multi_os/fermat-osa-addon-multi-os-file-system-bitdubai" />
             <option value="$PROJECT_DIR$/P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-client-bitdubai" />
             <option value="$PROJECT_DIR$/P2P/plugin/communication/fermat-p2p-plugin-communication-cloud-server-bitdubai" />
             <option value="$PROJECT_DIR$/PIP/addon/hardware/fermat-pip-addon-hardware-local-device-bitdubai" />
@@ -85,6 +87,10 @@
             <option value="$PROJECT_DIR$/fermat-core" />
             <option value="$PROJECT_DIR$/fermat-cry-api" />
             <option value="$PROJECT_DIR$/fermat-p2p-api" />
+            <option value="$PROJECT_DIR$/pip" />
+            <option value="$PROJECT_DIR$/pip/android" />
+            <option value="$PROJECT_DIR$/pip/android/developer" />
+            <option value="$PROJECT_DIR$/pip/android/developer/fermat-pip-android-developer-bitdubai" />
           </set>
         </option>
       </GradleProjectSettings>

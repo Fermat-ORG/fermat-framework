@@ -55,15 +55,21 @@ android {
 
 
 dependencies {
+
     compile project(':fermat-api')
     compile project(':fermat-core')
+
     // OSA Projects
+
     compile project(':fermat-osa-addon-android-database-system-bitdubai')
     compile project(':fermat-osa-addon-android-file-system-bitdubai')
     compile project(':fermat-osa-addon-android-device-location-bitdubai')
+
     // DMP Projects (Wallets)
+
     compile project(':fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai')
     compile project(':fermat-dmp-android-reference-niche-wallet-age-kids-boys-bitdubai')
+
     /*
 
     Wallets on the pipeline:
