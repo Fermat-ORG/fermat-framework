@@ -108,8 +108,8 @@
     <orderEntry type="module" module-name="fermat-dmp-plugin-module-wallet-manager-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-app-runtime-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-p2p-plugin-communication-cloud-client-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-wallet-store-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-transaction-inter-wallet-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-wallet-store-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-actor-extra-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-intra-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-cry-plugin-crypto-module-actor-address-book-bitdubai" exported="" />
@@ -117,14 +117,14 @@
     <orderEntry type="module" module-name="fermat-p2p-plugin-communication-cloud-server-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-api" exported="" />
     <orderEntry type="module" module-name="fermat-cry-api" exported="" />
-    <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-wallet-contacts-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-plugin-actor-developer-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-wallet-contacts-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-transaction-outgoing-device-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-niche-wallet-type-discount-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-composite-wallet-multi-account-wallet-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-crypto-addresses-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-hardware-remote-device-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-bank-notes-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-cry-plugin-crypto-router-incoming-crypto-bitdubai" exported="" />
@@ -133,10 +133,10 @@
     <orderEntry type="module" module-name="fermat-pip-addon-platform-service-location-subsystem-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-platform-service-error-manager-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-network-service-money-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-pip-addon-hardware-local-device-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-transaction-incoming-extra-user-bitdubai" exported="" />
-    <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-money-request-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-pip-addon-hardware-local-device-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-basic-wallet-bitcoin-wallet-bitdubai" exported="" />
+    <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-money-request-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-middleware-bank-notes-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-dmp-plugin-module-wallet-runtime-bitdubai" exported="" />
     <orderEntry type="module" module-name="fermat-pip-addon-platform-service-event-manager-bitdubai" exported="" />
