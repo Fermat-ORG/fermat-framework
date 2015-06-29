@@ -58,12 +58,6 @@
             <option value="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-device-user-bitdubai" />
             <option value="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-extra-user-bitdubai" />
             <option value="$PROJECT_DIR$/DMP/plugin/transaction/fermat-dmp-plugin-transaction-outgoing-intra-user-bitdubai" />
-            <option value="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-blockchain-info-bitdubai" />
-            <option value="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-coinapult-bitdubai" />
-            <option value="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-coinbase-bitdubai" />
-            <option value="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-crypto-index-bitdubai" />
-            <option value="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-location-bitdubai" />
-            <option value="$PROJECT_DIR$/DMP/plugin/world/fermat-dmp-plugin-world-shape-shift-bitdubai" />
             <option value="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-database-system-bitdubai" />
             <option value="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-device-connectivity-bitdubai" />
             <option value="$PROJECT_DIR$/OSA/addon/android/fermat-osa-addon-android-device-location-bitdubai" />
