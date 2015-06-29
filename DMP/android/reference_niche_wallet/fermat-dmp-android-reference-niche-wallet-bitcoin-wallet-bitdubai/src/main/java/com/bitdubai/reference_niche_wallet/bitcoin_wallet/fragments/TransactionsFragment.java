@@ -76,7 +76,7 @@ public class TransactionsFragment extends Fragment {
 
 
             try {
-                List<BitcoinTransaction> bitcoinTransactions = cryptoWallet.getTransactions(10, 10, wallet_id);
+                List<BitcoinTransaction> bitcoinTransactions = cryptoWallet.getTransactions(10, 0, wallet_id);
 
                 for(int i = 0; i < bitcoinTransactions.size(); i++) {
                     BitcoinTransaction transaction = (BitcoinTransaction) bitcoinTransactions.get(i);
