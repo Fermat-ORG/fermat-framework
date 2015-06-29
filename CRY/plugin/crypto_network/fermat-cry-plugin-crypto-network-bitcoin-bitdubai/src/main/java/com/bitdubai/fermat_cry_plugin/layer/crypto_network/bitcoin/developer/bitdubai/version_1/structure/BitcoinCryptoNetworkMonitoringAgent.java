@@ -18,6 +18,7 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bit
 import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantDisconnectFromNetworkException;
 
 import org.bitcoinj.core.NetworkParameters;
+import org.bitcoinj.core.PeerAddress;
 import org.bitcoinj.core.PeerGroup;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.net.discovery.DnsDiscovery;
@@ -209,10 +210,10 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
          */
         if (networkParameters == RegTestParams.get())
         {
-            InetSocketAddress regtestSocketAddress = new InetSocketAddress(REGTEST_SERVER_ADDRESS, REGTEST_SERVER_PORT);
-            peers.connectTo(regtestSocketAddress);
-            peers.connectToLocalHost();
-            System.out.println("CryptoNetwork information: Using RegTest. Connected to " + regtestSocketAddress.toString());
+            InetSocketAddress inetSocketAddress = new InetSocketAddress(REGTEST_SERVER_ADDRESS, REGTEST_SERVER_PORT);
+            PeerAddress peerAddress = new PeerAddress(inetSocketAddress);
+            peers.addAddress(peerAddress);
+            System.out.println("CryptoNetwork information: Using RegTest. Connecting to " + inetSocketAddress.toString());
         }
         else
         /**
