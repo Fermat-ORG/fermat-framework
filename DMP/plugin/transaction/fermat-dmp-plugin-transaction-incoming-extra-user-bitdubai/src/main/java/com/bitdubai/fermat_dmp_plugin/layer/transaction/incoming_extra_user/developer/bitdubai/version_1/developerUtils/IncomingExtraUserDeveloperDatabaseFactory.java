@@ -57,10 +57,10 @@ public class IncomingExtraUserDeveloperDatabaseFactory {
         incomingExtraUserRegistryColumns.add(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_TIMESTAMP_COLUMN.columnName);
 
         /**
-         * incomingCryptoRegistry table
+         * incomingExtraUserRegistry table
          */
-        DeveloperDatabaseTable  incomingCryptoRegistryTable = developerObjectFactory.getNewDeveloperDatabaseTable(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_NAME, incomingExtraUserRegistryColumns);
-        tables.add(incomingCryptoRegistryTable);
+        DeveloperDatabaseTable  incomingExtraUserRegistryTable = developerObjectFactory.getNewDeveloperDatabaseTable(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_NAME, incomingExtraUserRegistryColumns);
+        tables.add(incomingExtraUserRegistryTable);
 
         /*
          * EventsRecorded Registry table columns
