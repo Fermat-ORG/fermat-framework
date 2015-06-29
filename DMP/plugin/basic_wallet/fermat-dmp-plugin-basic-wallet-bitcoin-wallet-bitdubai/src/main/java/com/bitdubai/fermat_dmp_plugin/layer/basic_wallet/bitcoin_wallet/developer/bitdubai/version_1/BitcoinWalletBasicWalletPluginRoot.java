@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -35,6 +36,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.Unexpect
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventHandler;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.developerUtils.DeveloperDatabaseFactory;
+import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.exceptions.CantDeliverDatabaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure.BitcoinWalletBasicWallet;
 
 import java.util.ArrayList;
@@ -104,7 +106,6 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
         Database database;
-        System.out.println("Developer asked records");
         try {
             database = this.pluginDatabaseSystem.openDatabase(this.pluginId, developerDatabase.getName());
             return DeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database , developerDatabaseTable);
@@ -113,11 +114,11 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
             /**
              * The database exists but cannot be open. I can not handle this situation.
              */
-            Exception e = new CantInitializeBitcoinWalletBasicException("I can't open database",cantOpenDatabaseException,"WalletId: " + developerDatabase.getName(),"");
+            FermatException e = new CantDeliverDatabaseException("I can't open database",cantOpenDatabaseException,"WalletId: " + developerDatabase.getName(),"");
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
         }
         catch (DatabaseNotFoundException databaseNotFoundException) {
-            Exception e = new CantInitializeBitcoinWalletBasicException("Database does not exists",databaseNotFoundException,"WalletId: " + developerDatabase.getName(),"");
+            FermatException e = new CantDeliverDatabaseException("Database does not exists",databaseNotFoundException,"WalletId: " + developerDatabase.getName(),"");
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
         }
         // If we are here the database could not be opened, so we return an empry list
