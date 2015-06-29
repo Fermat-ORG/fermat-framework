@@ -30,21 +30,31 @@ import java.util.UUID;
 public class ContactsFragment extends Fragment {
 
     private static final String ARG_POSITION = "position";
+    private static final String ARG_PLATFORM = "platform";
     View rootView;
     UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
 
     /**
      * DealsWithNicheWalletTypeCryptoWallet Interface member variables.
      */
-    private static CryptoWalletManager cryptoWalletManager;
-    private static Platform platform = new Platform();
-    CryptoWallet cryptoWallet;
-
+    private CryptoWalletManager cryptoWalletManager;
+    private Platform platform;
+    private CryptoWallet cryptoWallet;
 
     public static ContactsFragment newInstance(int position) {
         ContactsFragment f = new ContactsFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
+        b.putSerializable(ARG_PLATFORM, new Platform());
+        f.setArguments(b);
+        return f;
+    }
+
+    public static ContactsFragment newInstance(final int position, final Platform platform) {
+        ContactsFragment f = new ContactsFragment();
+        Bundle b = new Bundle();
+        b.putInt(ARG_POSITION, position);
+        b.putSerializable(ARG_PLATFORM, platform);
         f.setArguments(b);
         return f;
     }
@@ -52,6 +62,8 @@ public class ContactsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        platform = (Platform) getArguments().getSerializable(ARG_PLATFORM);
+
         cryptoWalletManager = platform.getCryptoWalletManager();
 
         try {
@@ -68,7 +80,6 @@ public class ContactsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_contacts, container, false);
         try {
-
 
             //get contacts list
             List<WalletContactRecord> walletContactRecords = new ArrayList<>();

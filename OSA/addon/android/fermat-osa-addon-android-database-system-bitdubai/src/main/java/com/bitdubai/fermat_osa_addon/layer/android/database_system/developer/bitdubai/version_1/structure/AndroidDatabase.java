@@ -216,7 +216,7 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
         databasePath += "/" + databaseName.replace("-","") + ".db";
         try {
             this.Database = SQLiteDatabase.openDatabase(databasePath,null,0,null);
-        } catch (SQLiteCantOpenDatabaseException exception) {
+        } catch (SQLiteException exception) {
         
             /**
              * Probably there is no distinctions between a database that it can not be opened and a one that doesn't not exist.
