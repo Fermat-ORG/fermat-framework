@@ -9,10 +9,13 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinManager;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantCreateBlockStoreFileException;
 
 import org.bitcoinj.core.BlockChain;
 import org.bitcoinj.core.NetworkParameters;
@@ -101,31 +104,46 @@ class StoredBlockChain implements BitcoinManager, DealsWithErrors, DealsWithPlug
     /**
      * creates the blockchain object and the repository
      */
-    public void createBlockChain() throws BlockStoreException {
+    public void createBlockChain() throws CantCreateBlockStoreFileException {
+        String blockChainFileName = userId.toString() + ".spv";
         try {
             /**
-             * I will save the blockchain into disk.
-             */
-            String blockChainFileName = userId.toString() + ".spv";
+             * I will save the blockchain into disk.             */
+
             PluginTextFile blockchainFile = pluginFileSystem.createTextFile(pluginId, userId.toString(), blockChainFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             blockchainFile.persistToMedia();
-
 
             //todo this needs to be fixed
             File spvFile = new File("/data/data/com.bitdubai.fermat/files", blockChainFileName);
 
             spvStore = new SPVBlockStore(this.networkParameters, spvFile);
             chain = new BlockChain(this.networkParameters, this.wallet, spvStore);
-        } catch (Exception exception){
+        } catch (CantPersistFileException e) {
+            StringBuilder context = new StringBuilder();
+            context.append("userId: " + userId);
+            context.append(CantCreateBlockStoreFileException.CONTEXT_CONTENT_SEPARATOR);
+            context.append("blockChainFileName: " + blockChainFileName.toString());
+            throw new CantCreateBlockStoreFileException("Blockstore file could not be persisted into disk.", e, context.toString(), "Not enought space on disk.");
+        } catch (CantCreateFileException e) {
+            StringBuilder context = new StringBuilder();
+            context.append("userId: " + userId);
+            context.append(CantCreateBlockStoreFileException.CONTEXT_CONTENT_SEPARATOR);
+            context.append("blockChainFileName: " + blockChainFileName.toString());
+            throw new CantCreateBlockStoreFileException("Blockstore file could not be created.", e, context.toString(), "Not enought space on disk.");
+        } catch (BlockStoreException e) {
             /**
              * in an error occurs, I will try to save it into memory
              */
             memoryStore = new MemoryBlockStore(this.networkParameters);
-            chain = new BlockChain(this.networkParameters, this.wallet, memoryStore);
-            /**
-             * if this also fails, then I will raise the blockstoreException
-             */
-            System.err.println("Warning!!. Blockchain saved in memory.");
+            try {
+                chain = new BlockChain(this.networkParameters, this.wallet, memoryStore);
+            } catch (BlockStoreException e1) {
+                StringBuilder context = new StringBuilder();
+                context.append("userId: " + userId);
+                context.append(CantCreateBlockStoreFileException.CONTEXT_CONTENT_SEPARATOR);
+                context.append("blockChainFileName: " + blockChainFileName.toString());
+                throw new CantCreateBlockStoreFileException("Could not save blockchain in disk and in memory", e, context.toString(), "Not enought space on disk.");
+            }
         }
 
     }

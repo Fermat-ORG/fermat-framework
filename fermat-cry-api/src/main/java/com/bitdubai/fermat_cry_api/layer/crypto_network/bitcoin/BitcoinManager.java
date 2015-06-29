@@ -31,4 +31,7 @@ public interface BitcoinManager {
      */
     public final BitcoinNetworkUsed NETWORK_CONNECTION = BitcoinNetworkUsed.Test3_NET;
 
+    public final String REGTEST_SERVER_ADDRESS = "192.168.0.26";
+    public final int REGTEST_SERVER_PORT = 18333;
+
 }
