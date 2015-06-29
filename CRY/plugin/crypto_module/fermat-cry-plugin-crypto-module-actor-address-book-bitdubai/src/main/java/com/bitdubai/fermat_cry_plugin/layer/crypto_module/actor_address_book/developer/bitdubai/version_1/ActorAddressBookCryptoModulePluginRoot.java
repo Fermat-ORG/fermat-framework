@@ -2,6 +2,11 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.de
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
@@ -13,8 +18,10 @@ import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.except
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookRegistry;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.exceptions.CantInitializeActorAddressBookException;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.structure.ActorAddressBookCryptoModuleDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.structure.ActorAddressBookCryptoModuleRegistry;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -27,8 +34,66 @@ import java.util.UUID;
  * * * * * *
  */
 
-public class ActorAddressBookCryptoModulePluginRoot implements ActorAddressBookManager, DealsWithErrors, DealsWithPluginDatabaseSystem, Plugin, Service {
+public class ActorAddressBookCryptoModulePluginRoot implements ActorAddressBookManager, DatabaseManagerForDevelopers, DealsWithErrors, DealsWithPluginDatabaseSystem, Plugin, Service {
 
+
+    /**
+     * DatabaseManagerForDevelopers interface implementation
+     * Returns the list of databases implemented on this plug in.
+     */
+    @Override
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+        ActorAddressBookCryptoModuleDeveloperDatabaseFactory dbFactory = new ActorAddressBookCryptoModuleDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+        List<DeveloperDatabase> developerDatabaseList = null;
+        try {
+            dbFactory.initializeDatabase();
+            developerDatabaseList = dbFactory.getDatabaseList(developerObjectFactory);
+        } catch (Exception e) {
+            System.out.println("******* Error trying to get database list for plugin Wallet Contacts");
+        }
+        return developerDatabaseList;
+    }
+
+    /**
+     * returns the list of tables for the given database
+     *
+     * @param developerObjectFactory
+     * @param developerDatabase
+     * @return
+     */
+    @Override
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+        ActorAddressBookCryptoModuleDeveloperDatabaseFactory dbFactory = new ActorAddressBookCryptoModuleDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+        List<DeveloperDatabaseTable> developerDatabaseTableList = null;
+        try {
+            dbFactory.initializeDatabase();
+            developerDatabaseTableList = dbFactory.getDatabaseTableList(developerObjectFactory);
+        } catch (Exception e) {
+            System.out.println("******* Error trying to get database table list for plugin Wallet Contacts");
+        }
+        return developerDatabaseTableList;
+    }
+
+    /**
+     * returns the list of records for the passed table
+     *
+     * @param developerObjectFactory
+     * @param developerDatabase
+     * @param developerDatabaseTable
+     * @return
+     */
+    @Override
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+        ActorAddressBookCryptoModuleDeveloperDatabaseFactory dbFactory = new ActorAddressBookCryptoModuleDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
+        List<DeveloperDatabaseTableRecord> developerDatabaseTableRecordList = null;
+        try {
+            dbFactory.initializeDatabase();
+            developerDatabaseTableRecordList = dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        } catch (Exception e) {
+            System.out.println("******* Error trying to get database table list for plugin Wallet Contacts");
+        }
+        return developerDatabaseTableRecordList;
+    }
     /**
      * DealsWithErrors Interface member variables.
      */

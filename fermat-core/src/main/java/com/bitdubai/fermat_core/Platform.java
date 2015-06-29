@@ -465,48 +465,48 @@ public class Platform  {
          * Plugin Blockchain Info World
          * -----------------------------
          */
-        Plugin blockchainInfoWorld = ((WorldLayer)  mWorldLayer).getBlockchainInfo();
-        setPluginReferencesAndStart(blockchainInfoWorld, Plugins.BITDUBAI_BLOCKCHAIN_INFO_WORLD);
+       // Plugin blockchainInfoWorld = ((WorldLayer)  mWorldLayer).getBlockchainInfo();
+       // setPluginReferencesAndStart(blockchainInfoWorld, Plugins.BITDUBAI_BLOCKCHAIN_INFO_WORLD);
 
         /**
          * -----------------------------
          * Plugin Shape Shift World
          * -----------------------------
          */
-        Plugin shapeShiftWorld = ((WorldLayer)  mWorldLayer).getShapeShift();
-        setPluginReferencesAndStart(shapeShiftWorld, Plugins.BITDUBAI_SHAPE_SHIFT_WORLD);
+       // Plugin shapeShiftWorld = ((WorldLayer)  mWorldLayer).getShapeShift();
+       // setPluginReferencesAndStart(shapeShiftWorld, Plugins.BITDUBAI_SHAPE_SHIFT_WORLD);
 
         /**
          * -----------------------------
          * Plugin Coinapult World
          * -----------------------------
          */
-        Plugin coinapultWorld = ((WorldLayer)  mWorldLayer).getCoinapult();
-        setPluginReferencesAndStart(coinapultWorld, Plugins.BITDUBAI_COINAPULT_WORLD);
+       // Plugin coinapultWorld = ((WorldLayer)  mWorldLayer).getCoinapult();
+       // setPluginReferencesAndStart(coinapultWorld, Plugins.BITDUBAI_COINAPULT_WORLD);
 
         /**
          * -----------------------------
          * Plugin Coinbase World
          * -----------------------------
          */
-        Plugin coinbaseWorld = ((WorldLayer)  mWorldLayer).getCoinbase();
-        setPluginReferencesAndStart(coinbaseWorld, Plugins.BITDUBAI_COINBASE_WORLD);
+       // Plugin coinbaseWorld = ((WorldLayer)  mWorldLayer).getCoinbase();
+       // setPluginReferencesAndStart(coinbaseWorld, Plugins.BITDUBAI_COINBASE_WORLD);
 
         /**
          * -----------------------------
          * Plugin Location World
          * -----------------------------
          */
-        Plugin locationWorld = ((WorldLayer)  mWorldLayer).getLocation();
-        setPluginReferencesAndStart(locationWorld, Plugins.BITDUBAI_LOCATION_WORLD);
+       // Plugin locationWorld = ((WorldLayer)  mWorldLayer).getLocation();
+       // setPluginReferencesAndStart(locationWorld, Plugins.BITDUBAI_LOCATION_WORLD);
 
         /**
          * -----------------------------
          * Plugin Crypto Index World
          * -----------------------------
          */
-        Plugin cryptoIndexWorld = ((WorldLayer)  mWorldLayer).getCryptoIndex();
-        setPluginReferencesAndStart(cryptoIndexWorld, Plugins.BITDUBAI_CRYPTO_INDEX);
+       // Plugin cryptoIndexWorld = ((WorldLayer)  mWorldLayer).getCryptoIndex();
+       // setPluginReferencesAndStart(cryptoIndexWorld, Plugins.BITDUBAI_CRYPTO_INDEX);
 
         /**
          * -----------------------------

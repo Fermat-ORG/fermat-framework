@@ -97,39 +97,6 @@ public class CryptoWalletNicheWalletTypePluginRoot implements CryptoWalletManage
     @Override
     public void start() {
         this.serviceStatus = ServiceStatus.STARTED;
-
-        System.out.println("***********TESTING....");
-        try {
-            CryptoWallet cryptoWallet = getCryptoWallet();
-            UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
-
-            System.out.println("***********Request Address...");
-
-            CryptoAddress cryptoAddress = new CryptoAddress( "ASDSADSAD", CryptoCurrency.BITCOIN);
-            System.out.println("***********Create Wallet Contact...");
-
-            WalletContactRecord walletContactRecord = cryptoWallet.createWalletContact(cryptoAddress, "francisco", Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
-            System.out.println("***********SUCCESS: ContactName: "+walletContactRecord.getActorName()+"Address: "+walletContactRecord.getReceivedCryptoAddress().getAddress()+" - CryptoCurrency: "+cryptoAddress.getCryptoCurrency().toString());
-
-            walletContactRecord = cryptoWallet.createWalletContact(cryptoAddress, "roberto", Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
-            System.out.println("***********SUCCESS: ContactName: "+walletContactRecord.getActorName()+"Address: "+walletContactRecord.getReceivedCryptoAddress().getAddress()+" - CryptoCurrency: "+cryptoAddress.getCryptoCurrency().toString());
-
-            walletContactRecord = cryptoWallet.createWalletContact(cryptoAddress, "julio", Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
-            System.out.println("***********SUCCESS: ContactName: "+walletContactRecord.getActorName()+"Address: "+walletContactRecord.getReceivedCryptoAddress().getAddress()+" - CryptoCurrency: "+cryptoAddress.getCryptoCurrency().toString());
-
-            walletContactRecord = cryptoWallet.createWalletContact(cryptoAddress, "adalberto", Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
-            System.out.println("***********SUCCESS: ContactName: "+walletContactRecord.getActorName()+"Address: "+walletContactRecord.getReceivedCryptoAddress().getAddress()+" - CryptoCurrency: "+cryptoAddress.getCryptoCurrency().toString());
-
-            walletContactRecord = cryptoWallet.createWalletContact(cryptoAddress, "ramiro", Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
-            System.out.println("***********SUCCESS: ContactName: "+walletContactRecord.getActorName()+"Address: "+walletContactRecord.getReceivedCryptoAddress().getAddress()+" - CryptoCurrency: "+cryptoAddress.getCryptoCurrency().toString());
-
-
-            for (WalletContactRecord w : cryptoWallet.listWalletContacts(wallet_id)) {
-                System.out.println("Hola, soy un contacto! Y me llamo: "+w.getActorName());
-            }
-        } catch (Exception e) {
-            System.out.println("**************** SOY UN ERROR PORQUE SOY RE HEAVY Y RE JODIDO"+ e.getMessage());
-        }
     }
 
     @Override
