@@ -8,20 +8,14 @@ public class BitcoinWalletDatabaseConstants {
     /**
      * Bitcoin Wallet database table definition.
      */
-    static final String BITCOIN_WALLET_TABLE_NAME = "BitcoinWallet";
-    static final String BITCOIN_WALLET_TABLE_ID_COLUMN_NAME = "Id";
-    static final String BITCOIN_WALLET_TABLE_ADDRESS_FROM_COLUMN_NAME = "addressFrom";
-    static final String BITCOIN_WALLET_TABLE_ADDRESS_TO_COLUMN_NAME = "addressTo";
-    static final String BITCOIN_WALLET_TABLE_AMOUNT_COLUMN_NAME = "amount";
-    static final String BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME = "type";
-    static final String BITCOIN_WALLET_TABLE_STATE_COLUMN_NAME = "state";
-    static final String BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME = "timestamp";
-    static final String BITCOIN_WALLET_TABLE_MEMO_COLUMN_NAME = "memo";
-    static final String BITCOIN_WALLET_TABLE_TRANSACTION_HASH_COLUMN_NAME = "transactionHash";
-
-
-
-
-
-
+    public static final String BITCOIN_WALLET_TABLE_NAME = "BitcoinWallet";
+    public static final String BITCOIN_WALLET_TABLE_ID_COLUMN_NAME = "Id";
+    public static final String BITCOIN_WALLET_TABLE_ADDRESS_FROM_COLUMN_NAME = "addressFrom";
+    public static final String BITCOIN_WALLET_TABLE_ADDRESS_TO_COLUMN_NAME = "addressTo";
+    public static final String BITCOIN_WALLET_TABLE_AMOUNT_COLUMN_NAME = "amount";
+    public static final String BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME = "type";
+    public static final String BITCOIN_WALLET_TABLE_STATE_COLUMN_NAME = "state";
+    public static final String BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME = "timestamp";
+    public static final String BITCOIN_WALLET_TABLE_MEMO_COLUMN_NAME = "memo";
+    public static final String BITCOIN_WALLET_TABLE_TRANSACTION_HASH_COLUMN_NAME = "transactionHash";
 }
