@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
@@ -37,21 +38,7 @@ public class BitcoinWalletDatabaseFactory implements DealsWithPluginDatabaseSyst
         /**
          * I will create the database where I am going to store the information of this wallet.
          */
-        try {
-
-            database = this.pluginDatabaseSystem.createDatabase(ownerId, walletId.toString());
-
-        }
-        catch (CantCreateDatabaseException cantCreateDatabaseException){
-
-            /**
-             * I can not handle this situation.
-             */
-            System.err.println("CantCreateDatabaseException: " + cantCreateDatabaseException.getMessage());
-            cantCreateDatabaseException.printStackTrace();
-            throw new CantCreateDatabaseException();
-        }
-
+         database = this.pluginDatabaseSystem.createDatabase(ownerId, walletId.toString());
 
         /**
          * Next, I will add the needed tables.
@@ -59,7 +46,6 @@ public class BitcoinWalletDatabaseFactory implements DealsWithPluginDatabaseSyst
         try {
 
             DatabaseTableFactory table;
-
 
             /**
              * Then the value chunks table.
@@ -79,8 +65,6 @@ public class BitcoinWalletDatabaseFactory implements DealsWithPluginDatabaseSyst
                 ((DatabaseFactory) database).createTable(ownerId, table);
             }
             catch (CantCreateTableException cantCreateTableException) {
-                System.err.println("CantCreateTableException: " + cantCreateTableException.getMessage());
-                cantCreateTableException.printStackTrace();
                 throw new CantCreateDatabaseException();
             }
 
@@ -92,9 +76,7 @@ public class BitcoinWalletDatabaseFactory implements DealsWithPluginDatabaseSyst
              * but anyway, if this happens, I can not continue.
              * * *
              */
-            System.err.println("InvalidOwnerId: " + invalidOwnerId.getMessage());
-            invalidOwnerId.printStackTrace();
-            throw new CantCreateDatabaseException();
+            throw new CantCreateDatabaseException("I COUNLDN'T CREATE THE DATABASE",invalidOwnerId,"OwnerId: " + ownerId + FermatException.CONTEXT_CONTENT_SEPARATOR + "TableName: " + BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_NAME,"");
         }
 
         return database;
