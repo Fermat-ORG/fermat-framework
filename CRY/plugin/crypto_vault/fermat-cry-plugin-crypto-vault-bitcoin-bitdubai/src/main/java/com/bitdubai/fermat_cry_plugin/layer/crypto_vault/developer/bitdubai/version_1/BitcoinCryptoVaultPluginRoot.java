@@ -241,7 +241,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
     @Override
     public void start() throws CantStartPluginException {
         System.out.println("CryptoVault Starting...");
-        logManager.log(LogLevel.MODERATE_LOGGING, "CryptoVault Starting...", "CryptoVault Starting...", "CryptoVault Starting...");
+        logManager.log(LogLevel.AGGRESSIVE_LOGGING, "CryptoVault Starting...", "CryptoVault Starting...", "CryptoVault Starting...");
 
 
         /**
@@ -338,6 +338,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
              * now I will start the TransactionNotificationAgent to monitor
              */
             transactionNotificationAgent = new TransactionNotificationAgent(eventManager, pluginDatabaseSystem, errorManager, pluginId, userId);
+            transactionNotificationAgent.setLogManager(this.logLevel, this.logManager);
             try {
                 transactionNotificationAgent.start();
             } catch (CantStartAgentException cantStartAgentException ) {
