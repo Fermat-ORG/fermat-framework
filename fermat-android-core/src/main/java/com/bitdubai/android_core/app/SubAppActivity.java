@@ -3,6 +3,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.*;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -119,11 +120,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
         super.onCreate(savedInstanceState);
 
         try {
-            try {
-                setContentView(R.layout.runtime_app_activity_runtime);
-            } catch (Exception e) {
-                Toast.makeText(getApplicationContext(), "Can't set content view as runtime_app_activity_runtime: " + e.getMessage(), Toast.LENGTH_LONG).show();
-            }
+
 
             this.savedInstanceState = savedInstanceState;
             //init runtime app
@@ -245,6 +242,8 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
             pager.setAdapter(this.PagerAdapter);
 
             pager.setBackgroundResource(R.drawable.background_tiled_diagonal_light);
+            //set default page to show
+            pager.setCurrentItem(0);
 
         } catch (Exception ex) {
             this.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, ex);
@@ -273,6 +272,27 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
             this.mainMenumenu = activity.getMainMenu();
             this.sidemenu = activity.getSideMenu();
 
+
+            //if wallet do not set the navigator drawer I load a layout without him
+            if (sidemenu != null) {
+
+                setContentView(R.layout.runtime_app_activity_runtime_navigator);
+
+
+                this.NavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
+
+                this.NavigationDrawerFragment.setMenuVisibility(true);
+                // Set up the drawer.
+                this.NavigationDrawerFragment.setUp(
+                        R.id.navigation_drawer,
+                        (DrawerLayout) findViewById(R.id.drawer_layout), sidemenu);
+            }
+            else
+            {
+                setContentView(R.layout.runtime_app_activity_runtime);
+
+            }
+
             if (tabs == null)
                 (findViewById(R.id.tabs)).setVisibility(View.INVISIBLE);
             else {
@@ -286,15 +306,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
 
             ApplicationSession.setActivityProperties(this, getWindow(), getResources(), tabStrip, getActionBar(), titleBar, abTitle, Title);
 
-            if (sidemenu != null) {
-                this.NavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
 
-                this.NavigationDrawerFragment.setMenuVisibility(true);
-                // Set up the drawer.
-                this.NavigationDrawerFragment.setUp(
-                        R.id.navigation_drawer,
-                        (DrawerLayout) findViewById(R.id.drawer_layout), sidemenu);
-            }
 
 
             if (tabs == null && fragments.size() > 1) {
@@ -312,6 +324,8 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                 pagertabs.setPageMargin(pageMargin);
 
                 tabStrip.setViewPager(pagertabs);
+
+
 
                 String color = activity.getColor();
                 if (color != null)
@@ -727,7 +741,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
 
     }
 
-
+    private Fragment mCurrentPrimaryItem = null;
     public class MyPagerAdapter extends FragmentPagerAdapter {
 
         private String[] titles;
@@ -756,6 +770,8 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                 trans.commit();
             }
         }
+
+
 
         @Override
         public CharSequence getPageTitle(int position) {

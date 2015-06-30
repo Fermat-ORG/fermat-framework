@@ -135,7 +135,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
             platform = ApplicationSession.getFermatPlatform();
             this.platformContext = platform.getCorePlatformContext();
 
-            setContentView(R.layout.runtime_app_wallet_runtime);
+
 
             Context context = this.getApplicationContext();
 
@@ -176,6 +176,25 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
 
             this.sidemenu = activity.getSideMenu();
 
+            //if wallet do not set the navigator drawer I load a layout without him
+            if(sidemenu != null)
+            {
+                setContentView(R.layout.runtime_app_wallet_runtime_navigator);
+                this.NavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
+
+                this.NavigationDrawerFragment.setMenuVisibility(true);
+                // Set up the drawer.
+                this.NavigationDrawerFragment.setUp(
+                        R.id.navigation_drawer,
+                        (DrawerLayout) findViewById(R.id.drawer_layout), sidemenu);
+
+            }
+            else
+            {
+                setContentView(R.layout.runtime_app_wallet_runtime);
+            }
+
+
             if(tabs == null)
                 ((PagerSlidingTabStrip) findViewById(R.id.tabs)).setVisibility(View.INVISIBLE);
             else{
@@ -189,17 +208,6 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
 
             ApplicationSession.setActivityProperties(this, getWindow(), getResources(), tabStrip, getActionBar(), titleBar, abTitle, Title);
 
-            if(sidemenu != null)
-            {
-                   this.NavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
-
-                    this.NavigationDrawerFragment.setMenuVisibility(true);
-                    // Set up the drawer.
-                    this.NavigationDrawerFragment.setUp(
-                            R.id.navigation_drawer,
-                            (DrawerLayout) findViewById(R.id.drawer_layout), sidemenu);
-
-            }
 
 
 
@@ -330,6 +338,9 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
             pager.setAdapter(this.PagerAdapter);
 
             pager.setBackgroundResource(R.drawable.background_tiled_diagonal_light);
+
+            //set default page to show
+            pager.setCurrentItem(0);
 
 
         }
@@ -630,9 +641,13 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
             viewpager.setVisibility(View.INVISIBLE);
             ViewPager pager = (ViewPager)super.findViewById(R.id.pager);
             pager.setVisibility(View.INVISIBLE);
+
             if(NavigationDrawerFragment!= null)
+            {
                 this.NavigationDrawerFragment.setMenuVisibility(false);
-            NavigationDrawerFragment = null;
+                NavigationDrawerFragment = null;
+            }
+
             this.PagerAdapter = null;
             this.abTitle = null;
             this.adapter = null;
