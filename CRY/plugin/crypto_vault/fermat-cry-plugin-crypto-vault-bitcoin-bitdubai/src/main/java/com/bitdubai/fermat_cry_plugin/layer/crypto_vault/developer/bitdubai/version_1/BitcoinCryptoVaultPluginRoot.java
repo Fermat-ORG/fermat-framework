@@ -240,10 +240,8 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
 
     @Override
     public void start() throws CantStartPluginException {
-        /**
-         * Log manager implementation
-         */
         System.out.println("CryptoVault Starting...");
+        logManager.log(LogLevel.MODERATE_LOGGING, "CryptoVault Starting...", "CryptoVault Starting...", "CryptoVault Starting...");
 
 
         /**

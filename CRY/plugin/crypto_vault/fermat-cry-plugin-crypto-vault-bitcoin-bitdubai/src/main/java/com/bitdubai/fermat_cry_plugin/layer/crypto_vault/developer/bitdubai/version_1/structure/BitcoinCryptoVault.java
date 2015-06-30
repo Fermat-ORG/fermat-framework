@@ -347,8 +347,14 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
 
         try {
             if (!db.isNewFermatTransaction(FermatTxId))
+            /**
+             * Already sent, this might be an error. I'm not going to send it again.
+             */
                 return null;
             else
+            /**
+             * new Transaction, I will persist it as a Fermat transaction.
+             */
                 db.persistnewFermatTransaction(FermatTxId.toString());
         } catch (CantExecuteQueryException e) {
             return "";
