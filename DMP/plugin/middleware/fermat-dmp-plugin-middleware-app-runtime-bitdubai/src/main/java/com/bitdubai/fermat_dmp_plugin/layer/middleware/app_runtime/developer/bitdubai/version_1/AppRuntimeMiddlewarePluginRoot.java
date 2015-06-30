@@ -368,7 +368,7 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
         lastActivity = Activities.CWP_WALLET_MANAGER_MAIN;
 
 
-        runtimeSideMenu = new RuntimeSideMenu();
+       /* runtimeSideMenu = new RuntimeSideMenu();
 
 
         runtimeMenuItem = new RuntimeMenuItem();
@@ -402,7 +402,7 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
         runtimeMenuItem.setLabel("Exit");
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
-        runtimeActivity.setSideMenu(runtimeSideMenu);
+        runtimeActivity.setSideMenu(runtimeSideMenu);*/
 
         runtimeFragment = new RuntimeFragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_MANAGER_MAIN);
