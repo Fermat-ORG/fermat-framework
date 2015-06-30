@@ -339,6 +339,9 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
 
             pager.setBackgroundResource(R.drawable.background_tiled_diagonal_light);
 
+            //set default page to show
+            pager.setCurrentItem(0);
+
 
         }
         catch (Exception e)
