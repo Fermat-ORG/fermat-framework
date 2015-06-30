@@ -9,15 +9,33 @@
     android:paddingRight="7dip"
     android:paddingBottom="7dip"
     android:paddingTop="7dip"
-    android:gravity="center"
-    >
+    android:gravity="center">
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swipe_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:text="@string/swype_refresh"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center"/>
+        </ScrollView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:gravity="center"
-        >
+        android:gravity="center">
         <TextView
             android:id="@+id/labelbalance"
             android:layout_width="match_parent"
@@ -29,8 +47,7 @@
             android:paddingBottom="3dip"
             android:textColor="#FF666666"
             android:textSize="30sp"
-             android:text="balance"
-            />
+            android:text="balance"/>
             <TextView
                 android:id="@+id/balance"
                 android:layout_width="match_parent"
@@ -43,8 +60,24 @@
                 android:textColor="#FF666666"
                 android:textSize="45sp"
                 android:textStyle="bold"
-                android:text="mBTC     0"
-                />
+                android:text="mBTC     0"/>
+
     </LinearLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="bottom"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:id="@+id/changeFormatBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:background="@color/green"
+            android:text="Show in BTC"
+            android:textColor="#FFFFFF"/>
+    </RelativeLayout>
 </RelativeLayout>
