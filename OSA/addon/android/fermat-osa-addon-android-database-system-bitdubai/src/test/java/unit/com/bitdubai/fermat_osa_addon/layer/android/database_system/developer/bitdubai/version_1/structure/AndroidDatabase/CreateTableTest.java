@@ -6,9 +6,8 @@ import android.support.v13.BuildConfig;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerId;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerIdException;
 import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabase;
 import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabaseTableFactory;
 
@@ -69,7 +68,7 @@ public class CreateTableTest {
     @Test
     public void CreateTableWithOwnerId_TheOwnerUUIDIsDifferent_MethodInvokedSuccessfully() throws Exception{
         catchException(testDatabase).createTable(UUID.randomUUID(), testTableFactory);
-        assertThat(caughtException()).isInstanceOf(InvalidOwnerId.class);
+        assertThat(caughtException()).isInstanceOf(InvalidOwnerIdException.class);
         caughtException().printStackTrace();
     }
 

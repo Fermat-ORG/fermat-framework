@@ -6,11 +6,8 @@ import java.util.List;
 import java.util.UUID;
 
 import android.content.Context;
-import android.database.DatabaseErrorHandler;
-import android.database.sqlite.SQLiteCantOpenDatabaseException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.provider.ContactsContract;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -24,9 +21,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransac
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseSystemException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerId;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerIdException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
 
 /**
@@ -358,23 +354,23 @@ te a specific database file
      *
      * @param ownerId Plugin owner id
      * @param table DatabaseTableFactory object containing the definition of the table
-     * @throws InvalidOwnerId
+     * @throws InvalidOwnerIdException
      * @throws CantCreateTableException
      */
     @Override
-    public void createTable(UUID ownerId, DatabaseTableFactory table) throws InvalidOwnerId, CantCreateTableException {
+    public void createTable(UUID ownerId, DatabaseTableFactory table) throws InvalidOwnerIdException, CantCreateTableException {
 
         /**
          * I check that the owner id is the same I currently have..
          */
         if (this.ownerId != ownerId) {
-            String message = InvalidOwnerId.DEFAULT_MESSAGE;
+            String message = InvalidOwnerIdException.DEFAULT_MESSAGE;
             String context = "Database Owner Id: " + this.ownerId;
             FermatException cause = null;
-            context += InvalidOwnerId.CONTEXT_CONTENT_SEPARATOR;
+            context += InvalidOwnerIdException.CONTEXT_CONTENT_SEPARATOR;
             context += "Owner Id in the method invocation: " + ownerId;
             String possibleReason = "The owner Id passed in the Invocation doesn't belong to the Android Database Owner, maybe this was a passed object";
-            throw new InvalidOwnerId(message, cause, context, possibleReason);
+            throw new InvalidOwnerIdException(message, cause, context, possibleReason);
         }
 
         if(table == null){
@@ -452,7 +448,7 @@ te a specific database file
     public void createTable(DatabaseTableFactory table) throws CantCreateTableException {
         try{
             createTable(ownerId, table);
-        } catch (InvalidOwnerId ex){
+        } catch (InvalidOwnerIdException ex){
             throw new CantCreateTableException(CantCreateDatabaseException.DEFAULT_MESSAGE, ex, "Database Owner Id: " + this.ownerId, "This error is strange and shouldn't ever happen");
         }
     }
@@ -465,16 +461,16 @@ te a specific database file
      * @param ownerId Plugin owner id
      * @param tableName table name to use
      * @return DatabaseTableFactory Object
-     * @throws InvalidOwnerId
+     * @throws InvalidOwnerIdException
      */
     @Override
-    public DatabaseTableFactory newTableFactory(UUID ownerId, String tableName) throws InvalidOwnerId {
+    public DatabaseTableFactory newTableFactory(UUID ownerId, String tableName) throws InvalidOwnerIdException {
 
         /**
          * I check that the owner id is the same I currently have..
          */
         if (this.ownerId != ownerId) {
-            throw new InvalidOwnerId();
+            throw new InvalidOwnerIdException();
         }
 
         return new AndroidDatabaseTableFactory(tableName);
@@ -485,7 +481,7 @@ te a specific database file
      *
      * @param tableName table name to use
      * @return DatabaseTableFactory object
-     * @throws InvalidOwnerId
+     * @throws InvalidOwnerIdException
      */
     @Override
     public DatabaseTableFactory newTableFactory(String tableName) {

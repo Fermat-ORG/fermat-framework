@@ -18,7 +18,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlugin
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerId;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerIdException;
 
 
 /**
@@ -77,10 +77,10 @@ public final class BankNotesDatabaseFactory implements DealsWithPluginDatabaseSy
      *   <p>Method that create the wallet table.
      *
      *   @param database Database object.
-     *   @throw InvalidOwnerId
+     *   @throw InvalidOwnerIdException
      *   @throw CantCreateTableException
      * */
-    private void doCreateWalletTable (Database database) throws InvalidOwnerId, CantCreateTableException {
+    private void doCreateWalletTable (Database database) throws InvalidOwnerIdException, CantCreateTableException {
 
 
         // Method declarations.
@@ -110,10 +110,10 @@ public final class BankNotesDatabaseFactory implements DealsWithPluginDatabaseSy
      *   <p>Method that create the item table.
      *
      *   @param database Database object.
-     *   @throw InvalidOwnerId
+     *   @throw InvalidOwnerIdException
      *   @throw CantCreateTableException
      * */
-    private void doCreateItemTable (Database database) throws InvalidOwnerId, CantCreateTableException {
+    private void doCreateItemTable (Database database) throws InvalidOwnerIdException, CantCreateTableException {
 
 
         // Method declarations.
@@ -143,10 +143,10 @@ public final class BankNotesDatabaseFactory implements DealsWithPluginDatabaseSy
      *   <p>Method that create the depot table.
      *
      *   @param database Database object.
-     *   @throw InvalidOwnerId
+     *   @throw InvalidOwnerIdException
      *   @throw CantCreateTableException
      * */
-    private void doCreateDepotTable (Database database) throws InvalidOwnerId, CantCreateTableException {
+    private void doCreateDepotTable (Database database) throws InvalidOwnerIdException, CantCreateTableException {
 
 
         // Method declarations.
@@ -176,10 +176,10 @@ public final class BankNotesDatabaseFactory implements DealsWithPluginDatabaseSy
      *   <p>Method that create the item by depot table.
      *
      *   @param database Database object.
-     *   @throw InvalidOwnerId
+     *   @throw InvalidOwnerIdException
      *   @throw CantCreateTableException
      * */
-    private void doCreateItemByDepotTable (Database database) throws InvalidOwnerId, CantCreateTableException {
+    private void doCreateItemByDepotTable (Database database) throws InvalidOwnerIdException, CantCreateTableException {
 
 
         // Method declarations.
@@ -227,10 +227,10 @@ public final class BankNotesDatabaseFactory implements DealsWithPluginDatabaseSy
      *
      *  @return Object database.
      *  @throw CantCreateDatabaseException
-     *  @throw InvalidOwnerId
+     *  @throw InvalidOwnerIdException
      *  @throw CantCreateTableException
      * */
-    public Database createDatabase () throws CantCreateDatabaseException, InvalidOwnerId, CantCreateTableException {
+    public Database createDatabase () throws CantCreateDatabaseException, InvalidOwnerIdException, CantCreateTableException {
 
 
         // Method resources.

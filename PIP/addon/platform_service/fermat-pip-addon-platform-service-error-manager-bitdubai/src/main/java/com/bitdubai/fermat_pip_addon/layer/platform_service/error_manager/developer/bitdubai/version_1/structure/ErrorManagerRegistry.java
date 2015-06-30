@@ -6,12 +6,13 @@ package com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.devel
  */
 
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
 
@@ -125,7 +126,7 @@ public class ErrorManagerRegistry {
     * Methods
     */
 
-    public void Initialize() {
+    public void initialize() throws FermatException {
         try{
             this.errorManagerDB = this.platformDatabaseSystem.openDatabase(ErrorManagerDatabaseConstants.EXCEPTION_DATABASE_NAME);
         }
@@ -141,7 +142,7 @@ public class ErrorManagerRegistry {
 
         }
         catch (CantOpenDatabaseException cantOpenDatabaseException) {
-            //Implement ErrorManager exception catch
+            throw new FermatException(FermatException.DEFAULT_MESSAGE, cantOpenDatabaseException, "This is a bad design decision", "We shouldn't depend on the creation of this database");
         }
     }
 
@@ -162,6 +163,7 @@ public class ErrorManagerRegistry {
     * Adds a new ErrorRegistry into the database
     */
     public void addNewErrorRegistry(){
+        //TODO: how is this supposed to work???????
         DatabaseTableRecord errorManagerRegistryRecord = (DatabaseTableRecord) this;
         try {
             errorManagerDB.getTable(ErrorManagerDatabaseConstants.EXCEPTION_TABLE_NAME).insertRecord(errorManagerRegistryRecord);
@@ -178,7 +180,7 @@ public class ErrorManagerRegistry {
         DatabaseTableRecord errorManagerRegistryRecord = (DatabaseTableRecord) this;
         try {
             errorManagerDB.getTable(ErrorManagerDatabaseConstants.EXCEPTION_TABLE_NAME).updateRecord(errorManagerRegistryRecord);
-        } catch (CantUpdateRecord cantUpdateRecord) {
+        } catch (CantUpdateRecordException cantUpdateRecord) {
             cantUpdateRecord.printStackTrace();
         }
     }

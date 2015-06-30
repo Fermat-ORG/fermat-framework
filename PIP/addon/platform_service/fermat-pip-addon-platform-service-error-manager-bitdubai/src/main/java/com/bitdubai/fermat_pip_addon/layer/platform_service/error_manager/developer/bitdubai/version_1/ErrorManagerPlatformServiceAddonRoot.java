@@ -13,11 +13,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabas
 
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.*;
 import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.exceptions.CantStartAgentException;
+import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.functional.ErrorReport;
 import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.structure.ErrorManagerDatabaseFactory;
 import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.structure.ErrorManagerRegistry;
 import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.structure.ErrorManagerReportAgent;
-
-import java.util.Calendar;
 
 /**
  * Created by ciencias on 05.02.15
@@ -28,12 +27,12 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
     /**
      * ErrorManagerRegistry variable
      */
-    ErrorManagerRegistry errorManagerRegistry;
+    private ErrorManagerRegistry errorManagerRegistry;
 
     /**
      * ErrorManagerReportAgent variable
      */
-    ErrorManagerReportAgent errorManagerReportAgent;
+    private ErrorManagerReportAgent errorManagerReportAgent;
 
     /**
      * DealsWithPlatformDatabaseSystem Interface member variables.
@@ -43,13 +42,17 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
     /**
      * Service Interface member variables.
      */
-    ServiceStatus serviceStatus = ServiceStatus.CREATED;
+    private ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
-    private ErrorManagerDatabaseFactory errorManagerDatabaseFactory;
+    //private ErrorManagerDatabaseFactory errorManagerDatabaseFactory;
 
     @Override
     public void setPlatformDatabaseSystem(PlatformDatabaseSystem platformDatabaseSystem) {
         this.platformDatabaseSystem = platformDatabaseSystem;
+    }
+
+    public PlatformDatabaseSystem getPlatformDatabaseSystem(){
+        return this.platformDatabaseSystem;
     }
 
     /**
@@ -74,10 +77,8 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
                     exception.getMessage(),
                     0L,
                     System.currentTimeMillis());
-        }
-        catch (Exception e)
-        {
-            //TODO (LUIS) Ver que se hace acá
+        } catch (Exception ex) {
+            printErrorReport(FermatException.wrapException(ex));
         }
     }
 
@@ -96,10 +97,8 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
                     exception.toString(),
                     0L,
                     System.currentTimeMillis());
-        }
-        catch (Exception e)
-        {
-            //TODO (LUIS) Ver que se hace acá
+        } catch (Exception ex) {
+            printErrorReport(FermatException.wrapException(ex));
         }
     }
 
@@ -118,10 +117,8 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
                     exception.getMessage(),
                     0L,
                     System.currentTimeMillis());
-        }
-        catch (Exception e)
-        {
-            //TODO (LUIS) Ver que se hace acá
+        } catch (Exception ex) {
+            printErrorReport(FermatException.wrapException(ex));
         }
     }
 
@@ -140,10 +137,8 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
                     exception.getMessage(),
                     0L,
                     System.currentTimeMillis());
-        }
-        catch (Exception e)
-        {
-            //TODO (LUIS) Ver que se hace acá
+        } catch (Exception ex){
+            printErrorReport(FermatException.wrapException(ex));
         }
     }
     /**
@@ -157,19 +152,21 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
             this.serviceStatus = ServiceStatus.STARTED;
 
             this.errorManagerRegistry = new ErrorManagerRegistry();
-            this.errorManagerRegistry.Initialize();
+            this.errorManagerRegistry.initialize();
 
             this.errorManagerReportAgent = new ErrorManagerReportAgent();
             this.errorManagerReportAgent.setErrorManagerRegistry(this.errorManagerRegistry);
             try {
                 this.errorManagerReportAgent.start();
-            } catch (CantStartAgentException e) {
+            } catch (CantStartAgentException ex) {
                 //Implement ErrorManager catching exception
+                printErrorReport(FermatException.wrapException(ex));
             }
-        }
-        catch (Exception e)
-        {
-            //TODO (LUIS) Ver que se hace acá
+        } catch (Exception ex) {
+            if(ex instanceof FermatException)
+                printErrorReport((FermatException) ex);
+            else
+                printErrorReport(FermatException.wrapException(ex));
         }
     }
 
@@ -199,27 +196,7 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
     }
 
     private void printErrorReport(final FermatException exception){
-        System.err.println(constructErrorReport(exception));
-    }
-
-    private String constructErrorReport(final FermatException exception){
-        StringBuffer buffer = new StringBuffer("========================================================================================================================================================\n");
-        buffer.append("Fermat Error Manager * Unexpected Exception Report\n");
-        buffer.append("========================================================================================================================================================\n");
-        buffer.append(constructExceptionReport(exception));
-        buffer.append("Exceptions Processed: " + exception.getDepth() + "\n");
-        buffer.append("========================================================================================================================================================\n");
-        return buffer.toString();
-    }
-
-    private String constructExceptionReport(final FermatException exception){
-        if(exception == null)
-            return "";
-        StringBuffer buffer = new StringBuffer(constructExceptionReport(exception.getCause()));
-        buffer.append("********************************************************************************************************************************************************\n");
-        buffer.append(exception.toString());
-        buffer.append("********************************************************************************************************************************************************\n");
-        return buffer.toString();
+        System.err.println(new ErrorReport(exception).generateReport());
     }
 
 }

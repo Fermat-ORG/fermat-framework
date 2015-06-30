@@ -15,10 +15,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableCo
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilterGroup;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemory;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -185,10 +185,10 @@ public class AndroidDatabaseTable implements  DatabaseTable {
      * <p>This method update a table record in the database
      *
      * @param record DatabaseTableRecord object to update
-     * @throws CantUpdateRecord
+     * @throws CantUpdateRecordException
      */
     @Override
-    public void updateRecord (DatabaseTableRecord record) throws CantUpdateRecord
+    public void updateRecord (DatabaseTableRecord record) throws CantUpdateRecordException
     {
 
         try
@@ -214,7 +214,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
        }
         catch (Exception exception)
         {
-            throw new CantUpdateRecord();
+            throw new CantUpdateRecordException();
         }
     }
 
@@ -268,10 +268,10 @@ public class AndroidDatabaseTable implements  DatabaseTable {
      * <p>This method load all table records in a List of DatabaseTableRecord object
      * <p>Then use the method getRecords() to to retrieve.
      *
-     * @throws CantLoadTableToMemory
+     * @throws CantLoadTableToMemoryException
      */
     @Override
-    public void loadToMemory() throws CantLoadTableToMemory {
+    public void loadToMemory() throws CantLoadTableToMemoryException {
 
         this.records = new ArrayList<>();
 
@@ -315,7 +315,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
 
 
         } catch (Exception e) {
-            throw new CantLoadTableToMemory();
+            throw new CantLoadTableToMemoryException();
         }
     }
 
@@ -639,7 +639,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
     }
 
     @Override
-    public void deleteRecord(DatabaseTableRecord record) throws CantDeleteRecord {
+    public void deleteRecord(DatabaseTableRecord record) throws CantDeleteRecordException {
         try{
 
 
@@ -670,7 +670,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
             }
 
         }catch (Exception exception) {
-            throw new CantDeleteRecord();
+            throw new CantDeleteRecordException();
         }
     }
 

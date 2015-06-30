@@ -4,10 +4,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.BitcoinTransaction;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionState;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
-import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.exceptions.InsufficientFundsException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -16,8 +14,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlugin
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemory;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
@@ -101,31 +99,31 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
 
     }
 
-    public List<TransactionWrapper> getNewTransactions() throws CantLoadTableToMemory, InvalidParameterException {
+    public List<TransactionWrapper> getNewTransactions() throws CantLoadTableToMemoryException, InvalidParameterException {
         return getAllInState(TransactionStatus.NEW);
     }
 
-    public List<TransactionWrapper> getPersistedInWalletTransactions() throws CantLoadTableToMemory, InvalidParameterException {
+    public List<TransactionWrapper> getPersistedInWalletTransactions() throws CantLoadTableToMemoryException, InvalidParameterException {
         return getAllInState(TransactionStatus.PERSISTED_IN_WALLET);
     }
 
-    public List<TransactionWrapper> getSentToCryptoVaultTransactions() throws CantLoadTableToMemory, InvalidParameterException {
+    public List<TransactionWrapper> getSentToCryptoVaultTransactions() throws CantLoadTableToMemoryException, InvalidParameterException {
         return getAllInState(TransactionStatus.SENT_TO_CRYPTO_VOULT);
     }
 
-    public void cancelTransaction(TransactionWrapper bitcoinTransaction) throws CantUpdateRecord, InconsistentTableStateException, CantLoadTableToMemory {
+    public void cancelTransaction(TransactionWrapper bitcoinTransaction) throws CantUpdateRecordException, InconsistentTableStateException, CantLoadTableToMemoryException {
         setToState(bitcoinTransaction, TransactionStatus.CANCELED);
     }
 
-    public void setToNew(TransactionWrapper bitcoinTransaction) throws CantUpdateRecord, InconsistentTableStateException, CantLoadTableToMemory {
+    public void setToNew(TransactionWrapper bitcoinTransaction) throws CantUpdateRecordException, InconsistentTableStateException, CantLoadTableToMemoryException {
         setToState(bitcoinTransaction, TransactionStatus.NEW);
     }
 
-    public void setToPIW(TransactionWrapper bitcoinTransaction) throws CantUpdateRecord, InconsistentTableStateException, CantLoadTableToMemory {
+    public void setToPIW(TransactionWrapper bitcoinTransaction) throws CantUpdateRecordException, InconsistentTableStateException, CantLoadTableToMemoryException {
         setToState(bitcoinTransaction,TransactionStatus.PERSISTED_IN_WALLET);
     }
 
-    public void setToSTCV(TransactionWrapper bitcoinTransaction) throws CantUpdateRecord, InconsistentTableStateException, CantLoadTableToMemory {
+    public void setToSTCV(TransactionWrapper bitcoinTransaction) throws CantUpdateRecordException, InconsistentTableStateException, CantLoadTableToMemoryException {
         setToState(bitcoinTransaction,TransactionStatus.SENT_TO_CRYPTO_VOULT);
     }
 
@@ -152,7 +150,7 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
     }
 
 
-    private void setToState(TransactionWrapper bitcoinTransaction, TransactionStatus status) throws CantUpdateRecord, InconsistentTableStateException, CantLoadTableToMemory {
+    private void setToState(TransactionWrapper bitcoinTransaction, TransactionStatus status) throws CantUpdateRecordException, InconsistentTableStateException, CantLoadTableToMemoryException {
         DatabaseTable transactionTable = this.database.getTable(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_NAME);
 
         DatabaseTableRecord recordToUpdate = getByPrimaryKey(bitcoinTransaction.getTransactionId());
@@ -163,7 +161,7 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
     }
 
 
-    private DatabaseTableRecord getByPrimaryKey(UUID id) throws CantLoadTableToMemory, InconsistentTableStateException {
+    private DatabaseTableRecord getByPrimaryKey(UUID id) throws CantLoadTableToMemoryException, InconsistentTableStateException {
         DatabaseTable transactionTable = this.database.getTable(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_NAME);
         List<DatabaseTableRecord> records;
 
@@ -177,7 +175,7 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
         return records.get(0);
     }
 
-    private List<TransactionWrapper> getAllInState(TransactionStatus transactionState) throws CantLoadTableToMemory, InvalidParameterException {
+    private List<TransactionWrapper> getAllInState(TransactionStatus transactionState) throws CantLoadTableToMemoryException, InvalidParameterException {
 
         DatabaseTable transactionTable = this.database.getTable(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_NAME);
         List<DatabaseTableRecord> records;

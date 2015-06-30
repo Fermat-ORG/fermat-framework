@@ -4,7 +4,7 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.devel
 import com.bitdubai.fermat_api.layer.osa_android.database_system.*;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerId;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerIdException;
 
 import java.util.*;
 
@@ -75,12 +75,12 @@ class IncomingCryptoDataBaseFactory implements DealsWithPluginDatabaseSystem {
                 ((DatabaseFactory) database).createTable(table);
             }
 
-        } catch (InvalidOwnerId invalidOwnerId) {
-            //System.out.println("InvalidOwnerId: " + invalidOwnerId.getMessage());
+        } catch (InvalidOwnerIdException invalidOwnerId) {
+            //System.out.println("InvalidOwnerIdException: " + invalidOwnerId.getMessage());
             invalidOwnerId.printStackTrace();
             throw new CantCreateDatabaseException();
         } catch (CantCreateTableException e) {
-            //System.out.println("InvalidOwnerId: CantCreateTableException " + e.getMessage());
+            //System.out.println("InvalidOwnerIdException: CantCreateTableException " + e.getMessage());
             throw new CantCreateDatabaseException();
         }
         return database;

@@ -42,70 +42,21 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class AndroidPluginTextFile implements PluginTextFile {
 
+    private static final int HASH_PRIME_NUMBER_PRODUCT = 263;
+    private static final int HASH_PRIME_NUMBER_ADD = 6421;
+
     /**
      * PluginTextFile interface member variables.
      */
     
     private Context context;
 
-    private String directoryName;
-    private String fileName;
-    private FilePrivacy privacyLevel;
-    private FileLifeSpan lifeSpan;
-    private UUID ownerId;
+    private final String directoryName;
+    private final String fileName;
+    private final FilePrivacy privacyLevel;
+    private final FileLifeSpan lifeSpan;
+    private final UUID ownerId;
     private String content = "";
-
-    public FileLifeSpan getLifeSpan() {
-		return lifeSpan;
-	}
-
-	public void setLifeSpan(FileLifeSpan lifeSpan) {
-		this.lifeSpan = lifeSpan;
-	}
-
-
-    public Context getContext() {
-		return context;
-	}
-
-	public void setContext(Context context) {
-		this.context = context;
-	}
-
-	public String getFileName() {
-		return fileName;
-	}
-
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
-
-	public FilePrivacy getPrivacyLevel() {
-		return privacyLevel;
-	}
-
-	public void setPrivacyLevel(FilePrivacy privacyLevel) {
-		this.privacyLevel = privacyLevel;
-	}
-
-	public String getDirectoryName() {
-		return directoryName;
-	}
-
-	public void setDirectoryName(String directoryName) {
-		this.directoryName = directoryName;
-	}
-
-	public UUID getOwnerId() {
-		return ownerId;
-	}
-
-	public void setOwnerId(UUID ownerId) {
-		this.ownerId = ownerId;
-	}
-
-
-
 
     // Public constructor declarations.
 
@@ -119,17 +70,43 @@ public class AndroidPluginTextFile implements PluginTextFile {
      * @param privacyLevel level of privacy for the file, if it is public or private
      * @param lifeSpan lifetime of the file, whether it is permanent or temporary
      */
-    public AndroidPluginTextFile(UUID ownerId, Context context, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
-
+    public AndroidPluginTextFile(final UUID ownerId, final Context context, final String directoryName, final String fileName, final FilePrivacy privacyLevel, final FileLifeSpan lifeSpan){
         this.ownerId = ownerId;
         this.context = context;
         this.fileName = fileName;
         this.privacyLevel = privacyLevel;
         this.lifeSpan = lifeSpan;
         this.directoryName = directoryName;
-
     }
-    
+
+    public FileLifeSpan getLifeSpan() {
+		return lifeSpan;
+	}
+
+	public Context getContext() {
+		return context;
+	}
+
+	public void setContext(Context context) {
+		this.context = context;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public FilePrivacy getPrivacyLevel() {
+		return privacyLevel;
+	}
+
+	public String getDirectoryName() {
+		return directoryName;
+	}
+
+	public UUID getOwnerId() {
+		return ownerId;
+	}
+
     /**
      * PluginTextFile interface implementation.
      */
@@ -163,7 +140,7 @@ public class AndroidPluginTextFile implements PluginTextFile {
     @Override
     public void persistToMedia() throws CantPersistFileException {
         
-        try 
+        try
         {
 
             /**
@@ -204,8 +181,6 @@ public class AndroidPluginTextFile implements PluginTextFile {
             outputStream.write(encryptedContent.getBytes(Charset.forName("UTF-8")));
             outputStream.close();
 
-
-            
         } catch (Exception e) {
 
             throw new CantPersistFileException(e.getMessage());
@@ -345,6 +320,20 @@ public class AndroidPluginTextFile implements PluginTextFile {
 
     }
 
+    @Override
+    public boolean equals(Object o){
+        if(!(o instanceof AndroidPluginTextFile))
+            return false;
 
+        AndroidPluginTextFile compare = (AndroidPluginTextFile) o;
+        return directoryName.equals(compare.getDirectoryName());
+    }
+
+    @Override
+    public int hashCode(){
+        int c = 0;
+        c += directoryName.hashCode();
+        return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
+    }
 
 }

@@ -3,7 +3,7 @@ package com.bitdubai.fermat_pip_addon.layer.platform_service.location_subsystem.
 import com.bitdubai.fermat_api.layer.osa_android.database_system.*;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerId;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerIdException;
 
 import java.util.UUID;
 
@@ -41,7 +41,7 @@ class LocationServiceDatabaseFactory implements DealsWithPluginDatabaseSystem {
             table.addColumn(LocationServiceDatabaseConstants.LOCATION_SERVICE_TABLE_ALTITUDE_COLUMN, DatabaseDataType.REAL, 10, false);
             table.addColumn(LocationServiceDatabaseConstants.LOCATION_SERVICE_TABLE_ACCURACY_COLUMN, DatabaseDataType.REAL, 10, false);
             ((DatabaseFactory) database).createTable(ownerId, table);
-        } catch (InvalidOwnerId invalidOwnerId) {
+        } catch (InvalidOwnerIdException invalidOwnerId) {
             /**
              * This shouldn't happen here because I was the one who gave the owner id to the database file system,
              * but anyway, if this happens, I can not continue.

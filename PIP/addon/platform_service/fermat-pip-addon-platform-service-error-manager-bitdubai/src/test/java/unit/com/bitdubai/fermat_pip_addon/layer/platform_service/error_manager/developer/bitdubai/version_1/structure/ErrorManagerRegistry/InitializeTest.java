@@ -13,8 +13,6 @@ import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.develo
 import com.bitdubai.fermat_pip_addon.layer.platform_service.error_manager.developer.bitdubai.version_1.structure.ErrorManagerRegistry;
 
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.internal.matchers.Null;
 
 /**
  * Created by jorgegonzalez on 2015.06.24..
@@ -34,7 +32,7 @@ public class InitializeTest {
 
         ErrorManagerRegistry testRegistry = new ErrorManagerRegistry();
         testRegistry.setPlatformDatabaseSystem(mockPlatformDatabaSystem);
-        testRegistry.Initialize();
+        testRegistry.initialize();
         assertThat(testRegistry).isNotNull();
     }
 
@@ -44,10 +42,9 @@ public class InitializeTest {
 
         ErrorManagerRegistry testRegistry = new ErrorManagerRegistry();
         testRegistry.setPlatformDatabaseSystem(mockPlatformDatabaSystem);
-        catchException(testRegistry).Initialize();
+        catchException(testRegistry).initialize();
 
         assertThat(caughtException()).isInstanceOf(NullPointerException.class);
-
     }
 
 }
