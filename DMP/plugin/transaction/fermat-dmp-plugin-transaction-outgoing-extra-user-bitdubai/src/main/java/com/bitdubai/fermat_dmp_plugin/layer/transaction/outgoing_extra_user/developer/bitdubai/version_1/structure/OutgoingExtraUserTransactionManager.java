@@ -140,7 +140,7 @@ public class OutgoingExtraUserTransactionManager implements DealsWithBitcoinWall
             throw new CantSendFundsException("I couldn't calculate balance",e,"","");
         }
 
-        if(cryptoAmount < funds) {
+        if(cryptoAmount > funds) {
             throw new InsufficientFundsException("", null, "CryptoAmount: " + cryptoAmount + "\nBalance: " + funds, "Many transactions were accepted before discounting from basic wallet balanace");
         }
 
