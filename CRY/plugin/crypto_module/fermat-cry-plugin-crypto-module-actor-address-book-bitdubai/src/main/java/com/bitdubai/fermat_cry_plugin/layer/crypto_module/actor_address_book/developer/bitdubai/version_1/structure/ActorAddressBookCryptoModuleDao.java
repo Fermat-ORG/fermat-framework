@@ -184,7 +184,8 @@ public class ActorAddressBookCryptoModuleDao implements DealsWithErrors, DealsWi
             actorId = record.getUUIDValue(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ACTOR_ID);
             actorType = Actors.getByCode(record.getStringValue(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ACTOR_TYPE));
         } else {
-            return null;
+            // TODO: Cambiar pot una excepcion acorde
+            throw new CantGetActorAddressBook();
         }
 
         return new ActorAddressBookCryptoModuleRecord(actorId, actorType, cryptoAddress);
