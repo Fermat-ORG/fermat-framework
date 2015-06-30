@@ -440,8 +440,8 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
     }
 
     @Override
-    public String sendBitcoins(UUID walletId, UUID FermatTrId, CryptoAddress addressTo, long satothis) throws com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException, InvalidSendToAddressException, CouldNotSendMoneyException {
-        return vault.sendBitcoins(FermatTrId, addressTo, satothis);
+    public String sendBitcoins(UUID walletId, UUID FermatTrId, CryptoAddress addressTo, long satoshis) throws com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException, InvalidSendToAddressException, CouldNotSendMoneyException {
+        return vault.sendBitcoins(FermatTrId, addressTo, satoshis);
     }
 
     @Override
