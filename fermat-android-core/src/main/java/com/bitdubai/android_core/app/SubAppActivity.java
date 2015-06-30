@@ -3,6 +3,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.*;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -241,6 +242,8 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
             pager.setAdapter(this.PagerAdapter);
 
             pager.setBackgroundResource(R.drawable.background_tiled_diagonal_light);
+            //set default page to show
+            pager.setCurrentItem(0);
 
         } catch (Exception ex) {
             this.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, ex);
@@ -321,6 +324,8 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                 pagertabs.setPageMargin(pageMargin);
 
                 tabStrip.setViewPager(pagertabs);
+
+
 
                 String color = activity.getColor();
                 if (color != null)
@@ -736,7 +741,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
 
     }
 
-
+    private Fragment mCurrentPrimaryItem = null;
     public class MyPagerAdapter extends FragmentPagerAdapter {
 
         private String[] titles;
@@ -765,6 +770,8 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                 trans.commit();
             }
         }
+
+
 
         @Override
         public CharSequence getPageTitle(int position) {
