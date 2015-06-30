@@ -411,15 +411,6 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS);
         runtimeTabStrip.addTab(runtimeTab);
 
-        runtimeTab = new RuntimeTab();
-        runtimeTab.setLabel("Database Tools");
-        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_DATABASE_TOOLS);
-        runtimeTabStrip.addTab(runtimeTab);
-
-        runtimeTab = new RuntimeTab();
-        runtimeTab.setLabel("Log Tools");
-        runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_LOG_TOOLS);
-        runtimeTabStrip.addTab(runtimeTab);
 
 
 
@@ -455,25 +446,73 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeActivity.addFragment(runtimeFragment);
         listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS,runtimeFragment);
 
-        runtimeFragment = new RuntimeFragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_DATABASE_TOOLS);
-        runtimeActivity.addFragment(runtimeFragment);
-        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_DATABASE_TOOLS,runtimeFragment);
 
-        runtimeFragment = new RuntimeFragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_LOG_TOOLS);
-        runtimeActivity.addFragment(runtimeFragment);
-        listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_LOG_TOOLS,runtimeFragment);
 
         /**
          * End of Wallet basic fragments.
          */
 
+
+        /**
+         * Definition of Developer Manager
+         */
+
+        runtimeWallet = new RuntimeWallet();
+        runtimeWallet.setType(Wallets.CWP_WALLET_RUNTIME_WALLET_DEVELOPER_APP_ALL_BITDUBAI);
+        listWallets.put(Wallets.CWP_WALLET_RUNTIME_WALLET_DEVELOPER_APP_ALL_BITDUBAI, runtimeWallet);
+
+
+        runtimeActivity= new RuntimeActivity();
+        runtimeActivity.setType(Activities.CWP_SUP_APP_ALL_DEVELOPER);
+        runtimeActivity.setColor("#d07b62");
+        runtimeWallet.addActivity(runtimeActivity);
+        listActivities.put(Activities.CWP_SUP_APP_ALL_DEVELOPER, runtimeActivity);
+
+
+
+        runtimeTitleBar = new RuntimeTitleBar();
+        runtimeTitleBar.setLabel("DeveloperApp");
+
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+
+        runtimeTabStrip = new RuntimeTabStrip();
+        runtimeTab = new RuntimeTab();
+        runtimeTab.setLabel("DataBase Tools");
+        runtimeTab.setFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS);
+        runtimeTabStrip.addTab(runtimeTab);
+
+
+        runtimeTab = new RuntimeTab();
+        runtimeTab.setLabel("Log Tools");
+        runtimeTab.setFragment(Fragments.CWP_SUB_APP_DEVELOPER_LOG_TOOLS);
+        runtimeTabStrip.addTab(runtimeTab);
+
+
+        runtimeActivity.setTabStrip(runtimeTabStrip);
+
+        runtimeFragment = new RuntimeFragment();
+        runtimeFragment.setType(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS);
+        runtimeActivity.addFragment(runtimeFragment);
+        listFragments.put(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS,runtimeFragment);
+
+
+
+        runtimeFragment = new RuntimeFragment();
+        runtimeFragment.setType(Fragments.CWP_SUB_APP_DEVELOPER_LOG_TOOLS);
+        runtimeActivity.addFragment(runtimeFragment);
+        listFragments.put(Fragments.CWP_SUB_APP_DEVELOPER_LOG_TOOLS,runtimeFragment);
+
+        /**
+         * End of Developer tabs.
+         */
+
+
         // Wallet adults
 
         runtimeActivity= new RuntimeActivity();
         runtimeActivity.setType(Activities.CWP_WALLET_STORE_MAIN);
-     //   runtimeSubApp.addActivity(runtimeActivity);
+        //   runtimeSubApp.addActivity(runtimeActivity);
         listActivities.put(Activities.CWP_WALLET_STORE_MAIN, runtimeActivity);
 
         runtimeFragment = new RuntimeFragment();
@@ -484,7 +523,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
         runtimeWallet = new RuntimeWallet();
         runtimeWallet.setType(Wallets.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI);
-       // runtimeSubApp.addWallet(runtimeWallet);
+        // runtimeSubApp.addWallet(runtimeWallet);
         listWallets.put(Wallets.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI,runtimeWallet);
 
         runtimeActivity= new RuntimeActivity();
@@ -872,7 +911,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeActivity= new RuntimeActivity();
         runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_SHOPS);
         runtimeActivity.setColor("#76dc4a");
-      //  runtimeSubApp.addActivity(runtimeActivity);
+        //  runtimeSubApp.addActivity(runtimeActivity);
         listActivities.put(Activities.CWP_WALLET_ADULTS_ALL_SHOPS, runtimeActivity);
 
 
@@ -1005,7 +1044,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
         runtimeActivity= new RuntimeActivity();
         runtimeActivity.setType(Activities.CWP_WALLET_ADULTS_ALL_REFFILS);
-       // runtimeSubApp.addActivity(runtimeActivity);
+        // runtimeSubApp.addActivity(runtimeActivity);
         listActivities.put(Activities.CWP_WALLET_ADULTS_ALL_REFFILS, runtimeActivity);
 //-----------------------------------------------------------------------------------
         runtimeActivity= new RuntimeActivity();
@@ -1070,7 +1109,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
         runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_ALL);
         runtimeActivity.addFragment(runtimeFragment);
         listFragments.put(Fragments.CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_ALL,runtimeFragment);
-      //  listApps.put(Apps.CRYPTO_WALLET_PLATFORM,runtimeApp);
+        //  listApps.put(Apps.CRYPTO_WALLET_PLATFORM,runtimeApp);
         //lastApp = Apps.CRYPTO_WALLET_PLATFORM;
         /**
          * End of Wallet Accounts tabs.

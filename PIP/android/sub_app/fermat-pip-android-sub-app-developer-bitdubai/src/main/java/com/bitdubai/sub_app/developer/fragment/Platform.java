@@ -10,12 +10,13 @@ import com.bitdubai.fermat_api.layer.pip_actor.developer.DealsWithToolManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 
+import java.io.Serializable;
 
 
 /**
  * Created by natalia on 29/06/15.
  */
-public class Platform implements DealsWithErrors, DealsWithEvents, DealsWithNicheWalletTypeCryptoWallet, DealsWithToolManager {
+public class Platform implements DealsWithErrors, DealsWithEvents, DealsWithToolManager, Serializable {
 
     /**
      * DealsWithWalletContacts Interface member variables.
@@ -35,7 +36,7 @@ public class Platform implements DealsWithErrors, DealsWithEvents, DealsWithNich
     /**
      * DealsWithToolManager Interface member variables.
      */
-    private ToolManager toolManager;
+    private static ToolManager toolManager;
 
     /**
      * Platform class member variables.
@@ -46,12 +47,6 @@ public class Platform implements DealsWithErrors, DealsWithEvents, DealsWithNich
     private static String ticketId;
 
 
-    /**
-     * DealsWithWalletContacts Interface implementation.
-     */
-    public void setNicheWalletTypeCryptoWalletManager(CryptoWalletManager cryptoWalletManager) {
-        this.cryptoWalletManager = cryptoWalletManager;
-    }
 
     /**
      * DealsWithToolManager Interface implementation.
@@ -96,9 +91,6 @@ public class Platform implements DealsWithErrors, DealsWithEvents, DealsWithNich
      * Platform Class implementation.
      */
 
-    public CryptoWalletManager getCryptoWalletManager() {
-        return this.cryptoWalletManager;
-    }
 
     public ToolManager getToolManager() {
         return this.toolManager;
