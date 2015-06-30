@@ -5,7 +5,9 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -16,7 +18,7 @@ import android.widget.TextView;
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.pip_actor.developer.DatabaseTool;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.LogTool;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform;
@@ -68,20 +70,82 @@ public class LogToolsFragment extends Fragment {
         }
     }
 
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+        String selectedWord = ((TextView) info.targetView).getText().toString();
+        selectedWord = selectedWord.split(" \\|\\| ")[0];
+
+        menu.setHeaderTitle(selectedWord);
+        menu.add(0, 1, 0, "NOT_LOGGING");
+        menu.add(0, 2, 0, "MINIMAL_LOGGING");
+        menu.add(0, 3, 0, "MODERATE_LOGGING");
+        menu.add(0, 4, 0, "AGGRESSIVE_LOGGING");
+    }
+
+    public boolean onContextItemSelected(MenuItem item) {
+       /* AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+        Object item = getListAdapter().getItem(info.position);*/
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        String selectedWord = ((TextView) info.targetView).getText().toString();
+        selectedWord = selectedWord.split(" \\|\\| ")[0];
+
+        if (item.getItemId() == 1) {
+            changeLogLevel(LogLevel.NOT_LOGGING, selectedWord);
+        } else if (item.getItemId() == 2) {
+            changeLogLevel(LogLevel.MINIMAL_LOGGING, selectedWord);
+        } else if (item.getItemId() == 3) {
+            changeLogLevel(LogLevel.MODERATE_LOGGING, selectedWord);
+        } else if (item.getItemId() == 4) {
+            changeLogLevel(LogLevel.AGGRESSIVE_LOGGING, selectedWord);
+        } else {
+            return false;
+        }
+        return true;
+    }
+
+    private void changeLogLevel(LogLevel logLevel, String resource) {
+        try {
+            String name = resource.split(" - ")[0];
+            String type = resource.split(" - ")[1];
+            if (type.equals("Addon")) {
+                Addons addon = Addons.getByKey(name);
+                logTool.setLogLevel(addon, logLevel);
+            } else if (type.equals("Plugin")) {
+                Plugins plugin = Plugins.getByKey(name);
+                logTool.setLogLevel(plugin, logLevel);
+            }
+
+            TextView labelDatabase = (TextView) rootView.findViewById(R.id.labelLog);
+            labelDatabase.setVisibility(View.GONE);
+
+            LogToolsFragment logToolsFragment = new LogToolsFragment();
+
+            FragmentTransaction FT = getFragmentManager().beginTransaction();
+
+            FT.replace(R.id.logContainer, logToolsFragment);
+
+            FT.commit();
+        } catch (Exception e) {
+            System.out.println("*********** soy un error "+e.getMessage());
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_log_tools, container, false);
         try {
             // Get ListView object from xml
-            final ListView listView = (ListView) rootView.findViewById(R.id.lista1);
+            final ListView listView = (ListView) rootView.findViewById(R.id.listaLogResources);
 
             List<Plugins> plugins = logTool.getAvailablePluginList();
             List<Addons> addons = logTool.getAvailableAddonList();
 
             List<String> list = new ArrayList<>();
 
-            for(Plugins plugin : plugins){ list.add(plugin.getKey()+" - Plugin"); }
-            for(Addons addon : addons){ list.add(addon.getKey()+" - Addon"); }
+            for(Plugins plugin : plugins){ list.add(plugin.getKey()+" - Plugin || LogLevel: "+logTool.getLogLevel(plugin)); }
+            for(Addons addon : addons){ list.add(addon.getKey() + " - Addon || LogLevel: " + logTool.getLogLevel(addon)); }
 
             String[] availableResources;
             if (list.size() > 0) {
@@ -96,25 +160,9 @@ public class LogToolsFragment extends Fragment {
             ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity().getApplicationContext(),
                     android.R.layout.simple_list_item_1, android.R.id.text1, availableResources);
 
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    TextView labelDatabase = (TextView) rootView.findViewById(R.id.labelDatabase);
-                    labelDatabase.setVisibility(View.GONE);
-                    String item = (String) listView.getItemAtPosition(position);
-
-                    DatabaseToolsDatabaseListFragment databaseToolsDatabaseListFragment = new DatabaseToolsDatabaseListFragment ();
-
-                    databaseToolsDatabaseListFragment.setResource(item);
-
-                    FragmentTransaction FT = getFragmentManager().beginTransaction();
-
-                    FT.replace(R.id.hola, databaseToolsDatabaseListFragment);
-
-                    FT.commit();
-                }
-            });
-
             listView.setAdapter(adapter);
+
+            registerForContextMenu(listView);
         } catch (Exception e) {
             showMessage("LogTools Fragment onCreateView Exception - " + e.getMessage());
             e.printStackTrace();
