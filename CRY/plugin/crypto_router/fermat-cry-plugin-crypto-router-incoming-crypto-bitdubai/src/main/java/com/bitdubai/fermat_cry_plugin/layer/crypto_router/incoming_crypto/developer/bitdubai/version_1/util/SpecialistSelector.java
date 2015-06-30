@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.util;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
@@ -63,6 +64,7 @@ public class SpecialistSelector implements DealsWithActorAddressBook {
                     case EXTRA_USER:
                         return Specialist.EXTRA_USER_SPECIALIST;
                 }
+
             } catch (CantGetActorAddressBook cantGetActorAddressBook) {
                 // This exception will be managed by the relay agent
                 throw new CantSelectSpecialistException("Can't get actor address from registry",cantGetActorAddressBook,"CryptoAddress: "+ cryptoAddress.getAddress(),"Address not stored");
