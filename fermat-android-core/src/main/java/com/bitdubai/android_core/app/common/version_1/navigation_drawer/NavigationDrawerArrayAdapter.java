@@ -18,7 +18,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
 
 
     public NavigationDrawerArrayAdapter(Context context, String[] values) {
-        super(context, R.layout.wallet_framework_activity_framework_navigation_drawer_row_layout, values);
+        super(context, R.layout.wallet_framework_activity_main_navigation_drawer_row_layout_empty, values);
         try
         {
 
@@ -147,41 +147,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                             break;
                     }
 
-                }else{
 
-             /*   switch (position)
-                {
-                    case 1:
-                        imageView.setImageResource(R.drawable.ic_action_user);
-                        break;
-                    case 2:
-                        imageView.setImageResource(R.drawable.ic_action_accounts);
-                        break;
-                    case 3:
-                        imageView.setImageResource(R.drawable.ic_action_bank);
-                        break;
-                    case 4:
-                        imageView.setImageResource(R.drawable.ic_action_coupon);
-                        break;
-                    case 5:
-                        imageView.setImageResource(R.drawable.ic_action_discount);
-                        break;
-                    case 6:
-                        imageView.setImageResource(R.drawable.ic_action_voucher);
-                        break;
-                    case 7:
-                        imageView.setImageResource(R.drawable.ic_action_gift_card);
-                        break;
-                    case 8:
-                        imageView.setImageResource(R.drawable.ic_action_clone);
-                        break;
-                    case 9:
-                        imageView.setImageResource(R.drawable.ic_action_child);
-                        break;
-                    case 10:
-                        imageView.setImageResource(R.drawable.ic_action_exit);
-                        break;
-                }*/
                 }
 
             }
