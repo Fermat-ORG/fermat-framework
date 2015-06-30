@@ -62,6 +62,10 @@ public class LoggerManager implements LogManager {
 
 
     private void setAggressiveLogging(String message){
+        if (message != null) {
+            outputMessage.append("Message: " + message);
+            outputMessage.append(System.lineSeparator());
+        }
         for (String property : callerInformationGetter.getCurrentThreadInformation()){
             outputMessage.append(property);
             outputMessage.append(System.lineSeparator());
@@ -69,6 +73,10 @@ public class LoggerManager implements LogManager {
     }
 
     private void setModerateLogging(String message){
+        if (message != null) {
+            outputMessage.append("Message: " + message);
+            outputMessage.append(System.lineSeparator());
+        }
         for (String property : callerInformationGetter.getCurrentMethodInformation()){
             outputMessage.append(property);
             outputMessage.append(System.lineSeparator());
