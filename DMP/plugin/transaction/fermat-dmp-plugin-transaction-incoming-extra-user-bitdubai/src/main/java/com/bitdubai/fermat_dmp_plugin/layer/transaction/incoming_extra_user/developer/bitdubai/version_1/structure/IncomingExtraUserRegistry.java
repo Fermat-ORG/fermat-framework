@@ -169,7 +169,7 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
             eventsTable.setStringFilter(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_STATUS_COLUMN.columnName, "PENDING", DatabaseFilterType.EQUAL);
             try {
                 eventsTable.loadToMemory();
-            } catch (CantLoadTableToMemory cantLoadTableToMemory) {
+            } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
                 throw new CantReadEvent();
             }
@@ -200,7 +200,7 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
             eventsTable.setUUIDFilter(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_ID_COLUMN.columnName, eventId, DatabaseFilterType.EQUAL);
             try {
                 eventsTable.loadToMemory();
-            } catch (CantLoadTableToMemory cantLoadTableToMemory) {
+            } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
                 throw new CantReadEvent();
             }
@@ -238,7 +238,7 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
 
             try {
                 registryTable.loadToMemory();
-            } catch (CantLoadTableToMemory cantLoadTableToMemory) {
+            } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
                 //TODO: MANAGE EXCEPTION
             }
@@ -278,7 +278,7 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
 
         try {
             registryTable.loadToMemory();
-        } catch (CantLoadTableToMemory cantLoadTableToMemory) {
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
             //TODO: MANAGE EXCEPTION
         }
@@ -303,7 +303,7 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
 
         try {
             registryTable.loadToMemory();
-        } catch (CantLoadTableToMemory cantLoadTableToMemory) {
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
             //TODO: MANAGE EXCEPTION
         }
@@ -325,7 +325,7 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
                                          );
             try {
                 registryTable.updateRecord(recordToUpdate);
-            } catch (CantUpdateRecord cantUpdateRecord) {
+            } catch (CantUpdateRecordException cantUpdateRecord) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantUpdateRecord);
                 //TODO: MANAGE EXCEPTION
             }
@@ -349,7 +349,7 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
 
         try {
             registryTable.loadToMemory();
-        } catch (CantLoadTableToMemory cantLoadTableToMemory) {
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
             //TODO: MANAGE EXCEPTION
         }
@@ -369,7 +369,7 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
 
             try {
                 registryTable.updateRecord(recordToUpdate);
-            } catch (CantUpdateRecord cantUpdateRecord) {
+            } catch (CantUpdateRecordException cantUpdateRecord) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantUpdateRecord);
                 //TODO: MANAGE EXCEPTION
             }
@@ -454,7 +454,7 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
 
         try {
             registryTable.loadToMemory();
-        } catch (CantLoadTableToMemory cantLoadTableToMemory) {
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
             //TODO: MANAGE EXCEPTION
         }

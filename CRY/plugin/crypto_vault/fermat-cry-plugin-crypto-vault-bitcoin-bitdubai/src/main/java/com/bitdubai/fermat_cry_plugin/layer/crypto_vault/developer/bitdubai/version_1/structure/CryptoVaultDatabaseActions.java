@@ -9,7 +9,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterT
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemory;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -120,7 +120,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
         fermatTxTable.setStringFilter(CryptoVaultDatabaseConstants.FERMAT_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, txId.toString(), DatabaseFilterType.EQUAL);
         try {
             fermatTxTable.loadToMemory();
-        } catch (CantLoadTableToMemory cantLoadTableToMemory) {
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
             throw new CantExecuteQueryException();
         }
@@ -200,7 +200,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
             for (DatabaseTableRecord record : cryptoTxTable.getRecords()){
                 transactionsIds.put(record.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME), record.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME));
             }
-        } catch (CantLoadTableToMemory cantLoadTableToMemory) {
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
             throw new CantExecuteQueryException();
         }
@@ -217,7 +217,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
             for (DatabaseTableRecord record : cryptoTxTable.getRecords()){
                 transactionsIds.put(record.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME), record.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME));
             }
-        } catch (CantLoadTableToMemory cantLoadTableToMemory) {
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
             throw new CantExecuteQueryException();
         }
@@ -239,7 +239,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
         try {
             cryptoTxTable.loadToMemory();
             toUpdate = cryptoTxTable.getRecords().get(0); //todo add validation that only one record exists
-        } catch (CantLoadTableToMemory cantLoadTableToMemory) {
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
             throw new CantExecuteQueryException();
         }
@@ -272,7 +272,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
         cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, txId.toString(), DatabaseFilterType.EQUAL);
         try {
             cryptoTxTable.loadToMemory();
-        } catch (CantLoadTableToMemory cantLoadTableToMemory) {
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
             throw  new CantExecuteQueryException();
         }
@@ -305,7 +305,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
         cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, txId.toString(), DatabaseFilterType.EQUAL);
         try {
             cryptoTxTable.loadToMemory();
-        } catch (CantLoadTableToMemory cantLoadTableToMemory) {
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
             throw new CantExecuteQueryException();
         }
@@ -328,7 +328,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
                 return false;
             else
                 return true;
-        } catch (CantLoadTableToMemory cantLoadTableToMemory) {
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
             throw new CantExecuteQueryException();
         }
@@ -350,7 +350,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
                 txTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, transaction.getHashAsString(), DatabaseFilterType.EQUAL);
             try {
                 txTable.loadToMemory();
-            } catch (CantLoadTableToMemory cantLoadTableToMemory) {
+            } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
                 throw new CantExecuteQueryException();
             }
@@ -376,7 +376,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
 
         try {
             transactionProtocolStatusTable.loadToMemory();
-        } catch (CantLoadTableToMemory cantLoadTableToMemory) {
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
             throw new CantExecuteQueryException();
         }

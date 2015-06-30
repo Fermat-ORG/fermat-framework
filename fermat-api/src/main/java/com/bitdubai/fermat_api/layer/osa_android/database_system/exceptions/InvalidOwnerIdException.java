@@ -3,7 +3,7 @@ package com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions;
 /**
  * Created by ciencias on 3/23/15.
  */
-public class InvalidOwnerId extends DatabaseSystemException{
+public class InvalidOwnerIdException extends DatabaseSystemException{
 
 	/**
 	 * 
@@ -12,24 +12,24 @@ public class InvalidOwnerId extends DatabaseSystemException{
 
 	public static final String DEFAULT_MESSAGE = "INVALID OWNER ID";
 
-	public InvalidOwnerId(final String message, final Exception cause, final String context, final String possibleReason) {
+	public InvalidOwnerIdException(final String message, final Exception cause, final String context, final String possibleReason) {
 		super(message, cause, context, possibleReason);
 	}
 
-	public InvalidOwnerId(final String message, final Exception cause) {
+	public InvalidOwnerIdException(final String message, final Exception cause) {
 		this(message, cause, "", "");
 	}
 
-	public InvalidOwnerId(final String message) {
+	public InvalidOwnerIdException(final String message) {
 		this(message, null);
 	}
 
-	public InvalidOwnerId(final Exception exception) {
+	public InvalidOwnerIdException(final Exception exception) {
 		this(exception.getMessage());
 		setStackTrace(exception.getStackTrace());
 	}
 
-	public InvalidOwnerId() {
+	public InvalidOwnerIdException() {
 		this(DEFAULT_MESSAGE);
 	}
 }

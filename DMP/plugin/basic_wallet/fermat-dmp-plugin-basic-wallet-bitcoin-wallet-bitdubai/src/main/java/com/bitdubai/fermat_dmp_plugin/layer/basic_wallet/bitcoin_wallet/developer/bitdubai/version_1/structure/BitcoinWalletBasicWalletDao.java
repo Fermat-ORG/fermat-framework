@@ -2,7 +2,6 @@ package com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.develop
 
 
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 
@@ -20,18 +19,15 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantRegisterDebitDebitException;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilterGroup;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemory;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -93,7 +89,7 @@ public class BitcoinWalletBasicWalletDao {
         try {
             bitcoinwalletTable.loadToMemory();
         }
-        catch (CantLoadTableToMemory cantLoadTableToMemory) {
+        catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             /**
              * I can not solve this situation.
              */
@@ -116,7 +112,7 @@ public class BitcoinWalletBasicWalletDao {
         try {
             bitcoinwalletTable.loadToMemory();
         }
-        catch (CantLoadTableToMemory cantLoadTableToMemory) {
+        catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             /**
              * I can not solve this situation.
              */
@@ -156,7 +152,7 @@ public class BitcoinWalletBasicWalletDao {
 
         try {
             bitcoinwalletTable.loadToMemory();
-        } catch (CantLoadTableToMemory cantLoadTableToMemory) {
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             /**
              * I can not solve this situation.
              */
@@ -212,7 +208,7 @@ public class BitcoinWalletBasicWalletDao {
         try {
             bitcoinwalletTable.loadToMemory();
         }
-        catch (CantLoadTableToMemory cantLoadTableToMemory) {
+        catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             /**
              * I can not solve this situation.
              */
@@ -270,7 +266,7 @@ public class BitcoinWalletBasicWalletDao {
 
         try {
             bitcoinwalletTable.loadToMemory();
-        } catch (CantLoadTableToMemory cantLoadTableToMemory) {
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             /**
              * I can not solve this situation.
              */
@@ -343,7 +339,7 @@ public class BitcoinWalletBasicWalletDao {
         try {
             bitcoinwalletTable.loadToMemory();
 
-        } catch (CantLoadTableToMemory cantLoadTableToMemory) {
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             /**
              * I can not solve this situation.
              */
@@ -365,7 +361,7 @@ public class BitcoinWalletBasicWalletDao {
 
                 bitcoinwalletTable.updateRecord(record);
 
-            } catch (CantUpdateRecord cantUpdateRecord) {
+            } catch (CantUpdateRecordException cantUpdateRecord) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantUpdateRecord);
 
                 throw new CabtStoreMemoException();

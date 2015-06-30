@@ -3,7 +3,7 @@ package com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions;
 /**
  * Created by mati
  */
-public class CantDeleteRecord extends DatabaseSystemException {
+public class CantDeleteRecordException extends DatabaseSystemException {
 
 	/**
 	 * 
@@ -12,24 +12,24 @@ public class CantDeleteRecord extends DatabaseSystemException {
 
 	public static final String DEFAULT_MESSAGE = "CAN'T DELETE RECORD";
 
-	public CantDeleteRecord(final String message, final Exception cause, final String context, final String possibleReason) {
+	public CantDeleteRecordException(final String message, final Exception cause, final String context, final String possibleReason) {
 		super(message, cause, context, possibleReason);
 	}
 
-	public CantDeleteRecord(final String message, final Exception cause) {
+	public CantDeleteRecordException(final String message, final Exception cause) {
 		this(message, cause, "", "");
 	}
 
-	public CantDeleteRecord(final String message) {
+	public CantDeleteRecordException(final String message) {
 		this(message, null);
 	}
 
-	public CantDeleteRecord(final Exception exception) {
+	public CantDeleteRecordException(final Exception exception) {
 		this(exception.getMessage());
 		setStackTrace(exception.getStackTrace());
 	}
 
-	public CantDeleteRecord() {
+	public CantDeleteRecordException() {
 		this(DEFAULT_MESSAGE);
 	}
 }

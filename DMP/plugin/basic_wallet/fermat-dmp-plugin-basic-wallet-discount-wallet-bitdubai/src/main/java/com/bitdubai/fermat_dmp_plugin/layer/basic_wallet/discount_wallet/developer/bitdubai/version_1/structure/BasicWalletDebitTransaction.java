@@ -16,7 +16,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterT
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemory;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -159,11 +159,11 @@ class BasicWalletDebitTransaction implements DealsWithCryptoIndex, DealsWithErro
         try {
             valueChunksTable.loadToMemory();
         }
-        catch (CantLoadTableToMemory cantLoadTableToMemory) {
+        catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             /**
              * I can not solve this situation.
              */
-            System.err.println("CantLoadTableToMemory: " + cantLoadTableToMemory.getMessage());
+            System.err.println("CantLoadTableToMemoryException: " + cantLoadTableToMemory.getMessage());
             cantLoadTableToMemory.printStackTrace();
             throw new DebitFailedException(DebitFailedReasons.VALUE_CHUNKS_TABLE_FAIL_TO_LOAD_TO_MEMORY);
         }

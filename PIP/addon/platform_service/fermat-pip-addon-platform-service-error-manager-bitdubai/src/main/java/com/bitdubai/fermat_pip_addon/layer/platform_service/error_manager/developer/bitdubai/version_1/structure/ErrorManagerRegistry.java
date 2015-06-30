@@ -12,7 +12,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
 
@@ -180,7 +180,7 @@ public class ErrorManagerRegistry {
         DatabaseTableRecord errorManagerRegistryRecord = (DatabaseTableRecord) this;
         try {
             errorManagerDB.getTable(ErrorManagerDatabaseConstants.EXCEPTION_TABLE_NAME).updateRecord(errorManagerRegistryRecord);
-        } catch (CantUpdateRecord cantUpdateRecord) {
+        } catch (CantUpdateRecordException cantUpdateRecord) {
             cantUpdateRecord.printStackTrace();
         }
     }
