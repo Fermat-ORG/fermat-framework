@@ -129,8 +129,6 @@ public class IncomingExtraUserRelayAgent implements DealsWithBitcoinWallet, Deal
             this.agentThread.start();
         }
         catch (Exception exception) {
-            System.out.println("Exception: " + exception.getMessage());
-            exception.printStackTrace();
             throw new CantStartAgentException();
         }
 
