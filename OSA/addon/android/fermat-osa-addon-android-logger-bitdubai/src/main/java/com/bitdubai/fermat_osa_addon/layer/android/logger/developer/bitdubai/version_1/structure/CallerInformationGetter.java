@@ -31,7 +31,7 @@ class CallerInformationGetter {
         List<String> list = new ArrayList<String>();
 
         StackTraceElement[] stacktrace = Thread.currentThread().getStackTrace();
-        StackTraceElement e = stacktrace[3];//maybe this number needs to be corrected
+        StackTraceElement e = stacktrace[5];//maybe this number needs to be corrected
 
         list.add("Class name:" + e.getClassName());
         try {
