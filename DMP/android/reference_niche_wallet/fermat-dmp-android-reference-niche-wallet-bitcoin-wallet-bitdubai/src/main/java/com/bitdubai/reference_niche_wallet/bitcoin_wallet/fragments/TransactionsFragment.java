@@ -7,10 +7,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
@@ -22,6 +25,7 @@ import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfa
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform;
 
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +41,7 @@ public class TransactionsFragment extends Fragment {
     View rootView;
     public static Typeface mDefaultTypeface;
 
-    List TRANSACTIONS = new ArrayList<Transactions>();
+    //List TRANSACTIONS = new ArrayList<Transactions>();
 
     /**
      * DealsWithNicheWalletTypeCryptoWallet Interface member variables.
@@ -47,6 +51,14 @@ public class TransactionsFragment extends Fragment {
     CryptoWallet cryptoWallet;
 
     UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
+
+
+    List<Transactions> lstTransactions=new ArrayList<Transactions>();
+
+    ListView listViewTransactions;
+    SwipeRefreshLayout swipeRefreshLayout;
+    TransactionArrayAdapter transactionArrayAdapter;
+
 
     public static TransactionsFragment newInstance(int position) {
         TransactionsFragment f = new TransactionsFragment();
@@ -59,6 +71,24 @@ public class TransactionsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //lstTransactions=new ArrayList<Transactions>();
+
+        // Construct the data source
+        /*lstTransactions.add(new Transactions("Lucia Alarcon De Zamacona", "4 hours ago", "0.0012", "New telephone","Send"));
+        lstTransactions.add(new Transactions("Juan Luis R Pons","5 hours ago", "0.0023", "Old desk", "Received"));
+        lstTransactions.add(new Transactions("Karina Rodríguez","yesterday 11:00 PM","0.1023","Car oil","Received"));
+        lstTransactions.add(new Transactions("Lucia Alarcon De Zamacona", "4 hours ago", "0.0012", "New telephone","Send"));
+        lstTransactions.add(new Transactions("Juan Luis R Pons","5 hours ago", "0.0023", "Old desk", "Received"));
+        lstTransactions.add(new Transactions("Karina Rodríguez","yesterday 11:00 PM","0.1023","Car oil","Received"));
+        lstTransactions.add(new Transactions("Lucia Alarcon De Zamacona", "4 hours ago", "0.0012", "New telephone","Send"));
+        lstTransactions.add(new Transactions("Juan Luis R Pons","5 hours ago", "0.0023", "Old desk", "Received"));
+        lstTransactions.add(new Transactions("Karina Rodríguez","yesterday 11:00 PM","0.1023","Car oil","Received"));
+        lstTransactions.add(new Transactions("Lucia Alarcon De Zamacona", "4 hours ago", "0.0012", "New telephone","Send"));
+        */
+        //lstTransactions.add(new Transactions("Juan Luis R Pons","5 hours ago", "0.0023", "Old desk", "Received"));
+        //lstTransactions.add(new Transactions("Karina Rodríguez","yesterday 11:00 PM","0.1023","Car oil","Received"));
+
 
         try
         {
@@ -74,15 +104,15 @@ public class TransactionsFragment extends Fragment {
                 e.printStackTrace();
             }
 
-
+            //lstTransactions
             try {
-                List<BitcoinTransaction> bitcoinTransactions = cryptoWallet.getTransactions(10, 0, wallet_id);
+                List<BitcoinTransaction> bitcoinTransactions = cryptoWallet.getTransactions(10, 10, wallet_id);
 
                 for(int i = 0; i < bitcoinTransactions.size(); i++) {
                     BitcoinTransaction transaction = (BitcoinTransaction) bitcoinTransactions.get(i);
-                    transaction.getAmount();
+                    //transaction.getAmount();
                     // Construct the data source
-                    TRANSACTIONS.add(new Transactions(transaction.getAddressFrom().getAddress().toString(), String.valueOf(transaction.getTimestamp()), String.valueOf(transaction.getAmount()), transaction.getMemo(), transaction.getType().toString()));
+                    lstTransactions.add(new Transactions(transaction.getAddressFrom().getAddress().toString(), String.valueOf(transaction.getTimestamp()), String.valueOf(transaction.getAmount()), transaction.getMemo(), transaction.getType().toString()));
 
                 }
 
@@ -98,10 +128,7 @@ public class TransactionsFragment extends Fragment {
             ex.printStackTrace();
         }
 
-        // Construct the data source
-       // TRANSACTIONS.add(new Transactions("Lucia Alarcon De Zamacona", "4 hours ago", "0.0012", "New telephone","Send"));
-        //TRANSACTIONS.add(new Transactions("Juan Luis R Pons","5 hours ago", "0.0023", "Old desk", "Received"));
-        //TRANSACTIONS.add(new Transactions("Karina Rodríguez","yesterday 11:00 PM","0.1023","Car oil","Received"));
+
 
     }
 
@@ -111,20 +138,82 @@ public class TransactionsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_transactions, container, false);
         // Get ListView object from xml
-        ListView listView = (ListView) rootView.findViewById(R.id.transactionlist);
-
+        listViewTransactions = (ListView) rootView.findViewById(R.id.transactionlist);
+        swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
 
 
 // Create the adapter to convert the array to views
-        TransactionArrayAdapter adapter = new TransactionArrayAdapter(this.getActivity().getApplicationContext(), TRANSACTIONS);
-
+        transactionArrayAdapter = new TransactionArrayAdapter(this.getActivity(), lstTransactions);
+        //adapter.
 
 
         // Assign adapter to ListView
-        listView.setAdapter(adapter);
+        listViewTransactions.setAdapter(transactionArrayAdapter);
 
+
+        //swipeRefreshLayout.setColorSchemeColors(android.R.color);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshTransactionsContent();
+            }
+        });
+
+        /*listViewTransactions.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                //view.
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                //showMessage("holas");
+                Toast.makeText(getActivity(),"visible item count:"+visibleItemCount+"\n"
+                        +"first vible item:"+firstVisibleItem+"\n"
+                        +"total item count:"+totalItemCount,Toast.LENGTH_SHORT).show();
+
+            }
+        });*/
 
         return rootView;
+    }
+
+    private void refreshTransactionsContent(){
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                loadNewTransactions();
+                //transactionArrayAdapter = new TransactionArrayAdapter(getActivity(),lstTransactions);
+                //listViewTransactions.setAdapter(transactionArrayAdapter);
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        }, 1000);
+    }
+
+    private void loadNewTransactions(){
+        //List<Transactions> lstAux;
+        if(lstTransactions.isEmpty())
+            lstTransactions.add(0, new Transactions("Mati_" + lstTransactions.size(), "Testing", String.valueOf(lstTransactions.size()), "Bestia", "Enviado"));
+        else{
+            try {
+                List<BitcoinTransaction> lst =cryptoWallet.getTransactions(10, 10, wallet_id);
+                Toast.makeText(getActivity(),lst.size(),Toast.LENGTH_SHORT).show();
+                for(BitcoinTransaction transaction: lst){
+                    Toast.makeText(getActivity(),String.valueOf(transaction.getAmount()),Toast.LENGTH_SHORT).show();
+                    lstTransactions.add(0, new Transactions(transaction.getAddressFrom().getAddress().toString(), String.valueOf(transaction.getTimestamp()), String.valueOf(transaction.getAmount()), transaction.getMemo(), transaction.getType().toString()));
+                }
+
+            } catch (CantGetTransactionsException e) {
+                showMessage("Cant Get Transactions Exception- " + e.getMessage());
+                e.printStackTrace();
+            }
+            catch(Exception ex) {
+                showMessage("Unexpected error get Transactions - " + ex.getMessage());
+                ex.printStackTrace();
+            }
+        }
+
+        transactionArrayAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -138,8 +227,8 @@ public class TransactionsFragment extends Fragment {
 
     public class TransactionArrayAdapter extends ArrayAdapter<Transactions> {
 
-        public TransactionArrayAdapter(Context context, List<Transactions> objects) {
-            super(context, 0, objects);
+        public TransactionArrayAdapter(Context context, List<Transactions> lstTrasactions) {
+            super(context, 0, lstTrasactions);
         }
 
         @Override
@@ -247,6 +336,7 @@ public class TransactionsFragment extends Fragment {
         alertDialog.setButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // aquí puedes añadir funciones
+                Toast.makeText(getActivity(),"Auch me tocaste",Toast.LENGTH_SHORT).show();
             }
         });
         //alertDialog.setIcon(R.drawable.icon);
