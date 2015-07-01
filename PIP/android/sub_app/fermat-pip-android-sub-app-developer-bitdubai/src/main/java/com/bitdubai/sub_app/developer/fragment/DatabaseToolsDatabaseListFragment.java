@@ -4,7 +4,9 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -19,6 +22,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.DatabaseTool;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.ToolManager;
+import com.bitdubai.sub_app.developer.common.Resource;
 
 import java.util.List;
 
@@ -38,7 +42,8 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
 
     private DatabaseTool databaseTools;
 
-    private String resource;
+    private Resource resource;
+
 
     List<DeveloperDatabase> developerDatabaseList;
 
@@ -75,13 +80,12 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
         super.onCreateView(inflater, container, savedInstanceState);
         rootView = inflater.inflate(R.layout.fragment_database_tools, container, false);
         try {
-            String name = resource.split(" - ")[0];
-            String type = resource.split(" - ")[1];
-            if (type.equals("Addon")) {
-                Addons addon = Addons.getByKey(name);
+            if (Resource.TYPE_ADDON==resource.type) {
+                Toast.makeText(getActivity(),resource.resource,Toast.LENGTH_SHORT).show();
+                Addons addon = Addons.getByKey(resource.resource);
                 this.developerDatabaseList = databaseTools.getDatabaseListFromAddon(addon);
-            } else if (type.equals("Plugin")) {
-                Plugins plugin = Plugins.getByKey(name);
+            } else if (Resource.TYPE_PLUGIN==resource.type) {
+                Plugins plugin = Plugins.getByKey(resource.resource);
                 this.developerDatabaseList = databaseTools.getDatabaseListFromPlugin(plugin);
             }
 
@@ -113,7 +117,7 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
                     for (DeveloperDatabase devDB : developerDatabaseList2) {
                         if (devDB.getName().equals(item)) {
                             DatabaseToolsDatabaseTableListFragment databaseToolsDatabaseTableListFragment = new DatabaseToolsDatabaseTableListFragment();
-                            databaseToolsDatabaseTableListFragment.setResource(resource);
+                            databaseToolsDatabaseTableListFragment.setResource(resource.resource);
                             databaseToolsDatabaseTableListFragment.setDeveloperDatabase(devDB);
 
                             FragmentTransaction FT = getFragmentManager().beginTransaction();
@@ -151,7 +155,9 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
         alertDialog.show();
     }
 
-    public void setResource(String resource) {
+
+
+    public void setResource(Resource resource) {
         this.resource = resource;
     }
 }
