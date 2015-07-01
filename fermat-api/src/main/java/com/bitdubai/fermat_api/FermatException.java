@@ -22,8 +22,8 @@ public class FermatException extends Exception {
 		super(message, cause);
 		this.exceptionName = exceptionName;
 		this.cause = cause instanceof FermatException ? (FermatException) cause : null;
-		this.context = context;
-		this.possibleReason = possibleReason;
+		this.context = context == null || context.isEmpty() ? "N/A" : context;
+		this.possibleReason = possibleReason == null || possibleReason.isEmpty() ? "N/A" : possibleReason;
 		this.depth = (this.cause == null) ? Integer.valueOf(1) : Integer.valueOf(this.cause.getDepth() + 1);
 	}
 
@@ -38,8 +38,8 @@ public class FermatException extends Exception {
 		super(message, cause);
 		this.exceptionName = getClass().toString();
 		this.cause = cause instanceof FermatException ? (FermatException) cause : null;
-		this.context = context;
-		this.possibleReason = possibleReason;
+		this.context = context == null || context.isEmpty() ? "N/A" : context;
+		this.possibleReason = possibleReason == null || possibleReason.isEmpty() ? "N/A" : possibleReason;
 		this.depth = (this.cause == null) ? Integer.valueOf(1) : Integer.valueOf(this.cause.getDepth() + 1);
 	}
 
@@ -89,11 +89,11 @@ public class FermatException extends Exception {
 		buffer.append("Exception Type: " + exceptionName + "\n");
 		buffer.append("Exception Message: " + getMessage() + "\n");
 		buffer.append("Exception Possible Cause: ");
-		buffer.append(getPossibleReason().isEmpty() ? "N/A \n" : getPossibleReason() + "\n");
+		buffer.append(getPossibleReason() + "\n");
 		buffer.append("Exception Context: " );
-		buffer.append(!getFormattedContext().isEmpty() ? "\n---------------------------------------------------------------------------------\n" : "");
-		buffer.append(getFormattedContext().isEmpty() ? "N/A \n" : getFormattedContext());
-		buffer.append(!getFormattedContext().isEmpty() ? "---------------------------------------------------------------------------------\n" : "");
+		buffer.append("\n---------------------------------------------------------------------------------\n");
+		buffer.append(getFormattedContext());
+		buffer.append("---------------------------------------------------------------------------------\n");
 		buffer.append("Exception Stack Trace: \n");
 		buffer.append("---------------------------------------------------------------------------------\n");
 		buffer.append(getFormattedTrace());

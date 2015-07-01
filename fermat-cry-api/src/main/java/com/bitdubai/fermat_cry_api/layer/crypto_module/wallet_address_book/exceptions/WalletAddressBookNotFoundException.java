@@ -9,7 +9,7 @@ package com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exce
  */
 public class WalletAddressBookNotFoundException extends WalletAddressBookException {
 
-    public static final String DEFAULT_MESSAGE = "WALLET NOT FOUND EXCEPTION";
+    public static final String DEFAULT_MESSAGE = "WALLET ADDRESS BOOK NOT FOUND EXCEPTION";
 
     public WalletAddressBookNotFoundException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
