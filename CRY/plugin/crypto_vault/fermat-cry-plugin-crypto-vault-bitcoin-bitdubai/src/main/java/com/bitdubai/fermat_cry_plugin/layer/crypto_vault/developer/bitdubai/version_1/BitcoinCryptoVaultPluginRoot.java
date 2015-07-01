@@ -47,8 +47,18 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.vers
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.events.TransactionNotificationAgent;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.developerUtils.*;
 
+import org.reflections.Reflections;
+import org.reflections.scanners.ResourcesScanner;
+import org.reflections.scanners.SubTypesScanner;
+import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
+import org.reflections.util.FilterBuilder;
+
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -136,6 +146,37 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
     @Override
     public void changeLoggingLevel(LogLevel newLoggingLevel) {
         logLevel = newLoggingLevel;
+    }
+
+    @Override
+    public List<String> getClassesFullPath() {
+        /**
+         * I create the filters and loaders for reflection.
+         */
+        List<ClassLoader> classLoadersList = new LinkedList<ClassLoader>();
+        classLoadersList.add(ClasspathHelper.contextClassLoader());
+        classLoadersList.add(ClasspathHelper.staticClassLoader());
+
+        Reflections reflections = new Reflections(new ConfigurationBuilder()
+                .setScanners(new SubTypesScanner(false /* don't exclude Object.class */), new ResourcesScanner())
+                .setUrls(ClasspathHelper.forClassLoader(classLoadersList.toArray(new ClassLoader[0])))
+                        /**
+                         * I filter by the package name of the plug in Root.
+                         */
+                .filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix(this.getClass().getPackage().getName()))));
+
+        Set<Class<?>> classes = reflections.getSubTypesOf(Object.class);
+        Iterator<Class<?>> iterator = classes.iterator();
+
+        /**
+         * I insert the classes in the List and return it.
+         */
+        List<String> returnedClasses = new ArrayList<String>();
+        while (iterator.hasNext()){
+            String fullClass = iterator.next().getName();
+            returnedClasses.add(fullClass);
+        }
+        return returnedClasses;
     }
 
     /**
