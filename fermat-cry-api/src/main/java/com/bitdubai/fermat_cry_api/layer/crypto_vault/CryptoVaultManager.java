@@ -19,6 +19,19 @@ public interface CryptoVaultManager extends TransactionSender<CryptoTransaction>
     public void disconnectFromBitcoin();
     public CryptoAddress getAddress();
     public List<CryptoAddress> getAddresses(int amount);
-    public void sendBitcoins (UUID walletId, UUID FermatTrId,  CryptoAddress addressTo, long satothis) throws InsufficientMoneyException, InvalidSendToAddressException, CouldNotSendMoneyException;
+
+    /**
+     * Send bitcoins to the specified address. The Address must be a valid address in the network beeing used
+     * and we must have enought funds to send this money
+     * @param walletId
+     * @param FermatTrId internal transaction Id - used to validate that it was not send previously.
+     * @param addressTo the valid address we are sending to
+     * @param satoshis the amount in long of satoshis
+     * @return the transaction Hash of the new created transaction in the vault.
+     * @throws InsufficientMoneyException
+     * @throws InvalidSendToAddressException
+     * @throws CouldNotSendMoneyException
+     */
+    public String sendBitcoins (UUID walletId, UUID FermatTrId,  CryptoAddress addressTo, long satoshis) throws InsufficientMoneyException, InvalidSendToAddressException, CouldNotSendMoneyException;
     ;
 }

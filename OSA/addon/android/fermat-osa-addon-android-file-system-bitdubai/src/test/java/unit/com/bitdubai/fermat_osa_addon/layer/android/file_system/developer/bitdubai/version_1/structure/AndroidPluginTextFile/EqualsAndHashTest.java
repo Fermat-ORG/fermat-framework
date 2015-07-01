@@ -60,11 +60,24 @@ public class EqualsAndHashTest {
 
     @Test
     public void DifferentDirectory_NotEquals_DifferentHash(){
-        testFile2 = constructAndroidPluginTextFile(testId, testContext, testDirectory, testFileName, testPrivacyLevel, testLifeSpan);
+        testFile2 = constructAndroidPluginTextFile(testId, testContext, testDirectory+"abc", testFileName, testPrivacyLevel, testLifeSpan);
         assertThat(testFile1).isNotEqualTo(testFile2);
         assertThat(testFile1.hashCode()).isNotEqualTo(testFile2.hashCode());
     }
 
+    @Test
+    public void DifferentFileName_NotEquals_DifferentHash(){
+        testFile2 = constructAndroidPluginTextFile(testId, testContext, testDirectory, testFileName+"abc", testPrivacyLevel, testLifeSpan);
+        assertThat(testFile1).isNotEqualTo(testFile2);
+        assertThat(testFile1.hashCode()).isNotEqualTo(testFile2.hashCode());
+    }
+
+    @Test
+    public void DifferentPrivacyLevel_NotEquals_DifferentHash(){
+        testFile2 = constructAndroidPluginTextFile(testId, testContext, testDirectory, testFileName, FilePrivacy.PRIVATE, testLifeSpan);
+        assertThat(testFile1).isNotEqualTo(testFile2);
+        assertThat(testFile1.hashCode()).isNotEqualTo(testFile2.hashCode());
+    }
 
     private AndroidPluginTextFile constructAndroidPluginTextFile(final UUID ownerId, final Context context, final String directoryName, final String fileName, final FilePrivacy privacyLevel, final FileLifeSpan lifeSpan){
         return new AndroidPluginTextFile(ownerId, context, directoryName, fileName, privacyLevel, lifeSpan);

@@ -58,13 +58,14 @@ public class TransactionExecutor implements DealsWithBitcoinWallet, DealsWithWal
 
     public void executeTransaction(Transaction<CryptoTransaction> transaction) throws CantGetWalletAddressBookRegistryException, CantGetWalletAddressBookException, CantLoadWalletException, CantRegisterCreditException {
 
-
+/*
         UUID temporalId = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
 
         BitcoinWallet bitcoinWallet2 = bitcoinWalletManager.loadWallet(temporalId);
         bitcoinWallet2.credit(generateBitcoinTransaction(transaction.getInformation()));
         if (true)
           return;
+        */
 
         UUID walletID;
         PlatformWalletType platformWalletType;
@@ -86,6 +87,7 @@ public class TransactionExecutor implements DealsWithBitcoinWallet, DealsWithWal
             case BASIC_WALLET_BITCOIN_WALLET:
                 BitcoinWallet bitcoinWallet = bitcoinWalletManager.loadWallet(walletID);
                 bitcoinWallet.credit(generateBitcoinTransaction(transaction.getInformation()));
+                System.out.println("TTF - Transaction applie by transaction executor");
                 return;
             default:
                 break;
@@ -98,6 +100,7 @@ public class TransactionExecutor implements DealsWithBitcoinWallet, DealsWithWal
 
         long timestamp = System.currentTimeMillis() / 1000L;
 
+        bitcoinTransaction.setTramsactionHash(cryptoTransaction.getTransactionHash());
         bitcoinTransaction.setAddressFrom(cryptoTransaction.getAddressFrom());
         bitcoinTransaction.setAddressTo(cryptoTransaction.getAddressTo());
         bitcoinTransaction.setAmount(cryptoTransaction.getCryptoAmount());

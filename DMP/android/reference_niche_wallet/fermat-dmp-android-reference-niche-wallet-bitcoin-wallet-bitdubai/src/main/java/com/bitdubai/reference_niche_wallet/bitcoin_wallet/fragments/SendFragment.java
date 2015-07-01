@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -30,6 +32,7 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.IntentIntegrator;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.IntentResult;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
@@ -40,6 +43,8 @@ public class SendFragment extends Fragment implements View.OnClickListener {
     private static final String ARG_POSITION = "position";
     View rootView;
     UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
+
+    Bundle savedInstanceState;
     /**
      * DealsWithNicheWalletTypeCryptoWallet Interface member variables.
      */
@@ -60,6 +65,7 @@ public class SendFragment extends Fragment implements View.OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        this.savedInstanceState = savedInstanceState;
         cryptoWalletManager = platform.getCryptoWalletManager();
 
         try {
@@ -68,6 +74,8 @@ public class SendFragment extends Fragment implements View.OnClickListener {
             showMessage("CantGetCryptoWalletException- " + e.getMessage());
             e.printStackTrace();
         }
+
+
     }
 
     @Override
@@ -143,10 +151,10 @@ public class SendFragment extends Fragment implements View.OnClickListener {
             scanImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //Intent intent = new Intent("com.google.zxing.client.android.SCAN");
-                    //intent.putExtra("com.google.zxing.client.android.SCAN.SCAN_MODE", "QR_CODE_MODE");
-                    //startActivityForResult(intent, 0);
-                    IntentIntegrator integrator = new IntentIntegrator(getActivity());
+
+                //pass reference to edit text control to show scan result and main activity
+                   IntentIntegrator integrator = new IntentIntegrator(getActivity(),(EditText) rootView.findViewById(R.id.address));
+
                     integrator.initiateScan();
 
                 }
@@ -167,18 +175,17 @@ public class SendFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 0) {
+        try
+        {
+
+
             if (data != null) {
-                // Handle successful scan
-                //String contents = intent.getStringExtra("SCAN_RESULT");
-                //String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
-                //put code in file wallet address
 
-                //TextView tv;
 
-                //tv = (EditText) rootView.findViewById(R.id.address);
-                //tv.setText(contents);
                 IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+
+                //get references to edit text control to show scand result
+                EditText textResult =  IntentIntegrator.getTextResult();
                 if (scanResult != null) {
 
                     // handle scan result
@@ -188,9 +195,8 @@ public class SendFragment extends Fragment implements View.OnClickListener {
 
                     }else {
                         //load into text address
-                        txtAddress.setText(contantsString);
-                        //Toast.makeText(this.getActivity(), contantsString, Toast.LENGTH_LONG).show();
 
+                       textResult.setText(contantsString);
                     }
 
                 }
@@ -199,8 +205,12 @@ public class SendFragment extends Fragment implements View.OnClickListener {
                 }
 
             }
+    }
+    catch (Exception e) {
+        showMessage(" Load address Exception- " + e.getMessage());
+        e.printStackTrace();
+    }
 
-        }
     }
 
     @Override
@@ -250,4 +260,7 @@ public class SendFragment extends Fragment implements View.OnClickListener {
         //alertDialog.setIcon(R.drawable.icon);
         alertDialog.show();
     }
+
+
+
 }

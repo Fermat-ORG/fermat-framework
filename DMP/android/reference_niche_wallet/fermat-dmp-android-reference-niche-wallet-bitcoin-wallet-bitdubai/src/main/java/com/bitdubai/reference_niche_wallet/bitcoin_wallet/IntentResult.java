@@ -1,5 +1,7 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet;
 
+import android.widget.EditText;
+
 public final class IntentResult {
 
       private final String contents;
@@ -7,6 +9,7 @@ public final class IntentResult {
       private final byte[] rawBytes;
       private final Integer orientation;
       private final String errorCorrectionLevel;
+
 
       IntentResult() {
         this(null, null, null, null, null);
@@ -22,6 +25,7 @@ public final class IntentResult {
         this.rawBytes = rawBytes;
         this.orientation = orientation;
         this.errorCorrectionLevel = errorCorrectionLevel;
+
       }
 
       /**
@@ -30,6 +34,7 @@ public final class IntentResult {
       public String getContents() {
         return contents;
       }
+
 
       /**
        * @return name of format, like "QR_CODE", "UPC_A". See {@code BarcodeFormat} for more format names.
