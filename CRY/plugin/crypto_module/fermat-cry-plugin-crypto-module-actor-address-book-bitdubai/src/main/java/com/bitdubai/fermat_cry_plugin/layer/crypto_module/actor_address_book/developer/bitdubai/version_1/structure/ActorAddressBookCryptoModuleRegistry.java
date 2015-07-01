@@ -2,16 +2,19 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.de
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.ActorAddressBookNotFoundException;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantGetActorAddressBookException;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantRegisterActorAddressBookException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookRecord;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookRegistry;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantGetActorAddressBook;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantRegisterActorAddressBook;
-import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.exceptions.CantInitializeActorAddressBookException;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.exceptions.CantInitializeActorAddressBookCryptoModuleException;
 
 import java.util.List;
 import java.util.UUID;
@@ -45,7 +48,7 @@ public class ActorAddressBookCryptoModuleRegistry implements ActorAddressBookReg
      */
     private UUID pluginId;
 
-    public void initialize() throws CantInitializeActorAddressBookException {
+    public void initialize() throws CantInitializeActorAddressBookCryptoModuleException {
         /**
          * I will try to create and initialize a new DAO
          */
@@ -55,29 +58,42 @@ public class ActorAddressBookCryptoModuleRegistry implements ActorAddressBookReg
     }
 
     /**
-     * Address Book Manager implementation.
+     * Actor Address Book Manager implementation.
      */
-
     @Override
-
-    public ActorAddressBookRecord getActorAddressBookByCryptoAddress(CryptoAddress cryptoAddress) throws CantGetActorAddressBook {
-        return actorAddressBookDao.getActorAddressBookByCryptoAddress(cryptoAddress);
+    public ActorAddressBookRecord getActorAddressBookByCryptoAddress(CryptoAddress cryptoAddress) throws CantGetActorAddressBookException, ActorAddressBookNotFoundException {
+        try {
+            return actorAddressBookDao.getActorAddressBookByCryptoAddress(cryptoAddress);
+        } catch (CantGetActorAddressBookException |ActorAddressBookNotFoundException exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_ADDRESS_BOOK_CRYPTO, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw exception;
+        }
     }
 
     @Override
-    public List<ActorAddressBookRecord> getAllActorAddressBookByActorId(UUID actorId) throws CantGetActorAddressBook {
-        return actorAddressBookDao.getAllActorAddressBookByActorId(actorId);
+    public List<ActorAddressBookRecord> getAllActorAddressBookByActorId(UUID actorId) throws CantGetActorAddressBookException, ActorAddressBookNotFoundException {
+
+        try {
+            return actorAddressBookDao.getAllActorAddressBookByActorId(actorId);
+        } catch (CantGetActorAddressBookException |ActorAddressBookNotFoundException exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_ADDRESS_BOOK_CRYPTO, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw exception;
+        }
     }
 
 
     @Override
-    public void registerActorAddressBook(UUID actorId, Actors actorType, CryptoAddress cryptoAddress) throws CantRegisterActorAddressBook {
+    public void registerActorAddressBook(UUID actorId, Actors actorType, CryptoAddress cryptoAddress) throws CantRegisterActorAddressBookException {
 
         /**
          * Here I create the Address book record for new user.
          */
-        actorAddressBookDao.registerActorAddressBook(actorId, actorType, cryptoAddress);
-
+        try {
+            actorAddressBookDao.registerActorAddressBook(actorId, actorType, cryptoAddress);
+        } catch (CantRegisterActorAddressBookException exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_ADDRESS_BOOK_CRYPTO, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw exception;
+        }
     }
 
 
