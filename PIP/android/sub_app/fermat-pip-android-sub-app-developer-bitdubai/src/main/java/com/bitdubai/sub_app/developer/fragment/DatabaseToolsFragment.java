@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.sub_app.developer.R;
@@ -40,7 +41,10 @@ import java.util.List;
  *
  * @version 1.0
  */
-public class DatabaseToolsFragment extends Fragment {
+public class DatabaseToolsFragment extends Fragment{
+
+
+    public static final String TAG_DATABASE_TOOLS_FRAGMENT= "DatabaseToolsFragment";
 
     private static final String ARG_POSITION = "position";
     View rootView;
@@ -50,6 +54,8 @@ public class DatabaseToolsFragment extends Fragment {
     private static Platform platform = new Platform();
 
     private ArrayList<Resource> mlist;
+
+    private GridView gridView;
 
     public static DatabaseToolsFragment newInstance(int position) {
         DatabaseToolsFragment f = new DatabaseToolsFragment();
@@ -79,8 +85,8 @@ public class DatabaseToolsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_database_tools, container, false);
-        final GridView gridView = new GridView(getActivity());
+        rootView = inflater.inflate(R.layout.start, container, false);
+        gridView =(GridView) rootView.findViewById(R.id.gridView);
         try {
             // Get ListView object from xml
             //final ListView listView = (ListView) rootView.findViewById(R.id.lista1);
@@ -88,47 +94,7 @@ public class DatabaseToolsFragment extends Fragment {
             List<Plugins> plugins = databaseTools.getAvailablePluginList();
             List<Addons> addons = databaseTools.getAvailableAddonList();
 
-            //List<App> lstCompleta = new ArrayList<>();
 
-
-
-            //for(Plugins plugin : plugins){ lstCompleta.add(String.valueOf(plugin.getKey())); }
-            //for(Addons addon : addons){ lstCompleta.add(String.valueOf(addon.getKey())); }
-
-            /*String[] availableResources;
-            if (lstCompleta.size() > 0) {
-                availableResources = new String[lstCompleta.size()];
-                for(int i = 0; i < lstCompleta.size() ; i++) {
-                    availableResources[i] = lstCompleta.get(i);
-                }
-            } else {
-                availableResources = new String[0];
-            }*/
-
-            /*ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity().getApplicationContext(),
-                    android.R.layout.simple_list_item_1, android.R.id.text1, availableResources);
-            */
-
-            String[] company_picture =
-                    {"wallet_store_cover_photo_girl",
-                            "wallet_store_cover_photo_boy",
-                            "wallet_store_cover_photo_lady",
-                            "wallet_store_cover_fermat",
-                            "wallet_store_cover_photo_boca_juniors",
-                            "wallet_store_cover_photo_carrefour",
-                            "wallet_store_cover_photo_gucci",
-                            "wallet_store_cover_photo_bank_itau",
-                            "wallet_store_cover_photo_mcdonals",
-                            "wallet_store_cover_photo_vans",
-                            "wallet_store_cover_photo_samsung",
-                            "wallet_store_cover_photo_bank_popular",
-                            "wallet_store_cover_photo_sony",
-                            "wallet_store_cover_photo_bmw",
-                            "wallet_store_cover_photo_hp",
-                            "wallet_store_cover_photo_billabong",
-                            "wallet_store_cover_photo_starbucks"
-
-                    };
 
             mlist=new ArrayList<Resource>();
 
@@ -137,7 +103,7 @@ public class DatabaseToolsFragment extends Fragment {
 
                     item.picture = "plugin";
                     item.resource = plugins.get(i).getKey();
-                    item.developer = plugins.get(i).getDeveloper().toString();
+                    //item.developer = plugins.get(i).getDeveloper().toString();
                     item.type=Resource.TYPE_PLUGIN;
                     mlist.add(item);
                 //}
@@ -147,7 +113,7 @@ public class DatabaseToolsFragment extends Fragment {
 
                 item.picture = "addon";
                 item.resource = addons.get(i).getKey();
-                item.developer = plugins.get(i).getDeveloper().toString();
+                //item.developer = plugins.get(i).getDeveloper().toString();
                 item.type=Resource.TYPE_ADDON;
                 mlist.add(item);
                 //}
@@ -166,22 +132,9 @@ public class DatabaseToolsFragment extends Fragment {
             _adpatrer.notifyDataSetChanged();
             gridView.setAdapter(_adpatrer);
 
-            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                public void onItemClick(AdapterView<?> parent, View v,
-                                        int position, long id) {
-                    Resource item=(Resource) gridView.getItemAtPosition(position);
-                    DatabaseToolsDatabaseListFragment databaseToolsDatabaseListFragment = new DatabaseToolsDatabaseListFragment();
 
-                    databaseToolsDatabaseListFragment.setResource(item);
 
-                    FragmentTransaction FT = getFragmentManager().beginTransaction();
 
-                    FT.replace(R.id.hola, databaseToolsDatabaseListFragment);
-
-                    FT.commit();
-                    return;
-                }
-            });
 
 
             /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -208,8 +161,9 @@ public class DatabaseToolsFragment extends Fragment {
             showMessage("DatabaseTools Fragment onCreateView Exception - " + e.getMessage());
             e.printStackTrace();
         }
-        LinearLayout l=(LinearLayout)rootView.findViewById(R.id.hola);
-        l.addView(gridView);
+
+        //LinearLayout l=(LinearLayout)rootView.findViewById(R.id.hola);
+        //l.addView(gridView);
 
         return rootView;
     }
@@ -230,6 +184,7 @@ public class DatabaseToolsFragment extends Fragment {
 
 
 
+
     public class AppListAdapter extends ArrayAdapter<Resource> {
 
 
@@ -238,18 +193,67 @@ public class DatabaseToolsFragment extends Fragment {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
 
             Resource item = getItem(position);
+
+
+            /*gridView =(GridView) rootView.findViewById(R.id.gridView);
+            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                public void onItemClick(AdapterView<?> parent, View v,
+                                        int position, long id) {
+                    Toast.makeText(getActivity(), "natalia+"+position, Toast.LENGTH_SHORT).show();
+                    //Resource item=(Resource) gridView.getItemAtPosition(position);
+                    //Toast.makeText(getActivity(),item.resource,Toast.LENGTH_SHORT).show();
+                    //DatabaseToolsDatabaseListFragment databaseToolsDatabaseListFragment = new DatabaseToolsDatabaseListFragment();
+
+                    //databaseToolsDatabaseListFragment.setResource(item);
+
+                    //FragmentTransaction FT = getFragmentManager().beginTransaction();
+
+
+                    //FT.add(databaseToolsDatabaseListFragment, TAG_DATABASE_TOOLS_FRAGMENT);
+                    //FT.replace(R.id.hola, databaseToolsDatabaseListFragment);
+
+                    //FT.commit();
+
+
+                }
+            });
+            */
 
             ViewHolder holder;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
                 convertView = inflater.inflate(R.layout.shell_wallet_desktop_front_grid_item, parent, false);
+
+
                 holder = new ViewHolder();
 
 
+
+
                 holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
+
+                holder.imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        Resource item=(Resource) gridView.getItemAtPosition(position);
+                        Toast.makeText(getActivity(),item.resource,Toast.LENGTH_SHORT).show();
+                        DatabaseToolsDatabaseListFragment databaseToolsDatabaseListFragment = new DatabaseToolsDatabaseListFragment();
+
+                        databaseToolsDatabaseListFragment.setResource(item);
+
+                        FragmentTransaction FT = getFragmentManager().beginTransaction();
+
+
+                        FT.add(databaseToolsDatabaseListFragment, TAG_DATABASE_TOOLS_FRAGMENT);
+                        FT.replace(R.id.hola, databaseToolsDatabaseListFragment);
+
+                        FT.commit();
+                    }
+                });
                 holder.companyTextView = (TextView) convertView.findViewById(R.id.company_text_view);
 
 
@@ -273,7 +277,7 @@ public class DatabaseToolsFragment extends Fragment {
                     break;
                 default:
                     holder.imageView.setImageResource(R.drawable.addon);
-                    holder.imageView.setTag("CPWWRWAKAV1M|2");
+                    holder.imageView.setTag("CPWWRWAKAV1M|3");
                     break;
             }
 

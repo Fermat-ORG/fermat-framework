@@ -18,6 +18,13 @@ public class Resource implements Serializable {
 
         public int type;
 
-
-
-    }
+        @Override
+        public String toString() {
+                return "Resource{" +
+                        "picture='" + picture + '\'' +
+                        ", resource='" + resource + '\'' +
+                        ", developer='" + developer + '\'' +
+                        ", type=" + type +
+                        '}';
+        }
+}
