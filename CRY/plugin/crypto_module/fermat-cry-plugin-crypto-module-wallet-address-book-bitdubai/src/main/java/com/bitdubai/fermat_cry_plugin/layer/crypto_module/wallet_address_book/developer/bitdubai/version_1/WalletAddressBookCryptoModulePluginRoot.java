@@ -148,18 +148,6 @@ public class WalletAddressBookCryptoModulePluginRoot implements Crypto, Database
 
     @Override
     public void start() throws CantStartPluginException {
-        WalletAddressBookCryptoModuleRegistry walletAddressBookModuleRegistry = new WalletAddressBookCryptoModuleRegistry();
-
-        walletAddressBookModuleRegistry.setErrorManager(this.errorManager);
-        walletAddressBookModuleRegistry.setPluginDatabaseSystem(this.pluginDatabaseSystem);
-        walletAddressBookModuleRegistry.setPluginId(this.pluginId);
-
-        try {
-            walletAddressBookModuleRegistry.initialize();
-        } catch (CantInitializeWalletAddressBookCryptoModuleException exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_ADDRESS_BOOK_CRYPTO, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception);
-        }
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
