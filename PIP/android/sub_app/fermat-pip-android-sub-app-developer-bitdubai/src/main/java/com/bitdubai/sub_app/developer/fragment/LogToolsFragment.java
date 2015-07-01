@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.bitdubai.fermat_api.layer.pip_actor.developer.ClassHierarchy;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -143,7 +144,17 @@ public class LogToolsFragment extends Fragment {
 
             List<String> list = new ArrayList<>();
 
-            for(Plugins plugin : plugins){ list.add(plugin.getKey()+" - Plugin || LogLevel: "+logTool.getLogLevel(plugin)); }
+            for(Plugins plugin : plugins){
+                list.add(plugin.getKey()); //+" - Plugin || LogLevel: "+logTool.getLogLevel(plugin));
+                /**
+                 * I will get the list of the available classes on the plug in
+                 */
+                for (ClassHierarchy classes : logTool.getClassesHierarchy(plugin)){
+                    list.add(classes.getLevel1());
+                    list.add(classes.getLevel2());
+                    list.add(classes.getLevel3());
+                }
+            }
             for(Addons addon : addons){ list.add(addon.getKey() + " - Addon || LogLevel: " + logTool.getLogLevel(addon)); }
 
             String[] availableResources;
