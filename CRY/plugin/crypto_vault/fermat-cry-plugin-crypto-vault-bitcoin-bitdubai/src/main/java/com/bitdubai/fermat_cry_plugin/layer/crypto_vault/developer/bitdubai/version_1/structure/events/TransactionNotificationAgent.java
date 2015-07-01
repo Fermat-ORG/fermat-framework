@@ -37,6 +37,7 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.vers
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseActions;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseFactory;
 
+import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
@@ -58,7 +59,7 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
     MonitorAgent monitorAgent;
 
     /**
-     * DealWithLogManagers interface member variable
+     * DealWithLogger interface member variable
      */
     LogManager logManager;
 
@@ -275,7 +276,8 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
                  * now I will check if there are pending transactions to raise the event
                  */
                 try {
-                    logManager.log(BitcoinCryptoVaultPluginRoot.logLevel, null, "Iteration number " + iteration, "Iteration number " + iteration);
+
+                    logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.events.TransactionNotificationAgent"), null, "Iteration number " + iteration, "Iteration number " + iteration);
                     doTheMainTask();
                 } catch (CantExecuteQueryException e) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);

@@ -55,9 +55,11 @@ import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
@@ -104,6 +106,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
      * DealsWithLogger interface member variable
      */
     LogManager logManager;
+    static Map<String, LogLevel> newLoggingLevel;
 
     /**
      * DealsWithDeviceUsers interface member variable
@@ -158,12 +161,12 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
         classLoadersList.add(ClasspathHelper.staticClassLoader());
 
         Reflections reflections = new Reflections(new ConfigurationBuilder()
-                .setScanners(new SubTypesScanner(false /* don't exclude Object.class */), new ResourcesScanner())
+                .setScanners(new SubTypesScanner(false), new ResourcesScanner())
                 .setUrls(ClasspathHelper.forClassLoader(classLoadersList.toArray(new ClassLoader[0])))
                         /**
                          * I filter by the package name of the plug in Root.
                          */
-                .filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix(this.getClass().getPackage().getName()))));
+                .filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1"))));
 
         Set<Class<?>> classes = reflections.getSubTypesOf(Object.class);
         Iterator<Class<?>> iterator = classes.iterator();
@@ -176,7 +179,26 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
             String fullClass = iterator.next().getName();
             returnedClasses.add(fullClass);
         }
+        if (returnedClasses.isEmpty()){
+            returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot");
+            returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.BitcoinNetworkConfiguration");
+            returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseFactory");
+            returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.TransactionConfidenceCalculator");
+            returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseConstants");
+            returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.BitcoinCryptoVault");
+            returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseActions");
+            returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.events.TransactionNotificationAgent");
+            returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.developerUtils.DeveloperDatabaseFactory");
+            returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.events.TransactionNotificationAgent");
+        }
         return returnedClasses;
+    }
+
+
+    @Override
+    public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
+        this.newLoggingLevel = newLoggingLevel;
+
     }
 
     /**
@@ -488,5 +510,13 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
     @Override
     public TransactionProtocolManager<CryptoTransaction> getTransactionManager() {
         return vault;
+    }
+
+    public static LogLevel getLogLevelByClass(String className){
+        try{
+            return BitcoinCryptoVaultPluginRoot.newLoggingLevel.get(className);
+        } catch (Exception e){
+            return LogLevel.MINIMAL_LOGGING;
+        }
     }
 }

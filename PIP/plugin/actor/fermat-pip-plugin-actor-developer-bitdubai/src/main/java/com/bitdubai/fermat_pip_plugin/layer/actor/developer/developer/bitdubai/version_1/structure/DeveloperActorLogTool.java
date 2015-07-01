@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.pip_actor.developer.ClassHierarchyLevels;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.LogTool;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -118,7 +119,11 @@ public class DeveloperActorLogTool implements LogTool {
                 ClassHierarchyLevels classesAndPackages = new ClassHierarchyLevels();
                 classesAndPackages.setLevel1(splitedPackages.toString());
                 classesAndPackages.setLevel2(packages[packages.length - 2]);
-                classesAndPackages.setLevel3(packages[packages.length -1]);
+                classesAndPackages.setLevel3(packages[packages.length - 1]);
+                classesAndPackages.setFullPath(myClass);
+                /**
+                 * I add the full path for future reference.
+                 */
                 returnedClasses.add(classesAndPackages);
                 splitedPackages.delete(0,splitedPackages.length()-1 );
             }
@@ -141,6 +146,7 @@ public class DeveloperActorLogTool implements LogTool {
                 if (packages.length > 2)
                     classesAndPackages.setLevel3(packages[2]);
 
+                classesAndPackages.setFullPath(myClass);
                 /**
                  * I add the class to the returning object
                  */
@@ -152,5 +158,10 @@ public class DeveloperActorLogTool implements LogTool {
          * I return the object
          */
         return returnedClasses;
+    }
+
+    @Override
+    public void setNewLogLevelInClass(Plugins plugin, HashMap<String, LogLevel> newLogLevelInClass) {
+        ((LogManagerForDevelopers) this.LoggingLstPlugins.get(plugin)).setLoggingLevelPerClass(newLogLevelInClass);
     }
 }

@@ -7,6 +7,7 @@ public class ClassHierarchyLevels {
     String level1;
     String level2;
     String level3;
+    String fullPath;
 
 
     public String getLevel1() {
@@ -19,6 +20,14 @@ public class ClassHierarchyLevels {
 
     public String getLevel3() {
         return level3;
+    }
+
+    public String getFullPath() {
+        return fullPath;
+    }
+
+    public void setFullPath(String fullPath) {
+        this.fullPath = fullPath;
     }
 
     public void setLevel1(String level1) {
