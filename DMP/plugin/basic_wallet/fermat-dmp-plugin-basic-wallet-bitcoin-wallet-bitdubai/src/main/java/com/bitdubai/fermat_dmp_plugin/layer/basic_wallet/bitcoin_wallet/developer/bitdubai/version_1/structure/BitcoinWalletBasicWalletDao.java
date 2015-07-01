@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantFindTransactionException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantGetTransactionsException;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantInitializeBitcoinWalletBasicException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantRegisterDebitDebitException;
 
@@ -95,7 +96,8 @@ public class BitcoinWalletBasicWalletDao {
              */
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
 
-            throw new CantCalculateBalanceException();
+            throw new CantCalculateBalanceException("Error to get Wallet Balance",cantLoadTableToMemory,"Error load wallet table" , "");
+
         }
 
         // and finally we calculate the balance
@@ -116,9 +118,8 @@ public class BitcoinWalletBasicWalletDao {
             /**
              * I can not solve this situation.
              */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
+            throw new CantCalculateBalanceException("Error to get Wallet Balance",cantLoadTableToMemory,"Error load Amount table" , "");
 
-            throw new CantCalculateBalanceException();
         }
 
         // and finally we calculate the balance
@@ -156,9 +157,9 @@ public class BitcoinWalletBasicWalletDao {
             /**
              * I can not solve this situation.
              */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
 
-            throw new CantRegisterDebitDebitException();
+            throw new CantRegisterDebitDebitException("Error to add debit transaction to wallet",cantLoadTableToMemory,"Error load wallet table" , "");
+
 
         }
 
@@ -182,9 +183,10 @@ public class BitcoinWalletBasicWalletDao {
             try {
                 bitcoinwalletTable.insertRecord(debitRecord);
             } catch (CantInsertRecordException cantInsertRecordException) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantInsertRecordException);
 
-                throw new CantRegisterDebitDebitException();
+                throw new CantRegisterDebitDebitException("Error to add debit transaction to wallet",cantInsertRecordException,"Error to insert table record" , "");
+
+
             }
         }
 
@@ -212,9 +214,9 @@ public class BitcoinWalletBasicWalletDao {
             /**
              * I can not solve this situation.
              */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
 
-            throw new CantRegisterCreditException();
+            throw new CantRegisterCreditException("Error to add credit transaction to wallet",cantLoadTableToMemory,"Error to load wallet table" , "");
+
 
         }
 
@@ -243,7 +245,7 @@ public class BitcoinWalletBasicWalletDao {
             {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantInsertRecordException);
 
-                throw new CantRegisterCreditException();
+                throw new CantRegisterCreditException("Error to add credit transaction to wallet",cantInsertRecordException,"Error to insert new record on table" , "");
             }
         }
 
@@ -272,7 +274,8 @@ public class BitcoinWalletBasicWalletDao {
              */
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
 
-            throw new CantGetTransactionsException();
+            throw new CantGetTransactionsException("Get List of Transactions",cantLoadTableToMemory,"Error load wallet table ", "");
+
 
         }
 
@@ -304,7 +307,9 @@ public class BitcoinWalletBasicWalletDao {
                     bitcoinTransaction.setState(TransactionState.getByCode(record.getStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_STATE_COLUMN_NAME)));
                 } catch (InvalidParameterException e) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                    throw new CantGetTransactionsException();
+                    throw new CantGetTransactionsException("Get List of Transactions",e,"Error set State ", "");
+
+
                 }
                 bitcoinTransaction.setTimestamp(record.getLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME));
                 bitcoinTransaction.setTramsactionHash(record.getStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TRANSACTION_HASH_COLUMN_NAME));
@@ -312,10 +317,6 @@ public class BitcoinWalletBasicWalletDao {
 
                 bitcoinTransactionList.add(bitcoinTransaction);
             }
-
-
-
-
 
 
 
@@ -343,9 +344,8 @@ public class BitcoinWalletBasicWalletDao {
             /**
              * I can not solve this situation.
              */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
 
-            throw new CantFindTransactionException();
+            throw new CantFindTransactionException("Transaction Memo Update Error",cantLoadTableToMemory,"Error load Transaction table" + transactionID.toString(), "");
 
         }
 
@@ -362,9 +362,8 @@ public class BitcoinWalletBasicWalletDao {
                 bitcoinwalletTable.updateRecord(record);
 
             } catch (CantUpdateRecordException cantUpdateRecord) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantUpdateRecord);
 
-                throw new CabtStoreMemoException();
+                throw new CabtStoreMemoException("Transaction Memo Update Error",cantUpdateRecord,"Error update memo of Transaction " + transactionID.toString(), "");
             }
 
         }

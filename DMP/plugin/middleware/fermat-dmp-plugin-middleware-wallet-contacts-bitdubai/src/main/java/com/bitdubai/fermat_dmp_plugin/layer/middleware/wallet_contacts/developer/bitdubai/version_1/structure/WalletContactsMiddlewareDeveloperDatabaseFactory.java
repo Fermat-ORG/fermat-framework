@@ -15,7 +15,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantInitializeCryptoWalletContactsDatabaseException;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantInitializeWalletContactsDatabaseException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,9 +60,9 @@ public class WalletContactsMiddlewareDeveloperDatabaseFactory implements DealsWi
     /**
      * This method open or creates the database i'll be working with
      *
-     * @throws CantInitializeCryptoWalletContactsDatabaseException
+     * @throws CantInitializeWalletContactsDatabaseException
      */
-    public void initializeDatabase() throws CantInitializeCryptoWalletContactsDatabaseException {
+    public void initializeDatabase() throws CantInitializeWalletContactsDatabaseException {
         try {
 
              /*
@@ -75,7 +75,7 @@ public class WalletContactsMiddlewareDeveloperDatabaseFactory implements DealsWi
              /*
               * The database exists but cannot be open. I can not handle this situation.
               */
-            throw new CantInitializeCryptoWalletContactsDatabaseException(cantOpenDatabaseException.getMessage());
+            throw new CantInitializeWalletContactsDatabaseException(cantOpenDatabaseException.getMessage());
 
         } catch (DatabaseNotFoundException e) {
 
@@ -94,7 +94,7 @@ public class WalletContactsMiddlewareDeveloperDatabaseFactory implements DealsWi
                   /*
                    * The database cannot be created. I can not handle this situation.
                    */
-                throw new CantInitializeCryptoWalletContactsDatabaseException(cantCreateDatabaseException.getMessage());
+                throw new CantInitializeWalletContactsDatabaseException(cantCreateDatabaseException.getMessage());
             }
         }
     }
