@@ -56,6 +56,7 @@ import java.util.UUID;
  */
 public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, DatabaseManagerForDevelopers, DealsWithBitcoinCryptoNetwork, DealsWithEvents, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithDeviceUsers, DealsWithLogger, DealsWithPluginFileSystem, LogManagerForDevelopers, Plugin, Service {
 
+
     /**
      * BitcoinCryptoVaultPluginRoot member variables
      */
@@ -102,7 +103,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
     /**
      * LogManagerForDevelopers member variables
      */
-    LogLevel logLevel;
+    public static LogLevel logLevel;
 
 
     /**
@@ -134,7 +135,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
 
     @Override
     public void changeLoggingLevel(LogLevel newLoggingLevel) {
-        this.logLevel = newLoggingLevel;
+        logLevel = newLoggingLevel;
     }
 
     /**
@@ -173,7 +174,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
 
     @Override
     public void setLogManager(LogLevel logLevel, LogManager logManager) {
-        this.logLevel = logLevel;
+        logLevel = logLevel;
         this.logManager = logManager;
     }
 
@@ -240,8 +241,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
 
     @Override
     public void start() throws CantStartPluginException {
-        System.out.println("CryptoVault Starting...");
-        logManager.log(LogLevel.AGGRESSIVE_LOGGING, "CryptoVault Starting...", "CryptoVault Starting...", "CryptoVault Starting...");
+        logManager.log(logLevel, "CryptoVault Starting...", "CryptoVault Starting...", "CryptoVault Starting...");
 
 
         /**
@@ -338,7 +338,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
              * now I will start the TransactionNotificationAgent to monitor
              */
             transactionNotificationAgent = new TransactionNotificationAgent(eventManager, pluginDatabaseSystem, errorManager, pluginId, userId);
-            transactionNotificationAgent.setLogManager(this.logLevel, this.logManager);
+            transactionNotificationAgent.setLogManager(logLevel, this.logManager);
             try {
                 transactionNotificationAgent.start();
             } catch (CantStartAgentException cantStartAgentException ) {
