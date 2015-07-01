@@ -59,6 +59,10 @@ public class TransactionsFragment extends Fragment {
     SwipeRefreshLayout swipeRefreshLayout;
     TransactionArrayAdapter transactionArrayAdapter;
 
+    private int pointerOffset=0;
+    private int cantTransactions=10;
+
+
 
     public static TransactionsFragment newInstance(int position) {
         TransactionsFragment f = new TransactionsFragment();
@@ -71,29 +75,6 @@ public class TransactionsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //lstTransactions=new ArrayList<Transactions>();
-
-        // Construct the data source
-        /*lstTransactions.add(new Transactions("Lucia Alarcon De Zamacona", "4 hours ago", "0.0012", "New telephone","Send"));
-        lstTransactions.add(new Transactions("Juan Luis R Pons","5 hours ago", "0.0023", "Old desk", "Received"));
-        lstTransactions.add(new Transactions("Karina Rodríguez","yesterday 11:00 PM","0.1023","Car oil","Received"));
-        lstTransactions.add(new Transactions("Lucia Alarcon De Zamacona", "4 hours ago", "0.0012", "New telephone","Send"));
-        lstTransactions.add(new Transactions("Juan Luis R Pons","5 hours ago", "0.0023", "Old desk", "Received"));
-        lstTransactions.add(new Transactions("Karina Rodríguez","yesterday 11:00 PM","0.1023","Car oil","Received"));
-        lstTransactions.add(new Transactions("Lucia Alarcon De Zamacona", "4 hours ago", "0.0012", "New telephone","Send"));
-        lstTransactions.add(new Transactions("Juan Luis R Pons","5 hours ago", "0.0023", "Old desk", "Received"));
-        lstTransactions.add(new Transactions("Karina Rodríguez","yesterday 11:00 PM","0.1023","Car oil","Received"));
-        lstTransactions.add(new Transactions("Lucia Alarcon De Zamacona", "4 hours ago", "0.0012", "New telephone","Send"));
-        */
-        //lstTransactions.add(new Transactions("Juan Luis R Pons","5 hours ago", "0.0023", "Old desk", "Received"));
-        //lstTransactions.add(new Transactions("Karina Rodríguez","yesterday 11:00 PM","0.1023","Car oil","Received"));
-
-
-        try
-        {
-
-
             cryptoWalletManager = platform.getCryptoWalletManager();
 
             try{
@@ -103,33 +84,7 @@ public class TransactionsFragment extends Fragment {
                 showMessage("CantGetCryptoWalletException- " + e.getMessage());
                 e.printStackTrace();
             }
-
-            //lstTransactions
-            try {
-                List<BitcoinTransaction> bitcoinTransactions = cryptoWallet.getTransactions(10, 10, wallet_id);
-
-                for(int i = 0; i < bitcoinTransactions.size(); i++) {
-                    BitcoinTransaction transaction = (BitcoinTransaction) bitcoinTransactions.get(i);
-                    //transaction.getAmount();
-                    // Construct the data source
-                    lstTransactions.add(new Transactions(transaction.getAddressFrom().getAddress().toString(), String.valueOf(transaction.getTimestamp()), String.valueOf(transaction.getAmount()), transaction.getMemo(), transaction.getType().toString()));
-
-                }
-
-            }
-            catch (CantGetTransactionsException e) {
-                showMessage("Cant Get Transactions Exception- " + e.getMessage());
-                e.printStackTrace();
-            }
-
-        }
-        catch(Exception ex) {
-            showMessage("Unexpected error get Transactions - " + ex.getMessage());
-            ex.printStackTrace();
-        }
-
-
-
+        refreshTransactionsContent();
     }
 
 
@@ -142,7 +97,7 @@ public class TransactionsFragment extends Fragment {
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefreshLayout);
 
 
-// Create the adapter to convert the array to views
+        // Create the adapter to convert the array to views
         transactionArrayAdapter = new TransactionArrayAdapter(this.getActivity(), lstTransactions);
         //adapter.
 
@@ -193,13 +148,25 @@ public class TransactionsFragment extends Fragment {
     private void loadNewTransactions(){
         //List<Transactions> lstAux;
         if(lstTransactions.isEmpty())
-            lstTransactions.add(0, new Transactions("Mati_" + lstTransactions.size(), "Testing", String.valueOf(lstTransactions.size()), "Bestia", "Enviado"));
+            //Toast.makeText(getActivity(),"No transactions",Toast.LENGTH_SHORT).show();
+            try {
+                List<BitcoinTransaction> lst =cryptoWallet.getTransactions(cantTransactions, pointerOffset, wallet_id);
+                for(BitcoinTransaction transaction: lst){
+                    lstTransactions.add(0, new Transactions(transaction.getAddressFrom().getAddress().toString(), String.valueOf(transaction.getTimestamp()), String.valueOf(transaction.getAmount()), transaction.getMemo(), transaction.getType().toString()));
+                }
+
+            } catch (CantGetTransactionsException e) {
+                showMessage("Cant Get Transactions Exception- " + e.getMessage());
+                e.printStackTrace();
+            }
+            catch(Exception ex) {
+                showMessage("Unexpected error get Transactions - " + ex.getMessage());
+                ex.printStackTrace();
+            }
         else{
             try {
-                List<BitcoinTransaction> lst =cryptoWallet.getTransactions(10, 10, wallet_id);
-                Toast.makeText(getActivity(),lst.size(),Toast.LENGTH_SHORT).show();
+                List<BitcoinTransaction> lst =cryptoWallet.getTransactions(cantTransactions,pointerOffset, wallet_id);
                 for(BitcoinTransaction transaction: lst){
-                    Toast.makeText(getActivity(),String.valueOf(transaction.getAmount()),Toast.LENGTH_SHORT).show();
                     lstTransactions.add(0, new Transactions(transaction.getAddressFrom().getAddress().toString(), String.valueOf(transaction.getTimestamp()), String.valueOf(transaction.getAmount()), transaction.getMemo(), transaction.getType().toString()));
                 }
 
@@ -212,6 +179,7 @@ public class TransactionsFragment extends Fragment {
                 ex.printStackTrace();
             }
         }
+        pointerOffset=lstTransactions.size();
 
         transactionArrayAdapter.notifyDataSetChanged();
     }
