@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -31,7 +32,7 @@ import java.util.UUID;
  */
 
 /**
- * This Plug-in has the responsibility to manage the relationship between users and crypto addresses.
+ * This Plug-in has the responsibility to manage the relationship between actors and crypto addresses.
  *
  * * * * * *
  */
@@ -134,10 +135,9 @@ public class WalletAddressBookCryptoModulePluginRoot implements Crypto, Database
 
         try {
             walletAddressBookModuleRegistry.initialize();
-
-        } catch (CantInitializeWalletAddressBookCryptoModuleException cantInitializeWalletCryptoAddressBookException) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_ADDRESS_BOOK_CRYPTO, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantInitializeWalletCryptoAddressBookException);
-            throw new CantGetWalletAddressBookRegistryException();
+        } catch (CantInitializeWalletAddressBookCryptoModuleException exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_ADDRESS_BOOK_CRYPTO, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            throw new CantGetWalletAddressBookRegistryException(CantGetWalletAddressBookRegistryException.DEFAULT_MESSAGE, exception);
         }
         return walletAddressBookModuleRegistry;
     }
