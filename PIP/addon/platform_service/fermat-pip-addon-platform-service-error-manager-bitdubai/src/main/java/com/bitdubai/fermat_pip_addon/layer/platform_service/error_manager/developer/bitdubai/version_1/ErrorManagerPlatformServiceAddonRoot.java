@@ -64,82 +64,22 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
      */
     @Override
     public void reportUnexpectedPlatformException(PlatformComponents exceptionSource, UnexpectedPlatformExceptionSeverity unexpectedPlatformExceptionSeverity, Exception exception) {
-        if(exception instanceof FermatException)
-            printErrorReport((FermatException) exception);
-
-        try {
-            //I need the timestamp when the Exception occurred
-            //Calendar timeStamp = Calendar.getInstance();
-            //Creates a new ErrorManagerRegistry based on the Exception information provided
-            this.errorManagerRegistry.createNewErrorRegistry("Platform",
-                    exceptionSource.toString(),
-                    unexpectedPlatformExceptionSeverity.toString(),
-                    exception.getMessage(),
-                    0L,
-                    System.currentTimeMillis());
-        } catch (Exception ex) {
-            printErrorReport(FermatException.wrapException(ex));
-        }
+        processException(exceptionSource.name(), unexpectedPlatformExceptionSeverity.name(), exception);
     }
 
     @Override
     public void reportUnexpectedPluginException(Plugins exceptionSource, UnexpectedPluginExceptionSeverity unexpectedPluginExceptionSeverity, Exception exception) {
-        if(exception instanceof FermatException)
-            printErrorReport((FermatException) exception);
-
-        try {
-            //I need the timestamp when the Exception occurred
-            //Calendar timeStamp = Calendar.getInstance();
-            //Creates a new ErrorManagerRegistry based on the Exception information provided
-            this.errorManagerRegistry.createNewErrorRegistry("Plugins",
-                    exceptionSource.toString(),
-                    unexpectedPluginExceptionSeverity.toString(),
-                    exception.toString(),
-                    0L,
-                    System.currentTimeMillis());
-        } catch (Exception ex) {
-            printErrorReport(FermatException.wrapException(ex));
-        }
+        processException(exceptionSource.toString(), unexpectedPluginExceptionSeverity.toString(), exception);
     }
 
     @Override
     public void reportUnexpectedWalletException(Wallets exceptionSource, UnexpectedWalletExceptionSeverity unexpectedWalletExceptionSeverity, Exception exception) {
-        if(exception instanceof FermatException)
-            printErrorReport((FermatException) exception);
-
-        try {
-            //I need the timestamp when the Exception occurred
-            //Calendar timeStamp = Calendar.getInstance();
-            //Creates a new ErrorManagerRegistry based on the Exception information provided
-            this.errorManagerRegistry.createNewErrorRegistry("Wallets",
-                    exceptionSource.toString(),
-                    unexpectedWalletExceptionSeverity.toString(),
-                    exception.getMessage(),
-                    0L,
-                    System.currentTimeMillis());
-        } catch (Exception ex) {
-            printErrorReport(FermatException.wrapException(ex));
-        }
+        processException(exceptionSource.toString(), unexpectedWalletExceptionSeverity.toString(),exception);
     }
 
     @Override
     public void reportUnexpectedAddonsException(Addons exceptionSource, UnexpectedAddonsExceptionSeverity unexpectedAddonsExceptionSeverity, Exception exception) {
-        if(exception instanceof FermatException)
-            printErrorReport((FermatException) exception);
-
-        try {
-            //I need the timestamp when the Exception occurred
-            //Calendar timeStamp = Calendar.getInstance();
-            //Creates a new ErrorManagerRegistry based on the Exception information provided
-            this.errorManagerRegistry.createNewErrorRegistry("Addons",
-                    exceptionSource.toString(),
-                    unexpectedAddonsExceptionSeverity.toString(),
-                    exception.getMessage(),
-                    0L,
-                    System.currentTimeMillis());
-        } catch (Exception ex){
-            printErrorReport(FermatException.wrapException(ex));
-        }
+        processException(exceptionSource.toString(), unexpectedAddonsExceptionSeverity.toString(), exception);
     }
     /**
      * Service Interface implementation.
@@ -147,32 +87,11 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
 
     @Override
     public void start() {
-
-        try {
-            this.serviceStatus = ServiceStatus.STARTED;
-
-            this.errorManagerRegistry = new ErrorManagerRegistry();
-            this.errorManagerRegistry.initialize();
-
-            this.errorManagerReportAgent = new ErrorManagerReportAgent();
-            this.errorManagerReportAgent.setErrorManagerRegistry(this.errorManagerRegistry);
-            try {
-                this.errorManagerReportAgent.start();
-            } catch (CantStartAgentException ex) {
-                //Implement ErrorManager catching exception
-                printErrorReport(FermatException.wrapException(ex));
-            }
-        } catch (Exception ex) {
-            if(ex instanceof FermatException)
-                printErrorReport((FermatException) ex);
-            else
-                printErrorReport(FermatException.wrapException(ex));
-        }
+        this.serviceStatus = ServiceStatus.STARTED;
     }
 
     @Override
     public void pause() {
-
         this.serviceStatus = ServiceStatus.PAUSED;
 
     }
@@ -195,8 +114,13 @@ public class ErrorManagerPlatformServiceAddonRoot implements Addon,DealsWithPlat
         return serviceStatus;
     }
 
-    private void printErrorReport(final FermatException exception){
-        System.err.println(new ErrorReport(exception).generateReport());
+    private void processException(final String source, final String severity, final Exception exception){
+        if(exception instanceof FermatException && serviceStatus.equals(ServiceStatus.STARTED))
+            printErrorReport(source, severity, (FermatException) exception);
+    }
+
+    private void printErrorReport(final String source, final String severity, final FermatException exception){
+        System.err.println(new ErrorReport(source, severity, exception).generateReport());
     }
 
 }
