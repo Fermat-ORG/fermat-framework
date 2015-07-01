@@ -41,6 +41,23 @@ public class ConstructionTest {
         assertThat(testException.getContext()).isEqualTo(testContext);
         assertThat(testException.getPossibleReason()).isEqualTo(testPossibleReason);
         assertThat(testException.toString()).isNotEmpty();
+        System.out.println(constructErrorReport("SimpleConstruction_ValidParameters_SameValues", testException));
+    }
+
+    @Test
+    public void SimpleConstruction_NullContextOrReason_ReturnNA(){
+        testException = new FermatException(testMessage, testCause, null, null);
+        assertThat(testException.getContext()).isEqualTo("N/A");
+        assertThat(testException.getPossibleReason()).isEqualTo("N/A");
+        System.out.println(constructErrorReport("SimpleConstruction_NullContextOrReason_ReturnNA", testException));
+    }
+
+    @Test
+    public void SimpleConstruction_EmptyContextOrReason_ReturnNA(){
+        testException = new FermatException(testMessage, testCause, "", "");
+        assertThat(testException.getContext()).isEqualTo("N/A");
+        assertThat(testException.getPossibleReason()).isEqualTo("N/A");
+        System.out.println(constructErrorReport("SimpleConstruction_EmptyContextOrReason_ReturnNA",testException));
     }
 
     @Test
@@ -49,21 +66,14 @@ public class ConstructionTest {
         testException = new FermatException(testMessage, testCause, testContext, testPossibleReason);
         assertThat(testException.getCause()).isNotNull();
         assertThat(testException.getCause().toString()).isNotEmpty();
+        System.out.println(constructErrorReport("SimpleConstruction_WithACause_ReturnsCause",testException));
     }
 
-    @Test
-    public void SimpleConstruction_Printing(){
-        FermatException testCause1 = FermatException.wrapException(new IOException("THIS IS A TEST"));
-        FermatException testCause2 = new FermatException(testMessage+ " Cause 2", testCause1, "WE NEED TO TEST " + FermatException.CONTEXT_CONTENT_SEPARATOR + "THE CHAIN OF CAUSES", "WE NEED TO TEST THE CHAIN OF CAUSES");
-        testCause = new FermatException(testMessage+ " Cause", testCause2, "WE NEED TO TEST " + FermatException.CONTEXT_CONTENT_SEPARATOR + "THE CHAIN OF CAUSES", "WE NEED TO TEST THE CHAIN OF CAUSES");
-        testException = new FermatException(testMessage, testCause, testContext, testPossibleReason);
-        System.out.println(constructErrorReport(testException));
-    }
-
-    private String constructErrorReport(final FermatException exception){
+    private String constructErrorReport(final String method, final FermatException exception){
         StringBuffer buffer = new StringBuffer("========================================================================================================================================================\n");
         buffer.append("Fermat Error Manager * Unexpected Exception Report\n");
         buffer.append("========================================================================================================================================================\n");
+        buffer.append(method + "\n");
         buffer.append(constructExceptionReport(exception));
         buffer.append("Exceptions Processed: " + exception.getDepth() + "\n");
         buffer.append("========================================================================================================================================================\n");
