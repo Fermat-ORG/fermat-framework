@@ -3,6 +3,7 @@ package com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdub
 import android.content.Context;
 import android.util.Base64;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
@@ -22,19 +23,21 @@ import java.util.UUID;
  */
 
 /**
- * The Plugin File System is the implementation of the file system that is handled to external plugins. It differs
+ * The Plugin File System is the implementation of the file system that is handled to external plu256gins. It differs
  * from the Platform File System in that this one requires the plug in to identify itself.
  *
  */
 
 public class AndroidPluginFileSystem implements PluginFileSystem {
 
+    private static final String CHARSET_NAME = "UTF-8";
+    private static final String DIGEST_ALGORITHM = "SHA-256";
 
     /**
      * PluginFileSystem interface member variables.
      */
     
-    Context context;
+    private Context context;
 
     /**
      * PluginFileSystem interface implementation.
@@ -54,22 +57,16 @@ public class AndroidPluginFileSystem implements PluginFileSystem {
      */
     @Override
     public PluginTextFile getTextFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException,CantCreateFileException {
-
-        AndroidPluginTextFile newFile = null;
+        checkContext();
         try {
             //execute AndroidPluginTextFile constructor
-             newFile = new AndroidPluginTextFile(ownerId, this.context,directoryName, hashFileName(fileName), privacyLevel, lifeSpan);
-        }
-        catch (NoSuchAlgorithmException e){
-            throw new CantCreateFileException();
-        }
-        try {
+            AndroidPluginTextFile newFile = new AndroidPluginTextFile(ownerId, this.context,directoryName, hashFileName(fileName), privacyLevel, lifeSpan);
             //load content file
             newFile.loadFromMedia();
             return newFile;
         }
         catch (CantLoadFileException e){
-            throw new FileNotFoundException();
+            throw new FileNotFoundException(FileNotFoundException.DEFAULT_MESSAGE, e, "", "Check the cause");
         }
     }
 
@@ -86,12 +83,8 @@ public class AndroidPluginFileSystem implements PluginFileSystem {
      */
     @Override
     public PluginTextFile createTextFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException{
-        try {
-            return new AndroidPluginTextFile(ownerId, this.context, directoryName, hashFileName(fileName), privacyLevel, lifeSpan);
-        }
-        catch (NoSuchAlgorithmException e){
-            throw new CantCreateFileException();
-        }
+        checkContext();
+        return new AndroidPluginTextFile(ownerId, this.context, directoryName, hashFileName(fileName), privacyLevel, lifeSpan);
     }
 
     /**
@@ -108,21 +101,13 @@ public class AndroidPluginFileSystem implements PluginFileSystem {
      */
     @Override
     public PluginBinaryFile getBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException,CantCreateFileException{
-
-        AndroidPluginBinaryFile newFile = null;
+        checkContext();
         try {
-             newFile = new AndroidPluginBinaryFile(ownerId, directoryName, hashFileName(fileName), privacyLevel, lifeSpan);
-        }
-        catch (NoSuchAlgorithmException e){
-            throw new CantCreateFileException();
-        }
-        try {
+            AndroidPluginBinaryFile newFile = new AndroidPluginBinaryFile(ownerId, this.context, directoryName, hashFileName(fileName), privacyLevel, lifeSpan);
             newFile.loadFromMedia();
             return newFile;
-        }
-        catch (CantLoadFileException e){
-            e.printStackTrace();
-            throw new FileNotFoundException();
+        } catch (CantLoadFileException e){
+            throw new FileNotFoundException(FileNotFoundException.DEFAULT_MESSAGE, e, "", "Check the cause");
         }
     }
 
@@ -140,14 +125,8 @@ public class AndroidPluginFileSystem implements PluginFileSystem {
 
     @Override
     public PluginBinaryFile createBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException{
-
-       try {
-            return new AndroidPluginBinaryFile(ownerId,directoryName,hashFileName(fileName), privacyLevel, lifeSpan);
-        }
-        catch (NoSuchAlgorithmException e){
-            e.printStackTrace();
-            throw new CantCreateFileException();
-        }
+        checkContext();
+        return new AndroidPluginBinaryFile(ownerId, this.context, directoryName,hashFileName(fileName), privacyLevel, lifeSpan);
     }
 
     /**
@@ -160,31 +139,28 @@ public class AndroidPluginFileSystem implements PluginFileSystem {
         this.context = (Context) context;
     }
 
-
-
     /**
      *
      * Hash the file name using the algorithm SHA 256
      */
 
-    private String hashFileName(String fileName) throws NoSuchAlgorithmException {
-        String encryptedString = fileName;
-        try{
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            md.update(fileName.getBytes(Charset.forName("UTF-8")));
+    private String hashFileName(String fileName) throws CantCreateFileException{
+        try {
+            MessageDigest md = MessageDigest.getInstance(DIGEST_ALGORITHM);
+            md.update(fileName.getBytes(Charset.forName(CHARSET_NAME)));
             byte[] digest = md.digest();
             byte[] encoded = Base64.encode(digest, 1);
-            
-            try {
-                encryptedString = new String(encoded, "UTF-8");
-            } catch (Exception e) {
-            	throw new NoSuchAlgorithmException (e);
-            }
-            
-        }catch(NoSuchAlgorithmException e){
-            throw e;
+            String encryptedString = new String(encoded, CHARSET_NAME);
+            encryptedString = encryptedString.replace("/","");
+            return encryptedString.replace("\n","");
+        } catch (Exception e) {
+            throw new CantCreateFileException(CantCreateFileException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "This Should never happen unless we change the DIGEST_ALGORITHM Constant");
         }
-        encryptedString = encryptedString.replace("/","");
-        return encryptedString.replace("\n","");
+
+    }
+
+    private void checkContext() throws CantCreateFileException {
+        if(context == null)
+            throw new CantCreateFileException(CantCreateFileException.DEFAULT_MESSAGE, null, "Context: null", "Context can't ne Null, you need to call setContext before using the FileSystem");
     }
 }

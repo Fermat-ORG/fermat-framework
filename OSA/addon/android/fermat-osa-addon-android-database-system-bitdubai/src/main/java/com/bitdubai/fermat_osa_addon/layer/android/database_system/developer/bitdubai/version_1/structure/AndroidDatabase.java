@@ -141,11 +141,18 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
     @Override
     public void executeTransaction(DatabaseTransaction transaction) throws DatabaseTransactionFailedException{
 
+        if(transaction == null){
+            String message = DatabaseTransactionFailedException.DEFAULT_MESSAGE;
+            FermatException cause = null;
+            String context = "Transaction: null";
+            String possibleReason = "The passed transaction can't be null";
+            throw new DatabaseTransactionFailedException(message, cause, context, possibleReason);
+        }
+
         /**
          * I get tablets and records to insert or update
          * then make sql sentences
          */
-
         List<DatabaseTable> insertTables = transaction.getTablesToInsert();
         List<DatabaseTable> updateTables = transaction.getTablesToUpdate();
         List<DatabaseTableRecord> updateRecords = transaction.getRecordsToUpdate();
