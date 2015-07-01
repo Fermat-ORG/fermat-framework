@@ -3,7 +3,7 @@ package com.bitdubai.fermat_api.layer.pip_actor.developer;
 /**
  * Created by rodrigo on 2015.07.01..
  */
-public class ClassHierarchy {
+public class ClassHierarchyLevels {
     String level1;
     String level2;
     String level3;

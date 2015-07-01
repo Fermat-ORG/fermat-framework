@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.pip_actor.developer.ClassHierarchy;
+import com.bitdubai.fermat_api.layer.pip_actor.developer.ClassHierarchyLevels;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.LogTool;
 
 import java.util.ArrayList;
@@ -70,7 +70,7 @@ public class DeveloperActorLogTool implements LogTool {
     }
 
     @Override
-    public List<ClassHierarchy> getClassesHierarchy(Plugins plugin) {
+    public List<ClassHierarchyLevels> getClassesHierarchy(Plugins plugin) {
         /**
          * I get the class full patch from the plug in.
          */
@@ -97,7 +97,7 @@ public class DeveloperActorLogTool implements LogTool {
          * Level 2: the last package
          * Level 3: the class name.
          */
-        List<ClassHierarchy> returnedClasses = new ArrayList<ClassHierarchy>();
+        List<ClassHierarchyLevels> returnedClasses = new ArrayList<ClassHierarchyLevels>();
 
         if (minPackages >=  4){
             for (String myClass : classes){
@@ -115,7 +115,7 @@ public class DeveloperActorLogTool implements LogTool {
                 /**
                  * I add the packages to each level.
                  */
-                ClassHierarchy classesAndPackages = new ClassHierarchy();
+                ClassHierarchyLevels classesAndPackages = new ClassHierarchyLevels();
                 classesAndPackages.setLevel1(splitedPackages.toString());
                 classesAndPackages.setLevel2(packages[packages.length - 2]);
                 classesAndPackages.setLevel3(packages[packages.length -1]);
@@ -129,7 +129,7 @@ public class DeveloperActorLogTool implements LogTool {
         {
             for (String myClass : classes) {
                 String[] packages = myClass.split(Pattern.quote("."));
-                ClassHierarchy classesAndPackages = new ClassHierarchy();
+                ClassHierarchyLevels classesAndPackages = new ClassHierarchyLevels();
                 classesAndPackages.setLevel1(packages[0]);
 
                 /**

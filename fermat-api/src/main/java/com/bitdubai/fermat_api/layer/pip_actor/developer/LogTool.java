@@ -23,5 +23,5 @@ public interface LogTool {
 
     public void setLogLevel(Addons addon, LogLevel newLogLevel);
 
-    public List<ClassHierarchy> getClassesHierarchy(Plugins plugin);
+    public List<ClassHierarchyLevels> getClassesHierarchy(Plugins plugin);
 }
