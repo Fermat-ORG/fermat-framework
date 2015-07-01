@@ -4,6 +4,8 @@ package com.bitdubai.fermat_dmp_plugin.layer.middleware.app_runtime.developer.bi
  * Created by ciencias on 2/14/15.
  */
 
+import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
@@ -22,6 +24,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventTyp
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.app_runtime.developer.bitdubai.version_1.event_handlers.WalletResourcesInstalledEventHandler;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.app_runtime.developer.bitdubai.version_1.exceptions.CantFactoryReset;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.app_runtime.developer.bitdubai.version_1.structure.*;
 
 import java.util.ArrayList;
@@ -70,6 +73,12 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
      */
     PluginFileSystem pluginFileSystem;
 
+
+    /**
+     * DealsWithErrors Interface member variables.
+     */
+    ErrorManager errorManager;
+
     /**
      * DealWithEvents Interface member variables.
      */
@@ -100,7 +109,7 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
 
 
     @Override
-    public void start(){
+    public void start() throws CantStartPluginException{
         /**
          * I will initialize the handling of com.bitdubai.platform events.
          */
@@ -119,7 +128,22 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
          * functionality based on wallets downloaded by users this wont be an option.
          * * *
          */
-        factoryReset();
+
+        try
+        {
+            factoryReset();
+        }
+        catch(CantFactoryReset ex)
+        {
+            String message = CantStartPluginException.DEFAULT_MESSAGE;
+            FermatException cause = ex;
+            String context = "App Runtime Start";
+
+            String possibleReason = "Some null definition";
+            throw new CantStartPluginException(message, cause, context, possibleReason);
+        }
+
+
 
         this.serviceStatus = ServiceStatus.STARTED;
 
@@ -272,6 +296,8 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
     @Override
     public void setErrorManager(ErrorManager errorManager) {
 
+        this.errorManager = errorManager;
+
     }
 
     /**
@@ -302,8 +328,10 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
      * Here is where I actually generate the factory structure of the APP. This method is also useful to reset to the 
      * factory structure.
      */
-    private void factoryReset() {
+    private void factoryReset() throws CantFactoryReset {
 
+        try
+        {
         RuntimeApp runtimeApp;
         RuntimeSubApp runtimeSubApp;
         RuntimeActivity runtimeActivity;
@@ -730,7 +758,16 @@ public class AppRuntimeMiddlewarePluginRoot implements Service, AppRuntimeManage
         /**
          * End of Wallet Accounts tabs.
          */
+        }
+        catch(Exception e)
+        {
+            String message = CantFactoryReset.DEFAULT_MESSAGE;
+            FermatException cause = FermatException.wrapException(e);
+            String context = "Error on method Factory Reset, setting the structure of the apps";
+            String possibleReason = "some null definition";
+            throw new CantFactoryReset(message, cause, context, possibleReason);
 
+        }
 
     }
 

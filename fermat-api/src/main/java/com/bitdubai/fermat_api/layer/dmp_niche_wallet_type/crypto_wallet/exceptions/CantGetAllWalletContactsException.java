@@ -9,20 +9,23 @@ package com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.except
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CantGetAllWalletContactsException extends Exception {
+public class CantGetAllWalletContactsException extends CryptoWalletException {
 
-    /**
-     * Constructor
-     */
-    public CantGetAllWalletContactsException(){
-        super();
+    public static final String DEFAULT_MESSAGE = "CAN'T GET ALL WALLET CONTACTS EXCEPTION";
+
+    public CantGetAllWalletContactsException(final String message, final Exception cause, final String context, final String possibleReason) {
+        super(message, cause, context, possibleReason);
     }
 
-    /**
-     * Constructor whit parameter
-     * @param msg
-     */
-    public CantGetAllWalletContactsException(String msg){
-        super(msg);
+    public CantGetAllWalletContactsException(final String message, final Exception cause) {
+        this(message, cause, "", "");
+    }
+
+    public CantGetAllWalletContactsException(final String message) {
+        this(message, null);
+    }
+
+    public CantGetAllWalletContactsException() {
+        this(DEFAULT_MESSAGE);
     }
 }
