@@ -50,7 +50,7 @@
             android:text="balance"/>
             <TextView
                 android:id="@+id/balance"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:paddingLeft="7dip"
