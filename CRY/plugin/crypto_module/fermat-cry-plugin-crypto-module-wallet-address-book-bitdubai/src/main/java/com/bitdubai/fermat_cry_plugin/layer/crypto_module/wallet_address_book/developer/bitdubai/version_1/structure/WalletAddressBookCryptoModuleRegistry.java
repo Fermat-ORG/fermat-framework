@@ -1,16 +1,21 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformWalletType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.CantRegisterWalletAddressBookException;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.WalletAddressBookException;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.WalletAddressBookNotFoundException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookRecord;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookRegistry;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.CantGetWalletCryptoAddressBookException;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.CantRegisterWalletCryptoAddressBookException;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.CantGetWalletAddressBookException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.exceptions.CantInitializeWalletAddressBookCryptoModuleException;
 
 import java.util.List;
@@ -51,35 +56,44 @@ public class WalletAddressBookCryptoModuleRegistry implements DealsWithErrors, D
          */
         walletCryptoAddressBookDao = new WalletAddressBookCryptoModuleDao(errorManager, pluginDatabaseSystem, pluginId);
         walletCryptoAddressBookDao.initialize();
-
     }
 
     /**
-     * Address Book Manager implementation.
+     * Wallet Address Book Registry implementation.
      */
-
     @Override
-
-    public WalletAddressBookRecord getWalletCryptoAddressBookByCryptoAddress(CryptoAddress cryptoAddress) throws CantGetWalletCryptoAddressBookException {
-        return walletCryptoAddressBookDao.getWalletAddressBookModuleByCryptoAddress(cryptoAddress);
+    public WalletAddressBookRecord getWalletCryptoAddressBookByCryptoAddress(CryptoAddress cryptoAddress) throws CantGetWalletAddressBookException, WalletAddressBookNotFoundException {
+        try {
+            return walletCryptoAddressBookDao.getWalletAddressBookModuleByCryptoAddress(cryptoAddress);
+        } catch (CantGetWalletAddressBookException|WalletAddressBookNotFoundException exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_ADDRESS_BOOK_CRYPTO, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw exception;
+        }
     }
 
     @Override
-    public List<WalletAddressBookRecord> getAllWalletCryptoAddressBookByWalletId(UUID walletId) throws CantGetWalletCryptoAddressBookException {
-        return walletCryptoAddressBookDao.getAllWalletAddressBookModuleByActorId(walletId);
+    public List<WalletAddressBookRecord> getAllWalletCryptoAddressBookByWalletId(UUID walletId) throws CantGetWalletAddressBookException, WalletAddressBookNotFoundException {
+        try {
+            return walletCryptoAddressBookDao.getAllWalletAddressBookModuleByWalletId(walletId);
+        } catch (CantGetWalletAddressBookException|WalletAddressBookNotFoundException exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_ADDRESS_BOOK_CRYPTO, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw exception;
+        }
     }
 
-
     @Override
-    public void registerWalletCryptoAddressBook(CryptoAddress cryptoAddress, PlatformWalletType platformWalletType, UUID walletId) throws CantRegisterWalletCryptoAddressBookException {
+    public void registerWalletCryptoAddressBook(CryptoAddress cryptoAddress, PlatformWalletType platformWalletType, UUID walletId) throws CantRegisterWalletAddressBookException {
 
         /**
          * Here I create the Wallet Crypto Address book record for new address.
          */
-        walletCryptoAddressBookDao.registerWalletAddressBookModule(cryptoAddress, platformWalletType, walletId);
-
+        try {
+            walletCryptoAddressBookDao.registerWalletAddressBookModule(cryptoAddress, platformWalletType, walletId);
+        } catch (CantRegisterWalletAddressBookException exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_ADDRESS_BOOK_CRYPTO, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw exception;
+        }
     }
-
 
     /**
      *DealWithErrors Interface implementation.

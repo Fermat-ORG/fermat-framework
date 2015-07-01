@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions;
 
+import com.bitdubai.fermat_api.FermatException;
+
 /**
  * The Class <code>com.bitdubai.fermat_api.layer.middleware.wallet_contacts.exceptions.CantGetWalletContactRegistryException</code>
  * is thrown when an error occurs trying to get a wallet contact registry
@@ -9,20 +11,23 @@ package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CantGetWalletContactRegistryException extends Exception {
+public class CantGetWalletContactRegistryException extends WalletContactsException {
 
-    /**
-     * Constructor
-     */
-    public CantGetWalletContactRegistryException(){
-        super();
+    public static final String DEFAULT_MESSAGE = "CAN'T GET WALLET CONTACT REGISTRY EXCEPTION";
+
+    public CantGetWalletContactRegistryException(final String message, final Exception cause, final String context, final String possibleReason) {
+        super(message, cause, context, possibleReason);
     }
 
-    /**
-     * Constructor whit parameter
-     * @param msg as
-     */
-    public CantGetWalletContactRegistryException(String msg){
-        super(msg);
+    public CantGetWalletContactRegistryException(final String message, final Exception cause) {
+        this(message, cause, "", "");
+    }
+
+    public CantGetWalletContactRegistryException(final String message) {
+        this(message, null);
+    }
+
+    public CantGetWalletContactRegistryException() {
+        this(DEFAULT_MESSAGE);
     }
 }
