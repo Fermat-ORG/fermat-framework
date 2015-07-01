@@ -493,7 +493,6 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
     public void onItemSelectedClicked(View v) {
 
         try {
-            firstexecute = false;
 
             ApplicationSession.setContact("");
             String tagId = v.getTag().toString();
@@ -741,7 +740,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
 
     }
 
-    private Fragment mCurrentPrimaryItem = null;
+
     public class MyPagerAdapter extends FragmentPagerAdapter {
 
         private String[] titles;

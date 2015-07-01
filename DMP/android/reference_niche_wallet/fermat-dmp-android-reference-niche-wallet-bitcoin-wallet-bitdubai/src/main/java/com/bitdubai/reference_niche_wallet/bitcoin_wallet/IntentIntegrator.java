@@ -1,5 +1,6 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -13,7 +14,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
+import android.widget.EditText;
 
 
 public final class IntentIntegrator {
@@ -33,7 +38,7 @@ public final class IntentIntegrator {
   public static final Collection<String> PRODUCT_CODE_TYPES = list("UPC_A", "UPC_E", "EAN_8", "EAN_13", "RSS_14");
   public static final Collection<String> ONE_D_CODE_TYPES =
       list("UPC_A", "UPC_E", "EAN_8", "EAN_13", "CODE_39", "CODE_93", "CODE_128",
-           "ITF", "RSS_14", "RSS_EXPANDED");
+              "ITF", "RSS_14", "RSS_EXPANDED");
   public static final Collection<String> QR_CODE_TYPES = Collections.singleton("QR_CODE");
   public static final Collection<String> DATA_MATRIX_TYPES = Collections.singleton("DATA_MATRIX");
 
@@ -48,14 +53,16 @@ public final class IntentIntegrator {
       );
 
   private final Activity activity;
+  private  static EditText textResult = null;
   private String title;
   private String message;
   private String buttonYes;
   private String buttonNo;
   private Collection<String> targetApplications;
 
-  public IntentIntegrator(Activity activity) {
+  public IntentIntegrator(Activity activity,EditText textResult) {
     this.activity = activity;
+    this.textResult = textResult;
     title = DEFAULT_TITLE;
     message = DEFAULT_MESSAGE;
     buttonYes = DEFAULT_YES;
@@ -77,6 +84,10 @@ public final class IntentIntegrator {
 
   public String getMessage() {
     return message;
+  }
+
+  public static EditText getTextResult() {
+    return textResult;
   }
 
   public void setMessage(String message) {
@@ -156,6 +167,7 @@ public final class IntentIntegrator {
     if (targetAppPackage == null) {
       return showDownloadDialog();
     }
+
     intentScan.setPackage(targetAppPackage);
     intentScan.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     intentScan.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
@@ -219,7 +231,9 @@ public final class IntentIntegrator {
         int intentOrientation = intent.getIntExtra("SCAN_RESULT_ORIENTATION", Integer.MIN_VALUE);
         Integer orientation = intentOrientation == Integer.MIN_VALUE ? null : intentOrientation;
         String errorCorrectionLevel = intent.getStringExtra("SCAN_RESULT_ERROR_CORRECTION_LEVEL");
-        return new IntentResult(contents,
+
+
+          return new IntentResult(contents,
                                 formatName,
                                 rawBytes,
                                 orientation,
@@ -256,6 +270,27 @@ public final class IntentIntegrator {
 
   private static Collection<String> list(String... values) {
     return Collections.unmodifiableCollection(Arrays.asList(values));
+  }
+
+
+  public class editTextResult implements Parcelable
+  {
+    private EditText text;
+
+    @Override
+    public int describeContents(){
+      return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel var1, int var2){
+
+    }
+
+    public editTextResult(EditText text){
+      this.text = text;
+    }
+
   }
 
 }
