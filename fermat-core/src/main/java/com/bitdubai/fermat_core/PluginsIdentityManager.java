@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_core;
 
 import com.bitdubai.fermat_api.CantInitializePluginsManagerException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.PluginNotRecognizedException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
@@ -155,10 +156,11 @@ public class PluginsIdentityManager {
                     /**
                      * If I cannot save this file, It means the Plugin Manager cannot start,
                      */
-                    System.err.println("CantPersistFileException: " + cantPersistFileException.getMessage());
-                    cantPersistFileException.printStackTrace();
-                    cantPersistFileException.getFileName();
-                    throw new CantInitializePluginsManagerException();
+                    String message = CantInitializePluginsManagerException.DEFAULT_MESSAGE;
+                    FermatException cause = cantPersistFileException;
+                    String context = "Platform Text File Name: " + platformTextFile.toString();
+                    String possibleReason = "Check the cause for the reason";
+                    throw new CantInitializePluginsManagerException(message, cause, context, possibleReason);
                 }
 
             }
@@ -170,9 +172,11 @@ public class PluginsIdentityManager {
                 /**
                  * This really should never happen. But if it does...
                  */
-                System.err.println("CantCreateFileException: " + cantCreateFileException.getMessage());
-                cantCreateFileException.printStackTrace();
-                throw new CantInitializePluginsManagerException();
+                String message = CantInitializePluginsManagerException.DEFAULT_MESSAGE;
+                FermatException cause = cantCreateFileException;
+                String context = "Create File Params: Platform, PluginIds, PRIVATE, PERMANENT";
+                String possibleReason = "Check the cause for the reason";
+                throw new CantInitializePluginsManagerException(message, cause, context, possibleReason);
             }
 
             for (int arrayPosition = 0; arrayPosition < AMOUNT_OF_KNOWN_PLUGINS; arrayPosition++) {
@@ -188,10 +192,11 @@ public class PluginsIdentityManager {
                 /**
                  * If I cannot save this file, It means the Plugin Manager cannot start,
                  */
-                System.err.println("CantPersistFileException: " + cantPersistFileException.getMessage());
-                cantPersistFileException.printStackTrace();
-                cantPersistFileException.getFileName();
-                throw new CantInitializePluginsManagerException();
+                String message = CantInitializePluginsManagerException.DEFAULT_MESSAGE;
+                FermatException cause = cantPersistFileException;
+                String context = "Platform Text File Name: " + platformTextFile.toString();
+                String possibleReason = "Check the cause for the reason";
+                throw new CantInitializePluginsManagerException(message, cause, context, possibleReason);
             }
 
         }
@@ -735,19 +740,7 @@ public class PluginsIdentityManager {
 
         platformTextFile.setContent(fileContent);
 
-        try {
-            platformTextFile.persistToMedia();
-        } catch (CantPersistFileException cantPersistFileException) {
-            /**
-             * If I cannot save this file, I cant handle the situation,
-             */
-            System.err.println("CantPersistFileException: " + cantPersistFileException.getMessage());
-            cantPersistFileException.printStackTrace();
-            cantPersistFileException.getFileName();
-            throw new CantPersistFileException(cantPersistFileException.getFileName());
-        }
-
-
+        platformTextFile.persistToMedia();
     }
 
 }

@@ -7,6 +7,7 @@ package com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdub
 import android.content.Context;
 import android.os.Environment;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformTextFile;
@@ -19,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -31,16 +33,21 @@ import java.nio.charset.Charset;
 
 public class AndroidPlatformTextFile implements PlatformTextFile {
 
+    private static final int HASH_PRIME_NUMBER_PRODUCT = 5003;
+    private static final int HASH_PRIME_NUMBER_ADD = 4349;
+
+    private static final String CHARSET_NAME = "UTF-8";
+
     /**
      * PlatformTextFile Interface member variables.
      */
 
-    Context context;
-    String content = "";
-    String fileName;
-    FilePrivacy privacyLevel;
-    FileLifeSpan lifeSpan;
-    String directoryName;
+    private final Context context;
+    private final String directoryName;
+    private final String fileName;
+    private final FilePrivacy privacyLevel;
+    private final FileLifeSpan lifeSpan;
+    private String content = "";
 
 
     /**
@@ -53,13 +60,11 @@ public class AndroidPlatformTextFile implements PlatformTextFile {
      * @param lifeSpan lifetime of the file, whether it is permanent or temporary
      */
     public AndroidPlatformTextFile(Context context, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
-
         this.context = context;
+        this.directoryName = directoryName;
         this.fileName = fileName;
         this.privacyLevel = privacyLevel;
         this.lifeSpan = lifeSpan;
-        this.directoryName = directoryName;
-
     }
 
     /**
@@ -70,9 +75,21 @@ public class AndroidPlatformTextFile implements PlatformTextFile {
 		return lifeSpan;
 	}
 
-	public void setLifeSpan(FileLifeSpan lifeSpan) {
-		this.lifeSpan = lifeSpan;
-	}
+    public Context getContext() {
+        return context;
+    }
+
+    public String getDirectoryName(){
+        return directoryName;
+    }
+
+    public String getFileName(){
+        return fileName;
+    }
+
+    public FilePrivacy getPrivacyLevel(){
+        return privacyLevel;
+    }
 
 	/**
      * <p>This method returns the contents of a file in string.
@@ -104,49 +121,47 @@ public class AndroidPlatformTextFile implements PlatformTextFile {
      */
     @Override
     public void persistToMedia() throws CantPersistFileException {
+        String path = "";
+
+        /**
+         *  Evaluate privacyLevel to determine the location of directory - external or internal
+         */
+        if(privacyLevel == FilePrivacy.PUBLIC)
+            path = Environment.getExternalStorageDirectory().toString();
+        else
+            path = this.context.getFilesDir().toString();
+
+
+        if(!this.directoryName.isEmpty())
+            path +="/"+ this.directoryName;
+
+        /**
+         * If the directory does not exist, we create it here.
+         */
+
+        File storagePath = new File(path);
+        if (!storagePath.exists())
+            storagePath.mkdirs();
+
+        File file = new File(storagePath, this.fileName);
+
         try {
-
-
-            /**
-             *  Evaluate privacyLevel to determine the location of directory - external or internal
-             */
-            String path = "";
-            if(privacyLevel == FilePrivacy.PUBLIC)
-                path = Environment.getExternalStorageDirectory().toString();
-            else
-                path = this.context.getFilesDir().toString();
-
-
-            if(!this.directoryName.isEmpty())
-                path +="/"+ this.directoryName;
-
-            /**
-             * If the directory does not exist, we create it here.
-             */
-
-            File storagePath = new File(path);
-            if (!storagePath.exists() && storagePath.mkdirs()) {
-            	storagePath=null;
-            }
-
-            File file = new File(storagePath, this.fileName);
-
             /**
              * Then I create the file.
              * if not exist
              */
-            if (!file.exists()) {
-                /**
-                 * Finally I write the content.
-                 */
-                OutputStream outputStream;
-
-                outputStream = new BufferedOutputStream(new FileOutputStream(file));
-                outputStream.write(this.content.getBytes(Charset.forName("UTF-8")));
-                outputStream.close();
-            }
-        } catch (Exception e) {
-            throw new CantPersistFileException(e.getMessage());
+            /**
+            * Finally I write the content.
+            */
+            OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file));
+            outputStream.write(this.content.getBytes(Charset.forName(CHARSET_NAME)));
+            outputStream.close();
+        } catch (IOException ex) {
+            String message = CantPersistFileException.DEFAULT_MESSAGE;
+            FermatException cause = FermatException.wrapException(ex);
+            String context = "File Path: " + file.getPath();
+            String possibleReason = "Check if we have the appropiate permissions to write on this path";
+            throw new CantPersistFileException(message, cause, context, possibleReason);
         }
     }
 
@@ -158,52 +173,76 @@ public class AndroidPlatformTextFile implements PlatformTextFile {
     public void loadFromMedia() throws CantLoadFileException {
 
     	BufferedReader bufferedReader = null;
+        /**
+         *  Evaluate privacyLevel to determine the location of directory - external or internal
+         */
+        String path = "";
+        if(privacyLevel == FilePrivacy.PUBLIC)
+            path = Environment.getExternalStorageDirectory().toString();
+        else
+            path = this.context.getFilesDir().toString();
+
+        /**
+         * Get the file handle.
+         */
+
+        File file = new File(path +"/"+ this.directoryName,this.fileName);
+
         try {
-            /**
-             *  Evaluate privacyLevel to determine the location of directory - external or internal
-             */
-            String path = "";
-            if(privacyLevel == FilePrivacy.PUBLIC)
-                path = Environment.getExternalStorageDirectory().toString();
-            else
-                path = this.context.getFilesDir().toString();
-
-            /**
-             * Get the file handle.
-             */
-
-            File file = new File(path +"/"+ this.directoryName,this.fileName);
-            InputStream inputStream ;
-            inputStream =  new BufferedInputStream(new FileInputStream(file));
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+            InputStream inputStream =  new BufferedInputStream(new FileInputStream(file));
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream, CHARSET_NAME);
 
             /**
              * Read the content.
              */
-
             bufferedReader = new BufferedReader(inputStreamReader);
-            StringBuilder sb = new StringBuilder();
+            StringBuilder builder = new StringBuilder();
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                sb.append(line);
+                builder.append(line);
             }
             inputStream.close();
+            bufferedReader.close();
 
-            this.content = sb.toString();
+            this.content = builder.toString();
             inputStream.close();
 
-        } catch (Exception e) {
-            throw new CantLoadFileException(e.getMessage());
-        } finally {
-        	try {
-        		bufferedReader.close();
-        		bufferedReader=null;
-        	} catch (Exception e) {
-        		e.printStackTrace();
-        	}
+        } catch (IOException ex) {
+            String message = CantLoadFileException.DEFAULT_MESSAGE;
+            FermatException cause = FermatException.wrapException(ex);
+            String context = "File Path: " + file.getPath();
+            String possibleReason = "This problem should be related with the FileInputStream either in the construction or the read operation";
+            throw new CantLoadFileException(message, cause, context, possibleReason);
         }
     }
 
+    @Override
+    public boolean equals(Object o){
+        if(!(o instanceof AndroidPlatformTextFile))
+            return false;
+
+        AndroidPlatformTextFile compare = (AndroidPlatformTextFile) o;
+        return directoryName.equals(compare.getDirectoryName()) && fileName.equals(compare.getFileName()) && privacyLevel.equals(compare.getPrivacyLevel());
+    }
+
+    @Override
+    public int hashCode(){
+        int c = 0;
+        c += directoryName.hashCode();
+        c += fileName.hashCode();
+        c += privacyLevel.hashCode();
+        return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
+    }
+
+    @Override
+    public String toString(){
+        String path = "";
+        if(privacyLevel == FilePrivacy.PUBLIC)
+            path = Environment.getExternalStorageDirectory().toString();
+        else
+            path = this.context.getFilesDir().toString();
+        return path +"/"+ this.directoryName + "/" + fileName;
+    }
 
 
 

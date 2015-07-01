@@ -3,6 +3,7 @@ package com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdub
 import android.content.Context;
 import android.util.Base64;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PlatformFileSystem;
@@ -25,12 +26,14 @@ import java.security.NoSuchAlgorithmException;
 
 public class AndroidPlatformFileSystem implements PlatformFileSystem {
 
+    private static final String CHARSET_NAME = "UTF-8";
+    private static final String DIGEST_ALGORITHM = "SHA-256";
 
     /**
      * PlatformFileSystem interface member variables.
      */
 
-    Context context;
+    private Context context;
 
 
     /**
@@ -50,18 +53,9 @@ public class AndroidPlatformFileSystem implements PlatformFileSystem {
      */
     @Override
     public PlatformTextFile getFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException,CantCreateFileException {
-        AndroidPlatformTextFile newFile =null;
+        checkContext();
         try {
-
-            newFile = new AndroidPlatformTextFile( this.context, directoryName,hashFileName(fileName), privacyLevel, lifeSpan);
-
-        }
-        catch (NoSuchAlgorithmException e){
-            e.printStackTrace();
-            throw new CantCreateFileException();
-        }
-
-        try {
+            AndroidPlatformTextFile newFile = new AndroidPlatformTextFile( this.context, directoryName,hashFileName(fileName), privacyLevel, lifeSpan);
             newFile.loadFromMedia();
             return newFile;
         }
@@ -84,12 +78,8 @@ public class AndroidPlatformFileSystem implements PlatformFileSystem {
      */
     @Override
     public PlatformTextFile createFile(String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws  CantCreateFileException{
-        try {
+        checkContext();
         return new AndroidPlatformTextFile( this.context,directoryName,hashFileName(fileName), privacyLevel, lifeSpan);
-        }
-        catch (NoSuchAlgorithmException e){
-            throw new CantCreateFileException();
-        }
     }
 
     /**
@@ -109,24 +99,21 @@ public class AndroidPlatformFileSystem implements PlatformFileSystem {
      * Hash the file name using the algorithm SHA 256
      */
 
-    private String hashFileName(String fileName) throws NoSuchAlgorithmException {
-        String encryptedString = fileName;
+    private String hashFileName(String fileName) throws CantCreateFileException {
         try{
-
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            md.update(fileName.getBytes(Charset.forName("UTF-8")));
+            MessageDigest md = MessageDigest.getInstance(DIGEST_ALGORITHM);
+            md.update(fileName.getBytes(Charset.forName(CHARSET_NAME)));
             byte[] digest = md.digest();
             byte[] encoded = Base64.encode(digest,1);
-
-            try {
-                encryptedString = new String(encoded, "UTF-8");
-            } catch (Exception e){
-            	throw new NoSuchAlgorithmException (e);
-            }    
-
-        }catch(NoSuchAlgorithmException e){
-            throw e;
+            String encryptedString = new String(encoded, CHARSET_NAME);
+            return encryptedString.replace("/","");
+        }catch(Exception e){
+            throw new CantCreateFileException(CantCreateFileException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "This Should never happen unless we change the DIGEST_ALGORITHM Constant");
         }
-        return encryptedString.replace("/","");
+    }
+
+    private void checkContext() throws CantCreateFileException {
+        if(context == null)
+            throw new CantCreateFileException(CantCreateFileException.DEFAULT_MESSAGE, null, "Context: null", "Context can't ne Null, you need to call setContext before using the FileSystem");
     }
 }

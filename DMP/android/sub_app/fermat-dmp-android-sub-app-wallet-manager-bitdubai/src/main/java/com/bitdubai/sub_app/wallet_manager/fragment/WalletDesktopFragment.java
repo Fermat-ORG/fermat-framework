@@ -6,6 +6,7 @@ package com.bitdubai.sub_app.wallet_manager.fragment;
 
 import android.app.Service;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,9 +21,17 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.Activity;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.AppRuntimeManager;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Activities;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime.WalletRuntimeManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
 import com.bitdubai.fermat_dmp.wallet_manager.R;
 
 
@@ -40,6 +49,8 @@ public class WalletDesktopFragment extends Fragment {
     private static int tabId;
 
     private int position;
+
+
 
     //private SearchView mSearchView;
 
@@ -255,20 +266,25 @@ public class WalletDesktopFragment extends Fragment {
            // holder.companyTextView.setTypeface(MyApplication.getDefaultTypeface());
 
 
-
+            LinearLayout linearLayout = (LinearLayout)convertView.findViewById(R.id.wallet_3);
             switch (item.picture)
             {
                 case "wallet_store_cover_photo_girl":
                     holder.imageView.setImageResource(R.drawable.icono_piggy_pink);
+
                     holder.imageView.setTag("CPWWRWAKAV1M|1");
+                    linearLayout.setTag("CPWWRWAKAV1M|1");
+
                     break;
                 case "wallet_store_cover_photo_boy":
                     holder.imageView.setImageResource(R.drawable.icono_piggy_yellow);
                     holder.imageView.setTag("CPWWRWAKAV1M|2");
+                    linearLayout.setTag("CPWWRWAKAV1M|2");
                     break;
                 case "wallet_store_cover_photo_lady":
                     holder.imageView.setImageResource(R.drawable.wallet_1);
                     holder.imageView.setTag("AdultsActivity|3");
+                    linearLayout.setTag("AdultsActivity|3");
                     break;
                 /*case "wallet_store_cover_photo_young":
                     holder.imageView.setImageResource(R.drawable.wallet_2);
@@ -278,6 +294,8 @@ public class WalletDesktopFragment extends Fragment {
                 case "wallet_store_cover_fermat":
                     holder.imageView.setImageResource(R.drawable.fermat);
                     holder.imageView.setTag("WalletBitcoinActivity|4");
+                    linearLayout.setTag("WalletBitcoinActivity|4");
+
                     break;
                 case "wallet_store_cover_photo_boca_juniors":
                     holder.imageView.setImageResource(R.drawable.icono_club_1);
@@ -350,6 +368,9 @@ public class WalletDesktopFragment extends Fragment {
         }
 
     }
+
+
+
 
 }
 

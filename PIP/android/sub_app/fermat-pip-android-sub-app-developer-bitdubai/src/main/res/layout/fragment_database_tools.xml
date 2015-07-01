@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#000000"
+    android:background="#f3e4c4"
     android:id="@+id/hola">
 
     <TextView
@@ -18,7 +18,7 @@
         android:paddingBottom="3dip"
         android:textColor="#FF666666"
         android:textSize="30sp"
-        android:text="Click on a Resource"/>
+        android:text="Pick a resource"/>
 
     <ListView
         android:id="@+id/lista1"

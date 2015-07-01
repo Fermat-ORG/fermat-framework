@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bitdubai.sub_app.manager.R;
@@ -164,12 +165,13 @@ public class SubAppDesktopFragment extends Fragment {
             }
 
             holder.companyTextView.setText(item.company);
-
+            LinearLayout linearLayout = (LinearLayout)convertView.findViewById(R.id.wallet_3);
             switch (item.picture)
             {
                 case "ic_launcher":
                     holder.imageView.setImageResource(R.drawable.ic_launcher);
                   holder.imageView.setTag("DevelopersActivity|1");
+                    linearLayout.setTag("DevelopersActivity|1");
                     break;
 
             }
