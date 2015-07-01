@@ -11,6 +11,8 @@ import java.util.UUID;
  */
 public interface ExtraUserManager {
 
+    // TODO ADD EXCEPTIONS?
+
     public User getUser(UUID id);
 
     public User createUser(String userName);
