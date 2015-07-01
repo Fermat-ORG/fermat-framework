@@ -52,7 +52,7 @@ import java.util.UUID;
              * I can not handle this situation.
              */
 
-            throw new CantCreateDatabaseException();
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateDatabaseException, "", "Exception not handled by the plugin, There is a problem and i cannot create the database.");
         }
 
 
@@ -79,7 +79,7 @@ import java.util.UUID;
                 ((DatabaseFactory) database).createTable(ownerId, table);
             }
             catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException();
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
 
 
@@ -90,7 +90,7 @@ import java.util.UUID;
              * but anyway, if this happens, I can not continue.
              * * *
              */
-            throw new CantCreateDatabaseException();
+            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, invalidOwnerId, "", "There is a problem with the ownerId of the database.");
         }
 
         return database;
