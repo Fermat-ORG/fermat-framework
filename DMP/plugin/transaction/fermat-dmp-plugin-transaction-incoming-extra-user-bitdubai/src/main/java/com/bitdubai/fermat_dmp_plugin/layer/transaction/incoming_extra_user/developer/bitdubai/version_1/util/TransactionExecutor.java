@@ -95,6 +95,7 @@ public class TransactionExecutor implements DealsWithBitcoinWallet, DealsWithWal
 
         long timestamp = System.currentTimeMillis() / 1000L;
 
+        bitcoinTransaction.setTramsactionHash(cryptoTransaction.getTransactionHash());
         bitcoinTransaction.setAddressFrom(cryptoTransaction.getAddressFrom());
         bitcoinTransaction.setAddressTo(cryptoTransaction.getAddressTo());
         bitcoinTransaction.setAmount(cryptoTransaction.getCryptoAmount());

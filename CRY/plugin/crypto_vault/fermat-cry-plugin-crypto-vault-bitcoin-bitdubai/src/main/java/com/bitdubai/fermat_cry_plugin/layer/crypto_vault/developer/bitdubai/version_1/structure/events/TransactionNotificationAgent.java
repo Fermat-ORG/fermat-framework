@@ -1,6 +1,10 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.events;
 
+import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.Plugin;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DealsWithLogManagers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.event.DealWithEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.event.EventMonitor;
@@ -14,6 +18,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -28,12 +35,13 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.vers
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseActions;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseFactory;
 
+import java.util.Map;
 import java.util.UUID;
 
 /**
  * Created by rodrigo on 2015.06.18..
  */
-public class TransactionNotificationAgent implements Agent,DealsWithEvents,DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public class TransactionNotificationAgent implements Agent,DealsWithLogger,DealsWithEvents,DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
 
         /**
      * TransactionNotificationAgent variables
@@ -46,6 +54,12 @@ public class TransactionNotificationAgent implements Agent,DealsWithEvents,Deals
      */
     Thread agentThread;
     MonitorAgent monitorAgent;
+
+    /**
+     * DealWithLogManagers interface member variable
+     */
+    LogManager logManager;
+    LogLevel logLevel;
 
 
     /**
@@ -135,6 +149,12 @@ public class TransactionNotificationAgent implements Agent,DealsWithEvents,Deals
     @Override
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
+    }
+
+    @Override
+    public void setLogManager(LogLevel logLevel, LogManager logManager) {
+        this.logManager = logManager;
+        this.logLevel = logLevel;
     }
 
     /**
@@ -236,9 +256,14 @@ public class TransactionNotificationAgent implements Agent,DealsWithEvents,Deals
             /**
              * this will run in an infinite loop
              */
-            System.out.println("Transaction Protocol Notification Agent: running...");
+            logManager.log(logLevel, "Transaction Protocol Notification Agent: running...", "Transaction Protocol Notification Agent: running...", "Transaction Protocol Notification Agent: running...");
+            int iteration = 0;
             while (true)
             {
+                /**
+                 * Increase the iteration counter
+                 */
+                iteration++;
                 try {
                     Thread.sleep(SLEEP_TIME);
                 } catch (InterruptedException interruptedException) {
@@ -249,6 +274,7 @@ public class TransactionNotificationAgent implements Agent,DealsWithEvents,Deals
                  * now I will check if there are pending transactions to raise the event
                  */
                 try {
+                    logManager.log(logLevel, "", "Iteration number " + iteration, "Iteration number " + iteration);
                     doTheMainTask();
                 } catch (CantExecuteQueryException e) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
