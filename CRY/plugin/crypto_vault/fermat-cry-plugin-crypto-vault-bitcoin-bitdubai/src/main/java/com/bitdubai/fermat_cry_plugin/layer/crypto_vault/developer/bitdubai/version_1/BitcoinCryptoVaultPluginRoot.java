@@ -63,6 +63,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 /**
  * Created by loui on 08/06/15.
@@ -406,6 +407,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
 
                 vault.loadOrCreateVault();
 
+
                 System.out.println("CryptoVault - Valid receive address for the vault is: " + vault.getAddress().getAddress());
 
 
@@ -547,7 +549,12 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
 
     public static LogLevel getLogLevelByClass(String className){
         try{
-            return BitcoinCryptoVaultPluginRoot.newLoggingLevel.get(className);
+            /**
+             * sometimes the classname may be passed dinamically with an $moretext
+             * I need to ignore whats after this.
+             */
+            String[] correctedClass = className.split((Pattern.quote("$")));
+            return BitcoinCryptoVaultPluginRoot.newLoggingLevel.get(correctedClass[0]);
         } catch (Exception e){
             return LogLevel.MINIMAL_LOGGING;
         }
