@@ -41,6 +41,7 @@ import java.util.Map;
 public class LogToolsFragment extends Fragment {
 
     private Map<String, List<ClassHierarchyLevels>> pluginClasses;
+    List<LoggerPluginClassHierarchy> loggerPluginClassHierarchy;
 
     private static final String ARG_POSITION = "position";
     View rootView;
@@ -75,6 +76,11 @@ public class LogToolsFragment extends Fragment {
         }
 
         pluginClasses = new HashMap<String,List<ClassHierarchyLevels>>();
+
+        /**
+         * I will load the list of classes that will be used in other fragments.
+         */
+        loadLoggerHierarchyClassesForPlugins();
     }
 
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -82,7 +88,7 @@ public class LogToolsFragment extends Fragment {
 
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
         String selectedWord = ((TextView) info.targetView).getText().toString();
-        selectedWord = selectedWord.split(" \\|\\| ")[0];
+
 
         menu.setHeaderTitle(selectedWord);
         menu.add(LogLevel.NOT_LOGGING.toString());
@@ -121,18 +127,18 @@ public class LogToolsFragment extends Fragment {
            //     logTool.setLogLevel(addon, logLevel);
            // } else // por ahora no tengo como detectar si es un plug in o no.if (type.equals("Plugin"))
              //{
-                Plugins plugin = Plugins.getByKey("Bitcoin Crypto Vault");
+                Plugins plugin = Plugins.getByKey("Bitcoin Crypto Network");
                 //logTool.setLogLevel(plugin, logLevel);
             /**
              * Now I must look in pluginClasses map the match of the selected class to pass the full path
              */
             HashMap<String, LogLevel> data = new HashMap<String, LogLevel>();
             for (ClassHierarchyLevels c : pluginClasses.get(plugin.getKey())){
-                    if (c.getLevel3() == resource)
+                    if (c.getLevel3().equals(resource))
                         data.put(c.getFullPath(), logLevel);
-                    if (c.getLevel2() == resource)
+                if (c.getLevel2().equals(resource))
                         data.put(c.getFullPath(), logLevel);
-                    if (c.getLevel1() == resource)
+                if (c.getLevel1().equals(resource))
                         data.put(c.getFullPath(), logLevel);
             }
                 logTool.setNewLogLevelInClass(plugin, data);
@@ -154,6 +160,70 @@ public class LogToolsFragment extends Fragment {
         }
     }
 
+    private void loadLoggerHierarchyClassesForPlugins(){
+        loggerPluginClassHierarchy = new ArrayList<LoggerPluginClassHierarchy>();
+
+        /**
+         * I will load the data into the class for each plugin available
+         */
+        List<Plugins> plugins = logTool.getAvailablePluginList();
+        for(Plugins plugin : plugins){
+            LoggerPluginClassHierarchy pluginClassHierarchy = new LoggerPluginClassHierarchy();
+            pluginClassHierarchy.setLevel0(plugin.getKey());
+
+            /**
+             * I will get the list of the available classes on the plug in
+             */
+            String level1="";
+            String level2="";
+            String toReplace = "";
+            List<ClassHierarchyLevels> newList = new ArrayList<ClassHierarchyLevels>();
+            for (ClassHierarchyLevels classes : logTool.getClassesHierarchy(plugin)){
+                /**
+                 * I will acommodate the values to fit the screen
+                 */
+                if (classes.getLevel1().length() > 40)
+                    toReplace = classes.getLevel1().substring(15, classes.getLevel1().length()-15);
+                else if (classes.getLevel1().length() < 40)
+                    toReplace = classes.getLevel1().substring(8, classes.getLevel1().length()-8);
+                else if (classes.getLevel1().length() < 10)
+                    toReplace = "   ";
+                classes.setLevel1(classes.getLevel1().replace(toReplace, "..."));
+
+                if (classes.getLevel2().length() > 40)
+                    toReplace = classes.getLevel2().substring(15, classes.getLevel2().length()-15);
+                else if (classes.getLevel2().length() < 40 && classes.getLevel2().length() > 20)
+                    toReplace = classes.getLevel2().substring(8, classes.getLevel2().length()-8);
+                else if (classes.getLevel2().length() < 10)
+                    toReplace = "  ";
+
+                classes.setLevel2("-" + classes.getLevel2().replace(toReplace, "..."));
+                classes.setLevel3("--" + classes.getLevel3());
+
+                /**
+                 * I will add the first item to the list. If I already added it, then I will skip it.
+                 */
+                if (!level1.contentEquals(classes.getLevel1()))
+                    level1 = classes.getLevel1();
+
+
+                if (!level2.contentEquals(classes.getLevel2()))
+                    level2 = classes.getLevel2();
+
+                /**
+                 * At this point I have the class ready to be filled up with the rest of the levels
+                 */
+                pluginClassHierarchy.setFullPath(classes.getFullPath());
+                pluginClassHierarchy.setLevel1(classes.getLevel1());
+                pluginClassHierarchy.setLevel2(classes.getLevel2());
+                pluginClassHierarchy.setLevel3(classes.getLevel3());
+            }
+
+
+        }
+
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_log_tools, container, false);
@@ -167,6 +237,7 @@ public class LogToolsFragment extends Fragment {
             List<String> list = new ArrayList<>();
 
             for(Plugins plugin : plugins){
+
                 list.add(plugin.getKey()); //+" - Plugin || LogLevel: "+logTool.getLogLevel(plugin));
                 /**
                  * I will get the list of the available classes on the plug in
@@ -220,6 +291,7 @@ public class LogToolsFragment extends Fragment {
                     newList.add(classes);
                 }
                 pluginClasses.put(plugin.getKey(), newList);
+
 
 
             }

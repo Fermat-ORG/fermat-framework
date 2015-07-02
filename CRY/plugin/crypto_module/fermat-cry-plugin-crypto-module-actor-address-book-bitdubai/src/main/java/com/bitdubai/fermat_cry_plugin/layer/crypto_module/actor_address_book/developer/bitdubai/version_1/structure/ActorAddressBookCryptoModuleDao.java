@@ -77,6 +77,14 @@ public class ActorAddressBookCryptoModuleDao implements DealsWithErrors, DealsWi
      */
 
     public void initialize() throws CantInitializeActorAddressBookCryptoModuleException {
+
+        if (errorManager == null)
+            throw new CantInitializeActorAddressBookCryptoModuleException(CantInitializeActorAddressBookCryptoModuleException.DEFAULT_MESSAGE, null, "Error Manager: null", "You have to set the ErrorManager before initializing");
+        if (pluginDatabaseSystem == null)
+            throw new CantInitializeActorAddressBookCryptoModuleException(CantInitializeActorAddressBookCryptoModuleException.DEFAULT_MESSAGE, null, "Plugin Database System: null", "You have to set the PluginDatabaseSystem before initializing");
+        if (pluginId == null)
+            throw new CantInitializeActorAddressBookCryptoModuleException(CantInitializeActorAddressBookCryptoModuleException.DEFAULT_MESSAGE, null, "Plugin Id: null", "You have to set the PluginId before initializing");
+
         /**
          * I will try to open the actor address book's database..
          */
@@ -100,6 +108,13 @@ public class ActorAddressBookCryptoModuleDao implements DealsWithErrors, DealsWi
 
     public void registerActorAddressBook(UUID actorId, Actors actorType, CryptoAddress cryptoAddress) throws CantRegisterActorAddressBookException {
 
+        if (actorId == null)
+            throw new CantRegisterActorAddressBookException(CantRegisterActorAddressBookException.DEFAULT_MESSAGE, null, "ActorId: null", "You have to set the ActorId before initializing");
+        if (actorType == null)
+            throw new CantRegisterActorAddressBookException(CantRegisterActorAddressBookException.DEFAULT_MESSAGE, null, "ActorType: null", "You have to set the ActorType before initializing");
+        if (cryptoAddress == null)
+            throw new CantRegisterActorAddressBookException(CantRegisterActorAddressBookException.DEFAULT_MESSAGE, null, "CryptoAddress: null", "You have to set the CryptoAddress before initializing");
+
         /**
          * Here I create the Address book record for new Actor.
          */
@@ -121,11 +136,15 @@ public class ActorAddressBookCryptoModuleDao implements DealsWithErrors, DealsWi
             addressBookTable.insertRecord(addressBookRecord);
         } catch (CantInsertRecordException cantInsertRecord) {
             throw new CantRegisterActorAddressBookException(CantRegisterActorAddressBookException.DEFAULT_MESSAGE, cantInsertRecord, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.");
-
         }
     }
 
     public ActorAddressBookRecord getActorAddressBookByCryptoAddress(CryptoAddress cryptoAddress) throws CantGetActorAddressBookException, ActorAddressBookNotFoundException {
+
+        if (cryptoAddress == null)
+            throw new CantGetActorAddressBookException(CantGetActorAddressBookException.DEFAULT_MESSAGE, null, "cryptoAddress: null", "The parameter cryptoAddress cannot be null");
+
+
         DatabaseTable table;
 
         /**
@@ -163,6 +182,9 @@ public class ActorAddressBookCryptoModuleDao implements DealsWithErrors, DealsWi
 
     public List<ActorAddressBookRecord> getAllActorAddressBookByActorId(UUID actorId) throws CantGetActorAddressBookException, ActorAddressBookNotFoundException {
 
+        if (actorId == null)
+            throw new CantGetActorAddressBookException(CantGetActorAddressBookException.DEFAULT_MESSAGE, null, "actorId: null", "The parameter actorId cannot be null");
+
         DatabaseTable table;
 
         List<ActorAddressBookRecord> actorsAddressBooks = new ArrayList<>();
@@ -189,7 +211,7 @@ public class ActorAddressBookCryptoModuleDao implements DealsWithErrors, DealsWi
 
         List<DatabaseTableRecord> databaseTableRecordList = table.getRecords();
 
-        if (databaseTableRecordList.size() < 0) {
+        if (databaseTableRecordList.size() > 0) {
             for (DatabaseTableRecord record : table.getRecords()) {
                 actorType = Actors.getByCode(record.getStringValue(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_ACTOR_TYPE));
                 address = record.getStringValue(ActorAddressBookCryptoModuleDatabaseConstants.CRYPTO_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS);

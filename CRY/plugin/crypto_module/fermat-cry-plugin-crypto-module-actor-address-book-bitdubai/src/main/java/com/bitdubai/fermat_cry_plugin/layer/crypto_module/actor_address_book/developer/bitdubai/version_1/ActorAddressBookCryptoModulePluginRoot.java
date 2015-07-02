@@ -120,7 +120,7 @@ public class ActorAddressBookCryptoModulePluginRoot implements ActorAddressBookM
     @Override
     public ActorAddressBookRegistry getActorAddressBookRegistry() throws CantGetActorAddressBookRegistryException {
         /**
-         * I created instance of WalletCryptoAddressBookRegistry
+         * I created instance of ActorCryptoAddressBookRegistry
          */
         ActorAddressBookCryptoModuleRegistry actorCryptoAddressBookRegistry = new ActorAddressBookCryptoModuleRegistry();
 
@@ -130,17 +130,16 @@ public class ActorAddressBookCryptoModulePluginRoot implements ActorAddressBookM
 
         try {
             actorCryptoAddressBookRegistry.initialize();
+            return actorCryptoAddressBookRegistry;
         } catch (CantInitializeActorAddressBookCryptoModuleException cantInitializeActorCryptoAddressBookException) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_ADDRESS_BOOK_CRYPTO, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantInitializeActorCryptoAddressBookException);
             throw new CantGetActorAddressBookRegistryException(CantGetActorAddressBookRegistryException.DEFAULT_MESSAGE, cantInitializeActorCryptoAddressBookException);
         }
-        return actorCryptoAddressBookRegistry;
     }
 
     /**
      * Service Interface implementation.
      */
-
     @Override
     public void start() {
         this.serviceStatus = ServiceStatus.STARTED;

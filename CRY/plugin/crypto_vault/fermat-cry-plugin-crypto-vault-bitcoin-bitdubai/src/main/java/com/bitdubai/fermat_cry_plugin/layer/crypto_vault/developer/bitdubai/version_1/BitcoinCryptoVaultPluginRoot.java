@@ -54,6 +54,7 @@ import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 
+import java.security.Key;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -61,6 +62,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 /**
  * Created by loui on 08/06/15.
@@ -105,7 +107,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
      * DealsWithLogger interface member variable
      */
     LogManager logManager;
-    static Map<String, LogLevel> newLoggingLevel;
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
     /**
      * DealsWithDeviceUsers interface member variable
@@ -165,7 +167,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
                         /**
                          * I filter by the package name of the plug in Root.
                          */
-                .filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1"))));
+                .filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix(this.getClass().getName()))));
 
         Set<Class<?>> classes = reflections.getSubTypesOf(Object.class);
         Iterator<Class<?>> iterator = classes.iterator();
@@ -189,16 +191,34 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
             returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseActions");
             returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.events.TransactionNotificationAgent");
             returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.developerUtils.DeveloperDatabaseFactory");
-            returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.events.TransactionNotificationAgent");
         }
+
+
+        /**
+         * I return the values.
+         */
         return returnedClasses;
     }
 
 
     @Override
     public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
-        this.newLoggingLevel = newLoggingLevel;
+        /**
+         * I will check the current values and update the LogLevel in those which is different
+         */
 
+        for (Map.Entry<String, LogLevel> pluginPair : BitcoinCryptoVaultPluginRoot.newLoggingLevel.entrySet()){
+            /**
+             * if the incoming value is different from what I already have, then Ill updated it
+             */
+        if (newLoggingLevel.containsKey(pluginPair.getKey())){
+
+
+            if (pluginPair.getValue() != newLoggingLevel.get(pluginPair.getKey())){
+                pluginPair.setValue(newLoggingLevel.get(pluginPair.getKey()));
+            }
+        }
+        }
     }
 
     /**
@@ -306,6 +326,17 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
     public void start() throws CantStartPluginException {
         logManager.log(logLevel, "CryptoVault Starting...", "CryptoVault Starting...", "CryptoVault Starting...");
 
+        /**
+         * I will initialize the Root map with all the classes in default state of Minimal logging
+         */
+        try{
+            for (String c : getClassesFullPath()){
+                BitcoinCryptoVaultPluginRoot.newLoggingLevel.put(c, LogLevel.MINIMAL_LOGGING);
+            }
+        } catch (Exception e){
+            // no big deal if I coudln't fill the class now, we will do it later.
+        }
+
 
         /**
          * I get the userId from the deviceUserManager
@@ -372,6 +403,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
                 vault.setPluginId(pluginId);
 
                 vault.loadOrCreateVault();
+
 
                 System.out.println("CryptoVault - Valid receive address for the vault is: " + vault.getAddress().getAddress());
 
@@ -514,7 +546,12 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
 
     public static LogLevel getLogLevelByClass(String className){
         try{
-            return BitcoinCryptoVaultPluginRoot.newLoggingLevel.get(className);
+            /**
+             * sometimes the classname may be passed dinamically with an $moretext
+             * I need to ignore whats after this.
+             */
+            String[] correctedClass = className.split((Pattern.quote("$")));
+            return BitcoinCryptoVaultPluginRoot.newLoggingLevel.get(correctedClass[0]);
         } catch (Exception e){
             return LogLevel.MINIMAL_LOGGING;
         }

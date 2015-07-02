@@ -248,7 +248,7 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
             /**
              * this will run in an infinite loop
              */
-            logManager.log(BitcoinCryptoVaultPluginRoot.logLevel, "Transaction Protocol Notification Agent: running...", "Transaction Protocol Notification Agent: running...", "Transaction Protocol Notification Agent: running...");
+            logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.events.TransactionNotificationAgent"), "Transaction Protocol Notification Agent: running...", "Transaction Protocol Notification Agent: running...", "Transaction Protocol Notification Agent: running...");
             int iteration = 0;
             while (true)
             {
@@ -267,7 +267,7 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
                  */
                 try {
 
-                    logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.events.TransactionNotificationAgent"), null, "Iteration number " + iteration, "Iteration number " + iteration);
+                    logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), null, "Iteration number " + iteration, "Iteration number " + iteration);
                     doTheMainTask();
                 } catch (CantExecuteQueryException e) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -289,7 +289,7 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
                 PlatformEvent event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE);
                 event.setSource(EventSource.CRYPTO_VAULT);
 
-                System.out.println("Found transactions pending to be notified! Raising INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE event.");
+                logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), null, "Found transactions pending to be notified! Raising INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE event.","Found transactions pending to be notified! Raising INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE event.");
                 eventManager.raiseEvent(event);
 
                 /**
@@ -297,7 +297,8 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
                  * an error in the platform, so I will raise an error.
                  */
                 int iterations = db.updateTransactionProtocolStatus(true);
-                System.out.println("Transaction Protocol Notification Agent: iteration number " + iterations + " without other plugins consuming transaction.");
+
+                logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "No other plugin is consuming Vault transactions.", "Transaction Protocol Notification Agent: iteration number " + iterations + " without other plugins consuming transaction.","Transaction Protocol Notification Agent: iteration number " + iterations + " without other plugins consuming transaction.");
                 if (ITERATIONS_THRESHOLD < iterations){
                     System.err.println("Transaction Protocol Notification Agent: reached threshold of maximun iterations without any plugin consuming transactions.");
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new LimitReachedTransactionNotificationAgentException());
