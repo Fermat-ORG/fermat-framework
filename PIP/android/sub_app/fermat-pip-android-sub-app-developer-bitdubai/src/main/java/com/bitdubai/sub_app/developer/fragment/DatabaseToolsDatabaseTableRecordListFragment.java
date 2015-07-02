@@ -153,6 +153,8 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
 
 
         TableLayout tableLayout= new TableLayout(getActivity());
+        TableLayout.LayoutParams tableLayoutParams = new TableLayout.LayoutParams();
+        tableLayout.setBackgroundColor(Color.BLACK);
         try {
             TableRow.LayoutParams tableRowParams = new TableRow.LayoutParams();
             tableRowParams.setMargins(1, 1, 1, 1);
@@ -181,7 +183,7 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
                     tableRow.addView(textView, tableRowParams);
 
                 }
-                tableLayout.addView(tableRow);
+                tableLayout.addView(tableRow,tableLayoutParams);
             }
 
         }catch (Exception e){
