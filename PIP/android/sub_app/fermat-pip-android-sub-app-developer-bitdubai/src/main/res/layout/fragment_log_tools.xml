@@ -29,4 +29,10 @@
         android:divider="#FF0000"
         android:textColor="#000000">
     </ListView>
+
+    <TextSwitcher
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textSwitcher"
+        android:layout_gravity="right" />
 </LinearLayout>

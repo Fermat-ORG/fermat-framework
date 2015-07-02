@@ -9,20 +9,23 @@ package com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.except
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CantUpdateWalletContactException extends Exception {
+public class CantUpdateWalletContactException extends CryptoWalletException {
 
-    /**
-     * Constructor
-     */
-    public CantUpdateWalletContactException(){
-        super();
+    public static final String DEFAULT_MESSAGE = "CAN'T UPDATE WALLET CONTACT EXCEPTION";
+
+    public CantUpdateWalletContactException(final String message, final Exception cause, final String context, final String possibleReason) {
+        super(message, cause, context, possibleReason);
     }
 
-    /**
-     * Constructor whit parameter
-     * @param msg
-     */
-    public CantUpdateWalletContactException(String msg){
-        super(msg);
+    public CantUpdateWalletContactException(final String message, final Exception cause) {
+        this(message, cause, "", "");
+    }
+
+    public CantUpdateWalletContactException(final String message) {
+        this(message, null);
+    }
+
+    public CantUpdateWalletContactException() {
+        this(DEFAULT_MESSAGE);
     }
 }

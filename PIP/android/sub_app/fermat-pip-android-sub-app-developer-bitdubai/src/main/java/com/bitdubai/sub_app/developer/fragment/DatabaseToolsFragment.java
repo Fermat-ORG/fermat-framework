@@ -154,6 +154,9 @@ public class DatabaseToolsFragment extends Fragment{
 
                     FT.add(databaseToolsDatabaseListFragment, TAG_NOMBRE_DE_TU_CLASE);
 
+                    FT.add(databaseToolsDatabaseListFragment, databaseToolsDatabaseListFragment);
+
+
                     FT.commit();
                 }
             });
