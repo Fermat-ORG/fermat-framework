@@ -203,31 +203,6 @@ public class DatabaseToolsFragment extends Fragment{
 
             Resource item = getItem(position);
 
-
-            /*gridView =(GridView) rootView.findViewById(R.id.gridView);
-            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                public void onItemClick(AdapterView<?> parent, View v,
-                                        int position, long id) {
-                    Toast.makeText(getActivity(), "natalia+"+position, Toast.LENGTH_SHORT).show();
-                    //Resource item=(Resource) gridView.getItemAtPosition(position);
-                    //Toast.makeText(getActivity(),item.resource,Toast.LENGTH_SHORT).show();
-                    //DatabaseToolsDatabaseListFragment databaseToolsDatabaseListFragment = new DatabaseToolsDatabaseListFragment();
-
-                    //databaseToolsDatabaseListFragment.setResource(item);
-
-                    //FragmentTransaction FT = getFragmentManager().beginTransaction();
-
-
-                    //FT.add(databaseToolsDatabaseListFragment, TAG_DATABASE_TOOLS_FRAGMENT);
-                    //FT.replace(R.id.hola, databaseToolsDatabaseListFragment);
-
-                    //FT.commit();
-
-
-                }
-            });
-            */
-
             ViewHolder holder;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
@@ -290,7 +265,7 @@ public class DatabaseToolsFragment extends Fragment{
             Window window = getActivity().getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.setStatusBarColor(getActivity().getResources().getColor(R.color.material_blue_grey_800));
+//            window.setStatusBarColor(getActivity().getResources().getColor(R.color.material_blue_grey_800));
 
 
             return convertView;
