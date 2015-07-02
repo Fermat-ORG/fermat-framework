@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.Unexpect
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventSource;
 import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.DealsWithIncomingCrypto;
 import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantAcknowledgeTransactionException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantReadEvent;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.DealsWithRegistry;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.TransactionAgent;
@@ -249,26 +250,21 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
                 }
 
                 // Now we ask for the pending transactions
-                List<Transaction<CryptoTransaction>> transactionList = null;
-
                 try {
-                    transactionList = source.getPendingTransactions(Specialist.EXTRA_USER_SPECIALIST);
+                    List<Transaction<CryptoTransaction>> transactionList = source.getPendingTransactions(Specialist.EXTRA_USER_SPECIALIST);
+                    System.out.println("TTF - EXTRA USER MONITOR: " + transactionList.size() + " TRAMSACTION(s) DETECTED");
+                    // Now we save the list in the registry
+                    this.registry.acknowledgeTransactions(transactionList);
+                    System.out.println("TTF - EXTRA USER MONITOR: " + transactionList.size() + " TRAMSACTION(s) ACKNOWLEDGED");
                 } catch (CantDeliverPendingTransactionsException e) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                     //if somethig wrong happenned we try in the next round
                     return;
+                } catch (CantAcknowledgeTransactionException e) {
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    //if somethig wrong happenned we try in the next round
+                    return;
                 }
-                System.out.println("TTF - EXTRA USER MONITOR: " + transactionList.size() + " TRAMSACTION(s) DETECTED");
-
-                // Now we save the list in the registry
-                if(transactionList != null){
-                    this.registry.acknowledgeTransactions(transactionList);
-                } else {
-                  // if sombething failed we try in next round
-                  return;
-                }
-
-                System.out.println("TTF - EXTRA USER MONITOR: " + transactionList.size() + " TRAMSACTION(s) ACKNOWLEDGED");
 
 
                 // Now we take all the transactions in state (ACKNOWLEDGE,TO_BE_NOTIFIED)

@@ -40,7 +40,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.deve
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.DealsWithRegistry;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.TransactionAgent;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.TransactionService;
-import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUSerDataBaseConstants;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserDataBaseConstants;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserEventRecorderService;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserMonitorAgent;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserRegistry;
@@ -133,7 +133,7 @@ public class IncomingExtraUserTransactionPluginRoot implements DatabaseManagerFo
      */
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        IncomingExtraUserDeveloperDatabaseFactory dbFactory = new IncomingExtraUserDeveloperDatabaseFactory(pluginId.toString(), IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_DATABASE);
+        IncomingExtraUserDeveloperDatabaseFactory dbFactory = new IncomingExtraUserDeveloperDatabaseFactory(pluginId.toString(), IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_DATABASE);
         return dbFactory.getDatabaseList(developerObjectFactory);
     }
 
@@ -146,7 +146,7 @@ public class IncomingExtraUserTransactionPluginRoot implements DatabaseManagerFo
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
         Database database;
         try {
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_DATABASE);
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_DATABASE);
             return IncomingExtraUserDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable);
         }catch (CantOpenDatabaseException cantOpenDatabaseException){
             /**
