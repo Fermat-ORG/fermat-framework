@@ -1,6 +1,12 @@
 package unit.com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.ActorAddressBookCryptoModulePluginRoot;
 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantGetActorAddressBookRegistryException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookRegistry;
@@ -9,6 +15,7 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.dev
 import junit.framework.TestCase;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -26,6 +33,12 @@ public class GetActorAddressBookRegistryTest extends TestCase {
 
     @Mock
     PluginDatabaseSystem pluginDatabaseSystem;
+
+    @Mock
+    Database database;
+
+    @Mock
+    DatabaseTableFactory table;
 
     UUID pluginId;
 
@@ -46,10 +59,31 @@ public class GetActorAddressBookRegistryTest extends TestCase {
         assertNotNull(actorAddressBookRegistry);
     }
 
-  /*  @Test(expected=CantGetActorAddressBookRegistryException.class)
-    public void testGetActorAddressBookRegistryTest_NotNul() throws CantGetActorAddressBookRegistryException {
-        //when(pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString())).thenThrow(CantOpenDatabaseException);
+    @Test(expected=CantGetActorAddressBookRegistryException.class)
+    public void testGetActorAddressBookRegistryTest_CantOpenDatabaseException() throws Exception {
+        when(pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString())).thenThrow(new CantOpenDatabaseException());
+
+        actorAddressBookCryptoModulePluginRoot.getActorAddressBookRegistry();
+    }
+
+    @Ignore
+    public void testGetActorAddressBookRegistryTest_DatabaseNotFoundException() throws Exception {
+         /*
+         * TODO This test should pass but there is a wrong design decision that makes a cast of the Database interface into the DatabaseFactory; we should really look into that
+         */
+        when(pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString())).thenThrow(new DatabaseNotFoundException());
+        when(pluginDatabaseSystem.createDatabase(pluginId, pluginId.toString())).thenReturn(database);
+        when(((DatabaseFactory) database).newTableFactory(pluginId, "crypto_address_book")).thenReturn(table);
+
         ActorAddressBookRegistry actorAddressBookRegistry = actorAddressBookCryptoModulePluginRoot.getActorAddressBookRegistry();
         assertNotNull(actorAddressBookRegistry);
-    }*/
+    }
+
+    @Test(expected=CantGetActorAddressBookRegistryException.class)
+    public void testGetActorAddressBookRegistryTest_DatabaseNotFoundException_CantCreateDatabaseException() throws Exception {
+        when(pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString())).thenThrow(new DatabaseNotFoundException());
+        when(pluginDatabaseSystem.createDatabase(pluginId, pluginId.toString())).thenThrow(new CantCreateDatabaseException());
+
+        actorAddressBookCryptoModulePluginRoot.getActorAddressBookRegistry();
+    }
 }
