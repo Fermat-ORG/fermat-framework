@@ -8,6 +8,9 @@ import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentE
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
@@ -34,7 +37,7 @@ import java.util.concurrent.TimeoutException;
 /**
  * Created by rodrigo on 08/06/15.
  */
-public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManager, DealsWithErrors, DealsWithPluginFileSystem, DealsWithPluginIdentity {
+public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManager, DealsWithErrors, DealsWithLogger, DealsWithPluginFileSystem, DealsWithPluginIdentity {
 
 
     /**
@@ -58,6 +61,11 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
      * DealaWithError interface member variables
      */
     ErrorManager errorManager;
+
+    /**
+     * DealsWithLogger interface member variable
+     */
+    LogManager logManager;
 
     /**
      * DealsWithPluginFileSystem interface member variable
@@ -94,6 +102,16 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
     @Override
     public void setPluginId(UUID pluginId) {
         this.pluginId = pluginId;
+    }
+
+    /**
+     * DealsWithLogger interface implementation
+     * @param logLevel
+     * @param logManager
+     */
+    @Override
+    public void setLogManager(LogLevel logLevel, LogManager logManager) {
+        this.logManager = logManager;
     }
 
     /**
@@ -226,7 +244,9 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
 
 
         myListeners = new BitcoinEventListeners();
+        myListeners.setLogManager(null,this.logManager);
         peers.addEventListener(myListeners);
+
     }
 
 

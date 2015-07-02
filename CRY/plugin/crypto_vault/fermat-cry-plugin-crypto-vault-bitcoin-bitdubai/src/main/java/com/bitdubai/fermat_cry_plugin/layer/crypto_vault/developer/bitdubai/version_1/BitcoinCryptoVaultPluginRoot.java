@@ -209,7 +209,6 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
          */
 
         for (Map.Entry<String, LogLevel> pluginPair : BitcoinCryptoVaultPluginRoot.newLoggingLevel.entrySet()){
-            System.out.println("Key: " + pluginPair.getKey() + " LogLevel: " + pluginPair.getValue().toString());
             /**
              * if the incoming value is different from what I already have, then Ill updated it
              */
@@ -217,7 +216,6 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
 
 
             if (pluginPair.getValue() != newLoggingLevel.get(pluginPair.getKey())){
-                System.out.println("New Level to put: " + newLoggingLevel.get(pluginPair.getKey()));
                 pluginPair.setValue(newLoggingLevel.get(pluginPair.getKey()));
             }
         }

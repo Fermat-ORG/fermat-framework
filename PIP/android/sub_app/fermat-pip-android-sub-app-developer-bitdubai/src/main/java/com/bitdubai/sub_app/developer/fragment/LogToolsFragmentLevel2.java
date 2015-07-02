@@ -15,14 +15,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-
-import com.bitdubai.fermat_api.layer.pip_actor.developer.ClassHierarchyLevels;
-import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_api.layer.pip_actor.developer.ClassHierarchyLevels;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.LogTool;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.ToolManager;
+import com.bitdubai.sub_app.developer.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,10 +37,9 @@ import java.util.Map;
  *
  * @version 1.0
  */
-public class LogToolsFragment extends Fragment {
+public class LogToolsFragmentLevel2 extends Fragment {
 
     private Map<String, List<ClassHierarchyLevels>> pluginClasses;
-    List<LoggerPluginClassHierarchy> loggerPluginClassHierarchy;
 
     private static final String ARG_POSITION = "position";
     View rootView;
@@ -50,8 +48,8 @@ public class LogToolsFragment extends Fragment {
 
     private static Platform platform = new Platform();
 
-    public static LogToolsFragment newInstance(int position) {
-        LogToolsFragment f = new LogToolsFragment();
+    public static LogToolsFragmentLevel2 newInstance(int position) {
+        LogToolsFragmentLevel2 f = new LogToolsFragmentLevel2();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         f.setArguments(b);
@@ -76,11 +74,6 @@ public class LogToolsFragment extends Fragment {
         }
 
         pluginClasses = new HashMap<String,List<ClassHierarchyLevels>>();
-
-        /**
-         * I will load the list of classes that will be used in other fragments.
-         */
-        loadLoggerHierarchyClassesForPlugins();
     }
 
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -127,7 +120,7 @@ public class LogToolsFragment extends Fragment {
            //     logTool.setLogLevel(addon, logLevel);
            // } else // por ahora no tengo como detectar si es un plug in o no.if (type.equals("Plugin"))
              //{
-                Plugins plugin = Plugins.getByKey("Bitcoin Crypto Network");
+                Plugins plugin = Plugins.getByKey("Bitcoin Crypto Vault");
                 //logTool.setLogLevel(plugin, logLevel);
             /**
              * Now I must look in pluginClasses map the match of the selected class to pass the full path
@@ -148,7 +141,7 @@ public class LogToolsFragment extends Fragment {
             TextView labelDatabase = (TextView) rootView.findViewById(R.id.labelLog);
             labelDatabase.setVisibility(View.GONE);
 
-            LogToolsFragment logToolsFragment = new LogToolsFragment();
+            LogToolsFragmentLevel2 logToolsFragment = new LogToolsFragmentLevel2();
 
             FragmentTransaction FT = getFragmentManager().beginTransaction();
 
@@ -158,70 +151,6 @@ public class LogToolsFragment extends Fragment {
         } catch (Exception e) {
             System.out.println("*********** soy un error " + e.getMessage());
         }
-    }
-
-    private void loadLoggerHierarchyClassesForPlugins(){
-        loggerPluginClassHierarchy = new ArrayList<LoggerPluginClassHierarchy>();
-
-        /**
-         * I will load the data into the class for each plugin available
-         */
-        List<Plugins> plugins = logTool.getAvailablePluginList();
-        for(Plugins plugin : plugins){
-            LoggerPluginClassHierarchy pluginClassHierarchy = new LoggerPluginClassHierarchy();
-            pluginClassHierarchy.setLevel0(plugin.getKey());
-
-            /**
-             * I will get the list of the available classes on the plug in
-             */
-            String level1="";
-            String level2="";
-            String toReplace = "";
-            List<ClassHierarchyLevels> newList = new ArrayList<ClassHierarchyLevels>();
-            for (ClassHierarchyLevels classes : logTool.getClassesHierarchy(plugin)){
-                /**
-                 * I will acommodate the values to fit the screen
-                 */
-                if (classes.getLevel1().length() > 40)
-                    toReplace = classes.getLevel1().substring(15, classes.getLevel1().length()-15);
-                else if (classes.getLevel1().length() < 40)
-                    toReplace = classes.getLevel1().substring(8, classes.getLevel1().length()-8);
-                else if (classes.getLevel1().length() < 10)
-                    toReplace = "   ";
-                classes.setLevel1(classes.getLevel1().replace(toReplace, "..."));
-
-                if (classes.getLevel2().length() > 40)
-                    toReplace = classes.getLevel2().substring(15, classes.getLevel2().length()-15);
-                else if (classes.getLevel2().length() < 40 && classes.getLevel2().length() > 20)
-                    toReplace = classes.getLevel2().substring(8, classes.getLevel2().length()-8);
-                else if (classes.getLevel2().length() < 10)
-                    toReplace = "  ";
-
-                classes.setLevel2("-" + classes.getLevel2().replace(toReplace, "..."));
-                classes.setLevel3("--" + classes.getLevel3());
-
-                /**
-                 * I will add the first item to the list. If I already added it, then I will skip it.
-                 */
-                if (!level1.contentEquals(classes.getLevel1()))
-                    level1 = classes.getLevel1();
-
-
-                if (!level2.contentEquals(classes.getLevel2()))
-                    level2 = classes.getLevel2();
-
-                /**
-                 * At this point I have the class ready to be filled up with the rest of the levels
-                 */
-                pluginClassHierarchy.setFullPath(classes.getFullPath());
-                pluginClassHierarchy.setLevel1(classes.getLevel1());
-                pluginClassHierarchy.setLevel2(classes.getLevel2());
-                pluginClassHierarchy.setLevel3(classes.getLevel3());
-            }
-
-
-        }
-
     }
 
     @Override
@@ -237,7 +166,6 @@ public class LogToolsFragment extends Fragment {
             List<String> list = new ArrayList<>();
 
             for(Plugins plugin : plugins){
-
                 list.add(plugin.getKey()); //+" - Plugin || LogLevel: "+logTool.getLogLevel(plugin));
                 /**
                  * I will get the list of the available classes on the plug in
@@ -291,7 +219,6 @@ public class LogToolsFragment extends Fragment {
                     newList.add(classes);
                 }
                 pluginClasses.put(plugin.getKey(), newList);
-
 
 
             }
