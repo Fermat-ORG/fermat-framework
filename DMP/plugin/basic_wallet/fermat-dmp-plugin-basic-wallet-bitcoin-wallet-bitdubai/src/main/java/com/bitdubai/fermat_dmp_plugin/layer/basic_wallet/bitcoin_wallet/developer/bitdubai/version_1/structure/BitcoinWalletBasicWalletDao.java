@@ -94,9 +94,7 @@ public class BitcoinWalletBasicWalletDao {
             /**
              * I can not solve this situation.
              */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
-
-            throw new CantCalculateBalanceException("Error to get Wallet Balance",cantLoadTableToMemory,"Error load wallet table" , "");
+              throw new CantCalculateBalanceException("Error to get Wallet Balance",cantLoadTableToMemory,"Error load wallet table" , "");
 
         }
 
@@ -243,7 +241,6 @@ public class BitcoinWalletBasicWalletDao {
             }
             catch(CantInsertRecordException cantInsertRecordException)
             {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantInsertRecordException);
 
                 throw new CantRegisterCreditException("Error to add credit transaction to wallet",cantInsertRecordException,"Error to insert new record on table" , "");
             }
@@ -272,8 +269,6 @@ public class BitcoinWalletBasicWalletDao {
             /**
              * I can not solve this situation.
              */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
-
             throw new CantGetTransactionsException("Get List of Transactions",cantLoadTableToMemory,"Error load wallet table ", "");
 
 
@@ -306,7 +301,6 @@ public class BitcoinWalletBasicWalletDao {
                 try {
                     bitcoinTransaction.setState(TransactionState.getByCode(record.getStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_STATE_COLUMN_NAME)));
                 } catch (InvalidParameterException e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                     throw new CantGetTransactionsException("Get List of Transactions",e,"Error set State ", "");
 
 
