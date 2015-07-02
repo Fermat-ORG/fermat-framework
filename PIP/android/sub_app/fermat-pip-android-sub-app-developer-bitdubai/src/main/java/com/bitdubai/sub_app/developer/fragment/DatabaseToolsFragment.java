@@ -290,7 +290,7 @@ public class DatabaseToolsFragment extends Fragment{
             Window window = getActivity().getWindow();
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.setStatusBarColor(getActivity().getResources().getColor(R.color.material_blue_grey_800));
+//            window.setStatusBarColor(getActivity().getResources().getColor(R.color.material_blue_grey_800));
 
 
             return convertView;
