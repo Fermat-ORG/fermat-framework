@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1;
 
 
+import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.dmp_network_service.CantCheckResourcesException;
@@ -108,7 +109,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
      */
 
     @Override
-    public void start(){
+    public void start() throws CantStartPluginException{
         /**
          * I will initialize the handling of com.bitdubai.platform events.
          */
@@ -202,11 +203,13 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             repoManifest = getRepositoryStringFile(reponame, "manifest.txt");
         }
         catch(MalformedURLException|FileNotFoundException e){
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,e);
-            throw new CantCheckResourcesException();
+
+            throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES",e,"Http error in connection with the repository to load manifest file", "");
+
         }catch(IOException e){
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantCheckResourcesException();
+
+            throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES",e,"Error load manifest file ", "");
+
         }
         //get list of wallet image, split by ,
         String[] fileList = repoManifest.split(",");
@@ -217,12 +220,11 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
                 image =  getRepositoryImageFile(reponame, fileList[j].toString());
             }
             catch(MalformedURLException|FileNotFoundException e){
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,e);
-                throw new CantCheckResourcesException();
+                throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES",e,"Http error in connection with the repository to load image file " + fileList[j].toString(), "");
 
             }catch(IOException e){
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-                throw new CantCheckResourcesException();
+                throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES",e,"Error load image file " + fileList[j].toString(), "");
+
             }
             PluginBinaryFile imageFile = null;
 
@@ -231,16 +233,15 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
             }
             catch(CantCreateFileException cantPersistFileException){
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantPersistFileException);
-                throw new CantCheckResourcesException();
+                throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES",cantPersistFileException,"Error persist image file " + fileList[j].toString(), "");
             }
             imageFile.setContent(image);
             try{
                 imageFile.persistToMedia();
             }
             catch(CantPersistFileException cantPersistFileException){
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantPersistFileException);
-                throw new CantCheckResourcesException();
+                 throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES",cantPersistFileException,"Error persist image file " + fileList[j].toString(), "");
+
             }
 
         }
@@ -251,11 +252,10 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             layoutManifest = getRepositoryStringFile(reponame, "layout_manifest.txt");
         }
         catch(MalformedURLException|FileNotFoundException e){
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,e);
-            throw new CantCheckResourcesException();
+            throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES",e,"Http error in connection with the repository to load layout_manifest file " , "");
+
         }catch(IOException e){
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantCheckResourcesException();
+            throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES",e,"Error persist layout_manifest file", "");
         }
 
 
@@ -267,12 +267,10 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
                 file = getRepositoryStringFile(reponame, layoutList[j].toString());
             }
             catch(MalformedURLException|FileNotFoundException e){
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,e);
-                throw new CantCheckResourcesException();
+                throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES",e,"Http error in connection with the repository to load layout file " + layoutList[j].toString(), "");
 
             }catch(IOException e){
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,e);
-                throw new CantCheckResourcesException();
+                throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES",e,"Error persist layout file " + layoutList[j].toString(), "");
             }
             PluginTextFile layoutFile = null;
 
@@ -280,8 +278,8 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
                 layoutFile = pluginFileSystem.createTextFile(pluginId, reponame, layoutList[j].toString(), FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
 
             } catch (CantCreateFileException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,e);
-                throw new CantCheckResourcesException();
+
+                throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES",e,"Error created layout file " + layoutList[j].toString(), "");
             }
 
             layoutFile.setContent(file);
@@ -289,8 +287,8 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
                 layoutFile.persistToMedia();
             }
             catch (CantPersistFileException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,e);
-                throw new CantCheckResourcesException();
+
+                throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES",e,"Error persist layout file " + layoutList[j].toString(), "");
             }
 
         }
@@ -329,15 +327,13 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             /**
              * I cant continue if this happens.
              */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, fileNotFoundException);
-            throw new CantGetResourcesException();
+             throw new CantGetResourcesException("CAN'T GET WALLET RESOURCES:",fileNotFoundException,"Error write image file resource " , "");
 
         }catch (CantCreateFileException e) {
             /**
              * I cant continue if this happens.
              */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantGetResourcesException();
+            throw new CantGetResourcesException("CAN'T GET WALLET RESOURCES:",e,"Error created image file resource ", "");
 
         }
         return imageResource;
@@ -367,15 +363,13 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
             /**
              * I cant continue if this happens.
              */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantGetResourcesException();
+            throw new CantGetResourcesException("CAN'T GET WALLET RESOURCES:",e,"Error write layout file resource  " , "");
 
         } catch (CantCreateFileException e) {
             /**
              * I cant continue if this happens.
              */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_RESOURCES_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantGetResourcesException();
+            throw new CantGetResourcesException("CAN'T GET WALLET RESOURCES:",e,"Error created image file resource " , "");
 
         }
 
