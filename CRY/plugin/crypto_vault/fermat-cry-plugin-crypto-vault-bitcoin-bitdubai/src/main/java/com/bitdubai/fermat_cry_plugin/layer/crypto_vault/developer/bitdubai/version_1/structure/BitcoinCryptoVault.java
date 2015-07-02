@@ -48,6 +48,7 @@ import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.PeerGroup;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.store.UnreadableWalletException;
 import org.bitcoinj.wallet.DeterministicSeed;
@@ -532,11 +533,32 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
      * @return the string of the address
      */
     private String getAddressToFromVaul(String txHash) {
-        Sha256Hash hash = new Sha256Hash(txHash);
-        Transaction tx = vault.getTransaction(hash);
+        try{
+            Sha256Hash hash = new Sha256Hash(txHash);
+            Transaction tx = vault.getTransaction(hash);
 
-        String addressTo = tx.getOutput(0).getAddressFromP2PKHScript(networkParameters).toString();
-        return addressTo;
+            //String addressTo = tx.getOutput(0).getAddressFromP2PKHScript(networkParameters).toString();
+
+            String addressTo=null;
+            /**
+             * I will search on all outputs for an address that is mine
+             */
+            for (TransactionOutput output : tx.getOutputs()){
+                if (output.isMine(vault)){
+                    /**
+                     * I found an address that is mine in an output. I need to return this
+                     */
+                addressTo = output.getScriptPubKey().getToAddress(this.networkParameters).toString();
+                }
+            }
+            return addressTo;
+        } catch (Exception e){
+            /**
+             * it might be from an address that we can't get
+             */
+            return null;
+        }
+
     }
 
     /**
@@ -545,11 +567,18 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
      * @return the string of the address
      */
     private String getAddressFromVault(String txHash) {
-        Sha256Hash hash = new Sha256Hash(txHash);
-        Transaction tx = vault.getTransaction(hash);
+        try{
+            Sha256Hash hash = new Sha256Hash(txHash);
+            Transaction tx = vault.getTransaction(hash);
 
-        String addressFrom = tx.getInput(0).getFromAddress().toString();
-        return addressFrom;
+            String addressFrom = tx.getInput(0).getFromAddress().toString();
+            return addressFrom;
+        } catch (Exception e){
+            /**
+             * it might be from an address that we can't get
+             */
+            return null;
+        }
     }
 
     /**

@@ -35,15 +35,13 @@ public class BegunWalletInstallationEventHandler implements EventHandler {
                 /**
                  * The main module could not handle this exception. Me neither. Will throw it again.
                  */
-                System.err.println("CantCreateDefaultWalletsException: " + cantCheckResourcesException.getMessage());
-                cantCheckResourcesException.printStackTrace();
 
                 throw cantCheckResourcesException;
             }
         }
         else
         {
-            throw new CantCheckResourcesException();
+            throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES:",null,"Error intalled wallet resources fields" , "");
         }
 
     }
