@@ -15,6 +15,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+
+import com.bitdubai.fermat_api.layer.pip_actor.developer.ClassHierarchyLevels;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -23,7 +25,9 @@ import com.bitdubai.fermat_api.layer.pip_actor.developer.LogTool;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.ToolManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * The Class <code>com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.LogToolsFragment</code>
@@ -35,6 +39,8 @@ import java.util.List;
  * @version 1.0
  */
 public class LogToolsFragment extends Fragment {
+
+    private Map<String, List<ClassHierarchyLevels>> pluginClasses;
 
     private static final String ARG_POSITION = "position";
     View rootView;
@@ -67,6 +73,8 @@ public class LogToolsFragment extends Fragment {
             showMessage("Unexpected error get tool manager - " + ex.getMessage());
             ex.printStackTrace();
         }
+
+        pluginClasses = new HashMap<String,List<ClassHierarchyLevels>>();
     }
 
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -77,10 +85,10 @@ public class LogToolsFragment extends Fragment {
         selectedWord = selectedWord.split(" \\|\\| ")[0];
 
         menu.setHeaderTitle(selectedWord);
-        menu.add(0, 1, 0, "NOT_LOGGING");
-        menu.add(0, 2, 0, "MINIMAL_LOGGING");
-        menu.add(0, 3, 0, "MODERATE_LOGGING");
-        menu.add(0, 4, 0, "AGGRESSIVE_LOGGING");
+        menu.add(LogLevel.NOT_LOGGING.toString());
+        menu.add(LogLevel.MINIMAL_LOGGING.toString());
+        menu.add(LogLevel.MODERATE_LOGGING.toString());
+        menu.add(LogLevel.AGGRESSIVE_LOGGING.toString());
     }
 
     public boolean onContextItemSelected(MenuItem item) {
@@ -88,15 +96,15 @@ public class LogToolsFragment extends Fragment {
         Object item = getListAdapter().getItem(info.position);*/
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         String selectedWord = ((TextView) info.targetView).getText().toString();
-        selectedWord = selectedWord.split(" \\|\\| ")[0];
 
-        if (item.getItemId() == 1) {
+
+        if (item.getTitle() == LogLevel.NOT_LOGGING.toString()) {
             changeLogLevel(LogLevel.NOT_LOGGING, selectedWord);
-        } else if (item.getItemId() == 2) {
+        } else if (item.getTitle() == LogLevel.MINIMAL_LOGGING.toString()) {
             changeLogLevel(LogLevel.MINIMAL_LOGGING, selectedWord);
-        } else if (item.getItemId() == 3) {
+        } else if (item.getTitle() == LogLevel.MODERATE_LOGGING.toString()) {
             changeLogLevel(LogLevel.MODERATE_LOGGING, selectedWord);
-        } else if (item.getItemId() == 4) {
+        } else if (item.getTitle() == LogLevel.AGGRESSIVE_LOGGING.toString()) {
             changeLogLevel(LogLevel.AGGRESSIVE_LOGGING, selectedWord);
         } else {
             return false;
@@ -106,15 +114,30 @@ public class LogToolsFragment extends Fragment {
 
     private void changeLogLevel(LogLevel logLevel, String resource) {
         try {
-            String name = resource.split(" - ")[0];
-            String type = resource.split(" - ")[1];
-            if (type.equals("Addon")) {
-                Addons addon = Addons.getByKey(name);
-                logTool.setLogLevel(addon, logLevel);
-            } else if (type.equals("Plugin")) {
-                Plugins plugin = Plugins.getByKey(name);
-                logTool.setLogLevel(plugin, logLevel);
+            //String name = resource.split(" - ")[0];
+           // String type = resource.split(" - ")[1];
+           // if (type.equals("Addon")) {
+            //    Addons addon = Addons.getByKey(name);
+           //     logTool.setLogLevel(addon, logLevel);
+           // } else // por ahora no tengo como detectar si es un plug in o no.if (type.equals("Plugin"))
+             //{
+                Plugins plugin = Plugins.getByKey("Bitcoin Crypto Vault");
+                //logTool.setLogLevel(plugin, logLevel);
+            /**
+             * Now I must look in pluginClasses map the match of the selected class to pass the full path
+             */
+            HashMap<String, LogLevel> data = new HashMap<String, LogLevel>();
+            for (ClassHierarchyLevels c : pluginClasses.get(plugin.getKey())){
+                    if (c.getLevel3() == resource)
+                        data.put(c.getFullPath(), logLevel);
+                    if (c.getLevel2() == resource)
+                        data.put(c.getFullPath(), logLevel);
+                    if (c.getLevel1() == resource)
+                        data.put(c.getFullPath(), logLevel);
             }
+                logTool.setNewLogLevelInClass(plugin, data);
+
+            //}
 
             TextView labelDatabase = (TextView) rootView.findViewById(R.id.labelLog);
             labelDatabase.setVisibility(View.GONE);
@@ -127,7 +150,7 @@ public class LogToolsFragment extends Fragment {
 
             FT.commit();
         } catch (Exception e) {
-            System.out.println("*********** soy un error "+e.getMessage());
+            System.out.println("*********** soy un error " + e.getMessage());
         }
     }
 
@@ -143,7 +166,63 @@ public class LogToolsFragment extends Fragment {
 
             List<String> list = new ArrayList<>();
 
-            for(Plugins plugin : plugins){ list.add(plugin.getKey()+" - Plugin || LogLevel: "+logTool.getLogLevel(plugin)); }
+            for(Plugins plugin : plugins){
+                list.add(plugin.getKey()); //+" - Plugin || LogLevel: "+logTool.getLogLevel(plugin));
+                /**
+                 * I will get the list of the available classes on the plug in
+                 */
+                String level1="";
+                String level2="";
+                String toReplace = "";
+                List<ClassHierarchyLevels> newList = new ArrayList<ClassHierarchyLevels>();
+                for (ClassHierarchyLevels classes : logTool.getClassesHierarchy(plugin)){
+                    /**
+                     * I will acommodate the values to fit the screen
+                     */
+                    if (classes.getLevel1().length() > 40)
+                        toReplace = classes.getLevel1().substring(15, classes.getLevel1().length()-15);
+                    else if (classes.getLevel1().length() < 40)
+                        toReplace = classes.getLevel1().substring(8, classes.getLevel1().length()-8);
+                    else if (classes.getLevel1().length() < 10)
+                        toReplace = "   ";
+                    classes.setLevel1(classes.getLevel1().replace(toReplace, "..."));
+
+                    if (classes.getLevel2().length() > 40)
+                        toReplace = classes.getLevel2().substring(15, classes.getLevel2().length()-15);
+                    else if (classes.getLevel2().length() < 40 && classes.getLevel2().length() > 20)
+                        toReplace = classes.getLevel2().substring(8, classes.getLevel2().length()-8);
+                    else if (classes.getLevel2().length() < 10)
+                        toReplace = "  ";
+
+                    classes.setLevel2("-" + classes.getLevel2().replace(toReplace, "..."));
+                    classes.setLevel3("--" + classes.getLevel3());
+
+                    /**
+                     * I will add the first item to the list. If I already added it, then I will skip it.
+                     */
+                    if (!level1.contentEquals(classes.getLevel1())){
+                        level1 = classes.getLevel1();
+                        list.add(classes.getLevel1());
+
+                    }
+                    if (!level2.contentEquals(classes.getLevel2())){
+                        level2 = classes.getLevel2();
+                        list.add(classes.getLevel2());
+                    }
+                    /**
+                     * this level will always be added
+                     */
+                    list.add(classes.getLevel3());
+
+                    /**
+                     * I insert the modified class in a new map with the plug in and the classes.
+                     */
+                    newList.add(classes);
+                }
+                pluginClasses.put(plugin.getKey(), newList);
+
+
+            }
             for(Addons addon : addons){ list.add(addon.getKey() + " - Addon || LogLevel: " + logTool.getLogLevel(addon)); }
 
             String[] availableResources;
