@@ -11,6 +11,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
@@ -37,7 +39,7 @@ import java.util.List;
  * haves all methods for the database tools activity of a developer
  * <p/>
  * <p/>
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 25/06/15.
+ * Created by Mati
  *
  * @version 1.0
  */
@@ -85,6 +87,7 @@ public class DatabaseToolsFragment extends Fragment{
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
         rootView = inflater.inflate(R.layout.start, container, false);
         gridView =(GridView) rootView.findViewById(R.id.gridView);
         try {
@@ -149,7 +152,7 @@ public class DatabaseToolsFragment extends Fragment{
 
                     FragmentTransaction FT = getFragmentManager().beginTransaction();
 
-                    FT.replace(R.id.hola, databaseToolsDatabaseListFragment);
+                    FT.add(databaseToolsDatabaseListFragment, TAG_NOMBRE_DE_TU_CLASE);
 
                     FT.add(databaseToolsDatabaseListFragment, databaseToolsDatabaseListFragment);
 
@@ -251,7 +254,7 @@ public class DatabaseToolsFragment extends Fragment{
                         FragmentTransaction FT = getFragmentManager().beginTransaction();
 
 
-                        FT.add(databaseToolsDatabaseListFragment, TAG_DATABASE_TOOLS_FRAGMENT);
+                        //FT.add(databaseToolsDatabaseListFragment, TAG_DATABASE_TOOLS_FRAGMENT);
                         FT.replace(R.id.hola, databaseToolsDatabaseListFragment);
 
                         FT.commit();
@@ -271,18 +274,23 @@ public class DatabaseToolsFragment extends Fragment{
 
             switch (item.picture) {
                 case "plugin":
-                    holder.imageView.setImageResource(R.drawable.plugin);
+                    holder.imageView.setImageResource(R.drawable.addon);
                     holder.imageView.setTag("CPWWRWAKAV1M|1");
                     break;
                 case "addon":
-                    holder.imageView.setImageResource(R.drawable.addon);
+                    holder.imageView.setImageResource(R.drawable.plugin);
                     holder.imageView.setTag("CPWWRWAKAV1M|2");
                     break;
                 default:
-                    holder.imageView.setImageResource(R.drawable.addon);
+                    holder.imageView.setImageResource(R.drawable.fermat);
                     holder.imageView.setTag("CPWWRWAKAV1M|3");
                     break;
             }
+
+            Window window = getActivity().getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.setStatusBarColor(getActivity().getResources().getColor(R.color.material_blue_grey_800));
 
 
             return convertView;
