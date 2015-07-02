@@ -11,7 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -106,6 +106,8 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
      * IncomingExtraUserRegistry member methods.
      */
     public void initialize(UUID pluginId) throws CantInitializeCryptoRegistryException {
+        if(pluginDatabaseSystem == null)
+            throw new CantInitializeCryptoRegistryException(CantInitializeCryptoRegistryException.DEFAULT_MESSAGE, null, "Plugin Database System: null", "You have to set the PluginDatabaseSystem before initializing");
 
         try {
             this.database = this.pluginDatabaseSystem.openDatabase(pluginId, IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_DATABASE);
@@ -116,11 +118,9 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
             try {
                 this.database = databaseFactory.createDatabase(pluginId, IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_DATABASE);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantInitializeCryptoRegistryException();
             }
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
             throw new CantInitializeCryptoRegistryException();
         }
     }
