@@ -107,5 +107,6 @@
 
     <string name="title_activity_requests_received">Requests Received</string>
     <string name="title_activity_activity_main">Main Activity</string>
+    <string name="empty_view">Empty List view</string>
 
 </resources>

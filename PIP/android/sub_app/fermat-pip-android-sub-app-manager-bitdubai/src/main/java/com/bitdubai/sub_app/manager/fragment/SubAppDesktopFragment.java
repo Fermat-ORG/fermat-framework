@@ -169,7 +169,7 @@ public class SubAppDesktopFragment extends Fragment {
             switch (item.picture)
             {
                 case "ic_launcher":
-                    holder.imageView.setImageResource(R.drawable.ic_launcher);
+                    holder.imageView.setImageResource(R.drawable.developer_sub_app);
                   holder.imageView.setTag("DevelopersActivity|1");
                     linearLayout.setTag("DevelopersActivity|1");
                     break;

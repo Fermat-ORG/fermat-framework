@@ -41,7 +41,6 @@ public class LoggerManager implements LogManager {
          */
         if (logLevel == LogLevel.MODERATE_LOGGING){
             setModerateLogging(moderateLogging);
-            setMinimalLogging(minimalLogging);
         }
 
         /**
@@ -49,8 +48,6 @@ public class LoggerManager implements LogManager {
          */
         if (logLevel == LogLevel.AGGRESSIVE_LOGGING){
             setAggressiveLogging(aggressiveLogging);
-            setModerateLogging(moderateLogging);
-            setMinimalLogging(minimalLogging);
         }
 
         /**
@@ -62,13 +59,26 @@ public class LoggerManager implements LogManager {
 
 
     private void setAggressiveLogging(String message){
+        if (message != null) {
+            outputMessage.append("Message: " + message);
+            outputMessage.append(System.lineSeparator());
+        }
         for (String property : callerInformationGetter.getCurrentThreadInformation()){
+            outputMessage.append(property);
+            outputMessage.append(System.lineSeparator());
+        }
+
+        for (String property : callerInformationGetter.getCurrentMethodInformation()){
             outputMessage.append(property);
             outputMessage.append(System.lineSeparator());
         }
     }
 
     private void setModerateLogging(String message){
+        if (message != null) {
+            outputMessage.append("Message: " + message);
+            outputMessage.append(System.lineSeparator());
+        }
         for (String property : callerInformationGetter.getCurrentMethodInformation()){
             outputMessage.append(property);
             outputMessage.append(System.lineSeparator());

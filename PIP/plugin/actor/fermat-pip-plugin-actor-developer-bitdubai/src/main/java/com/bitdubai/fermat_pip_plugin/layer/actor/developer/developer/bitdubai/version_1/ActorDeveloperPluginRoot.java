@@ -155,4 +155,6 @@ public class ActorDeveloperPluginRoot implements DealWithDatabaseManagers, Deals
         this.logManagersOnPlugins = logManagersOnPlugins;
         this.logManagersOnAddons = logManagersOnAddons;
     }
+
+
 }

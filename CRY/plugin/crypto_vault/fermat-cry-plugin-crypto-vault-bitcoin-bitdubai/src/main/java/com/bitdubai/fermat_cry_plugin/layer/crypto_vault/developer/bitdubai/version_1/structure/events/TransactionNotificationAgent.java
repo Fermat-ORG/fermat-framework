@@ -31,10 +31,13 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventTyp
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoTransactionsWaitingTransferenceEvent;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultTransactionNotificationAgent;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.LimitReachedTransactionNotificationAgentException;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantExecuteQueryException;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.BitcoinCryptoVault;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseActions;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseFactory;
 
+import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
@@ -56,10 +59,10 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
     MonitorAgent monitorAgent;
 
     /**
-     * DealWithLogManagers interface member variable
+     * DealWithLogger interface member variable
      */
     LogManager logManager;
-    LogLevel logLevel;
+
 
 
     /**
@@ -154,7 +157,6 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
     @Override
     public void setLogManager(LogLevel logLevel, LogManager logManager) {
         this.logManager = logManager;
-        this.logLevel = logLevel;
     }
 
     /**
@@ -256,7 +258,7 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
             /**
              * this will run in an infinite loop
              */
-            logManager.log(logLevel, "Transaction Protocol Notification Agent: running...", "Transaction Protocol Notification Agent: running...", "Transaction Protocol Notification Agent: running...");
+            logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.events.TransactionNotificationAgent"), "Transaction Protocol Notification Agent: running...", "Transaction Protocol Notification Agent: running...", "Transaction Protocol Notification Agent: running...");
             int iteration = 0;
             while (true)
             {
@@ -274,7 +276,8 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
                  * now I will check if there are pending transactions to raise the event
                  */
                 try {
-                    logManager.log(logLevel, "", "Iteration number " + iteration, "Iteration number " + iteration);
+
+                    logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.events.TransactionNotificationAgent"), null, "Iteration number " + iteration, "Iteration number " + iteration);
                     doTheMainTask();
                 } catch (CantExecuteQueryException e) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
