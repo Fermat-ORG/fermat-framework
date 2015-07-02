@@ -263,6 +263,7 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
                         DatabaseToolsDatabaseTableListFragment dabaDatabaseToolsDatabaseTableListFragment = new DatabaseToolsDatabaseTableListFragment();
 
                         dabaDatabaseToolsDatabaseTableListFragment.setResource(resource);
+                        dabaDatabaseToolsDatabaseTableListFragment.setDeveloperDatabase(developerDatabaseList.get(position));
 
                         FragmentTransaction FT = getFragmentManager().beginTransaction();
 

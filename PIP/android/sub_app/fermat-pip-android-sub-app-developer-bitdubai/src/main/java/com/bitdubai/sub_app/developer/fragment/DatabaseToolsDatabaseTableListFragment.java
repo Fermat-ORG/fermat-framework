@@ -250,6 +250,7 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
 
                         dabaDatabaseToolsDatabaseTableListFragment.setResource(databases);
                         dabaDatabaseToolsDatabaseTableListFragment.setDeveloperDatabaseTable(developerDatabaseTableList.get(position));
+                        dabaDatabaseToolsDatabaseTableListFragment.setDeveloperDatabase(developerDatabase);
                         //dabaDatabaseToolsDatabaseTableListFragment.setResource();
 
                         //falta pasar la database
