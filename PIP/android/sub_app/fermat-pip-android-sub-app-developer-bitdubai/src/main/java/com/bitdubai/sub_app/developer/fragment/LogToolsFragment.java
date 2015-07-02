@@ -82,7 +82,7 @@ public class LogToolsFragment extends Fragment {
 
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
         String selectedWord = ((TextView) info.targetView).getText().toString();
-        selectedWord = selectedWord.split(" \\|\\| ")[0];
+
 
         menu.setHeaderTitle(selectedWord);
         menu.add(LogLevel.NOT_LOGGING.toString());
@@ -128,11 +128,11 @@ public class LogToolsFragment extends Fragment {
              */
             HashMap<String, LogLevel> data = new HashMap<String, LogLevel>();
             for (ClassHierarchyLevels c : pluginClasses.get(plugin.getKey())){
-                    if (c.getLevel3() == resource)
+                    if (c.getLevel3().equals(resource))
                         data.put(c.getFullPath(), logLevel);
-                    if (c.getLevel2() == resource)
+                if (c.getLevel2().equals(resource))
                         data.put(c.getFullPath(), logLevel);
-                    if (c.getLevel1() == resource)
+                if (c.getLevel1().equals(resource))
                         data.put(c.getFullPath(), logLevel);
             }
                 logTool.setNewLogLevelInClass(plugin, data);

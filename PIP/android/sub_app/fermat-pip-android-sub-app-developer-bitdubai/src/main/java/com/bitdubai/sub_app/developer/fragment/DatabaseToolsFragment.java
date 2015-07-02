@@ -151,6 +151,9 @@ public class DatabaseToolsFragment extends Fragment{
 
                     FT.replace(R.id.hola, databaseToolsDatabaseListFragment);
 
+                    FT.add(databaseToolsDatabaseListFragment, databaseToolsDatabaseListFragment);
+
+
                     FT.commit();
                 }
             });
