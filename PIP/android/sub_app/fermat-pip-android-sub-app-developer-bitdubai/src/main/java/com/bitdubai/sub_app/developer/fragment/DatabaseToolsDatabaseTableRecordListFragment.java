@@ -137,16 +137,16 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
 
 
         ScrollView sv = new ScrollView(getActivity());
-        if(developerDatabaseTableRecordList!=null){
+        //if(developerDatabaseTableRecordList!=null){
             TableLayout tableLayout = createTable(values, columnNames, developerDatabaseTableRecordList.size(), columnNames.size());
             HorizontalScrollView hsv = new HorizontalScrollView(getActivity());
 
             hsv.addView(tableLayout);
             sv.addView(hsv);
             base.addView(sv);
-        }else{
+        //}else{
             //TableLayout tableLayout = createTable(values, columnNames, developerDatabaseTableRecordList.size(), columnNames.size());
-        }
+        //}
 
         return rootView;
     }
