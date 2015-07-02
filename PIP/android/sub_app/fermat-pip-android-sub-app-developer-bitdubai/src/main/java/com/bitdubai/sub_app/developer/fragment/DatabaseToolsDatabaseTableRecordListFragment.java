@@ -168,12 +168,18 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
         ScrollView sv = new ScrollView(getActivity());
         //if(row!=null && column!=null) {
             //TableLayout tableLayout = createTableLayout(row, column, row.length, column.length);
-            TableLayout tableLayout = createTable(values, columnNames, developerDatabaseTableRecordList.size(), columnNames.size());
-            HorizontalScrollView hsv = new HorizontalScrollView(getActivity());
+            if(developerDatabaseTableRecordList!=null){
+                TableLayout tableLayout = createTable(values, columnNames, developerDatabaseTableRecordList.size(), columnNames.size());
+                HorizontalScrollView hsv = new HorizontalScrollView(getActivity());
 
-            hsv.addView(tableLayout);
-            sv.addView(hsv);
-            base.addView(sv);
+                hsv.addView(tableLayout);
+                sv.addView(hsv);
+                base.addView(sv);
+            }else{
+                //TableLayout tableLayout = createTable(values, columnNames, developerDatabaseTableRecordList.size(), columnNames.size());
+            }
+
+
         //}
         return rootView;
     }
@@ -200,24 +206,33 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
         tv3.setTextColor(Color.WHITE);
         tbrow0.addView(tv3);
         */
-        TableRow tbrow0 = new TableRow(getActivity());
-        for (int i = 0;i<rv.size();i++){
-            TextView tv0 = new TextView(getActivity());
-            tv0.setText(cv.get(i));
-            tv0.setTextColor(Color.WHITE);
-            tbrow0.addView(tv0);
-        }
-        tableLayout.addView(tbrow0);
+        TableRow.LayoutParams tableRowParams = new TableRow.LayoutParams();
+        tableRowParams.setMargins(1, 1, 1, 1);
+        tableRowParams.weight = 1;
+        if( !rv.isEmpty() && !cv.isEmpty()) {
+            TableRow tbrow0 = new TableRow(getActivity());
+            for (int i = 0; i < rv.size(); i++) {
+                TextView tv0 = new TextView(getActivity());
+                tv0.setBackgroundColor(Color.WHITE);
+                tv0.setText(cv.get(i));
+                tv0.setTextColor(Color.BLACK);
+                // 2) create tableRow params
 
-        tbrow0 = new TableRow(getActivity());
-        for (int i = 0; i < cv.size(); i++) {
-            TextView tv0 = new TextView(getActivity());
-            tv0.setText(rv.get(i));
-            tv0.setTextColor(Color.WHITE);
-            tbrow0.addView(tv0);
+                tbrow0.addView(tv0,tableRowParams);
+            }
+            tableLayout.addView(tbrow0);
 
+            tbrow0 = new TableRow(getActivity());
+            for (int i = 0; i < cv.size(); i++) {
+                TextView tv0 = new TextView(getActivity());
+                tv0.setBackgroundColor(Color.WHITE);
+                tv0.setText(rv.get(i));
+                tv0.setTextColor(Color.BLACK);
+                tbrow0.addView(tv0,tableRowParams);
+
+            }
+            tableLayout.addView(tbrow0);
         }
-        tableLayout.addView(tbrow0);
         return tableLayout;
     }
 
