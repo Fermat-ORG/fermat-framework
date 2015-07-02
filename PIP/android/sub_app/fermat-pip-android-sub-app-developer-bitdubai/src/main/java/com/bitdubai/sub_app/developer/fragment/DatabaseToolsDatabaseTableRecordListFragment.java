@@ -137,7 +137,7 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
 
 
         ScrollView sv = new ScrollView(getActivity());
-        //if(developerDatabaseTableRecordList!=null){
+        if(developerDatabaseTableRecordList!=null){
             TableLayout tableLayout = createTable(values, columnNames, developerDatabaseTableRecordList.size(), columnNames.size());
             HorizontalScrollView hsv = new HorizontalScrollView(getActivity());
 
@@ -146,7 +146,7 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
             base.addView(sv);
         //}else{
             //TableLayout tableLayout = createTable(values, columnNames, developerDatabaseTableRecordList.size(), columnNames.size());
-        //}
+        }
 
         return rootView;
     }
@@ -159,19 +159,21 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
             TableRow.LayoutParams tableRowParams = new TableRow.LayoutParams();
             tableRowParams.setMargins(1, 1, 1, 1);
             tableRowParams.weight = 1;
-
             TableRow tbrow0 = new TableRow(getActivity());
-            for (int i = 0; i < rv.size(); i++) {
-                TextView tv0 = new TextView(getActivity());
-                tv0.setBackgroundColor(Color.WHITE);
-                tv0.setText(cv.get(i));
-                tv0.setTextColor(Color.BLACK);
-                // 2) create tableRow params
+            if(rv!=null) {
 
-                tbrow0.addView(tv0, tableRowParams);
+                for (int i = 0; i < rv.size(); i++) {
+                    TextView tv0 = new TextView(getActivity());
+                    tv0.setBackgroundColor(Color.WHITE);
+                    tv0.setText(cv.get(i));
+                    tv0.setTextColor(Color.BLACK);
+                    // 2) create tableRow params
+
+                    tbrow0.addView(tv0, tableRowParams);
+                }
             }
             tableLayout.addView(tbrow0);
-            if(rv!=null) {
+            if(cv!=null) {
                 tbrow0 = new TableRow(getActivity());
                 for (int i = 0; i < cv.size(); i++) {
                     TextView tv0 = new TextView(getActivity());
