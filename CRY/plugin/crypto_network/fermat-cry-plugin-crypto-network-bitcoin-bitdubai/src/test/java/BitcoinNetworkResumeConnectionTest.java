@@ -34,20 +34,6 @@ public class BitcoinNetworkResumeConnectionTest {
         bitcoin.setPluginFileSystem(pluginFileSystem);
         bitcoin.setErrorManager(errorManager);
 
-
-        org.junit.Assert.assertFalse(bitcoin.isRunning());
-        bitcoin.start();
-        Thread.sleep(5000);
-        org.junit.Assert.assertTrue(bitcoin.isRunning());
-        bitcoin.stop();
-        org.junit.Assert.assertFalse(bitcoin.isRunning());
-
-        System.out.println("second restart...");
-        bitcoin.start();
-        Thread.sleep(5000);
-        org.junit.Assert.assertTrue(bitcoin.isRunning());
-        bitcoin.stop();
-        org.junit.Assert.assertFalse(bitcoin.isRunning());
     }
 
 }
