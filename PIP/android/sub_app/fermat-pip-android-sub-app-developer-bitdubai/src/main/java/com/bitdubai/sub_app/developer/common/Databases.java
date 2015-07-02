@@ -15,8 +15,6 @@ public class Databases {
 
     public String databases;
 
-    //public String developer;
-
     public int type;
 
     @Override
