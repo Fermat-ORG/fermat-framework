@@ -70,6 +70,12 @@ public class DeveloperActorLogTool implements LogTool {
         ((LogManagerForDevelopers)this.LoggingLstAddons.get(addon)).changeLoggingLevel(newLogLevel);
     }
 
+    /**
+     * I get from the plugin the list of classes with their full paths.
+     * I transform that into a class to be passed to the android App.
+     * @param plugin
+     * @return
+     */
     @Override
     public List<ClassHierarchyLevels> getClassesHierarchy(Plugins plugin) {
         /**
@@ -79,7 +85,7 @@ public class DeveloperActorLogTool implements LogTool {
 
         /**
          * I need to know the minimun number of packages on the plug in.
-         * If there are more than three, then I will create only three levels
+         * If there are more than three, then I will create only three levels         *
          */
         int minPackages=100, cantPackages = 0;
         for (String myClass : classes){
@@ -160,6 +166,11 @@ public class DeveloperActorLogTool implements LogTool {
         return returnedClasses;
     }
 
+    /**
+     * This sets the new level in the plug in.
+     * @param plugin
+     * @param newLogLevelInClass
+     */
     @Override
     public void setNewLogLevelInClass(Plugins plugin, HashMap<String, LogLevel> newLogLevelInClass) {
         ((LogManagerForDevelopers) this.LoggingLstPlugins.get(plugin)).setLoggingLevelPerClass(newLogLevelInClass);
