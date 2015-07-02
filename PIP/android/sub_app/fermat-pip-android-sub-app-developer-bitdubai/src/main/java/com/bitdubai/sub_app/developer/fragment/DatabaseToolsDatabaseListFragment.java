@@ -112,8 +112,8 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
             // Get ListView object from xml
             //final ListView listView = (ListView) rootView.findViewById(R.id.lista1);
 
-            TextView labelDatabase = (TextView) rootView.findViewById(R.id.labelDatabase);
-            labelDatabase.setText(resource+" - Databases List");
+            //TextView labelDatabase = (TextView) rootView.findViewById(R.id.labelDatabase);
+            //labelDatabase.setText(resource+" - Databases List");
 
 
             for(int i = 0; i < developerDatabaseList.size() ; i++) {
@@ -215,7 +215,7 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
 
-            Databases item = getItem(position);
+            final Databases item = getItem(position);
 
 
             /*gridView =(GridView) rootView.findViewById(R.id.gridView);
@@ -259,20 +259,20 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
 
-                        Databases item=(Databases) gridView.getItemAtPosition(position);
-                        Toast.makeText(getActivity(),item.databases,Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getActivity(),item.databases,Toast.LENGTH_SHORT).show();
                         DatabaseToolsDatabaseTableListFragment dabaDatabaseToolsDatabaseTableListFragment = new DatabaseToolsDatabaseTableListFragment();
 
-                        //dabaDatabaseToolsDatabaseTableListFragment.setResource(item);
-                        dabaDatabaseToolsDatabaseTableListFragment.setDatabases(item);
+                        dabaDatabaseToolsDatabaseTableListFragment.setResource(resource);
 
-                        //falta pasar la database
                         FragmentTransaction FT = getFragmentManager().beginTransaction();
 
 
-                        FT.add(dabaDatabaseToolsDatabaseTableListFragment, TAG_DATABASE_TABLES_FRAGMENT);
 
+
+                        //FT.add(dabaDatabaseToolsDatabaseTableListFragment, TAG_DATABASE_TABLES_FRAGMENT);
+                        FT.replace(R.id.hola, dabaDatabaseToolsDatabaseTableListFragment);
                         FT.commit();
+                        //FT.show(dabaDatabaseToolsDatabaseTableListFragment);
                     }
                 });
                 holder.companyTextView = (TextView) convertView.findViewById(R.id.company_text_view);
@@ -289,15 +289,15 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
 
             switch (item.picture) {
                 case "plugin":
-                    holder.imageView.setImageResource(R.drawable.plugin);
+                    holder.imageView.setImageResource(R.drawable.db);
                     holder.imageView.setTag("CPWWRWAKAV1M|1");
                     break;
                 case "addon":
-                    holder.imageView.setImageResource(R.drawable.addon);
+                    holder.imageView.setImageResource(R.drawable.db);
                     holder.imageView.setTag("CPWWRWAKAV1M|2");
                     break;
                 default:
-                    holder.imageView.setImageResource(R.drawable.addon);
+                    holder.imageView.setImageResource(R.drawable.db);
                     holder.imageView.setTag("CPWWRWAKAV1M|3");
                     break;
             }

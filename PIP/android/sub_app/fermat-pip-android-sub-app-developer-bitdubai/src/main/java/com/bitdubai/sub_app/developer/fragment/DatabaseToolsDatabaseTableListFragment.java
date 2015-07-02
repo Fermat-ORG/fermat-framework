@@ -45,7 +45,7 @@ import java.util.List;
 public class DatabaseToolsDatabaseTableListFragment extends Fragment {
 
     private static final String ARG_POSITION = "position";
-    private static final String TAG_DATABASE_TABLES_FRAGMENT = "databases table list";
+    private static final String TAG_DATABASE_TABLES_TOOLS_FRAGMENT = "databases tables list tools";
     View rootView;
 
 
@@ -57,11 +57,12 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
 
     List<DeveloperDatabaseTable> developerDatabaseTableList;
 
-    public void setDatabases(Databases databases) {
+    public void setResource(Resource databases) {
         this.databases = databases;
     }
 
-    private Databases databases;
+    private Resource databases;
+
 
     private GridView gridView;
 
@@ -106,20 +107,19 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
             //String name = resource.split(" - ")[0];
             //String type = resource.split(" - ")[1];
             if (databases.type==Databases.TYPE_ADDON) {
-                Addons addon = Addons.getByKey(databases.databases);
+                Addons addon = Addons.getByKey(databases.resource);
                 this.developerDatabaseTableList = databaseTools.getAddonTableListFromDatabase(addon, developerDatabase);
             } else if (databases.type==Databases.TYPE_PLUGIN) {
-                Plugins plugin = Plugins.getByKey(databases.databases);
+                Plugins plugin = Plugins.getByKey(databases.resource);
                 this.developerDatabaseTableList = databaseTools.getPluginTableListFromDatabase(plugin, developerDatabase);
             }
 
             // Get ListView object from xml
             //final ListView listView = (ListView) rootView.findViewById(R.id.lista1);
 
-            TextView labelDatabase = (TextView) rootView.findViewById(R.id.labelDatabase);
-            labelDatabase.setText(developerDatabase.getName()+" - Tables List");
+            //TextView labelDatabase = (TextView) rootView.findViewById(R.id.labelDatabase);
+            //labelDatabase.setText(developerDatabase.getName()+" - Tables List");
 
-            final List<DeveloperDatabaseTable> developerDatabaseTableList2 = developerDatabaseTableList;
 
             /*String[] availableResources;
             if (developerDatabaseTableList.size() > 0) {
@@ -131,6 +131,7 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
                 availableResources = new String[0];
             }*/
 
+
             for(int i = 0; i < developerDatabaseTableList.size() ; i++) {
                 //availableResources[i] = developerDatabaseList.get(i).getName();
                 DatabasesTable item = new DatabasesTable();
@@ -140,6 +141,8 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
                 //item.developer = plugins.get(i).getDeveloper().toString();
                 item.type=Resource.TYPE_PLUGIN;
                 lstTables.add(item);
+
+
                 //}
             }
 
@@ -219,32 +222,10 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
 
-            DatabasesTable item = getItem(position);
+            final DatabasesTable item = getItem(position);
 
 
-            /*gridView =(GridView) rootView.findViewById(R.id.gridView);
-            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                public void onItemClick(AdapterView<?> parent, View v,
-                                        int position, long id) {
-                    Toast.makeText(getActivity(), "natalia+"+position, Toast.LENGTH_SHORT).show();
-                    //Resource item=(Resource) gridView.getItemAtPosition(position);
-                    //Toast.makeText(getActivity(),item.resource,Toast.LENGTH_SHORT).show();
-                    //DatabaseToolsDatabaseListFragment databaseToolsDatabaseListFragment = new DatabaseToolsDatabaseListFragment();
 
-                    //databaseToolsDatabaseListFragment.setResource(item);
-
-                    //FragmentTransaction FT = getFragmentManager().beginTransaction();
-
-
-                    //FT.add(databaseToolsDatabaseListFragment, TAG_DATABASE_TOOLS_FRAGMENT);
-                    //FT.replace(R.id.hola, databaseToolsDatabaseListFragment);
-
-                    //FT.commit();
-
-
-                }
-            });
-            */
 
             ViewHolder holder;
             if (convertView == null) {
@@ -263,18 +244,21 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
                     @Override
                     public void onClick(View view) {
 
-                        Resource item=(Resource) gridView.getItemAtPosition(position);
-                        Toast.makeText(getActivity(), item.resource, Toast.LENGTH_SHORT).show();
+
+                        //Toast.makeText(getActivity(), item.databases, Toast.LENGTH_SHORT).show();
                         DatabaseToolsDatabaseTableRecordListFragment dabaDatabaseToolsDatabaseTableListFragment = new DatabaseToolsDatabaseTableRecordListFragment();
 
-                        //dabaDatabaseToolsDatabaseTableListFragment.setResource(item);
+                        dabaDatabaseToolsDatabaseTableListFragment.setResource(databases);
+                        dabaDatabaseToolsDatabaseTableListFragment.setDeveloperDatabaseTable(developerDatabaseTableList.get(position));
                         //dabaDatabaseToolsDatabaseTableListFragment.setResource();
 
                         //falta pasar la database
                         FragmentTransaction FT = getFragmentManager().beginTransaction();
 
 
-                        FT.add(dabaDatabaseToolsDatabaseTableListFragment, TAG_DATABASE_TABLES_FRAGMENT);
+                        //FT.add(dabaDatabaseToolsDatabaseTableListFragment, TAG_DATABASE_TABLES_TOOLS_FRAGMENT);
+
+                        //FT.replace(R.id.hola, dabaDatabaseToolsDatabaseTableListFragment, TAG_DATABASE_TABLES_TOOLS_FRAGMENT);
                         FT.replace(R.id.hola, dabaDatabaseToolsDatabaseTableListFragment);
 
                         FT.commit();
@@ -294,15 +278,15 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
 
             switch (item.picture) {
                 case "plugin":
-                    holder.imageView.setImageResource(R.drawable.plugin);
+                    holder.imageView.setImageResource(R.drawable.table);
                     holder.imageView.setTag("CPWWRWAKAV1M|1");
                     break;
                 case "addon":
-                    holder.imageView.setImageResource(R.drawable.addon);
+                    holder.imageView.setImageResource(R.drawable.table);
                     holder.imageView.setTag("CPWWRWAKAV1M|2");
                     break;
                 default:
-                    holder.imageView.setImageResource(R.drawable.addon);
+                    holder.imageView.setImageResource(R.drawable.table);
                     holder.imageView.setTag("CPWWRWAKAV1M|3");
                     break;
             }
