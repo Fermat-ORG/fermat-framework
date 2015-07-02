@@ -135,33 +135,6 @@ public class DatabaseToolsFragment extends Fragment{
             _adpatrer.notifyDataSetChanged();
             gridView.setAdapter(_adpatrer);
 
-
-
-
-
-
-            /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    TextView labelDatabase = (TextView) rootView.findViewById(R.id.labelDatabase);
-                    labelDatabase.setVisibility(View.GONE);
-                    App item = (App) listView.getItemAtPosition(position);
-
-                    DatabaseToolsDatabaseListFragment databaseToolsDatabaseListFragment = new DatabaseToolsDatabaseListFragment();
-
-                    databaseToolsDatabaseListFragment.setResource(item.company);
-
-                    FragmentTransaction FT = getFragmentManager().beginTransaction();
-
-                    FT.add(databaseToolsDatabaseListFragment, TAG_NOMBRE_DE_TU_CLASE);
-
-                    FT.add(databaseToolsDatabaseListFragment, databaseToolsDatabaseListFragment);
-
-
-                    FT.commit();
-                }
-            });
-            */
-
             //listView.setAdapter(adapter);
         } catch (Exception e) {
             showMessage("DatabaseTools Fragment onCreateView Exception - " + e.getMessage());
