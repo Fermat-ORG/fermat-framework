@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.pip_actor.developer;
 
+import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -25,7 +26,9 @@ public interface LogTool {
 
     public void setLogLevel(Addons addon, LogLevel newLogLevel);
 
-    public List<ClassHierarchyLevels> getClassesHierarchy(Plugins plugin);
+    public List<ClassHierarchyLevels> getClassesHierarchyPlugins(Plugins plugin);
+
+    public List<ClassHierarchyLevels> getClassesHierarchyAddons(Addons addon);
 
     public void setNewLogLevelInClass(Plugins plugin, HashMap<String, LogLevel> newLogLevelInClass);
 }
