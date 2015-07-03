@@ -16,6 +16,9 @@ public class RuntimeTabStrip implements TabStrip {
     int backgroundcolor;
     int textcolor;
     int backgroundresource;
+    String tabsColor;
+    String tabsTextColor;
+    String tabsIndicateColor;
 
     List<Tab> tabs = new ArrayList<>();
     
@@ -79,5 +82,35 @@ public class RuntimeTabStrip implements TabStrip {
     public int getBackgroundResource(){
         return this.backgroundresource;
     }
-    
+
+    @Override
+    public void setTabsColor(String color) {
+        this.tabsColor=color;
+    }
+
+    @Override
+    public String getTabsColor() {
+        return this.tabsColor;
+    }
+
+    @Override
+    public void setTabsTextColor(String color) {
+        tabsTextColor=color;
+    }
+
+    @Override
+    public String getTabsTextColor() {
+        return tabsTextColor;
+    }
+
+    @Override
+    public void setTabsIndicateColor(String color) {
+        this.tabsIndicateColor=color;
+    }
+
+    @Override
+    public String getTabsIndicateColor() {
+        return tabsIndicateColor;
+    }
+
 }
