@@ -33,7 +33,7 @@ public interface CryptoWallet {
 
     void deleteWalletContact(UUID contactId) throws CantDeleteWalletContactException;
 
-    WalletContactRecord getWalletContactByContainsLikeAndWalletId(String actorName, UUID walletId) throws CantGetWalletContactException;
+    List<WalletContactRecord> getWalletContactByNameContainsAndWalletId(String actorName, UUID walletId) throws CantGetWalletContactException;
 
     /**
      * Balance Fragment methods
