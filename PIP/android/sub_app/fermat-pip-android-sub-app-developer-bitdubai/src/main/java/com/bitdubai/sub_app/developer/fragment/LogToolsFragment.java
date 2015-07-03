@@ -191,7 +191,7 @@ public class LogToolsFragment extends Fragment {
                 String toReplace = "";
                 List<ClassHierarchyLevels> newList = new ArrayList<ClassHierarchyLevels>();
                 //esto es sacar con getClassesHierarchy
-                for (ClassHierarchyLevels classes : logTool.getClassesHierarchy(plugin)){
+                for (ClassHierarchyLevels classes : logTool.getClassesHierarchyPlugins(plugin)){
                     //loading de loggers class
 
                     Loggers log = new Loggers();
@@ -208,16 +208,38 @@ public class LogToolsFragment extends Fragment {
                      */
                     //newList.add(classes);
                 }
-                pluginClasses.put(plugin.getKey(), newList);
-
-                for(ClassHierarchyLevels classes: newList){
-                    Loggers log = new Loggers();
-                    log.level0=plugin.getKey();
-                    //lstLoggers
-                }
 
             }
-            for(Addons addon : addons){ list.add(addon.getKey() + " - Addon || LogLevel: " + logTool.getLogLevel(addon)); }
+
+            for(Addons addon : addons) {
+
+                //list.add(plugin.getKey()); //+" - Plugin || LogLevel: "+logTool.getLogLevel(plugin));
+                /**
+                 * I will get the list of the available classes on the plug in
+                 */
+                String level1 = "";
+                String level2 = "";
+                String toReplace = "";
+                List<ClassHierarchyLevels> newList = new ArrayList<ClassHierarchyLevels>();
+                //esto es sacar con getClassesHierarchy
+                for (ClassHierarchyLevels classes : logTool.getClassesHierarchyAddons(addon)) {
+                    //loading de loggers class
+
+                    Loggers log = new Loggers();
+                    log.level0 = addon.getKey();
+                    log.level1 = classes.getLevel1();
+                    log.level2 = classes.getLevel2();
+                    log.level3 = classes.getLevel3();
+                    log.fullPath = classes.getFullPath();
+                    log.type = Loggers.TYPE_PLUGIN;
+                    log.picture = "plugin";
+
+                    /**
+                     * I insert the modified class in a new map with the plug in and the classes.
+                     */
+                    //newList.add(classes);
+                }
+            /*for(Addons addon : addons){ list.add(addon.getKey() + " - Addon || LogLevel: " + logTool.getLogLevel(addon)); }
 
             String[] availableResources;
             if (list.size() > 0) {
@@ -227,19 +249,24 @@ public class LogToolsFragment extends Fragment {
                 }
             } else {
                 availableResources = new String[0];
-            }
+            }*/
 
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity().getApplicationContext(),
-                    android.R.layout.simple_list_item_1, android.R.id.text1, availableResources);
+                //ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity().getApplicationContext(),
+                //        android.R.layout.simple_list_item_1, android.R.id.text1, availableResources);
 
-            listView.setAdapter(adapter);
+                //listView.setAdapter(adapter);
 
-            registerForContextMenu(listView);
-        } catch (Exception e) {
-            showMessage("LogTools Fragment onCreateView Exception - " + e.getMessage());
+                registerForContextMenu(listView);
+            }}catch (Exception e){
             e.printStackTrace();
         }
+        /*} catch (Exception e) {
+            showMessage("LogTools Fragment onCreateView Exception - " + e.getMessage());
+            e.printStackTrace();
+        }*/
+
         return rootView;
+
     }
 
     //show alert
