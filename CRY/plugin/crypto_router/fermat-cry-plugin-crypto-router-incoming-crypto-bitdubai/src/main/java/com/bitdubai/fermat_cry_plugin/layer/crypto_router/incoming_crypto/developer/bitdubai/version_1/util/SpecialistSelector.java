@@ -1,15 +1,15 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.util;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.ActorAddressBookNotFoundException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantGetActorAddressBookRegistryException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookRecord;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookRegistry;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.DealsWithActorAddressBook;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantGetActorAddressBook;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantGetActorAddressBookException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantSelectSpecialistException;
 
 /**
@@ -36,8 +36,6 @@ public class SpecialistSelector implements DealsWithActorAddressBook {
     }
 
     public Specialist getSpecialist(CryptoTransaction cryptoTransaction) throws CantSelectSpecialistException {
-        if(true)
-            return Specialist.EXTRA_USER_SPECIALIST;
 
         CryptoAddress cryptoAddress = new CryptoAddress();
         cryptoAddress.setAddress(cryptoTransaction.getAddressTo().getAddress());
@@ -65,9 +63,11 @@ public class SpecialistSelector implements DealsWithActorAddressBook {
                     case EXTRA_USER:
                         return Specialist.EXTRA_USER_SPECIALIST;
                 }
-            } catch (CantGetActorAddressBook cantGetActorAddressBook) {
+
+            } catch (CantGetActorAddressBookException|ActorAddressBookNotFoundException cantGetActorAddressBookException) {
+                // todo ver como manejar ActorAddressBookNotFoundException
                 // This exception will be managed by the relay agent
-                throw new CantSelectSpecialistException("Can't get actor address from registry",cantGetActorAddressBook,"CryptoAddress: "+ cryptoAddress.getAddress(),"Address not stored");
+                throw new CantSelectSpecialistException("Can't get actor address from registry", cantGetActorAddressBookException,"CryptoAddress: "+ cryptoAddress.getAddress(),"Address not stored");
             }
         }
 

@@ -48,6 +48,7 @@ import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.PeerGroup;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.store.UnreadableWalletException;
 import org.bitcoinj.wallet.DeterministicSeed;
@@ -255,6 +256,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
             vault = Wallet.loadFromFile(vaultFile);
             System.out.println("Vault loaded from file " + vaultFile.getAbsoluteFile().toString());
             System.out.println("CryptoVault current balance: " + vault.getBalance().getValue());
+            System.out.println("CryptoVault estimated current balance: " + vault.getBalance(Wallet.BalanceType.ESTIMATED).value);
 
             /**
              * If I couldn't load it I can't go on.
@@ -309,9 +311,10 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
      * @throws CantCreateCryptoWalletException
      */
     private void configureVault() throws CantCreateCryptoWalletException {
-        vault.autosaveToFile(vaultFile, 0, TimeUnit.SECONDS, null);
+        vault.autosaveToFile(vaultFile, 0, TimeUnit.NANOSECONDS, null);
         vaultEventListeners = new VaultEventListeners(database, errorManager, eventManager);
         vault.addEventListener(vaultEventListeners);
+
     }
 
 
@@ -345,8 +348,14 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
 
         try {
             if (!db.isNewFermatTransaction(FermatTxId))
+            /**
+             * Already sent, this might be an error. I'm not going to send it again.
+             */
                 return null;
             else
+            /**
+             * new Transaction, I will persist it as a Fermat transaction.
+             */
                 db.persistnewFermatTransaction(FermatTxId.toString());
         } catch (CantExecuteQueryException e) {
             return "";
@@ -524,11 +533,32 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
      * @return the string of the address
      */
     private String getAddressToFromVaul(String txHash) {
-        Sha256Hash hash = new Sha256Hash(txHash);
-        Transaction tx = vault.getTransaction(hash);
+        try{
+            Sha256Hash hash = new Sha256Hash(txHash);
+            Transaction tx = vault.getTransaction(hash);
 
-        String addressTo = tx.getOutput(0).getAddressFromP2PKHScript(networkParameters).toString();
-        return addressTo;
+            //String addressTo = tx.getOutput(0).getAddressFromP2PKHScript(networkParameters).toString();
+
+            String addressTo=null;
+            /**
+             * I will search on all outputs for an address that is mine
+             */
+            for (TransactionOutput output : tx.getOutputs()){
+                if (output.isMine(vault)){
+                    /**
+                     * I found an address that is mine in an output. I need to return this
+                     */
+                addressTo = output.getScriptPubKey().getToAddress(this.networkParameters).toString();
+                }
+            }
+            return addressTo;
+        } catch (Exception e){
+            /**
+             * it might be from an address that we can't get
+             */
+            return null;
+        }
+
     }
 
     /**
@@ -537,11 +567,18 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
      * @return the string of the address
      */
     private String getAddressFromVault(String txHash) {
-        Sha256Hash hash = new Sha256Hash(txHash);
-        Transaction tx = vault.getTransaction(hash);
+        try{
+            Sha256Hash hash = new Sha256Hash(txHash);
+            Transaction tx = vault.getTransaction(hash);
 
-        String addressFrom = tx.getInput(0).getFromAddress().toString();
-        return addressFrom;
+            String addressFrom = tx.getInput(0).getFromAddress().toString();
+            return addressFrom;
+        } catch (Exception e){
+            /**
+             * it might be from an address that we can't get
+             */
+            return null;
+        }
     }
 
     /**

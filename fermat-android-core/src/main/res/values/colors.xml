@@ -4,5 +4,5 @@
     <color name="background_tab_pressed">#6633B5E5</color>
     <color name="black_overlay">#66000000</color>
     <color name="wallet_factory_orange">#ff9900</color>
-
+    <color name="wallet_status_bar">#F0E173</color>
 </resources>

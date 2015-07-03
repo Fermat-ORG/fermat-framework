@@ -14,6 +14,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableCo
  */
 public class AndroidDatabaseTableColumn implements DatabaseTableColumn {
 
+    private static final int HASH_PRIME_NUMBER_PRODUCT = 4019;
+    private static final int HASH_PRIME_NUMBER_ADD = 877;
+
     /**
      * DatabaseTableColumn Member Variables.
      */
@@ -108,5 +111,34 @@ public class AndroidDatabaseTableColumn implements DatabaseTableColumn {
     @Override
     public boolean getPrimaryKey (){
         return primaryKey;
+    }
+
+    @Override
+    public String toString(){
+        String column = type.toString();
+        column += dataTypeSize > 0 ? "(" + dataTypeSize +")" : "";
+        column += " ";
+        column += name;
+        return column;
+    }
+
+
+    @Override
+    public boolean equals(Object o){
+        if(!(o instanceof DatabaseTableColumn))
+            return false;
+        DatabaseTableColumn compare = (DatabaseTableColumn) o;
+
+        return type.equals(compare.getType()) && name.equals(compare.getName());
+    }
+
+    @Override
+    public int hashCode(){
+        int c = 0;
+        if(type != null)
+            c += type.hashCode();
+        if(name != null)
+            c += name.hashCode();
+        return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
     }
 }

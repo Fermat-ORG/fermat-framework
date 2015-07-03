@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.UUID;
 
 
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemory;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 
 /**
  *
@@ -41,11 +41,11 @@ public interface DatabaseTable {
     public DatabaseTableFilterGroup getEmptyTableFilterGroup();
 
 
-    public void updateRecord (DatabaseTableRecord record) throws CantUpdateRecord;
+    public void updateRecord (DatabaseTableRecord record) throws CantUpdateRecordException;
 
     public void insertRecord (DatabaseTableRecord record) throws CantInsertRecordException;
 
-    public void loadToMemory() throws CantLoadTableToMemory;
+    public void loadToMemory() throws CantLoadTableToMemoryException;
 
     public boolean isTableExists();
 
@@ -61,7 +61,7 @@ public interface DatabaseTable {
 
     public void setFilterOffSet(String offset);
 
-    public void deleteRecord(DatabaseTableRecord record) throws CantDeleteRecord;
+    public void deleteRecord(DatabaseTableRecord record) throws CantDeleteRecordException;
 
     public DatabaseTableRecord getRecordFromPk(String pk) throws Exception;
 

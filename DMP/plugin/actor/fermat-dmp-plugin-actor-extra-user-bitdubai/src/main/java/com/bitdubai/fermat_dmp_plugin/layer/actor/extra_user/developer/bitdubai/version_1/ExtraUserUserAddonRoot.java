@@ -4,6 +4,11 @@ import com.bitdubai.fermat_api.Addon;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
@@ -22,8 +27,10 @@ import com.bitdubai.fermat_api.layer.pip_user.User;
 import com.bitdubai.fermat_api.layer.pip_user.extra_user.exceptions.CantCreateExtraUserRegistry;
 import com.bitdubai.fermat_api.layer.pip_user.extra_user.exceptions.CantGetExtraUserRegistry;
 import com.bitdubai.fermat_api.layer.pip_user.extra_user.exceptions.CantInitializeExtraUserRegistryException;
+import com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.structure.ExtraUserDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.structure.ExtraUserRegistry;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -34,7 +41,65 @@ import java.util.UUID;
  * This plug-in manages a registry of known extra users..
  */
 
-public class ExtraUserUserAddonRoot implements Addon, DealsWithErrors, DealsWithEvents, DealsWithPlatformDatabaseSystem, DealsWithPlatformFileSystem, ExtraUserManager, Service  {
+public class ExtraUserUserAddonRoot implements Addon, DatabaseManagerForDevelopers, DealsWithErrors, DealsWithEvents, DealsWithPlatformDatabaseSystem, DealsWithPlatformFileSystem, ExtraUserManager, Service  {
+
+    /**
+     * DatabaseManagerForDevelopers interface implementation
+     * Returns the list of databases implemented on this plug in.
+     */
+    @Override
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+        ExtraUserDeveloperDatabaseFactory dbFactory = new ExtraUserDeveloperDatabaseFactory(errorManager, platformDatabaseSystem);
+        List<DeveloperDatabase> developerDatabaseList = null;
+        try {
+            dbFactory.initializeDatabase();
+            developerDatabaseList = dbFactory.getDatabaseList(developerObjectFactory);
+        } catch (Exception e) {
+            System.out.println("******* Error trying to get database list for plugin Wallet Contacts");
+        }
+        return developerDatabaseList;
+    }
+
+    /**
+     * returns the list of tables for the given database
+     *
+     * @param developerObjectFactory
+     * @param developerDatabase
+     * @return
+     */
+    @Override
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+        ExtraUserDeveloperDatabaseFactory dbFactory = new ExtraUserDeveloperDatabaseFactory(errorManager, platformDatabaseSystem);
+        List<DeveloperDatabaseTable> developerDatabaseTableList = null;
+        try {
+            dbFactory.initializeDatabase();
+            developerDatabaseTableList = dbFactory.getDatabaseTableList(developerObjectFactory);
+        } catch (Exception e) {
+            System.out.println("******* Error trying to get database table list for plugin Wallet Contacts");
+        }
+        return developerDatabaseTableList;
+    }
+
+    /**
+     * returns the list of records for the passed table
+     *
+     * @param developerObjectFactory
+     * @param developerDatabase
+     * @param developerDatabaseTable
+     * @return
+     */
+    @Override
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+        ExtraUserDeveloperDatabaseFactory dbFactory = new ExtraUserDeveloperDatabaseFactory(errorManager, platformDatabaseSystem);
+        List<DeveloperDatabaseTableRecord> developerDatabaseTableRecordList = null;
+        try {
+            dbFactory.initializeDatabase();
+            developerDatabaseTableRecordList = dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+        } catch (Exception e) {
+            System.out.println("******* Error trying to get database table list for plugin Wallet Contacts");
+        }
+        return developerDatabaseTableRecordList;
+    }
 
     /**
      * Addon Interface member variables.

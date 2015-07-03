@@ -15,7 +15,7 @@ android {
 
     defaultConfig {
         applicationId "com.bitdubai.fermat"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
@@ -55,15 +55,23 @@ android {
 
 
 dependencies {
+
     compile project(':fermat-api')
     compile project(':fermat-core')
+
+
     // OSA Projects
+
     compile project(':fermat-osa-addon-android-database-system-bitdubai')
     compile project(':fermat-osa-addon-android-file-system-bitdubai')
     compile project(':fermat-osa-addon-android-device-location-bitdubai')
+    compile project(':fermat-osa-addon-android-logger-bitdubai')
+
     // DMP Projects (Wallets)
+
     compile project(':fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai')
     compile project(':fermat-dmp-android-reference-niche-wallet-age-kids-boys-bitdubai')
+
     /*
 
     Wallets on the pipeline:
@@ -79,11 +87,20 @@ dependencies {
     */
     // DMP Projects (Sub APPs)
 
+    /*
+
+    Sub APPs on the pipeline
+
+    */
+
     compile project(':fermat-dmp-android-sub-app-wallet-manager-bitdubai')
     compile project(':fermat-dmp-android-sub-app-wallet-factory-bitdubai')
     compile project(':fermat-dmp-android-sub-app-wallet-store-bitdubai')
     compile project(':fermat-dmp-android-sub-app-wallet-publisher-bitdubai')
     compile project(':fermat-dmp-android-sub-app-shop-manager-bitdubai')
+    compile project(':fermat-pip-android-sub-app-manager-bitdubai')
+
+
 
     // PIP Projects (Sub APPs)
 

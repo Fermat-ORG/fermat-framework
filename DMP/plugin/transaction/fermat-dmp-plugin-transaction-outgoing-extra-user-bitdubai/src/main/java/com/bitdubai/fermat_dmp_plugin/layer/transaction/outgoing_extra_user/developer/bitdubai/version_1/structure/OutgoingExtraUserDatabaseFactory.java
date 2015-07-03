@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlugin
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerId;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerIdException;
 
 import java.util.UUID;
 
@@ -85,13 +85,13 @@ public class OutgoingExtraUserDatabaseFactory implements DealsWithPluginDatabase
 
 
         }
-        catch (InvalidOwnerId invalidOwnerId) {
+        catch (InvalidOwnerIdException invalidOwnerId) {
             /**
              * This shouldn't happen here because I was the one who gave the owner id to the database file system,
              * but anyway, if this happens, I can not continue.
              * * *
              */
-            System.err.println("InvalidOwnerId: " + invalidOwnerId.getMessage());
+            System.err.println("InvalidOwnerIdException: " + invalidOwnerId.getMessage());
             throw new CantCreateDatabaseException();
         }
 

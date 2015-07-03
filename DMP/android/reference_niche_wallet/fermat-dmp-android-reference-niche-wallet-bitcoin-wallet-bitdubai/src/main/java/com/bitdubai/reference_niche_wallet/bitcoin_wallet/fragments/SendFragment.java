@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -21,15 +23,19 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformWalletType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantCreateWalletContactException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantSendCryptoException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.IntentIntegrator;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.IntentResult;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
@@ -40,12 +46,15 @@ public class SendFragment extends Fragment implements View.OnClickListener {
     private static final String ARG_POSITION = "position";
     View rootView;
     UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
+
+    Bundle savedInstanceState;
     /**
      * DealsWithNicheWalletTypeCryptoWallet Interface member variables.
      */
     private static CryptoWalletManager cryptoWalletManager;
     private static Platform platform = new Platform();
     CryptoWallet cryptoWallet;
+    private ErrorManager errorManager;
 
     private TextView txtAddress;
 
@@ -60,14 +69,21 @@ public class SendFragment extends Fragment implements View.OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        this.savedInstanceState = savedInstanceState;
         cryptoWalletManager = platform.getCryptoWalletManager();
+        errorManager = platform.getErrorManager();
 
         try {
             cryptoWallet = cryptoWalletManager.getCryptoWallet();
-        } catch (CantGetCryptoWalletException e) {
-            showMessage("CantGetCryptoWalletException- " + e.getMessage());
-            e.printStackTrace();
         }
+        catch (CantGetCryptoWalletException e)
+        {
+            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            showMessage("CantGetCryptoWalletException- " + e.getMessage());
+            ;
+        }
+
+
     }
 
     @Override
@@ -143,10 +159,10 @@ public class SendFragment extends Fragment implements View.OnClickListener {
             scanImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //Intent intent = new Intent("com.google.zxing.client.android.SCAN");
-                    //intent.putExtra("com.google.zxing.client.android.SCAN.SCAN_MODE", "QR_CODE_MODE");
-                    //startActivityForResult(intent, 0);
-                    IntentIntegrator integrator = new IntentIntegrator(getActivity());
+
+                //pass reference to edit text control to show scan result and main activity
+                   IntentIntegrator integrator = new IntentIntegrator(getActivity(),(EditText) rootView.findViewById(R.id.address));
+
                     integrator.initiateScan();
 
                 }
@@ -154,8 +170,9 @@ public class SendFragment extends Fragment implements View.OnClickListener {
 
 
         } catch (Exception e) {
+            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(" CreateView Exception- " + e.getMessage());
-            e.printStackTrace();
+
         }
         return rootView;
     }
@@ -167,18 +184,17 @@ public class SendFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 0) {
+        try
+        {
+
+
             if (data != null) {
-                // Handle successful scan
-                //String contents = intent.getStringExtra("SCAN_RESULT");
-                //String format = intent.getStringExtra("SCAN_RESULT_FORMAT");
-                //put code in file wallet address
 
-                //TextView tv;
 
-                //tv = (EditText) rootView.findViewById(R.id.address);
-                //tv.setText(contents);
                 IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+
+                //get references to edit text control to show scand result
+                EditText textResult =  IntentIntegrator.getTextResult();
                 if (scanResult != null) {
 
                     // handle scan result
@@ -188,9 +204,8 @@ public class SendFragment extends Fragment implements View.OnClickListener {
 
                     }else {
                         //load into text address
-                        txtAddress.setText(contantsString);
-                        //Toast.makeText(this.getActivity(), contantsString, Toast.LENGTH_LONG).show();
 
+                       textResult.setText(contantsString);
                     }
 
                 }
@@ -199,8 +214,12 @@ public class SendFragment extends Fragment implements View.OnClickListener {
                 }
 
             }
+    }
+    catch (Exception e) {
+        errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        showMessage(" Load address Exception- " + e.getMessage());
+    }
 
-        }
     }
 
     @Override
@@ -222,15 +241,19 @@ public class SendFragment extends Fragment implements View.OnClickListener {
                 cryptoWallet.send(Long.parseLong(amount.getText().toString()), cryptoAddress, wallet_id);
 
                 showMessage("Send OK");
-            } catch (CantCreateWalletContactException e) {
-                e.printStackTrace();
+            } catch (CantCreateWalletContactException e)
+            {
+                errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 showMessage("Error creating wallet contact - " + e.getMessage());
-            } catch (CantSendCryptoException e) {
-                e.printStackTrace();
+            }
+            catch (CantSendCryptoException e)
+            {
+                errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 showMessage("Error send satoshis - " + e.getMessage());
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (Exception e)
+        {
+            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage("Error send satoshis - " + e.getMessage());
         }
 
@@ -250,4 +273,7 @@ public class SendFragment extends Fragment implements View.OnClickListener {
         //alertDialog.setIcon(R.drawable.icon);
         alertDialog.show();
     }
+
+
+
 }

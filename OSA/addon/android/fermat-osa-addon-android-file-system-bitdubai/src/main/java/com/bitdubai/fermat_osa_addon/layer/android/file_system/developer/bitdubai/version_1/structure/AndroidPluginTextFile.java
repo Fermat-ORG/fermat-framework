@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Environment;
 import android.util.Base64;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
@@ -18,6 +19,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -42,68 +44,25 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class AndroidPluginTextFile implements PluginTextFile {
 
+    private static final int HASH_PRIME_NUMBER_PRODUCT = 263;
+    private static final int HASH_PRIME_NUMBER_ADD = 6421;
+
+        private static final String CHARSET_NAME = "UTF-8";
+        private static final String DIGEST_ALGORITHM = "MD5";
+    private static final String KEYSPEC_ALGORITHM = "DESede";
+
     /**
      * PluginTextFile interface member variables.
      */
     
     private Context context;
-    public FileLifeSpan getLifeSpan() {
-		return lifeSpan;
-	}
 
-	public void setLifeSpan(FileLifeSpan lifeSpan) {
-		this.lifeSpan = lifeSpan;
-	}
-
-
-	private String content = "";
-    private String fileName;
-    public Context getContext() {
-		return context;
-	}
-
-	public void setContext(Context context) {
-		this.context = context;
-	}
-
-	public String getFileName() {
-		return fileName;
-	}
-
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
-
-	public FilePrivacy getPrivacyLevel() {
-		return privacyLevel;
-	}
-
-	public void setPrivacyLevel(FilePrivacy privacyLevel) {
-		this.privacyLevel = privacyLevel;
-	}
-
-	public String getDirectoryName() {
-		return directoryName;
-	}
-
-	public void setDirectoryName(String directoryName) {
-		this.directoryName = directoryName;
-	}
-
-	public UUID getOwnerId() {
-		return ownerId;
-	}
-
-	public void setOwnerId(UUID ownerId) {
-		this.ownerId = ownerId;
-	}
-
-
-	private FilePrivacy privacyLevel;
-    private FileLifeSpan lifeSpan;
-    private String directoryName;
-    private UUID ownerId;
-
+    private final String directoryName;
+    private final String fileName;
+    private final FilePrivacy privacyLevel;
+    private final FileLifeSpan lifeSpan;
+    private final UUID ownerId;
+    private String content = "";
 
     // Public constructor declarations.
 
@@ -117,17 +76,43 @@ public class AndroidPluginTextFile implements PluginTextFile {
      * @param privacyLevel level of privacy for the file, if it is public or private
      * @param lifeSpan lifetime of the file, whether it is permanent or temporary
      */
-    public AndroidPluginTextFile(UUID ownerId, Context context, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
-
+    public AndroidPluginTextFile(final UUID ownerId, final Context context, final String directoryName, final String fileName, final FilePrivacy privacyLevel, final FileLifeSpan lifeSpan){
         this.ownerId = ownerId;
         this.context = context;
         this.fileName = fileName;
         this.privacyLevel = privacyLevel;
         this.lifeSpan = lifeSpan;
         this.directoryName = directoryName;
-
     }
-    
+
+    public FileLifeSpan getLifeSpan() {
+		return lifeSpan;
+	}
+
+	public Context getContext() {
+		return context;
+	}
+
+	public void setContext(Context context) {
+		this.context = context;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public FilePrivacy getPrivacyLevel() {
+		return privacyLevel;
+	}
+
+	public String getDirectoryName() {
+		return directoryName;
+	}
+
+	public UUID getOwnerId() {
+		return ownerId;
+	}
+
     /**
      * PluginTextFile interface implementation.
      */
@@ -160,36 +145,30 @@ public class AndroidPluginTextFile implements PluginTextFile {
      */
     @Override
     public void persistToMedia() throws CantPersistFileException {
-        
-        try 
-        {
 
-            /**
-             *  Evaluate privacyLevel to determine the location of directory - external or internal
-             */
-            String path = "";
-            if(privacyLevel == FilePrivacy.PUBLIC)
-                path = Environment.getExternalStorageDirectory().toString();
-            else
-                path = this.context.getFilesDir().toString();
+        /**
+         *  Evaluate privacyLevel to determine the location of directory - external or internal
+         */
+        String path = "";
+        if(privacyLevel == FilePrivacy.PUBLIC)
+            path = Environment.getExternalStorageDirectory().toString();
+        else
+            path = this.context.getFilesDir().toString();
 
+        /**
+         * If the directory does not exist, we create it here.
+         */
 
-            /**
-             * If the directory does not exist, we create it here.
-             */
-            
-            File storagePath = new File(path +"/"+ this.directoryName);
-            if (!storagePath.exists() && storagePath.mkdirs()) {storagePath=null;}
-                
-           
-            /**
-             * Then we create the file.
-             */
-            File file = new File(storagePath, fileName);
+        File storagePath = new File(path +"/"+ this.directoryName);
+        if (!storagePath.exists() )
+            storagePath.mkdirs();
 
+        /**
+         * Then we create the file.
+         */
+        File file = new File(storagePath, fileName);
 
-            OutputStream outputStream;
-
+        try {
             /**
              * We encrypt the content.
              */
@@ -198,19 +177,32 @@ public class AndroidPluginTextFile implements PluginTextFile {
             /**
              * We write the encrypted content into the file.
              */
-            outputStream =  new BufferedOutputStream(new FileOutputStream(file));
-            outputStream.write(encryptedContent.getBytes(Charset.forName("UTF-8")));
+            OutputStream outputStream =  new BufferedOutputStream(new FileOutputStream(file));
+            outputStream.write(encryptedContent.getBytes(CHARSET_NAME));
             outputStream.close();
+            return;
 
-
-            
-        } catch (Exception e) {
-
-            throw new CantPersistFileException(e.getMessage());
+        } catch(CantEncryptException ex){
+            String message = CantPersistFileException.DEFAULT_MESSAGE;
+            FermatException cause = ex;
+            String context = "Storage Path: " + storagePath.toString() + " exists? " + storagePath.exists();
+            context += CantPersistFileException.CONTEXT_CONTENT_SEPARATOR;
+            context += "FileName: " + fileName;
+            context += CantPersistFileException.CONTEXT_CONTENT_SEPARATOR;
+            context += "Owner Id: " + this.ownerId;
+            String possibleReason = "This might have something to do specifically with the encryption algorithm and its implementation";
+            throw new CantPersistFileException(message, cause, context, possibleReason);
+        } catch (IOException ex) {String message = CantPersistFileException.DEFAULT_MESSAGE;
+            FermatException cause = FermatException.wrapException(ex);
+            String context = "Storage Path: " + storagePath.toString() + " exists? " + storagePath.exists();
+            context += CantPersistFileException.CONTEXT_CONTENT_SEPARATOR;
+            context += "FileName: " + fileName;
+            context += CantPersistFileException.CONTEXT_CONTENT_SEPARATOR;
+            context += "Owner Id: " + this.ownerId;
+            String possibleReason = "This problem should be related with the FileOutputStream either in the construction or the write operation";
+            throw new CantPersistFileException(message, cause, context, possibleReason);
         }
     }
-    
-
 
     /**
      * This method reads the file, decrypts its content and then it load it into memory.
@@ -219,130 +211,165 @@ public class AndroidPluginTextFile implements PluginTextFile {
      */
     @Override
     public void loadFromMedia() throws CantLoadFileException {
-    	BufferedReader bufferedReader = null;
-        try 
-        {
-            /**
-             *  Evaluate privacyLevel to determine the location of directory - external or internal
-             */
-            String path = "";
-            if(privacyLevel == FilePrivacy.PUBLIC)
-                path = Environment.getExternalStorageDirectory().toString();
-            else
-                path = this.context.getFilesDir().toString();
+        /**
+         *  Evaluate privacyLevel to determine the location of directory - external or internal
+         */
+        String path = "";
+        if(privacyLevel == FilePrivacy.PUBLIC)
+            path = Environment.getExternalStorageDirectory().toString();
+        else
+            path = this.context.getFilesDir().toString();
 
-            /**
-             * We open the file and read its encrypted content.
-             */
-            File file = new File(path +"/"+ this.directoryName, this.fileName);
-
-            InputStream inputStream ;
-            inputStream =  new BufferedInputStream(new FileInputStream(file));
-
-            InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
-
-            bufferedReader = new BufferedReader(inputStreamReader);
+        /**
+         * We open the file and read its encrypted content.
+         */
+        File file = new File(path +"/"+ this.directoryName, this.fileName);
+        String decryptedContent = "";
+        try {
+            InputStream inputStream =  new BufferedInputStream(new FileInputStream(file));
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream, CHARSET_NAME);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             StringBuilder stringBuilder = new StringBuilder();
             String line;
-
             while ((line = bufferedReader.readLine()) != null) {
                 stringBuilder.append(line);
             }
             inputStream.close();
+            bufferedReader.close();
             
             /**
              * Now we decrypt it.
              */
-            String decryptedContent = "";
-            
-            try {
+            try{
                 decryptedContent = this.decrypt(stringBuilder.toString());
-
-            } catch (CantDecryptException e) {
-                throw new CantLoadFileException("Error trying to decrypt file: " +this.fileName);
+            }catch (CantDecryptException ex) {
+                String message = CantPersistFileException.DEFAULT_MESSAGE;
+                FermatException cause = ex;
+                String context = "File Path: " + file.getPath();
+                context += CantPersistFileException.CONTEXT_CONTENT_SEPARATOR;
+                context += "Owner Id: " + this.ownerId;
+                String possibleReason = "This might have something to do specifically with the encryption algorithm and its implementation";
+                throw new CantLoadFileException(message, cause, context, possibleReason);
             }
-
             /**
              * Finally, I load it into memory.
              */
             this.content = decryptedContent;
-            
-        } catch (Exception e) {
-            throw new CantLoadFileException(e.getMessage());
-        } finally {
-        	try {
-        		bufferedReader.close();
-        		bufferedReader=null;
-        	} catch (Exception e) {
-        		e.printStackTrace();
-        	}
+
+        } catch (IOException ex) {
+            String message = CantPersistFileException.DEFAULT_MESSAGE;
+            FermatException cause = FermatException.wrapException(ex);
+            String context = "File Path: " + file.getPath();
+            String possibleReason = "This problem should be related with the FileInputStream either in the construction or the read operation";
+            throw new CantLoadFileException(message, cause, context, possibleReason);
         }
     }
 
     
+
+
+    @Override
+    public boolean equals(Object o){
+        if(!(o instanceof AndroidPluginTextFile))
+            return false;
+
+        AndroidPluginTextFile compare = (AndroidPluginTextFile) o;
+        return directoryName.equals(compare.getDirectoryName()) && fileName.equals(compare.getFileName()) && privacyLevel.equals(compare.getPrivacyLevel());
+    }
+
+    @Override
+    public int hashCode(){
+        int c = 0;
+        c += directoryName.hashCode();
+        c += fileName.hashCode();
+        c += privacyLevel.hashCode();
+        return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
+    }
+
+    @Override
+    public String toString(){
+        String path = "";
+        if(privacyLevel == FilePrivacy.PUBLIC)
+            path = Environment.getExternalStorageDirectory().toString();
+        else
+            path = this.context.getFilesDir().toString();
+        return path +"/"+ this.directoryName + "/" + fileName;
+    }
+
     /**
      * Private Encrypting Method.
      */
-    
+
     private  String encrypt(String text, String secretKey) throws CantEncryptException {
 
         String base64EncryptedString = "";
 
         try {
 
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            byte[] digestOfPassword = md.digest(secretKey.getBytes("utf-8"));
+            MessageDigest md = MessageDigest.getInstance(DIGEST_ALGORITHM);
+            byte[] digestOfPassword = md.digest(secretKey.getBytes(CHARSET_NAME));
             byte[] keyBytes = Arrays.copyOf(digestOfPassword, 24);
 
-            SecretKey key = new SecretKeySpec(keyBytes, "DESede");
-            Cipher cipher = Cipher.getInstance("DESede");
+            SecretKey key = new SecretKeySpec(keyBytes, KEYSPEC_ALGORITHM);
+            Cipher cipher = Cipher.getInstance(KEYSPEC_ALGORITHM);
             cipher.init(Cipher.ENCRYPT_MODE, key);
 
-            byte[] plainTextBytes = text.getBytes("utf-8");
+            byte[] plainTextBytes = text.getBytes(CHARSET_NAME);
             byte[] buf = cipher.doFinal(plainTextBytes);
             byte[] base64Bytes = Base64.encode(buf, 1);
-            base64EncryptedString = new String(base64Bytes, "UTF-8");
+            base64EncryptedString = new String(base64Bytes, CHARSET_NAME);
 
-        } catch (Exception e) {
-        	e.printStackTrace();
-            throw  new CantEncryptException();
+        } catch (Exception ex) {
+            String message = CantEncryptException.DEFAULT_MESSAGE;
+            FermatException cause = FermatException.wrapException(ex);
+            String context = "Encription Digest Algorithm: " + DIGEST_ALGORITHM;
+            context += CantDecryptException.CONTEXT_CONTENT_SEPARATOR;
+            context += "Encription KeySpec Algorithm: " + KEYSPEC_ALGORITHM;
+            context += CantDecryptException.CONTEXT_CONTENT_SEPARATOR;
+            context += "Charset: " + CHARSET_NAME;
+            String possibleReason = "This is most likely to happen due to a bad Secret Key passing";
+            throw  new CantEncryptException(message, cause, context, possibleReason);
         }
         return base64EncryptedString;
     }
 
-
     /**
      * Private Decrypting Method.
      */
-    
+
     private  String decrypt(String encryptedText) throws CantDecryptException {
 
         String secretKey = this.ownerId.toString();
         String base64EncryptedString = "";
 
         try {
-            byte[] message = Base64.decode(encryptedText.getBytes("utf-8"), 1);
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            byte[] digestOfPassword = md.digest(secretKey.getBytes("utf-8"));
+            byte[] message = Base64.decode(encryptedText.getBytes(CHARSET_NAME), 1);
+            MessageDigest md = MessageDigest.getInstance(DIGEST_ALGORITHM);
+            byte[] digestOfPassword = md.digest(secretKey.getBytes(CHARSET_NAME));
             byte[] keyBytes = Arrays.copyOf(digestOfPassword, 24);
-            SecretKey key = new SecretKeySpec(keyBytes, "DESede");
+            SecretKey key = new SecretKeySpec(keyBytes, KEYSPEC_ALGORITHM);
 
-            Cipher decipher = Cipher.getInstance("DESede");
+            Cipher decipher = Cipher.getInstance(KEYSPEC_ALGORITHM);
             decipher.init(Cipher.DECRYPT_MODE, key);
 
             byte[] plainText = decipher.doFinal(message);
 
-            base64EncryptedString = new String(plainText, "UTF-8");
+            base64EncryptedString = new String(plainText, CHARSET_NAME);
             return base64EncryptedString;
 
-        } catch (Exception e) {
-        	e.printStackTrace();
-            throw  new CantDecryptException();
+        } catch (Exception ex) {
+            String message = CantEncryptException.DEFAULT_MESSAGE;
+            FermatException cause = FermatException.wrapException(ex);
+            String context = "Encription Digest Algorithm: " + DIGEST_ALGORITHM;
+            context += CantDecryptException.CONTEXT_CONTENT_SEPARATOR;
+            context += "Encription KeySpec Algorithm: " + KEYSPEC_ALGORITHM;
+            context += CantDecryptException.CONTEXT_CONTENT_SEPARATOR;
+            context += "Charset: " + CHARSET_NAME;
+            String possibleReason = "This is most likely to happen due to a bad Secret Key passing";
+            throw  new CantDecryptException(message, cause, context, possibleReason);
 
         }
 
     }
-
-
 
 }

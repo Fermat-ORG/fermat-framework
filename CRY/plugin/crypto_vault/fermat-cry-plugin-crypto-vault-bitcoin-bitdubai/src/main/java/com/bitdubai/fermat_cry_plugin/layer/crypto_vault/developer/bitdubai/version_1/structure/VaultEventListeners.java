@@ -2,6 +2,9 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.ver
 
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
@@ -11,6 +14,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.I
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoReceptionConfirmedEvent;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoReversedEvent;
 import com.bitdubai.fermat_cry_api.layer.definition.DepthInBlocksThreshold;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantCalculateTransactionConfidenceException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantExecuteQueryException;
 
@@ -32,7 +36,7 @@ import javax.annotation.Nullable;
 /**
  * Created by rodrigo on 11/06/15.
  */
-class VaultEventListeners extends AbstractWalletEventListener implements DealsWithErrors, DealsWithEvents{
+class VaultEventListeners extends AbstractWalletEventListener implements DealsWithErrors, DealsWithEvents, DealsWithLogger {
 
     /**
      * VaultEventListeners member variables
@@ -50,6 +54,12 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
      */
     EventManager eventManager;
 
+    /**
+     * DealsWithLogger interface member variable
+     */
+    LogManager logManager;
+    LogLevel logLevel;
+    final String fullPath = this.getClass().getCanonicalName().toString();
 
     /**
      * DealsWithEvents interface implmentation
@@ -67,6 +77,17 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
     @Override
     public void setErrorManager(ErrorManager errorManager) {
         this.errorManager = errorManager;
+    }
+
+    /**
+     * DealsWithLogger interface implementation
+     * @param logLevel
+     * @param logManager
+     */
+    @Override
+    public void setLogManager(LogLevel logLevel, LogManager logManager) {
+        this.logManager = logManager;
+        this.logLevel = logLevel;
     }
 
     /**
@@ -119,13 +140,14 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
 
     @Override
     public void onTransactionConfidenceChanged(Wallet wallet, Transaction tx) {
-        System.out.println("CryptoVault: Transaction confidence changed for transaction " + tx.toString());
+        logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(fullPath), "Transaction confidence change detected!", "Transaction confidence changed. Transaction: " + tx , "Transaction confidence changed. Transaction: " + tx);
 
         TransactionConfidenceCalculator transactionConfidenceCalculator = new TransactionConfidenceCalculator(tx, wallet);
         CryptoStatus cryptoStatus;
         try {
             cryptoStatus = transactionConfidenceCalculator.getCryptoStatus();
         } catch (CantCalculateTransactionConfidenceException e) {
+            //todo need to check this, because the transaction doesn't seems to change the confidence from IDENTIFIED.
             cryptoStatus = CryptoStatus.IDENTIFIED;
         }
 

@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_pip_addon.layer.platform_service.location_subsystem.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -63,9 +62,9 @@ public class LocationServiceRegistry implements DealsWithErrors, DealsWithPlugin
      * Retrieve the most recent location saved
      *
      * @return can be {@code null} if there is no saved registry yet
-     * @throws CantLoadTableToMemory
+     * @throws CantLoadTableToMemoryException
      */
-    public LocationSubsystem findLastLocation() throws CantLoadTableToMemory {
+    public LocationSubsystem findLastLocation() throws CantLoadTableToMemoryException {
         DatabaseTable table = database.getTable(LocationServiceDatabaseConstants.LOCATION_SERVICE_TABLE_NAME);
         /**
          * It is not ordered by ID, because not  necessarily every register has a later date to the previous
@@ -82,7 +81,7 @@ public class LocationServiceRegistry implements DealsWithErrors, DealsWithPlugin
         return null;
     }
 
-    public List<LocationSubsystem> findLastLocations(int limit) throws CantLoadTableToMemory {
+    public List<LocationSubsystem> findLastLocations(int limit) throws CantLoadTableToMemoryException {
         List<LocationSubsystem> l = new ArrayList<>(limit);
         DatabaseTable table = database.getTable(LocationServiceDatabaseConstants.LOCATION_SERVICE_TABLE_NAME);
         table.setFilterOrder(LocationServiceDatabaseConstants.LOCATION_SERVICE_TABLE_TIME_COLUMN, DatabaseFilterOrder.DESCENDING);
@@ -150,7 +149,7 @@ public class LocationServiceRegistry implements DealsWithErrors, DealsWithPlugin
 
     }
 
-    void update(LocationService locationService) throws CantUpdateRecord {
+    void update(LocationService locationService) throws CantUpdateRecordException {
         throw new UnsupportedOperationException("update is unsupported yet");
 //        DatabaseTableRecord record = parseTo(locationSubsystem);
 //        DatabaseTable table = database.getTable(LocationServiceDatabaseConstants.LOCATION_SERVICE_TABLE_NAME);

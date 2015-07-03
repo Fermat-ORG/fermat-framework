@@ -6,14 +6,14 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet;
 
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.DealsWithNicheWalletTypeCryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
-import com.bitdubai.fermat_api.layer.pip_actor.developer.DealsWithToolManager;
-import com.bitdubai.fermat_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 
-public class Platform implements DealsWithErrors, DealsWithEvents, DealsWithNicheWalletTypeCryptoWallet, DealsWithToolManager {
+import java.io.Serializable;
+
+public class Platform implements DealsWithErrors, DealsWithEvents, DealsWithNicheWalletTypeCryptoWallet,  Serializable {
 
     /**
      * DealsWithWalletContacts Interface member variables.
@@ -23,25 +23,12 @@ public class Platform implements DealsWithErrors, DealsWithEvents, DealsWithNich
     /**
      * DealsWithErrors Interface member variables.
      */
-    private ErrorManager errorManager;
+    private static ErrorManager errorManager;
 
     /**
      * DealsWithEvents Interface member variables.
      */
     private EventManager eventManager;
-
-    /**
-     * DealsWithToolManager Interface member variables.
-     */
-    private static ToolManager toolManager;
-
-    /**
-     * Platform class member variables.
-     */
-
-    private static int tagId;
-    private static int id;
-    private static String ticketId;
 
 
     /**
@@ -51,27 +38,6 @@ public class Platform implements DealsWithErrors, DealsWithEvents, DealsWithNich
         this.cryptoWalletManager = cryptoWalletManager;
     }
 
-    /**
-     * DealsWithToolManager Interface implementation.
-     */
-    @Override
-    public void setToolManager(ToolManager toolManager) {
-        this.toolManager = toolManager;
-    }
-
-
-    /**
-     * DealsWithErrors Interface implementation.
-     */
-
-    public ErrorManager getErrorManager() {
-        return errorManager;
-    }
-
-
-    public EventManager getEventManager() {
-        return eventManager;
-    }
 
     /**
      * DealsWithErrors Interface implementation.
@@ -98,7 +64,9 @@ public class Platform implements DealsWithErrors, DealsWithEvents, DealsWithNich
         return this.cryptoWalletManager;
     }
 
-    public ToolManager getToolManager() {
-        return this.toolManager;
+    public ErrorManager getErrorManager() {
+        return this.errorManager;
     }
+
+
 }

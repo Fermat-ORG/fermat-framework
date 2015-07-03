@@ -62,6 +62,20 @@ public class AsymmectricCryptography {
 		AsymmetricKeyCreator keyCreator = new AsymmetricKeyCreator();
 		return keyCreator.createPublicKey(privateKey).toString();
 	}
+
+	public static String generatePublicAddress(final String hexPublicKey) throws IllegalArgumentException {
+		checkStringArgument(hexPublicKey);
+		AsymmetricPublicKey publicKey = new AsymmetricPublicKey(hexPublicKey);
+		AsymmetricKeyCreator keyCreator = new AsymmetricKeyCreator();
+		return keyCreator.createPublicAddress(publicKey);
+	}
+
+	public static String generateTestAddress(final String hexPublicKey) throws IllegalArgumentException {
+		checkStringArgument(hexPublicKey);
+		AsymmetricPublicKey publicKey = new AsymmetricPublicKey(hexPublicKey);
+		AsymmetricKeyCreator keyCreator = new AsymmetricKeyCreator();
+		return keyCreator.createTestAddress(publicKey);
+	}
 	
 	private static void checkStringArgument(final String argument){
 		if(argument == null || argument.isEmpty())

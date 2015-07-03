@@ -3,25 +3,36 @@ package com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions;
 /**
  * Created by ciencias on 22.01.15.
  */
-public class CantPersistFileException extends Exception {
+public class CantPersistFileException extends FileSystemException {
 
     /**
 	 * 
 	 */
 	private static final long serialVersionUID = 4841032427648911456L;
-	String mFileName;
 
-    public CantPersistFileException (String fileName) {
-        mFileName = fileName;
+    public static final String DEFAULT_MESSAGE = "CAN'T PERSIST FILE";
+
+    //private final String fileName;
+
+    public CantPersistFileException(final String message, final Exception cause, final String context, final String possibleReason) {
+        super(message, cause, context, possibleReason);
     }
 
-    @Override
-    public String getMessage() {
-        return "Cant persist to media the file " + mFileName;
+    public CantPersistFileException(final String message, final Exception cause) {
+        this(message, cause, "", "");
     }
 
-    public String getFileName() {
-        return  mFileName;
+    public CantPersistFileException(final String message) {
+        this(message, null);
+    }
+
+    public CantPersistFileException(final Exception exception) {
+        this(exception.getMessage());
+        setStackTrace(exception.getStackTrace());
+    }
+
+    public CantPersistFileException() {
+        this(DEFAULT_MESSAGE);
     }
 
 }

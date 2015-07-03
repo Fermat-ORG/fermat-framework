@@ -2,8 +2,9 @@ package com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.inte
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformWalletType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.CantGetWalletCryptoAddressBookException;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.CantRegisterWalletCryptoAddressBookException;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.CantGetWalletAddressBookException;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.CantRegisterWalletAddressBookException;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.WalletAddressBookNotFoundException;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,10 +18,10 @@ import java.util.UUID;
  */
 public interface WalletAddressBookRegistry {
 
-    WalletAddressBookRecord getWalletCryptoAddressBookByCryptoAddress(CryptoAddress cryptoAddress) throws CantGetWalletCryptoAddressBookException;
+    WalletAddressBookRecord getWalletCryptoAddressBookByCryptoAddress(CryptoAddress cryptoAddress) throws CantGetWalletAddressBookException, WalletAddressBookNotFoundException;
 
-    List<WalletAddressBookRecord> getAllWalletCryptoAddressBookByWalletId(UUID walletId) throws CantGetWalletCryptoAddressBookException;
+    List<WalletAddressBookRecord> getAllWalletCryptoAddressBookByWalletId(UUID walletId) throws CantGetWalletAddressBookException, WalletAddressBookNotFoundException;
 
-    void registerWalletCryptoAddressBook(CryptoAddress cryptoAddress, PlatformWalletType walletType, UUID walletId) throws CantRegisterWalletCryptoAddressBookException;
+    void registerWalletCryptoAddressBook(CryptoAddress cryptoAddress, PlatformWalletType walletType, UUID walletId) throws CantRegisterWalletAddressBookException;
 
 }

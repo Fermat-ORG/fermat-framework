@@ -37,16 +37,15 @@ public class ErrorManagerReportAgent implements ErrorAgent, DealsWithPlatformDat
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
-    PlatformDatabaseSystem platformDatabaseSystem;
+    private PlatformDatabaseSystem platformDatabaseSystem;
 
 
     /**
      * ErrorAgent Member Variables.
      */
-    Thread agentThread;
-    ErrorReportAgent errorReportAgent;
-    ErrorManagerRegistry errorManagerRegistry;
-
+    private Thread agentThread;
+    private ErrorReportAgent errorReportAgent;
+    private ErrorManagerRegistry errorManagerRegistry;
 
     @Override
     public void start() throws CantStartAgentException {
@@ -55,7 +54,7 @@ public class ErrorManagerReportAgent implements ErrorAgent, DealsWithPlatformDat
 
         ((DealsWithPlatformDatabaseSystem) this.errorReportAgent).setPlatformDatabaseSystem(this.platformDatabaseSystem);
 
-        ((ErrorReportAgent) this.errorReportAgent).Initialize();
+        ((ErrorReportAgent) this.errorReportAgent).initialize();
 
         this.agentThread = new Thread(new ErrorReportAgent());
         this.agentThread.start();
@@ -79,17 +78,11 @@ public class ErrorManagerReportAgent implements ErrorAgent, DealsWithPlatformDat
         this.errorManagerRegistry = errorManagerRegistry;
     }
 
-
-
-
-
-
-
     private class ErrorReportAgent implements DealsWithPlatformDatabaseSystem, Runnable, ConnectivityState  {
 
-        private final int SLEEP_TIME = 5000;
+        private static final int SLEEP_TIME = 5000;
 
-        ErrorManagerRegistry errorManagerRegistry;
+        //private ErrorManagerRegistry errorManagerRegistry;
 
         /*
         public ErrorManagerRegistry getErrorManagerRegistry() {
@@ -107,12 +100,12 @@ public class ErrorManagerReportAgent implements ErrorAgent, DealsWithPlatformDat
         /**
          * DealsWithPluginDatabaseSystem Interface member variables.
          */
-        PlatformDatabaseSystem platformDatabaseSystem;
+        private PlatformDatabaseSystem platformDatabaseSystem;
 
         /**
-         * Initialize the Agent.
+         * initialize the Agent.
          */
-        private void Initialize ()  {
+        private void initialize()  {
             /* Update the List of Error Registries not sent */
             loadNotSentErrorRegistries();
         }
@@ -124,6 +117,10 @@ public class ErrorManagerReportAgent implements ErrorAgent, DealsWithPlatformDat
         @Override
         public void setPlatformDatabaseSystem(PlatformDatabaseSystem platformDatabaseSystem) {
             this.platformDatabaseSystem = platformDatabaseSystem;
+        }
+
+        public PlatformDatabaseSystem getPlatformDatabaseSystem(){
+            return this.platformDatabaseSystem;
         }
 
         /**
@@ -193,7 +190,6 @@ public class ErrorManagerReportAgent implements ErrorAgent, DealsWithPlatformDat
 
         private void loadNotSentErrorRegistries(){
             //Load the ErrorManagerRegistry list of objects not sent
-
             listErrorManagerRegistryToSend = errorManagerRegistry.getListOfErrorRegistryNotSent();
         }
 
@@ -236,7 +232,7 @@ public class ErrorManagerReportAgent implements ErrorAgent, DealsWithPlatformDat
                 System.out.println("Response Code : " + responseCode);
 
                 BufferedReader in = new BufferedReader(
-                        new InputStreamReader(con.getInputStream()));
+                        new InputStreamReader(con.getInputStream(), "UTF-8"));
                 String inputLine;
                 StringBuffer response = new StringBuffer();
 

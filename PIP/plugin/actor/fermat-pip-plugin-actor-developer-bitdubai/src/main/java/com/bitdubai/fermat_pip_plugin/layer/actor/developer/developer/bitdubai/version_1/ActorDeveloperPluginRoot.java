@@ -6,10 +6,8 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 
 
-import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DealWithDatabaseManagers;
-import com.bitdubai.fermat_api.layer.all_definition.developer.DealWithLogManagers;
-import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DealsWithLogManagers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
@@ -23,14 +21,11 @@ import com.bitdubai.fermat_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_pip_plugin.layer.actor.developer.developer.bitdubai.version_1.structure.DeveloperActorDatabaseTool;
 import com.bitdubai.fermat_pip_plugin.layer.actor.developer.developer.bitdubai.version_1.structure.DeveloperActorLogTool;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -45,19 +40,13 @@ import java.util.UUID;
  * It is responsible for login in users to the current device.
  */
 
-public class ActorDeveloperPluginRoot implements DealWithDatabaseManagers, DealWithLogManagers, DealsWithErrors, DealsWithEvents,DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, ToolManager, Service, Plugin {
+public class ActorDeveloperPluginRoot implements DealWithDatabaseManagers, DealsWithLogManagers, DealsWithErrors, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, ToolManager, Service, Plugin {
 
 
     /**
      * DealsWithErrors Interface member variables.
      */
     ErrorManager errorManager;
-
-    /**
-     * DealWithEvents Interface member variables.
-     */
-    EventManager eventManager;
-
 
     /**
      * Service Interface member variables.
@@ -81,18 +70,6 @@ public class ActorDeveloperPluginRoot implements DealWithDatabaseManagers, DealW
     */
     private UUID pluginId;
 
-
-    /**
-     * List of databases
-     */
-    private List<DatabaseManagerForDevelopers> databaseManagers;
-
-    /**
-     * List of Loggins
-     */
-    private List<LogManagerForDevelopers> loggingManagers;
-
-
     //Esto seria lo nuevo
     private Map<Plugins,Plugin> databaseManagersOnPlugins;
     private Map<Plugins,Plugin> logManagersOnPlugins;
@@ -108,24 +85,11 @@ public class ActorDeveloperPluginRoot implements DealWithDatabaseManagers, DealW
     }
 
     /**
-     * DealWithEvents Interface implementation.
-     */
-
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-
-
-
-    /**
      * Service Interface implementation.
      */
 
     @Override
     public void start() {
-
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
@@ -145,19 +109,7 @@ public class ActorDeveloperPluginRoot implements DealWithDatabaseManagers, DealW
 
     @Override
     public void stop() {
-
-        /**
-         * I will remove all the event listeners registered with the event manager.
-         */
-
-        for (EventListener eventListener : listenersAdded) {
-            eventManager.removeListener(eventListener);
-        }
-
-        listenersAdded.clear();
-
         this.serviceStatus = ServiceStatus.STOPPED;
-
     }
 
     @Override
@@ -178,18 +130,16 @@ public class ActorDeveloperPluginRoot implements DealWithDatabaseManagers, DealW
 
     @Override
     public void setId(UUID pluginId) {
-        this.pluginId=pluginId;
+        this.pluginId = pluginId;
     }
 
     @Override
     public DatabaseTool getDatabaseTool() {
-        //return new DeveloperActorDatabaseTool();
         return new DeveloperActorDatabaseTool(this.databaseManagersOnPlugins,this.databaseManagersOnAddons);
     }
 
     @Override
     public LogTool getLogTool() {
-        /*return new DeveloperActorLogTool();*/
         return new DeveloperActorLogTool(logManagersOnPlugins,logManagersOnAddons);
     }
 
@@ -201,18 +151,10 @@ public class ActorDeveloperPluginRoot implements DealWithDatabaseManagers, DealW
     }
 
     @Override
-    public void setLogManagers(LogManagerForDevelopers logManagerForDevelopers) {
-        
-    }
-
-
-    //MAtias te lo comento para que compile. Cuando te conestes lo vemos.
-    /*@Override
-
-    public void setLogManagers (Map<Plugins,Plugin> logManagersOnPlugins,Map<Addons,Addon> logManagersOnAddons){
+    public void setLogManagers(Map<Plugins,Plugin> logManagersOnPlugins,Map<Addons,Addon> logManagersOnAddons) {
         this.logManagersOnPlugins = logManagersOnPlugins;
         this.logManagersOnAddons = logManagersOnAddons;
     }
-*/
+
 
 }

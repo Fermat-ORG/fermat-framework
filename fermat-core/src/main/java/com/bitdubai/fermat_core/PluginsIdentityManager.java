@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_core;
 
 import com.bitdubai.fermat_api.CantInitializePluginsManagerException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.PluginNotRecognizedException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
@@ -11,9 +12,9 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot;
-import com.bitdubai.fermat_dmp_plugin.layer.world.coinbase.developer.bitdubai.version_1.CoinbaseWorldPluginRoot;
+
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.BitcoinWalletBasicWalletPluginRoot;
-import com.bitdubai.fermat_dmp_plugin.layer.world.location.developer.bitdubai.version_1.LocationWorldPluginRoot;
+
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.discount_wallet.developer.bitdubai.version_1.DiscountWalletBasicWalletPluginRoot;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.IncomingCryptoTransactionPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.bank_notes_wallet.developer.bitdubai.version_1.BankNotesWalletNicheWalletTypePluginRoot;
@@ -35,10 +36,21 @@ import com.bitdubai.fermat_dmp_plugin.layer.transaction.inter_wallet.developer.b
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.developer.bitsubai.version_1.OutgoingDeviceUserTransactionPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.OutgoingExtraUserTransactionPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_intra_user.developer.bitdubai.version_1.OutgoingIntraUserTransactionPluginRoot;
+
+
+/*
+
+World layer projects on the pipeline:
+
+import com.bitdubai.fermat_dmp_plugin.layer.world.coinbase.developer.bitdubai.version_1.CoinbaseWorldPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.world.coinapult.developer.bitdubai.version_1.CoinapultWorldPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.world.blockchain_info.developer.bitdubai.version_1.BlockchainInfoWorldPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.world.crypto_index.developer.bitdubai.version_1.CryptoIndexWorldPluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.world.shape_shift.developer.bitdubai.version_1.ShapeShiftWorldPluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.world.location.developer.bitdubai.version_1.LocationWorldPluginRoot;
+
+ */
+
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.ActorAddressBookCryptoModulePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.app_runtime.developer.bitdubai.version_1.AppRuntimeMiddlewarePluginRoot;
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.bank_notes.developer.bitdubai.version_1.BankNotesMiddlewarePluginRoot;
@@ -144,10 +156,11 @@ public class PluginsIdentityManager {
                     /**
                      * If I cannot save this file, It means the Plugin Manager cannot start,
                      */
-                    System.err.println("CantPersistFileException: " + cantPersistFileException.getMessage());
-                    cantPersistFileException.printStackTrace();
-                    cantPersistFileException.getFileName();
-                    throw new CantInitializePluginsManagerException();
+                    String message = CantInitializePluginsManagerException.DEFAULT_MESSAGE;
+                    FermatException cause = cantPersistFileException;
+                    String context = "Platform Text File Name: " + platformTextFile.toString();
+                    String possibleReason = "Check the cause for the reason";
+                    throw new CantInitializePluginsManagerException(message, cause, context, possibleReason);
                 }
 
             }
@@ -159,9 +172,11 @@ public class PluginsIdentityManager {
                 /**
                  * This really should never happen. But if it does...
                  */
-                System.err.println("CantCreateFileException: " + cantCreateFileException.getMessage());
-                cantCreateFileException.printStackTrace();
-                throw new CantInitializePluginsManagerException();
+                String message = CantInitializePluginsManagerException.DEFAULT_MESSAGE;
+                FermatException cause = cantCreateFileException;
+                String context = "Create File Params: Platform, PluginIds, PRIVATE, PERMANENT";
+                String possibleReason = "Check the cause for the reason";
+                throw new CantInitializePluginsManagerException(message, cause, context, possibleReason);
             }
 
             for (int arrayPosition = 0; arrayPosition < AMOUNT_OF_KNOWN_PLUGINS; arrayPosition++) {
@@ -177,10 +192,11 @@ public class PluginsIdentityManager {
                 /**
                  * If I cannot save this file, It means the Plugin Manager cannot start,
                  */
-                System.err.println("CantPersistFileException: " + cantPersistFileException.getMessage());
-                cantPersistFileException.printStackTrace();
-                cantPersistFileException.getFileName();
-                throw new CantInitializePluginsManagerException();
+                String message = CantInitializePluginsManagerException.DEFAULT_MESSAGE;
+                FermatException cause = cantPersistFileException;
+                String context = "Platform Text File Name: " + platformTextFile.toString();
+                String possibleReason = "Check the cause for the reason";
+                throw new CantInitializePluginsManagerException(message, cause, context, possibleReason);
             }
 
         }
@@ -192,6 +208,9 @@ public class PluginsIdentityManager {
         UUID pluginId = new UUID(0, 0);
         Integer pluginIndex = 0;
 
+        /* Plugin on the pipeline:
+
+
         if (pluginIndex == 0) {
             try {
                 CryptoIndexWorldPluginRoot tryType;
@@ -200,9 +219,10 @@ public class PluginsIdentityManager {
             } catch (Exception e) {
                 /**
                  * If this fails, is because this is not the index for this plug in.
-                 */
+                 *
             }
         }
+*/
 
         if (pluginIndex == 0) {
             try {
@@ -312,6 +332,8 @@ public class PluginsIdentityManager {
             }
         }
 
+                /* Plugin on the pipeline:
+
         if (pluginIndex == 0) {
             try {
                 CryptoIndexWorldPluginRoot tryType;
@@ -320,10 +342,10 @@ public class PluginsIdentityManager {
             } catch (Exception e) {
                 /**
                  * If this fails, is because this is not the index for this plug in.
-                 */
+                 /
             }
         }
-
+*/
         if (pluginIndex == 0) {
             try {
                 OutgoingDeviceUserTransactionPluginRoot tryType;
@@ -456,6 +478,8 @@ public class PluginsIdentityManager {
             }
         }
 
+                /* Plugin on the pipeline:
+
         if (pluginIndex == 0) {
             try {
                 BlockchainInfoWorldPluginRoot tryType;
@@ -464,9 +488,10 @@ public class PluginsIdentityManager {
             } catch (Exception e) {
                 /**
                  * If this fails, is because this is not the index for this plug in.
-                 */
+                 *
             }
         }
+
 
         if (pluginIndex == 0) {
             try {
@@ -476,7 +501,7 @@ public class PluginsIdentityManager {
             } catch (Exception e) {
                 /**
                  * If this fails, is because this is not the index for this plug in.
-                 */
+                 *
             }
         }
 
@@ -488,207 +513,208 @@ public class PluginsIdentityManager {
             } catch (Exception e) {
                 /**
                  * If this fails, is because this is not the index for this plug in.
+                 *
+            }
+                */
+
+        if (pluginIndex == 0) {
+            try {
+                IncomingCryptoTransactionPluginRoot tryType;
+                tryType = (IncomingCryptoTransactionPluginRoot) plugin;
+                pluginIndex = 25;
+            } catch (Exception e) {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
                  */
             }
-
-            if (pluginIndex == 0) {
-                try {
-                    IncomingCryptoTransactionPluginRoot tryType;
-                    tryType = (IncomingCryptoTransactionPluginRoot) plugin;
-                    pluginIndex = 25;
-                } catch (Exception e) {
-                    /**
-                     * If this fails, is because this is not the index for this plug in.
-                     */
-                }
-            }
-
-
-            if (pluginIndex == 0) {
-                try {
-                    CoinbaseWorldPluginRoot tryType;
-                    tryType = (CoinbaseWorldPluginRoot) plugin;
-                    pluginIndex = 26;
-                } catch (Exception e) {
-                    /**
-                     * If this fails, is because this is not the index for this plug in.
-                     */
-                }
-            }
-
-
-            if (pluginIndex == 0) {
-                try {
-                    CloudServerCommunicationPluginRoot tryType;
-                    tryType = (CloudServerCommunicationPluginRoot) plugin;
-                    pluginIndex = 27;
-                } catch (Exception e) {
-                    /**
-                     * If this fails, is because this is not the index for this plug in.
-                     */
-                }
-            }
-
-            if (pluginIndex == 0) {
-                try {
-                    WalletFactoryModulePluginRoot tryType;
-                    tryType = (WalletFactoryModulePluginRoot) plugin;
-                    pluginIndex = 28;
-                } catch (Exception e) {
-                    /**
-                     * If this fails, is because this is not the index for this plug in.
-                     */
-                }
-            }
-
-            if (pluginIndex == 0) {
-                try {
-                    BitcoinWalletBasicWalletPluginRoot tryType;
-                    tryType = (BitcoinWalletBasicWalletPluginRoot) plugin;
-                    pluginIndex = 29;
-                } catch (Exception e) {
-                    /**
-                     * If this fails, is because this is not the index for this plug in.
-                     */
-                }
-            }
-
-            if (pluginIndex == 0) {
-                try {
-                    WalletAddressBookCryptoModulePluginRoot tryType;
-                    tryType = (WalletAddressBookCryptoModulePluginRoot) plugin;
-                    pluginIndex = 30;
-                } catch (Exception e) {
-                    /**
-                     * If this fails, is because this is not the index for this plug in.
-                     */
-                }
-            }
-
-            if (pluginIndex == 0) {
-                try {
-                    LocationWorldPluginRoot tryType;
-                    tryType = (LocationWorldPluginRoot) plugin;
-                    pluginIndex = 31;
-                } catch (Exception e) {
-                    /**
-                     * If this fails, is because this is not the index for this plug in.
-                     */
-                }
-            }
-
-            if (pluginIndex == 0) {
-                try {
-                    BankNotesWalletNicheWalletTypePluginRoot tryType;
-                    tryType = (BankNotesWalletNicheWalletTypePluginRoot) plugin;
-                    pluginIndex = 32;
-                } catch (Exception e) {
-                    /**
-                     * If this fails, is because this is not the index for this plug in.
-                     */
-                }
-            }
-
-
-            if (pluginIndex == 0) {
-                try {
-                    //CryptoLossProtectedWalletNicheWalletTypePluginRoot tryType;
-                    // tryType = (CryptoLossProtectedWalletNicheWalletTypePluginRoot) plugin;
-                    pluginIndex = 33;
-                } catch (Exception e) {
-                    /**
-                     * If this fails, is because this is not the index for this plug in.
-                     */
-                }
-            }
-
-
-            if (pluginIndex == 0) {
-                try {
-                    CryptoWalletNicheWalletTypePluginRoot tryType;
-                    tryType = (CryptoWalletNicheWalletTypePluginRoot) plugin;
-                    pluginIndex = 34;
-                } catch (Exception e) {
-                    /**
-                     * If this fails, is because this is not the index for this plug in.
-                     */
-                }
-            }
-
-            if (pluginIndex == 0) {
-                try {
-                    DiscountWalletNicheWalletTypePluginRoot tryType;
-                    tryType = (DiscountWalletNicheWalletTypePluginRoot) plugin;
-                    pluginIndex = 35;
-                } catch (Exception e) {
-                    /**
-                     * If this fails, is because this is not the index for this plug in.
-                     */
-                }
-            }
-
-            if (pluginIndex == 0) {
-                try {
-                    //  FiatOverCryptoLossProtectedWalletNicheWalletTypePluginRoot tryType;
-                    //  tryType = (FiatOverCryptoLossProtectedWalletNicheWalletTypePluginRoot) plugin;
-                    pluginIndex = 36;
-                } catch (Exception e) {
-                    /**
-                     * If this fails, is because this is not the index for this plug in.
-                     */
-                }
-            }
-
-            if (pluginIndex == 0) {
-                try {
-                    FiatOverCryptoWalletNicheWalletTypePluginRoot tryType;
-                    tryType = (FiatOverCryptoWalletNicheWalletTypePluginRoot) plugin;
-                    pluginIndex = 37;
-                } catch (Exception e) {
-                    /**
-                     * If this fails, is because this is not the index for this plug in.
-                     */
-                }
-            }
-
-            if (pluginIndex == 0) {
-                try {
-                    MultiAccountWalletNicheWalletTypePluginRoot tryType;
-                    tryType = (MultiAccountWalletNicheWalletTypePluginRoot) plugin;
-                    pluginIndex = 38;
-                } catch (Exception e) {
-                    /**
-                     * If this fails, is because this is not the index for this plug in.
-                     */
-                }
-            }
-
-            if (pluginIndex == 0) {
-                try {
-                    BitcoinCryptoVaultPluginRoot tryType;
-                    tryType = (BitcoinCryptoVaultPluginRoot) plugin;
-                    pluginIndex = 39;
-                } catch (Exception e) {
-                    /**
-                     * If this fails, is because this is not the index for this plug in.
-                     */
-                }
-            }
-
-            if (pluginIndex == 0) {
-                try {
-                    ActorDeveloperPluginRoot tryType;
-                    tryType = (ActorDeveloperPluginRoot) plugin;
-                    pluginIndex = 40;
-                } catch (Exception e) {
-                    /**
-                     * If this fails, is because this is not the index for this plug in.
-                     */
-                }
-            }
-
-
         }
+
+/*
+        if (pluginIndex == 0) {
+            try {
+                CoinbaseWorldPluginRoot tryType;
+                tryType = (CoinbaseWorldPluginRoot) plugin;
+                pluginIndex = 26;
+            } catch (Exception e) {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 *
+            }
+        }
+*/
+
+        if (pluginIndex == 0) {
+            try {
+                CloudServerCommunicationPluginRoot tryType;
+                tryType = (CloudServerCommunicationPluginRoot) plugin;
+                pluginIndex = 27;
+            } catch (Exception e) {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
+
+        if (pluginIndex == 0) {
+            try {
+                WalletFactoryModulePluginRoot tryType;
+                tryType = (WalletFactoryModulePluginRoot) plugin;
+                pluginIndex = 28;
+            } catch (Exception e) {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
+
+        if (pluginIndex == 0) {
+            try {
+                BitcoinWalletBasicWalletPluginRoot tryType;
+                tryType = (BitcoinWalletBasicWalletPluginRoot) plugin;
+                pluginIndex = 29;
+            } catch (Exception e) {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
+
+        if (pluginIndex == 0) {
+            try {
+                WalletAddressBookCryptoModulePluginRoot tryType;
+                tryType = (WalletAddressBookCryptoModulePluginRoot) plugin;
+                pluginIndex = 30;
+            } catch (Exception e) {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
+
+    /*
+        if (pluginIndex == 0) {
+            try {
+                LocationWorldPluginRoot tryType;
+                tryType = (LocationWorldPluginRoot) plugin;
+                pluginIndex = 31;
+            } catch (Exception e) {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 *
+            }
+        }*/
+
+        if (pluginIndex == 0) {
+            try {
+                BankNotesWalletNicheWalletTypePluginRoot tryType;
+                tryType = (BankNotesWalletNicheWalletTypePluginRoot) plugin;
+                pluginIndex = 32;
+            } catch (Exception e) {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
+
+
+        if (pluginIndex == 0) {
+            try {
+                //CryptoLossProtectedWalletNicheWalletTypePluginRoot tryType;
+                // tryType = (CryptoLossProtectedWalletNicheWalletTypePluginRoot) plugin;
+                pluginIndex = 33;
+            } catch (Exception e) {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
+
+
+        if (pluginIndex == 0) {
+            try {
+                CryptoWalletNicheWalletTypePluginRoot tryType;
+                tryType = (CryptoWalletNicheWalletTypePluginRoot) plugin;
+                pluginIndex = 34;
+            } catch (Exception e) {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
+
+        if (pluginIndex == 0) {
+            try {
+                DiscountWalletNicheWalletTypePluginRoot tryType;
+                tryType = (DiscountWalletNicheWalletTypePluginRoot) plugin;
+                pluginIndex = 35;
+            } catch (Exception e) {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
+
+        if (pluginIndex == 0) {
+            try {
+                //  FiatOverCryptoLossProtectedWalletNicheWalletTypePluginRoot tryType;
+                //  tryType = (FiatOverCryptoLossProtectedWalletNicheWalletTypePluginRoot) plugin;
+                pluginIndex = 36;
+            } catch (Exception e) {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
+
+        if (pluginIndex == 0) {
+            try {
+                FiatOverCryptoWalletNicheWalletTypePluginRoot tryType;
+                tryType = (FiatOverCryptoWalletNicheWalletTypePluginRoot) plugin;
+                pluginIndex = 37;
+            } catch (Exception e) {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
+
+        if (pluginIndex == 0) {
+            try {
+                MultiAccountWalletNicheWalletTypePluginRoot tryType;
+                tryType = (MultiAccountWalletNicheWalletTypePluginRoot) plugin;
+                pluginIndex = 38;
+            } catch (Exception e) {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
+
+        if (pluginIndex == 0) {
+            try {
+                BitcoinCryptoVaultPluginRoot tryType;
+                tryType = (BitcoinCryptoVaultPluginRoot) plugin;
+                pluginIndex = 39;
+            } catch (Exception e) {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
+
+        if (pluginIndex == 0) {
+            try {
+                ActorDeveloperPluginRoot tryType;
+                tryType = (ActorDeveloperPluginRoot) plugin;
+                pluginIndex = 40;
+            } catch (Exception e) {
+                /**
+                 * If this fails, is because this is not the index for this plug in.
+                 */
+            }
+        }
+
+
 
 
         if (pluginIndex > 0) {
@@ -714,19 +740,7 @@ public class PluginsIdentityManager {
 
         platformTextFile.setContent(fileContent);
 
-        try {
-            platformTextFile.persistToMedia();
-        } catch (CantPersistFileException cantPersistFileException) {
-            /**
-             * If I cannot save this file, I cant handle the situation,
-             */
-            System.err.println("CantPersistFileException: " + cantPersistFileException.getMessage());
-            cantPersistFileException.printStackTrace();
-            cantPersistFileException.getFileName();
-            throw new CantPersistFileException(cantPersistFileException.getFileName());
-        }
-
-
+        platformTextFile.persistToMedia();
     }
 
 }

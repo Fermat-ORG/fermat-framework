@@ -50,6 +50,7 @@ public enum Activities {
     CWP_WALLET_ADULTS_ALL_DAILY_DISCOUNT( "DailyDiscountsActivity"),
     CWP_WALLET_ADULTS_ALL_WEEKLY_DISCOUNT( "WeeklyDiscountsActivity"),
     CWP_WALLET_ADULTS_ALL_MONTHLY_DISCOUNT( "MonthlyDiscountsActivity"),
+    CWP_SUP_APP_ALL_DEVELOPER ("DevelopersActivity"),
     CWP_WALLET_FACTORY_MAIN ("FactoryActivity");
 
     private String key;

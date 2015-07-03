@@ -5,7 +5,9 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,27 +16,37 @@ import android.view.View;
 import android.view.ViewGroup;
 
 
+import android.widget.Button;
 import android.widget.TextView;
+
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
+import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetAllWalletContactsException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform;
 
+import java.text.DecimalFormat;
 import java.util.UUID;
 
 /**
  * Created by Natalia on 02/06/2015.
  */
-public class BalanceFragment extends  Fragment {
+public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     View rootView;
+    SwipeRefreshLayout swipeLayout;
 
-    String balance;
+    long balance;
+
+    boolean showBalanceBTC = false;
 
     private static final String ARG_POSITION = "position";
-    private int position;
 
     UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
 
@@ -44,6 +56,7 @@ public class BalanceFragment extends  Fragment {
     private static CryptoWalletManager cryptoWalletManager;
     private static Platform platform = new Platform();
     CryptoWallet cryptoWallet;
+    private ErrorManager errorManager;
 
     public static BalanceFragment newInstance(int position) {
         BalanceFragment f = new BalanceFragment();
@@ -53,102 +66,109 @@ public class BalanceFragment extends  Fragment {
         return f;
     }
 
-
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-
-        /*for(int i=0;i<menu.size();i++){
-            menu.getItem(i).setVisible(false);
-        }
-        menu.clear();
-*/
-        super.onPrepareOptionsMenu(menu);
-        for(int i=0;i<menu.size();i++){
-            menu.getItem(i).setVisible(false);
-        }
-        //MenuItem item3  = menu.findItem(R.id.action);
-        //item3.setVisible(false);
-    }
-
-
-
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        try{
-
-         balance = "0 bits";
-        cryptoWalletManager = platform.getCryptoWalletManager();
-
+        errorManager = platform.getErrorManager();
         try {
-            cryptoWallet = cryptoWalletManager.getCryptoWallet();
+            balance = 0;
+            cryptoWalletManager = platform.getCryptoWalletManager();
+
+            try {
+                cryptoWallet = cryptoWalletManager.getCryptoWallet();
+            } catch (CantGetCryptoWalletException e)
+            {
+                errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                showMessage("CantGetCryptoWalletException- " + e.getMessage());
+
+            }
+            try {
+                balance = cryptoWallet.getBalance(wallet_id);
+            } catch (CantGetBalanceException e)
+            {
+                errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                showMessage("CantGetBalanceException- " + e.getMessage());
+
+            }
+        } catch (Exception ex) {
+            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+            showMessage("Unexpected error getting the balance - " + ex.getMessage());
         }
-        catch (CantGetCryptoWalletException e) {
-            showMessage("CantGetCryptoWalletException- " + e.getMessage());
-           e.printStackTrace();
-        }
-
-        try {
-            long lngBalance = cryptoWallet.getBalance(wallet_id);
-
-            balance = (int) (lngBalance / 100) + " bits";
-
-            //String.valueOf
-        } catch (CantGetBalanceException e) {
-            showMessage("CantGetBalanceException- " + e.getMessage());
-            e.printStackTrace();
-
-        }
-    }
-    catch(Exception ex) {
-        showMessage("Unexpected error getting the balance - " + ex.getMessage());
-        ex.printStackTrace();
-    }
-
-
-
-      //  MyApplication.changeColor(Color.parseColor("#F0E173"), super.getActivity().getResources());
-
-    }
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-
-        inflater.inflate(R.menu.menu_main, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-        //MenuItem searchItem = menu.findItem(R.id.action_search);
-        //mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-        int id = item.getItemId();
-        //if(id == R.id.action_search){
-        //    Toast.makeText(getActivity(), "holaa", Toast.LENGTH_LONG);
-        //}
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_balance, container, false);
-        TextView tv = ((TextView)rootView.findViewById(R.id.balance));
-        tv.setText(balance);
+        TextView tv = ((TextView) rootView.findViewById(R.id.balance));
+        tv.setText(formatBalanceString());
 
+        swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
+        swipeLayout.setOnRefreshListener(this);
+
+        final Button b = (Button) rootView.findViewById(R.id.changeFormatBtn);
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (showBalanceBTC)
+                    b.setText("Show in bits");
+                else
+                    b.setText("Show in BTC");
+
+                showBalanceBTC = !showBalanceBTC;
+                refreshBalance();
+            }
+        });
 
         return rootView;
     }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-
-
-
+    private String formatBalanceString() {
+        String stringBalance = "";
+        if (showBalanceBTC) {
+            DecimalFormat df = new DecimalFormat();
+            df.setMaximumFractionDigits(6);
+            df.setMinimumFractionDigits(6);
+            String BTCFormat = df.format(balance / 100000000);
+            stringBalance = BTCFormat + " BTC";
+        } else {
+            stringBalance = (int) (balance / 100) + " bits";
+        }
+        return stringBalance;
     }
-    private void showMessage(String text){
+
+    @Override
+    public void onRefresh() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                swipeLayout.setRefreshing(false);
+                refreshBalance();
+            }
+        }, 3000);
+    }
+
+    private void refreshBalance() {
+        try {
+            try {
+                balance = cryptoWallet.getBalance(wallet_id);
+            } catch (CantGetBalanceException e) {
+
+                errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                showMessage("CantGetBalanceException- " + e.getMessage());
+
+            }
+            TextView tv = ((TextView) rootView.findViewById(R.id.balance));
+            tv.setText(formatBalanceString());
+        } catch (Exception ex) {
+
+            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+            showMessage("Unexpected error getting the balance - " + ex.getMessage());
+
+        }
+    }
+
+    private void showMessage(String text) {
         AlertDialog alertDialog = new AlertDialog.Builder(this.getActivity()).create();
         alertDialog.setTitle("Warning");
         alertDialog.setMessage(text);
@@ -157,14 +177,8 @@ public class BalanceFragment extends  Fragment {
                 // aquí puedes añadir funciones
             }
         });
-       // alertDialog.setIcon(R.drawable.icon);
+        // alertDialog.setIcon(R.drawable.icon);
         alertDialog.show();
     }
-
-
-
-
-
-
 }
 

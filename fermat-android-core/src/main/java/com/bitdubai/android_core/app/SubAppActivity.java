@@ -1,9 +1,9 @@
 package com.bitdubai.android_core.app;
-
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.*;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -31,11 +31,15 @@ import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopReviewsF
 import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopShopFragment;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ReceiveFragment;
 
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.*;
+import com.bitdubai.sub_app.developer.fragment.DatabaseToolsFragment;
+import com.bitdubai.sub_app.manager.fragment.SubAppDesktopFragment;
 import com.bitdubai.sub_app.shop_manager.fragment.ShopDesktopFragment;
 
 import com.bitdubai.sub_app.wallet_store.fragment.AllFragment;
@@ -116,11 +120,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
         super.onCreate(savedInstanceState);
 
         try {
-            try {
-                setContentView(R.layout.runtime_app_activity_runtime);
-            } catch (Exception e) {
-                Toast.makeText(getApplicationContext(), "Can't set content view as runtime_app_activity_runtime: " + e.getMessage(), Toast.LENGTH_LONG).show();
-            }
+
 
             this.savedInstanceState = savedInstanceState;
             //init runtime app
@@ -176,6 +176,10 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                     case CWP_WALLET_MANAGER_SHOP:
                         fragments.add(android.support.v4.app.Fragment.instantiate(this, ShopDesktopFragment.class.getName()));
                         break;
+                    case CWP_SUB_APP_DEVELOPER:
+                        fragments.add(android.support.v4.app.Fragment.instantiate(this, com.bitdubai.sub_app.manager.fragment.SubAppDesktopFragment.class.getName()));
+                        break;
+
                     case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE:
                         fragments.add(android.support.v4.app.Fragment.instantiate(this, ReceiveFragment.class.getName()));
                         break;
@@ -238,6 +242,8 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
             pager.setAdapter(this.PagerAdapter);
 
             pager.setBackgroundResource(R.drawable.background_tiled_diagonal_light);
+            //set default page to show
+            pager.setCurrentItem(0);
 
         } catch (Exception ex) {
             this.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, ex);
@@ -266,6 +272,27 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
             this.mainMenumenu = activity.getMainMenu();
             this.sidemenu = activity.getSideMenu();
 
+
+            //if wallet do not set the navigator drawer I load a layout without him
+            if (sidemenu != null) {
+
+                setContentView(R.layout.runtime_app_activity_runtime_navigator);
+
+
+                this.NavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
+
+                this.NavigationDrawerFragment.setMenuVisibility(true);
+                // Set up the drawer.
+                this.NavigationDrawerFragment.setUp(
+                        R.id.navigation_drawer,
+                        (DrawerLayout) findViewById(R.id.drawer_layout), sidemenu);
+            }
+            else
+            {
+                setContentView(R.layout.runtime_app_activity_runtime);
+
+            }
+
             if (tabs == null)
                 (findViewById(R.id.tabs)).setVisibility(View.INVISIBLE);
             else {
@@ -279,15 +306,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
 
             ApplicationSession.setActivityProperties(this, getWindow(), getResources(), tabStrip, getActionBar(), titleBar, abTitle, Title);
 
-            if (sidemenu != null) {
-                this.NavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
 
-                this.NavigationDrawerFragment.setMenuVisibility(true);
-                // Set up the drawer.
-                this.NavigationDrawerFragment.setUp(
-                        R.id.navigation_drawer,
-                        (DrawerLayout) findViewById(R.id.drawer_layout), sidemenu);
-            }
 
 
             if (tabs == null && fragments.size() > 1) {
@@ -305,6 +324,8 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                 pagertabs.setPageMargin(pageMargin);
 
                 tabStrip.setViewPager(pagertabs);
+
+
 
                 String color = activity.getColor();
                 if (color != null)
@@ -472,7 +493,6 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
     public void onItemSelectedClicked(View v) {
 
         try {
-            firstexecute = false;
 
             ApplicationSession.setContact("");
             String tagId = v.getTag().toString();
@@ -499,6 +519,15 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                 case CWP_SHOP_MANAGER_MAIN:
 
                     break;
+                case CWP_SUP_APP_ALL_DEVELOPER: //Developer manager
+                    ((ApplicationSession) this.getApplication()).setWalletId(0);
+
+                    this.activity = this.walletRuntimeMiddleware.getActivity(Activities.CWP_SUP_APP_ALL_DEVELOPER);
+                    //execute NavigateWallet to go wallet activity
+                    intent = new Intent(this, com.bitdubai.android_core.app.WalletActivity.class);
+                    startActivity(intent);
+
+
                 case CWP_WALLET_MANAGER_MAIN:
 
 
@@ -741,6 +770,8 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
             }
         }
 
+
+
         @Override
         public CharSequence getPageTitle(int position) {
             return titles[position];
@@ -769,6 +800,8 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                     }
                 }
 
+                com.bitdubai.sub_app.developer.fragment.Platform developerPlatform;
+
                 //execute current activity fragments
                 try {
                     switch (fragmentType) {
@@ -781,6 +814,11 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                         case CWP_WALLET_MANAGER_SHOP:
                             currentFragment = ShopDesktopFragment.newInstance(position);
                             break;
+
+                        case CWP_SUB_APP_DEVELOPER:
+                            currentFragment = SubAppDesktopFragment.newInstance(position);
+                            break;
+
                         case CWP_SHOP_MANAGER_MAIN:
                             currentFragment = AllFragment.newInstance(0);
                             break;

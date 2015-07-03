@@ -15,16 +15,19 @@ import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_
 import com.bitdubai.android_core.layer._2_os.android.developer.bitdubai.version_1.AndroidOsLocationSystem;
 import com.bitdubai.fermat_api.CantReportCriticalStartingProblemException;
 import com.bitdubai.fermat_api.CantStartPlatformException;
+import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.AppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime.WalletRuntimeManager;
+import com.bitdubai.fermat_api.layer.osa_android.LoggerSystemOs;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
 import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.fermat.R;
+import com.bitdubai.fermat_osa_addon.layer.android.logger.developer.bitdubai.version_1.LoggerAddonRoot;
 
 //import android.support.v7.widget.SearchView;
 
@@ -52,6 +55,7 @@ public class StartActivity extends FragmentActivity {
     private CorePlatformContext platformContext;
     private AndroidOsDataBaseSystem databaseSystemOs;
     private AndroidOsLocationSystem locationSystemOs;
+    private LoggerSystemOs loggerSystemOs;
 
     private Bundle savedInstanceState;
     private Platform platform;
@@ -145,6 +149,14 @@ public class StartActivity extends FragmentActivity {
             locationSystemOs = new AndroidOsLocationSystem();
             locationSystemOs.setContext(context);
             platform.setLocationSystemOs(locationSystemOs);
+
+            loggerSystemOs = new LoggerAddonRoot();
+            try {
+                ((Service) loggerSystemOs).start();
+                platform.setLoggerSystemOs(loggerSystemOs);
+            } catch (Exception e) {
+                System.out.println("cant start logger exception: "+e.getMessage());
+            }
 
             Bundle bundle = getIntent().getExtras();
 

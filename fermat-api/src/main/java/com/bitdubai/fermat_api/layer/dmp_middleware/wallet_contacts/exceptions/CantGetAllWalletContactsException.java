@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions;
 
+import com.bitdubai.fermat_api.FermatException;
+
 /**
  * The Class <code>com.bitdubai.fermat_api.layer.middleware.wallet_contacts.exceptions.CantGetAllWalletContactsException</code>
  * is thrown when an error occurs trying to get all contacts from a wallet
@@ -9,20 +11,23 @@ package com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CantGetAllWalletContactsException extends Exception {
+public class CantGetAllWalletContactsException extends WalletContactsException {
 
-    /**
-     * Constructor
-     */
-    public CantGetAllWalletContactsException(){
-        super();
+    public static final String DEFAULT_MESSAGE = "CAN'T GET ALL WALLET CONTACTS EXCEPTION";
+
+    public CantGetAllWalletContactsException(final String message, final Exception cause, final String context, final String possibleReason) {
+        super(message, cause, context, possibleReason);
     }
 
-    /**
-     * Constructor whit parameter
-     * @param msg
-     */
-    public CantGetAllWalletContactsException(String msg){
-        super(msg);
+    public CantGetAllWalletContactsException(final String message, final Exception cause) {
+        this(message, cause, "", "");
+    }
+
+    public CantGetAllWalletContactsException(final String message) {
+        this(message, null);
+    }
+
+    public CantGetAllWalletContactsException() {
+        this(DEFAULT_MESSAGE);
     }
 }
