@@ -24,6 +24,7 @@ public class RuntimeActivity implements Activity {
     MainMenu mainMenu;
     TabStrip tabStrip;
     String color;
+    String statusBarColor;
 
     /**
      * RuntimeActivity interface implementation.
@@ -61,6 +62,11 @@ public class RuntimeActivity implements Activity {
         this.tabStrip = tabStrip;
     }
 
+    public void setStatusBarColor(String color){this.statusBarColor=color;}
+
+
+
+
     /**
      * SubApp interface implementation.
      */
@@ -94,4 +100,11 @@ public class RuntimeActivity implements Activity {
     public TabStrip getTabStrip() {
         return tabStrip;
     }
+
+    @Override
+    public String getStatusBarColor() {
+        return statusBarColor;
+    }
+
+
 }
