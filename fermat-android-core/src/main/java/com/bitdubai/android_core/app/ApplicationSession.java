@@ -317,7 +317,7 @@ public class ApplicationSession extends android.support.multidex.MultiDexApplica
                     wallpaper = context.getDrawable(R.drawable.background_tiled_diagonal_light);
                     abTitle.setTextColor(Color.YELLOW);
                     bg = context.getDrawable(R.drawable.banner_club_1);
-                    bg.setVisible(true,false);
+                    bg.setVisible(true, false);
                     walletStyle = "Club";
                     break;
 
@@ -330,6 +330,13 @@ public class ApplicationSession extends android.support.multidex.MultiDexApplica
                     bg = context.getDrawable(R.drawable.banner_club_2);
                     bg.setVisible(true,false);
                     walletStyle = "Club";
+                    break;
+
+                case 12:
+                    //bg = context.getDrawable(R.drawable.banner_club_2);
+                    //bg.setVisible(true,false);
+                    //mTitle="Developer";
+                    //pTabs.setIndicatorColor(Color.GREEN);
                     break;
             }
 
