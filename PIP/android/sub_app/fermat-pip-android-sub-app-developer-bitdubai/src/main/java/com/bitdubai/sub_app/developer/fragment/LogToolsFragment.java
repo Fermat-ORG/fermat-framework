@@ -42,7 +42,7 @@ import java.util.Map;
 public class LogToolsFragment extends Fragment {
 
     private Map<String, List<ClassHierarchyLevels>> pluginClasses;
-    List<LoggerPluginClassHierarchy> loggerPluginClassHierarchy;
+    //List<LoggerPluginClassHierarchy> loggerPluginClassHierarchy;
 
     private static final String ARG_POSITION = "position";
     View rootView;
@@ -83,7 +83,6 @@ public class LogToolsFragment extends Fragment {
         /**
          * I will load the list of classes that will be used in other fragments.
          */
-        loadLoggerHierarchyClassesForPlugins();
     }
 
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -163,69 +162,9 @@ public class LogToolsFragment extends Fragment {
         }
     }
 
-    private void loadLoggerHierarchyClassesForPlugins(){
-        loggerPluginClassHierarchy = new ArrayList<LoggerPluginClassHierarchy>();
-
-        /**
-         * I will load the data into the class for each plugin available
-         */
-        List<Plugins> plugins = logTool.getAvailablePluginList();
-        for(Plugins plugin : plugins){
-            LoggerPluginClassHierarchy pluginClassHierarchy = new LoggerPluginClassHierarchy();
-            pluginClassHierarchy.setLevel0(plugin.getKey());
-
-            /**
-             * I will get the list of the available classes on the plug in
-             */
-            String level1="";
-            String level2="";
-            String toReplace = "";
-            List<ClassHierarchyLevels> newList = new ArrayList<ClassHierarchyLevels>();
-            for (ClassHierarchyLevels classes : logTool.getClassesHierarchy(plugin)){
-                /**
-                 * I will acommodate the values to fit the screen
-                 */
-                if (classes.getLevel1().length() > 40)
-                    toReplace = classes.getLevel1().substring(15, classes.getLevel1().length()-15);
-                else if (classes.getLevel1().length() < 40)
-                    toReplace = classes.getLevel1().substring(8, classes.getLevel1().length()-8);
-                else if (classes.getLevel1().length() < 10)
-                    toReplace = "   ";
-                classes.setLevel1(classes.getLevel1().replace(toReplace, "..."));
-
-                if (classes.getLevel2().length() > 40)
-                    toReplace = classes.getLevel2().substring(15, classes.getLevel2().length()-15);
-                else if (classes.getLevel2().length() < 40 && classes.getLevel2().length() > 20)
-                    toReplace = classes.getLevel2().substring(8, classes.getLevel2().length()-8);
-                else if (classes.getLevel2().length() < 10)
-                    toReplace = "  ";
-
-                classes.setLevel2("-" + classes.getLevel2().replace(toReplace, "..."));
-                classes.setLevel3("--" + classes.getLevel3());
-
-                /**
-                 * I will add the first item to the list. If I already added it, then I will skip it.
-                 */
-                if (!level1.contentEquals(classes.getLevel1()))
-                    level1 = classes.getLevel1();
 
 
-                if (!level2.contentEquals(classes.getLevel2()))
-                    level2 = classes.getLevel2();
 
-                /**
-                 * At this point I have the class ready to be filled up with the rest of the levels
-                 */
-                pluginClassHierarchy.setFullPath(classes.getFullPath());
-                pluginClassHierarchy.setLevel1(classes.getLevel1());
-                pluginClassHierarchy.setLevel2(classes.getLevel2());
-                pluginClassHierarchy.setLevel3(classes.getLevel3());
-            }
-
-
-        }
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -251,55 +190,31 @@ public class LogToolsFragment extends Fragment {
                 String level2="";
                 String toReplace = "";
                 List<ClassHierarchyLevels> newList = new ArrayList<ClassHierarchyLevels>();
+                //esto es sacar con getClassesHierarchy
                 for (ClassHierarchyLevels classes : logTool.getClassesHierarchy(plugin)){
-                    /**
-                     * I will acommodate the values to fit the screen
-                     */
-                    if (classes.getLevel1().length() > 40)
-                        toReplace = classes.getLevel1().substring(15, classes.getLevel1().length()-15);
-                    else if (classes.getLevel1().length() < 40)
-                        toReplace = classes.getLevel1().substring(8, classes.getLevel1().length()-8);
-                    else if (classes.getLevel1().length() < 10)
-                        toReplace = "   ";
-                    classes.setLevel1(classes.getLevel1().replace(toReplace, "..."));
+                    //loading de loggers class
 
-                    if (classes.getLevel2().length() > 40)
-                        toReplace = classes.getLevel2().substring(15, classes.getLevel2().length()-15);
-                    else if (classes.getLevel2().length() < 40 && classes.getLevel2().length() > 20)
-                        toReplace = classes.getLevel2().substring(8, classes.getLevel2().length()-8);
-                    else if (classes.getLevel2().length() < 10)
-                        toReplace = "  ";
-
-                    classes.setLevel2("-" + classes.getLevel2().replace(toReplace, "..."));
-                    classes.setLevel3("--" + classes.getLevel3());
-
-                    /**
-                     * I will add the first item to the list. If I already added it, then I will skip it.
-                     */
-                    if (!level1.contentEquals(classes.getLevel1())){
-                        level1 = classes.getLevel1();
-                        list.add(classes.getLevel1());
-                    }
-
-
-
-                    if (!level2.contentEquals(classes.getLevel2())){
-                        level2 = classes.getLevel2();
-                        list.add(classes.getLevel2());
-                    }
-                    /**
-                     * this level will always be added
-                     */
-                    list.add(classes.getLevel3());
+                    Loggers log = new Loggers();
+                    log.level0=plugin.getKey();
+                    log.level1=classes.getLevel1();
+                    log.level2=classes.getLevel2();
+                    log.level3=classes.getLevel3();
+                    log.fullPath=classes.getFullPath();
+                    log.type=Loggers.TYPE_PLUGIN;
+                    log.picture="plugin";
 
                     /**
                      * I insert the modified class in a new map with the plug in and the classes.
                      */
-                    newList.add(classes);
+                    //newList.add(classes);
                 }
                 pluginClasses.put(plugin.getKey(), newList);
 
-
+                for(ClassHierarchyLevels classes: newList){
+                    Loggers log = new Loggers();
+                    log.level0=plugin.getKey();
+                    //lstLoggers
+                }
 
             }
             for(Addons addon : addons){ list.add(addon.getKey() + " - Addon || LogLevel: " + logTool.getLogLevel(addon)); }
