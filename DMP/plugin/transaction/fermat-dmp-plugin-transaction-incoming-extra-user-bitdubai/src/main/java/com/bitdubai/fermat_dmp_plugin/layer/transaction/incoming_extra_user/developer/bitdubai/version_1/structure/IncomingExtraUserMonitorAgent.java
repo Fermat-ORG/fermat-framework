@@ -23,6 +23,7 @@ import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.DealsWith
 import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantAcknowledgeTransactionException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantReadEventException;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.DealsWithRegistry;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.TransactionAgent;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantStartAgentException;
@@ -122,10 +123,7 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
             this.agentThread.start();
         }
         catch (Exception exception) {
-            if(exception instanceof FermatException)
-                throw new CantStartAgentException(CantStartAgentException.DEFAULT_MESSAGE, exception, null, "You should inspect the cause");
-            else
-                throw new CantStartAgentException(CantStartAgentException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "You should inspect the cause");
+            throw new CantStartAgentException(CantStartAgentException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "You should inspect the cause");
         }
 
     }
@@ -287,7 +285,6 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
                     return;
                 }
 
-
                 // Now we take all the transactions in state (ACKNOWLEDGE,TO_BE_NOTIFIED)
                 // Remember that this list can be more extensive than the one we saved, this is
                 // because the system could have shut down in this step of the protocol making old
@@ -301,20 +298,20 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
                         source.confirmReception(transaction.getTransactionID());
                         System.out.println("TTF - EXTRA USER MONITOR: TRANSACTION RESPONSIBILITY ACQUIRED");
                         this.registry.acquireResponsibility(transaction);
-                    } catch (CantConfirmTransactionException e) {
+                    } catch (CantConfirmTransactionException exception) {
                         // TODO: Consultar si esto hace lo que pienso, si falla no registra en base de datos
                         //       la transacción
                         // We will inform the exception and try again in the next round
-                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
                     }
                 }
                 // After finishing all the steps we mark the event as seen.
                 try {
                     this.registry.disableEvent(eventWrapper.eventId);
                     System.out.println("TTF - EXTRA USER MONITOR: EVENT DISABLED");
-                } catch (Exception e) { // There are two exceptions and we react in the same way to both
+                } catch (CantReadEventException | CantSaveEventException exception) { // There are two exceptions and we react in the same way to both
                     // We will inform the exception and try again in the next round
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
                 }
             }
         }

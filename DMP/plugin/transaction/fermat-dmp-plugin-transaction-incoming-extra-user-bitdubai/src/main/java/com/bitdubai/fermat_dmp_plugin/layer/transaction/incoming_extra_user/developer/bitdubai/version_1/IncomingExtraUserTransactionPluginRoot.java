@@ -255,9 +255,7 @@ public class IncomingExtraUserTransactionPluginRoot implements DatabaseManagerFo
         /**
          * I will start the Event Recorder.
          */
-        this.eventRecorder = new IncomingExtraUserEventRecorderService();
-        ((DealsWithEvents) this.eventRecorder).setEventManager(this.eventManager);
-        ((DealsWithRegistry) this.eventRecorder).setRegistry(this.registry);
+        this.eventRecorder = new IncomingExtraUserEventRecorderService(eventManager, registry);
 
         try {
             this.eventRecorder.start();
@@ -274,13 +272,8 @@ public class IncomingExtraUserTransactionPluginRoot implements DatabaseManagerFo
         /**
          * I will start the Relay Agent.
          */
-        this.relay = new IncomingExtraUserRelayAgent();
-
+        this.relay = new IncomingExtraUserRelayAgent(this.bitcoinWalletManager, this.errorManager, this.registry, this.walletAddressBookManager);
         try {
-            ((DealsWithBitcoinWallet) this.relay).setBitcoinWalletManager(this.bitcoinWalletManager);
-            ((DealsWithErrors) this.relay).setErrorManager(this.errorManager);
-            ((DealsWithRegistry) this.relay).setRegistry(this.registry);
-            ((DealsWithWalletAddressBook) this.relay).setWalletAddressBookManager(this.walletAddressBookManager);
             this.relay.start();
         }
         catch (CantStartAgentException cantStartAgentException) {

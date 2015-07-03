@@ -7,22 +7,20 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventTyp
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserEventRecorderService;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserRegistry;
 
-import static org.fest.assertions.api.Assertions.*;
-import static org.mockito.Mockito.*;
-import static com.googlecode.catchexception.CatchException.*;
-
-import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static com.googlecode.catchexception.CatchException.catchException;
+import static org.fest.assertions.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
+
 /**
  * Created by jorgegonzalez on 2015.07.02..
  */
 @RunWith(MockitoJUnitRunner.class)
-public class StartTest {
+public class IncomingCryptoWaitingTransferenceTest {
 
     @Mock
     private EventManager mockEventManager;
@@ -34,7 +32,7 @@ public class StartTest {
     private IncomingExtraUserEventRecorderService testEventRecorderService;
 
     @Test
-    public void Start_EventManagerSetWithValidEventListener_ServiceStarted() throws Exception{
+    public void IncomingCryptoWaitingTransference_EventManagerSetWithValidEventListener_ServiceStarted() throws Exception{
         when(mockEventManager.getNewListener(EventType.INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE_EXTRA_USER)).thenReturn(mockEventListener);
         testRegistry = new IncomingExtraUserRegistry();
 

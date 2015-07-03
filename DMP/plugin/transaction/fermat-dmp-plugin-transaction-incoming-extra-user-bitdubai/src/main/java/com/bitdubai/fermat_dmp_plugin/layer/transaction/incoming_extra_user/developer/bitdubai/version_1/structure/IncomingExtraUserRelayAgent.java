@@ -74,6 +74,16 @@ public class IncomingExtraUserRelayAgent implements DealsWithBitcoinWallet, Deal
     private Thread agentThread;
     private RelayAgent relayAgent;
 
+    /**
+     * The Specialized Constructor
+     */
+    public IncomingExtraUserRelayAgent(final BitcoinWalletManager bitcoinWalletManager, final ErrorManager errorManager, final IncomingExtraUserRegistry registry, final WalletAddressBookManager walletAddressBookManager){
+        this.bitcoinWalletManager = bitcoinWalletManager;
+        this.errorManager = errorManager;
+        this.registry = registry;
+        this.walletAddressBookManager = walletAddressBookManager;
+    }
+
 
     /**
      * DealsWithBitcoinWallet Interface implementation.
@@ -127,10 +137,7 @@ public class IncomingExtraUserRelayAgent implements DealsWithBitcoinWallet, Deal
             this.agentThread.start();
         }
         catch (Exception exception) {
-            if(exception instanceof FermatException)
-                throw new CantStartAgentException(CantStartAgentException.DEFAULT_MESSAGE, exception, null, "You should inspect the cause");
-            else
-                throw new CantStartAgentException(CantStartAgentException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "You should inspect the cause");
+            throw new CantStartAgentException(CantStartAgentException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "You should inspect the cause");
         }
 
     }
