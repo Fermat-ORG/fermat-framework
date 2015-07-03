@@ -488,7 +488,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
             //acá estoy seteando los colores y toda la vaina esa
             runtimeActivity= new RuntimeActivity();
             runtimeActivity.setType(Activities.CWP_SUP_APP_ALL_DEVELOPER);
-            runtimeActivity.setColor("#d07b62");
+            runtimeActivity.setColor("#b46a54");
             runtimeActivity.setStatusBarColor("#b46a54");
             runtimeWallet.addActivity(runtimeActivity);
             listActivities.put(Activities.CWP_SUP_APP_ALL_DEVELOPER, runtimeActivity);
