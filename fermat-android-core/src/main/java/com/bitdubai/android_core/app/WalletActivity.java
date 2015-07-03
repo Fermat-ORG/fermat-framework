@@ -222,8 +222,22 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
                 setStatusBarColor(this.activity.getStatusBarColor());
 
             }
+            if (this.activity.getTabStrip().getTabsColor()!=null){
+                tabStrip.setBackgroundColor(Color.parseColor(this.activity.getTabStrip().getTabsColor()));
+                //tabStrip.setDividerColor(Color.TRANSPARENT);
 
-            ApplicationSession.setActivityProperties(this, getWindow(), getResources(), tabStrip, getActionBar(), titleBar, abTitle, Title);
+            }
+            if(this.activity.getTabStrip().getTabsTextColor()!=null){
+                tabStrip.setTextColor(Color.parseColor(this.activity.getTabStrip().getTabsTextColor()));
+            }
+
+            if(this.activity.getTabStrip().getTabsIndicateColor()!=null){
+                tabStrip.setIndicatorColor(Color.parseColor(this.activity.getTabStrip().getTabsIndicateColor()));
+            }
+
+            //TODO por ahora le estoy pasando un null al tabstrip porque ahí adentro lo está cargando mal, porque hace un clean de la pantalla y borra el color de los tabs
+            // que yo puse acá
+            ApplicationSession.setActivityProperties(this, getWindow(), getResources(), null, getActionBar(), titleBar, abTitle, Title);
 
 
 
