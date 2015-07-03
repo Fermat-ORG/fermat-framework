@@ -103,6 +103,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
          * after I save the transaction in the database and the vault, I'll raise the incoming transaction.
          *
          */
+
         PlatformEvent event = new IncomingCryptoIdentifiedEvent(EventType.INCOMING_CRYPTO_RECEIVED);
         eventManager.raiseEvent(event);
 
@@ -140,12 +141,14 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
     public UUID persistNewTransaction(String txHash) throws CantExecuteQueryException {
         UUID txId = UUID.randomUUID();
 
+
         DatabaseTable cryptoTxTable;
         DatabaseTransaction dbTx = this.database.newTransaction();
         cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
         DatabaseTableRecord incomingTxRecord =  cryptoTxTable.getEmptyRecord();
         incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, txId.toString());
         incomingTxRecord.setStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, txHash);
+
         /**
          * since the wallet generated this transaction, we dont need to inform it.
          */
@@ -313,10 +316,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
         cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME,ProtocolStatus.TO_BE_NOTIFIED.toString() ,DatabaseFilterType.EQUAL);
         try {
             cryptoTxTable.loadToMemory();
-            if (cryptoTxTable.getRecords().isEmpty())
-                return false;
-            else
-                return true;
+           return !cryptoTxTable.getRecords().isEmpty();
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
             throw new CantExecuteQueryException();

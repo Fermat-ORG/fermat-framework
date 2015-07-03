@@ -48,6 +48,7 @@ import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.PeerGroup;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionInput;
 import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.store.UnreadableWalletException;
@@ -474,8 +475,9 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
                 /**
                  * I get the transaction from the vault
                  */
-                CryptoAddress addressFrom = new CryptoAddress(getAddressFromVault(txHash), CryptoCurrency.BITCOIN);
-                CryptoAddress addressTo = new CryptoAddress(getAddressToFromVaul(txHash), CryptoCurrency.BITCOIN);
+                String[] addresses = getAddressFromTransaction(txHash);
+                CryptoAddress addressFrom = new CryptoAddress(addresses[0], CryptoCurrency.BITCOIN);
+                CryptoAddress addressTo = new CryptoAddress(addresses[1], CryptoCurrency.BITCOIN);
                 long amount = getAmountFromVault(txHash);
 
 
@@ -532,26 +534,38 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
      * @param txHash
      * @return the string of the address
      */
-    private String getAddressToFromVaul(String txHash) {
+    private String[] getAddressFromTransaction(String txHash) {
+        String[] addresses = new String[2];
         try{
             Sha256Hash hash = new Sha256Hash(txHash);
             Transaction tx = vault.getTransaction(hash);
 
-            //String addressTo = tx.getOutput(0).getAddressFromP2PKHScript(networkParameters).toString();
+            /**
+             * Will validate if this is an incoming transaction
+             */
+            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
+            db.setVault(vault);
 
-            String addressTo=null;
+
             /**
              * I will search on all outputs for an address that is mine
              */
             for (TransactionOutput output : tx.getOutputs()){
-                if (output.isMine(vault)){
-                    /**
-                     * I found an address that is mine in an output. I need to return this
-                     */
-                addressTo = output.getScriptPubKey().getToAddress(this.networkParameters).toString();
-                }
-            }
-            return addressTo;
+                if (output.isMine(vault))
+                /**
+                 * this is address From
+                 */
+                   addresses[0] = output.getScriptPubKey().getToAddress(this.networkParameters).toString();
+               else
+                /**
+                 * This is address to
+                 */
+                    addresses[1] = output.getScriptPubKey().getToAddress(networkParameters).toString();
+           }
+
+
+            return addresses;
+
         } catch (Exception e){
             /**
              * it might be from an address that we can't get
@@ -561,25 +575,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
 
     }
 
-    /**
-     * Access the vault and retrieves the address from if the transaction
-     * @param txHash
-     * @return the string of the address
-     */
-    private String getAddressFromVault(String txHash) {
-        try{
-            Sha256Hash hash = new Sha256Hash(txHash);
-            Transaction tx = vault.getTransaction(hash);
 
-            String addressFrom = tx.getInput(0).getFromAddress().toString();
-            return addressFrom;
-        } catch (Exception e){
-            /**
-             * it might be from an address that we can't get
-             */
-            return null;
-        }
-    }
 
     /**
      * Get the timestamp of the transaction

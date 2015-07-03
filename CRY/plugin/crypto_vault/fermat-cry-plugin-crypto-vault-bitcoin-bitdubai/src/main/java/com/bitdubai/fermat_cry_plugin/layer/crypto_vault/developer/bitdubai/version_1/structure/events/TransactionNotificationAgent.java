@@ -299,7 +299,7 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
                 PlatformEvent event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE);
                 event.setSource(EventSource.CRYPTO_VAULT);
 
-                logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), null, "Found transactions pending to be notified! Raising INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE event.","Found transactions pending to be notified! Raising INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE event.");
+                //logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), null, "Found transactions pending to be notified! Raising INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE event.","Found transactions pending to be notified! Raising INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE event.");
                 eventManager.raiseEvent(event);
 
                 /**
@@ -308,7 +308,7 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
                  */
                 int iterations = db.updateTransactionProtocolStatus(true);
 
-                logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "No other plugin is consuming Vault transactions.", "Transaction Protocol Notification Agent: iteration number " + iterations + " without other plugins consuming transaction.","Transaction Protocol Notification Agent: iteration number " + iterations + " without other plugins consuming transaction.");
+                //logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "No other plugin is consuming Vault transactions.", "Transaction Protocol Notification Agent: iteration number " + iterations + " without other plugins consuming transaction.","Transaction Protocol Notification Agent: iteration number " + iterations + " without other plugins consuming transaction.");
                 if (ITERATIONS_THRESHOLD < iterations){
                     System.err.println("Transaction Protocol Notification Agent: reached threshold of maximun iterations without any plugin consuming transactions.");
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new LimitReachedTransactionNotificationAgentException());
@@ -327,10 +327,7 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
 
         private boolean isTransactionToBeNotified() throws CantExecuteQueryException {
             CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
-            if (db.isPendingTransactions())
-                return  true;
-            else
-                return  false;
+           return db.isPendingTransactions();
 
         }
     }
