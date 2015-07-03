@@ -1,7 +1,0 @@
-package com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions;
-
-/**
- * Created by arturo on 05/05/15.
- */
-public class CantReadEvent extends Exception {
-}

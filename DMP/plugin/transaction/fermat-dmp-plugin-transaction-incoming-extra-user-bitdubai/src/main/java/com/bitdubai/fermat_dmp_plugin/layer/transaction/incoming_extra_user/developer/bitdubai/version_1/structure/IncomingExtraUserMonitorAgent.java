@@ -6,6 +6,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.dev
  */
 
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
@@ -21,7 +22,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventSou
 import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.DealsWithIncomingCrypto;
 import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantAcknowledgeTransactionException;
-import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantReadEvent;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantReadEventException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.DealsWithRegistry;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.TransactionAgent;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantStartAgentException;
@@ -121,8 +122,10 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
             this.agentThread.start();
         }
         catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
-            throw new CantStartAgentException();
+            if(exception instanceof FermatException)
+                throw new CantStartAgentException(CantStartAgentException.DEFAULT_MESSAGE, exception, null, "You should inspect the cause");
+            else
+                throw new CantStartAgentException(CantStartAgentException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "You should inspect the cause");
         }
 
     }
@@ -213,15 +216,12 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
          */
         @Override
         public void run() {
-
             /**
              * Infinite loop.
              */
             running.set(true);
 
             while (running.get()) {
-
-
                 /**
                  * Sleep for a while.
                  */
@@ -245,34 +245,6 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
                 }
             }
             cleanResources();
-            /*
-            while (true) {
-
-
-                /**
-                 * Sleep for a while.
-                 *
-                try {
-                    Thread.sleep(SLEEP_TIME);
-                } catch (InterruptedException interruptedException) {
-                    cleanResources();
-                    return;
-                }
-
-                /**
-                 * Now I do the main task.
-                 *
-                doTheMainTask();
-
-                /**
-                 * Check if I have been Interrupted.
-                 *
-                if (Thread.currentThread().isInterrupted()) {
-                    cleanResources();
-                    running.set(false);
-                    return;
-                }
-            }*/
         }
 
         private void doTheMainTask() {
@@ -280,9 +252,10 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
             IncomingExtraUserRegistry.EventWrapper eventWrapper = null;
             try {
                 eventWrapper = this.registry.getNextPendingEvent();
-            } catch (CantReadEvent cantReadEvent) {
+            } catch (CantReadEventException cantReadEvent) {
                 // we can report the exception and try again in next call.
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantReadEvent);
+                return;
             }
             if(eventWrapper != null){
                 System.out.println("TTF - EXTRA USER MONITOR: NEW EVENT DETECTED");

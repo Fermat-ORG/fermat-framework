@@ -67,7 +67,6 @@ public class StopTest {
             if(i>200)
                 break;
         }
-        System.out.println("Vueltas " + i + " " + testMonitorAgent.isRunning());
         assertThat(i).isLessThan(200);
 
     }
