@@ -1,20 +1,25 @@
 package com.bitdubai.android_core.app;
 
+import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -122,6 +127,8 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
     private ViewGroup collection;
     private Platform platform;
     private SearchView mSearchView;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -210,6 +217,11 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
             int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
             this.abTitle = (TextView) findViewById(titleId);
 
+            String status_color=this.activity.getStatusBarColor();
+            if(this.activity.getStatusBarColor()!=null){
+                setStatusBarColor(this.activity.getStatusBarColor());
+
+            }
 
             ApplicationSession.setActivityProperties(this, getWindow(), getResources(), tabStrip, getActionBar(), titleBar, abTitle, Title);
 
@@ -244,6 +256,27 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
 
             Toast.makeText(getApplicationContext(), "Error in NavigateWallet " + e.getMessage(),
                     Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void setStatusBarColor(String color){
+        try {
+
+            Window window =this.getWindow();
+
+            // clear FLAG_TRANSLUCENT_STATUS flag:
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+            // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+            // finally change the color
+            window.setStatusBarColor(this.getResources().getColor(com.bitdubai.sub_app.developer.R.color.wallet_factory_orange));
+            Color color_status = new Color();
+            window.setStatusBarColor(color_status.parseColor("#b46a54"));
+        }catch (Exception e){
+            Log.d("DatabaseToolsFragment", "Versión del sdk no compatible con el cambio de color del status bar");
         }
     }
 

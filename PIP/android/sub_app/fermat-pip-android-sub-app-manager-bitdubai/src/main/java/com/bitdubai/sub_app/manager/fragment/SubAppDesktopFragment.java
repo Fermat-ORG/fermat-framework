@@ -50,7 +50,7 @@ public class SubAppDesktopFragment extends Fragment {
                 {  "true"
                 };
         String[] sub_app_names =
-                { "Developer App"
+                { "Developer"
                 };
 
 
