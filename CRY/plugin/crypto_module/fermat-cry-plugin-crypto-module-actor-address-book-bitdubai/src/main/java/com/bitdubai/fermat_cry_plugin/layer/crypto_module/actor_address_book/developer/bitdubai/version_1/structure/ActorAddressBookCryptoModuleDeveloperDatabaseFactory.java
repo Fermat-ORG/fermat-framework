@@ -14,8 +14,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.exceptions.CantInitializeActorAddressBookException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.exceptions.CantInitializeActorAddressBookCryptoModuleException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ import java.util.UUID;
 /**
  * The Class <code>com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.structure.ActorAddressBookCryptoModuleDeveloperDatabaseFactory</code> have
  * <p/>
- *
+ * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 29/06/15.
  *
  * @version 1.0
@@ -60,24 +60,22 @@ public class ActorAddressBookCryptoModuleDeveloperDatabaseFactory implements Dea
     /**
      * This method open or creates the database i'll be working with
      *
-     * @throws CantInitializeActorAddressBookException
+     * @throws CantInitializeActorAddressBookCryptoModuleException
      */
-    public void initializeDatabase() throws CantInitializeActorAddressBookException {
+    public void initializeDatabase() throws CantInitializeActorAddressBookCryptoModuleException {
 
         /**
          * I will try to open the wallets' database..
          */
         try {
             this.database = this.pluginDatabaseSystem.openDatabase(this.pluginId, this.pluginId.toString());
-        }
-        catch (CantOpenDatabaseException cantOpenDatabaseException){
+        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
             /**
              * The database exists but cannot be open. I can not handle this situation.
              */
-            throw new CantInitializeActorAddressBookException();
-        }
-        catch (DatabaseNotFoundException databaseNotFoundException) {
+            throw new CantInitializeActorAddressBookCryptoModuleException();
+        } catch (DatabaseNotFoundException databaseNotFoundException) {
 
             ActorAddressBookCryptoModuleDatabaseFactory databaseFactory = new ActorAddressBookCryptoModuleDatabaseFactory();
             databaseFactory.setPluginDatabaseSystem(this.pluginDatabaseSystem);
@@ -87,15 +85,14 @@ public class ActorAddressBookCryptoModuleDeveloperDatabaseFactory implements Dea
              */
             try {
 
-                this.database =  databaseFactory.createDatabase(this.pluginId, this.pluginId);
+                this.database = databaseFactory.createDatabase(this.pluginId, this.pluginId);
 
-            }
-            catch (CantCreateDatabaseException cantCreateDatabaseException){
+            } catch (CantCreateDatabaseException cantCreateDatabaseException) {
 
                 /**
                  * The database cannot be created. I can not handle this situation.
                  */
-                throw new CantInitializeActorAddressBookException();
+                throw new CantInitializeActorAddressBookCryptoModuleException();
             }
         }
     }

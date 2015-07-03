@@ -51,6 +51,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.Tab;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.TabStrip;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.TitleBar;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.Wallet;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Fragments;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime.WalletRuntimeManager;
@@ -142,7 +143,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
             // get instances of Runtime middleware object
             this.appRuntimeMiddleware = ApplicationSession.getAppRuntime();
             this.walletRuntimeMiddleware = ApplicationSession.getwalletRuntime();
-            this.errorManager = ApplicationSession.getErrorManager();
+            this.errorManager = (ErrorManager) platformContext.getAddon(Addons.ERROR_MANAGER);
 
             //load wallet UI
             NavigateWallet();
@@ -198,7 +199,11 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
             if(tabs == null)
                 ((PagerSlidingTabStrip) findViewById(R.id.tabs)).setVisibility(View.INVISIBLE);
             else{
-                ((PagerSlidingTabStrip) findViewById(R.id.tabs)).setVisibility(View.VISIBLE);
+                //acá puedo cambiar todo esto, mati
+                PagerSlidingTabStrip pagerSlidingTabStrip=((PagerSlidingTabStrip) findViewById(R.id.tabs));
+                pagerSlidingTabStrip.setVisibility(View.VISIBLE);
+                //pagerSlidingTabStrip.setTextColor(Color.GREEN);
+                //pagerSlidingTabStrip.setBackgroundColor(Color.GREEN);
                 this.tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
 
             }
@@ -262,17 +267,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
                 switch (type) {
                     case CWP_SHELL_LOGIN:
                         break;
-                    case CWP_WALLET_MANAGER_MAIN:
-
-                        //Matias this flag is because this fragment appair two times and when press the back button in a fragment
-                        //the application crash
-                        if(!flag) {
-                            //fragments.add(android.support.v4.app.Fragment.instantiate(this, WalletDesktopFragment.class.getName()));
-                    //        fragments.add(android.support.v4.app.Fragment.instantiate(this, WalletDesktopFragment.class.getName()));
-                            flag=true;
-                        }
-                        break;
-                    case CWP_WALLET_MANAGER_SHOP:
+                   case CWP_WALLET_MANAGER_SHOP:
                      //   fragments.add(android.support.v4.app.Fragment.instantiate(this, ShopDesktopFragment.class.getName()));
                         break;
                    // case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE :
@@ -582,11 +577,44 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
         //NavigateWallet();
     }
 
+    int mRequestCode;
+    int mResultCode;
+    Intent mData;
+    boolean returningWithResult = false;
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+        returningWithResult = true;
+        this.mData = data;
+        mRequestCode = requestCode;
+        mResultCode = resultCode;
+
+        //it returns to fragment call
         super.onActivityResult(requestCode, resultCode, data);
 
+    }
+
+    @Override
+    protected void onPostResume() {
+
+
+        super.onPostResume();
+        if (returningWithResult)
+        {
+             //Get actual wallet to execute activity result method
+            Activity wallet = this.walletRuntimeMiddleware.getLasActivity();
+
+            if (wallet.getType() == Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN)
+            {
+                android.support.v4.app.Fragment currentFragment =  SendFragment.newInstance(0);
+                currentFragment.onActivityResult(mRequestCode, mResultCode, mData);
+            }
+
+        }
+
+
+        returningWithResult = false;
     }
 
     public void restoreActionBar() {
@@ -785,33 +813,33 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
                     case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE:
                         bitcoinPlatform = new com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform();
                         bitcoinPlatform.setNicheWalletTypeCryptoWalletManager((CryptoWalletManager) platformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE));
-
+                        bitcoinPlatform.setErrorManager((ErrorManager)platformContext.getAddon(Addons.ERROR_MANAGER));
                         currentFragment =  BalanceFragment.newInstance(0);
                         break;
                     case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE:
                         bitcoinPlatform = new com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform();
                         bitcoinPlatform.setNicheWalletTypeCryptoWalletManager((CryptoWalletManager) platformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE));
-
+                        bitcoinPlatform.setErrorManager((ErrorManager) platformContext.getAddon(Addons.ERROR_MANAGER));
                         currentFragment = ReceiveFragment.newInstance(0);
                         break;
                     case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND:
                         bitcoinPlatform = new com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform();
                         bitcoinPlatform.setNicheWalletTypeCryptoWalletManager((CryptoWalletManager) platformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE));
-
+                        bitcoinPlatform.setErrorManager((ErrorManager) platformContext.getAddon(Addons.ERROR_MANAGER));
                         currentFragment =  SendFragment.newInstance(0);
                         break;
 
                     case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS:
                         bitcoinPlatform = new com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform();
                         bitcoinPlatform.setNicheWalletTypeCryptoWalletManager((CryptoWalletManager) platformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE));
-
+                        bitcoinPlatform.setErrorManager((ErrorManager) platformContext.getAddon(Addons.ERROR_MANAGER));
                         currentFragment =  TransactionsFragment.newInstance(0);
 
                         break;
                     case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS:
                         bitcoinPlatform = new com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform();
                         bitcoinPlatform.setNicheWalletTypeCryptoWalletManager((CryptoWalletManager) platformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE));
-
+                        bitcoinPlatform.setErrorManager((ErrorManager) platformContext.getAddon(Addons.ERROR_MANAGER));
                         currentFragment =  ContactsFragment.newInstance(0);
                         break;
 

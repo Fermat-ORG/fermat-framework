@@ -12,7 +12,8 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.CantGetWalletAddressBookRegistryException;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.CantGetWalletCryptoAddressBookException;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.CantGetWalletAddressBookException;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.WalletAddressBookNotFoundException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.DealsWithWalletAddressBook;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookRecord;
@@ -55,8 +56,7 @@ public class TransactionExecutor implements DealsWithBitcoinWallet, DealsWithWal
     }
 
 
-
-    public void executeTransaction(Transaction<CryptoTransaction> transaction) throws CantGetWalletAddressBookRegistryException, CantGetWalletCryptoAddressBookException, CantLoadWalletException, CantRegisterCreditException {
+    public void executeTransaction(Transaction<CryptoTransaction> transaction) throws CantGetWalletAddressBookRegistryException, CantGetWalletAddressBookException, CantLoadWalletException, CantRegisterCreditException {
 
 /*
         UUID temporalId = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
@@ -66,27 +66,28 @@ public class TransactionExecutor implements DealsWithBitcoinWallet, DealsWithWal
         if (true)
           return;
         */
-
-        UUID walletID;
-        PlatformWalletType platformWalletType;
-
-
         WalletAddressBookRegistry walletAddressBookRegistry = this.walletAddressBookManager.getWalletAddressBookRegistry();
 
-        WalletAddressBookRecord walletAddressBookRecord = walletAddressBookRegistry.getWalletCryptoAddressBookByCryptoAddress(transaction.getInformation().getAddressTo());
+        try{
+            WalletAddressBookRecord walletAddressBookRecord = walletAddressBookRegistry.getWalletCryptoAddressBookByCryptoAddress(transaction.getInformation().getAddressTo());
 
-        walletID = walletAddressBookRecord.getWalletId();
-        platformWalletType = walletAddressBookRecord.getWalletType();
+            UUID walletID = walletAddressBookRecord.getWalletId();
+            PlatformWalletType platformWalletType = walletAddressBookRecord.getWalletType();
 
-        switch (platformWalletType) {
-            case BASIC_WALLET_BITCOIN_WALLET:
-                BitcoinWallet bitcoinWallet = bitcoinWalletManager.loadWallet(walletID);
-                bitcoinWallet.credit(generateBitcoinTransaction(transaction.getInformation()));
-                System.out.println("TTF - Transaction applie by transaction executor");
-                return;
-            default:
-                break;
+            switch (platformWalletType) {
+                case BASIC_WALLET_BITCOIN_WALLET:
+                    BitcoinWallet bitcoinWallet = bitcoinWalletManager.loadWallet(walletID);
+                    bitcoinWallet.credit(generateBitcoinTransaction(transaction.getInformation()));
+                    System.out.println("TTF - Transaction applie by transaction executor");
+                    return;
+                default:
+                    break;
+            }
+        } catch(WalletAddressBookNotFoundException exception){
+            //TODO LUIS we should define what is going to happen in this case, in the meantime we throw an exception
+            throw new CantGetWalletAddressBookException(CantGetWalletAddressBookException.DEFAULT_MESSAGE, exception, "", "Check the cause to see what happened");
         }
+
     }
 
 

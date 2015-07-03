@@ -6,10 +6,11 @@ import com.bitdubai.fermat_api.FermatException
  * Created by jorgegonzalez on 2015.06.30..
  */
 
-class ErrorReport(fermatException: FermatException) {
+class ErrorReport(source: String, severity: String, fermatException: FermatException) {
 
   val reportSeparator = "========================================================================================================================================================\n"
-  val header = reportSeparator + "Fermat Error Manager * Unexpected Exception Report\n" + reportSeparator
+  val headerInfo =   "Source: " + source + "\n" + "Severity: " + severity + "\n"
+  val header = reportSeparator + "Fermat Error Manager * Unexpected Exception Report\n" + reportSeparator + headerInfo
   val footer = "Exceptions Processed: " + fermatException.getDepth + "\n" + reportSeparator
   val exceptionSeparator = "********************************************************************************************************************************************************\n"
 
@@ -18,10 +19,9 @@ class ErrorReport(fermatException: FermatException) {
   }
 
   private def constructExceptionReports(exception : FermatException): String ={
-    if(exception == null){
-      return ""
-    }
-    return  constructExceptionReports(exception.getCause) + exceptionSeparator + exception.toString + exceptionSeparator
+    if(exception == null) return ""
+
+    return constructExceptionReports(exception getCause) + exceptionSeparator + exception.toString + exceptionSeparator
   }
 
 }

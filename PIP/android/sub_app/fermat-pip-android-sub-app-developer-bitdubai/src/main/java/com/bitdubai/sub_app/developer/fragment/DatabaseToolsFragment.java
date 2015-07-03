@@ -1,16 +1,21 @@
 package com.bitdubai.sub_app.developer.fragment;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
@@ -18,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.sub_app.developer.R;
@@ -36,11 +42,14 @@ import java.util.List;
  * haves all methods for the database tools activity of a developer
  * <p/>
  * <p/>
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 25/06/15.
+ * Created by Mati
  *
  * @version 1.0
  */
-public class DatabaseToolsFragment extends Fragment {
+public class DatabaseToolsFragment extends Fragment{
+
+
+    public static final String TAG_DATABASE_TOOLS_FRAGMENT= "DatabaseToolsFragment";
 
     private static final String ARG_POSITION = "position";
     View rootView;
@@ -51,6 +60,8 @@ public class DatabaseToolsFragment extends Fragment {
 
     private ArrayList<Resource> mlist;
 
+    private GridView gridView;
+
     public static DatabaseToolsFragment newInstance(int position) {
         DatabaseToolsFragment f = new DatabaseToolsFragment();
         Bundle b = new Bundle();
@@ -58,6 +69,7 @@ public class DatabaseToolsFragment extends Fragment {
         f.setArguments(b);
         return f;
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,12 +87,35 @@ public class DatabaseToolsFragment extends Fragment {
             showMessage("Unexpected error get tool manager - " + ex.getMessage());
             ex.printStackTrace();
         }
+
+        setStatusBarColor();
+
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void setStatusBarColor(){
+        try {
+
+            Window window = getActivity().getWindow();
+
+            // clear FLAG_TRANSLUCENT_STATUS flag:
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+            // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+            // finally change the color
+            window.setStatusBarColor(getActivity().getResources().getColor(R.color.wallet_factory_orange ));
+        }catch (Exception e){
+            Log.d("DatabaseToolsFragment","Versión del sdk no compatible con el cambio de color del status bar");
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_database_tools, container, false);
-        final GridView gridView = new GridView(getActivity());
+        super.onCreateView(inflater, container, savedInstanceState);
+        rootView = inflater.inflate(R.layout.start, container, false);
+        gridView =(GridView) rootView.findViewById(R.id.gridView);
         try {
             // Get ListView object from xml
             //final ListView listView = (ListView) rootView.findViewById(R.id.lista1);
@@ -88,47 +123,7 @@ public class DatabaseToolsFragment extends Fragment {
             List<Plugins> plugins = databaseTools.getAvailablePluginList();
             List<Addons> addons = databaseTools.getAvailableAddonList();
 
-            //List<App> lstCompleta = new ArrayList<>();
 
-
-
-            //for(Plugins plugin : plugins){ lstCompleta.add(String.valueOf(plugin.getKey())); }
-            //for(Addons addon : addons){ lstCompleta.add(String.valueOf(addon.getKey())); }
-
-            /*String[] availableResources;
-            if (lstCompleta.size() > 0) {
-                availableResources = new String[lstCompleta.size()];
-                for(int i = 0; i < lstCompleta.size() ; i++) {
-                    availableResources[i] = lstCompleta.get(i);
-                }
-            } else {
-                availableResources = new String[0];
-            }*/
-
-            /*ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity().getApplicationContext(),
-                    android.R.layout.simple_list_item_1, android.R.id.text1, availableResources);
-            */
-
-            String[] company_picture =
-                    {"wallet_store_cover_photo_girl",
-                            "wallet_store_cover_photo_boy",
-                            "wallet_store_cover_photo_lady",
-                            "wallet_store_cover_fermat",
-                            "wallet_store_cover_photo_boca_juniors",
-                            "wallet_store_cover_photo_carrefour",
-                            "wallet_store_cover_photo_gucci",
-                            "wallet_store_cover_photo_bank_itau",
-                            "wallet_store_cover_photo_mcdonals",
-                            "wallet_store_cover_photo_vans",
-                            "wallet_store_cover_photo_samsung",
-                            "wallet_store_cover_photo_bank_popular",
-                            "wallet_store_cover_photo_sony",
-                            "wallet_store_cover_photo_bmw",
-                            "wallet_store_cover_photo_hp",
-                            "wallet_store_cover_photo_billabong",
-                            "wallet_store_cover_photo_starbucks"
-
-                    };
 
             mlist=new ArrayList<Resource>();
 
@@ -137,7 +132,7 @@ public class DatabaseToolsFragment extends Fragment {
 
                     item.picture = "plugin";
                     item.resource = plugins.get(i).getKey();
-                    item.developer = plugins.get(i).getDeveloper().toString();
+                    //item.developer = plugins.get(i).getDeveloper().toString();
                     item.type=Resource.TYPE_PLUGIN;
                     mlist.add(item);
                 //}
@@ -147,7 +142,7 @@ public class DatabaseToolsFragment extends Fragment {
 
                 item.picture = "addon";
                 item.resource = addons.get(i).getKey();
-                item.developer = plugins.get(i).getDeveloper().toString();
+                //item.developer = plugins.get(i).getDeveloper().toString();
                 item.type=Resource.TYPE_ADDON;
                 mlist.add(item);
                 //}
@@ -166,50 +161,14 @@ public class DatabaseToolsFragment extends Fragment {
             _adpatrer.notifyDataSetChanged();
             gridView.setAdapter(_adpatrer);
 
-            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                public void onItemClick(AdapterView<?> parent, View v,
-                                        int position, long id) {
-                    Resource item=(Resource) gridView.getItemAtPosition(position);
-                    DatabaseToolsDatabaseListFragment databaseToolsDatabaseListFragment = new DatabaseToolsDatabaseListFragment();
-
-                    databaseToolsDatabaseListFragment.setResource(item);
-
-                    FragmentTransaction FT = getFragmentManager().beginTransaction();
-
-                    FT.replace(R.id.hola, databaseToolsDatabaseListFragment);
-
-                    FT.commit();
-                    return;
-                }
-            });
-
-
-            /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    TextView labelDatabase = (TextView) rootView.findViewById(R.id.labelDatabase);
-                    labelDatabase.setVisibility(View.GONE);
-                    App item = (App) listView.getItemAtPosition(position);
-
-                    DatabaseToolsDatabaseListFragment databaseToolsDatabaseListFragment = new DatabaseToolsDatabaseListFragment();
-
-                    databaseToolsDatabaseListFragment.setResource(item.company);
-
-                    FragmentTransaction FT = getFragmentManager().beginTransaction();
-
-                    FT.replace(R.id.hola, databaseToolsDatabaseListFragment);
-
-                    FT.commit();
-                }
-            });
-            */
-
             //listView.setAdapter(adapter);
         } catch (Exception e) {
             showMessage("DatabaseTools Fragment onCreateView Exception - " + e.getMessage());
             e.printStackTrace();
         }
-        LinearLayout l=(LinearLayout)rootView.findViewById(R.id.hola);
-        l.addView(gridView);
+
+        //LinearLayout l=(LinearLayout)rootView.findViewById(R.id.hola);
+        //l.addView(gridView);
 
         return rootView;
     }
@@ -230,6 +189,7 @@ public class DatabaseToolsFragment extends Fragment {
 
 
 
+
     public class AppListAdapter extends ArrayAdapter<Resource> {
 
 
@@ -238,7 +198,7 @@ public class DatabaseToolsFragment extends Fragment {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
 
             Resource item = getItem(position);
 
@@ -246,10 +206,34 @@ public class DatabaseToolsFragment extends Fragment {
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
                 convertView = inflater.inflate(R.layout.shell_wallet_desktop_front_grid_item, parent, false);
+
+
                 holder = new ViewHolder();
 
 
+
+
                 holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
+
+                holder.imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        Resource item=(Resource) gridView.getItemAtPosition(position);
+                        Toast.makeText(getActivity(),item.resource,Toast.LENGTH_SHORT).show();
+                        DatabaseToolsDatabaseListFragment databaseToolsDatabaseListFragment = new DatabaseToolsDatabaseListFragment();
+
+                        databaseToolsDatabaseListFragment.setResource(item);
+
+                        FragmentTransaction FT = getFragmentManager().beginTransaction();
+
+
+                        //FT.add(databaseToolsDatabaseListFragment, TAG_DATABASE_TOOLS_FRAGMENT);
+                        FT.replace(R.id.hola, databaseToolsDatabaseListFragment);
+
+                        FT.commit();
+                    }
+                });
                 holder.companyTextView = (TextView) convertView.findViewById(R.id.company_text_view);
 
 
@@ -264,18 +248,23 @@ public class DatabaseToolsFragment extends Fragment {
 
             switch (item.picture) {
                 case "plugin":
-                    holder.imageView.setImageResource(R.drawable.plugin);
+                    holder.imageView.setImageResource(R.drawable.addon);
                     holder.imageView.setTag("CPWWRWAKAV1M|1");
                     break;
                 case "addon":
-                    holder.imageView.setImageResource(R.drawable.addon);
+                    holder.imageView.setImageResource(R.drawable.plugin);
                     holder.imageView.setTag("CPWWRWAKAV1M|2");
                     break;
                 default:
-                    holder.imageView.setImageResource(R.drawable.addon);
-                    holder.imageView.setTag("CPWWRWAKAV1M|2");
+                    holder.imageView.setImageResource(R.drawable.fermat);
+                    holder.imageView.setTag("CPWWRWAKAV1M|3");
                     break;
             }
+
+            Window window = getActivity().getWindow();
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+//            window.setStatusBarColor(getActivity().getResources().getColor(R.color.material_blue_grey_800));
 
 
             return convertView;

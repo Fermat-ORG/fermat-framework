@@ -6,6 +6,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.dev
  */
 
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
@@ -20,13 +21,15 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.Unexpect
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventSource;
 import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.DealsWithIncomingCrypto;
 import com.bitdubai.fermat_cry_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
-import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantReadEvent;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantAcknowledgeTransactionException;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantReadEventException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.DealsWithRegistry;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.TransactionAgent;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.util.SourceAdministrator;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Este agente corre en su propio Thread.
@@ -49,7 +52,7 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
     /**
      * DealsWithErrors Interface member variables.
      */
-    ErrorManager errorManager;
+    private ErrorManager errorManager;
 
     /**
      * DealsWithIncomingCrypto Interface member variables.
@@ -69,6 +72,11 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
     private MonitorAgent monitorAgent;
 
 
+    public IncomingExtraUserMonitorAgent(final ErrorManager errorManager, final IncomingCryptoManager incomingCryptoManager, final IncomingExtraUserRegistry registry){
+        this.errorManager = errorManager;
+        this.incomingCryptoManager = incomingCryptoManager;
+        this.registry = registry;
+    }
 
     /**
      *DealsWithErrors Interface implementation.
@@ -114,24 +122,37 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
             this.agentThread.start();
         }
         catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
-            throw new CantStartAgentException();
+            if(exception instanceof FermatException)
+                throw new CantStartAgentException(CantStartAgentException.DEFAULT_MESSAGE, exception, null, "You should inspect the cause");
+            else
+                throw new CantStartAgentException(CantStartAgentException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "You should inspect the cause");
         }
 
     }
 
     @Override
     public void stop() {
-        
-        this.agentThread.interrupt();
-        
+        //this.agentThread.interrupt();
+        this.monitorAgent.stop();
     }
 
+    public boolean isRunning(){
+        return this.monitorAgent.isRunning();
+    }
 
 
 
     private static class MonitorAgent implements DealsWithIncomingCrypto, DealsWithErrors, DealsWithRegistry, Runnable  {
 
+        private AtomicBoolean running = new AtomicBoolean(false);
+
+        public boolean isRunning(){
+            return running.get();
+        }
+
+        public void stop(){
+            running.set(false);
+        }
         /**
          * DealsWithCryptoVault Interface member variables.
          */
@@ -195,12 +216,12 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
          */
         @Override
         public void run() {
-
             /**
              * Infinite loop.
              */
-            while (true) {
+            running.set(true);
 
+            while (running.get()) {
                 /**
                  * Sleep for a while.
                  */
@@ -215,15 +236,15 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
                  * Now I do the main task.
                  */
                 doTheMainTask();
-            
+
                 /**
                  * Check if I have been Interrupted.
                  */
                 if (Thread.currentThread().isInterrupted()) {
-                    cleanResources();
-                    return;
+                    break;
                 }
             }
+            cleanResources();
         }
 
         private void doTheMainTask() {
@@ -231,9 +252,10 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
             IncomingExtraUserRegistry.EventWrapper eventWrapper = null;
             try {
                 eventWrapper = this.registry.getNextPendingEvent();
-            } catch (CantReadEvent cantReadEvent) {
+            } catch (CantReadEventException cantReadEvent) {
                 // we can report the exception and try again in next call.
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantReadEvent);
+                return;
             }
             if(eventWrapper != null){
                 System.out.println("TTF - EXTRA USER MONITOR: NEW EVENT DETECTED");
@@ -249,26 +271,21 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
                 }
 
                 // Now we ask for the pending transactions
-                List<Transaction<CryptoTransaction>> transactionList = null;
-
                 try {
-                    transactionList = source.getPendingTransactions(Specialist.EXTRA_USER_SPECIALIST);
+                    List<Transaction<CryptoTransaction>> transactionList = source.getPendingTransactions(Specialist.EXTRA_USER_SPECIALIST);
+                    System.out.println("TTF - EXTRA USER MONITOR: " + transactionList.size() + " TRAMSACTION(s) DETECTED");
+                    // Now we save the list in the registry
+                    this.registry.acknowledgeTransactions(transactionList);
+                    System.out.println("TTF - EXTRA USER MONITOR: " + transactionList.size() + " TRAMSACTION(s) ACKNOWLEDGED");
                 } catch (CantDeliverPendingTransactionsException e) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                     //if somethig wrong happenned we try in the next round
                     return;
+                } catch (CantAcknowledgeTransactionException e) {
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    //if somethig wrong happenned we try in the next round
+                    return;
                 }
-                System.out.println("TTF - EXTRA USER MONITOR: " + transactionList.size() + " TRAMSACTION(s) DETECTED");
-
-                // Now we save the list in the registry
-                if(transactionList != null){
-                    this.registry.acknowledgeTransactions(transactionList);
-                } else {
-                  // if sombething failed we try in next round
-                  return;
-                }
-
-                System.out.println("TTF - EXTRA USER MONITOR: " + transactionList.size() + " TRAMSACTION(s) ACKNOWLEDGED");
 
 
                 // Now we take all the transactions in state (ACKNOWLEDGE,TO_BE_NOTIFIED)

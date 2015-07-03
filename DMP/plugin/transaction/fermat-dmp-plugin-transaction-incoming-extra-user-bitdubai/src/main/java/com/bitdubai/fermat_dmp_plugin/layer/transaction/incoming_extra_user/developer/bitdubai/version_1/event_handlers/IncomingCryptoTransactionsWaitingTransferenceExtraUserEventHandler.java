@@ -4,9 +4,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionServiceNotStartedException;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventHandler;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoTransactionsWaitingTransferenceEvent;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoTransactionsWaitingTransferenceExtraUserEvent;
-import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantSaveEvent;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserEventRecorderService;
 
 /**
@@ -39,12 +38,12 @@ public class IncomingCryptoTransactionsWaitingTransferenceExtraUserEventHandler 
             {
                 this.incomingExtraUserEventRecorderService.incomingCryptoWaitingTransference((IncomingCryptoTransactionsWaitingTransferenceExtraUserEvent) platformEvent);
             }
-            catch (CantSaveEvent cantSaveEvent)
+            catch (CantSaveEventException cantSaveEvent)
             {
                 /**
                  * The main module could not handle this exception. Me neither. Will throw it again.
                  */
-                System.err.println("CantSaveEvent: "+ cantSaveEvent.getMessage());
+                System.err.println("CantSaveEventException: "+ cantSaveEvent.getMessage());
                 cantSaveEvent.printStackTrace();
 
                 throw  cantSaveEvent;
@@ -57,7 +56,7 @@ public class IncomingCryptoTransactionsWaitingTransferenceExtraUserEventHandler 
                 System.err.println("ClassCastException: "+ classCastException.getMessage());
                 classCastException.printStackTrace();
 
-                throw  new CantSaveEvent();
+                throw  new CantSaveEventException();
             }
         }
         else

@@ -1,5 +1,10 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.BitcoinCryptoNetworkPluginRoot;
+
 import org.bitcoinj.core.AbstractBlockChain;
 import org.bitcoinj.core.Block;
 import org.bitcoinj.core.BlockChainListener;
@@ -20,8 +25,13 @@ import javax.annotation.Nullable;
 /**
  * Created by rodrigo on 27/05/15.
  */
-class BitcoinEventListeners implements BlockChainListener, PeerEventListener{
+class BitcoinEventListeners implements BlockChainListener, DealsWithLogger,  PeerEventListener{
 
+    LogManager logManager;
+    @Override
+    public void setLogManager(LogLevel logLevel, LogManager logManager) {
+        this.logManager = logManager;
+    }
 
     /**
      * BlockChainEventListener interface implementation
@@ -67,8 +77,10 @@ class BitcoinEventListeners implements BlockChainListener, PeerEventListener{
      */
     @Override
     public void receiveFromBlock(Transaction tx, StoredBlock block, AbstractBlockChain.NewBlockType blockType, int relativityOffset) throws VerificationException {
-        System.out.println("BitcoinCryptoNetwork information message: Receive from block. Transaction: " + tx.toString());
-        System.out.println("block: " + block.toString());
+        StringBuilder logAggresive = new StringBuilder("BitcoinCryptoNetwork information message: Receive from block. Transaction: " + tx.toString());
+        logAggresive.append(System.getProperty("line.separator"));
+        logAggresive.append("block: " + block.toString());
+        logManager.log(BitcoinCryptoNetworkPluginRoot.getLogLevelByClass(this.getClass().getName()), "New block Recieved", "BitcoinCryptoNetwork information message: Receive from block. Transaction: " + tx.toString(), logAggresive.toString());
 
     }
 
@@ -95,7 +107,13 @@ class BitcoinEventListeners implements BlockChainListener, PeerEventListener{
      */
     @Override
     public void onBlocksDownloaded(Peer peer, Block block, int blocksLeft) {
-        //System.out.println("Blocks Downloaded. Blocks Left " + blocksLeft);
+        StringBuilder logAggresive = new StringBuilder("New Block downloaded from Peer  " + peer.toString());
+        logAggresive.append(System.getProperty("line.separator"));
+        logAggresive.append("Blocks Left: " + blocksLeft);
+        logAggresive.append(System.getProperty("line.separator"));
+        logAggresive.append("Blocks info: " + block.toString());
+        LogLevel logLevel = BitcoinCryptoNetworkPluginRoot.getLogLevelByClass(this.getClass().getName());
+        logManager.log(logLevel, "Block Downloaded", "Block downloaded. Blocks left " + blocksLeft, logAggresive.toString());
     }
 
     /**
@@ -116,6 +134,11 @@ class BitcoinEventListeners implements BlockChainListener, PeerEventListener{
     @Override
     public void onPeerConnected(Peer peer, int peerCount) {
         System.out.println("BitcoinCryptoNetwork information message: Peer connected (total: " + peerCount + "). Peer info: " + peer.toString());
+
+        StringBuilder logAggresive = new StringBuilder("New connection to Peer " + peer.toString());
+        logAggresive.append(System.getProperty("line.separator"));
+        logAggresive.append("Total connected peers: " + peerCount);
+        logManager.log(BitcoinCryptoNetworkPluginRoot.getLogLevelByClass(this.getClass().getName()), "Connected to Peer.", "Connected to peer. Total peers are " + peerCount, logAggresive.toString());
     }
 
     /**

@@ -27,11 +27,14 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.DatabaseTool;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.ToolManager;
+import com.bitdubai.sub_app.developer.common.Databases;
+import com.bitdubai.sub_app.developer.common.Resource;
 
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TableRow.LayoutParams;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,7 +42,7 @@ import java.util.List;
  * haves all methods for the database tools activity of a developer
  * <p/>
  * <p/>
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 25/06/15.
+ * Created by MAti
  *
  * @version 1.0
  */
@@ -50,7 +53,6 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
 
     private DatabaseTool databaseTools;
 
-    private String resource;
     private DeveloperDatabase developerDatabase;
     private DeveloperDatabaseTable developerDatabaseTable;
 
@@ -58,6 +60,10 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
 
     private static Platform platform = new Platform();
 
+
+
+
+    private Resource resource;
 
     LinearLayout base;
     TableLayout tableLayout;
@@ -90,56 +96,35 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
+        super.onCreateView(inflater,container,savedInstanceState);
         rootView = inflater.inflate(R.layout.database_table_record, container, false);
-        String[] row = null;
-        String[] column=null;
+        List<String> columnNames = null;
+        List<String> values=null;
 
         try {
-            String name = resource.split(" - ")[0];
-            String type = resource.split(" - ")[1];
-            if (type.equals("Addon")) {
-                Addons addon = Addons.getByKey(name);
+            if (resource.type== Databases.TYPE_ADDON) {
+                Addons addon = Addons.getByKey(resource.resource);
                 this.developerDatabaseTableRecordList = databaseTools.getAddonTableContent(addon, developerDatabase, developerDatabaseTable);
-            } else if (type.equals("Plugin")) {
-                Plugins plugin = Plugins.getByKey(name);
+            } else if (resource.type== Databases.TYPE_PLUGIN) {
+                Plugins plugin = Plugins.getByKey(resource.resource);
                 this.developerDatabaseTableRecordList = databaseTools.getPluginTableContent(plugin, developerDatabase, developerDatabaseTable);
             }
 
-            List<String> columnNames = developerDatabaseTable.getFieldNames();
-            column = new String[columnNames.size()];
+            columnNames = developerDatabaseTable.getFieldNames();
             int i=0;
-            for(String s:columnNames){
-                column[i]=s;
-            }
-            // Get ListView object from xml
-            //final ListView listView = (ListView) rootView.findViewById(R.id.lista1);
-
-            TextView labelDatabase = (TextView) rootView.findViewById(R.id.labelDatabase);
-            labelDatabase.setText(developerDatabase.getName()+" - Table "+developerDatabaseTable.getName()+" records");
-
-            String[] listString;
 
             if (developerDatabaseTableRecordList.size() > 0) {
-                /*listString = new String[developerDatabaseTableRecordList.size()+1];
-                listString[0] = strJoin(columnNames, " | ");
-                for(int i = 1; i < developerDatabaseTableRecordList.size()+1 ; i++){
-                    listString[i] = strJoin(developerDatabaseTableRecordList.get(i-1).getValues(), " | ");
-                }*/
-                row = new String[developerDatabaseTableRecordList.size()];
                 i=0;
-                for(DeveloperDatabaseTableRecord dtr:developerDatabaseTableRecordList){
-
-                    row[i]=dtr.toString();
+                values =new ArrayList<String>();
+                for(DeveloperDatabaseTableRecord developerDatabaseTableRecord:developerDatabaseTableRecordList){
+                    values=(developerDatabaseTableRecord.getValues());
+                    i++;
                 }
             } else {
                 //listString = new String[0];
+
             }
 
-            //ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity().getApplicationContext(),
-            //        android.R.layout.simple_list_item_1, android.R.id.text1, listString);
-
-            //listView.setAdapter(adapter);
         } catch (Exception e) {
             showMessage("DatabaseTools Database Table List Fragment onCreateView Exception - " + e.getMessage());
             e.printStackTrace();
@@ -148,116 +133,66 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
 
         base=(LinearLayout)rootView.findViewById(R.id.base);
 
-        //mati
-        //tableLayout = (TableLayout) rootView.findViewById(R.id.tableLayout);
 
-        //BuildTable(5, 8);
+        ScrollView scrollView = new ScrollView(getActivity());
+        if(developerDatabaseTableRecordList!=null){
+            TableLayout tableLayout = createTable(values, columnNames, developerDatabaseTableRecordList.size(), columnNames.size());
+            HorizontalScrollView horizontalScrollView = new HorizontalScrollView(getActivity());
 
-        ScrollView sv = new ScrollView(getActivity());
+            horizontalScrollView.addView(tableLayout);
+            scrollView.addView(horizontalScrollView);
+            base.addView(scrollView);
+        }
 
-        TableLayout tableLayout = createTableLayout(row, column,row.length, column.length);
-        HorizontalScrollView hsv = new HorizontalScrollView(getActivity());
-
-        hsv.addView(tableLayout);
-        sv.addView(hsv);
-        base.addView(sv);
         return rootView;
     }
 
-    private TableLayout createTableLayout(String [] rv, String [] cv,int rowCount, int columnCount) {
-        // 1) Create a tableLayout and its params
+    private TableLayout createTable(List<String> lstRows, List<String> lstColumns,int rowCount, int columnCount){
+
+
+        TableLayout tableLayout= new TableLayout(getActivity());
         TableLayout.LayoutParams tableLayoutParams = new TableLayout.LayoutParams();
-        TableLayout tableLayout = new TableLayout(getActivity());
         tableLayout.setBackgroundColor(Color.BLACK);
+        tableLayout.setPadding(3,3,3,3);
+        try {
+            TableRow.LayoutParams tableRowParams = new TableRow.LayoutParams();
+            tableRowParams.setMargins(3, 3, 3, 3);
+            tableRowParams.weight = 1;
 
-        // 2) create tableRow params
-        TableRow.LayoutParams tableRowParams = new TableRow.LayoutParams();
-        tableRowParams.setMargins(1, 1, 1, 1);
-        tableRowParams.weight = 1;
-
-        for (int i = 0; i < rowCount; i++) {
-            // 3) create tableRow
             TableRow tableRow = new TableRow(getActivity());
-            tableRow.setBackgroundColor(Color.BLACK);
+            if(lstColumns!=null) {
 
-            for (int j= 0; j < columnCount; j++) {
-                // 4) create textView
-                TextView textView = new TextView(getActivity());
-                //  textView.setText(String.valueOf(j));
-                textView.setBackgroundColor(Color.WHITE);
-                textView.setGravity(Gravity.CENTER);
+                for (int i = 0; i < lstColumns.size(); i++) {
+                    TextView textView = new TextView(getActivity());
+                    textView.setBackgroundColor(Color.WHITE);
+                    textView.setText(lstColumns.get(i));
+                    textView.setTextColor(Color.BLACK);
+                    // 2) create tableRow params
 
-                String s1 = Integer.toString(i);
-                String s2 = Integer.toString(j);
-                String s3 = s1 + s2;
-                int id = Integer.parseInt(s3);
-                Log.d("TAG", "-___>"+id);
-                if (i ==0 && j==0){
-                    textView.setText("0==0");
-                } else if(i==0){
-                    Log.d("TAAG", "set Column Headers");
-                    textView.setText(cv[j-1]);
-                }else if( j==0){
-                    Log.d("TAAG", "Set Row Headers");
-                    textView.setText(rv[i-1]);
-                }else {
-                    textView.setText(""+id);
-                    // check id=23
-                    if(id==23){
-                        textView.setText("ID=23");
-
-                    }
+                    tableRow.addView(textView, tableRowParams);
                 }
+            }
+            tableLayout.addView(tableRow);
+            if(lstRows!=null) {
+                tableRow = new TableRow(getActivity());
+                for (int i = 0; i < lstRows.size(); i++) {
+                    TextView textView = new TextView(getActivity());
+                    textView.setBackgroundColor(Color.WHITE);
+                    textView.setText(lstRows.get(i));
+                    textView.setTextColor(Color.BLACK);
+                    tableRow.addView(textView, tableRowParams);
 
-                // 5) add textView to tableRow
-                tableRow.addView(textView, tableRowParams);
+                }
+                tableLayout.addView(tableRow,tableLayoutParams);
             }
 
-            // 6) add tableRow to tableLayout
-            tableLayout.addView(tableRow, tableLayoutParams);
+        }catch (Exception e){
+            showMessage("Table layout create Exception - " + e.getMessage());
+            e.printStackTrace();
         }
-
         return tableLayout;
     }
 
-    private void BuildTable(int rows, int cols) {
-
-        // outer for loop
-        for (int i = 1; i <= rows; i++) {
-
-            TableRow row = new TableRow(getActivity());
-            row.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
-                    LayoutParams.WRAP_CONTENT));
-
-            // inner for loop
-            for (int j = 1; j <= cols; j++) {
-
-                TextView tv = new TextView(getActivity());
-                tv.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,
-                        LayoutParams.WRAP_CONTENT));
-                //tv.setBackgroundResource(R.drawable.cell_shape);
-                tv.setPadding(5, 5, 5, 5);
-                tv.setText("R " + i + ", C" + j);
-
-                row.addView(tv);
-
-            }
-
-            if(tableLayout!=null)
-            tableLayout.addView(row);
-
-        }
-    }
-
-    public static String strJoin(List<String> aArr, String sSep) {
-        StringBuilder sbStr = new StringBuilder();
-        for (int i = 0, il = aArr.size(); i < il; i++) {
-            if (i > 0)
-                sbStr.append(sSep);
-            sbStr.append(aArr.get(i));
-        }
-        return sbStr.toString();
-    }
 
     //show alert
     private void showMessage(String text) {
@@ -273,15 +208,14 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
         alertDialog.show();
     }
 
-    public void setResource(String resource) {
-        this.resource = resource;
-    }
-
     public void setDeveloperDatabase(DeveloperDatabase developerDatabase) {
         this.developerDatabase = developerDatabase;
     }
 
     public void setDeveloperDatabaseTable(DeveloperDatabaseTable developerDatabaseTable) {
         this.developerDatabaseTable = developerDatabaseTable;
+    }
+    public void setResource(Resource resource) {
+        this.resource = resource;
     }
 }

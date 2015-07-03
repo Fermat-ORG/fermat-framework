@@ -83,7 +83,7 @@ uploadArchives {
 tasks.withType(FindBugs) {
 	reports {
 		xml.enabled = false
-		html.enabled = html
+		html.enabled = true
 	}
 }
 

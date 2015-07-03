@@ -17,7 +17,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.Unexpect
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantGetActorAddressBookRegistryException;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookRegistry;
-import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.exceptions.CantInitializeActorAddressBookException;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.exceptions.CantInitializeActorAddressBookCryptoModuleException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.structure.ActorAddressBookCryptoModuleDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.structure.ActorAddressBookCryptoModuleRegistry;
 
@@ -35,7 +35,6 @@ import java.util.UUID;
  */
 
 public class ActorAddressBookCryptoModulePluginRoot implements ActorAddressBookManager, DatabaseManagerForDevelopers, DealsWithErrors, DealsWithPluginDatabaseSystem, Plugin, Service {
-
 
     /**
      * DatabaseManagerForDevelopers interface implementation
@@ -121,7 +120,7 @@ public class ActorAddressBookCryptoModulePluginRoot implements ActorAddressBookM
     @Override
     public ActorAddressBookRegistry getActorAddressBookRegistry() throws CantGetActorAddressBookRegistryException {
         /**
-         * I created instance of WalletCryptoAddressBookRegistry
+         * I created instance of ActorCryptoAddressBookRegistry
          */
         ActorAddressBookCryptoModuleRegistry actorCryptoAddressBookRegistry = new ActorAddressBookCryptoModuleRegistry();
 
@@ -131,17 +130,16 @@ public class ActorAddressBookCryptoModulePluginRoot implements ActorAddressBookM
 
         try {
             actorCryptoAddressBookRegistry.initialize();
-        } catch (CantInitializeActorAddressBookException cantInitializeActorCryptoAddressBookException) {
+            return actorCryptoAddressBookRegistry;
+        } catch (CantInitializeActorAddressBookCryptoModuleException cantInitializeActorCryptoAddressBookException) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_ADDRESS_BOOK_CRYPTO, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantInitializeActorCryptoAddressBookException);
-            throw new CantGetActorAddressBookRegistryException();
+            throw new CantGetActorAddressBookRegistryException(CantGetActorAddressBookRegistryException.DEFAULT_MESSAGE, cantInitializeActorCryptoAddressBookException);
         }
-        return actorCryptoAddressBookRegistry;
     }
 
     /**
      * Service Interface implementation.
      */
-
     @Override
     public void start() {
         this.serviceStatus = ServiceStatus.STARTED;

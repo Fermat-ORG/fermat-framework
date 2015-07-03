@@ -8,7 +8,6 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.C
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetWalletContactException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantUpdateWalletContactException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -18,12 +17,12 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransac
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantInitializeCryptoWalletContactsDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.exceptions.CantInitializeWalletContactsDatabaseException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,12 +38,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletContactsMiddlewareDao implements DealsWithErrors, DealsWithPluginDatabaseSystem {
-
-    /**
-     * Represent the Error manager.
-     */
-    private ErrorManager errorManager;
+public class WalletContactsMiddlewareDao implements DealsWithPluginDatabaseSystem {
 
     /**
      *  Represent the Plugin Database.
@@ -60,11 +54,9 @@ public class WalletContactsMiddlewareDao implements DealsWithErrors, DealsWithPl
     /**
      * Constructor with parameters
      *
-     * @param errorManager DealsWithErrors
      * @param pluginDatabaseSystem DealsWithPluginDatabaseSystem
      */
-    public WalletContactsMiddlewareDao(ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem) {
-        this.errorManager = errorManager;
+    public WalletContactsMiddlewareDao(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
@@ -73,32 +65,22 @@ public class WalletContactsMiddlewareDao implements DealsWithErrors, DealsWithPl
      *
      * @param ownerId plugin id
      * @param databaseName database name
-     * @throws CantInitializeCryptoWalletContactsDatabaseException
+     * @throws CantInitializeWalletContactsDatabaseException
      */
-    public void initializeDatabase(UUID ownerId, String databaseName) throws CantInitializeCryptoWalletContactsDatabaseException {
+    public void initializeDatabase(UUID ownerId, String databaseName) throws CantInitializeWalletContactsDatabaseException {
         try {
-
              /*
               * Open new database connection
               */
             database = this.pluginDatabaseSystem.openDatabase(ownerId, databaseName);
-
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-
-             /*
-              * The database exists but cannot be open. I can not handle this situation.
-              */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
-            throw new CantInitializeCryptoWalletContactsDatabaseException(cantOpenDatabaseException.getMessage());
-
+            throw new CantInitializeWalletContactsDatabaseException(CantInitializeWalletContactsDatabaseException.DEFAULT_MESSAGE, cantOpenDatabaseException, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
         } catch (DatabaseNotFoundException e) {
-
              /*
               * The database no exist may be the first time the plugin is running on this device,
               * We need to create the new database
               */
             WalletContactsMiddlewareDatabaseFactory walletContactsDatabaseFactory = new WalletContactsMiddlewareDatabaseFactory(pluginDatabaseSystem);
-
             try {
                   /*
                    * We create the new database
@@ -108,8 +90,7 @@ public class WalletContactsMiddlewareDao implements DealsWithErrors, DealsWithPl
                   /*
                    * The database cannot be created. I can not handle this situation.
                    */
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateDatabaseException);
-                throw new CantInitializeCryptoWalletContactsDatabaseException(cantCreateDatabaseException.getMessage());
+                throw new CantInitializeWalletContactsDatabaseException(CantInitializeWalletContactsDatabaseException.DEFAULT_MESSAGE, cantCreateDatabaseException, "", "There is a problem and i cannot create the database.");
             }
         }
     }
@@ -146,14 +127,11 @@ public class WalletContactsMiddlewareDao implements DealsWithErrors, DealsWithPl
 
                 walletContactsListRecord.add(walletContact);
             }
-
-        } catch (Exception e) {
+            return walletContactsListRecord;
+        } catch (CantLoadTableToMemoryException e) {
             // Register the failure.
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantGetAllWalletContactsException(e.getMessage());
+            throw new CantGetAllWalletContactsException(CantGetAllWalletContactsException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         }
-
-        return walletContactsListRecord;
     }
 
     /**
@@ -170,8 +148,7 @@ public class WalletContactsMiddlewareDao implements DealsWithErrors, DealsWithPl
             DatabaseTable walletContactAddressBookTable = database.getTable(WalletContactsMiddlewareDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_NAME);
             walletContactAddressBookTable.setUUIDFilter(WalletContactsMiddlewareDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_WALLET_ID_COLUMN_NAME, walletId, DatabaseFilterType.EQUAL);
             walletContactAddressBookTable.setFilterTop(max.toString());
-            // TODO: WHEN OFFSET IS IMPLEMENTED UNCOMMENT NEXT LINE
-            //walletContactAddressBookTable.setFilterOffset(offset.toString());
+            walletContactAddressBookTable.setFilterOffSet(offset.toString());
             walletContactAddressBookTable.loadToMemory();
 
             List<DatabaseTableRecord> records = walletContactAddressBookTable.getRecords();
@@ -193,14 +170,12 @@ public class WalletContactsMiddlewareDao implements DealsWithErrors, DealsWithPl
 
                 walletContactsListRecord.add(walletContact);
             }
+            return walletContactsListRecord;
 
-        } catch (Exception e) {
+        } catch (CantLoadTableToMemoryException e) {
             // Register the failure.
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantGetAllWalletContactsException(e.getMessage());
+            throw new CantGetAllWalletContactsException(CantGetAllWalletContactsException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         }
-
-        return walletContactsListRecord;
     }
 
     /**
@@ -211,7 +186,7 @@ public class WalletContactsMiddlewareDao implements DealsWithErrors, DealsWithPl
     public void create(WalletContactRecord walletContactRecord) throws CantCreateWalletContactException {
 
         if (walletContactRecord == null){
-            throw new CantCreateWalletContactException("The entity is required, can not be null");
+            throw new CantCreateWalletContactException(CantCreateWalletContactException.DEFAULT_MESSAGE, null, "", "The entity is required, can not be null");
         }
 
         try {
@@ -231,10 +206,10 @@ public class WalletContactsMiddlewareDao implements DealsWithErrors, DealsWithPl
             transaction.addRecordToInsert(walletContactAddressBookTable, entityRecord);
             database.executeTransaction(transaction);
 
-        } catch (Exception e) {
+        } catch (DatabaseTransactionFailedException e) {
             // Register the failure.
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantCreateWalletContactException(e.getMessage());
+            throw new CantCreateWalletContactException(CantCreateWalletContactException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.");
+
         }
     }
 
@@ -246,7 +221,7 @@ public class WalletContactsMiddlewareDao implements DealsWithErrors, DealsWithPl
     public void update(WalletContactRecord walletContactRecord) throws CantUpdateWalletContactException {
 
         if (walletContactRecord == null){
-            throw new CantUpdateWalletContactException("The entity is required, can not be null");
+            throw new CantUpdateWalletContactException(CantUpdateWalletContactException.DEFAULT_MESSAGE, null, "", "The entity is required, can not be null");
         }
 
         try {
@@ -267,10 +242,12 @@ public class WalletContactsMiddlewareDao implements DealsWithErrors, DealsWithPl
             transaction.addRecordToUpdate(walletContactAddressBookTable, record);
             database.executeTransaction(transaction);
 
-        } catch (Exception e) {
+        } catch (DatabaseTransactionFailedException e) {
             // Register the failure.
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantUpdateWalletContactException(e.getMessage());
+            throw new CantUpdateWalletContactException(CantUpdateWalletContactException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert the record.");
+        } catch (CantLoadTableToMemoryException e) {
+            // Register the failure.
+            throw new CantUpdateWalletContactException(CantUpdateWalletContactException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         }
     }
 
@@ -282,26 +259,30 @@ public class WalletContactsMiddlewareDao implements DealsWithErrors, DealsWithPl
     public void delete(UUID contactId) throws CantDeleteWalletContactException {
 
         if (contactId == null){
-            throw new CantDeleteWalletContactException("The id is required can not be null");
+            throw new CantDeleteWalletContactException(CantDeleteWalletContactException.DEFAULT_MESSAGE, null, "", "The id is required, can not be null");
         }
 
         try {
             DatabaseTable walletContactAddressBookTable = database.getTable(WalletContactsMiddlewareDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_NAME);
             walletContactAddressBookTable.setStringFilter(WalletContactsMiddlewareDatabaseConstants.CRYPTO_WALLET_CONTACTS_ADDRESS_BOOK_TABLE_CONTACT_ID_COLUMN_NAME, contactId.toString(), DatabaseFilterType.EQUAL);
             walletContactAddressBookTable.loadToMemory();
-            //DatabaseTableRecord record = walletContactAddressBookTable.getRecords().get(0);
+            List<DatabaseTableRecord> databaseTableRecordList = walletContactAddressBookTable.getRecords();
 
-            DatabaseTransaction transaction = database.newTransaction();
+            if (databaseTableRecordList.size() > 0) {
+                DatabaseTableRecord record = databaseTableRecordList.get(0);
 
-            //TODO configure delete method in transaction AND UNCOMMENT THIS
-            //transaction.addRecordToDelete(walletContactAddressBookTable, record);
+                walletContactAddressBookTable.deleteRecord(record);
+            } else {
+                throw new CantDeleteWalletContactException(CantDeleteWalletContactException.DEFAULT_MESSAGE, null, "", "Cannot find a wallet contact with that id");
+            }
 
-            database.executeTransaction(transaction);
-
-        } catch (Exception e) {
+        } catch (CantDeleteRecordException e) {
             // Register the failure.
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantDeleteWalletContactException(e.getMessage());
+            throw new CantDeleteWalletContactException(CantDeleteWalletContactException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot delete the record.");
+
+        } catch (CantLoadTableToMemoryException e) {
+            // Register the failure.
+            throw new CantDeleteWalletContactException(CantDeleteWalletContactException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         }
     }
 
@@ -316,7 +297,8 @@ public class WalletContactsMiddlewareDao implements DealsWithErrors, DealsWithPl
         WalletContactRecord walletContactRecord;
 
         if (actorName == null || walletId == null) {
-            throw new CantGetWalletContactException("The name and the actorName is required, can not be null");
+            throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, null, "", "The walletId and the actorName is required, can not be null");
+
         }
 
         try {
@@ -341,10 +323,9 @@ public class WalletContactsMiddlewareDao implements DealsWithErrors, DealsWithPl
             } else {
                 walletContactRecord = null;
             }
-        } catch (Exception e) {
+        } catch (CantLoadTableToMemoryException e) {
             // Register the failure.
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantGetWalletContactException(e.getMessage());
+            throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         }
         return walletContactRecord;
     }
@@ -360,7 +341,7 @@ public class WalletContactsMiddlewareDao implements DealsWithErrors, DealsWithPl
         WalletContactRecord walletContactRecord;
 
         if (actorName == null || walletId == null) {
-            throw new CantGetWalletContactException("The name and the actorName is required, can not be null");
+            throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, null, "", "The walletId and the actorName is required, can not be null");
         }
 
         try {
@@ -379,10 +360,9 @@ public class WalletContactsMiddlewareDao implements DealsWithErrors, DealsWithPl
             CryptoAddress receivedCryptoAddress = new CryptoAddress(receivedAddress, CryptoCurrency.getByCode(receivedCurrency));
 
             walletContactRecord = new WalletContactsMiddlewareRecord(actorId, actorName, actorType, contactId, receivedCryptoAddress, walletId);
-        } catch (Exception e) {
+        } catch (CantLoadTableToMemoryException e) {
             // Register the failure.
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantGetWalletContactException(e.getMessage());
+            throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         }
         return walletContactRecord;
     }
@@ -397,7 +377,8 @@ public class WalletContactsMiddlewareDao implements DealsWithErrors, DealsWithPl
         WalletContactRecord walletContactRecord;
 
         if (contactId == null) {
-            throw new CantGetWalletContactException("The name and the contactId is required, can not be null");
+            throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, null, "", "The id is required, can not be null");
+
         }
 
         try {
@@ -416,20 +397,11 @@ public class WalletContactsMiddlewareDao implements DealsWithErrors, DealsWithPl
             CryptoAddress receivedCryptoAddress = new CryptoAddress(receivedAddress, CryptoCurrency.getByCode(receivedCurrency));
 
             walletContactRecord = new WalletContactsMiddlewareRecord(actorId, actorName, actorType, contactId, receivedCryptoAddress, walletId);
-        } catch (Exception e) {
+        } catch (CantLoadTableToMemoryException e) {
             // Register the failure.
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WALLET_CONTACTS_MIDDLEWARE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantGetWalletContactException(e.getMessage());
+            throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         }
         return walletContactRecord;
-    }
-
-    /**
-     * DealsWithPluginDatabaseSystem Interface implementation.
-     */
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
     }
 
     /**
