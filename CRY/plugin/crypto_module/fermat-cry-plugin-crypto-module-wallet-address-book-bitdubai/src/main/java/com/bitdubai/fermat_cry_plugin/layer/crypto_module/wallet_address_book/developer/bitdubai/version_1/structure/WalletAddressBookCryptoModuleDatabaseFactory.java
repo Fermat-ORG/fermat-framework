@@ -20,14 +20,14 @@ import java.util.UUID;
  *
  * @version 1.0
  */
-class WalletAddressBookCryptoModuleDatabaseFactory implements DealsWithPluginDatabaseSystem {
+public class WalletAddressBookCryptoModuleDatabaseFactory implements DealsWithPluginDatabaseSystem {
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
     private PluginDatabaseSystem pluginDatabaseSystem;
 
-    Database createDatabase(UUID pluginId) throws CantCreateDatabaseException {
+    public Database createDatabase(UUID pluginId) throws CantCreateDatabaseException {
 
         Database database;
 

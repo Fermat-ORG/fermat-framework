@@ -78,6 +78,14 @@ public class WalletAddressBookCryptoModuleDao implements DealsWithErrors, DealsW
      */
 
     public void initialize() throws CantInitializeWalletAddressBookCryptoModuleException {
+
+        if (errorManager == null)
+            throw new CantInitializeWalletAddressBookCryptoModuleException(CantInitializeWalletAddressBookCryptoModuleException.DEFAULT_MESSAGE, null, "Error Manager: null", "You have to set the ErrorManager before initializing");
+        if (pluginDatabaseSystem == null)
+            throw new CantInitializeWalletAddressBookCryptoModuleException(CantInitializeWalletAddressBookCryptoModuleException.DEFAULT_MESSAGE, null, "Plugin Database System: null", "You have to set the PluginDatabaseSystem before initializing");
+        if (pluginId == null)
+            throw new CantInitializeWalletAddressBookCryptoModuleException(CantInitializeWalletAddressBookCryptoModuleException.DEFAULT_MESSAGE, null, "Plugin Id: null", "You have to set the PluginId before initializing");
+
         /**
          * I will try to open the wallets' database..
          */
@@ -101,6 +109,12 @@ public class WalletAddressBookCryptoModuleDao implements DealsWithErrors, DealsW
 
     public void registerWalletAddressBookModule(CryptoAddress cryptoAddress, PlatformWalletType platformWalletType, UUID walletId) throws CantRegisterWalletAddressBookException {
 
+        if (cryptoAddress == null)
+            throw new CantRegisterWalletAddressBookException(CantRegisterWalletAddressBookException.DEFAULT_MESSAGE, null, "cryptoAddress: null", "cryptoAddress cannot be null");
+        if (platformWalletType == null)
+            throw new CantRegisterWalletAddressBookException(CantRegisterWalletAddressBookException.DEFAULT_MESSAGE, null, "platformWalletType: null", "platformWalletType cannot be null");
+        if (walletId == null)
+            throw new CantRegisterWalletAddressBookException(CantRegisterWalletAddressBookException.DEFAULT_MESSAGE, null, "walletId: null", "walletId cannot be null");
         /**
          * Here I create the Address book record for the Wallet.
          */
@@ -126,6 +140,9 @@ public class WalletAddressBookCryptoModuleDao implements DealsWithErrors, DealsW
     }
 
     public WalletAddressBookRecord getWalletAddressBookModuleByCryptoAddress(CryptoAddress cryptoAddress) throws CantGetWalletAddressBookException, WalletAddressBookNotFoundException {
+
+        if (cryptoAddress == null)
+            throw new CantGetWalletAddressBookException(CantGetWalletAddressBookException.DEFAULT_MESSAGE, null, "cryptoAddress: null", "cryptoAddress cannot be null");
 
         DatabaseTable table;
 
@@ -164,6 +181,9 @@ public class WalletAddressBookCryptoModuleDao implements DealsWithErrors, DealsW
 
     public List<WalletAddressBookRecord> getAllWalletAddressBookModuleByWalletId(UUID walletId) throws CantGetWalletAddressBookException, WalletAddressBookNotFoundException {
 
+        if (walletId == null)
+            throw new CantGetWalletAddressBookException(CantGetWalletAddressBookException.DEFAULT_MESSAGE, null, "walletId: null", "walletId cannot be null");
+
         List<WalletAddressBookRecord> walletAddressBookRecords = new ArrayList<>();
 
         DatabaseTable table;
@@ -190,7 +210,7 @@ public class WalletAddressBookCryptoModuleDao implements DealsWithErrors, DealsW
 
         List<DatabaseTableRecord> databaseTableRecordList = table.getRecords();
 
-        if (databaseTableRecordList.size() < 0) {
+        if (databaseTableRecordList.size() > 0) {
             for (DatabaseTableRecord record : databaseTableRecordList) {
                 platformWalletType = PlatformWalletType.getByCode(record.getStringValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_WALLET_TYPE));
                 address = record.getStringValue(WalletAddressBookCryptoModuleDatabaseConstants.CRYPTO_WALLET_ADDRESS_BOOK_TABLE_CRYPTO_ADDRESS);

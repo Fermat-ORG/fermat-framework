@@ -14,7 +14,7 @@ dependencies {
     compile project(':fermat-cry-api')
 
     testCompile 'junit:junit:4.11'
-    compile project(':fermat-dmp-plugin-identity-intra-user-bitdubai')
-    compile project(':fermat-dmp-plugin-actor-extra-user-bitdubai')
-    compile project(':fermat-pip-addon-user-device-user-bitdubai')
+    testCompile 'org.mockito:mockito-all:2.0.2-beta'
+    testCompile group: 'org.easytesting', name: 'fest-assert-core', version: '2.0M10'
+    testCompile group: 'com.googlecode.catch-exception', name: 'catch-exception', version: '1.2.0'
 }
