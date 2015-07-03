@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.ver
 
 import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DealsWithLogManagers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -33,6 +34,7 @@ import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultTransactionNoti
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.LimitReachedTransactionNotificationAgentException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantExecuteQueryException;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.TransactionProtocolAgentMaxIterationsReachedException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.BitcoinCryptoVault;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseActions;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseFactory;
@@ -122,7 +124,6 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
              * I cant continue if this happens.
              */
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantInitializeCryptoRegistryException);
-            throw new CantStartAgentException();
         }
 
         /**
@@ -240,6 +241,7 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
                      */
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                     throw new CantInitializeMonitorAgentException();
+
                 }
             }
             catch (CantOpenDatabaseException cantOpenDatabaseException){
@@ -258,7 +260,7 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
             /**
              * this will run in an infinite loop
              */
-            logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.events.TransactionNotificationAgent"), "Transaction Protocol Notification Agent: running...", "Transaction Protocol Notification Agent: running...", "Transaction Protocol Notification Agent: running...");
+            //logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.events.TransactionNotificationAgent"), "Transaction Protocol Notification Agent: running...", "Transaction Protocol Notification Agent: running...", "Transaction Protocol Notification Agent: running...");
             int iteration = 0;
             while (true)
             {
@@ -277,19 +279,20 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
                  */
                 try {
 
-                    logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), null, "Iteration number " + iteration, "Iteration number " + iteration);
+                    //logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), null, "Iteration number " + iteration, "Iteration number " + iteration);
                     doTheMainTask();
                 } catch (CantExecuteQueryException e) {
+                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+               } catch (FermatException e) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 }
             }
 
         }
-
         /**
          * Implements the agent
          */
-        private void doTheMainTask() throws CantExecuteQueryException {
+        private void doTheMainTask() throws CantExecuteQueryException, TransactionProtocolAgentMaxIterationsReachedException {
             /**
              * I search for transactions not yet notified. If I found something, Ill raise an event
              */
@@ -299,7 +302,7 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
                 PlatformEvent event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE);
                 event.setSource(EventSource.CRYPTO_VAULT);
 
-                logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), null, "Found transactions pending to be notified! Raising INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE event.","Found transactions pending to be notified! Raising INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE event.");
+                //logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), null, "Found transactions pending to be notified! Raising INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE event.","Found transactions pending to be notified! Raising INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE event.");
                 eventManager.raiseEvent(event);
 
                 /**
@@ -308,10 +311,9 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
                  */
                 int iterations = db.updateTransactionProtocolStatus(true);
 
-                logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "No other plugin is consuming Vault transactions.", "Transaction Protocol Notification Agent: iteration number " + iterations + " without other plugins consuming transaction.","Transaction Protocol Notification Agent: iteration number " + iterations + " without other plugins consuming transaction.");
+                //logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "No other plugin is consuming Vault transactions.", "Transaction Protocol Notification Agent: iteration number " + iterations + " without other plugins consuming transaction.","Transaction Protocol Notification Agent: iteration number " + iterations + " without other plugins consuming transaction.");
                 if (ITERATIONS_THRESHOLD < iterations){
-                    System.err.println("Transaction Protocol Notification Agent: reached threshold of maximun iterations without any plugin consuming transactions.");
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new LimitReachedTransactionNotificationAgentException());
+                    throw new TransactionProtocolAgentMaxIterationsReachedException("The max limit configured for the Transaction Protocol Agent has been reached.", null,"Iteration Limit: " + ITERATIONS_THRESHOLD, "Notify developer.");
                 }
 
             } else
@@ -327,10 +329,8 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
 
         private boolean isTransactionToBeNotified() throws CantExecuteQueryException {
             CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
-            if (db.isPendingTransactions())
-                return  true;
-            else
-                return  false;
+            boolean isPending =db.isPendingTransactions();
+           return isPending;
 
         }
     }

@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -258,7 +259,6 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
 
     @Override
     public void setLogManager(LogLevel logLevel, LogManager logManager) {
-        logLevel = logLevel;
         this.logManager = logManager;
     }
 
@@ -271,6 +271,11 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
         return this.serviceStatus;
     }
 
+
+    @Override
+    public boolean isValidAddress(CryptoAddress addressTo) {
+        return vault.isValidAddress(addressTo);
+    }
 
     /**
      * DealWithEvents Interface implementation.
@@ -330,12 +335,8 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
         /**
          * I will initialize the Root map with all the classes in default state of Minimal logging
          */
-        try{
-            for (String c : getClassesFullPath()){
-                BitcoinCryptoVaultPluginRoot.newLoggingLevel.put(c, LogLevel.MINIMAL_LOGGING);
-            }
-        } catch (Exception e){
-            // no big deal if I coudln't fill the class now, we will do it later.
+        for (String c : getClassesFullPath()){
+            BitcoinCryptoVaultPluginRoot.newLoggingLevel.put(c, LogLevel.MINIMAL_LOGGING);
         }
 
 
@@ -369,7 +370,6 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
                  * something went wrong creating the db, I can't handle this.
                  */
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-                throw new CantStartPluginException(e1, Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT);
             }
 
         } catch (DatabaseNotFoundException e) {
@@ -384,10 +384,9 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
                 database = cryptoVaultDatabaseFactory.createDatabase(pluginId, userId.toString());
             } catch (CantCreateDatabaseException e1) {
                 /**
-                 * something went wrong creatig the db, I can't handle this.
+                 * something went wrong creating the db, I can't handle this.
                  */
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-                throw new CantStartPluginException(e1, Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT);
             }
         }
 
@@ -404,9 +403,6 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
                 vault.setPluginId(pluginId);
 
                 vault.loadOrCreateVault();
-
-
-                System.out.println("CryptoVault - Valid receive address for the vault is: " + vault.getAddress().getAddress());
 
 
                 /**
@@ -426,7 +422,6 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
                  * If I couldnt create the Vault, I cant go on.
                  */
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateCryptoWalletException );
-                throw new CantStartPluginException(cantCreateCryptoWalletException, Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT);
             }
 
 
@@ -501,8 +496,8 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
         try {
             vault.connectVault();
         } catch (CantConnectToBitcoinNetwork cantConnectToBitcoinNetwork) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantConnectToBitcoinNetwork);
             throw new VaultNotConnectedToNetworkException();
+
         }
     }
 
@@ -554,6 +549,9 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
             String[] correctedClass = className.split((Pattern.quote("$")));
             return BitcoinCryptoVaultPluginRoot.newLoggingLevel.get(correctedClass[0]);
         } catch (Exception e){
+            /**
+             * If I couldn't get the correct loggin level, then I will set it to minimal.
+             */
             return LogLevel.MINIMAL_LOGGING;
         }
     }
