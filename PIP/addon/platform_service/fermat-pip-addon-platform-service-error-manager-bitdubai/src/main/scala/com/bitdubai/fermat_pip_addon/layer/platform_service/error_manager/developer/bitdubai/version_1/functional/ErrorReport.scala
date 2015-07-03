@@ -21,7 +21,7 @@ class ErrorReport(source: String, severity: String, fermatException: FermatExcep
   private def constructExceptionReports(exception : FermatException): String ={
     if(exception == null) return ""
 
-    return  constructExceptionReports(exception getCause) + exceptionSeparator + exception.toString + exceptionSeparator
+    return constructExceptionReports(exception getCause) + exceptionSeparator + exception.toString + exceptionSeparator
   }
 
 }
