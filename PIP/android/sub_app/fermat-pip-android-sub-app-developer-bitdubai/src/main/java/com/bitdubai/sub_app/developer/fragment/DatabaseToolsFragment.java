@@ -52,6 +52,7 @@ public class DatabaseToolsFragment extends Fragment{
     public static final String TAG_DATABASE_TOOLS_FRAGMENT= "DatabaseToolsFragment";
 
     private static final String ARG_POSITION = "position";
+    private static final int TAG_FRAGMENT_DATABASE = 1;
     View rootView;
 
     private DatabaseTool databaseTools;
@@ -88,11 +89,13 @@ public class DatabaseToolsFragment extends Fragment{
             ex.printStackTrace();
         }
 
-        setStatusBarColor();
+
+
+        //setStatusBarColor();
 
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    /*@TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void setStatusBarColor(){
         try {
 
@@ -109,13 +112,14 @@ public class DatabaseToolsFragment extends Fragment{
         }catch (Exception e){
             Log.d("DatabaseToolsFragment","Versión del sdk no compatible con el cambio de color del status bar");
         }
-    }
+    }*/
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         rootView = inflater.inflate(R.layout.start, container, false);
-        gridView =(GridView) rootView.findViewById(R.id.gridView);
+        rootView.setTag(1);
+        gridView=(GridView) rootView.findViewById(R.id.gridView);
         try {
             // Get ListView object from xml
             //final ListView listView = (ListView) rootView.findViewById(R.id.lista1);

@@ -384,7 +384,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
                 database = cryptoVaultDatabaseFactory.createDatabase(pluginId, userId.toString());
             } catch (CantCreateDatabaseException e1) {
                 /**
-                 * something went wrong creatig the db, I can't handle this.
+                 * something went wrong creating the db, I can't handle this.
                  */
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                 throw new CantStartPluginException(e1, Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT);
@@ -404,9 +404,6 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
                 vault.setPluginId(pluginId);
 
                 vault.loadOrCreateVault();
-
-
-                System.out.println("CryptoVault - Valid receive address for the vault is: " + vault.getAddress().getAddress());
 
 
                 /**

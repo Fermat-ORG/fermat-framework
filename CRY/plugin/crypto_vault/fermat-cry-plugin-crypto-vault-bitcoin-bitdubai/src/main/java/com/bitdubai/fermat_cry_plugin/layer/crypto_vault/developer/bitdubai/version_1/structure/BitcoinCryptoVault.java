@@ -48,6 +48,7 @@ import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.core.PeerGroup;
 import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
+import org.bitcoinj.core.TransactionInput;
 import org.bitcoinj.core.TransactionOutput;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.store.UnreadableWalletException;
@@ -393,27 +394,36 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         /**
          * I commit the transaction locally and save the vault
          */
-        vault.commitTx(request.tx);
+        String txHash = null;
+        Transaction tx = request.tx;
+        txHash = tx.getHashAsString();
+        try {
+            db.persistNewTransaction(txHash);
+            vault.commitTx(request.tx);
+        } catch (CantExecuteQueryException e) {
+            e.printStackTrace();
+        }
+
         PeerGroup peers = (PeerGroup) bitcoinCryptoNetworkManager.getBroadcasters();
 
         /**
          * I broadcast and wait for the confirmation of the network
          */
         ListenableFuture<Transaction> future = peers.broadcastTransaction(request.tx);
-        String txHash=null;
+
         try {
+
             future.get();
             /**
              * the transaction was broadcasted and accepted by the nwetwork
              * I will persist it to inform it when the confidence level changes
              */
-            Transaction tx = request.tx;
-            txHash = tx.getHashAsString();
+
             /**
              * at this point the transaction is already created and in the network, if there are erros in any other plug in, I can't roll back anything.
              * I will deal with any DB error later when I control the transactions.
              */
-            db.persistNewTransaction(txHash);
+
         } catch (InterruptedException e) {
             /**
              * If I have an error sending the money, I will raise it.
@@ -421,10 +431,8 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
             throw new CouldNotSendMoneyException();
         } catch (ExecutionException e) {
             throw new CouldNotSendMoneyException();
-        } catch (CantExecuteQueryException e) {
-            /**
-             * if the error was saving the information to the database, I can go on.
-             */
+
+
         }
 
         /**
@@ -433,7 +441,6 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         System.out.println("CryptoVault information: bitcoin sent!!!");
         return txHash;
     }
-
 
 
 
@@ -474,8 +481,9 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
                 /**
                  * I get the transaction from the vault
                  */
-                CryptoAddress addressFrom = new CryptoAddress(getAddressFromVault(txHash), CryptoCurrency.BITCOIN);
-                CryptoAddress addressTo = new CryptoAddress(getAddressToFromVaul(txHash), CryptoCurrency.BITCOIN);
+                String[] addresses = getAddressFromTransaction(txHash);
+                CryptoAddress addressFrom = new CryptoAddress(addresses[0], CryptoCurrency.BITCOIN);
+                CryptoAddress addressTo = new CryptoAddress(addresses[1], CryptoCurrency.BITCOIN);
                 long amount = getAmountFromVault(txHash);
 
 
@@ -532,54 +540,33 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
      * @param txHash
      * @return the string of the address
      */
-    private String getAddressToFromVaul(String txHash) {
-        try{
-            Sha256Hash hash = new Sha256Hash(txHash);
-            Transaction tx = vault.getTransaction(hash);
+    private String[] getAddressFromTransaction(String txHash) {
+        String[] addresses = new String[2];
 
-            //String addressTo = tx.getOutput(0).getAddressFromP2PKHScript(networkParameters).toString();
+        Sha256Hash hash = new Sha256Hash(txHash);
+        Transaction tx = vault.getTransaction(hash);
 
-            String addressTo=null;
-            /**
-             * I will search on all outputs for an address that is mine
-             */
-            for (TransactionOutput output : tx.getOutputs()){
-                if (output.isMine(vault)){
-                    /**
-                     * I found an address that is mine in an output. I need to return this
-                     */
-                addressTo = output.getScriptPubKey().getToAddress(this.networkParameters).toString();
-                }
+        /**
+         * I will search on all outputs for an address that is mine
+         */
+        for (TransactionOutput output : tx.getOutputs()) {
+            if (output.isMine(vault)){
+                /**
+                 * this is address To
+                 */
+                addresses[1] = output.getScriptPubKey().getToAddress(this.networkParameters).toString();
+            } else {
+                /**
+                 * This is address From
+                 */
+                addresses[0] = output.getScriptPubKey().getToAddress(networkParameters).toString();
             }
-            return addressTo;
-        } catch (Exception e){
-            /**
-             * it might be from an address that we can't get
-             */
-            return null;
-        }
 
+        }
+        return addresses;
     }
 
-    /**
-     * Access the vault and retrieves the address from if the transaction
-     * @param txHash
-     * @return the string of the address
-     */
-    private String getAddressFromVault(String txHash) {
-        try{
-            Sha256Hash hash = new Sha256Hash(txHash);
-            Transaction tx = vault.getTransaction(hash);
 
-            String addressFrom = tx.getInput(0).getFromAddress().toString();
-            return addressFrom;
-        } catch (Exception e){
-            /**
-             * it might be from an address that we can't get
-             */
-            return null;
-        }
-    }
 
     /**
      * Get the timestamp of the transaction

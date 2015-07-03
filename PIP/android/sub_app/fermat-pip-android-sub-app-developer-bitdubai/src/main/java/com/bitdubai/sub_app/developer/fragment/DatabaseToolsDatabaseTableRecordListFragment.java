@@ -99,7 +99,7 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
         super.onCreateView(inflater,container,savedInstanceState);
         rootView = inflater.inflate(R.layout.database_table_record, container, false);
         List<String> columnNames = null;
-        List<String> values=null;
+        List<List<String>> values=null;
 
         try {
             if (resource.type== Databases.TYPE_ADDON) {
@@ -115,9 +115,9 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
 
             if (developerDatabaseTableRecordList.size() > 0) {
                 i=0;
-                values =new ArrayList<String>();
+                values =new ArrayList<List<String>>();
                 for(DeveloperDatabaseTableRecord developerDatabaseTableRecord:developerDatabaseTableRecordList){
-                    values=(developerDatabaseTableRecord.getValues());
+                    values.add(developerDatabaseTableRecord.getValues());
                     i++;
                 }
             } else {
@@ -147,7 +147,7 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
         return rootView;
     }
 
-    private TableLayout createTable(List<String> lstRows, List<String> lstColumns,int rowCount, int columnCount){
+    private TableLayout createTable(List<List<String>> lstRows, List<String> lstColumns,int rowCount, int columnCount){
 
 
         TableLayout tableLayout= new TableLayout(getActivity());
@@ -156,8 +156,9 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
         tableLayout.setPadding(3,3,3,3);
         try {
             TableRow.LayoutParams tableRowParams = new TableRow.LayoutParams();
-            tableRowParams.setMargins(3, 3, 3, 3);
+            tableRowParams.setMargins(5, 5, 5, 5);
             tableRowParams.weight = 1;
+
 
             TableRow tableRow = new TableRow(getActivity());
             if(lstColumns!=null) {
@@ -174,16 +175,28 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
             }
             tableLayout.addView(tableRow);
             if(lstRows!=null) {
-                tableRow = new TableRow(getActivity());
-                for (int i = 0; i < lstRows.size(); i++) {
+                //tableRow = new TableRow(getActivity());
+                for (List<String> lstValues:lstRows){
+                    tableRow = new TableRow(getActivity());
+                    for (String values:lstValues){
+                        TextView textView = new TextView(getActivity());
+                        textView.setBackgroundColor(Color.WHITE);
+                        textView.setText(values);
+                        textView.setTextColor(Color.BLACK);
+                        tableRow.addView(textView, tableRowParams);
+                    }
+                    tableLayout.addView(tableRow,tableLayoutParams);
+                }
+
+                /*for (int i = 0; i < lstRows.size(); i++) {
                     TextView textView = new TextView(getActivity());
                     textView.setBackgroundColor(Color.WHITE);
                     textView.setText(lstRows.get(i));
                     textView.setTextColor(Color.BLACK);
                     tableRow.addView(textView, tableRowParams);
 
-                }
-                tableLayout.addView(tableRow,tableLayoutParams);
+                }*/
+                //tableLayout.addView(tableRow,tableLayoutParams);
             }
 
         }catch (Exception e){

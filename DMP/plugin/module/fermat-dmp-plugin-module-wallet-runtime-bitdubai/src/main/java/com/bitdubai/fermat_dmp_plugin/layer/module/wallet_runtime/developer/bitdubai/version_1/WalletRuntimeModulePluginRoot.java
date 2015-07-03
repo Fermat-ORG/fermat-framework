@@ -485,10 +485,11 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
             runtimeWallet.setType(Wallets.CWP_WALLET_RUNTIME_WALLET_DEVELOPER_APP_ALL_BITDUBAI);
             listWallets.put(Wallets.CWP_WALLET_RUNTIME_WALLET_DEVELOPER_APP_ALL_BITDUBAI, runtimeWallet);
 
-
+            //acá estoy seteando los colores y toda la vaina esa
             runtimeActivity= new RuntimeActivity();
             runtimeActivity.setType(Activities.CWP_SUP_APP_ALL_DEVELOPER);
-            //runtimeActivity.setColor("#d07b62");
+            runtimeActivity.setColor("#d07b62");
+            runtimeActivity.setStatusBarColor("#b46a54");
             runtimeWallet.addActivity(runtimeActivity);
             listActivities.put(Activities.CWP_SUP_APP_ALL_DEVELOPER, runtimeActivity);
 
@@ -496,12 +497,16 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeTitleBar = new RuntimeTitleBar();
             runtimeTitleBar.setLabel("Developer");
-
+            //runtimeTitleBar.setColor("#d07b62");
             runtimeActivity.setTitleBar(runtimeTitleBar);
 
 
 
             runtimeTabStrip = new RuntimeTabStrip();
+            runtimeTabStrip.setTabsColor("#d07b62");
+            runtimeTabStrip.setTabsTextColor("#FFFFFF");
+            runtimeTabStrip.setTabsIndicateColor("#b46a54");
+
             runtimeTab = new RuntimeTab();
             runtimeTab.setLabel("DataBase Tools");
             runtimeTab.setFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS);
