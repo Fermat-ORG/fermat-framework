@@ -164,9 +164,9 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
             /**
              * now I raise the event
              */
-            if (cryptoStatus == CryptoStatus.RECEIVED) {
-                eventManager.raiseEvent(new IncomingCryptoReceivedEvent(EventType.INCOMING_CRYPTO_RECEIVED));
-            }
+            //if (cryptoStatus == CryptoStatus.RECEIVED) {
+            //    eventManager.raiseEvent(new IncomingCryptoReceivedEvent(EventType.INCOMING_CRYPTO_RECEIVED));
+            //}
 
             if (cryptoStatus == CryptoStatus.CONFIRMED)
                 eventManager.raiseEvent(new IncomingCryptoReceptionConfirmedEvent(EventType.INCOMING_CRYPTO_RECEPTION_CONFIRMED));

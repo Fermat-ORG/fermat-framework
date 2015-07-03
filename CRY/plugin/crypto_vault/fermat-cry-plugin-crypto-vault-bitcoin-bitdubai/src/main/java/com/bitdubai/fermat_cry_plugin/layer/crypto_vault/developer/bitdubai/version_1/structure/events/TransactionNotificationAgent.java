@@ -327,7 +327,8 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
 
         private boolean isTransactionToBeNotified() throws CantExecuteQueryException {
             CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
-           return db.isPendingTransactions();
+            boolean isPending =db.isPendingTransactions();
+           return isPending;
 
         }
     }

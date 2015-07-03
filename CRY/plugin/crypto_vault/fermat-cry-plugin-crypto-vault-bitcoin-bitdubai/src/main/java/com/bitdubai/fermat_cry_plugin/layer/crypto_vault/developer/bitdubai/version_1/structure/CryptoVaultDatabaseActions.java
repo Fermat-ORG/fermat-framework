@@ -86,9 +86,9 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
          */
         DatabaseTable cryptoTxTable;
         cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
-        cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, txHash,DatabaseFilterType.EQUAL);
+        cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, txHash, DatabaseFilterType.EQUAL);
         cryptoTxTable.loadToMemory();
-        if (cryptoTxTable.getRecords().size() == 0){
+        if (cryptoTxTable.getRecords().isEmpty()){
             /**
              * If this is not a transaction that we previously generated, then I will identify it as a new transaction.
              */
@@ -117,7 +117,8 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
 
             PlatformEvent event = new IncomingCryptoIdentifiedEvent(EventType.INCOMING_CRYPTO_RECEIVED);
             eventManager.raiseEvent(event);
-        }
+        } else
+            System.out.println("Transaction " + txHash + " is already in the DB. so is a outgoing transaction.");
     }
 
     /**
