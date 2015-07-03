@@ -88,7 +88,7 @@ public class DatabaseToolsFragment extends Fragment{
             ex.printStackTrace();
         }
 
-        setStatusBarColor();
+        //setStatusBarColor();
 
     }
 
