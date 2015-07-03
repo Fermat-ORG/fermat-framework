@@ -25,6 +25,19 @@ public class CantCheckResourcesException extends FermatException {
 		super(message, cause, context, possibleReason);
 	}
 
+
+	public CantCheckResourcesException(final String message, final Exception cause) {
+		this(message, cause, "", "");
+	}
+
+	public CantCheckResourcesException(final String message) {
+		this(message, null);
+	}
+
+	public CantCheckResourcesException() {
+		this(DEFAULT_MESSAGE);
+	}
+
 }
 
 
