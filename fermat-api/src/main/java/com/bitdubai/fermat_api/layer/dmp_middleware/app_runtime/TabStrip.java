@@ -33,4 +33,16 @@ public interface TabStrip {
 
     public int getBackgroundResource();
 
+    public void setTabsColor(String color);
+
+    public String getTabsColor();
+
+    public void setTabsTextColor(String color);
+
+    public String getTabsTextColor();
+
+    public void setTabsIndicateColor(String color);
+
+    public String getTabsIndicateColor();
+
 }
