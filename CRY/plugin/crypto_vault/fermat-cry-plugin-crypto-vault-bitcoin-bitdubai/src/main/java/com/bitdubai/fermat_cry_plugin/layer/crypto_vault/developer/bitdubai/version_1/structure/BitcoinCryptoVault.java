@@ -394,27 +394,36 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         /**
          * I commit the transaction locally and save the vault
          */
-        vault.commitTx(request.tx);
+        String txHash = null;
+        Transaction tx = request.tx;
+        txHash = tx.getHashAsString();
+        try {
+            db.persistNewTransaction(txHash);
+            vault.commitTx(request.tx);
+        } catch (CantExecuteQueryException e) {
+            e.printStackTrace();
+        }
+
         PeerGroup peers = (PeerGroup) bitcoinCryptoNetworkManager.getBroadcasters();
 
         /**
          * I broadcast and wait for the confirmation of the network
          */
         ListenableFuture<Transaction> future = peers.broadcastTransaction(request.tx);
-        String txHash=null;
+
         try {
+
             future.get();
             /**
              * the transaction was broadcasted and accepted by the nwetwork
              * I will persist it to inform it when the confidence level changes
              */
-            Transaction tx = request.tx;
-            txHash = tx.getHashAsString();
+
             /**
              * at this point the transaction is already created and in the network, if there are erros in any other plug in, I can't roll back anything.
              * I will deal with any DB error later when I control the transactions.
              */
-            db.persistNewTransaction(txHash);
+
         } catch (InterruptedException e) {
             /**
              * If I have an error sending the money, I will raise it.
@@ -422,10 +431,8 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
             throw new CouldNotSendMoneyException();
         } catch (ExecutionException e) {
             throw new CouldNotSendMoneyException();
-        } catch (CantExecuteQueryException e) {
-            /**
-             * if the error was saving the information to the database, I can go on.
-             */
+
+
         }
 
         /**
@@ -434,7 +441,6 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         System.out.println("CryptoVault information: bitcoin sent!!!");
         return txHash;
     }
-
 
 
 
