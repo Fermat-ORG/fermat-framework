@@ -156,8 +156,9 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
         tableLayout.setPadding(3,3,3,3);
         try {
             TableRow.LayoutParams tableRowParams = new TableRow.LayoutParams();
-            tableRowParams.setMargins(3, 3, 3, 3);
+            tableRowParams.setMargins(5, 5, 5, 5);
             tableRowParams.weight = 1;
+
 
             TableRow tableRow = new TableRow(getActivity());
             if(lstColumns!=null) {
