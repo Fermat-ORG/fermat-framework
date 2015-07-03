@@ -662,7 +662,8 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
 
         } catch (Exception e) {
             this.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
-            Toast.makeText(getApplicationContext(), "Error in OptionsItemSelecte " + e.getMessage(), Toast.LENGTH_LONG).show();
+            //Esto va a habr que cambiarlo porque no me toma el tag, Matias
+            //Toast.makeText(getApplicationContext(), "Error in OptionsItemSelecte " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 
