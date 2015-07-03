@@ -199,7 +199,11 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
             if(tabs == null)
                 ((PagerSlidingTabStrip) findViewById(R.id.tabs)).setVisibility(View.INVISIBLE);
             else{
-                ((PagerSlidingTabStrip) findViewById(R.id.tabs)).setVisibility(View.VISIBLE);
+                //acá puedo cambiar todo esto, mati
+                PagerSlidingTabStrip pagerSlidingTabStrip=((PagerSlidingTabStrip) findViewById(R.id.tabs));
+                pagerSlidingTabStrip.setVisibility(View.VISIBLE);
+                //pagerSlidingTabStrip.setTextColor(Color.GREEN);
+                //pagerSlidingTabStrip.setBackgroundColor(Color.GREEN);
                 this.tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
 
             }

@@ -23,6 +23,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.LogTool;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.ToolManager;
+import com.bitdubai.sub_app.developer.common.Loggers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,6 +50,8 @@ public class LogToolsFragment extends Fragment {
     private LogTool logTool;
 
     private static Platform platform = new Platform();
+
+    private List<Loggers> lstLoggers;
 
     public static LogToolsFragment newInstance(int position) {
         LogToolsFragment f = new LogToolsFragment();
@@ -227,6 +230,8 @@ public class LogToolsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_log_tools, container, false);
+
+        lstLoggers=new ArrayList<Loggers>();
         try {
             // Get ListView object from xml
             final ListView listView = (ListView) rootView.findViewById(R.id.listaLogResources);
@@ -274,8 +279,10 @@ public class LogToolsFragment extends Fragment {
                     if (!level1.contentEquals(classes.getLevel1())){
                         level1 = classes.getLevel1();
                         list.add(classes.getLevel1());
-
                     }
+
+
+
                     if (!level2.contentEquals(classes.getLevel2())){
                         level2 = classes.getLevel2();
                         list.add(classes.getLevel2());

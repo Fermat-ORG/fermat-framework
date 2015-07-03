@@ -28,6 +28,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_runtime.developer.bitd
 import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_runtime.developer.bitdubai.version_1.structure.*;
 import com.bitdubai.fermat_dmp_plugin.layer.module.wallet_runtime.developer.bitdubai.version_1.exceptions.*;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -487,22 +488,24 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeActivity= new RuntimeActivity();
             runtimeActivity.setType(Activities.CWP_SUP_APP_ALL_DEVELOPER);
-            runtimeActivity.setColor("#d07b62");
+            //runtimeActivity.setColor("#d07b62");
             runtimeWallet.addActivity(runtimeActivity);
             listActivities.put(Activities.CWP_SUP_APP_ALL_DEVELOPER, runtimeActivity);
 
 
 
             runtimeTitleBar = new RuntimeTitleBar();
-            runtimeTitleBar.setLabel("DeveloperApp");
+            runtimeTitleBar.setLabel("Developer");
 
             runtimeActivity.setTitleBar(runtimeTitleBar);
+
 
 
             runtimeTabStrip = new RuntimeTabStrip();
             runtimeTab = new RuntimeTab();
             runtimeTab.setLabel("DataBase Tools");
             runtimeTab.setFragment(Fragments.CWP_SUB_APP_DEVELOPER_DATABASE_TOOLS);
+
             runtimeTabStrip.addTab(runtimeTab);
 
 
