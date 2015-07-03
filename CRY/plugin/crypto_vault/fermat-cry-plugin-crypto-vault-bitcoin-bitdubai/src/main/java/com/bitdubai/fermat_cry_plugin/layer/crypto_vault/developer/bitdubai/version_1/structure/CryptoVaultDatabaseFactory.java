@@ -63,9 +63,6 @@ public class CryptoVaultDatabaseFactory implements DealsWithPluginDatabaseSystem
             /**
              * I can not handle this situation.
              */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateDatabaseException);
-            System.err.println("CantCreateDatabaseException: " + cantCreateDatabaseException.getMessage());
-            cantCreateDatabaseException.printStackTrace();
             throw new CantCreateDatabaseException();
         }
 
@@ -87,9 +84,6 @@ public class CryptoVaultDatabaseFactory implements DealsWithPluginDatabaseSystem
         try {
             ((DatabaseFactory) database).createTable(table);
         } catch (CantCreateTableException cantCreateTableException) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateTableException);
-            System.err.println("CantCreateTableException: " + cantCreateTableException.getMessage());
-            cantCreateTableException.printStackTrace();
             throw new CantCreateDatabaseException();
         }
 
@@ -110,9 +104,6 @@ public class CryptoVaultDatabaseFactory implements DealsWithPluginDatabaseSystem
             try {
                 ((DatabaseFactory) database).createTable(table2);
             } catch (CantCreateTableException cantCreateTableException) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateTableException);
-                System.err.println("CantCreateTableException: " + cantCreateTableException.getMessage());
-                cantCreateTableException.printStackTrace();
                 throw new CantCreateDatabaseException();
             }
 
@@ -135,9 +126,6 @@ public class CryptoVaultDatabaseFactory implements DealsWithPluginDatabaseSystem
         try {
             ((DatabaseFactory) database).createTable(table3);
         } catch (CantCreateTableException cantCreateTableException) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateTableException);
-            System.err.println("CantCreateTableException: " + cantCreateTableException.getMessage());
-            cantCreateTableException.printStackTrace();
             throw new CantCreateDatabaseException();
         }
 

@@ -275,6 +275,9 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void setStatusBarColor(String color){
+        if(Build.VERSION.SDK_INT>20){
+
+
         try {
 
             Window window =this.getWindow();
@@ -286,6 +289,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 
             // finally change the color
+
             window.setStatusBarColor(this.getResources().getColor(com.bitdubai.sub_app.developer.R.color.wallet_factory_orange));
             Color color_status = new Color();
             window.setStatusBarColor(color_status.parseColor("#b46a54"));
@@ -293,7 +297,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
             Log.d("DatabaseToolsFragment", "Versión del sdk no compatible con el cambio de color del status bar");
         }
     }
-
+    }
     /**
      * Initialise the fragments to be paged
      */

@@ -67,7 +67,7 @@ public class TransactionConfidenceCalculator {
         try {
             dbHash = getTransactionHash();
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            throw new CantCalculateTransactionConfidenceException();
+            throw new CantCalculateTransactionConfidenceException("Error calculating the confidence of transaction.", cantLoadTableToMemory, null, "error in database plugin");
         }
 
         Sha256Hash txHash = new Sha256Hash(dbHash);
