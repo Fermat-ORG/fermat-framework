@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorMan
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantDeleteRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesStatus;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.MessagesTypes;
@@ -86,8 +87,9 @@ public class OutgoingMessageDataAccessObject {
      *
      *  @param id Long id.
      *  @return OutgoingIntraUserNetworkServiceMessage found.
+     *  @throws CantReadRecordDataBaseException
      */
-    public OutgoingIntraUserNetworkServiceMessage findById (String id){
+    public OutgoingIntraUserNetworkServiceMessage findById (String id) throws CantReadRecordDataBaseException {
 
         if (id == null){
             throw new IllegalArgumentException("The id is required, can not be null");
@@ -123,8 +125,13 @@ public class OutgoingMessageDataAccessObject {
 
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             // Register the failure.
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
-            return null;
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Database Name: " + IntraUserNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "The data no exist";
+            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
+            throw cantReadRecordDataBaseException;
         }
 
         return incomingIntraUserNetworkServiceMessage;
@@ -134,8 +141,9 @@ public class OutgoingMessageDataAccessObject {
      * Method that list the all entities on the data base.
      *
      *  @return All OutgoingIntraUserNetworkServiceMessage.
+     *  @throws CantReadRecordDataBaseException
      */
-    public List<OutgoingIntraUserNetworkServiceMessage> findAll () {
+    public List<OutgoingIntraUserNetworkServiceMessage> findAll () throws CantReadRecordDataBaseException {
 
 
         List<OutgoingIntraUserNetworkServiceMessage> list = null;
@@ -177,9 +185,14 @@ public class OutgoingMessageDataAccessObject {
             }
 
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            // Register the failure.
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
-            return null;
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Database Name: " + IntraUserNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "The data no exist";
+            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
+            throw cantReadRecordDataBaseException;
         }
 
         /*
@@ -194,8 +207,9 @@ public class OutgoingMessageDataAccessObject {
      *
      *  @see IntraUserNetworkServiceDatabaseConstants
      *  @return All OutgoingIntraUserNetworkServiceMessage.
+     *  @throws CantReadRecordDataBaseException
      */
-    public List<OutgoingIntraUserNetworkServiceMessage> findAll (String columnName, String columnValue) {
+    public List<OutgoingIntraUserNetworkServiceMessage> findAll (String columnName, String columnValue) throws CantReadRecordDataBaseException {
 
         if (columnName == null ||
                 columnName.isEmpty() ||
@@ -246,9 +260,14 @@ public class OutgoingMessageDataAccessObject {
             }
 
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            // Register the failure.
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
-            return null;
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Database Name: " + IntraUserNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "The data no exist";
+            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
+            throw cantReadRecordDataBaseException;
         }
 
         /*
@@ -262,10 +281,11 @@ public class OutgoingMessageDataAccessObject {
      * Method that list the all entities on the data base. The valid value of
      * the key are the att of the <code>IntraUserNetworkServiceDatabaseConstants</code>
      *
-     *  @see IntraUserNetworkServiceDatabaseConstants
-     *  @return All OutgoingIntraUserNetworkServiceMessage.
+     * @param filters
+     * @return List<OutgoingIntraUserNetworkServiceMessage>
+     * @throws CantReadRecordDataBaseException
      */
-    public List<OutgoingIntraUserNetworkServiceMessage> findAll (Map<String, Object> filters) {
+    public List<OutgoingIntraUserNetworkServiceMessage> findAll (Map<String, Object> filters) throws CantReadRecordDataBaseException {
 
         if (filters == null ||
                 filters.isEmpty()){
@@ -329,9 +349,14 @@ public class OutgoingMessageDataAccessObject {
             }
 
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            // Register the failure.
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
-            return null;
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Database Name: " + IntraUserNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "The data no exist";
+            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
+            throw cantReadRecordDataBaseException;
         }
 
         /*
@@ -344,6 +369,7 @@ public class OutgoingMessageDataAccessObject {
      * Method that create a new entity in the data base.
      *
      *  @param entity OutgoingIntraUserNetworkServiceMessage to create.
+     *  @throws CantInsertRecordDataBaseException
      */
     public void create (OutgoingIntraUserNetworkServiceMessage entity) throws CantInsertRecordDataBaseException {
 
@@ -366,9 +392,16 @@ public class OutgoingMessageDataAccessObject {
             getDataBase().executeTransaction(transaction);
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
-            // Register the failure.
-            errorManager.reportUnexpectedPluginException (Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, databaseTransactionFailedException);
-            throw new CantInsertRecordDataBaseException();
+
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Database Name: " + IntraUserNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "The IntraUser Database triggered an unexpected problem that wasn't able to solve by itself";
+            CantInsertRecordDataBaseException cantInsertRecordDataBaseException = new CantInsertRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
+            throw cantInsertRecordDataBaseException;
+
         }
 
     }
@@ -377,6 +410,7 @@ public class OutgoingMessageDataAccessObject {
      * Method that update an entity in the data base.
      *
      *  @param entity OutgoingIntraUserNetworkServiceMessage to update.
+     *  @throws CantUpdateRecordDataBaseException
      */
     public void update(OutgoingIntraUserNetworkServiceMessage entity) throws CantUpdateRecordDataBaseException {
 
@@ -399,9 +433,15 @@ public class OutgoingMessageDataAccessObject {
             getDataBase().executeTransaction(transaction);
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
-            // Register the failure.
-            errorManager.reportUnexpectedPluginException (Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, databaseTransactionFailedException);
-            throw  new CantUpdateRecordDataBaseException();
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Database Name: " + IntraUserNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "The record do not exist";
+            CantUpdateRecordDataBaseException cantUpdateRecordDataBaseException = new CantUpdateRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
+            throw cantUpdateRecordDataBaseException;
+
         }
 
     }
@@ -410,7 +450,8 @@ public class OutgoingMessageDataAccessObject {
      * Method that delete a entity in the data base.
      *
      *  @param id Long id.
-     * */
+     *  @throws CantDeleteRecordDataBaseException
+     */
     public void delete (Long id) throws CantDeleteRecordDataBaseException {
 
         if (id == null){
@@ -429,9 +470,15 @@ public class OutgoingMessageDataAccessObject {
             getDataBase().executeTransaction(transaction);
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
-            // Register the failure.
-            errorManager.reportUnexpectedPluginException (Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, databaseTransactionFailedException);
-            throw new CantDeleteRecordDataBaseException();
+
+            StringBuffer contextBuffer = new StringBuffer();
+            contextBuffer.append("Database Name: " + IntraUserNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+
+            String context = contextBuffer.toString();
+            String possibleCause = "The record do not exist";
+            CantDeleteRecordDataBaseException cantDeleteRecordDataBaseException = new CantDeleteRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
+            throw cantDeleteRecordDataBaseException;
+
         }
 
     }
