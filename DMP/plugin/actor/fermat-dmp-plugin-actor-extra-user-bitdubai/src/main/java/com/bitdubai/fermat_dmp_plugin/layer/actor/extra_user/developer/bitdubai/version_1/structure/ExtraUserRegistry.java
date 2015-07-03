@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -106,8 +107,18 @@ public class ExtraUserRegistry implements DealsWithErrors,DealsWithPlatformDatab
                 /**
                  * The database cannot be created. I can not handle this situation.
                  */
+/*Francisco Arce
+        Exception in the context Fermat Context
+        *
+        * */
+                String message =CantInitializeExtraUserRegistryException.DEFAULT_MESSAGE;
+                FermatException cause = cantCreateDatabaseException.getCause();
+                String context = "DataBase Factory: "+  cantCreateDatabaseException.getContext();
+                String possibleReason  = "The exception occurred when calling  'databaseFactory.createDatabase()': " + cantCreateDatabaseException.getPossibleReason();
+
                 errorManager.reportUnexpectedAddonsException(Addons.EXTRA_USER, UnexpectedAddonsExceptionSeverity.DISABLES_THIS_ADDONS, cantCreateDatabaseException);
-                throw new CantInitializeExtraUserRegistryException();
+               /*Francisco Arce*/
+                throw new CantInitializeExtraUserRegistryException(message, cause, context, possibleReason);
             }
         }
         catch (CantOpenDatabaseException cantOpenDatabaseException){
@@ -115,9 +126,20 @@ public class ExtraUserRegistry implements DealsWithErrors,DealsWithPlatformDatab
             /**
              * The database exists but cannot be open. I can not handle this situation.
              */
+/*Francisco Arce
+        Exception in the context Fermat Context
+        *
+        * */
+            String message =  CantInitializeExtraUserRegistryException.DEFAULT_MESSAGE;
+            FermatException cause = cantOpenDatabaseException.getCause();
+            String context = "Create Database:" + cantOpenDatabaseException.getContext();
+            String possibleReason = "The exception occurred while trying to open the database of users 'this.database = this.platformDatabaseSystem.openDatabase (\"ExtraUser\")': " + cantOpenDatabaseException.getPossibleReason();
 
             errorManager.reportUnexpectedAddonsException(Addons.EXTRA_USER, UnexpectedAddonsExceptionSeverity.DISABLES_THIS_ADDONS, cantOpenDatabaseException);
-            throw new CantInitializeExtraUserRegistryException();
+            /*
+            Modified by Francisco Arce
+            */
+            throw new CantInitializeExtraUserRegistryException(message, cause, context, possibleReason);
         }
 
     }
@@ -167,8 +189,19 @@ public class ExtraUserRegistry implements DealsWithErrors,DealsWithPlatformDatab
             /**
              * I can not solve this situation.
              */
+        /*Francisco Arce
+        Exception in the context Fermat Context
+        *
+        * */
+            String message =  CantCreateExtraUserRegistry.DEFAULT_MESSAGE;
+            FermatException cause = cantInsertRecord.getCause();
+            String context = "Extra User Record: " + cantInsertRecord.getContext();
+            String possibleReason = "The exception occurred when recording the Extra User extrauserTable.insertRecord(extrauserRecord): " +  cantInsertRecord.getPossibleReason();
             errorManager.reportUnexpectedAddonsException(Addons.EXTRA_USER, UnexpectedAddonsExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_ADDONS, cantInsertRecord);
-            throw new CantCreateExtraUserRegistry();
+            /*
+          modified by Francisco Arce
+            */
+            throw new CantCreateExtraUserRegistry(message, cause, context, possibleReason);
         }
 
         return user;
@@ -203,8 +236,17 @@ public class ExtraUserRegistry implements DealsWithErrors,DealsWithPlatformDatab
             /**
              * I can not solve this situation.
              */
+            /*Francisco Arce
+            Exception in the context Fermat Context
+            *
+            * */
+            String message = CantGetExtraUserRegistry.DEFAULT_MESSAGE;
+            FermatException cause = cantLoadTableToMemory.getCause();
+            String context = "table Memory: " + cantLoadTableToMemory.getContext();
+            String possibleReason = "The exception occurred when calling table.loadToMemory (): " + cantLoadTableToMemory.getPossibleReason();
+
             errorManager.reportUnexpectedAddonsException(Addons.EXTRA_USER, UnexpectedAddonsExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_ADDONS, cantLoadTableToMemory);
-            throw new CantGetExtraUserRegistry();
+            throw new CantGetExtraUserRegistry(message, cause, context, possibleReason);
         }
 
 
