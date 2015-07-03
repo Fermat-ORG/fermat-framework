@@ -301,11 +301,8 @@ public class IncomingExtraUserTransactionPluginRoot implements DatabaseManagerFo
         /**
          * I will start the Monitor Agent.
          */
-        this.monitor = new IncomingExtraUserMonitorAgent();
+        this.monitor = new IncomingExtraUserMonitorAgent(this.errorManager, this.incomingCryptoManager, this.registry);
         try {
-            ((DealsWithErrors) this.monitor).setErrorManager(this.errorManager);
-            ((DealsWithIncomingCrypto) this.monitor).setIncomingCryptoManager(this.incomingCryptoManager);
-            ((DealsWithRegistry) this.monitor).setRegistry(this.registry);
             this.monitor.start();
         }
         catch (CantStartAgentException cantStartAgentException) {

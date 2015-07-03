@@ -21,7 +21,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.*;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantAcknowledgeTransactionException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantInitializeCryptoRegistryException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantReadEvent;
-import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantSaveEvent;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.ExpectedTransactionNotFoundException;
 
 import java.util.ArrayList;
@@ -164,7 +164,7 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
         }
     }
 
-    protected void saveNewEvent(String eventType, String eventSource) throws CantSaveEvent {
+    protected void saveNewEvent(String eventType, String eventSource) throws CantSaveEventException {
         try {
             DatabaseTransaction dbTrx = this.database.newTransaction();
             DatabaseTable eventsTable = this.database.getTable(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_NAME);
@@ -181,7 +181,7 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
             this.database.executeTransaction(dbTrx);
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, databaseTransactionFailedException);
-            throw new CantSaveEvent();
+            throw new CantSaveEventException();
         }
     }
 
@@ -215,7 +215,7 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
         }
     }
 
-    protected void disableEvent(UUID eventId) throws CantReadEvent, CantSaveEvent {
+    protected void disableEvent(UUID eventId) throws CantReadEvent, CantSaveEventException {
         try {
             DatabaseTransaction dbTrx = this.database.newTransaction();
             DatabaseTable eventsTable = this.database.getTable(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_NAME);
@@ -232,7 +232,7 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
                 throw new CantReadEvent();
             } else if (records.size() > 1) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, new Exception(String.format("More than one event with Id: %s", eventId)));
-                throw new CantSaveEvent();
+                throw new CantSaveEventException();
             }
 
             DatabaseTableRecord eventRecord = records.get(0);
@@ -241,7 +241,7 @@ public class IncomingExtraUserRegistry implements DealsWithErrors, DealsWithPlug
             this.database.executeTransaction(dbTrx);
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_CRYPTO_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, databaseTransactionFailedException);
-            throw new CantSaveEvent();
+            throw new CantSaveEventException();
         }
     }
 

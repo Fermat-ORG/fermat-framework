@@ -16,7 +16,7 @@ class IncomingExtraUserDataBaseFactory implements DealsWithPluginDatabaseSystem 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
-    PluginDatabaseSystem pluginDatabaseSystem;
+    private PluginDatabaseSystem pluginDatabaseSystem;
 
 
     /**
@@ -31,7 +31,7 @@ class IncomingExtraUserDataBaseFactory implements DealsWithPluginDatabaseSystem 
      * IncomingExtraUserDataBaseFactory methods.
      * The whole login of this module should be redesigned
      */
-    Database createDatabase (UUID ownerId, String databaseName) throws CantCreateDatabaseException {
+    protected Database createDatabase (UUID ownerId, String databaseName) throws CantCreateDatabaseException {
         Database database = this.pluginDatabaseSystem.createDatabase(ownerId, databaseName);
         DatabaseTableFactory table;
         HashMap<String, List<IncomingExtraUserDataBaseConstants.ColumnDefinition>> tablesDefinitions = new HashMap<>();

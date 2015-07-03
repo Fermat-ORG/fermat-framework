@@ -28,6 +28,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.deve
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.util.SourceAdministrator;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Este agente corre en su propio Thread.
@@ -50,7 +51,7 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
     /**
      * DealsWithErrors Interface member variables.
      */
-    ErrorManager errorManager;
+    private ErrorManager errorManager;
 
     /**
      * DealsWithIncomingCrypto Interface member variables.
@@ -70,6 +71,11 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
     private MonitorAgent monitorAgent;
 
 
+    public IncomingExtraUserMonitorAgent(final ErrorManager errorManager, final IncomingCryptoManager incomingCryptoManager, final IncomingExtraUserRegistry registry){
+        this.errorManager = errorManager;
+        this.incomingCryptoManager = incomingCryptoManager;
+        this.registry = registry;
+    }
 
     /**
      *DealsWithErrors Interface implementation.
@@ -123,16 +129,27 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
 
     @Override
     public void stop() {
-        
-        this.agentThread.interrupt();
-        
+        //this.agentThread.interrupt();
+        this.monitorAgent.stop();
     }
 
+    public boolean isRunning(){
+        return this.monitorAgent.isRunning();
+    }
 
 
 
     private static class MonitorAgent implements DealsWithIncomingCrypto, DealsWithErrors, DealsWithRegistry, Runnable  {
 
+        private AtomicBoolean running = new AtomicBoolean(false);
+
+        public boolean isRunning(){
+            return running.get();
+        }
+
+        public void stop(){
+            running.set(false);
+        }
         /**
          * DealsWithCryptoVault Interface member variables.
          */
@@ -200,7 +217,10 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
             /**
              * Infinite loop.
              */
-            while (true) {
+            running.set(true);
+
+            while (running.get()) {
+
 
                 /**
                  * Sleep for a while.
@@ -216,15 +236,43 @@ public class IncomingExtraUserMonitorAgent implements DealsWithIncomingCrypto, D
                  * Now I do the main task.
                  */
                 doTheMainTask();
-            
+
                 /**
                  * Check if I have been Interrupted.
                  */
                 if (Thread.currentThread().isInterrupted()) {
+                    break;
+                }
+            }
+            cleanResources();
+            /*
+            while (true) {
+
+
+                /**
+                 * Sleep for a while.
+                 *
+                try {
+                    Thread.sleep(SLEEP_TIME);
+                } catch (InterruptedException interruptedException) {
                     cleanResources();
                     return;
                 }
-            }
+
+                /**
+                 * Now I do the main task.
+                 *
+                doTheMainTask();
+
+                /**
+                 * Check if I have been Interrupted.
+                 *
+                if (Thread.currentThread().isInterrupted()) {
+                    cleanResources();
+                    running.set(false);
+                    return;
+                }
+            }*/
         }
 
         private void doTheMainTask() {
