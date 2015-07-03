@@ -79,7 +79,7 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        setRetainInstance(true);
         try {
             ToolManager toolManager = platform.getToolManager();
             try {
