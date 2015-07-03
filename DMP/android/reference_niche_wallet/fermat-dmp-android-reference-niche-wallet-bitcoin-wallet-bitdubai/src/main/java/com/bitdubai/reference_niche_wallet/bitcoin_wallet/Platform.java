@@ -23,7 +23,7 @@ public class Platform implements DealsWithErrors, DealsWithEvents, DealsWithNich
     /**
      * DealsWithErrors Interface member variables.
      */
-    private ErrorManager errorManager;
+    private static ErrorManager errorManager;
 
     /**
      * DealsWithEvents Interface member variables.
@@ -62,6 +62,10 @@ public class Platform implements DealsWithErrors, DealsWithEvents, DealsWithNich
 
     public CryptoWalletManager getCryptoWalletManager() {
         return this.cryptoWalletManager;
+    }
+
+    public ErrorManager getErrorManager() {
+        return this.errorManager;
     }
 
 

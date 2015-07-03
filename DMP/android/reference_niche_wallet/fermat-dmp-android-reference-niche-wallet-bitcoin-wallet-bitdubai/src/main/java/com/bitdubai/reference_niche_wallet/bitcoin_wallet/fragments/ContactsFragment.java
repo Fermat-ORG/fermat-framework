@@ -13,11 +13,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetAllWalletContactsException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform;
 
 import java.util.ArrayList;
@@ -40,6 +43,7 @@ public class ContactsFragment extends Fragment {
     private CryptoWalletManager cryptoWalletManager;
     private Platform platform;
     private CryptoWallet cryptoWallet;
+    private ErrorManager errorManager;
 
     public static ContactsFragment newInstance(int position) {
         ContactsFragment f = new ContactsFragment();
@@ -62,16 +66,21 @@ public class ContactsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        errorManager = platform.getErrorManager();
         platform = (Platform) getArguments().getSerializable(ARG_PLATFORM);
 
         cryptoWalletManager = platform.getCryptoWalletManager();
 
         try {
             cryptoWallet = cryptoWalletManager.getCryptoWallet();
-        } catch (CantGetCryptoWalletException e) {
-
+        }
+        catch (CantGetCryptoWalletException e)
+        {
+            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage("Unexpected error get Contact list - " + e.getMessage());
-            e.printStackTrace();
+
+
         }
 
     }
@@ -85,9 +94,11 @@ public class ContactsFragment extends Fragment {
             List<WalletContactRecord> walletContactRecords = new ArrayList<>();
             try {
                 walletContactRecords = cryptoWallet.listWalletContacts(wallet_id);
-            } catch (CantGetAllWalletContactsException e) {
+            } catch (CantGetAllWalletContactsException e)
+            {
+                errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 showMessage("CantGetAllWalletContactsException- " + e.getMessage());
-                e.printStackTrace();
+
             }
 
             // Get ListView object from xml
@@ -134,9 +145,11 @@ public class ContactsFragment extends Fragment {
                         .show();
             }
         });*/
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
+            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage("Contacts Fragment onCreateView Exception - " + e.getMessage());
-            e.printStackTrace();
+
         }
         return rootView;
     }

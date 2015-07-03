@@ -8,22 +8,19 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.net.Uri;
+
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.ContextMenu;
-import android.view.KeyEvent;
+
 import android.view.LayoutInflater;
-import android.view.MenuItem;
-import android.view.MotionEvent;
+
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.widget.AdapterView;
+
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -35,10 +32,13 @@ import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformWalletType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantRequestCryptoAddressException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
@@ -71,7 +71,8 @@ public class ReceiveFragment extends Fragment {
      */
     private static CryptoWalletManager cryptoWalletManager;
     private static Platform platform = new Platform();
-    CryptoWallet cryptoWallet;
+    private CryptoWallet cryptoWallet;
+    private ErrorManager errorManager;
 
 
     public static ReceiveFragment newInstance(int position) {
@@ -86,15 +87,20 @@ public class ReceiveFragment extends Fragment {
         //setHasOptionsMenu(false);
         super.onCreate(savedInstanceState);
         try {
+            errorManager = platform.getErrorManager();
             cryptoWalletManager = platform.getCryptoWalletManager();
-            try {
+            try
+            {
                 cryptoWallet = cryptoWalletManager.getCryptoWallet();
-            } catch (CantGetCryptoWalletException e) {
-                e.printStackTrace();
             }
-        } catch(Exception ex) {
+            catch (CantGetCryptoWalletException e)
+            {
+                errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                showMessage("Unexpected error init Crypto Manager - " + e.getMessage());
+            }
+        } catch (Exception ex) {
             showMessage("Unexpected error init Crypto Manager - " + ex.getMessage());
-            ex.printStackTrace();
+
         }
     }
 
@@ -186,6 +192,7 @@ public class ReceiveFragment extends Fragment {
 
             //TODO SHOW BUTTON SHARE AND ADDRESS IN SCREEN
         } catch (WriterException writerException) {
+            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, writerException);
 
         }
     }
@@ -199,9 +206,12 @@ public class ReceiveFragment extends Fragment {
         try {
             CryptoAddress cryptoAddress = cryptoWallet.requestAddress(contact_name.toString(), Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
             user_address_wallet = cryptoAddress.getAddress();
-        } catch (CantRequestCryptoAddressException e) {
+        }
+        catch (CantRequestCryptoAddressException e)
+        {
+            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage("Cant Request Crypto Address Exception - " + e.getMessage());
-            e.printStackTrace();
+
         }
     }
 

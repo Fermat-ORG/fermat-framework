@@ -1,4 +1,4 @@
-package unit.com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.structure.ActorAddressBookCryptoModuleRegistry;
+package unit.com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.structure.WalletAddressBookCryptoModuleDao;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -8,9 +8,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.ActorAddressBookNotFoundException;
-import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.exceptions.CantGetActorAddressBookException;
-import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.structure.ActorAddressBookCryptoModuleRegistry;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.CantGetWalletAddressBookException;
+import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.WalletAddressBookNotFoundException;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.structure.WalletAddressBookCryptoModuleDao;
 
 import junit.framework.TestCase;
 
@@ -30,7 +30,7 @@ import static org.mockito.Mockito.when;
 
 
 @RunWith(MockitoJUnitRunner.class)
-public class GetActorAddressBookByCryptoAddressTest extends TestCase {
+public class GetWalletAddressBookByCryptoAddressTest extends TestCase {
 
     @Mock
     ErrorManager errorManager;
@@ -50,7 +50,7 @@ public class GetActorAddressBookByCryptoAddressTest extends TestCase {
     CryptoAddress cryptoAddress;
 
 
-    ActorAddressBookCryptoModuleRegistry registry;
+    WalletAddressBookCryptoModuleDao dao;
 
     UUID pluginId;
 
@@ -58,43 +58,40 @@ public class GetActorAddressBookByCryptoAddressTest extends TestCase {
     public void setUp() throws Exception {
         cryptoAddress = new CryptoAddress("asdadas", CryptoCurrency.BITCOIN);
         pluginId = UUID.randomUUID();
-        registry = new ActorAddressBookCryptoModuleRegistry();
-        registry.setErrorManager(errorManager);
-        registry.setPluginDatabaseSystem(pluginDatabaseSystem);
-        registry.setPluginId(pluginId);
+        dao = new WalletAddressBookCryptoModuleDao(errorManager, pluginDatabaseSystem, pluginId);
         when(pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString())).thenReturn(database);
-        registry.initialize();
+        dao.initialize();
 
     }
 
     @Test
-    public void testGetActorAddressBookByCryptoAddress_NotNull() throws Exception {
+    public void testGetWalletAddressBookByCryptoAddress_NotNull() throws Exception {
         when(database.getTable(anyString())).thenReturn(databaseTable);
-        when(databaseTableRecord.getStringValue(anyString())).thenReturn("EUS");
+        when(databaseTableRecord.getStringValue(anyString())).thenReturn("BWBW");
         List<DatabaseTableRecord> databaseTableRecordList = new ArrayList<>();
         databaseTableRecordList.add(databaseTableRecord);
         when(databaseTable.getRecords()).thenReturn(databaseTableRecordList);
 
-        registry.getActorAddressBookByCryptoAddress(cryptoAddress);
+        dao.getWalletAddressBookModuleByCryptoAddress(cryptoAddress);
     }
 
-    @Test(expected=ActorAddressBookNotFoundException.class)
-    public void testGetActorAddressBookByCryptoAddress_ActorAddressBookNotFoundException() throws Exception {
+    @Test(expected=WalletAddressBookNotFoundException.class)
+    public void testGetWalletAddressBookByCryptoAddress_WalletAddressBookNotFoundException() throws Exception {
         when(database.getTable(anyString())).thenReturn(databaseTable);
 
-        registry.getActorAddressBookByCryptoAddress(cryptoAddress);
+        dao.getWalletAddressBookModuleByCryptoAddress(cryptoAddress);
     }
 
-    @Test(expected=CantGetActorAddressBookException.class)
-    public void testGetActorAddressBookByCryptoAddress_CantLoadTableToMemoryException_CantGetActorAddressBookException() throws Exception {
+    @Test(expected=CantGetWalletAddressBookException.class)
+    public void testGetWalletAddressBookByCryptoAddress_CantLoadTableToMemoryException_CantGetWalletAddressBookException() throws Exception {
         doThrow(new CantLoadTableToMemoryException()).when(databaseTable).loadToMemory();
         when(database.getTable(anyString())).thenReturn(databaseTable);
 
-        registry.getActorAddressBookByCryptoAddress(cryptoAddress);
+        dao.getWalletAddressBookModuleByCryptoAddress(cryptoAddress);
     }
 
-    @Test(expected=CantGetActorAddressBookException.class)
-    public void testGetActorAddressBookByCryptoAddress_CryptoAddressNull_CantGetActorAddressBookException() throws Exception {
-        registry.getActorAddressBookByCryptoAddress(null);
+    @Test(expected=CantGetWalletAddressBookException.class)
+    public void testGetWalletAddressBookByCryptoAddress_CryptoAddressNull_CantGetWalletAddressBookException() throws Exception {
+        dao.getWalletAddressBookModuleByCryptoAddress(null);
     }
 }

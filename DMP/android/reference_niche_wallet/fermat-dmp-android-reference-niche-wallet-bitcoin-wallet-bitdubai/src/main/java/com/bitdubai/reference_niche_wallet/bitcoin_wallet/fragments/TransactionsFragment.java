@@ -18,10 +18,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.BitcoinTransaction;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform;
 
 import android.widget.TextView;
@@ -49,6 +52,7 @@ public class TransactionsFragment extends Fragment {
     private static CryptoWalletManager cryptoWalletManager;
     private static Platform platform = new Platform();
     CryptoWallet cryptoWallet;
+    private ErrorManager errorManager;
 
     UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
 
@@ -76,13 +80,16 @@ public class TransactionsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
             cryptoWalletManager = platform.getCryptoWalletManager();
+        errorManager = platform.getErrorManager();
 
             try{
                 cryptoWallet = cryptoWalletManager.getCryptoWallet();
             }
-            catch (CantGetCryptoWalletException e) {
+            catch (CantGetCryptoWalletException e)
+            {
+                errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 showMessage("CantGetCryptoWalletException- " + e.getMessage());
-                e.printStackTrace();
+
             }
         refreshTransactionsContent();
     }
@@ -155,13 +162,14 @@ public class TransactionsFragment extends Fragment {
                     lstTransactions.add(0, new Transactions(transaction.getAddressFrom().getAddress().toString(), String.valueOf(transaction.getTimestamp()), String.valueOf(transaction.getAmount()), transaction.getMemo(), transaction.getType().toString()));
                 }
 
-            } catch (CantGetTransactionsException e) {
+            } catch (CantGetTransactionsException e)
+            {
+                errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 showMessage("Cant Get Transactions Exception- " + e.getMessage());
-                e.printStackTrace();
             }
-            catch(Exception ex) {
+            catch(Exception ex)
+            {
                 showMessage("Unexpected error get Transactions - " + ex.getMessage());
-                ex.printStackTrace();
             }
         else{
             try {
@@ -170,13 +178,16 @@ public class TransactionsFragment extends Fragment {
                     lstTransactions.add(0, new Transactions(transaction.getAddressFrom().getAddress().toString(), String.valueOf(transaction.getTimestamp()), String.valueOf(transaction.getAmount()), transaction.getMemo(), transaction.getType().toString()));
                 }
 
-            } catch (CantGetTransactionsException e) {
+            } catch (CantGetTransactionsException e)
+            {
+                errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 showMessage("Cant Get Transactions Exception- " + e.getMessage());
-                e.printStackTrace();
             }
-            catch(Exception ex) {
+            catch(Exception ex)
+            {
+                errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
                 showMessage("Unexpected error get Transactions - " + ex.getMessage());
-                ex.printStackTrace();
+
             }
         }
         pointerOffset=lstTransactions.size();
@@ -304,7 +315,7 @@ public class TransactionsFragment extends Fragment {
         alertDialog.setButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // aquí puedes añadir funciones
-                Toast.makeText(getActivity(),"Auch me tocaste",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),"",Toast.LENGTH_SHORT).show();
             }
         });
         //alertDialog.setIcon(R.drawable.icon);
