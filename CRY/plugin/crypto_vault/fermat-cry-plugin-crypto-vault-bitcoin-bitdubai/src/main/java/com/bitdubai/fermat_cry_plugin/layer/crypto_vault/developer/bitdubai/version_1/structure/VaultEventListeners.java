@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.ver
 
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -127,6 +128,9 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
 
             dbActions.updateCryptoTransactionStatus(tx.getHashAsString(), cryptoStatus);
         } catch (CantExecuteQueryException e) {
+            //todo better handle this
+            e.printStackTrace();
+        } catch (CantLoadTableToMemoryException e) {
             //todo better handle this
             e.printStackTrace();
         }

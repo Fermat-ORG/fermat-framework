@@ -536,43 +536,28 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
      */
     private String[] getAddressFromTransaction(String txHash) {
         String[] addresses = new String[2];
-        try{
-            Sha256Hash hash = new Sha256Hash(txHash);
-            Transaction tx = vault.getTransaction(hash);
 
-            /**
-             * Will validate if this is an incoming transaction
-             */
-            CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
-            db.setVault(vault);
+        Sha256Hash hash = new Sha256Hash(txHash);
+        Transaction tx = vault.getTransaction(hash);
 
-
-            /**
-             * I will search on all outputs for an address that is mine
-             */
-            for (TransactionOutput output : tx.getOutputs()){
-                if (output.isMine(vault))
+        /**
+         * I will search on all outputs for an address that is mine
+         */
+        for (TransactionOutput output : tx.getOutputs()) {
+            if (output.isMine(vault)){
                 /**
-                 * this is address From
+                 * this is address To
                  */
-                   addresses[0] = output.getScriptPubKey().getToAddress(this.networkParameters).toString();
-               else
+                addresses[1] = output.getScriptPubKey().getToAddress(this.networkParameters).toString();
+            } else {
                 /**
-                 * This is address to
+                 * This is address From
                  */
-                    addresses[1] = output.getScriptPubKey().getToAddress(networkParameters).toString();
-           }
+                addresses[0] = output.getScriptPubKey().getToAddress(networkParameters).toString();
+            }
 
-
-            return addresses;
-
-        } catch (Exception e){
-            /**
-             * it might be from an address that we can't get
-             */
-            return null;
         }
-
+        return addresses;
     }
 
 

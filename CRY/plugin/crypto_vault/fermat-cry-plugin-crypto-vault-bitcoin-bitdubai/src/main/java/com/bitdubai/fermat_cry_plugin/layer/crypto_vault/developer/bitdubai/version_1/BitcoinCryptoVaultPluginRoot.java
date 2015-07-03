@@ -406,9 +406,6 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
                 vault.loadOrCreateVault();
 
 
-                System.out.println("CryptoVault - Valid receive address for the vault is: " + vault.getAddress().getAddress());
-
-
                 /**
                  * Once the vault is loaded or created, I will connect it to Bitcoin network to recieve pending transactions
                  */

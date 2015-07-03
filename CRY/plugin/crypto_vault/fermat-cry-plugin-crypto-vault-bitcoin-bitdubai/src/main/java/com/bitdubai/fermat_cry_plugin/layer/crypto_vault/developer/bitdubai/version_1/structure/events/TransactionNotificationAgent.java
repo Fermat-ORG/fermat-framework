@@ -258,7 +258,7 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
             /**
              * this will run in an infinite loop
              */
-            logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.events.TransactionNotificationAgent"), "Transaction Protocol Notification Agent: running...", "Transaction Protocol Notification Agent: running...", "Transaction Protocol Notification Agent: running...");
+            //logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.events.TransactionNotificationAgent"), "Transaction Protocol Notification Agent: running...", "Transaction Protocol Notification Agent: running...", "Transaction Protocol Notification Agent: running...");
             int iteration = 0;
             while (true)
             {
@@ -277,7 +277,7 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
                  */
                 try {
 
-                    logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), null, "Iteration number " + iteration, "Iteration number " + iteration);
+                    //logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), null, "Iteration number " + iteration, "Iteration number " + iteration);
                     doTheMainTask();
                 } catch (CantExecuteQueryException e) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
