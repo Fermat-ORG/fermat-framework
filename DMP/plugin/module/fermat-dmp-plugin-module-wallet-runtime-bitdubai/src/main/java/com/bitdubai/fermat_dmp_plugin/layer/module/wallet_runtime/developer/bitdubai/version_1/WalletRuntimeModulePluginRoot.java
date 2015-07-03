@@ -503,7 +503,9 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
 
             runtimeTabStrip = new RuntimeTabStrip();
-
+            runtimeTabStrip.setTabsColor("#d07b62");
+            runtimeTabStrip.setTabsTextColor("#FFFFFF");
+            runtimeTabStrip.setTabsIndicateColor("#b46a54");
 
             runtimeTab = new RuntimeTab();
             runtimeTab.setLabel("DataBase Tools");
