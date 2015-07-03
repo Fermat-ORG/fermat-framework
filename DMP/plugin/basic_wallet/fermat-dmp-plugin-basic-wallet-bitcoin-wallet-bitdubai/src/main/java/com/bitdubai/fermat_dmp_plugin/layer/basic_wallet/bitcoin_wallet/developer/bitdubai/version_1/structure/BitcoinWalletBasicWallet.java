@@ -43,7 +43,7 @@ public class BitcoinWalletBasicWallet implements BitcoinWallet ,DealsWithErrors,
      * BitcoinWalletBasicWallet member variables.
      */
     private Database database;
-    private UUID internalWalletId;
+    //private UUID internalWalletId;
 
     private final String WALLET_IDS_FILE_NAME = "walletsIds";
 
@@ -138,14 +138,15 @@ public class BitcoinWalletBasicWallet implements BitcoinWallet ,DealsWithErrors,
 
         // TODO: Until the Wallet MAnager create the wallets, we will use this internal id
         //       We need to change this in the near future
-        this.internalWalletId = UUID.fromString("35f1b7bc-886a-458a-8ae3-51a16a28889a"); //UUID.randomUUID();
+        UUID internalWalletId = UUID.randomUUID();
+        //this.internalWalletId = UUID.fromString("35f1b7bc-886a-458a-8ae3-51a16a28889a"); //UUID.randomUUID();
 
         /**
          * We will create the database where I am going to store the information of this wallet.
          */
         try {
             // We will create wallet data base with new internal wallet id
-            this.database =  databaseFactory.createDatabase(this.pluginId, this.internalWalletId);
+            this.database =  databaseFactory.createDatabase(this.pluginId, internalWalletId);
 
         }
         catch (CantCreateDatabaseException cantCreateDatabaseException){
@@ -153,7 +154,7 @@ public class BitcoinWalletBasicWallet implements BitcoinWallet ,DealsWithErrors,
             /**
              * The database cannot be created. I can not handle this situation.
              */
-            throw new CantCreateWalletException("Database could not be created",cantCreateDatabaseException,"internalWalletId: "+this.internalWalletId.toString(),"");
+            throw new CantCreateWalletException("Database could not be created",cantCreateDatabaseException,"internalWalletId: "+internalWalletId.toString(),"");
         }
 
         PluginTextFile walletIdsFile;
@@ -207,7 +208,7 @@ public class BitcoinWalletBasicWallet implements BitcoinWallet ,DealsWithErrors,
 
 
         // We add the new Id pair
-        walletIds.put(walletId,this.internalWalletId);
+        walletIds.put(walletId,internalWalletId);
 
         /**
          * Now we will generate the file content.
@@ -236,7 +237,7 @@ public class BitcoinWalletBasicWallet implements BitcoinWallet ,DealsWithErrors,
              */
             throw new CantCreateWalletException("Could not persist in file",cantPersistFileException,"stringBuilder: " + stringBuilder.toString(),"");
         }
-        return this.internalWalletId;
+        return internalWalletId;
     }
 
 
