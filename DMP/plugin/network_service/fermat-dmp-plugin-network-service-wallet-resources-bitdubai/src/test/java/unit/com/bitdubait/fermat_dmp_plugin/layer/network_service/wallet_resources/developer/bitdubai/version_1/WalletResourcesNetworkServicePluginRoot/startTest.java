@@ -1,0 +1,67 @@
+package unit.com.bitdubait.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.WalletResourcesNetworkServicePluginRoot;
+
+import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Wallets;
+
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
+import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.WalletResourcesNetworkServicePluginRoot;
+
+import junit.framework.TestCase;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+
+import static com.googlecode.catchexception.CatchException.catchException;
+import static com.googlecode.catchexception.CatchException.caughtException;
+import static org.fest.assertions.api.Assertions.assertThat;
+
+/**
+ * Created by natalia on 03/07/15.
+ */
+public class startTest extends TestCase {
+
+    /**
+     * DealsWithErrors interface Mocked
+     */
+    @Mock
+    ErrorManager errorManager;
+
+    /**
+     * UsesFileSystem Interface member variables.
+     */
+    @Mock
+    PluginFileSystem pluginFileSystem;
+
+
+    /**
+     * DealWithEvents Iianterface member variables.
+     */
+    @Mock
+    EventManager eventManager;
+
+
+
+    WalletResourcesNetworkServicePluginRoot walletResourcePluginRoot;
+
+    @Before
+    public void setUp() throws Exception {
+        walletResourcePluginRoot = new WalletResourcesNetworkServicePluginRoot();
+        walletResourcePluginRoot.setwalletType(Wallets.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI);
+        walletResourcePluginRoot.setPluginFileSystem(pluginFileSystem);
+        walletResourcePluginRoot.setEventManager(eventManager);
+        walletResourcePluginRoot.setErrorManager(errorManager);
+    }
+
+    @Test
+    public void teststart_ThePlugInHasStartedOk_ThrowsCantStartPluginException() throws Exception {
+
+
+        catchException(walletResourcePluginRoot).start();
+        assertThat(caughtException()).isInstanceOf(NullPointerException.class);
+        caughtException().printStackTrace();
+    }
+
+}
