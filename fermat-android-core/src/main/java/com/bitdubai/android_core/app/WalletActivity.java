@@ -199,7 +199,11 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
             if(tabs == null)
                 ((PagerSlidingTabStrip) findViewById(R.id.tabs)).setVisibility(View.INVISIBLE);
             else{
-                ((PagerSlidingTabStrip) findViewById(R.id.tabs)).setVisibility(View.VISIBLE);
+                //acá puedo cambiar todo esto, mati
+                PagerSlidingTabStrip pagerSlidingTabStrip=((PagerSlidingTabStrip) findViewById(R.id.tabs));
+                pagerSlidingTabStrip.setVisibility(View.VISIBLE);
+                //pagerSlidingTabStrip.setTextColor(Color.GREEN);
+                //pagerSlidingTabStrip.setBackgroundColor(Color.GREEN);
                 this.tabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
 
             }
@@ -809,33 +813,33 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
                     case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE:
                         bitcoinPlatform = new com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform();
                         bitcoinPlatform.setNicheWalletTypeCryptoWalletManager((CryptoWalletManager) platformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE));
-
+                        bitcoinPlatform.setErrorManager((ErrorManager)platformContext.getAddon(Addons.ERROR_MANAGER));
                         currentFragment =  BalanceFragment.newInstance(0);
                         break;
                     case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE:
                         bitcoinPlatform = new com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform();
                         bitcoinPlatform.setNicheWalletTypeCryptoWalletManager((CryptoWalletManager) platformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE));
-
+                        bitcoinPlatform.setErrorManager((ErrorManager) platformContext.getAddon(Addons.ERROR_MANAGER));
                         currentFragment = ReceiveFragment.newInstance(0);
                         break;
                     case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND:
                         bitcoinPlatform = new com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform();
                         bitcoinPlatform.setNicheWalletTypeCryptoWalletManager((CryptoWalletManager) platformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE));
-
+                        bitcoinPlatform.setErrorManager((ErrorManager) platformContext.getAddon(Addons.ERROR_MANAGER));
                         currentFragment =  SendFragment.newInstance(0);
                         break;
 
                     case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS:
                         bitcoinPlatform = new com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform();
                         bitcoinPlatform.setNicheWalletTypeCryptoWalletManager((CryptoWalletManager) platformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE));
-
+                        bitcoinPlatform.setErrorManager((ErrorManager) platformContext.getAddon(Addons.ERROR_MANAGER));
                         currentFragment =  TransactionsFragment.newInstance(0);
 
                         break;
                     case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS:
                         bitcoinPlatform = new com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform();
                         bitcoinPlatform.setNicheWalletTypeCryptoWalletManager((CryptoWalletManager) platformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE));
-
+                        bitcoinPlatform.setErrorManager((ErrorManager) platformContext.getAddon(Addons.ERROR_MANAGER));
                         currentFragment =  ContactsFragment.newInstance(0);
                         break;
 

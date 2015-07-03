@@ -113,13 +113,11 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
             columnNames = developerDatabaseTable.getFieldNames();
             int i=0;
 
-
-
             if (developerDatabaseTableRecordList.size() > 0) {
                 i=0;
                 values =new ArrayList<String>();
-                for(DeveloperDatabaseTableRecord dtr:developerDatabaseTableRecordList){
-                    values=(dtr.getValues());
+                for(DeveloperDatabaseTableRecord developerDatabaseTableRecord:developerDatabaseTableRecordList){
+                    values=(developerDatabaseTableRecord.getValues());
                     i++;
                 }
             } else {
@@ -136,54 +134,56 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
         base=(LinearLayout)rootView.findViewById(R.id.base);
 
 
-        ScrollView sv = new ScrollView(getActivity());
+        ScrollView scrollView = new ScrollView(getActivity());
         if(developerDatabaseTableRecordList!=null){
             TableLayout tableLayout = createTable(values, columnNames, developerDatabaseTableRecordList.size(), columnNames.size());
-            HorizontalScrollView hsv = new HorizontalScrollView(getActivity());
+            HorizontalScrollView horizontalScrollView = new HorizontalScrollView(getActivity());
 
-            hsv.addView(tableLayout);
-            sv.addView(hsv);
-            base.addView(sv);
-        //}else{
-            //TableLayout tableLayout = createTable(values, columnNames, developerDatabaseTableRecordList.size(), columnNames.size());
+            horizontalScrollView.addView(tableLayout);
+            scrollView.addView(horizontalScrollView);
+            base.addView(scrollView);
         }
 
         return rootView;
     }
 
-    private TableLayout createTable(List<String> rv, List<String> cv,int rowCount, int columnCount){
+    private TableLayout createTable(List<String> lstRows, List<String> lstColumns,int rowCount, int columnCount){
 
 
         TableLayout tableLayout= new TableLayout(getActivity());
+        TableLayout.LayoutParams tableLayoutParams = new TableLayout.LayoutParams();
+        tableLayout.setBackgroundColor(Color.BLACK);
+        tableLayout.setPadding(3,3,3,3);
         try {
             TableRow.LayoutParams tableRowParams = new TableRow.LayoutParams();
-            tableRowParams.setMargins(1, 1, 1, 1);
+            tableRowParams.setMargins(3, 3, 3, 3);
             tableRowParams.weight = 1;
-            TableRow tbrow0 = new TableRow(getActivity());
-            if(rv!=null) {
 
-                for (int i = 0; i < rv.size(); i++) {
-                    TextView tv0 = new TextView(getActivity());
-                    tv0.setBackgroundColor(Color.WHITE);
-                    tv0.setText(cv.get(i));
-                    tv0.setTextColor(Color.BLACK);
+            TableRow tableRow = new TableRow(getActivity());
+            if(lstColumns!=null) {
+
+                for (int i = 0; i < lstColumns.size(); i++) {
+                    TextView textView = new TextView(getActivity());
+                    textView.setBackgroundColor(Color.WHITE);
+                    textView.setText(lstColumns.get(i));
+                    textView.setTextColor(Color.BLACK);
                     // 2) create tableRow params
 
-                    tbrow0.addView(tv0, tableRowParams);
+                    tableRow.addView(textView, tableRowParams);
                 }
             }
-            tableLayout.addView(tbrow0);
-            if(cv!=null) {
-                tbrow0 = new TableRow(getActivity());
-                for (int i = 0; i < cv.size(); i++) {
-                    TextView tv0 = new TextView(getActivity());
-                    tv0.setBackgroundColor(Color.WHITE);
-                    tv0.setText(rv.get(i));
-                    tv0.setTextColor(Color.BLACK);
-                    tbrow0.addView(tv0, tableRowParams);
+            tableLayout.addView(tableRow);
+            if(lstRows!=null) {
+                tableRow = new TableRow(getActivity());
+                for (int i = 0; i < lstRows.size(); i++) {
+                    TextView textView = new TextView(getActivity());
+                    textView.setBackgroundColor(Color.WHITE);
+                    textView.setText(lstRows.get(i));
+                    textView.setTextColor(Color.BLACK);
+                    tableRow.addView(textView, tableRowParams);
 
                 }
-                tableLayout.addView(tbrow0);
+                tableLayout.addView(tableRow,tableLayoutParams);
             }
 
         }catch (Exception e){

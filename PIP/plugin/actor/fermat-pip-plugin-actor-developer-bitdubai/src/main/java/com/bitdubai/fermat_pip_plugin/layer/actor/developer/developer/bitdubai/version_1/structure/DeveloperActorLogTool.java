@@ -77,7 +77,7 @@ public class DeveloperActorLogTool implements LogTool {
      * @return
      */
     @Override
-    public List<ClassHierarchyLevels> getClassesHierarchy(Plugins plugin) {
+    public List<ClassHierarchyLevels> getClassesHierarchyPlugins(Plugins plugin) {
         /**
          * I get the class full patch from the plug in.
          */
@@ -164,6 +164,15 @@ public class DeveloperActorLogTool implements LogTool {
          * I return the object
          */
         return returnedClasses;
+    }
+
+
+    /*
+        Created by matias, used in fragment to get loglevels
+     */
+    @Override
+    public List<ClassHierarchyLevels> getClassesHierarchyAddons(Addons addon) {
+        return null;
     }
 
     /**

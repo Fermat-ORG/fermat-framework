@@ -1,13 +1,16 @@
 package com.bitdubai.sub_app.developer.fragment;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,6 +70,7 @@ public class DatabaseToolsFragment extends Fragment{
         return f;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,6 +86,28 @@ public class DatabaseToolsFragment extends Fragment{
         } catch (Exception ex) {
             showMessage("Unexpected error get tool manager - " + ex.getMessage());
             ex.printStackTrace();
+        }
+
+        setStatusBarColor();
+
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void setStatusBarColor(){
+        try {
+
+            Window window = getActivity().getWindow();
+
+            // clear FLAG_TRANSLUCENT_STATUS flag:
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+
+            // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+            // finally change the color
+            window.setStatusBarColor(getActivity().getResources().getColor(R.color.wallet_factory_orange ));
+        }catch (Exception e){
+            Log.d("DatabaseToolsFragment","Versión del sdk no compatible con el cambio de color del status bar");
         }
     }
 
@@ -134,33 +160,6 @@ public class DatabaseToolsFragment extends Fragment{
             AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.shell_wallet_desktop_front_grid_item, mlist);
             _adpatrer.notifyDataSetChanged();
             gridView.setAdapter(_adpatrer);
-
-
-
-
-
-
-            /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    TextView labelDatabase = (TextView) rootView.findViewById(R.id.labelDatabase);
-                    labelDatabase.setVisibility(View.GONE);
-                    App item = (App) listView.getItemAtPosition(position);
-
-                    DatabaseToolsDatabaseListFragment databaseToolsDatabaseListFragment = new DatabaseToolsDatabaseListFragment();
-
-                    databaseToolsDatabaseListFragment.setResource(item.company);
-
-                    FragmentTransaction FT = getFragmentManager().beginTransaction();
-
-                    FT.add(databaseToolsDatabaseListFragment, TAG_NOMBRE_DE_TU_CLASE);
-
-                    FT.add(databaseToolsDatabaseListFragment, databaseToolsDatabaseListFragment);
-
-
-                    FT.commit();
-                }
-            });
-            */
 
             //listView.setAdapter(adapter);
         } catch (Exception e) {

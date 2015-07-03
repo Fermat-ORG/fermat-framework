@@ -174,7 +174,7 @@ public class LogToolsFragmentLevel2 extends Fragment {
                 String level2="";
                 String toReplace = "";
                 List<ClassHierarchyLevels> newList = new ArrayList<ClassHierarchyLevels>();
-                for (ClassHierarchyLevels classes : logTool.getClassesHierarchy(plugin)){
+                for (ClassHierarchyLevels classes : logTool.getClassesHierarchyPlugins(plugin)){
                     /**
                      * I will acommodate the values to fit the screen
                      */
