@@ -67,8 +67,8 @@ public class ContactsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        errorManager = platform.getErrorManager();
         platform = (Platform) getArguments().getSerializable(ARG_PLATFORM);
+        errorManager = platform.getErrorManager();
 
         cryptoWalletManager = platform.getCryptoWalletManager();
 
