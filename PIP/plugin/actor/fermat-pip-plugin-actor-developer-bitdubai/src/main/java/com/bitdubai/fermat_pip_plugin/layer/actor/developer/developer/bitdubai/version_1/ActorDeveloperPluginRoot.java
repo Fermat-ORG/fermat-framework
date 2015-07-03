@@ -83,6 +83,8 @@ public class ActorDeveloperPluginRoot implements DealWithDatabaseManagers, Deals
      */
     @Override
     public void setErrorManager(ErrorManager errorManager) {
+        if(errorManager == null)
+            throw new NullPointerException();
         this.errorManager = errorManager;
     }
 
