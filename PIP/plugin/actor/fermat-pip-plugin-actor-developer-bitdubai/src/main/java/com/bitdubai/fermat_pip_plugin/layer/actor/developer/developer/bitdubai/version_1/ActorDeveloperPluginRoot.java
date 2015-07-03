@@ -18,6 +18,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.*;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.DatabaseTool;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.LogTool;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.ToolManager;
+import com.bitdubai.fermat_api.layer.pip_actor.exception.CantGetDataBaseTool;
+import com.bitdubai.fermat_api.layer.pip_actor.exception.CantGetLogTool;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 
@@ -134,13 +136,30 @@ public class ActorDeveloperPluginRoot implements DealWithDatabaseManagers, Deals
     }
 
     @Override
-    public DatabaseTool getDatabaseTool() {
-        return new DeveloperActorDatabaseTool(this.databaseManagersOnPlugins,this.databaseManagersOnAddons);
+    public DatabaseTool getDatabaseTool() throws CantGetDataBaseTool {
+        try
+        {
+            return new DeveloperActorDatabaseTool(this.databaseManagersOnPlugins,this.databaseManagersOnAddons);
+        }
+        catch (Exception e)
+        {
+            throw new CantGetDataBaseTool(CantGetDataBaseTool.DEFAULT_MESSAGE ,e, " Error get DeveloperActorDatabaseTool object","");
+        }
+
     }
 
     @Override
-    public LogTool getLogTool() {
-        return new DeveloperActorLogTool(logManagersOnPlugins,logManagersOnAddons);
+    public LogTool getLogTool() throws CantGetLogTool {
+        try
+        {
+            return new DeveloperActorLogTool(logManagersOnPlugins,logManagersOnAddons);
+        }
+        catch(Exception e)
+        {
+            throw new CantGetLogTool(CantGetLogTool.DEFAULT_MESSAGE ,e, " Error get DeveloperActorLogTool object","");
+
+        }
+
     }
 
 

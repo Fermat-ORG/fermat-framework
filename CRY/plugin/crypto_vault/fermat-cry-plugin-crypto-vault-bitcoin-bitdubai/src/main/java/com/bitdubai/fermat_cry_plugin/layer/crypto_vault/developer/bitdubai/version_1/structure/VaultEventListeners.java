@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.ver
 
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -129,6 +130,9 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
         } catch (CantExecuteQueryException e) {
             //todo better handle this
             e.printStackTrace();
+        } catch (CantLoadTableToMemoryException e) {
+            //todo better handle this
+            e.printStackTrace();
         }
 
     }
@@ -140,8 +144,8 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
 
     @Override
     public void onTransactionConfidenceChanged(Wallet wallet, Transaction tx) {
-        logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(fullPath), "Transaction confidence change detected!", "Transaction confidence changed. Transaction: " + tx , "Transaction confidence changed. Transaction: " + tx);
-
+        //logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(fullPath), "Transaction confidence change detected!", "Transaction confidence changed. Transaction: " + tx , "Transaction confidence changed. Transaction: " + tx);
+        System.out.println("Transaction confidence change. " + tx.toString());
         TransactionConfidenceCalculator transactionConfidenceCalculator = new TransactionConfidenceCalculator(tx, wallet);
         CryptoStatus cryptoStatus;
         try {
@@ -160,9 +164,9 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
             /**
              * now I raise the event
              */
-            if (cryptoStatus == CryptoStatus.RECEIVED) {
-                eventManager.raiseEvent(new IncomingCryptoReceivedEvent(EventType.INCOMING_CRYPTO_RECEIVED));
-            }
+            //if (cryptoStatus == CryptoStatus.RECEIVED) {
+            //    eventManager.raiseEvent(new IncomingCryptoReceivedEvent(EventType.INCOMING_CRYPTO_RECEIVED));
+            //}
 
             if (cryptoStatus == CryptoStatus.CONFIRMED)
                 eventManager.raiseEvent(new IncomingCryptoReceptionConfirmedEvent(EventType.INCOMING_CRYPTO_RECEPTION_CONFIRMED));

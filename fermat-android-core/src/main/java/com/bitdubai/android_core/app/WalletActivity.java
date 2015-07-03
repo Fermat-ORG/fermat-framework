@@ -608,8 +608,8 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
             this.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, e);
 
 
-            Toast.makeText(getApplicationContext(), "Error in OptionsItemSelecte " + e.getMessage(),
-                    Toast.LENGTH_LONG).show();
+            //Toast.makeText(getApplicationContext(), "Error in OptionsItemSelecte " + e.getMessage(),
+             //       Toast.LENGTH_LONG).show();
         }
 
 

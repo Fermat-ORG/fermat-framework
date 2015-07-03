@@ -111,9 +111,9 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
             @Override
             public void onClick(View v) {
                 if (showBalanceBTC)
-                    b.setText("Show in bits");
-                else
                     b.setText("Show in BTC");
+                else
+                    b.setText("Show in bits");
 
                 showBalanceBTC = !showBalanceBTC;
                 refreshBalance();
@@ -129,7 +129,7 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
             DecimalFormat df = new DecimalFormat();
             df.setMaximumFractionDigits(6);
             df.setMinimumFractionDigits(6);
-            String BTCFormat = df.format(balance / 100000000);
+            String BTCFormat = df.format(balance / 100000000.0);
             stringBalance = BTCFormat + " BTC";
         } else {
             stringBalance = (int) (balance / 100) + " bits";

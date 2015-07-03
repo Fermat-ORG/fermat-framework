@@ -35,7 +35,7 @@ public interface WalletContactsRegistry {
 
     WalletContactRecord getWalletContactByNameAndWalletId(String actorName, UUID walletId) throws CantGetWalletContactException;
 
-    WalletContactRecord getWalletContactByNameContainsAndWalletId(String actorName, UUID walletId) throws CantGetWalletContactException;
+    List<WalletContactRecord>  getWalletContactByNameContainsAndWalletId(String actorName, UUID walletId) throws CantGetWalletContactException;
 
     WalletContactRecord getWalletContactByContactId(UUID contactId) throws CantGetWalletContactException;
 }
