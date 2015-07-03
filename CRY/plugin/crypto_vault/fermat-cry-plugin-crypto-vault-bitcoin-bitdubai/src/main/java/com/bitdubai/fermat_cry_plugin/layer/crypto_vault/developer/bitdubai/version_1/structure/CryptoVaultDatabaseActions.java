@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventTyp
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoIdentifiedEvent;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantCalculateTransactionConfidenceException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantExecuteQueryException;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.UnexpectedResultReturnedFromDatabaseException;
 
 import org.bitcoinj.core.Wallet;
 
@@ -105,8 +106,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
             try {
                 this.database.executeTransaction(dbTx);
             } catch (DatabaseTransactionFailedException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantExecuteQueryException();
+                throw new CantExecuteQueryException("Error in saveIncomingTransaction method.", e, "Transaction Hash:" + txHash, "Error in database plugin.");
             }
 
 
@@ -117,8 +117,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
 
             PlatformEvent event = new IncomingCryptoIdentifiedEvent(EventType.INCOMING_CRYPTO_RECEIVED);
             eventManager.raiseEvent(event);
-        } else
-            System.out.println("Transaction " + txHash + " is already in the DB. so is a outgoing transaction.");
+        }
     }
 
     /**
@@ -134,8 +133,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
         try {
             fermatTxTable.loadToMemory();
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
-            throw new CantExecuteQueryException();
+            throw new CantExecuteQueryException("Error validating transaction in DB.", cantLoadTableToMemory, "Transaction Id:" + txId, "Error in database plugin.");
         }
         /**
          * If I couldnt find any record with this transaction id, then it is a new transactions.
@@ -177,8 +175,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
             database.executeTransaction(dbTx);
 
         } catch (DatabaseTransactionFailedException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantExecuteQueryException();
+            throw new CantExecuteQueryException("Error persisting in DB.", e, "Transaction Hash:" + txHash, "Error in database plugin.");
         }
 
         return txId;
@@ -206,27 +203,8 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
                 transactionsIds.put(record.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME), record.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME));
             }
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
-            throw new CantExecuteQueryException();
+            throw new CantExecuteQueryException("Error executing query in DB.", cantLoadTableToMemory, null, "Error in database plugin.");
         }
-
-
-
-        /**
-         * I get the transaction IDs and Hashes for the TO_BE_NOTIFIED
-         */
-        /*
-        cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME, ProtocolStatus.SENDING_NOTIFIED.toString(), DatabaseFilterType.EQUAL);
-        try {
-            cryptoTxTable.loadToMemory();
-            for (DatabaseTableRecord record : cryptoTxTable.getRecords()){
-                transactionsIds.put(record.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME), record.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME));
-            }
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
-            throw new CantExecuteQueryException();
-        }
-        */
 
         return transactionsIds;
     }
@@ -236,17 +214,19 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
      * @param txHash
      * @param newState
      */
-    public void updateCryptoTransactionStatus(String txHash, CryptoStatus newState) throws CantExecuteQueryException {
+    public void updateCryptoTransactionStatus(String txHash, CryptoStatus newState) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
         DatabaseTable cryptoTxTable;
         cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
         DatabaseTableRecord toUpdate;
         cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_HASH_COLUMN_NAME, txHash, DatabaseFilterType.EQUAL);
         try {
             cryptoTxTable.loadToMemory();
-            toUpdate = cryptoTxTable.getRecords().get(0); //todo add validation that only one record exists
+            if (cryptoTxTable.getRecords().size() > 1)
+                throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.", null, "TxHash:" + txHash + " CryptoStatus:" + newState.toString(), "duplicated Transaction Hash.");
+            else
+                toUpdate = cryptoTxTable.getRecords().get(0);
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
-            throw new CantExecuteQueryException();
+            throw new CantExecuteQueryException("Error executing query in DB.", cantLoadTableToMemory, null, "Error in database plugin.");
         }
 
 
@@ -259,8 +239,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
         try {
             database.executeTransaction(dbTrx);
         } catch (DatabaseTransactionFailedException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantExecuteQueryException();
+            throw new CantExecuteQueryException("Error executing query in DB.", e, null, "Error in database plugin.");
         }
 
 
@@ -271,19 +250,23 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
      * @param txId
      * @param newStatus
      */
-    public void updateTransactionProtocolStatus(UUID  txId, ProtocolStatus newStatus) throws CantExecuteQueryException {
+    public void updateTransactionProtocolStatus(UUID  txId, ProtocolStatus newStatus) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
         DatabaseTable cryptoTxTable;
         cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
         cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, txId.toString(), DatabaseFilterType.EQUAL);
         try {
             cryptoTxTable.loadToMemory();
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
-            throw  new CantExecuteQueryException();
+            throw new CantExecuteQueryException("Error executing query in DB.", cantLoadTableToMemory, "TxId " + txId, "Error in database plugin.");
         }
 
         DatabaseTransaction dbTrx = this.database.newTransaction();
-        DatabaseTableRecord toUpdate = cryptoTxTable.getRecords().get(0); //todo add validation that only one record exists
+        DatabaseTableRecord toUpdate=null;
+        if (cryptoTxTable.getRecords().size() > 1)
+            throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.", null, "Txid:" + txId+ " Protocol Status:" + newStatus.toString(), "duplicated Transaction Id.");
+        else {
+            toUpdate = cryptoTxTable.getRecords().get(0);
+        }
 
         /**
          * I set the Protocol status to the new value
@@ -293,8 +276,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
         try {
             database.executeTransaction(dbTrx);
         } catch (DatabaseTransactionFailedException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantExecuteQueryException();
+            throw new CantExecuteQueryException("Error executing query in DB.", e, "TxId " + txId, "Error in database plugin.");
         }
 
     }
@@ -304,17 +286,23 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
      * @param txId
      * @return
      */
-    public ProtocolStatus getCurrentTransactionProtocolStatus(UUID txId) throws CantExecuteQueryException {
+    public ProtocolStatus getCurrentTransactionProtocolStatus(UUID txId) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
         DatabaseTable cryptoTxTable;
         cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
         cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRX_ID_COLUMN_NAME, txId.toString(), DatabaseFilterType.EQUAL);
         try {
             cryptoTxTable.loadToMemory();
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
-            throw new CantExecuteQueryException();
+            throw new CantExecuteQueryException("Error executing query in DB.", cantLoadTableToMemory, "TxId " + txId, "Error in database plugin.");
         }
-        DatabaseTableRecord currentStatus = cryptoTxTable.getRecords().get(0); //todo add validation that only one record exists
+        DatabaseTableRecord currentStatus = null;
+        /**
+         * I will make sure I only get one result.
+         */
+        if (cryptoTxTable.getRecords().size() > 1)
+            throw new UnexpectedResultReturnedFromDatabaseException("Unexpected result. More than value returned.", null, "TxId:" + txId.toString(), "duplicated Transaction Hash.");
+        else
+            currentStatus = cryptoTxTable.getRecords().get(0);
 
         return ProtocolStatus.valueOf(currentStatus.getStringValue(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME));
     }
@@ -331,8 +319,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
             cryptoTxTable.loadToMemory();
            return !cryptoTxTable.getRecords().isEmpty();
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
-            throw new CantExecuteQueryException();
+            throw new CantExecuteQueryException("Error executing query in DB.", cantLoadTableToMemory, null, "Error in database plugin.");
         }
     }
 
@@ -353,8 +340,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
             try {
                 txTable.loadToMemory();
             } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
-                throw new CantExecuteQueryException();
+                throw new CantExecuteQueryException("Error executing query in DB.", cantLoadTableToMemory, null, "Error in database plugin.");
             }
             if (txTable.getRecords().isEmpty()){
                     /**
@@ -379,8 +365,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
         try {
             transactionProtocolStatusTable.loadToMemory();
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
-            throw new CantExecuteQueryException();
+            throw new CantExecuteQueryException("Error executing query in DB.", cantLoadTableToMemory, null, "Error in database plugin.");
         }
         List<DatabaseTableRecord> records = transactionProtocolStatusTable.getRecords();
         if (records.isEmpty()){
@@ -413,8 +398,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
             try {
                 database.executeTransaction(dbTx);
             } catch (DatabaseTransactionFailedException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantExecuteQueryException();
+                throw new CantExecuteQueryException("Error executing query in DB.", e, null, "Error in database plugin.");
             }
             return ocurrence;
 
@@ -427,8 +411,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
             try {
                 database.executeTransaction(dbTx);
             } catch (DatabaseTransactionFailedException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantExecuteQueryException();
+                throw new CantExecuteQueryException("Error executing query in DB.", e, null, "Error in database plugin.");
             }
 
             return 0;
@@ -451,7 +434,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
         try {
             database.executeTransaction(dbTx);
         } catch (DatabaseTransactionFailedException e) {
-            throw  new CantExecuteQueryException();
+            throw new CantExecuteQueryException("Error executing query in DB.", e, "TxId: " + txId, "Error in database plugin.");
         }
 
     }
