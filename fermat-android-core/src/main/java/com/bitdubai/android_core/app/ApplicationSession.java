@@ -14,6 +14,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 
@@ -170,7 +171,11 @@ public class ApplicationSession extends android.support.multidex.MultiDexApplica
                 if (tabStrip != null){
 
                     tabStrip.setTypeface(tf,1 );
-                    tabStrip.setBackgroundResource(R.drawable.background_tiled_diagonal_light);
+                    //MATI
+                    //TODO ACÁ SE LE ESTÁ SETEANDO EL WALPAPER ESE A TODOS LADOS CUANDO NO DEBERIA, DEBERIA SEGUIR LO QUE VIENE DEL MIDDLEWARE.
+                    // AHORA LO CAMBIÉ TODO PARA QUE SIGA EL MIDDLEWARE.
+                    //tabStrip.setBackgroundResource(R.drawable.background_tiled_diagonal_light);
+                    tabStrip.setDividerColor(Color.TRANSPARENT);
 
                 }
 
@@ -212,7 +217,7 @@ public class ApplicationSession extends android.support.multidex.MultiDexApplica
 
     public static void setActionBarProperties(Activity activity, Window window,  PagerSlidingTabStrip pTabs, ActionBar pActionBar, Resources context,  TextView abTitle, String pTitle) {
 
-        try{
+        try {
             actionBar = pActionBar;
             tabs = pTabs;
             // Change the title of the action bar and the typeface
@@ -221,20 +226,19 @@ public class ApplicationSession extends android.support.multidex.MultiDexApplica
             mTitle = pTitle;
 
             Drawable bg = context.getDrawable(R.drawable.transparent);
-            bg.setVisible(false,false);
+            bg.setVisible(false, false);
 
             Drawable wallpaper = context.getDrawable(R.drawable.transparent);
 
             s = new SpannableString(mTitle);
 
-            switch (getWalletId() )
-            {
+            switch (getWalletId()) {
                 case 1:
 
                     color = "#FFC2F1";
                     actionBar.setIcon(context.getDrawable(R.drawable.icono_piggy_pink));
                     bg = context.getDrawable(R.drawable.wallet_wallpaper_pink);
-                    bg.setVisible(true,false);
+                    bg.setVisible(true, false);
                     wallpaper = context.getDrawable(R.drawable.wallet_wallpaper_pink);
                     abTitle.setTextColor(Color.BLACK);
                     walletStyle = "Kids";
@@ -244,7 +248,7 @@ public class ApplicationSession extends android.support.multidex.MultiDexApplica
                     color = "#84DCF5";
                     actionBar.setIcon(context.getDrawable(R.drawable.icono_piggy_yellow));
                     bg = context.getDrawable(R.drawable.banner_kid_yellow_blue);
-                    bg.setVisible(true,false);
+                    bg.setVisible(true, false);
                     wallpaper = context.getDrawable(R.drawable.wallet_wallpaper_yellow);
 
                     abTitle.setTextColor(Color.BLACK);
@@ -263,7 +267,7 @@ public class ApplicationSession extends android.support.multidex.MultiDexApplica
                     color = "#d07b62";
                     actionBar.setIcon(context.getDrawable(R.drawable.fermat));
                     wallpaper = context.getDrawable(R.drawable.background_tabs_diagonal_rotated);
-                    if(abTitle !=null) {
+                    if (abTitle != null) {
                         abTitle.setTextColor(Color.BLACK);
                     }
                     walletStyle = "Young";
@@ -328,11 +332,12 @@ public class ApplicationSession extends android.support.multidex.MultiDexApplica
                     abTitle.setTextColor(Color.WHITE);
                     wallpaper = context.getDrawable(R.drawable.wallet_wallpaper_club_2);
                     bg = context.getDrawable(R.drawable.banner_club_2);
-                    bg.setVisible(true,false);
+                    bg.setVisible(true, false);
                     walletStyle = "Club";
                     break;
 
                 case 12:
+
                     //bg = context.getDrawable(R.drawable.banner_club_2);
                     //bg.setVisible(true,false);
                     //mTitle="Developer";
@@ -341,7 +346,7 @@ public class ApplicationSession extends android.support.multidex.MultiDexApplica
             }
 
 
-            s.setSpan(new MyTypefaceSpan( activity, "CaviarDreams.ttf"), 0, s.length(),
+            s.setSpan(new MyTypefaceSpan(activity, "CaviarDreams.ttf"), 0, s.length(),
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
 
             // Update the action bar title with the TypefaceSpan instance
