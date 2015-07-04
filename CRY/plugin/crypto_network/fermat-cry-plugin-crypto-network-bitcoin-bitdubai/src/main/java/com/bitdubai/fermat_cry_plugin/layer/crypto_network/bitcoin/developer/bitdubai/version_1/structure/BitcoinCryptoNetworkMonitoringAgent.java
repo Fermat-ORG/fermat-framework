@@ -106,11 +106,10 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
 
     /**
      * DealsWithLogger interface implementation
-     * @param logLevel
      * @param logManager
      */
     @Override
-    public void setLogManager(LogLevel logLevel, LogManager logManager) {
+    public void setLogManager(LogManager logManager) {
         this.logManager = logManager;
     }
 
@@ -244,7 +243,7 @@ public class BitcoinCryptoNetworkMonitoringAgent implements Agent, BitcoinManage
 
 
         myListeners = new BitcoinEventListeners();
-        myListeners.setLogManager(null,this.logManager);
+        myListeners.setLogManager(this.logManager);
         peers.addEventListener(myListeners);
 
     }
