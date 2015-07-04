@@ -145,16 +145,6 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
     }
 
     @Override
-    public LogLevel getLoggingLevel() {
-        return logLevel;
-    }
-
-    @Override
-    public void changeLoggingLevel(LogLevel newLoggingLevel) {
-        logLevel = newLoggingLevel;
-    }
-
-    @Override
     public List<String> getClassesFullPath() {
         /**
          * I create the filters and loaders for reflection.
@@ -257,7 +247,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
     }
 
     @Override
-    public void setLogManager(LogLevel logLevel, LogManager logManager) {
+    public void setLogManager(LogManager logManager) {
         this.logManager = logManager;
     }
 
@@ -421,7 +411,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
              * now I will start the TransactionNotificationAgent to monitor
              */
             transactionNotificationAgent = new TransactionNotificationAgent(eventManager, pluginDatabaseSystem, errorManager, pluginId, userId);
-            transactionNotificationAgent.setLogManager(logLevel, this.logManager);
+            transactionNotificationAgent.setLogManager(this.logManager);
             try {
                 transactionNotificationAgent.start();
             } catch (CantStartAgentException cantStartAgentException ) {
@@ -531,6 +521,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
     public TransactionProtocolManager<CryptoTransaction> getTransactionManager() {
         return vault;
     }
+
 
     /**
      * Static method to get the logging level from any class under root.

@@ -78,19 +78,8 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManag
      * DealsWithLogManager interface member variable
      */
     LogManager logManager;
-    LogLevel logLevel;
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
-
-    @Override
-    public LogLevel getLoggingLevel() {
-        return logLevel;
-    }
-
-    @Override
-    public void changeLoggingLevel(LogLevel newLoggingLevel) {
-        logLevel = newLoggingLevel;
-    }
 
     @Override
     public List<String> getClassesFullPath() {
@@ -177,9 +166,8 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManag
     }
 
     @Override
-    public void setLogManager(LogLevel logLevel, LogManager logManager) {
+    public void setLogManager(LogManager logManager) {
         this.logManager = logManager;
-        this.logLevel = logLevel;
     }
 
     /**
@@ -243,7 +231,7 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManag
     public void connectToBitcoinNetwork() throws CantConnectToBitcoinNetwork {
         bitcoinCryptoNetworkMonitoringAgent = new BitcoinCryptoNetworkMonitoringAgent((Wallet) cryptoVault.getWallet(), cryptoVault.getUserId());
         bitcoinCryptoNetworkMonitoringAgent.setPluginFileSystem(pluginFileSystem);
-        bitcoinCryptoNetworkMonitoringAgent.setLogManager(null, this.logManager);
+        bitcoinCryptoNetworkMonitoringAgent.setLogManager(this.logManager);
         bitcoinCryptoNetworkMonitoringAgent.setErrorManager(errorManager);
         bitcoinCryptoNetworkMonitoringAgent.setPluginId(pluginId);
 

@@ -52,26 +52,6 @@ public class DeveloperActorLogTool implements LogTool {
         return lstAddons;
     }
 
-    @Override
-    public LogLevel getLogLevel(Plugins plugin) {
-       return ((LogManagerForDevelopers)this.LoggingLstPlugins.get(plugin)).getLoggingLevel();
-    }
-
-    @Override
-    public LogLevel getLogLevel(Addons addon) {
-        return ((LogManagerForDevelopers)this.LoggingLstAddons.get(addon)).getLoggingLevel();
-    }
-
-    @Override
-    public void setLogLevel(Plugins plugin, LogLevel newLogLevel) {
-        ((LogManagerForDevelopers)this.LoggingLstPlugins.get(plugin)).changeLoggingLevel(newLogLevel);
-
-    }
-
-    @Override
-    public void setLogLevel(Addons addon, LogLevel newLogLevel) {
-        ((LogManagerForDevelopers)this.LoggingLstAddons.get(addon)).changeLoggingLevel(newLogLevel);
-    }
 
     /**
      * I get from the plugin the list of classes with their full paths.
