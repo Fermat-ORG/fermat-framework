@@ -1,0 +1,4 @@
+= Developer SubApp
+
+La función de esta sub aplicación es permitir a usuarios registrarse y logearse con identidad de desarrolladores. +
+Además debe proveer herramientas de debug pata que el desarrollador pueda obtener cierta información de su wallet. Por ejemplo, ver las tablas y el loggeo del módulo.
