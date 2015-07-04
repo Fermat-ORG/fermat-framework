@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
@@ -69,9 +70,22 @@ class ExtraUserDatabaseFactory implements DealsWithErrors,DealsWithPlatformDatab
 
             /**
              * I can not handle this situation.
+             *s
              */
+        /*Francisco Arce
+        Exception in the context Fermat Context
+        *
+        * */
+            String message = CantCreateDatabaseException.DEFAULT_MESSAGE;
+            FermatException cause = cantCreateDatabaseException.getCause();
+            String context = "Extra User DataBase Factory: " + cantCreateDatabaseException.getContext();
+            String possibleReason = "The exception is thrown the Create Database ExtraUser 'this.platformDatabaseSystem.createDatabase(\"ExtraUser\")'" + cantCreateDatabaseException.getPossibleReason();
+
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
-            throw new CantCreateDatabaseException();
+          /*
+            modified by Francisco Arce
+            */
+            throw new CantCreateDatabaseException(message, cause, context, possibleReason);
         }
 
 
@@ -96,7 +110,19 @@ class ExtraUserDatabaseFactory implements DealsWithErrors,DealsWithPlatformDatab
             }
             catch (CantCreateTableException cantCreateTableException) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateTableException);
-                throw new CantCreateDatabaseException();
+
+                 /*Francisco Arce
+        Exception in the context Fermat Context
+        *
+        * */
+                String message = CantCreateTableException.DEFAULT_MESSAGE;
+                FermatException cause = cantCreateTableException.getCause();
+                String context = "Create Table Extra User" + cantCreateTableException.getContext();
+                String possibleReason = "The exception is generated when creating the table Extra User  ((DatabaseFactory) database).createTable(table) " + cantCreateTableException.getPossibleReason();
+ /*
+           modified by Francisco Arce
+            */
+               throw new CantCreateDatabaseException(message, cause, context, possibleReason);
             }
 
 

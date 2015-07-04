@@ -33,5 +33,12 @@ public interface CryptoVaultManager extends TransactionSender<CryptoTransaction>
      * @throws CouldNotSendMoneyException
      */
     public String sendBitcoins (UUID walletId, UUID FermatTrId,  CryptoAddress addressTo, long satoshis) throws InsufficientMoneyException, InvalidSendToAddressException, CouldNotSendMoneyException;
-    ;
+
+
+    /**
+     * Validates if the passes CryptoAddress is valid in the current network or not.
+     * @param addressTo
+     * @return true if is valid and we can use it, or false if not.
+     */
+    public boolean isValidAddress(CryptoAddress addressTo);
 }

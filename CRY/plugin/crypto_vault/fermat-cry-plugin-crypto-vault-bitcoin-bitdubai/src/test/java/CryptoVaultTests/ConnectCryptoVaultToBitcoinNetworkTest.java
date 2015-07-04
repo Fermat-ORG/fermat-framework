@@ -10,6 +10,7 @@ import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantC
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.BitcoinCryptoVault;
 
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -30,8 +31,9 @@ public class ConnectCryptoVaultToBitcoinNetworkTest implements DealsWithBitcoinC
     UUID userId;
 
 
+    @Ignore
     @Test
-    public void connectToBitcoinTes() throws CantCreateCryptoWalletException, CantConnectToBitcoinNetwork {
+    public void connectToBitcoinTest() throws CantCreateCryptoWalletException, CantConnectToBitcoinNetwork {
         userId = UUID.randomUUID();
         BitcoinCryptoVault vault = new BitcoinCryptoVault(userId);
         vault.setErrorManager(errorManager);

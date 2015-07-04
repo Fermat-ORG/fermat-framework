@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.*;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoTransactionsWaitingTransferenceExtraUserEvent;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.event_handlers.IncomingCryptoTransactionsWaitingTransferenceExtraUserEventHandler;
-import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantSaveEvent;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.DealsWithRegistry;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.interfaces.TransactionService;
@@ -44,11 +44,16 @@ public class IncomingExtraUserEventRecorderService implements DealsWithEvents, D
     private IncomingExtraUserRegistry registry;
 
 
-
     /**
      * TransactionService Interface member variables.
      */
     private ServiceStatus serviceStatus = ServiceStatus.CREATED;
+
+
+    public IncomingExtraUserEventRecorderService(final EventManager eventManager, final IncomingExtraUserRegistry registry){
+        this.eventManager = eventManager;
+        this.registry = registry;
+    }
 
 
     /**
@@ -71,7 +76,10 @@ public class IncomingExtraUserEventRecorderService implements DealsWithEvents, D
     /**
      * IncomingCryptoEventRecorder Interface implementation.
      */
-    public void incomingCryptoWaitingTransference(IncomingCryptoTransactionsWaitingTransferenceExtraUserEvent event) throws CantSaveEvent {
+    public void incomingCryptoWaitingTransference(IncomingCryptoTransactionsWaitingTransferenceExtraUserEvent event) throws CantSaveEventException {
+        if(!serviceStatus.equals(ServiceStatus.STARTED))
+            throw new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE, null, null, "You must start the service first");
+
         this.registry.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
     }
 
@@ -89,8 +97,7 @@ public class IncomingExtraUserEventRecorderService implements DealsWithEvents, D
         EventHandler eventHandler;
 
         eventListener = eventManager.getNewListener(EventType.INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE_EXTRA_USER);
-        eventHandler = new IncomingCryptoTransactionsWaitingTransferenceExtraUserEventHandler();
-        ((IncomingCryptoTransactionsWaitingTransferenceExtraUserEventHandler) eventHandler).setIncomingExtraUserEventRecorderService(this);
+        eventHandler = new IncomingCryptoTransactionsWaitingTransferenceExtraUserEventHandler(this);
         eventListener.setEventHandler(eventHandler);
         eventManager.addListener(eventListener);
         listenersAdded.add(eventListener);

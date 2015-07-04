@@ -352,7 +352,7 @@ public class ApplicationSession extends android.support.multidex.MultiDexApplica
             // Update the action bar title with the TypefaceSpan instance
             actionBar.setTitle(s);
 
-            changeColor(Color.parseColor(color), context);
+            if(pTabs!=null) changeColor(Color.parseColor(color), context);
 
             window.getDecorView().setBackground(wallpaper);
             if (bg.isVisible() == true) {actionBar.setBackgroundDrawable(bg);}

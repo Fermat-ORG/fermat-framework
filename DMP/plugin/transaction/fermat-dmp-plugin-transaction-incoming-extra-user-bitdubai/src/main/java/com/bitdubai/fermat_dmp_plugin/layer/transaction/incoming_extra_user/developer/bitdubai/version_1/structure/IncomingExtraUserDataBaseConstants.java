@@ -5,7 +5,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataTyp
 /**
  * Created by Arturo Vallone 25/04/2015
  */
-public class IncomingExtraUSerDataBaseConstants {
+public class IncomingExtraUserDataBaseConstants {
     public static final String INCOMING_EXTRA_USER_DATABASE = "IncomingExtraUserDatabase";
 
     public static final String INCOMING_EXTRA_USER_REGISTRY_TABLE_NAME = "IncomingExtraUserRegistry";
