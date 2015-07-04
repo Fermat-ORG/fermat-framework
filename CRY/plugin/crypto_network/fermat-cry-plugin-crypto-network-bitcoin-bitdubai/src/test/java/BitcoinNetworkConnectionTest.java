@@ -34,7 +34,7 @@ public class BitcoinNetworkConnectionTest {
         bitcoin.setPluginId(UUID.randomUUID());
         bitcoin.setPluginFileSystem(pluginFileSystem);
         bitcoin.setErrorManager(errorManager);
-        bitcoin.setLogManager(null, logManager);
+        bitcoin.setLogManager(logManager);
 
     }
 }
