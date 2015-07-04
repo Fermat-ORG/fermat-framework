@@ -135,7 +135,6 @@ public class DatabaseToolsFragment extends Fragment{
                 gridView.setNumColumns(3);
             }
             //@SuppressWarnings("unchecked")
-            //ArrayList<App> list = (ArrayList<App>) getArguments().get("list");
             AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.shell_wallet_desktop_front_grid_item, mlist);
             _adpatrer.notifyDataSetChanged();
             gridView.setAdapter(_adpatrer);
