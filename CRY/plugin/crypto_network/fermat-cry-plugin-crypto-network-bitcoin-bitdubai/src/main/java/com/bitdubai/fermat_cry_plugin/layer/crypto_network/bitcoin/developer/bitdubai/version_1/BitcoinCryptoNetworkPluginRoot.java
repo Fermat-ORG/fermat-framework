@@ -197,16 +197,6 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManag
 
     @Override
     public void start() {
-        /**
-         * I will initialize the Root map with all the classes in default state of Minimal logging
-         */
-        try{
-            for (String c : getClassesFullPath()){
-                BitcoinCryptoNetworkPluginRoot.newLoggingLevel.put(c, LogLevel.MINIMAL_LOGGING);
-            }
-        } catch (Exception e){
-            // no big deal if I coudln't fill the class now, we will do it later.
-        }
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
@@ -288,12 +278,18 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManag
     }
 
     public static LogLevel getLogLevelByClass(String className){
-    /**
-     * sometimes the classname may be passed dinamically with an $moretext
-     * I need to ignore whats after this.
-     */
-    String[] correctedClass = className.split((Pattern.quote("$")));
-    LogLevel logLevel = BitcoinCryptoNetworkPluginRoot.newLoggingLevel.get(correctedClass[0]);
-    return logLevel;
+        try{
+            /**
+             * sometimes the classname may be passed dinamically with an $moretext
+             * I need to ignore whats after this.
+             */
+            String[] correctedClass = className.split((Pattern.quote("$")));
+            return BitcoinCryptoNetworkPluginRoot.newLoggingLevel.get(correctedClass[0]);
+        } catch (Exception e){
+            /**
+             * If I couldn't get the correct loggin level, then I will set it to minimal.
+             */
+            return LogLevel.MINIMAL_LOGGING;
+        }
     }
 }

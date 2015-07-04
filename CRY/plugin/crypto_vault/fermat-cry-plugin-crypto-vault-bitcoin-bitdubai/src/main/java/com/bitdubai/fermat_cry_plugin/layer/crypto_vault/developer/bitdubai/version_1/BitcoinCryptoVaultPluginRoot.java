@@ -215,7 +215,6 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
              */
         if (newLoggingLevel.containsKey(pluginPair.getKey())){
 
-
             if (pluginPair.getValue() != newLoggingLevel.get(pluginPair.getKey())){
                 pluginPair.setValue(newLoggingLevel.get(pluginPair.getKey()));
             }
@@ -331,13 +330,6 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
     @Override
     public void start() throws CantStartPluginException {
         logManager.log(logLevel, "CryptoVault Starting...", "CryptoVault Starting...", "CryptoVault Starting...");
-
-        /**
-         * I will initialize the Root map with all the classes in default state of Minimal logging
-         */
-        for (String c : getClassesFullPath()){
-            BitcoinCryptoVaultPluginRoot.newLoggingLevel.put(c, LogLevel.MINIMAL_LOGGING);
-        }
 
 
         /**
@@ -540,6 +532,11 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
         return vault;
     }
 
+    /**
+     * Static method to get the logging level from any class under root.
+     * @param className
+     * @return
+     */
     public static LogLevel getLogLevelByClass(String className){
         try{
             /**
