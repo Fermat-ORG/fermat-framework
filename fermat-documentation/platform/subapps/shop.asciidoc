@@ -1,0 +1,4 @@
+[[Platform-SubApps-Shop]]
+= Shop
+
+This subapp let a shop owner manage his shop. This include adding products, the store location, editing prices, emitting discounts, etc. Creating a presentation page in the platform.

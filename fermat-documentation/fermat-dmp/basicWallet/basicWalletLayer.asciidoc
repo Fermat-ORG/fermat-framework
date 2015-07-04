@@ -1,0 +1,11 @@
+= Basic Wallet Layer
+
+== Layer Description
+
+...
+
+== Plug-ins in this layer
+
+:leveloffset: 2
+include::discountWallet/developersIndex.asciidoc[]
+

@@ -1,0 +1,22 @@
+= Wallet Publisher
+
+== Wallet Publisher SubApp
+
+Esta subApp debería presentar las wallets que el developer logueado tiene publicadas. Al tocar en estas wallets se debería poder ingresar a la lista de versiones de la misma. +
+Cuando la lista de versiones está desplegada debería permitir ver información de las versiones que se pueda obtener de la red (número de usuarios, información de la lisencia, metadata, etc). +
+También podría mostrarse información de la wallet como conjunto (sumando información de todas sus versiones). +
+
+Se debe permitir crear una nueva wallet pidiéndole al usuario que escoja un WFP o crear una nueva versión de una wallet existente también pidiendo al usuario que indique el WPF asociado a la wallet.
+
+Como mencionamos antes, se podrían pensar en mecanismos que le impidan al desarrollador publicar una wallet que aún no ha sido aceptada por bitDubai (una que no está instalada en la plataforma). Sin embargo, dado que el desarrollador tiene acceso a todo el código desde su máquina este podría saltear las restricciones que querramos imponer editando e código y corriendo una versión modificada de la plataforma.
+
+== Wallet Publisger plugin - Module Layer
+
+== Wallet Publisger plugin - Middleware Layer
+
+Algunas de las funcionalidades específicas de este módulo serán:
+
+* Mandar a publicar un WFP al network service Wallet Resources. +
+* Comunicar al Wallet Store DMP Network Service que se tiene una nueva wallet en el catálogo.
+* A futuro: llevar algunas estadísticas sobre la wallet. Por ejemplo, cómo ha crecido el número de usuarios de una wallet o versión de la misma entre un par de sesiones de conexión del desarrollador.
+
