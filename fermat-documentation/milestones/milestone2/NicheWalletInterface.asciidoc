@@ -1,0 +1,10 @@
+= Niche  Wallet Interface
+
+Las Niche Wallets deben implementar una interfaz que le permitirá a la plataforma obtener información de relevancia.
+
+Dentro de esta información se encuentra:
+
+* Hash de los recursos
+* Hash de la estructura de navegación
+* Version Numer
+* Tipo (para que el wallet manager sepa a qué wallet manager acudir para )
