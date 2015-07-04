@@ -145,7 +145,7 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
             if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 gridView.setNumColumns(6);
             } else {
-                gridView.setNumColumns(4);
+                gridView.setNumColumns(3);
             }
             //@SuppressWarnings("unchecked")
             //ArrayList<App> list = (ArrayList<App>) getArguments().get("list");

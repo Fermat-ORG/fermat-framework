@@ -282,7 +282,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void setStatusBarColor(String color){
-        if(Build.VERSION.SDK_INT>21) {
+        if(Build.VERSION.SDK_INT>20) {
             try {
 
                 Window window = this.getWindow();
