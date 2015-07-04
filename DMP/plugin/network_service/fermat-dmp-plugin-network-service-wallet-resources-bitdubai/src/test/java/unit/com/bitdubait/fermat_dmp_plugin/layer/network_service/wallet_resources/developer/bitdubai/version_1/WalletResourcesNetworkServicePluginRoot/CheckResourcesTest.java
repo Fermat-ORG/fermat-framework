@@ -1,7 +1,7 @@
 package unit.com.bitdubait.fermat_dmp_plugin.layer.network_service.wallet_resources.developer.bitdubai.version_1.WalletResourcesNetworkServicePluginRoot;
 
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Wallets;
-import com.bitdubai.fermat_api.layer.dmp_network_service.CantGetResourcesException;
+import com.bitdubai.fermat_api.layer.dmp_network_service.CantCheckResourcesException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
@@ -10,8 +10,11 @@ import com.bitdubai.fermat_dmp_plugin.layer.network_service.wallet_resources.dev
 import junit.framework.TestCase;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import static com.googlecode.catchexception.CatchException.catchException;
 import static com.googlecode.catchexception.CatchException.caughtException;
@@ -24,8 +27,8 @@ import static org.fest.assertions.api.Assertions.assertThat;
 /**
  * The Resource Repository  is not created, then test return error for all case.
  */
-
-public class getLayoutResourceTest extends TestCase {
+@RunWith(MockitoJUnitRunner.class)
+public class CheckResourcesTest extends TestCase {
 
     /**
      * DealsWithErrors interface Mocked
@@ -57,37 +60,36 @@ public class getLayoutResourceTest extends TestCase {
         walletResourcePluginRoot.setPluginFileSystem(pluginFileSystem);
         walletResourcePluginRoot.setEventManager(eventManager);
         walletResourcePluginRoot.setErrorManager(errorManager);
-
-        //walletResourcePluginRoot.checkResources();
     }
 
+    @Ignore
     @Test
-    public void testgetImageResource_TheResourcesHasAlreadyBeenReturn_ThrowsCantGetResourcesException() throws Exception {
+    public void testcheckResources_TheResourcesHasAlreadyBeenDownload_ThrowsCantCheckResourcesException() throws Exception {
 
 
-        catchException(walletResourcePluginRoot).getLayoutResource("wallets_kids_fragment_balance.txt");
-        assertThat(caughtException()).isInstanceOf(CantGetResourcesException.class);
+        catchException(walletResourcePluginRoot).checkResources();
+        assertThat(caughtException()).isInstanceOf(CantCheckResourcesException.class);
         caughtException().printStackTrace();
-
     }
 
+    @Ignore
     @Test
-    public void testcheckResources_TheResourcesRepositoryNotExist_ThrowsCantGetResourcesException() throws Exception {
+    public void testcheckResources_TheResourceRepositoryNotExist_ThrowsCantCheckResourcesException() throws Exception {
 
         walletResourcePluginRoot.setwalletType(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI);
 
-        catchException(walletResourcePluginRoot).getLayoutResource("wallets_kids_fragment_balance.txt");
-        assertThat(caughtException()).isInstanceOf(CantGetResourcesException.class);
+        catchException(walletResourcePluginRoot).checkResources();
+        assertThat(caughtException()).isInstanceOf(CantCheckResourcesException.class);
         caughtException().printStackTrace();
     }
 
+    @Ignore
     @Test
-    public void testcheckResources_fileNotFound_ThrowsCantGetResourcesException() throws Exception {
+    public void testcheckResources_TheResourcesFieldsCannotPersist_ThrowsCantCheckResourcesException() throws Exception {
 
-        catchException(walletResourcePluginRoot).getLayoutResource("layout1.xml");
-        assertThat(caughtException()).isInstanceOf(CantGetResourcesException.class);
+        walletResourcePluginRoot.setPluginFileSystem(null);
+        catchException(walletResourcePluginRoot).checkResources();
+        assertThat(caughtException()).isInstanceOf(CantCheckResourcesException.class);
         caughtException().printStackTrace();
     }
 }
-
-
