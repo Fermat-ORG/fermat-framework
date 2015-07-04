@@ -130,16 +130,15 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManag
          * I will check the current values and update the LogLevel in those which is different
          */
 
-        for (Map.Entry<String, LogLevel> pluginPair : BitcoinCryptoNetworkPluginRoot.newLoggingLevel.entrySet()){
+        for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
             /**
-             * if the incoming value is different from what I already have, then Ill updated it
+             * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
              */
-            if (newLoggingLevel.containsKey(pluginPair.getKey())){
-
-
-                if (pluginPair.getValue() != newLoggingLevel.get(pluginPair.getKey())){
-                    pluginPair.setValue(newLoggingLevel.get(pluginPair.getKey()));
-                }
+            if (BitcoinCryptoNetworkPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                BitcoinCryptoNetworkPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                BitcoinCryptoNetworkPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            } else {
+                BitcoinCryptoNetworkPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
         }
 

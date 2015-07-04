@@ -146,6 +146,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
 
     @Override
     public List<String> getClassesFullPath() {
+        //todo this will be removed.
         /**
          * I create the filters and loaders for reflection.
          */
@@ -199,17 +200,18 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
          * I will check the current values and update the LogLevel in those which is different
          */
 
-        for (Map.Entry<String, LogLevel> pluginPair : BitcoinCryptoVaultPluginRoot.newLoggingLevel.entrySet()){
+        for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
             /**
-             * if the incoming value is different from what I already have, then Ill updated it
+             * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
              */
-        if (newLoggingLevel.containsKey(pluginPair.getKey())){
-
-            if (pluginPair.getValue() != newLoggingLevel.get(pluginPair.getKey())){
-                pluginPair.setValue(newLoggingLevel.get(pluginPair.getKey()));
+            if (BitcoinCryptoVaultPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                BitcoinCryptoVaultPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                BitcoinCryptoVaultPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            } else {
+                BitcoinCryptoVaultPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
         }
-        }
+
     }
 
     /**
