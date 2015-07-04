@@ -17,5 +17,4 @@ dependencies {
         exclude module: 'scrypt'
     }
     testCompile 'org.mockito:mockito-all:2.0.2-beta'
-    compile 'org.reflections:reflections:0.9.10'
 }

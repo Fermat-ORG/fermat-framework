@@ -220,7 +220,7 @@ public class LogToolsFragmentLevel2 extends Fragment {
 
 
             }
-            for(Addons addon : addons){ list.add(addon.getKey() + " - Addon || LogLevel: " + logTool.getLogLevel(addon)); }
+            for(Addons addon : addons){ list.add(addon.getKey() + " - Addon"); }
 
             String[] availableResources;
             if (list.size() > 0) {
