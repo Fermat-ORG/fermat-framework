@@ -85,13 +85,11 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
 
     /**
      * DealsWithLogger interface implementation
-     * @param logLevel
      * @param logManager
      */
     @Override
-    public void setLogManager(LogLevel logLevel, LogManager logManager) {
+    public void setLogManager(LogManager logManager) {
         this.logManager = logManager;
-        this.logLevel = logLevel;
     }
 
     /**

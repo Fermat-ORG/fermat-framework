@@ -833,7 +833,7 @@ public class Platform  {
                 ((DealsWithExtraUsers) plugin).setExtraUserManager((ExtraUserManager) corePlatformContext.getAddon(Addons.EXTRA_USER));
 
             if (plugin instanceof DealsWithLogger)
-                ((DealsWithLogger) plugin).setLogManager(LogLevel.NOT_LOGGING, loggerSystemOs.getLoggerManager());
+                ((DealsWithLogger) plugin).setLogManager(loggerSystemOs.getLoggerManager());
 
             if (plugin instanceof DealsWithNicheWalletTypeCryptoWallet)
                 ((DealsWithNicheWalletTypeCryptoWallet) plugin).setNicheWalletTypeCryptoWalletManager((CryptoWalletManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE));

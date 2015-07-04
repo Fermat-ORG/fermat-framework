@@ -16,4 +16,4 @@ Sería interesante permitir al usuario buscar wallets que no están en el catál
 
 == Wallet Store plugin - Middleware Layer
 
-Gran parte de este módulo consistirá en administrar la información que se mostrará al usuario. Este plug-in tomará la información del catálogo del network service de la wallet store y aplicará los filtros necesarios. +
+Gran parte de este módulo consistirá en generar la información que se mostrará al usuario. Este plug-in tomará la información del catálogo del network service de la wallet store y aplicará los filtros necesarios. +
