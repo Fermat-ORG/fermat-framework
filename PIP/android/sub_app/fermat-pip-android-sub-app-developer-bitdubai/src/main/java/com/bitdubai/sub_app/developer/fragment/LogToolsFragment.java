@@ -213,7 +213,7 @@ public class LogToolsFragment extends Fragment {
                     log.fullPath=classes.getFullPath();
                     log.type=Loggers.TYPE_PLUGIN;
                     log.picture="plugin";
-
+                    lstLoggers.add(log);
                     /**
                      * I insert the modified class in a new map with the plug in and the classes.
                      */
@@ -244,7 +244,7 @@ public class LogToolsFragment extends Fragment {
                     log.fullPath = classes.getFullPath();
                     log.type = Loggers.TYPE_ADDON;
                     log.picture = "addon";
-
+                    lstLoggers.add(log);
                     /**
                      * I insert the modified class in a new map with the plug in and the classes.
                      */
@@ -273,17 +273,17 @@ public class LogToolsFragment extends Fragment {
                 if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
                     gridView.setNumColumns(6);
                 } else {
-                    gridView.setNumColumns(4);
+                    gridView.setNumColumns(3);
                 }
                 //@SuppressWarnings("unchecked")
-                //ArrayList<App> list = (ArrayList<App>) getArguments().get("list");
-                //AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.shell_wallet_desktop_front_grid_item, mlist);
-                //_adpatrer.notifyDataSetChanged();
-                //gridView.setAdapter(_adpatrer);
+                AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.shell_wallet_desktop_front_grid_item, lstLoggers);
+                _adpatrer.notifyDataSetChanged();
+                gridView.setAdapter(_adpatrer);
 
 
             }}catch (Exception e){
-            e.printStackTrace();
+                showMessage("LogTools Fragment onCreateView Exception - " + e.getMessage());
+                e.printStackTrace();
         }
         /*} catch (Exception e) {
             showMessage("LogTools Fragment onCreateView Exception - " + e.getMessage());

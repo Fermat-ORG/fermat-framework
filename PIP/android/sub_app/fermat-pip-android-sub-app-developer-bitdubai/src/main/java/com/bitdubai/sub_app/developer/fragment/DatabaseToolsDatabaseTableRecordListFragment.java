@@ -113,6 +113,7 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
             columnNames = developerDatabaseTable.getFieldNames();
             int i=0;
 
+
             if (developerDatabaseTableRecordList.size() > 0) {
                 i=0;
                 values =new ArrayList<List<String>>();
@@ -190,15 +191,6 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
                     tableLayout.addView(tableRow,tableLayoutParams);
                 }
 
-                /*for (int i = 0; i < lstRows.size(); i++) {
-                    TextView textView = new TextView(getActivity());
-                    textView.setBackgroundColor(Color.WHITE);
-                    textView.setText(lstRows.get(i));
-                    textView.setTextColor(Color.BLACK);
-                    tableRow.addView(textView, tableRowParams);
-
-                }*/
-                //tableLayout.addView(tableRow,tableLayoutParams);
             }
 
         }catch (Exception e){
