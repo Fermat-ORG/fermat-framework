@@ -13,13 +13,10 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,8 +28,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.LogTool;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.ToolManager;
+import com.bitdubai.sub_app.developer.common.ArrayListLoggers;
 import com.bitdubai.sub_app.developer.common.Loggers;
-import com.bitdubai.sub_app.developer.common.Resource;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,7 +57,7 @@ public class LogToolsFragment extends Fragment {
 
     private static Platform platform = new Platform();
 
-    private List<Loggers> lstLoggers;
+    private ArrayListLoggers lstLoggers;
 
     private GridView gridView;
 
@@ -181,7 +178,7 @@ public class LogToolsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_log_tools, container, false);
 
-        lstLoggers=new ArrayList<Loggers>();
+        lstLoggers=new ArrayListLoggers();
         try {
             // Get ListView object from xml
             gridView = (GridView) rootView.findViewById(R.id.gridView);
@@ -245,46 +242,40 @@ public class LogToolsFragment extends Fragment {
                     log.type = Loggers.TYPE_ADDON;
                     log.picture = "addon";
                     lstLoggers.add(log);
-                    /**
-                     * I insert the modified class in a new map with the plug in and the classes.
-                     */
-                    //newList.add(classes);
                 }
-            /*for(Addons addon : addons){ list.add(addon.getKey() + " - Addon || LogLevel: " + logTool.getLogLevel(addon)); }
-
-            String[] availableResources;
-            if (list.size() > 0) {
-                availableResources = new String[list.size()];
-                for(int i = 0; i < list.size() ; i++) {
-                    availableResources[i] = list.get(i);
-                }
-            } else {
-                availableResources = new String[0];
-            }*/
-
-                //ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity().getApplicationContext(),
-                //        android.R.layout.simple_list_item_1, android.R.id.text1, availableResources);
 
                 //listView.setAdapter(adapter);
 
-                //registerForContextMenu(listView);
+                //registerForContextMenu(listView)
 
-                Configuration config = getResources().getConfiguration();
-                if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                    gridView.setNumColumns(6);
-                } else {
-                    gridView.setNumColumns(3);
+
+            }
+
+
+            Configuration config = getResources().getConfiguration();
+            if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                gridView.setNumColumns(6);
+            } else {
+                gridView.setNumColumns(3);
+            }
+
+            ArrayListLoggers lstLoggersToShow=new ArrayListLoggers();
+            for(Loggers loggers:lstLoggers){
+               //String level_0 = loggers.level0;
+                if(!lstLoggersToShow.containsLevel0(loggers)){
+                    lstLoggersToShow.add(loggers);
                 }
-                //@SuppressWarnings("unchecked")
-                AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.shell_wallet_desktop_front_grid_item, lstLoggers);
-                _adpatrer.notifyDataSetChanged();
-                gridView.setAdapter(_adpatrer);
+            }
 
 
-            }}catch (Exception e){
+
+            AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.shell_wallet_desktop_front_grid_item, lstLoggersToShow);
+            _adpatrer.notifyDataSetChanged();
+            gridView.setAdapter(_adpatrer);
+        }catch (Exception e){
                 showMessage("LogTools Fragment onCreateView Exception - " + e.getMessage());
                 e.printStackTrace();
-        }
+            }
         /*} catch (Exception e) {
             showMessage("LogTools Fragment onCreateView Exception - " + e.getMessage());
             e.printStackTrace();
