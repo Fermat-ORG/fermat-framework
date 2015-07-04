@@ -5,6 +5,7 @@ import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -217,6 +218,8 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
             int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
             this.abTitle = (TextView) findViewById(titleId);
 
+
+
             String status_color=this.activity.getStatusBarColor();
             if(this.activity.getStatusBarColor()!=null){
                 setStatusBarColor(this.activity.getStatusBarColor());
@@ -233,6 +236,10 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
 
             if(this.activity.getTabStrip().getTabsIndicateColor()!=null){
                 tabStrip.setIndicatorColor(Color.parseColor(this.activity.getTabStrip().getTabsIndicateColor()));
+            }
+            Typeface tf = Typeface.createFromAsset(this.getAssets(), "fonts/CaviarDreams.ttf");
+            if (tabStrip != null){
+                tabStrip.setTypeface(tf,1 );
             }
 
             //TODO por ahora le estoy pasando un null al tabstrip porque ahí adentro lo está cargando mal, porque hace un clean de la pantalla y borra el color de los tabs
@@ -275,29 +282,27 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private void setStatusBarColor(String color){
-        if(Build.VERSION.SDK_INT>20){
+        if(Build.VERSION.SDK_INT>21) {
+            try {
 
+                Window window = this.getWindow();
 
-        try {
+                // clear FLAG_TRANSLUCENT_STATUS flag:
+                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 
-            Window window =this.getWindow();
+                // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 
-            // clear FLAG_TRANSLUCENT_STATUS flag:
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
-            // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-
-            // finally change the color
-
-            window.setStatusBarColor(this.getResources().getColor(com.bitdubai.sub_app.developer.R.color.wallet_factory_orange));
-            Color color_status = new Color();
-            window.setStatusBarColor(color_status.parseColor("#b46a54"));
-        }catch (Exception e){
-            Log.d("DatabaseToolsFragment", "Versión del sdk no compatible con el cambio de color del status bar");
+                // finally change the color
+                // window.setStatusBarColor(this.getResources().getColor(com.bitdubai.sub_app.developer.R.color.wallet_factory_orange));
+                Color color_status = new Color();
+                window.setStatusBarColor(color_status.parseColor("#b46a54"));
+            } catch (Exception e) {
+                Log.d("DatabaseToolsFragment", "Versión del sdk no compatible con el cambio de color del status bar");
+            }
         }
     }
-    }
+
     /**
      * Initialise the fragments to be paged
      */
