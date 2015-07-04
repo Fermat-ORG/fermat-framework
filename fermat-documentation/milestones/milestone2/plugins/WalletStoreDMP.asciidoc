@@ -1,0 +1,9 @@
+= Wallet Store - Network Service Layer
+
+Este network service es un nodo de la DAPP Wallet Store. +
+Su misión es encontrar billeteras que no tenga registradas localmente para mostrar al usuario a través del Wallet Store (Sub App), también debe comunicar a otros nodos que posee una billetera nueva cuando el usuario publica una a través de la Sub Appr Wallet Publisher.
+
+Debemos definir la política de comunicación de este network service, es decir: 
+
+* ¿a quién le envía la información de una nueva wallet?
+* ¿cómo pide información de una wallet que no tiene en su catálogo?

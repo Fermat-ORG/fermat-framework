@@ -1,0 +1,23 @@
+= Wallet Manager
+
+== Wallet Manager SubApp
+
+Esta app debe mostrar las wallets intaladas al usuario para permitirle abrirlas, desinstalarlas, consultar información de las mismas entre otras cosas.
+
+Esta subApp debe escuchar un evento lanzado por el Wallet Store  cuando el usuario desea instalar una nueva wallet o una nueva versión de una wallet, ante el cual debe proceder a instalar
+
+== Wallet Manager - Module Layer
+
+== Wallet Manager - Middleware Layer
+
+Además de administrar la información que maneja el Wallet Manager, este componente es el responsable de instalar las wallets que el usuario selecciona desde la wallet store. +
+
+El wallet store le pasa como datos la identificación de la wallet y del desarrollador de la misma. +
+El Wallet Manager debe primero controlar que el código de la wallet está instalado en la versión de la plataforma que se está corriendo. Luego debe pedirle al network service Wallet Resources que consiga el WFP de dicha wallet. Con estos datos podemos comenzar el proceso de instalación de la wallet.
+
+. Se genera el WalletId (un UUID que identifica la wallet). +
+. Se crea una wallet del tipo correspondiente en la capa de basic wallet pasando como argumento dicho WalletId.
+. Se toma la estructura de navegación de la wallet del Wallet Resources y se la pasa al Wallet Runtime para que la persista, manteniendo la identifycación con el WalletId.  +
+. Se marca en el Wallet Resources que una nueva wallet está usando los recursos. La idea es que el wallet resources lleve un registro de cuántas wallets usan los recursos que están instalados, así cuando se desinstala una wallet se puede saber si los recursos siguen siendo necesarios para marcarlos como candidatos a ser borrados en caso de requerir más espacio de memoria.
+
+Todo este proceso debe considerar fallas como que el dispositivo se apague en el medio de la instalación. Para que pueda reanudarse o eliminarse la información parcialmente instalada.
