@@ -86,7 +86,17 @@ public class DeveloperActorLogTool implements LogTool {
             /**
              * I get the class full patch from the plug in.
              */
-            List<String> classes = ((LogManagerForDevelopers)this.LoggingLstPlugins.get(plugin)).getClassesFullPath();
+            //List<String> classes = ((LogManagerForDevelopers)this.LoggingLstPlugins.get(plugin)).getClassesFullPath();
+            List<Class<?>> javaClasses = ClassFinder.find(((LogManagerForDevelopers) this.LoggingLstPlugins.get(plugin)).getClass().getPackage().getName());
+
+            /**
+             * I'll put the classes in a List of Strings
+             */
+            List<String> classes = new ArrayList<String>();
+            for (Class<?> c : javaClasses){
+                classes.add(c.getName().toString());
+            }
+
 
             /**
              * I need to know the minimun number of packages on the plug in.
@@ -128,6 +138,7 @@ public class DeveloperActorLogTool implements LogTool {
                      * I add the packages to each level.
                      */
                     ClassHierarchyLevels classesAndPackages = new ClassHierarchyLevels();
+                    classesAndPackages.setLevel0(plugin.getKey());
                     classesAndPackages.setLevel1(splitedPackages.toString());
                     classesAndPackages.setLevel2(packages[packages.length - 2]);
                     classesAndPackages.setLevel3(packages[packages.length - 1]);
@@ -146,6 +157,7 @@ public class DeveloperActorLogTool implements LogTool {
                 for (String myClass : classes) {
                     String[] packages = myClass.split(Pattern.quote("."));
                     ClassHierarchyLevels classesAndPackages = new ClassHierarchyLevels();
+                    classesAndPackages.setLevel0(plugin.getKey());
                     classesAndPackages.setLevel1(packages[0]);
 
                     /**
@@ -196,4 +208,9 @@ public class DeveloperActorLogTool implements LogTool {
     public void setNewLogLevelInClass(Plugins plugin, HashMap<String, LogLevel> newLogLevelInClass) {
         ((LogManagerForDevelopers) this.LoggingLstPlugins.get(plugin)).setLoggingLevelPerClass(newLogLevelInClass);
     }
+
+    public List<Class<?>>  getRawClasses(){
+        return ClassFinder.find(this.getClass().getPackage().getName());
+    }
+
 }
