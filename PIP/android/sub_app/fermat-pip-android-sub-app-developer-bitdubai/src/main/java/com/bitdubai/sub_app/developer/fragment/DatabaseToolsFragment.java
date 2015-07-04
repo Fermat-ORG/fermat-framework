@@ -132,7 +132,7 @@ public class DatabaseToolsFragment extends Fragment{
             if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 gridView.setNumColumns(6);
             } else {
-                gridView.setNumColumns(4);
+                gridView.setNumColumns(3);
             }
             //@SuppressWarnings("unchecked")
             //ArrayList<App> list = (ArrayList<App>) getArguments().get("list");
@@ -239,10 +239,6 @@ public class DatabaseToolsFragment extends Fragment{
                     break;
             }
 
-            Window window = getActivity().getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//            window.setStatusBarColor(getActivity().getResources().getColor(R.color.material_blue_grey_800));
 
 
             return convertView;

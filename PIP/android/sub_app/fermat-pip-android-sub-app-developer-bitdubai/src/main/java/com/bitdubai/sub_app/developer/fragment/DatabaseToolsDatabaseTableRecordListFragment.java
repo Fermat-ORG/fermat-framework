@@ -168,6 +168,7 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
                     textView.setBackgroundColor(Color.WHITE);
                     textView.setText(lstColumns.get(i));
                     textView.setTextColor(Color.BLACK);
+                    textView.setPadding(10,10,10,10);
                     // 2) create tableRow params
 
                     tableRow.addView(textView, tableRowParams);
@@ -183,6 +184,7 @@ public class DatabaseToolsDatabaseTableRecordListFragment extends Fragment {
                         textView.setBackgroundColor(Color.WHITE);
                         textView.setText(values);
                         textView.setTextColor(Color.BLACK);
+                        textView.setPadding(10, 10, 10, 10);
                         tableRow.addView(textView, tableRowParams);
                     }
                     tableLayout.addView(tableRow,tableLayoutParams);

@@ -138,8 +138,6 @@ public class LogToolsFragmentLevel2 extends Fragment {
 
             //}
 
-            TextView labelDatabase = (TextView) rootView.findViewById(R.id.labelLog);
-            labelDatabase.setVisibility(View.GONE);
 
             LogToolsFragmentLevel2 logToolsFragment = new LogToolsFragmentLevel2();
 
@@ -158,7 +156,7 @@ public class LogToolsFragmentLevel2 extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_log_tools, container, false);
         try {
             // Get ListView object from xml
-            final ListView listView = (ListView) rootView.findViewById(R.id.listaLogResources);
+            //final ListView listView = (ListView) rootView.findViewById(R.id.listaLogResources);
 
             List<Plugins> plugins = logTool.getAvailablePluginList();
             List<Addons> addons = logTool.getAvailableAddonList();
@@ -237,9 +235,9 @@ public class LogToolsFragmentLevel2 extends Fragment {
             ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity().getApplicationContext(),
                     android.R.layout.simple_list_item_1, android.R.id.text1, availableResources);
 
-            listView.setAdapter(adapter);
+            //listView.setAdapter(adapter);
 
-            registerForContextMenu(listView);
+            //registerForContextMenu(listView);
         } catch (Exception e) {
             showMessage("LogTools Fragment onCreateView Exception - " + e.getMessage());
             e.printStackTrace();

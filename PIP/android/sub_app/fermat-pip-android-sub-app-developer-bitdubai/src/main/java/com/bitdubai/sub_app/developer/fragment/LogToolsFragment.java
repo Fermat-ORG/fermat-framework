@@ -1,7 +1,10 @@
 package com.bitdubai.sub_app.developer.fragment;
 
 import android.app.AlertDialog;
+import android.app.Service;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -10,10 +13,15 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.bitdubai.fermat_api.layer.pip_actor.developer.ClassHierarchyLevels;
@@ -24,6 +32,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.LogTool;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.sub_app.developer.common.Loggers;
+import com.bitdubai.sub_app.developer.common.Resource;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,6 +61,8 @@ public class LogToolsFragment extends Fragment {
     private static Platform platform = new Platform();
 
     private List<Loggers> lstLoggers;
+
+    private GridView gridView;
 
     public static LogToolsFragment newInstance(int position) {
         LogToolsFragment f = new LogToolsFragment();
@@ -147,8 +158,8 @@ public class LogToolsFragment extends Fragment {
 
             //}
 
-            TextView labelDatabase = (TextView) rootView.findViewById(R.id.labelLog);
-            labelDatabase.setVisibility(View.GONE);
+            //TextView labelDatabase = (TextView) rootView.findViewById(R.id.labelLog);
+            //labelDatabase.setVisibility(View.GONE);
 
             LogToolsFragment logToolsFragment = new LogToolsFragment();
 
@@ -173,7 +184,7 @@ public class LogToolsFragment extends Fragment {
         lstLoggers=new ArrayList<Loggers>();
         try {
             // Get ListView object from xml
-            final ListView listView = (ListView) rootView.findViewById(R.id.listaLogResources);
+            gridView = (GridView) rootView.findViewById(R.id.gridView);
 
             List<Plugins> plugins = logTool.getAvailablePluginList();
             List<Addons> addons = logTool.getAvailableAddonList();
@@ -231,8 +242,8 @@ public class LogToolsFragment extends Fragment {
                     log.level2 = classes.getLevel2();
                     log.level3 = classes.getLevel3();
                     log.fullPath = classes.getFullPath();
-                    log.type = Loggers.TYPE_PLUGIN;
-                    log.picture = "plugin";
+                    log.type = Loggers.TYPE_ADDON;
+                    log.picture = "addon";
 
                     /**
                      * I insert the modified class in a new map with the plug in and the classes.
@@ -256,7 +267,21 @@ public class LogToolsFragment extends Fragment {
 
                 //listView.setAdapter(adapter);
 
-                registerForContextMenu(listView);
+                //registerForContextMenu(listView);
+
+                Configuration config = getResources().getConfiguration();
+                if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                    gridView.setNumColumns(6);
+                } else {
+                    gridView.setNumColumns(4);
+                }
+                //@SuppressWarnings("unchecked")
+                //ArrayList<App> list = (ArrayList<App>) getArguments().get("list");
+                //AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.shell_wallet_desktop_front_grid_item, mlist);
+                //_adpatrer.notifyDataSetChanged();
+                //gridView.setAdapter(_adpatrer);
+
+
             }}catch (Exception e){
             e.printStackTrace();
         }
@@ -281,5 +306,94 @@ public class LogToolsFragment extends Fragment {
         });
         //alertDialog.setIcon(R.drawable.icon);
         alertDialog.show();
+    }
+
+
+    public class AppListAdapter extends ArrayAdapter<Loggers> {
+
+
+        public AppListAdapter(Context context, int textViewResourceId, List<Loggers> objects) {
+            super(context, textViewResourceId, objects);
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+
+            final Loggers item = getItem(position);
+
+            ViewHolder holder;
+            if (convertView == null) {
+                LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
+                convertView = inflater.inflate(R.layout.shell_wallet_desktop_front_grid_item, parent, false);
+
+
+                holder = new ViewHolder();
+
+
+
+
+                holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
+
+                holder.imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(getContext(),item.fullPath,Toast.LENGTH_SHORT);
+                        //Resource item=(Resource) gridView.getItemAtPosition(position);
+                        //DatabaseToolsDatabaseListFragment databaseToolsDatabaseListFragment = new DatabaseToolsDatabaseListFragment();
+
+                        //databaseToolsDatabaseListFragment.setResource(item);
+
+                        //FragmentTransaction FT = getFragmentManager().beginTransaction();
+
+
+                        //FT.add(databaseToolsDatabaseListFragment, TAG_DATABASE_TOOLS_FRAGMENT);
+                        //FT.replace(R.id.hola, databaseToolsDatabaseListFragment);
+
+                        //FT.commit();
+                    }
+                });
+                holder.companyTextView = (TextView) convertView.findViewById(R.id.company_text_view);
+
+
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+
+            holder.companyTextView.setText(item.level0);
+            // holder.companyTextView.setTypeface(MyApplication.getDefaultTypeface());
+
+
+            switch (item.picture) {
+                case "plugin":
+                    holder.imageView.setImageResource(R.drawable.addon);
+                    holder.imageView.setTag("CPWWRWAKAV1M|1");
+                    break;
+                case "addon":
+                    holder.imageView.setImageResource(R.drawable.plugin);
+                    holder.imageView.setTag("CPWWRWAKAV1M|2");
+                    break;
+                default:
+                    holder.imageView.setImageResource(R.drawable.fermat);
+                    holder.imageView.setTag("CPWWRWAKAV1M|3");
+                    break;
+            }
+
+
+            return convertView;
+        }
+
+    }
+    /**
+     * ViewHolder.
+     */
+    private class ViewHolder {
+
+
+
+        public ImageView imageView;
+        public TextView companyTextView;
+
+
     }
 }
