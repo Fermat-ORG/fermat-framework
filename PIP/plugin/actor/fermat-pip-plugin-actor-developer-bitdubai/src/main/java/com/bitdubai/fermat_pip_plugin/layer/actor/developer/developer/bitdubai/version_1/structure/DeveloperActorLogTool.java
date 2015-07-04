@@ -67,16 +67,8 @@ public class DeveloperActorLogTool implements LogTool {
             /**
              * I get the class full patch from the plug in.
              */
-            //List<String> classes = ((LogManagerForDevelopers)this.LoggingLstPlugins.get(plugin)).getClassesFullPath();
-            List<Class<?>> javaClasses = ClassFinder.find(((LogManagerForDevelopers) this.LoggingLstPlugins.get(plugin)).getClass().getPackage().getName());
-
-            /**
-             * I'll put the classes in a List of Strings
-             */
-            List<String> classes = new ArrayList<String>();
-            for (Class<?> c : javaClasses){
-                classes.add(c.getName().toString());
-            }
+            List<String> classes = ((LogManagerForDevelopers)this.LoggingLstPlugins.get(plugin)).getClassesFullPath();
+            //List<Class<?>> javaClasses = ClassFinder.find(((LogManagerForDevelopers) this.LoggingLstPlugins.get(plugin)).getClass().getPackage().getName());
 
 
             /**
@@ -182,16 +174,7 @@ public class DeveloperActorLogTool implements LogTool {
             /**
              * I get the class full patch from the plug in.
              */
-            //List<String> classes = ((LogManagerForDevelopers)this.LoggingLstPlugins.get(plugin)).getClassesFullPath();
-            List<Class<?>> javaClasses = ClassFinder.find(((LogManagerForDevelopers) this.LoggingLstPlugins.get(addon)).getClass().getPackage().getName());
-
-            /**
-             * I'll put the classes in a List of Strings
-             */
-            List<String> classes = new ArrayList<String>();
-            for (Class<?> c : javaClasses){
-                classes.add(c.getName().toString());
-            }
+            List<String> classes = ((LogManagerForDevelopers)this.LoggingLstPlugins.get(addon)).getClassesFullPath();
 
 
             /**
@@ -293,10 +276,6 @@ public class DeveloperActorLogTool implements LogTool {
     @Override
     public void setNewLogLevelInClass(Plugins plugin, HashMap<String, LogLevel> newLogLevelInClass) {
         ((LogManagerForDevelopers) this.LoggingLstPlugins.get(plugin)).setLoggingLevelPerClass(newLogLevelInClass);
-    }
-
-    public List<Class<?>>  getRawClasses(){
-        return ClassFinder.find(this.getClass().getPackage().getName());
     }
 
 }
