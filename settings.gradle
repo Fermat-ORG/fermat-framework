@@ -105,6 +105,8 @@ project(':fermat-pip-android-sub-app-sub-app-manager-bitdubai').projectDir = new
 
 
 
+
+
 // P2P Projects
 
 include ':fermat-p2p-plugin-communication-cloud-client-bitdubai'
