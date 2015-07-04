@@ -15,7 +15,6 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;

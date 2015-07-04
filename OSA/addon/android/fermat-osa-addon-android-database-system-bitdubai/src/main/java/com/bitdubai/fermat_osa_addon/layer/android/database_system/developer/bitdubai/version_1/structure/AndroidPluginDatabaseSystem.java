@@ -7,8 +7,8 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
 
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
@@ -102,7 +102,7 @@ public class AndroidPluginDatabaseSystem  implements PluginDatabaseSystem{
      * @throws CantCreateDatabaseException
      */
     @Override
-    public Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException{
+    public Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
         try{
             AndroidDatabase database;
             String hasDBName = hashDataBaseName(databaseName);

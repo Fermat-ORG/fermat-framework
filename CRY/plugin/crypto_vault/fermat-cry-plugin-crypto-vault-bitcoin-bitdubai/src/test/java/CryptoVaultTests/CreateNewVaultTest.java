@@ -13,6 +13,7 @@ import org.bitcoinj.core.InsufficientMoneyException;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.Wallet;
 import org.bitcoinj.params.TestNet3Params;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -31,6 +32,7 @@ public class CreateNewVaultTest {
     @Mock ErrorManager errorManager;
     @Mock PluginDatabaseSystem pluginDatabaseSystem;
 
+    @Ignore
     @Test
     public void createNewVault() throws CantCreateCryptoWalletException, AddressFormatException, InsufficientMoneyException {
         userId = UUID.randomUUID();

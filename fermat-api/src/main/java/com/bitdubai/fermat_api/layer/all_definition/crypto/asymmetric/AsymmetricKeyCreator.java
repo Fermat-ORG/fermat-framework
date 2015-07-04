@@ -58,4 +58,29 @@ public class AsymmetricKeyCreator {
 
 		return publicAddress;
 	}
+
+	public String createTestAddress(final AsymmetricPublicKey publicKey) throws InvalidParameterException{
+		if(publicKey == null)
+			throw new InvalidParameterException();
+		//1: uncompressed public key
+		String publicAddress = publicKey.toUncompressedString();
+		//2: sha-256
+		publicAddress = CryptoHasher.performSha256(new BigInteger(publicAddress, 16));
+		//3: ripemd-160
+		publicAddress = CryptoHasher.performRipemd160(new BigInteger(publicAddress,16));
+		//4: version byte 00
+		publicAddress = "6F" + publicAddress;
+		//5: Stat checksum sha-256
+		String checksum = CryptoHasher.performSha256(new BigInteger(publicAddress,16));
+		//6: sha-256
+		checksum = CryptoHasher.performSha256(new BigInteger(checksum,16));
+		//7: first 4 bytes checksum
+		checksum = checksum.substring(0,8);
+		//8: checksum at end of 4
+		publicAddress = publicAddress + checksum;
+		//9: base58 string encoding
+		publicAddress = Base58.encode(publicAddress);
+
+		return publicAddress;
+	}
 }

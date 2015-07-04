@@ -9,7 +9,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
-import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUSerDataBaseConstants;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserDataBaseConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,38 +44,38 @@ public class IncomingExtraUserDeveloperDatabaseFactory {
          * We start with the columns
          */
         List<String> incomingExtraUserRegistryColumns = new ArrayList<>();
-        incomingExtraUserRegistryColumns.add(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_ID_COLUMN.columnName);
-        incomingExtraUserRegistryColumns.add(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_TRANSACTION_HASH_COLUMN.columnName);
-        incomingExtraUserRegistryColumns.add(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_ADDRESS_TO_COLUMN.columnName);
-        incomingExtraUserRegistryColumns.add(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_CRYPTO_CURRENCY_COLUMN.columnName);
-        incomingExtraUserRegistryColumns.add(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_CRYPTO_AMOUNT_COLUMN.columnName);
-        incomingExtraUserRegistryColumns.add(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_ADDRESS_FROM_COLUMN.columnName);
-        incomingExtraUserRegistryColumns.add(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_CRYPTO_STATUS_COLUMN.columnName);
-        incomingExtraUserRegistryColumns.add(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_ACTION_COLUMN.columnName);
-        incomingExtraUserRegistryColumns.add(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName);
-        incomingExtraUserRegistryColumns.add(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_TRANSACTION_STATUS_COLUMN.columnName);
-        incomingExtraUserRegistryColumns.add(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_TIMESTAMP_COLUMN.columnName);
+        incomingExtraUserRegistryColumns.add(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_ID_COLUMN.columnName);
+        incomingExtraUserRegistryColumns.add(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_TRANSACTION_HASH_COLUMN.columnName);
+        incomingExtraUserRegistryColumns.add(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_ADDRESS_TO_COLUMN.columnName);
+        incomingExtraUserRegistryColumns.add(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_CRYPTO_CURRENCY_COLUMN.columnName);
+        incomingExtraUserRegistryColumns.add(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_CRYPTO_AMOUNT_COLUMN.columnName);
+        incomingExtraUserRegistryColumns.add(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_ADDRESS_FROM_COLUMN.columnName);
+        incomingExtraUserRegistryColumns.add(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_CRYPTO_STATUS_COLUMN.columnName);
+        incomingExtraUserRegistryColumns.add(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_ACTION_COLUMN.columnName);
+        incomingExtraUserRegistryColumns.add(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_PROTOCOL_STATUS_COLUMN.columnName);
+        incomingExtraUserRegistryColumns.add(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_TRANSACTION_STATUS_COLUMN.columnName);
+        incomingExtraUserRegistryColumns.add(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_TIMESTAMP_COLUMN.columnName);
 
         /**
          * incomingExtraUserRegistry table
          */
-        DeveloperDatabaseTable  incomingExtraUserRegistryTable = developerObjectFactory.getNewDeveloperDatabaseTable(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_NAME, incomingExtraUserRegistryColumns);
+        DeveloperDatabaseTable  incomingExtraUserRegistryTable = developerObjectFactory.getNewDeveloperDatabaseTable(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_REGISTRY_TABLE_NAME, incomingExtraUserRegistryColumns);
         tables.add(incomingExtraUserRegistryTable);
 
         /*
          * EventsRecorded Registry table columns
          */
         List<String> eventsRecordedColumns = new ArrayList<>();
-        eventsRecordedColumns.add(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_ID_COLUMN.columnName);
-        eventsRecordedColumns.add(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_EVENT_COLUMN.columnName);
-        eventsRecordedColumns.add(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_SOURCE_COLUMN.columnName);
-        eventsRecordedColumns.add(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_STATUS_COLUMN.columnName);
-        eventsRecordedColumns.add(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_TIMESTAMP_COLUMN.columnName);
+        eventsRecordedColumns.add(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_ID_COLUMN.columnName);
+        eventsRecordedColumns.add(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_EVENT_COLUMN.columnName);
+        eventsRecordedColumns.add(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_SOURCE_COLUMN.columnName);
+        eventsRecordedColumns.add(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_STATUS_COLUMN.columnName);
+        eventsRecordedColumns.add(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_TIMESTAMP_COLUMN.columnName);
 
         /*
          * EventsRecorded Registry table
          */
-        DeveloperDatabaseTable  eventsRecordedTable = developerObjectFactory.getNewDeveloperDatabaseTable(IncomingExtraUSerDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_NAME, eventsRecordedColumns);
+        DeveloperDatabaseTable  eventsRecordedTable = developerObjectFactory.getNewDeveloperDatabaseTable(IncomingExtraUserDataBaseConstants.INCOMING_EXTRA_USER_EVENTS_RECORDED_TABLE_NAME, eventsRecordedColumns);
         tables.add(eventsRecordedTable);
 
 

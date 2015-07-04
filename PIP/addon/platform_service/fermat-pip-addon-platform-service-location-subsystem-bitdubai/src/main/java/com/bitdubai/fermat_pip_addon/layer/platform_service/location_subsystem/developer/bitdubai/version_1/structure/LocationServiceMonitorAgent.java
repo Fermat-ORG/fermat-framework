@@ -5,21 +5,13 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_pip_addon.layer.platform_service.location_subsystem.developer.bitdubai.version_1.exception.CantGetDeviceLocationException;
 import com.bitdubai.fermat_api.Plugin;
-/* No puede implementar una interfaz de un layer superior
-import com.bitdubai.fermat_api.layer._11_world.Agent;
-import com.bitdubai.fermat_api.layer._11_world.blockchain_info.exceptions.CantStartAgentException;
-*/
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
-//TODO se movio la interface
-//import com.bitdubai.fermat_api.layer.osa_android.device_location.DealsWithDeviceLocation;
-//import com.bitdubai.fermat_api.layer.osa_android.device_location.Location;
-//import com.bitdubai.fermat_api.layer.osa_android.device_location.LocationManager;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
