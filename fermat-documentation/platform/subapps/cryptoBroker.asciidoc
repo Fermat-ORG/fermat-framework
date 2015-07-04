@@ -1,0 +1,5 @@
+[[Platform-SubApps-CryptoBroker]]
+= Crypto Broker
+
+This is a subapp focused for the use of brokers (people who buy and sell crypto currencies). +
+The brokers are central actors in this platform.
