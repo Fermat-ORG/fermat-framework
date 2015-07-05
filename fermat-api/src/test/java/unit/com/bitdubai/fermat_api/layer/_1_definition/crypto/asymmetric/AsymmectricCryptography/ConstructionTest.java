@@ -1,10 +1,11 @@
-package unit.com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.KeyPair;
+package unit.com.bitdubai.fermat_api.layer._1_definition.crypto.asymmetric.AsymmectricCryptography;
 
 import static org.fest.assertions.api.Assertions.*;
 
 import org.junit.Test;
 
-import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 
 public class ConstructionTest {
 	
@@ -59,6 +60,12 @@ public class ConstructionTest {
 	@Test(expected=IllegalArgumentException.class)
 	public void Construction_PublicKeyStringISNotDerivedFromPrivateKey_ThrowsIllegalArgumentException(){
 		new ECCKeyPair(testPrivateKey, "ABCDEF1234");
+	}
+
+	@Test
+	public void Construction_NoParameters_whitAsymmectricCryptography() throws Exception{
+		ECCKeyPair testPairDefault1 = AsymmectricCryptography.generateECCKeyPair();
+		assertThat(testPairDefault1).isNotNull();
 	}
 
 }

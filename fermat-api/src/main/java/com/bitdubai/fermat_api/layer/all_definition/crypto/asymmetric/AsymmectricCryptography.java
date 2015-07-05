@@ -67,5 +67,20 @@ public class AsymmectricCryptography {
 		if(argument == null || argument.isEmpty())
 			throw new IllegalArgumentException();
 	}
+
+    /**
+     * Generate a new ECCKeyPair
+     *
+     * privateKey + publicKey
+     *
+     * @return ECCKeyPair
+     */
+	public static ECCKeyPair generateECCKeyPair(){
+
+        String privateKey = createPrivateKey();
+        String publicKey  = derivePublicKey(privateKey);
+
+        return new ECCKeyPair(privateKey, publicKey);
+    }
 	
 }
