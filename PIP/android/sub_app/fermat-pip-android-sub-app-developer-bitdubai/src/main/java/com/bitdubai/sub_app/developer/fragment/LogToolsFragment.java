@@ -336,18 +336,18 @@ public class LogToolsFragment extends Fragment {
 
                         LogToolsFragmentLevel2 logToolsFragmentLevel2 = new LogToolsFragmentLevel2();
 
-
+                        logToolsFragmentLevel2.setLoggers(lstLoggers.getListFromLevel(item,ArrayListLoggers.LEVEL_0));
                         //DatabaseToolsDatabaseListFragment databaseToolsDatabaseListFragment = new DatabaseToolsDatabaseListFragment();
 
                         //databaseToolsDatabaseListFragment.setResource(item);
 
-                        //FragmentTransaction FT = getFragmentManager().beginTransaction();
+                        FragmentTransaction FT = getFragmentManager().beginTransaction();
 
 
                         //FT.add(databaseToolsDatabaseListFragment, TAG_DATABASE_TOOLS_FRAGMENT);
-                        //FT.replace(R.id.hola, databaseToolsDatabaseListFragment);
-
-                        //FT.commit();
+                        FT.replace(R.id.logContainer, logToolsFragmentLevel2,"fragmento2");
+                        FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                        FT.commit();
                     }
                 });
                 holder.companyTextView = (TextView) convertView.findViewById(R.id.company_text_view);

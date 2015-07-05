@@ -139,44 +139,7 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
             AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.shell_wallet_desktop_front_grid_item, lstDatabases);
             _adpatrer.notifyDataSetChanged();
             gridView.setAdapter(_adpatrer);
-            /*String[] availableResources;
-            if (developerDatabaseList.size() > 0) {
-                availableResources = new String[developerDatabaseList.size()];
-                for(int i = 0; i < developerDatabaseList.size() ; i++) {
-                    availableResources[i] = developerDatabaseList.get(i).getName();
-                }
-            } else {
-                availableResources = new String[0];
-            }*/
 
-            //ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity().getApplicationContext(),
-            //        android.R.layout.simple_list_item_1, android.R.id.text1, availableResources);
-
-            /*listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    String item = (String) listView.getItemAtPosition(position);
-
-                    for (DeveloperDatabase devDB : developerDatabaseList2) {
-                        if (devDB.getName().equals(item)) {
-                            DatabaseToolsDatabaseTableListFragment databaseToolsDatabaseTableListFragment = new DatabaseToolsDatabaseTableListFragment();
-                            databaseToolsDatabaseTableListFragment.setResource(resource.resource);
-                            databaseToolsDatabaseTableListFragment.setDeveloperDatabase(devDB);
-
-                            FragmentTransaction FT = getFragmentManager().beginTransaction();
-
-                            FT.replace(R.id.hola, databaseToolsDatabaseTableListFragment);
-
-                            FT.addToBackStack(null);
-
-                            FT.commit();
-                        }
-                    }
-
-                }
-            });
-            */
-
-            //listView.setAdapter(adapter);
         } catch (Exception e) {
             showMessage("DatabaseTools Database List onCreateView Exception - " + e.getMessage());
             e.printStackTrace();
@@ -217,31 +180,6 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
 
             final Databases item = getItem(position);
 
-
-            /*gridView =(GridView) rootView.findViewById(R.id.gridView);
-            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                public void onItemClick(AdapterView<?> parent, View v,
-                                        int position, long id) {
-                    Toast.makeText(getActivity(), "natalia+"+position, Toast.LENGTH_SHORT).show();
-                    //Resource item=(Resource) gridView.getItemAtPosition(position);
-                    //Toast.makeText(getActivity(),item.resource,Toast.LENGTH_SHORT).show();
-                    //DatabaseToolsDatabaseListFragment databaseToolsDatabaseListFragment = new DatabaseToolsDatabaseListFragment();
-
-                    //databaseToolsDatabaseListFragment.setResource(item);
-
-                    //FragmentTransaction FT = getFragmentManager().beginTransaction();
-
-
-                    //FT.add(databaseToolsDatabaseListFragment, TAG_DATABASE_TOOLS_FRAGMENT);
-                    //FT.replace(R.id.hola, databaseToolsDatabaseListFragment);
-
-                    //FT.commit();
-
-
-                }
-            });
-            */
-
             ViewHolder holder;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
@@ -272,6 +210,7 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
 
                         //FT.add(dabaDatabaseToolsDatabaseTableListFragment, TAG_DATABASE_TABLES_FRAGMENT);
                         FT.replace(R.id.hola, dabaDatabaseToolsDatabaseTableListFragment);
+                        FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                         FT.commit();
                         //FT.show(dabaDatabaseToolsDatabaseTableListFragment);
                     }

@@ -217,17 +217,12 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
                         dabaDatabaseToolsDatabaseTableListFragment.setResource(databases);
                         dabaDatabaseToolsDatabaseTableListFragment.setDeveloperDatabaseTable(developerDatabaseTableList.get(position));
                         dabaDatabaseToolsDatabaseTableListFragment.setDeveloperDatabase(developerDatabase);
-                        //dabaDatabaseToolsDatabaseTableListFragment.setResource();
 
-                        //falta pasar la database
                         FragmentTransaction FT = getFragmentManager().beginTransaction();
 
 
-                        //FT.add(dabaDatabaseToolsDatabaseTableListFragment, TAG_DATABASE_TABLES_TOOLS_FRAGMENT);
-
-                        //FT.replace(R.id.hola, dabaDatabaseToolsDatabaseTableListFragment, TAG_DATABASE_TABLES_TOOLS_FRAGMENT);
                         FT.replace(R.id.hola, dabaDatabaseToolsDatabaseTableListFragment);
-
+                        FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                         FT.commit();
                     }
                 });
