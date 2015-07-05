@@ -287,8 +287,8 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
         /**
          * I get the userId from the deviceUserManager
          */
-        //userId = deviceUserManager.getLoggedInUser().getId();
-        userId = UUID.fromString("4c4322c7-8c73-4633-956d-96991f413e93"); //todo fix deviceUser Implementation
+        userId = deviceUserManager.getLoggedInUser().getId();
+        //userId = UUID.fromString("4c4322c7-8c73-4633-956d-96991f413e93"); //todo fix deviceUser Implementation
         //userId = UUID.randomUUID();
 
 

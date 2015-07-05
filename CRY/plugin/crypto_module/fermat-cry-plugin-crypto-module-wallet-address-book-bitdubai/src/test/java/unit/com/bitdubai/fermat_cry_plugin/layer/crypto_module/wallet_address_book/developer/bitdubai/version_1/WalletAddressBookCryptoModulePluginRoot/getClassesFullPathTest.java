@@ -27,9 +27,7 @@ public class getClassesFullPathTest {
         List<Class<?>> classes = find(WalletAddressBookCryptoModulePluginRoot.class.getPackage().getName());
         WalletAddressBookCryptoModulePluginRoot root = new WalletAddressBookCryptoModulePluginRoot();
 
-        for (Class<?> c : classes){
-            System.out.println(c.getName());
-        }
+
 
         for (String myClass : root.getClassesFullPath()) {
             /**

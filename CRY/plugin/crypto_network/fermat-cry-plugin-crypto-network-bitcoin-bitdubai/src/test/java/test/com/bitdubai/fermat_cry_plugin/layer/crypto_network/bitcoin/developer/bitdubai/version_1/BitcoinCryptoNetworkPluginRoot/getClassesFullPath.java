@@ -27,9 +27,6 @@ public class getClassesFullPath {
         List<Class<?>> classes = find(BitcoinCryptoNetworkPluginRoot.class.getPackage().getName());
         BitcoinCryptoNetworkPluginRoot root = new BitcoinCryptoNetworkPluginRoot();
 
-        for (Class<?> c : classes){
-            System.out.println(c.getName());
-        }
 
         for (String myClass : root.getClassesFullPath()) {
             /**
