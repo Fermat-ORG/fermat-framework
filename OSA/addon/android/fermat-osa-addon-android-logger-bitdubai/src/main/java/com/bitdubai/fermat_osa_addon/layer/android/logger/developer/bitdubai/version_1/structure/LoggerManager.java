@@ -40,6 +40,7 @@ public class LoggerManager implements LogManager {
          * Moderate loggin level logs current class and method information + minimal level.
          */
         if (logLevel == LogLevel.MODERATE_LOGGING){
+            setMinimalLogging(minimalLogging);
             setModerateLogging(moderateLogging);
         }
 
@@ -47,6 +48,8 @@ public class LoggerManager implements LogManager {
          * Agressive logging level includes moderate and minimal + Thread information.
          */
         if (logLevel == LogLevel.AGGRESSIVE_LOGGING){
+            setMinimalLogging(minimalLogging);
+            setModerateLogging(moderateLogging);
             setAggressiveLogging(aggressiveLogging);
         }
 
