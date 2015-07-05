@@ -119,10 +119,10 @@ public class LogToolsFragment extends Fragment {
 
         //getActivity().getMenuInflater().inflate(R.menu.logs_menu, menu);
         GridView gv = (GridView) v;
-        AdapterViewCompat.AdapterContextMenuInfo info = (AdapterViewCompat.AdapterContextMenuInfo) menuInfo;
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
 
-        String selectedWord = ((TextView) info.targetView).getText().toString();
-        menu.setHeaderTitle(selectedWord);
+        //String selectedWord = ((TextView) info.targetView).getText().toString();
+        //menu.setHeaderTitle(selectedWord);
         menu.add(LogLevel.NOT_LOGGING.toString());
         menu.add(LogLevel.MINIMAL_LOGGING.toString());
         menu.add(LogLevel.MODERATE_LOGGING.toString());
@@ -380,7 +380,7 @@ public class LogToolsFragment extends Fragment {
                         FT.commit();
                     }
                 });
-                holder.imageView.setOnLongClickListener(new View.OnLongClickListener() {
+                /*holder.imageView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View view) {
                         Toast.makeText(getActivity(),"tocando",Toast.LENGTH_SHORT).show();
@@ -388,7 +388,7 @@ public class LogToolsFragment extends Fragment {
                         return true;
                     }
                 });
-
+                */
                 holder.companyTextView = (TextView) convertView.findViewById(R.id.company_text_view);
 
 
