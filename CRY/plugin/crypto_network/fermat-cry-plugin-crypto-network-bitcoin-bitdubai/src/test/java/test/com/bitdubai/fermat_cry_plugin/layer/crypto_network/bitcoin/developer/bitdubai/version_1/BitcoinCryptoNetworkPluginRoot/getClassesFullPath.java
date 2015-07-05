@@ -1,6 +1,6 @@
-package unit.com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.ActorAddressBookCryptoModulePluginRoot;
+package test.com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.BitcoinCryptoNetworkPluginRoot;
 
-import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.ActorAddressBookCryptoModulePluginRoot;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.BitcoinCryptoNetworkPluginRoot;
 
 import org.junit.Test;
 
@@ -14,7 +14,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by rodrigo on 2015.07.04..
  */
-public class GetClassesFullPathTest {
+public class getClassesFullPath {
     final char DOT = '.';
     final char SLASH = '/';
     final String CLASS_SUFFIX = ".class";
@@ -23,9 +23,9 @@ public class GetClassesFullPathTest {
     @Test
     public void generateClassesTree() throws ClassNotFoundException {
 
-        String scannedPackage = ActorAddressBookCryptoModulePluginRoot.class.getPackage().getName();
-        List<Class<?>> classes = find(ActorAddressBookCryptoModulePluginRoot.class.getPackage().getName());
-        ActorAddressBookCryptoModulePluginRoot root = new ActorAddressBookCryptoModulePluginRoot();
+        String scannedPackage = BitcoinCryptoNetworkPluginRoot.class.getPackage().getName();
+        List<Class<?>> classes = find(BitcoinCryptoNetworkPluginRoot.class.getPackage().getName());
+        BitcoinCryptoNetworkPluginRoot root = new BitcoinCryptoNetworkPluginRoot();
 
 
         for (String myClass : root.getClassesFullPath()) {
@@ -69,5 +69,4 @@ public class GetClassesFullPathTest {
         }
         return classes;
     }
-
 }
