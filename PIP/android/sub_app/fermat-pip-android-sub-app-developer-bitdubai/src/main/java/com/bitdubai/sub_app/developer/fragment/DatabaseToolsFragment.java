@@ -207,7 +207,7 @@ public class DatabaseToolsFragment extends Fragment{
 
                         //FT.add(databaseToolsDatabaseListFragment, TAG_DATABASE_TOOLS_FRAGMENT);
                         FT.replace(R.id.hola, databaseToolsDatabaseListFragment);
-
+                        FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                         FT.commit();
                     }
                 });
