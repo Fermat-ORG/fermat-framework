@@ -1,7 +1,10 @@
 package com.bitdubai.sub_app.developer.fragment;
 
 import android.app.AlertDialog;
+import android.app.Service;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -12,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -22,6 +27,8 @@ import com.bitdubai.fermat_api.layer.pip_actor.developer.ClassHierarchyLevels;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.LogTool;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.ToolManager;
 import com.bitdubai.sub_app.developer.R;
+import com.bitdubai.sub_app.developer.common.ArrayListLoggers;
+import com.bitdubai.sub_app.developer.common.Loggers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,6 +54,9 @@ public class LogToolsFragmentLevel2 extends Fragment {
     private LogTool logTool;
 
     private static Platform platform = new Platform();
+
+    private ArrayListLoggers lstLoggers;
+    private GridView gridView;
 
     public static LogToolsFragmentLevel2 newInstance(int position) {
         LogToolsFragmentLevel2 f = new LogToolsFragmentLevel2();
@@ -154,94 +164,35 @@ public class LogToolsFragmentLevel2 extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_log_tools, container, false);
-        try {
-            // Get ListView object from xml
-            //final ListView listView = (ListView) rootView.findViewById(R.id.listaLogResources);
 
-            List<Plugins> plugins = logTool.getAvailablePluginList();
-            List<Addons> addons = logTool.getAvailableAddonList();
+        gridView = (GridView) rootView.findViewById(R.id.gridView);
+        try{
 
-            List<String> list = new ArrayList<>();
-
-            for(Plugins plugin : plugins){
-                list.add(plugin.getKey()); //+" - Plugin || LogLevel: "+logTool.getLogLevel(plugin));
-                /**
-                 * I will get the list of the available classes on the plug in
-                 */
-                String level1="";
-                String level2="";
-                String toReplace = "";
-                List<ClassHierarchyLevels> newList = new ArrayList<ClassHierarchyLevels>();
-                for (ClassHierarchyLevels classes : logTool.getClassesHierarchyPlugins(plugin)){
-                    /**
-                     * I will acommodate the values to fit the screen
-                     */
-                    if (classes.getLevel1().length() > 40)
-                        toReplace = classes.getLevel1().substring(15, classes.getLevel1().length()-15);
-                    else if (classes.getLevel1().length() < 40)
-                        toReplace = classes.getLevel1().substring(8, classes.getLevel1().length()-8);
-                    else if (classes.getLevel1().length() < 10)
-                        toReplace = "   ";
-                    classes.setLevel1(classes.getLevel1().replace(toReplace, "..."));
-
-                    if (classes.getLevel2().length() > 40)
-                        toReplace = classes.getLevel2().substring(15, classes.getLevel2().length()-15);
-                    else if (classes.getLevel2().length() < 40 && classes.getLevel2().length() > 20)
-                        toReplace = classes.getLevel2().substring(8, classes.getLevel2().length()-8);
-                    else if (classes.getLevel2().length() < 10)
-                        toReplace = "  ";
-
-                    classes.setLevel2("-" + classes.getLevel2().replace(toReplace, "..."));
-                    classes.setLevel3("--" + classes.getLevel3());
-
-                    /**
-                     * I will add the first item to the list. If I already added it, then I will skip it.
-                     */
-                    if (!level1.contentEquals(classes.getLevel1())){
-                        level1 = classes.getLevel1();
-                        list.add(classes.getLevel1());
-
-                    }
-                    if (!level2.contentEquals(classes.getLevel2())){
-                        level2 = classes.getLevel2();
-                        list.add(classes.getLevel2());
-                    }
-                    /**
-                     * this level will always be added
-                     */
-                    list.add(classes.getLevel3());
-
-                    /**
-                     * I insert the modified class in a new map with the plug in and the classes.
-                     */
-                    newList.add(classes);
-                }
-                pluginClasses.put(plugin.getKey(), newList);
-
-
-            }
-            for(Addons addon : addons){ list.add(addon.getKey() + " - Addon"); }
-
-            String[] availableResources;
-            if (list.size() > 0) {
-                availableResources = new String[list.size()];
-                for(int i = 0; i < list.size() ; i++) {
-                    availableResources[i] = list.get(i);
-                }
+            Configuration config = getResources().getConfiguration();
+            if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                gridView.setNumColumns(6);
             } else {
-                availableResources = new String[0];
+                gridView.setNumColumns(3);
             }
 
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity().getApplicationContext(),
-                    android.R.layout.simple_list_item_1, android.R.id.text1, availableResources);
+            ArrayListLoggers lstLoggersToShow=new ArrayListLoggers();
+            for(Loggers loggers:lstLoggers){
+                //String level_0 = loggers.level0;
+                if(!lstLoggersToShow.containsLevel1(loggers)){
+                    lstLoggersToShow.add(loggers);
+                }
+            }
 
-            //listView.setAdapter(adapter);
+            AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.shell_wallet_desktop_front_grid_item, lstLoggersToShow);
+            _adpatrer.notifyDataSetChanged();
+            gridView.setAdapter(_adpatrer);
 
-            //registerForContextMenu(listView);
-        } catch (Exception e) {
+        }catch (Exception e){
             showMessage("LogTools Fragment onCreateView Exception - " + e.getMessage());
             e.printStackTrace();
         }
+
+
         return rootView;
     }
 
@@ -257,5 +208,114 @@ public class LogToolsFragmentLevel2 extends Fragment {
         });
         //alertDialog.setIcon(R.drawable.icon);
         alertDialog.show();
+    }
+
+    public void setLoggers(ArrayListLoggers lstLoggers){
+        this.lstLoggers=lstLoggers;
+    }
+
+    public class AppListAdapter extends ArrayAdapter<Loggers> {
+
+
+        public AppListAdapter(Context context, int textViewResourceId, List<Loggers> objects) {
+            super(context, textViewResourceId, objects);
+        }
+
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+
+            final Loggers item = getItem(position);
+
+            ViewHolder holder;
+            if (convertView == null) {
+                LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
+                convertView = inflater.inflate(R.layout.shell_wallet_desktop_front_grid_item, parent, false);
+
+
+                holder = new ViewHolder();
+
+
+
+
+                holder.imageView = (ImageView) convertView.findViewById(R.id.image_view);
+
+                holder.imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //Toast.makeText(getContext(),item.fullPath,Toast.LENGTH_SHORT);
+                        Loggers item=(Loggers) gridView.getItemAtPosition(position);
+
+
+
+                        //LogToolsFragmentLevel2 logToolsFragmentLevel2 = new LogToolsFragmentLevel2();
+
+                        setLoggers(lstLoggers.getListFromLevel(item, ArrayListLoggers.LEVEL_2));
+                        //DatabaseToolsDatabaseListFragment databaseToolsDatabaseListFragment = new DatabaseToolsDatabaseListFragment();
+
+                        //databaseToolsDatabaseListFragment.setResource(item);
+
+                        //FragmentTransaction FT = getFragmentManager().beginTransaction();
+
+
+                        //FT.add(databaseToolsDatabaseListFragment, TAG_DATABASE_TOOLS_FRAGMENT);
+                        //FT.replace(R.id.logContainer,getParentFragment());
+                        //FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                        //FT.commit();
+
+
+                        // Reload current fragment
+                        LogToolsFragmentLevel2 frg = null;
+                        frg =(LogToolsFragmentLevel2) getFragmentManager().findFragmentByTag("fragmento2");
+                        frg.setLoggers(lstLoggers.getListFromLevel(item, ArrayListLoggers.LEVEL_2));
+                        final FragmentTransaction ft = getFragmentManager().beginTransaction();
+                        ft.detach(frg);
+                        ft.attach(frg);
+                        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+                        ft.commit();
+                    }
+                });
+                holder.companyTextView = (TextView) convertView.findViewById(R.id.company_text_view);
+
+
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
+            }
+
+            holder.companyTextView.setText(item.level1);
+            // holder.companyTextView.setTypeface(MyApplication.getDefaultTypeface());
+
+
+            switch (item.picture) {
+                case "plugin":
+                    holder.imageView.setImageResource(R.drawable.addon);
+                    holder.imageView.setTag("CPWWRWAKAV1M|1");
+                    break;
+                case "addon":
+                    holder.imageView.setImageResource(R.drawable.plugin);
+                    holder.imageView.setTag("CPWWRWAKAV1M|2");
+                    break;
+                default:
+                    holder.imageView.setImageResource(R.drawable.fermat);
+                    holder.imageView.setTag("CPWWRWAKAV1M|3");
+                    break;
+            }
+
+
+            return convertView;
+        }
+
+    }
+    /**
+     * ViewHolder.
+     */
+    private class ViewHolder {
+
+
+
+        public ImageView imageView;
+        public TextView companyTextView;
+
+
     }
 }

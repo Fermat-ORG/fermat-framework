@@ -8,10 +8,10 @@ import java.util.List;
  */
 public class ArrayListLoggers extends ArrayList<Loggers> implements List<Loggers>{
 
-    private final int LEVEL_0 = 0;
-    private final int LEVEL_1 = 1;
-    private final int LEVEL_2 = 2;
-    private final int LEVEL_3 = 3;
+    public static final int LEVEL_0 = 0;
+    public static final int LEVEL_1 = 1;
+    public static final int LEVEL_2 = 2;
+    public static final int LEVEL_3 = 3;
 
 
 
@@ -38,21 +38,31 @@ public class ArrayListLoggers extends ArrayList<Loggers> implements List<Loggers
     }
 
     public boolean containsLevel1(Loggers log){
-        for(Loggers logger:this){
+        boolean result=false;
+        int i=0;
+        while(!result && i<this.size()){
+            Loggers logger=this.get(i);
+
             if(logger.level1.compareTo(log.level1)==0){
-                return true;
+                result= true;
             }
+            i++;
         }
-        return false;
+        return result;
     }
 
     public boolean containsLevel2(Loggers log){
-        for(Loggers logger:this){
+        boolean result=false;
+        int i=0;
+        while(!result && i<this.size()){
+            Loggers logger=this.get(i);
+
             if(logger.level2.compareTo(log.level2)==0){
-                return true;
+                result= true;
             }
+            i++;
         }
-        return false;
+        return result;
     }
 
     public ArrayListLoggers getListFromLevel(Loggers logger,int level){
