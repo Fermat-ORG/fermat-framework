@@ -1,6 +1,6 @@
-package unit.com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.ActorAddressBookCryptoModulePluginRoot;
+package unit.com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.WalletAddressBookCryptoModulePluginRoot;
 
-import com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.ActorAddressBookCryptoModulePluginRoot;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.WalletAddressBookCryptoModulePluginRoot;
 
 import org.junit.Test;
 
@@ -14,7 +14,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by rodrigo on 2015.07.04..
  */
-public class GetClassesFullPathTest {
+public class getClassesFullPathTest {
     final char DOT = '.';
     final char SLASH = '/';
     final String CLASS_SUFFIX = ".class";
@@ -23,9 +23,10 @@ public class GetClassesFullPathTest {
     @Test
     public void generateClassesTree() throws ClassNotFoundException {
 
-        String scannedPackage = ActorAddressBookCryptoModulePluginRoot.class.getPackage().getName();
-        List<Class<?>> classes = find(ActorAddressBookCryptoModulePluginRoot.class.getPackage().getName());
-        ActorAddressBookCryptoModulePluginRoot root = new ActorAddressBookCryptoModulePluginRoot();
+        String scannedPackage = WalletAddressBookCryptoModulePluginRoot.class.getPackage().getName();
+        List<Class<?>> classes = find(WalletAddressBookCryptoModulePluginRoot.class.getPackage().getName());
+        WalletAddressBookCryptoModulePluginRoot root = new WalletAddressBookCryptoModulePluginRoot();
+
 
 
         for (String myClass : root.getClassesFullPath()) {
