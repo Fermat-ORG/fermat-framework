@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.internal.widget.AdapterViewCompat;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -88,11 +89,15 @@ public class LogToolsFragment extends Fragment {
 
         pluginClasses = new HashMap<String,List<ClassHierarchyLevels>>();
 
+
+
+
         /**
          * I will load the list of classes that will be used in other fragments.
          */
     }
 
+    /*@Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
 
@@ -105,8 +110,31 @@ public class LogToolsFragment extends Fragment {
         menu.add(LogLevel.MINIMAL_LOGGING.toString());
         menu.add(LogLevel.MODERATE_LOGGING.toString());
         menu.add(LogLevel.AGGRESSIVE_LOGGING.toString());
-    }
+    }*/
 
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        //getActivity().getMenuInflater().inflate(R.menu.logs_menu, menu);
+        GridView gv = (GridView) v;
+        AdapterViewCompat.AdapterContextMenuInfo info = (AdapterViewCompat.AdapterContextMenuInfo) menuInfo;
+
+        String selectedWord = ((TextView) info.targetView).getText().toString();
+        menu.setHeaderTitle(selectedWord);
+        menu.add(LogLevel.NOT_LOGGING.toString());
+        menu.add(LogLevel.MINIMAL_LOGGING.toString());
+        menu.add(LogLevel.MODERATE_LOGGING.toString());
+        menu.add(LogLevel.AGGRESSIVE_LOGGING.toString());
+        int position = info.position;
+        /*if(!(position==0 || position==2))
+        {
+            menu.close();
+            )*/
+        }
+
+    @Override
     public boolean onContextItemSelected(MenuItem item) {
        /* AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
         Object item = getListAdapter().getItem(info.position);*/
@@ -280,7 +308,7 @@ public class LogToolsFragment extends Fragment {
             showMessage("LogTools Fragment onCreateView Exception - " + e.getMessage());
             e.printStackTrace();
         }*/
-
+        registerForContextMenu(gridView);
         return rootView;
 
     }
@@ -298,6 +326,8 @@ public class LogToolsFragment extends Fragment {
         //alertDialog.setIcon(R.drawable.icon);
         alertDialog.show();
     }
+
+
 
 
 
@@ -319,6 +349,8 @@ public class LogToolsFragment extends Fragment {
                 convertView = inflater.inflate(R.layout.shell_wallet_desktop_front_grid_item, parent, false);
 
 
+
+
                 holder = new ViewHolder();
 
 
@@ -329,14 +361,12 @@ public class LogToolsFragment extends Fragment {
                 holder.imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        //Toast.makeText(getContext(),item.fullPath,Toast.LENGTH_SHORT);
-                        Loggers item=(Loggers) gridView.getItemAtPosition(position);
-
+                        Loggers item = (Loggers) gridView.getItemAtPosition(position);
 
 
                         LogToolsFragmentLevel2 logToolsFragmentLevel2 = new LogToolsFragmentLevel2();
 
-                        logToolsFragmentLevel2.setLoggers(lstLoggers.getListFromLevel(item,ArrayListLoggers.LEVEL_0));
+                        logToolsFragmentLevel2.setLoggers(lstLoggers.getListFromLevel(item, ArrayListLoggers.LEVEL_0));
                         //DatabaseToolsDatabaseListFragment databaseToolsDatabaseListFragment = new DatabaseToolsDatabaseListFragment();
 
                         //databaseToolsDatabaseListFragment.setResource(item);
@@ -345,11 +375,20 @@ public class LogToolsFragment extends Fragment {
 
 
                         //FT.add(databaseToolsDatabaseListFragment, TAG_DATABASE_TOOLS_FRAGMENT);
-                        FT.replace(R.id.logContainer, logToolsFragmentLevel2,"fragmento2");
+                        FT.replace(R.id.logContainer, logToolsFragmentLevel2, "fragmento2");
                         FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                         FT.commit();
                     }
                 });
+                holder.imageView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        Toast.makeText(getActivity(),"tocando",Toast.LENGTH_SHORT).show();
+
+                        return true;
+                    }
+                });
+
                 holder.companyTextView = (TextView) convertView.findViewById(R.id.company_text_view);
 
 
