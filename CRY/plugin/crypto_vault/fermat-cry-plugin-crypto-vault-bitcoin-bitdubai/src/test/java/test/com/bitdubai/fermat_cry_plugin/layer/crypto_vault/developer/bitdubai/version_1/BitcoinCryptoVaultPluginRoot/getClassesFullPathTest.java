@@ -1,29 +1,53 @@
-package LoggerTests;
+package test.com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot;
+
+import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot;
+
+import org.junit.Test;
 
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertTrue;
+
 /**
  * Created by rodrigo on 2015.07.04..
  */
-public class ClassFinder {
-    private static final char DOT = '.';
+public class getClassesFullPathTest {
+    final char DOT = '.';
+    final char SLASH = '/';
+    final String CLASS_SUFFIX = ".class";
+    final String BAD_PACKAGE_ERROR = "Unable to get resources from path '%s'. Are you sure the package '%s' exists?";
 
-    private static final char SLASH = '/';
+    @Test
+    public void generateClassesTree() throws ClassNotFoundException {
 
-    private static final String CLASS_SUFFIX = ".class";
+        String scannedPackage = BitcoinCryptoVaultPluginRoot.class.getPackage().getName();
+        List<Class<?>> classes = find(BitcoinCryptoVaultPluginRoot.class.getPackage().getName());
+        BitcoinCryptoVaultPluginRoot root = new BitcoinCryptoVaultPluginRoot();
 
-    private static final String BAD_PACKAGE_ERROR = "Unable to get resources from path '%s'. Are you sure the package '%s' exists?";
+        for (Class<?> c : classes){
+            System.out.println(c.getName());
+        }
 
-    public static List<Class<?>> find(String scannedPackage) {
+        for (String myClass : root.getClassesFullPath()) {
+            /**
+             * True if it exists
+             */
+            assertTrue(classes.contains(Class.forName(myClass)));
+        }
+
+    }
+
+    private  List<Class<?>> find (String scannedPackage) {
         String scannedPath = scannedPackage.replace(DOT, SLASH);
         URL scannedUrl = Thread.currentThread().getContextClassLoader().getResource(scannedPath);
         if (scannedUrl == null) {
             throw new IllegalArgumentException(String.format(BAD_PACKAGE_ERROR, scannedPath, scannedPackage));
         }
         File scannedDir = new File(scannedUrl.getFile());
+
         List<Class<?>> classes = new ArrayList<Class<?>>();
         for (File file : scannedDir.listFiles()) {
             classes.addAll(find(file, scannedPackage));
@@ -31,7 +55,7 @@ public class ClassFinder {
         return classes;
     }
 
-    private static List<Class<?>> find(File file, String scannedPackage) {
+    private List<Class<?>> find(File file, String scannedPackage) {
         List<Class<?>> classes = new ArrayList<Class<?>>();
         String resource = scannedPackage + DOT + file.getName();
         if (file.isDirectory()) {
@@ -48,4 +72,5 @@ public class ClassFinder {
         }
         return classes;
     }
+
 }
