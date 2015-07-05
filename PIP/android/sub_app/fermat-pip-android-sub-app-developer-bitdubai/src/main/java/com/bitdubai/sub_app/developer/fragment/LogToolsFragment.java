@@ -300,6 +300,7 @@ public class LogToolsFragment extends Fragment {
     }
 
 
+
     public class AppListAdapter extends ArrayAdapter<Loggers> {
 
 
@@ -328,8 +329,14 @@ public class LogToolsFragment extends Fragment {
                 holder.imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(getContext(),item.fullPath,Toast.LENGTH_SHORT);
-                        //Resource item=(Resource) gridView.getItemAtPosition(position);
+                        //Toast.makeText(getContext(),item.fullPath,Toast.LENGTH_SHORT);
+                        Loggers item=(Loggers) gridView.getItemAtPosition(position);
+
+
+
+                        LogToolsFragmentLevel2 logToolsFragmentLevel2 = new LogToolsFragmentLevel2();
+
+
                         //DatabaseToolsDatabaseListFragment databaseToolsDatabaseListFragment = new DatabaseToolsDatabaseListFragment();
 
                         //databaseToolsDatabaseListFragment.setResource(item);
