@@ -8,6 +8,12 @@ import java.util.List;
  */
 public class ArrayListLoggers extends ArrayList<Loggers> implements List<Loggers>{
 
+    private final int LEVEL_0 = 0;
+    private final int LEVEL_1 = 1;
+    private final int LEVEL_2 = 2;
+    private final int LEVEL_3 = 3;
+
+
 
     public ArrayListLoggers(){
 
@@ -47,6 +53,49 @@ public class ArrayListLoggers extends ArrayList<Loggers> implements List<Loggers
             }
         }
         return false;
+    }
+
+    public ArrayListLoggers getListFromLevel(Loggers logger,int level){
+        ArrayListLoggers lstLoggers= new ArrayListLoggers();
+
+        switch (level){
+            case LEVEL_0:{
+
+                for (Loggers log:this){
+                    if(log.level0.compareTo(logger.level0)==0){
+                        lstLoggers.add(log);
+                    }
+                }
+
+                break;
+            }
+            case LEVEL_1:{
+                for (Loggers log:this){
+                    if(log.level1.compareTo(logger.level1)==0){
+                        lstLoggers.add(log);
+                    }
+                }
+                break;
+            }
+            case LEVEL_2:{
+                for (Loggers log:this){
+                    if(log.level2.compareTo(logger.level2)==0){
+                        lstLoggers.add(log);
+                    }
+                }
+                break;
+            }
+            case LEVEL_3:{
+                for (Loggers log:this){
+                    if(log.level3.compareTo(logger.level3)==0){
+                        lstLoggers.add(log);
+                    }
+                }
+                break;
+            }
+        }
+
+        return lstLoggers;
     }
 
 }
