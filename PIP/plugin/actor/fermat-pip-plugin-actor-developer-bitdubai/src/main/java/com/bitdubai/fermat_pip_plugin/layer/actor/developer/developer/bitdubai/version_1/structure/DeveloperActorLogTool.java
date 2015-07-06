@@ -174,7 +174,7 @@ public class DeveloperActorLogTool implements LogTool {
             /**
              * I get the class full patch from the plug in.
              */
-            List<String> classes = ((LogManagerForDevelopers)this.LoggingLstPlugins.get(addon)).getClassesFullPath();
+            List<String> classes = ((LogManagerForDevelopers)this.LoggingLstAddons.get(addon)).getClassesFullPath();
 
 
             /**
@@ -263,7 +263,7 @@ public class DeveloperActorLogTool implements LogTool {
         }
         catch(Exception e)
         {
-            throw new CantGetClasessHierarchyAddons(CantGetClasessHierarchyAddons.DEFAULT_MESSAGE,e,"Error to get from the Addon the list of classes with their full paths","");
+            throw new CantGetClasessHierarchyAddons(CantGetClasessHierarchyAddons.DEFAULT_MESSAGE,e,"Error to get from the plugin the list of classes with their full paths. Addon: " + addon.getKey(),"");
 
         }
     }
