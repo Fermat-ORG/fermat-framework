@@ -23,11 +23,12 @@ Action:: Enum que lista qué debe hacerse con la transacción crypto que se tras
 ** APPLY: Para que se aplique la transacción
 ** REVERT: Para revertir la transacción
 
-CryptoState:: Enum que lista los cuatro posbles estados de una transacción crypto. Estos son:
-** IDENTIFIED: Cuando se ve la transacción crypto en la red pero sin ninguna confirmación
-** RECEIVED: Cuando la transacción crypto obtiene la primer confirmación.
-** CONFIRMED: Cuando la tramsacción crypto obtiene suficientes confrmaciones para considerar la transacción irreversble.
-** REVERSED: Cuando se reverte la transacción.
+CryptoStatus:: Enum que lista los cuatro posbles estados de una transacción crypto. Estos son:
+ ** PENDING_SUBMIT: Cuando la transacciòn se creò internamente, pero aun no fue distribuida en la red de Bitcoin.
+ ** ON_CRYPTO_NETWORK: Cuando se ve la transacción crypto en la red pero sin ninguna confirmación
+ ** ON_BLOCKCHAIN: Cuando la transacción crypto obtiene la primer confirmación.
+ ** IRREVERSABLE: Cuando la tramsacción crypto obtiene suficientes confrmaciones para considerar la transacción irreversble.
+ ** REVERSED: Cuando se reverte la transacción.
 
 Specialist:: Enum que lista qué tipo de plug-in debe tomar poseción de la transacción a traspazar. Este enum es necesario dado que este plug-in debe dar distintas transacciones a distintos plug-ins, por ende cuando un plug-in venga a tomar posesión de una transacción debe indicar qué tipo de transacciones maneja.
 CryptoTransaction:: Contenedor de datos con la información de una transacción. Esta información es: 
