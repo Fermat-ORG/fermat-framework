@@ -3,8 +3,6 @@ package test.com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.develop
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.BitcoinCryptoNetworkPluginRoot;
 
-import junit.framework.Assert;
-
 import org.junit.Test;
 
 import java.util.HashMap;

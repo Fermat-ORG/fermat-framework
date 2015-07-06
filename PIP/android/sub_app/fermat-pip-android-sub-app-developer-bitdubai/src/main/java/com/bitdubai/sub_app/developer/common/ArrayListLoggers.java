@@ -65,6 +65,20 @@ public class ArrayListLoggers extends ArrayList<Loggers> implements List<Loggers
         return result;
     }
 
+    public boolean containsLevel3(Loggers log){
+        boolean result=false;
+        int i=0;
+        while(!result && i<this.size()){
+            Loggers logger=this.get(i);
+
+            if(logger.level3.compareTo(log.level3)==0){
+                result= true;
+            }
+            i++;
+        }
+        return result;
+    }
+
     public ArrayListLoggers getListFromLevel(Loggers logger,int level){
         ArrayListLoggers lstLoggers= new ArrayListLoggers();
 
