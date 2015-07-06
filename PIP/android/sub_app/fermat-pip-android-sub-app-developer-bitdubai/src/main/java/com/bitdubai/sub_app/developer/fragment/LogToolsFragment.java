@@ -23,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.ClassHierarchyLevels;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -196,34 +197,35 @@ public class LogToolsFragment extends Fragment {
 
     private void changeLogLevel(String pluginKey,LogLevel logLevel, String resource) {
         try {
-            //String name = resource.split(" - ")[0];
-           // String type = resource.split(" - ")[1];
-           // if (type.equals("Addon")) {
-            //    Addons addon = Addons.getByKey(name);
-           //     logTool.setLogLevel(addon, logLevel);
-           // } else // por ahora no tengo como detectar si es un plug in o no.if (type.equals("Plugin"))
-             //{
-                //Plugins plugin = Plugins.getByKey("Bitcoin Crypto Network");
-            Plugins plugin = Plugins.getByKey(pluginKey);
-                //logTool.setLogLevel(plugin, logLevel);
-            /**
-             * Now I must look in pluginClasses map the match of the selected class to pass the full path
-             */
             HashMap<String, LogLevel> data = new HashMap<String, LogLevel>();
-            for (ClassHierarchyLevels c : pluginClasses.get(plugin.getKey())){
-                    if (c.getLevel3().equals(resource))
-                        data.put(c.getFullPath(), logLevel);
-                if (c.getLevel2().equals(resource))
-                        data.put(c.getFullPath(), logLevel);
-                if (c.getLevel1().equals(resource))
-                        data.put(c.getFullPath(), logLevel);
+            Plugins plugin = Plugins.getByKey(pluginKey);
+
+            /**
+             * I will get all the PullPath matches with resource
+             */
+            for (Loggers logger : lstLoggers){
+                if (logger.level0 == resource)
+                    data.put(logger.fullPath,logLevel);
+                if (logger.level1 == resource)
+                    data.put(logger.fullPath,logLevel);
+                if (logger.level2 == resource)
+                    data.put(logger.fullPath,logLevel);
+                if (logger.level3 == resource)
+                    data.put(logger.fullPath,logLevel);
             }
-                logTool.setNewLogLevelInClass(plugin, data);
+            for (ClassHierarchyLevels classes : logTool.getClassesHierarchyPlugins(plugin)){
+                if (classes.getLevel0() == resource)
+                    data.put(classes.getFullPath(),logLevel);
+                if (classes.getLevel1() == resource)
+                    data.put(classes.getFullPath(),logLevel);
+                if (classes.getLevel2() == resource)
+                data.put(classes.getFullPath(),logLevel);
+                if (classes.getLevel3() == resource)
+                data.put(classes.getFullPath(),logLevel);
+            }
 
-            //}
+            logTool.setNewLogLevelInClass(plugin, data);
 
-            //TextView labelDatabase = (TextView) rootView.findViewById(R.id.labelLog);
-            //labelDatabase.setVisibility(View.GONE);
 
             LogToolsFragment logToolsFragment = new LogToolsFragment();
 
@@ -268,6 +270,7 @@ public class LogToolsFragment extends Fragment {
                 //esto es sacar con getClassesHierarchy
                 for (ClassHierarchyLevels classes : logTool.getClassesHierarchyPlugins(plugin)){
                     //loading de loggers class
+
 
                     Loggers log = new Loggers();
                     log.level0=classes.getLevel0();
@@ -323,6 +326,7 @@ public class LogToolsFragment extends Fragment {
                //String level_0 = loggers.level0;
                 if(!lstLoggersToShow.containsLevel0(loggers)){
                     lstLoggersToShow.add(loggers);
+
                 }
             }
 
