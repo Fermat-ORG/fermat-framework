@@ -46,14 +46,14 @@ public class OpenDatabaseTest {
     public void OpenDatabase_DatabaseInPath_InvokedSuccesfully() throws Exception{
         testDatabase = new AndroidDatabase(mockContext, UUID.randomUUID(), testDatabaseName);
         testDatabase.createDatabase(testDatabaseName);
-        catchException(testDatabase).openDatabase(testDatabaseName);
+        catchException(testDatabase).openDatabase();
         assertThat(caughtException()).isNull();
     }
 
     @Test
     public void OpenDatabase_NoDatabaseInPath_ThrowException() throws Exception{
         testDatabase = new AndroidDatabase(mockContext, UUID.randomUUID(), testDatabaseName);
-        catchException(testDatabase).openDatabase(testDatabaseName);
+        catchException(testDatabase).openDatabase();
         assertThat(caughtException()).isInstanceOf(DatabaseNotFoundException.class);
         caughtException().printStackTrace();
     }

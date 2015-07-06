@@ -52,7 +52,7 @@ public class AndroidPlatformDatabaseSystem implements PlatformDatabaseSystem {
             AndroidDatabase database;
             String hasDBName = hashDataBaseName(databaseName);
             database = new AndroidDatabase(this.context, hasDBName);
-            database.openDatabase(hasDBName);
+            database.openDatabase();
             return database;
         }
         catch (NoSuchAlgorithmException e){

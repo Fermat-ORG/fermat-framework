@@ -4,8 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.v13.BuildConfig;
 
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
 import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabase;
 
 import org.junit.Before;
@@ -23,11 +22,11 @@ import static org.fest.assertions.api.Assertions.assertThat;
 import static org.robolectric.Shadows.shadowOf;
 
 /**
- * Created by jorgegonzalez on 2015.06.27..
+ * Created by jorgegonzalez on 2015.07.06..
  */
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class)
-public class CreateDatabaseTest {
+public class GetDatabaseFactoryTest {
 
     private Activity mockActivity;
     private Context mockContext;
@@ -35,26 +34,17 @@ public class CreateDatabaseTest {
     private AndroidDatabase testDatabase;
     private String testDatabaseName = "testDatabase";
 
-
     @Before
-    public void CreateDatabase_TheDatabaseHasNotBeenCreated_MethodInvokedSuccessfully() throws Exception{
+    public void setUpContext(){
         mockActivity = Robolectric.setupActivity(Activity.class);
         mockContext = shadowOf(mockActivity).getApplicationContext();
-
-        testDatabase = new AndroidDatabase(mockContext, UUID.randomUUID(), testDatabaseName);
-        catchException(testDatabase).createDatabase(testDatabaseName);
-        assertThat(caughtException()).isNull();
     }
 
     @Test
-    public void CreateDatabase_TheDatabaseHasAlreadyBeenCreated_ThrowsCantCreateDatabaseException() throws Exception{
-        mockActivity = Robolectric.setupActivity(Activity.class);
-        mockContext = shadowOf(mockActivity).getApplicationContext();
-
+    public void OpenDatabase_DatabaseInPath_InvokedSuccesfully() throws Exception{
         testDatabase = new AndroidDatabase(mockContext, UUID.randomUUID(), testDatabaseName);
-        testDatabase.createDatabase(testDatabaseName);
-        catchException(testDatabase).createDatabase(testDatabaseName);
-        assertThat(caughtException()).isInstanceOf(CantCreateDatabaseException.class);
-        caughtException().printStackTrace();
+        assertThat(testDatabase.getDatabaseFactory())
+                .isNotNull()
+                .isInstanceOf(DatabaseFactory.class);
     }
 }

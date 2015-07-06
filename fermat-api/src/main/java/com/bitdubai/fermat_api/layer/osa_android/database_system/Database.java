@@ -23,4 +23,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
     public DatabaseTransaction newTransaction();
 
     public void executeTransaction(DatabaseTransaction transaction) throws DatabaseTransactionFailedException;
+
+    public DatabaseFactory getDatabaseFactory();
+
+    public void closeDatabase();
 }
