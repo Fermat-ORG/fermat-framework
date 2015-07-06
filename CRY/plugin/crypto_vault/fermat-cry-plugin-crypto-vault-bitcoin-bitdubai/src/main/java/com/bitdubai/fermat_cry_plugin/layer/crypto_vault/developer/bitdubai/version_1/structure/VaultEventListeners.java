@@ -124,7 +124,7 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
             try {
                 cryptoStatus = transactionConfidenceCalculator.getCryptoStatus();
             } catch (CantCalculateTransactionConfidenceException e) {
-                cryptoStatus = CryptoStatus.IDENTIFIED;
+                cryptoStatus = CryptoStatus.ON_CRYPTO_NETWORK;
             }
 
             dbActions.updateCryptoTransactionStatus(tx.getHashAsString(), cryptoStatus);
@@ -152,7 +152,7 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
         try {
             cryptoStatus = transactionConfidenceCalculator.getCryptoStatus();
         } catch (CantCalculateTransactionConfidenceException e) {
-            cryptoStatus = CryptoStatus.IDENTIFIED;
+            cryptoStatus = CryptoStatus.ON_CRYPTO_NETWORK;
         }
 
         try {
@@ -164,12 +164,17 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
             /**
              * now I raise the event
              */
-            if (cryptoStatus == CryptoStatus.RECEIVED) {
+            if (cryptoStatus == CryptoStatus.ON_CRYPTO_NETWORK) {
+                eventManager.raiseEvent(new IncomingCryptoReceivedEvent(EventType.INCOMING_CRYPTO_IDENTIFIED));
+            }
+
+            if (cryptoStatus == CryptoStatus.ON_BLOCKCHAIN) {
                 eventManager.raiseEvent(new IncomingCryptoReceivedEvent(EventType.INCOMING_CRYPTO_RECEIVED));
             }
 
-            if (cryptoStatus == CryptoStatus.CONFIRMED)
+            if (cryptoStatus == CryptoStatus.IRREVERSABLE)
                 eventManager.raiseEvent(new IncomingCryptoReceptionConfirmedEvent(EventType.INCOMING_CRYPTO_RECEPTION_CONFIRMED));
+
 
             if (cryptoStatus == CryptoStatus.REVERSED)
                 eventManager.raiseEvent(new IncomingCryptoReversedEvent(EventType.INCOMING_CRYPTO_REVERSED));
