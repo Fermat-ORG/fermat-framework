@@ -1,14 +1,14 @@
 package com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.util;
 
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.BitcoinTransaction;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionState;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
 
 /**
  * Created by eze on 2015.06.25..
  */
-public class BitcoinTransactionWrapper implements BitcoinTransaction{
+public class BitcoinTransactionWrapper implements BitcoinWalletTransactionRecord {
     private String transactionHash;
 
     private CryptoAddress addressFrom;

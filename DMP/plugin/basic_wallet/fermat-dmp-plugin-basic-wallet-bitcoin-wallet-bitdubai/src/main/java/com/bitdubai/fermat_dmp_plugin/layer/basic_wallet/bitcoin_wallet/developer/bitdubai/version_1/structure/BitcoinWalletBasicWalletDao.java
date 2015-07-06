@@ -3,11 +3,10 @@ package com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.develop
 
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.BitcoinTransaction;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionState;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
 
@@ -15,7 +14,6 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantFindTransactionException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantGetTransactionsException;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantInitializeBitcoinWalletBasicException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantRegisterDebitDebitException;
 
@@ -31,7 +29,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.util.BitcoinTransactionWrapper;
 
 
@@ -135,7 +132,7 @@ public class BitcoinWalletBasicWalletDao {
     /*
      * Add a new debit transaction.
      */
-    public void addDebit(BitcoinTransaction cryptoTransaction) throws CantRegisterDebitDebitException {
+    public void addDebit(BitcoinWalletTransactionRecord cryptoTransaction) throws CantRegisterDebitDebitException {
 
         // create the database objects
         DatabaseTable bitcoinwalletTable = database.getTable(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_NAME);
@@ -193,7 +190,7 @@ public class BitcoinWalletBasicWalletDao {
          /*
      * Add a new Credit transaction.
      */
-    public void addCredit(BitcoinTransaction cryptoTransaction) throws CantRegisterCreditException {
+    public void addCredit(BitcoinWalletTransactionRecord cryptoTransaction) throws CantRegisterCreditException {
 
         // create the database objects
         DatabaseTable bitcoinwalletTable = database.getTable(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_NAME);
@@ -251,7 +248,7 @@ public class BitcoinWalletBasicWalletDao {
     }
 
 
-    public List<BitcoinTransaction> getTransactions(int max, int offset) throws CantGetTransactionsException {
+    public List<BitcoinWalletTransactionRecord> getTransactions(int max, int offset) throws CantGetTransactionsException {
 
         // create the database objects
         DatabaseTable bitcoinwalletTable = database.getTable(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_NAME);
@@ -274,7 +271,7 @@ public class BitcoinWalletBasicWalletDao {
 
         }
 
-        List<BitcoinTransaction> bitcoinTransactionList = new ArrayList<>();
+        List<BitcoinWalletTransactionRecord> bitcoinWalletTransactionRecordList = new ArrayList<>();
 
 
             // Read record data and create transactions list
@@ -283,39 +280,39 @@ public class BitcoinWalletBasicWalletDao {
             {
                 record.getLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_AMOUNT_COLUMN_NAME);
 
-                BitcoinTransaction bitcoinTransaction = new BitcoinTransactionWrapper();
+                BitcoinWalletTransactionRecord bitcoinWalletTransactionRecord = new BitcoinTransactionWrapper();
 
                 CryptoAddress crypoAddressTo = new CryptoAddress();
 
 
                 crypoAddressTo.setAddress(record.getStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ADDRESS_TO_COLUMN_NAME));
                 crypoAddressTo.setCryptoCurrency(CryptoCurrency.BITCOIN);
-                bitcoinTransaction.setAddressFrom(crypoAddressTo);
+                bitcoinWalletTransactionRecord.setAddressFrom(crypoAddressTo);
 
                 CryptoAddress crypoAddressFrom = new CryptoAddress();
                 crypoAddressFrom.setAddress(record.getStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ADDRESS_FROM_COLUMN_NAME));
 
-                bitcoinTransaction.setAddressTo(crypoAddressFrom);
-                bitcoinTransaction.setAmount(record.getLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_AMOUNT_COLUMN_NAME));
-                bitcoinTransaction.setMemo(record.getStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_MEMO_COLUMN_NAME));
+                bitcoinWalletTransactionRecord.setAddressTo(crypoAddressFrom);
+                bitcoinWalletTransactionRecord.setAmount(record.getLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_AMOUNT_COLUMN_NAME));
+                bitcoinWalletTransactionRecord.setMemo(record.getStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_MEMO_COLUMN_NAME));
                 try {
-                    bitcoinTransaction.setState(TransactionState.getByCode(record.getStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_STATE_COLUMN_NAME)));
+                    bitcoinWalletTransactionRecord.setState(TransactionState.getByCode(record.getStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_STATE_COLUMN_NAME)));
                 } catch (InvalidParameterException e) {
                     throw new CantGetTransactionsException("Get List of Transactions",e,"Error set State ", "");
 
 
                 }
-                bitcoinTransaction.setTimestamp(record.getLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME));
-                bitcoinTransaction.setTramsactionHash(record.getStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TRANSACTION_HASH_COLUMN_NAME));
-                bitcoinTransaction.setType(TransactionType.getByCode(record.getStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME)));
+                bitcoinWalletTransactionRecord.setTimestamp(record.getLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME));
+                bitcoinWalletTransactionRecord.setTramsactionHash(record.getStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TRANSACTION_HASH_COLUMN_NAME));
+                bitcoinWalletTransactionRecord.setType(TransactionType.getByCode(record.getStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME)));
 
-                bitcoinTransactionList.add(bitcoinTransaction);
+                bitcoinWalletTransactionRecordList.add(bitcoinWalletTransactionRecord);
             }
 
 
 
-    // Now we return BitcoinTransaction list
-        return  bitcoinTransactionList;
+    // Now we return BitcoinWalletTransactionRecord list
+        return bitcoinWalletTransactionRecordList;
     }
 
 

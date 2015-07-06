@@ -8,7 +8,7 @@ public class BitcoinWalletDatabaseConstants {
     /**
      * Bitcoin Wallet database table definition.
      */
-    public static final String BITCOIN_WALLET_TABLE_NAME = "BitcoinWallet";
+    public static final String BITCOIN_WALLET_TABLE_NAME = "BitcoinWalletWallet";
     public static final String BITCOIN_WALLET_TABLE_ID_COLUMN_NAME = "Id";
     public static final String BITCOIN_WALLET_TABLE_ADDRESS_FROM_COLUMN_NAME = "addressFrom";
     public static final String BITCOIN_WALLET_TABLE_ADDRESS_TO_COLUMN_NAME = "addressTo";

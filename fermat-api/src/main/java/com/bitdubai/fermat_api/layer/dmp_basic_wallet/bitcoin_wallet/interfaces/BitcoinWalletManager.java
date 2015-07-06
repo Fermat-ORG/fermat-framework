@@ -9,7 +9,8 @@ import java.util.UUID;
  * Created by eze on 2015.06.17..
  */
 public interface BitcoinWalletManager {
-    public BitcoinWallet loadWallet (UUID walletId) throws CantLoadWalletException;
+
+    public BitcoinWalletWallet loadWallet (UUID walletId) throws CantLoadWalletException;
 
     public void createWallet (UUID walletId) throws CantCreateWalletException;
 }
