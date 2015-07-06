@@ -8,6 +8,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.develope
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
@@ -22,20 +23,14 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWit
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.CommunicationChannelAddressFactory;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CantConnectToRemoteServiceException;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannel;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.OnlineChannel;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.ServiceToServiceOnlineConnection;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.enums.RejectConnectionRequestReasons;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.CloudServiceManager;
-import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -57,7 +52,7 @@ import java.util.regex.Pattern;
  *
  * @version 1.0
  */
-public class    CloudServerCommunicationPluginRoot implements Service, DealsWithEvents, DealsWithErrors, DealsWithLogger,LogManagerForDevelopers,  DealsWithPluginFileSystem,Plugin {
+public class CloudServerCommunicationPluginRoot implements Service, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem,Plugin {
 
     /**
      * Represents the numbers of Thread that have the pool
@@ -67,7 +62,7 @@ public class    CloudServerCommunicationPluginRoot implements Service, DealsWith
     /**
      * Represents the numbers of the port that the services is listening
      */
-    private static final int LISTENING_PORT = 8181;
+    private static final int LISTENING_PORT = 9090;
 
     /**
      * Represent the status of this service
@@ -132,13 +127,10 @@ public class    CloudServerCommunicationPluginRoot implements Service, DealsWith
 
                 NetworkInterface networkInterface = interfaces.nextElement();
 
-                networkInterface.getName();
-
                 /**
                  * If not a loopback interfaces (127.0.0.1) and is active
                  */
                 if (!networkInterface.isLoopback() && networkInterface.isUp()){
-
 
                     /*
                      * Get his inet addresses
@@ -153,22 +145,20 @@ public class    CloudServerCommunicationPluginRoot implements Service, DealsWith
                         /*
                          * Create a new key pair
                          */
-                        ECCKeyPair keyPair = null;
+                        ECCKeyPair keyPair = new ECCKeyPair();
 
                         /*
                          * Create the communication chanel address
                          */
                         CommunicationChannelAddress communicationChannelAddress = CommunicationChannelAddressFactory.constructCloudAddress(addresses.nextElement().getHostAddress(), CloudServerCommunicationPluginRoot.LISTENING_PORT);
 
-                        /*
-                         * Create the new cloud service manager
-                         */
-                        CloudServiceManager cloudServiceManager = new CloudServiceManager(communicationChannelAddress, executorService, keyPair);
+
+                        String name = networkInterface.getName();
 
                         /*
-                         * Put into the cache
+                         * Create the new cloud service manager and Put into the cache
                          */
-                        cloudServiceManagersCache.put(networkInterface.getName(), cloudServiceManager);
+                        cloudServiceManagersCache.put(name, new CloudServiceManager(communicationChannelAddress, executorService, keyPair));
 
                     }
 
