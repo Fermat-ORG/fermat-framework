@@ -263,7 +263,7 @@ public class DeveloperActorLogTool implements LogTool {
         }
         catch(Exception e)
         {
-            throw new CantGetClasessHierarchyAddons(CantGetClasessHierarchyAddons.DEFAULT_MESSAGE,e,"Error to get from the Addon the list of classes with their full paths","");
+            throw new CantGetClasessHierarchyAddons(CantGetClasessHierarchyAddons.DEFAULT_MESSAGE,e,"Error to get from the Addon the list of classes with their full paths. Addon: " + addon.getKey(),"");
 
         }
     }
