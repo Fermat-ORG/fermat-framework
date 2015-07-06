@@ -12,13 +12,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -150,7 +147,7 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
             }
             //@SuppressWarnings("unchecked")
             //ArrayList<App> list = (ArrayList<App>) getArguments().get("list");
-            AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.shell_wallet_desktop_front_grid_item, lstTables);
+            AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.grid_items, lstTables);
             _adpatrer.notifyDataSetChanged();
             gridView.setAdapter(_adpatrer);
 
@@ -198,7 +195,7 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
             ViewHolder holder;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.shell_wallet_desktop_front_grid_item, parent, false);
+                convertView = inflater.inflate(R.layout.grid_items, parent, false);
 
 
                 holder = new ViewHolder();
