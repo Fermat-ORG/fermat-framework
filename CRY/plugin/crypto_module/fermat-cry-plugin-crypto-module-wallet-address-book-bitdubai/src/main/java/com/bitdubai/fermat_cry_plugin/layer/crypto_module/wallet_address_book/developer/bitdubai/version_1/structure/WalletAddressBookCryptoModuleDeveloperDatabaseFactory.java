@@ -156,11 +156,11 @@ public class WalletAddressBookCryptoModuleDeveloperDatabaseFactory implements De
         }
 
         List<DatabaseTableRecord> records = selectedTable.getRecords();
-        List<String> developerRow = new ArrayList<String>();
         for (DatabaseTableRecord row : records) {
             /**
              * for each row in the table list
              */
+            List<String> developerRow = new ArrayList<String>();
             for (DatabaseRecord field : row.getValues()) {
                 /**
                  * I get each row and save them into a List<String>
