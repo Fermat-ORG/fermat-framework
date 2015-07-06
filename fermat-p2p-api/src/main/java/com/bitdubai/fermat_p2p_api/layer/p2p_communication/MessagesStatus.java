@@ -27,6 +27,7 @@ public enum MessagesStatus {
     PENDING_TO_SEND ("PTS"),
     SENT            ("S"),
     DELIVERED       ("D"),
+    NEW_RECEIVED    ("NR"),
     READ            ("R");
 
     /**
@@ -66,6 +67,8 @@ public enum MessagesStatus {
                 return MessagesStatus.SENT;
             case "D":
                 return MessagesStatus.DELIVERED;
+            case "NR":
+                return MessagesStatus.NEW_RECEIVED;
             case "R":
                 return MessagesStatus.READ;
         }
