@@ -15,13 +15,14 @@ class ErrorReport(source: String, severity: String, fermatException: FermatExcep
   val exceptionSeparator = "********************************************************************************************************************************************************\n"
 
   def generateReport(): String ={
-    return header + constructExceptionReports(fermatException) + footer
+    return constructExceptionReports(fermatException, footer)
   }
 
-  private def constructExceptionReports(exception : FermatException): String ={
-    if(exception == null) return ""
-
-    return  constructExceptionReports(exception getCause) + exceptionSeparator + exception.toString + exceptionSeparator
+  private def constructExceptionReports(exception : FermatException, acumulator: String): String ={
+    if(exception == null)
+      return header + acumulator
+    else
+      return constructExceptionReports(exception.getCause, exceptionSeparator + exception.toString + acumulator)
   }
 
 }

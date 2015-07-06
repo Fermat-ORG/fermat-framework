@@ -27,4 +27,16 @@ public class CantGetResourcesException extends FermatException {
 		super(message, cause, context, possibleReason);
 	}
 
+	public CantGetResourcesException(final String message, final Exception cause) {
+		this(message, cause, "", "");
+	}
+
+	public CantGetResourcesException(final String message) {
+		this(message, null);
+	}
+
+	public CantGetResourcesException() {
+		this(DEFAULT_MESSAGE);
+	}
+
 }

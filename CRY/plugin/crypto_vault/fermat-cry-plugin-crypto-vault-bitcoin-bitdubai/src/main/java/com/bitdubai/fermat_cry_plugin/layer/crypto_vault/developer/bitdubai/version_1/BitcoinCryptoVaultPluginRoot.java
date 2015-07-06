@@ -8,30 +8,31 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventListener;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_api.layer.pip_user.device_user.DealsWithDeviceUsers;
 import com.bitdubai.fermat_api.layer.pip_user.device_user.DeviceUserManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.BitcoinCryptoNetworkManager;
@@ -39,29 +40,21 @@ import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.DealsWithBitcoin
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantConnectToBitcoinNetwork;
 import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantCreateCryptoWalletException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CouldNotGetCryptoStatusException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.VaultNotConnectedToNetworkException;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantExecuteQueryException;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.BitcoinCryptoVault;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseFactory;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.developerUtils.DeveloperDatabaseFactory;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.events.TransactionNotificationAgent;
-import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.developerUtils.*;
 
-import org.reflections.Reflections;
-import org.reflections.scanners.ResourcesScanner;
-import org.reflections.scanners.SubTypesScanner;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
-import org.reflections.util.FilterBuilder;
-
-import java.security.Key;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -144,58 +137,21 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
     }
 
     @Override
-    public LogLevel getLoggingLevel() {
-        return logLevel;
-    }
-
-    @Override
-    public void changeLoggingLevel(LogLevel newLoggingLevel) {
-        logLevel = newLoggingLevel;
-    }
-
-    @Override
     public List<String> getClassesFullPath() {
-        /**
-         * I create the filters and loaders for reflection.
-         */
-        List<ClassLoader> classLoadersList = new LinkedList<ClassLoader>();
-        classLoadersList.add(ClasspathHelper.contextClassLoader());
-        classLoadersList.add(ClasspathHelper.staticClassLoader());
-
-        Reflections reflections = new Reflections(new ConfigurationBuilder()
-                .setScanners(new SubTypesScanner(false), new ResourcesScanner())
-                .setUrls(ClasspathHelper.forClassLoader(classLoadersList.toArray(new ClassLoader[0])))
-                        /**
-                         * I filter by the package name of the plug in Root.
-                         */
-                .filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix(this.getClass().getName()))));
-
-        Set<Class<?>> classes = reflections.getSubTypesOf(Object.class);
-        Iterator<Class<?>> iterator = classes.iterator();
-
-        /**
-         * I insert the classes in the List and return it.
-         */
         List<String> returnedClasses = new ArrayList<String>();
-        while (iterator.hasNext()){
-            String fullClass = iterator.next().getName();
-            returnedClasses.add(fullClass);
-        }
-        if (returnedClasses.isEmpty()){
-            returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot");
-            returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.BitcoinNetworkConfiguration");
-            returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseFactory");
-            returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.VaultEventListeners");
-            returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.TransactionConfidenceCalculator");
-            returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseConstants");
-            returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.BitcoinCryptoVault");
-            returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseActions");
-            returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.events.TransactionNotificationAgent");
-            returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.developerUtils.DeveloperDatabaseFactory");
-        }
-
-
-        /**
+        returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.BitcoinNetworkConfiguration");
+        returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseFactory");
+        returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.BitcoinCryptoVault");
+        returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseActions");
+        returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.events.TransactionNotificationAgent");
+        returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.developerUtils.DeveloperDatabaseFactory");
+        returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.TransactionConfidenceCalculator");
+        returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.VaultEventListeners");
+        returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.CryptoVaultDatabaseConstants");
+        returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.BitcoinNetworkConfiguration");
+        returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure.TransactionConfidenceCalculator");
+         /**
          * I return the values.
          */
         return returnedClasses;
@@ -208,18 +164,18 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
          * I will check the current values and update the LogLevel in those which is different
          */
 
-        for (Map.Entry<String, LogLevel> pluginPair : BitcoinCryptoVaultPluginRoot.newLoggingLevel.entrySet()){
+        for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
             /**
-             * if the incoming value is different from what I already have, then Ill updated it
+             * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
              */
-        if (newLoggingLevel.containsKey(pluginPair.getKey())){
-
-
-            if (pluginPair.getValue() != newLoggingLevel.get(pluginPair.getKey())){
-                pluginPair.setValue(newLoggingLevel.get(pluginPair.getKey()));
+            if (BitcoinCryptoVaultPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                BitcoinCryptoVaultPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                BitcoinCryptoVaultPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            } else {
+                BitcoinCryptoVaultPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
         }
-        }
+
     }
 
     /**
@@ -257,8 +213,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
     }
 
     @Override
-    public void setLogManager(LogLevel logLevel, LogManager logManager) {
-        logLevel = logLevel;
+    public void setLogManager(LogManager logManager) {
         this.logManager = logManager;
     }
 
@@ -271,6 +226,11 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
         return this.serviceStatus;
     }
 
+
+    @Override
+    public boolean isValidAddress(CryptoAddress addressTo) {
+        return vault.isValidAddress(addressTo);
+    }
 
     /**
      * DealWithEvents Interface implementation.
@@ -325,18 +285,8 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
 
     @Override
     public void start() throws CantStartPluginException {
-        logManager.log(logLevel, "CryptoVault Starting...", "CryptoVault Starting...", "CryptoVault Starting...");
-
-        /**
-         * I will initialize the Root map with all the classes in default state of Minimal logging
-         */
-        try{
-            for (String c : getClassesFullPath()){
-                BitcoinCryptoVaultPluginRoot.newLoggingLevel.put(c, LogLevel.MINIMAL_LOGGING);
-            }
-        } catch (Exception e){
-            // no big deal if I coudln't fill the class now, we will do it later.
-        }
+        //logManager.log(logLevel, "CryptoVault7 Starting...", "CryptoVault Starting...", "CryptoVault Starting...");
+        System.out.println("Crypto Vault Starting....");
 
 
         /**
@@ -369,7 +319,6 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
                  * something went wrong creating the db, I can't handle this.
                  */
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-                throw new CantStartPluginException(e1, Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT);
             }
 
         } catch (DatabaseNotFoundException e) {
@@ -387,7 +336,6 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
                  * something went wrong creating the db, I can't handle this.
                  */
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-                throw new CantStartPluginException(e1, Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT);
             }
         }
 
@@ -423,7 +371,6 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
                  * If I couldnt create the Vault, I cant go on.
                  */
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateCryptoWalletException );
-                throw new CantStartPluginException(cantCreateCryptoWalletException, Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT);
             }
 
 
@@ -431,7 +378,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
              * now I will start the TransactionNotificationAgent to monitor
              */
             transactionNotificationAgent = new TransactionNotificationAgent(eventManager, pluginDatabaseSystem, errorManager, pluginId, userId);
-            transactionNotificationAgent.setLogManager(logLevel, this.logManager);
+            transactionNotificationAgent.setLogManager(this.logManager);
             try {
                 transactionNotificationAgent.start();
             } catch (CantStartAgentException cantStartAgentException ) {
@@ -498,8 +445,8 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
         try {
             vault.connectVault();
         } catch (CantConnectToBitcoinNetwork cantConnectToBitcoinNetwork) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantConnectToBitcoinNetwork);
             throw new VaultNotConnectedToNetworkException();
+
         }
     }
 
@@ -542,6 +489,12 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
         return vault;
     }
 
+
+    /**
+     * Static method to get the logging level from any class under root.
+     * @param className
+     * @return
+     */
     public static LogLevel getLogLevelByClass(String className){
         try{
             /**
@@ -551,7 +504,21 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
             String[] correctedClass = className.split((Pattern.quote("$")));
             return BitcoinCryptoVaultPluginRoot.newLoggingLevel.get(correctedClass[0]);
         } catch (Exception e){
-            return LogLevel.MINIMAL_LOGGING;
+            /**
+             * If I couldn't get the correct loggin level, then I will set it to minimal.
+             */
+            return DEFAULT_LOG_LEVEL;
+        }
+    }
+
+    @Override
+    public CryptoStatus getCryptoStatus(UUID transactionId) throws CouldNotGetCryptoStatusException {
+        try {
+            return vault.getCryptoStatus(transactionId);
+        } catch (CantExecuteQueryException e) {
+            throw new CouldNotGetCryptoStatusException("There was an error accesing the database to get the CryptoStatus.", e, "TransactionId: " + transactionId.toString(), "An error in the database plugin.");
+        } catch (UnexpectedResultReturnedFromDatabaseException e) {
+            throw new CouldNotGetCryptoStatusException("There was an error getting the CryptoStatus of the transaction.", e, "TransactionId: " + transactionId.toString(), "Duplicated transaction Id in the database.");
         }
     }
 }

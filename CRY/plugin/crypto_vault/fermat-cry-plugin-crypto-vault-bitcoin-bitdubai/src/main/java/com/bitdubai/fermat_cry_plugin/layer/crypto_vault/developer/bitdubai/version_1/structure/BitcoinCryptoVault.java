@@ -38,6 +38,7 @@ import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CouldNotSendMon
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantCalculateTransactionConfidenceException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantExecuteQueryException;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import org.bitcoinj.core.Address;
@@ -239,12 +240,9 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
              * If I couldn't create it I can't go on
              */
         } catch (CantCreateFileException cantCreateFileException) {
-
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateFileException);
-            throw new CantCreateCryptoWalletException();
+            throw new CantCreateCryptoWalletException("There was an error trying to create a new Vault." ,cantCreateFileException, "Vault filename: " + vaultFileName, "Not enought space on disk?");
         } catch (CantPersistFileException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantCreateCryptoWalletException();
+            throw new CantCreateCryptoWalletException("There was an error trying to save the Vault into a file." ,e, "Vault filename: " + vaultFileName, "Not enought space on disk?");
         }
     }
 
@@ -263,8 +261,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
              * If I couldn't load it I can't go on.
              */
         } catch (UnreadableWalletException unreadableWalletException) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, unreadableWalletException);
-            throw new CantCreateCryptoWalletException();
+            throw new CantCreateCryptoWalletException("Vault file not accesible.", unreadableWalletException, "Vault filename: " + vaultFileName, "Corrupted file.");
         }
 
     }
@@ -285,8 +282,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
             /**
              * I cannot load the existing vault from the provide seed. I cannot handle this
              */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantCreateCryptoWalletException();
+            throw new CantCreateCryptoWalletException("Error trying to load the Vault from a seed.", e, null, "Unreadeble seed.");
         }
 
     }
@@ -352,14 +348,11 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
             /**
              * Already sent, this might be an error. I'm not going to send it again.
              */
-                return null;
-            else
-            /**
-             * new Transaction, I will persist it as a Fermat transaction.
-             */
-                db.persistnewFermatTransaction(FermatTxId.toString());
+                throw new CouldNotSendMoneyException("This transaction has already been sent before.", null, "Transaction ID: " + FermatTxId.toString(), "An error in a previous module.");
+
+
         } catch (CantExecuteQueryException e) {
-            return "";
+            throw new CouldNotSendMoneyException("I coudln't persist the internal transaction Id.", e, "Transaction ID: " + FermatTxId.toString(), "An error in the Database plugin..");
         }
 
 
@@ -373,7 +366,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
             /**
              * If the address is incorrectly formated, then I will throw the exception so that other plug ins can handle it.
              */
-            throw new InvalidSendToAddressException();
+            throw new InvalidSendToAddressException("The SendTo address is not correct." , e, "Address: " + addressTo.getAddress(), "Incorrect generation by scanner or user entry");
         }
 
         /**
@@ -387,7 +380,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
             /**
              * this shouldn't happen because the money is checked by previois modules, but if it does I will throw it so that the user can handle this.
              */
-            throw new com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException();
+            throw new com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException("Not enought money in Vault to complete the transaction", e, "AddressTo:" + addressTo.getAddress() + ", Satoshis: " + amount, "Transaction confidence level too low to spend money. Wait for at least another block generation." );
         }
 
 
@@ -398,7 +391,12 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         Transaction tx = request.tx;
         txHash = tx.getHashAsString();
         try {
-            db.persistNewTransaction(txHash);
+            db.persistNewTransaction(FermatTxId.toString(), txHash);
+            /**
+             * new Transaction, I will persist it as a Fermat transaction.
+             */
+            db.persistnewFermatTransaction(FermatTxId.toString());
+
             vault.commitTx(request.tx);
         } catch (CantExecuteQueryException e) {
             e.printStackTrace();
@@ -419,6 +417,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
              * I will persist it to inform it when the confidence level changes
              */
 
+
             /**
              * at this point the transaction is already created and in the network, if there are erros in any other plug in, I can't roll back anything.
              * I will deal with any DB error later when I control the transactions.
@@ -428,12 +427,11 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
             /**
              * If I have an error sending the money, I will raise it.
              */
-            throw new CouldNotSendMoneyException();
+            throw new CouldNotSendMoneyException("An error occured waiting for confirmation from the Bitcoin network.", e, null, "No peers connected at this time.");
         } catch (ExecutionException e) {
-            throw new CouldNotSendMoneyException();
-
-
+            throw new CouldNotSendMoneyException("Unknown error trying to send money", e, null, null);
         }
+
 
         /**
          * returns the created transaction id
@@ -442,6 +440,19 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         return txHash;
     }
 
+    /**
+     * Validates if the address sent is valid in the current network or not.
+     * @param addressTo
+     * @return
+     */
+    public boolean isValidAddress(CryptoAddress addressTo){
+        try {
+            Address address = new Address(networkParameters, addressTo.getAddress());
+            return true;
+        } catch (AddressFormatException e) {
+            return false;
+        }
+    }
 
 
     /**
@@ -457,7 +468,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
             db.setVault(vault);
             db.updateTransactionProtocolStatus(transactionID, ProtocolStatus.RECEPTION_NOTIFIED);
         } catch (Exception e){
-            throw new CantConfirmTransactionException();
+            throw new CantConfirmTransactionException("There was an error trying to confirm reception of a transaction", e, "TransactionId: " + transactionID.toString(), "Database plugin error.");
         }
     }
 
@@ -495,7 +506,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
                 try{
                     cryptoStatus = transactionConfidenceCalculator.getCryptoStatus();
                 } catch (CantCalculateTransactionConfidenceException cantCalculateTransactionConfidenceException){
-                    cryptoStatus = CryptoStatus.IDENTIFIED;
+                    cryptoStatus = CryptoStatus.ON_CRYPTO_NETWORK;
                 }
 
                 CryptoTransaction cryptoTransaction = new CryptoTransaction(txHash, addressFrom, addressTo,CryptoCurrency.BITCOIN, amount, cryptoStatus);
@@ -516,7 +527,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
 
             return txs;
         } catch (Exception e){
-            throw new CantDeliverPendingTransactionsException("I couldn't deliver pending transactions",e,"","");
+            throw new CantDeliverPendingTransactionsException("I couldn't deliver pending transactions",e,null,null);
         }
     }
 
@@ -581,5 +592,11 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
          * I get the current timestamp
          */
         return tx.getLockTime();
+    }
+
+    public CryptoStatus getCryptoStatus(UUID transactionId) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
+        CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
+        db.setVault(vault);
+        return db.getCryptoStatus(transactionId.toString());
     }
 }

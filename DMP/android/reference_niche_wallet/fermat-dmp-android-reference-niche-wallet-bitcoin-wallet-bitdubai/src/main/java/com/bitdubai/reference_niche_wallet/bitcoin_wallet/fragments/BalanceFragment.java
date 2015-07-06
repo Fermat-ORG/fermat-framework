@@ -50,6 +50,8 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
 
+    Typeface tf ;
+
     /**
      * DealsWithNicheWalletTypeCryptoWallet Interface member variables.
      */
@@ -68,6 +70,8 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        tf=Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
 
         errorManager = platform.getErrorManager();
         try {
@@ -100,14 +104,28 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_balance, container, false);
-        TextView tv = ((TextView) rootView.findViewById(R.id.balance));
-        tv.setText(formatBalanceString());
+
+
+
+        TextView textViewBalance = ((TextView) rootView.findViewById(R.id.balance));
+        textViewBalance.setTypeface(tf);
+        textViewBalance.setText(formatBalanceString());
+
+        textViewBalance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showBalanceBTC = !showBalanceBTC;
+                refreshBalance();
+            }
+        });
 
         swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
         swipeLayout.setOnRefreshListener(this);
 
-        final Button b = (Button) rootView.findViewById(R.id.changeFormatBtn);
-        b.setOnClickListener(new View.OnClickListener() {
+        //final Button b = (Button) rootView.findViewById(R.id.changeFormatBtn);
+        //b.setTypeface(tf);
+
+        /*b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (showBalanceBTC)
@@ -119,7 +137,7 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 refreshBalance();
             }
         });
-
+        */
         return rootView;
     }
 
@@ -158,8 +176,9 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 showMessage("CantGetBalanceException- " + e.getMessage());
 
             }
-            TextView tv = ((TextView) rootView.findViewById(R.id.balance));
-            tv.setText(formatBalanceString());
+            TextView textViewBalance = ((TextView) rootView.findViewById(R.id.balance));
+            textViewBalance.setText(formatBalanceString());
+            textViewBalance.setTypeface(tf);
         } catch (Exception ex) {
 
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);

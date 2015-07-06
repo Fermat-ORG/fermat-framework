@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
@@ -18,6 +19,7 @@ import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.deve
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.util.TransactionExecutor;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by ciencias on 3/30/15.
@@ -72,6 +74,16 @@ public class IncomingExtraUserRelayAgent implements DealsWithBitcoinWallet, Deal
     private Thread agentThread;
     private RelayAgent relayAgent;
 
+    /**
+     * The Specialized Constructor
+     */
+    public IncomingExtraUserRelayAgent(final BitcoinWalletManager bitcoinWalletManager, final ErrorManager errorManager, final IncomingExtraUserRegistry registry, final WalletAddressBookManager walletAddressBookManager){
+        this.bitcoinWalletManager = bitcoinWalletManager;
+        this.errorManager = errorManager;
+        this.registry = registry;
+        this.walletAddressBookManager = walletAddressBookManager;
+    }
+
 
     /**
      * DealsWithBitcoinWallet Interface implementation.
@@ -125,19 +137,29 @@ public class IncomingExtraUserRelayAgent implements DealsWithBitcoinWallet, Deal
             this.agentThread.start();
         }
         catch (Exception exception) {
-            throw new CantStartAgentException();
+            throw new CantStartAgentException(CantStartAgentException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "You should inspect the cause");
         }
 
     }
 
+    public boolean isRunning(){
+        if(this.relayAgent == null)
+            return false;
+
+        return this.relayAgent.isRunning();
+    }
+
     @Override
     public void stop() {
-
+        if(isRunning())
+            this.relayAgent.stop();
     }
 
 
 
     private static class RelayAgent implements DealsWithWalletAddressBook , DealsWithBitcoinWallet, DealsWithErrors, DealsWithRegistry , Runnable  {
+
+        private AtomicBoolean running = new AtomicBoolean(false);
 
         /*
          * DealsWithBitcoinWallet Interface member variables.
@@ -160,12 +182,17 @@ public class IncomingExtraUserRelayAgent implements DealsWithBitcoinWallet, Deal
          */
         private IncomingExtraUserRegistry registry;
 
-
-
         private TransactionExecutor transactionExecutor;
 
         private static final int SLEEP_TIME = 5000;
 
+        public boolean isRunning(){
+            return running.get();
+        }
+
+        public void stop(){
+            running.set(false);
+        }
 
         /**
          * DealsWithBitcoinWallet Interface implementation.
@@ -217,19 +244,19 @@ public class IncomingExtraUserRelayAgent implements DealsWithBitcoinWallet, Deal
         @Override
         public void run() {
 
+            running.set(true);
+
             /**
              * Infinite loop.
              */
-            while (true) {
-
+            while (running.get()) {
                 /**
                  * Sleep for a while.
                  */
                 try {
                     Thread.sleep(SLEEP_TIME);
                 } catch (InterruptedException interruptedException) {
-                    cleanResources();
-                    return;
+                    break;
                 }
 
                 /**
@@ -241,10 +268,10 @@ public class IncomingExtraUserRelayAgent implements DealsWithBitcoinWallet, Deal
                  * Check if I have been Interrupted.
                  */
                 if (Thread.currentThread().isInterrupted()) {
-                    cleanResources();
-                    return;
+                    break;
                 }
             }
+            cleanResources();
         }
 
         private void doTheMainTask() {

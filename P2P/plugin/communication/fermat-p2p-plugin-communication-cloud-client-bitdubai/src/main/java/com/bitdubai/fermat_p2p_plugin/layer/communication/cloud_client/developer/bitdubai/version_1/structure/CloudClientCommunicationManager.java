@@ -153,18 +153,18 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 		if(running.get())
 			throw new CloudFMPClientStartFailedException(CloudFMPClientStartFailedException.DEFAULT_MESSAGE, null, address.toString(), "The FMP Client is already running");
 		try{
-			selector = Selector.open();
-			clientChannel = SocketChannel.open();
-			clientChannel.configureBlocking(false);
-			SelectionKey serverConnection = clientChannel.register(selector, SelectionKey.OP_CONNECT);
-			clientChannel.connect(address.getSocketAddress());
-			if(clientChannel.isConnectionPending())
-				clientChannel.finishConnect();
-			running.set(clientChannel.isConnected());
-			unregisteredConnections.put(serverPublicKey, serverConnection);
-			executor.execute(this);
-		} catch(IOException ex){
-			throw wrapNIOSocketIOException(ex);
+				selector = Selector.open();
+				clientChannel = SocketChannel.open();
+				clientChannel.configureBlocking(false);
+				SelectionKey serverConnection = clientChannel.register(selector, SelectionKey.OP_CONNECT);
+				clientChannel.connect(address.getSocketAddress());
+				if(clientChannel.isConnectionPending())
+					clientChannel.finishConnect();
+				running.set(clientChannel.isConnected());
+				unregisteredConnections.put(serverPublicKey, serverConnection);
+				executor.execute(this);
+			} catch(IOException ex){
+				throw wrapNIOSocketIOException(ex);
 		}
 	}
 	

@@ -1,12 +1,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.BitcoinTransaction;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionState;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletBalance;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CabtStoreMemoException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantFindTransactionException;
@@ -14,13 +9,14 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantInitializeBitcoinWalletBasicException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantRegisterDebitDebitException;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWallet;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -28,14 +24,11 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
-import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -45,7 +38,7 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.
 /**
  * Created by eze on 2015.06.23..
  */
-public class BitcoinWalletBasicWallet implements BitcoinWallet ,DealsWithErrors, DealsWithPluginDatabaseSystem,DealsWithPluginFileSystem {
+public class BitcoinWalletBasicWallet implements BitcoinWalletWallet,DealsWithErrors, DealsWithPluginDatabaseSystem,DealsWithPluginFileSystem {
 
     /**
      * BitcoinWalletBasicWallet member variables.
@@ -120,7 +113,7 @@ public class BitcoinWalletBasicWallet implements BitcoinWallet ,DealsWithErrors,
     }
 
     /**
-     * BitcoinWallet member variables.
+     * BitcoinWalletWallet member variables.
      */
 
     /* At the moment of creation the plug-in root gives us the walletId
@@ -257,45 +250,14 @@ public class BitcoinWalletBasicWallet implements BitcoinWallet ,DealsWithErrors,
 
     }
 
-    @Override
-    public long getBalance() throws CantCalculateBalanceException {
-        //suma los debitos y los creditos los resta
-        long balance;
-        bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(errorManager,this.database);
-
-        balance = bitcoinWalletBasicWalletDao.getBalance();
-
-        return balance;
-    }
 
 
 
-    /*
-     * NOTA:
-     *  El debit y el credit debería mirar primero si la tramsacción que
-     *  se quiere aplicar existe. Si no existe aplica los cambios normalmente, pero si existe
-     *  debería ignorar la transacción.
-     */
-    @Override
-    public void debit(BitcoinTransaction cryptoTransaction) throws CantRegisterDebitDebitException {
-
-        bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(errorManager,this.database);
-
-        bitcoinWalletBasicWalletDao.addDebit(cryptoTransaction);
-    }
 
     @Override
-    public void credit(BitcoinTransaction cryptoTransaction) throws CantRegisterCreditException {
+    public List<BitcoinWalletTransactionRecord> getTransactions(int max, int offset) throws CantGetTransactionsException {
 
-        bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(errorManager,this.database);
-
-        bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction);
-    }
-
-    @Override
-    public List<BitcoinTransaction> getTransactions(int max, int offset) throws CantGetTransactionsException {
-
-        bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(errorManager, this.database);
+        bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(this.database);
 
         return bitcoinWalletBasicWalletDao.getTransactions(max, offset);
     }
@@ -304,9 +266,21 @@ public class BitcoinWalletBasicWallet implements BitcoinWallet ,DealsWithErrors,
     public void setDescription(UUID transactionID, String memo) throws CabtStoreMemoException, CantFindTransactionException {
         //update memo field
 
-        bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(errorManager, this.database);
+        bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(this.database);
 
         bitcoinWalletBasicWalletDao.updateMemoFiled(transactionID, memo);
+    }
+
+    @Override
+    public BitcoinWalletBalance getAvailableBalance() throws CantCalculateBalanceException{
+
+        return new BitcoinWalletBasicWalletAvailableBalance(this.errorManager,this.pluginDatabaseSystem, this.database);
+    }
+
+
+    @Override
+    public BitcoinWalletBalance getBookBalance() throws CantCalculateBalanceException{
+        return new BitcoinWalletBasicWalletBookBalance(this.errorManager,this.pluginDatabaseSystem, this.database);
     }
 
     /**

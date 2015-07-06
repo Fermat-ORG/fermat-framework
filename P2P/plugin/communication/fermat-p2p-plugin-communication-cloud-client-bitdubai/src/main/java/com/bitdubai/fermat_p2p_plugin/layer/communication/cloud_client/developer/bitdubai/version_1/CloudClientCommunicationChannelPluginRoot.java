@@ -5,9 +5,12 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -31,6 +34,8 @@ import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.LogManager;
+import java.util.regex.Pattern;
 
 /**
  * Created by ciencias on 20.01.15.
@@ -42,7 +47,7 @@ import java.util.concurrent.Executors;
  * Hi! I am a cloud service which centralizes the communications between system users.
  */
 
-public class CloudClientCommunicationChannelPluginRoot implements CommunicationChannel, DealsWithErrors, DealsWithEvents, DealsWithPluginFileSystem, Plugin, Service{
+public class CloudClientCommunicationChannelPluginRoot implements CommunicationChannel, DealsWithErrors, DealsWithEvents, DealsWithLogger, LogManagerForDevelopers, DealsWithPluginFileSystem, Plugin, Service{
 
     /**
      * CommunicationChannel Interface member variables.
@@ -57,6 +62,14 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
      */
     private EventManager eventManager;
     private ErrorManager errorManager;
+
+
+	/**
+	 * DealsWithLogger interface member variable
+	 */
+	com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager logManager;
+	static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
+
 
     /**
      * DealsWithPluginFileSystem Interface member variables.
@@ -198,8 +211,76 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 			RejectConnectionRequestReasons reason) {
 		// TODO Auto-generated method stub
 	}
-    
-    /**
+
+
+	@Override
+	public void setLogManager(com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager logManager) {
+		this.logManager = logManager;
+	}
+
+	/**
+	 * DealsWith Logger interface implementation
+	 *
+	 */
+
+
+	@Override
+	public List<String> getClassesFullPath() {
+		List<String> returnedClasses = new ArrayList<String>();
+		returnedClasses.add("com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.CloudClientCommunicationChannelPluginRoot");
+		returnedClasses.add("com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.structure.CloudClientCommunicationNetworkServiceConnection");
+		returnedClasses.add("com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.structure.CloudClientCommunicationManager");
+		returnedClasses.add("com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.structure.CloudClientCommunicationNetworkServiceVPN");
+		returnedClasses.add("com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_client.developer.bitdubai.version_1.structure.CloudClientCommunicationMessage");
+
+		/**
+		 * I return the values.
+		 */
+		return returnedClasses;
+	}
+
+	@Override
+	public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
+		/**
+		 * I will check the current values and update the LogLevel in those which is different
+		 */
+
+		for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
+			/**
+			 * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
+			 */
+			if (CloudClientCommunicationChannelPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+				CloudClientCommunicationChannelPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+				CloudClientCommunicationChannelPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+			} else {
+				CloudClientCommunicationChannelPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+			}
+		}
+	}
+
+	/**
+	 * Static method to get the logging level from any class under root.
+	 * @param className
+	 * @return
+	 */
+	public static LogLevel getLogLevelByClass(String className){
+		try{
+			/**
+			 * sometimes the classname may be passed dinamically with an $moretext
+			 * I need to ignore whats after this.
+			 */
+			String[] correctedClass = className.split((Pattern.quote("$")));
+			return CloudClientCommunicationChannelPluginRoot.newLoggingLevel.get(correctedClass[0]);
+		} catch (Exception e){
+			/**
+			 * If I couldn't get the correct loggin level, then I will set it to minimal.
+			 */
+			return DEFAULT_LOG_LEVEL;
+		}
+	}
+
+
+	/**
      * DealsWithPluginFileSystem Interface implementation.
      */
 

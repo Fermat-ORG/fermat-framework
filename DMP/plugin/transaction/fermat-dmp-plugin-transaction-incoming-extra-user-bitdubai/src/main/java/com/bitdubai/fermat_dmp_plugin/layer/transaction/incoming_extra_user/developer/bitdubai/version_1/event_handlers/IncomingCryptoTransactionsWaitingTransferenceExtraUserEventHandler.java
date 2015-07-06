@@ -1,12 +1,12 @@
 package com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.event_handlers;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.event.PlatformEvent;
 import com.bitdubai.fermat_api.layer.dmp_transaction.TransactionServiceNotStartedException;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventHandler;
-import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoTransactionsWaitingTransferenceEvent;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoTransactionsWaitingTransferenceExtraUserEvent;
-import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantSaveEvent;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.structure.IncomingExtraUserEventRecorderService;
 
 /**
@@ -16,53 +16,27 @@ public class IncomingCryptoTransactionsWaitingTransferenceExtraUserEventHandler 
     /**
      * IncomingCryptoIdentifiedEventHandler member variables
      */
-    IncomingExtraUserEventRecorderService incomingExtraUserEventRecorderService;
+    private final IncomingExtraUserEventRecorderService eventRecorderService;
 
-
-    /**
-     * IncomingCryptoIdentifiedEventHandler member methods
-     */
-    public void setIncomingExtraUserEventRecorderService(IncomingExtraUserEventRecorderService incomingExtraUserEventRecorderService){
-        this.incomingExtraUserEventRecorderService = incomingExtraUserEventRecorderService;
+    public IncomingCryptoTransactionsWaitingTransferenceExtraUserEventHandler(final IncomingExtraUserEventRecorderService eventRecorderService){
+        this.eventRecorderService = eventRecorderService;
     }
-
 
     /**
      * EventHandler interface implementation
      */
     @Override
     public void handleEvent(PlatformEvent platformEvent) throws Exception {
+        if(!eventRecorderService.getStatus().equals(ServiceStatus.STARTED))
+            throw new TransactionServiceNotStartedException(TransactionServiceNotStartedException.DEFAULT_MESSAGE, null, null, "Events can't be handled if the service is not started");
 
-        if (this.incomingExtraUserEventRecorderService.getStatus() == ServiceStatus.STARTED){
-
-            try
-            {
-                this.incomingExtraUserEventRecorderService.incomingCryptoWaitingTransference((IncomingCryptoTransactionsWaitingTransferenceExtraUserEvent) platformEvent);
-            }
-            catch (CantSaveEvent cantSaveEvent)
-            {
-                /**
-                 * The main module could not handle this exception. Me neither. Will throw it again.
-                 */
-                System.err.println("CantSaveEvent: "+ cantSaveEvent.getMessage());
-                cantSaveEvent.printStackTrace();
-
-                throw  cantSaveEvent;
-            }
-            catch (ClassCastException classCastException)
-            {
-                /**
-                 * The main module could not handle this exception. Me neither. Will throw it again.
-                 */
-                System.err.println("ClassCastException: "+ classCastException.getMessage());
-                classCastException.printStackTrace();
-
-                throw  new CantSaveEvent();
-            }
-        }
-        else
-        {
-            throw new TransactionServiceNotStartedException();
+        try {
+            this.eventRecorderService.incomingCryptoWaitingTransference((IncomingCryptoTransactionsWaitingTransferenceExtraUserEvent) platformEvent);
+        } catch (ClassCastException classCastException) {
+            /**
+             * The main module could not handle this exception. Me neither. Will throw it again.
+             */
+            throw  new CantSaveEventException(CantSaveEventException.DEFAULT_MESSAGE, FermatException.wrapException(classCastException), null, "Some weird casting happened here");
         }
     }
 

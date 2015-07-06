@@ -23,7 +23,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerIdException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 
 /**
  * Created by ciencias on 23.12.14.
@@ -43,22 +43,22 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
 
     private Context context;
     public String getDatabaseName() {
-		return databaseName;
-	}
+        return databaseName;
+    }
 
-	public void setDatabaseName(String databaseName) {
-		this.databaseName = databaseName;
-	}
+    public void setDatabaseName(String databaseName) {
+        this.databaseName = databaseName;
+    }
 
-	public DatabaseTransaction getDatabaseTransaction() {
-		return databaseTransaction;
-	}
+    public DatabaseTransaction getDatabaseTransaction() {
+        return databaseTransaction;
+    }
 
-	public void setDatabaseTransaction(DatabaseTransaction databaseTransaction) {
-		this.databaseTransaction = databaseTransaction;
-	}
+    public void setDatabaseTransaction(DatabaseTransaction databaseTransaction) {
+        this.databaseTransaction = databaseTransaction;
+    }
 
-	private String databaseName;
+    private String databaseName;
     private UUID ownerId;
     private String query;
     private SQLiteDatabase Database;
@@ -67,7 +67,7 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
 
 
     public AndroidDatabase(){
-	}
+    }
     // Public constructor declarations.
 
     /**
@@ -234,7 +234,7 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
         try {
             this.Database = SQLiteDatabase.openDatabase(databasePath,null,0,null);
         } catch (SQLiteException exception) {
-        
+
             /**
              * Probably there is no distinctions between a database that it can not be opened and a one that doesn't not exist.
              * We will assume that if it didn't open it was because it didn't exist.
@@ -250,9 +250,8 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
     }
 
     /**
-     * 
-
-te a specific database file
+     *
+     te a specific database file
      * if used by a plugin, It use plugin id to define directory path name
      *
      * @param databaseName name of database to deleted
@@ -274,10 +273,10 @@ te a specific database file
         databasePath += "/" + databaseName.replace("-","") + ".db";
 
 
-            /**
-             * if owner id if null
-             * because it comes from platformdatabase
-             */
+        /**
+         * if owner id if null
+         * because it comes from platformdatabase
+         */
         File databaseFile = new File(databasePath);
 
         if(SQLiteDatabase.deleteDatabase(databaseFile))
@@ -397,8 +396,8 @@ te a specific database file
             String possibleReason = "The table already exists.";
             throw new CantCreateTableException(message, cause, context, possibleReason);
         }
-        
-         /**
+
+        /**
          * Get the columns of the table and write the query to create it
          */
         try
@@ -492,7 +491,7 @@ te a specific database file
      */
     @Override
     public DatabaseTableFactory newTableFactory(String tableName) {
-             return new AndroidDatabaseTableFactory(tableName);
+        return new AndroidDatabaseTableFactory(tableName);
     }
 
 
