@@ -71,7 +71,7 @@ public class AcknowledgeTransactionsTest {
         CryptoAddress toAddress = new CryptoAddress(to, CryptoCurrency.BITCOIN);
         String transactionHash = CryptoHasher.performSha256("TRANSACTION");
 
-        CryptoTransaction cryptoTransaction = new CryptoTransaction(transactionHash, fromAddress, toAddress, CryptoCurrency.BITCOIN, 1L, CryptoStatus.CONFIRMED);
+        CryptoTransaction cryptoTransaction = new CryptoTransaction(transactionHash, fromAddress, toAddress, CryptoCurrency.BITCOIN, 1L, CryptoStatus.ON_BLOCKCHAIN);
         testTransaction = new Transaction<>(UUID.randomUUID(), cryptoTransaction, Action.APPLY, System.currentTimeMillis());
 
         testTransactionList = new ArrayList<>();
