@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
@@ -9,7 +10,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlatformDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
@@ -20,6 +23,7 @@ import com.bitdubai.fermat_api.layer.pip_user.extra_user.exceptions.CantInitiali
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * The Class <code>com.bitdubai.fermat_cry_plugin.layer.crypto_module.actor_address_book.developer.bitdubai.version_1.structure.ActorAddressBookCryptoModuleDeveloperDatabaseFactory</code> have
@@ -31,7 +35,7 @@ import java.util.List;
  * @since Java JDK 1.7
  */
 
-public class ExtraUserDeveloperDatabaseFactory implements DealsWithErrors, DealsWithPlatformDatabaseSystem {
+public class ExtraUserDeveloperDatabaseFactory implements DealsWithErrors, DealsWithPluginIdentity,DealsWithPluginDatabaseSystem {
 
     /**
      * DealsWithErrors Interface member variables.
@@ -41,19 +45,21 @@ public class ExtraUserDeveloperDatabaseFactory implements DealsWithErrors, Deals
     /**
      * DealsWithPlatformDatabaseSystem Interface member variables.
      */
-    PlatformDatabaseSystem platformDatabaseSystem;
+    private PluginDatabaseSystem pluginDatabaseSystem;
 
     Database database;
+    private UUID pluginId;
+
 
     /**
      * Constructor
      *
      * @param errorManager
-     * @param platformDatabaseSystem
+     * @param pluginDatabaseSystem
      */
-    public ExtraUserDeveloperDatabaseFactory(ErrorManager errorManager, PlatformDatabaseSystem platformDatabaseSystem) {
+    public ExtraUserDeveloperDatabaseFactory(ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem) {
         this.errorManager = errorManager;
-        this.platformDatabaseSystem = platformDatabaseSystem;
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
     /**
@@ -68,11 +74,11 @@ public class ExtraUserDeveloperDatabaseFactory implements DealsWithErrors, Deals
          */
         try {
 
-            this.database = this.platformDatabaseSystem.openDatabase("ExtraUser");
+            this.database = this.pluginDatabaseSystem.openDatabase(pluginId,pluginId.toString());
         } catch (DatabaseNotFoundException databaseNotFoundException) {
 
             ExtraUserDatabaseFactory databaseFactory = new ExtraUserDatabaseFactory();
-            databaseFactory.setPlatformDatabaseSystem(this.platformDatabaseSystem);
+            databaseFactory.setPluginDatabaseSystem(this.pluginDatabaseSystem);
             databaseFactory.setErrorManager(this.errorManager);
 
             /**
@@ -188,8 +194,15 @@ public class ExtraUserDeveloperDatabaseFactory implements DealsWithErrors, Deals
     /**
      * DealsWithPlatformDatabaseSystem interface implementation.
      */
+
+
     @Override
-    public void setPlatformDatabaseSystem(PlatformDatabaseSystem platformDatabaseSystem) {
-        this.platformDatabaseSystem = platformDatabaseSystem;
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem=pluginDatabaseSystem;
+    }
+
+    @Override
+    public void setPluginId(UUID pluginId) {
+        this.pluginId=pluginId;
     }
 }

@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.PlatformLayer;
 import com.bitdubai.fermat_api.layer.pip_actor.ActorSubsystem;
 import com.bitdubai.fermat_api.layer.pip_actor.CantStartSubsystemException;
 import com.bitdubai.fermat_core.layer.pip_actor.actor_developer.ActorDeveloperSubsystem;
+import com.bitdubai.fermat_core.layer.pip_user.extra_user.ExtraUserSubsystem;
 
 /**
  * The interface <code>com.bitdubai.fermat_core.layer.pip_actor.ActorLayer</code>
@@ -16,6 +17,10 @@ import com.bitdubai.fermat_core.layer.pip_actor.actor_developer.ActorDeveloperSu
 public class ActorLayer implements PlatformLayer {
 
     private Plugin mActorDeveloper;
+
+
+
+    private Plugin mExtraUser;
 
     public Plugin getmActorDeveloper() {
         return mActorDeveloper;
@@ -40,5 +45,24 @@ public class ActorLayer implements PlatformLayer {
             throw new CantStartLayerException();
 
         }
+        ActorSubsystem extraUserActorSubsystemType = new ExtraUserSubsystem();
+
+        try {
+            actorDeveloperSubsystemType.start();
+            mExtraUser = (actorDeveloperSubsystemType).getPlugin();
+
+        } catch (CantStartSubsystemException e) {
+            System.err.println("CantStartActorLayerException: " + e.getMessage());
+
+            /**
+             * Since this is the only implementation, if this does not start, then the layer can't start either.
+             */
+
+            throw new CantStartLayerException();
+
+        }
+    }
+    public Plugin getmExtraUser() {
+        return mExtraUser;
     }
 }

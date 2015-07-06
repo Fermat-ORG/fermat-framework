@@ -15,17 +15,12 @@ import com.bitdubai.fermat_core.layer.pip_user.intra_user.IntraUserSubsystem;
 public class UserLayer implements PlatformLayer {
 
     Addon deviceUser;
-    Addon extraUser;
     Addon intraUser;
 
 
 
 
 
-
-    public Addon getExtraUser(){
-        return extraUser;
-    }
 
     public Addon getDeviceUser() {
         return deviceUser;
@@ -73,20 +68,6 @@ public class UserLayer implements PlatformLayer {
             throw new CantStartLayerException();
         }
 
-        /**
-         * Let's start the Extra User Subsystem;
-         */
-        UserSubsystem extraUserSubsystem = new ExtraUserSubsystem();
-
-        try {
-            extraUserSubsystem.start();
-            extraUser = extraUserSubsystem.getAddon();
-
-        } catch (CantStartSubsystemException e) {
-            System.err.println("CantStartSubsystemException: " + e.getMessage());
-
-            throw new CantStartLayerException();
-        }
 
     }
 
