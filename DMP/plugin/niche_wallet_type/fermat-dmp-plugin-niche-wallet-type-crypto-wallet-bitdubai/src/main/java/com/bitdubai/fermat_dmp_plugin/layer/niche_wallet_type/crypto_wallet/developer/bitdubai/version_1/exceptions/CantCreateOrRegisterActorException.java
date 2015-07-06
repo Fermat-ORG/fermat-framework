@@ -19,16 +19,4 @@ public class CantCreateOrRegisterActorException extends CryptoWalletException {
     public CantCreateOrRegisterActorException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
     }
-
-    public CantCreateOrRegisterActorException(final String message, final Exception cause) {
-        this(message, cause, "", "");
-    }
-
-    public CantCreateOrRegisterActorException(final String message) {
-        this(message, null);
-    }
-
-    public CantCreateOrRegisterActorException() {
-        this(DEFAULT_MESSAGE);
-    }
 }

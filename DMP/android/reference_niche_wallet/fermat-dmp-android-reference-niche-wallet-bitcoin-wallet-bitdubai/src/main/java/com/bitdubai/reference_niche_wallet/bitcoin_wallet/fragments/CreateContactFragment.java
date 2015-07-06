@@ -1,7 +1,6 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -17,8 +16,8 @@ import android.widget.TextView;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Wallets;
-import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetAllWalletContactsException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactRecord;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetAllWalletContactsException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
@@ -33,7 +32,7 @@ import java.util.UUID;
 /**
  * Created by natalia on 19/06/15.
  */
-public class ContactsFragment extends Fragment {
+public class CreateContactFragment extends Fragment {
 
     private static final String ARG_POSITION = "position";
     private static final String ARG_PLATFORM = "platform";
@@ -51,8 +50,8 @@ public class ContactsFragment extends Fragment {
     private CryptoWallet cryptoWallet;
     private ErrorManager errorManager;
 
-    public static ContactsFragment newInstance(int position) {
-        ContactsFragment f = new ContactsFragment();
+    public static CreateContactFragment newInstance(int position) {
+        CreateContactFragment f = new CreateContactFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         b.putSerializable(ARG_PLATFORM, new Platform());
@@ -60,8 +59,8 @@ public class ContactsFragment extends Fragment {
         return f;
     }
 
-    public static ContactsFragment newInstance(final int position, final Platform platform) {
-        ContactsFragment f = new ContactsFragment();
+    public static CreateContactFragment newInstance(final int position, final Platform platform) {
+        CreateContactFragment f = new CreateContactFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
         b.putSerializable(ARG_PLATFORM, platform);

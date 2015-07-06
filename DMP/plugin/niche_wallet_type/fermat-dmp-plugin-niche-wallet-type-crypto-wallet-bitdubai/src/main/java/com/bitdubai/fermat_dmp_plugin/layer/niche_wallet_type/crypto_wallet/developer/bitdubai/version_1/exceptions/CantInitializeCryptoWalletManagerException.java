@@ -23,12 +23,4 @@ public class CantInitializeCryptoWalletManagerException extends CryptoWalletExce
     public CantInitializeCryptoWalletManagerException(final String message, final Exception cause) {
         this(message, cause, "", "");
     }
-
-    public CantInitializeCryptoWalletManagerException(final String message) {
-        this(message, null);
-    }
-
-    public CantInitializeCryptoWalletManagerException() {
-        this(DEFAULT_MESSAGE);
-    }
 }

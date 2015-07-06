@@ -74,7 +74,7 @@ public class ActorAddressBookCryptoModuleDeveloperDatabaseFactory implements Dea
             /**
              * The database exists but cannot be open. I can not handle this situation.
              */
-            throw new CantInitializeActorAddressBookCryptoModuleException();
+            throw new CantInitializeActorAddressBookCryptoModuleException(CantInitializeActorAddressBookCryptoModuleException.DEFAULT_MESSAGE, cantOpenDatabaseException, "", "Exception not handled by the plugin, there is a problem and i cannot open the database.");
         } catch (DatabaseNotFoundException databaseNotFoundException) {
 
             ActorAddressBookCryptoModuleDatabaseFactory databaseFactory = new ActorAddressBookCryptoModuleDatabaseFactory();
@@ -92,7 +92,7 @@ public class ActorAddressBookCryptoModuleDeveloperDatabaseFactory implements Dea
                 /**
                  * The database cannot be created. I can not handle this situation.
                  */
-                throw new CantInitializeActorAddressBookCryptoModuleException();
+                throw new CantInitializeActorAddressBookCryptoModuleException(CantInitializeActorAddressBookCryptoModuleException.DEFAULT_MESSAGE, cantCreateDatabaseException, "", "Exception not handled by the plugin, there is a problem and i cannot create the database.");
             }
         }
     }

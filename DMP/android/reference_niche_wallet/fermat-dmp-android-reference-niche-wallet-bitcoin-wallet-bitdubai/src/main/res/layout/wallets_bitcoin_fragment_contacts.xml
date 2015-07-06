@@ -6,9 +6,31 @@
     android:background="#fbf7ed"
     android:textColor="#000000">
 
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_alignParentBottom="true">
+
+        <EditText android:id="@+id/inputSearch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/search_contacts_hint"
+            android:inputType="textVisiblePassword"/>
+
+        <Button
+            android:id="@+id/add_contact_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add"
+            android:background="@color/green"
+            android:textColor="#FFFFFF"
+            android:layout_weight="1"
+            android:layout_margin="2dip"/>
+    </LinearLayout>
+
     <ListView
         android:id="@+id/contactlist"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_width="match_parent"
         android:layout_weight="0.14"
         android:headerDividersEnabled="false"

@@ -43,14 +43,7 @@ public class ActorAddressBookCryptoModulePluginRoot implements ActorAddressBookM
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
         ActorAddressBookCryptoModuleDeveloperDatabaseFactory dbFactory = new ActorAddressBookCryptoModuleDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
-        List<DeveloperDatabase> developerDatabaseList = null;
-        try {
-            dbFactory.initializeDatabase();
-            developerDatabaseList = dbFactory.getDatabaseList(developerObjectFactory);
-        } catch (Exception e) {
-            System.out.println("******* Error trying to get database list for plugin Wallet Contacts");
-        }
-        return developerDatabaseList;
+        return dbFactory.getDatabaseList(developerObjectFactory);
     }
 
     /**
@@ -63,14 +56,7 @@ public class ActorAddressBookCryptoModulePluginRoot implements ActorAddressBookM
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
         ActorAddressBookCryptoModuleDeveloperDatabaseFactory dbFactory = new ActorAddressBookCryptoModuleDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId);
-        List<DeveloperDatabaseTable> developerDatabaseTableList = null;
-        try {
-            dbFactory.initializeDatabase();
-            developerDatabaseTableList = dbFactory.getDatabaseTableList(developerObjectFactory);
-        } catch (Exception e) {
-            System.out.println("******* Error trying to get database table list for plugin Wallet Contacts");
-        }
-        return developerDatabaseTableList;
+        return dbFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     /**
