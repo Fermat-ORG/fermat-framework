@@ -25,17 +25,20 @@ public interface BitcoinWalletWallet {
      * amount of satoshis the user has.
     */
 
-    //TODO: NATALIA este metodo pasa a la interfaz Wallet Balance
+    /* TODO: NATALIA los siguientes 3 métodos pasan a la interfaz Wallet Balance
+     * getBalance se convierte en dos metodos, uno llamado getAvailableBalance
+     * que retorna una interfaz WalletBalance que representa al available balance y
+     * otro método getBookBalance que retorna una interfaz WalletBalance pero esta
+     * represental al book balance.
+     */
     public long getBalance() throws CantCalculateBalanceException;
 
-    //TODO: NATALIA este metodo pasa a la interfaz Wallet Balance
     public void debit(BitcoinWalletTransactionRecord cryptoTransaction) throws CantRegisterDebitDebitException;
 
-    //TODO: NATALIA este metodo pasa a la interfaz Wallet Balance
     public void credit(BitcoinWalletTransactionRecord cryptoTransaction) throws CantRegisterCreditException;
 
+    // Estos dos quedan aquí
     public List<BitcoinWalletTransactionRecord> getTransactions(int max, int offset) throws CantGetTransactionsException;
 
-    //TODO: NATALIA este metodo tiene que estar en BitcoinWalletTransactionRecord
     public void setDescription(UUID transactionID, String memo) throws CabtStoreMemoException, CantFindTransactionException;
 }
