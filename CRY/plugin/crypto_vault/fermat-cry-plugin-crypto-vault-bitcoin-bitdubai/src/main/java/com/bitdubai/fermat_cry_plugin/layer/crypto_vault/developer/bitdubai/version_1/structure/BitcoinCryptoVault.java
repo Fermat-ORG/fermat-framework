@@ -394,7 +394,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         Transaction tx = request.tx;
         txHash = tx.getHashAsString();
         try {
-            db.persistNewTransaction(txHash);
+            db.persistNewTransaction(FermatTxId.toString(), txHash);
             vault.commitTx(request.tx);
         } catch (CantExecuteQueryException e) {
             e.printStackTrace();
