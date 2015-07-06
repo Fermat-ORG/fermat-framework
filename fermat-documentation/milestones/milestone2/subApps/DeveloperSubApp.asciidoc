@@ -1,4 +1,38 @@
 = Developer SubApp
 
+Desntro del sistema cada usuario podrá tener varias identidades (ver Identity Layer). En escencia una
+identidad es un par de claves (una pública y una privada). Las claves se usarán para firmar mensajes
+que envía el usuario desde sus distintas identidades para poder certificar que él es el emisor. +
+Una identidad particular es la identidad de Device User. Para este milestone la identidad como developer
+estará asociada a una identidad de device user. +
+
 La función de esta sub aplicación es permitir a usuarios registrarse y logearse con identidad de desarrolladores. +
 Además debe proveer herramientas de debug pata que el desarrollador pueda obtener cierta información de su wallet. Por ejemplo, ver las tablas y el loggeo del módulo.
+
+Actualmente en sistema asume que desde el inicio hay un único Device User que está logueado todo el
+tiempo. Se usa un userId hardcodeado en diversos archivos como identificación del Device User.
+Esto deberá cambiar eventualmente para identificar al ususario con una clave pública. +
+A lo hecho en el milestone 1 debemos agregar que cuando se ingresa a esta sub app se permita a un
+usuario crear una identidad como Developer o identificarse como una ya existene. Esta identidad debería
+asociarse a la identidad del Device User. Para esto requerimos los plugins Developer y Device User de
+la capa Identity. +
+Las funciones que debería agregar la subapp son:
+
+* Permitir crear una nueva identidad como Developer (es decir, poder registrarse como Developer
+ingresando un alias) y amarrar al device user logueado
+* Importar/exportar la identidad de developer. Inicialmente esto corresponde al par de claves y al
+alias del mismo.
+
+
+== Developer plug-in - Identity Layer
+
+Este plugin es quien almacena el par de claves y el alias de un desarrollador nuevo. En esta versión
+primitiva debería exponer los métodos:
+
+* List<Developer> getDevelopersAssociated(String deviceUserId)
+* Developer createNewDeveloper(String alias,String deviceUserId)
+
+La clase developer debería permitir obtener las claves, el alias y el Device User asociado.
+
+NOTE: Debe pensarse si se tendrán todos las identidades como Developers de todos los Device User o si
+se creará una base de datos para cada Device User dentro del plugin de Developer de la clase Identity.
