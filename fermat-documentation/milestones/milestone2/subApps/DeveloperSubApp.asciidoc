@@ -26,13 +26,15 @@ alias del mismo.
 
 == Developer plug-in - Identity Layer
 
-Este plugin es quien almacena el par de claves y el alias de un desarrollador nuevo. En esta versión
-primitiva debería exponer los métodos:
+Este plugin es quien almacena el par de claves y el alias de un desarrollador nuevo. +
+El plugin deberá escuchar los eventos de login (lanzados cuando un usuario se logea en la plataforma)
+y en base a estos almacenar quién es el usuario logueado actualmente.
 
-* List<Developer> getDevelopersAssociated(String deviceUserId)
-* Developer createNewDeveloper(String alias,String deviceUserId)
+En esta versión primitiva debería exponer los métodos:
 
-La clase developer debería permitir obtener las claves, el alias y el Device User asociado.
+* List<Developer> getDevelopersAssociated() que retorna la lista de developers asociados al usuario
+actualmente logeado.
+* void createNewDeveloper(String alias) que crea una nueva identidad como developer para el usuario
+actualmente logeado.
 
-NOTE: Debe pensarse si se tendrán todos las identidades como Developers de todos los Device User o si
-se creará una base de datos para cada Device User dentro del plugin de Developer de la clase Identity.
+La interfaz developer debería permitir obtener las claves (pública y privada) y el alias.
