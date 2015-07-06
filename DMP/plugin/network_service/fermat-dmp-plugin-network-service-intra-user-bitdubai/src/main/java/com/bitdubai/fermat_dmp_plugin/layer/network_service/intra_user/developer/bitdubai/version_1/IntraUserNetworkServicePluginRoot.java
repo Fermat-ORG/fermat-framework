@@ -9,6 +9,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.develope
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
@@ -108,6 +109,11 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
     private Database dataBase;
 
     /**
+     * Represent the eccKeyPair
+     */
+    private ECCKeyPair eccKeyPair;
+
+    /**
      * Constructor
      */
     public IntraUserNetworkServicePluginRoot() {
@@ -195,7 +201,14 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
          * If all resources are inject
          */
         if (communicationLayerManager != null && pluginDatabaseSystem != null && errorManager != null && eventManager  != null) {
+
             try {
+
+                /*
+                 * Create a new key pair for this execution
+                 */
+                eccKeyPair = new ECCKeyPair();
+
                 /*
                  * Initialize the data base
                  */
@@ -204,13 +217,8 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
                 /*
                  * Register this network service whit the communicationLayerManager
                  */
-                communicationLayerManager.registerNetworkService(NetworkServices.INTRA_USER);
+                communicationLayerManager.registerNetworkService(NetworkServices.INTRA_USER, eccKeyPair.getPublicKey());
 
-                /*
-                 * Obtain the public key generate for this network service at register
-                 */
-                // this method might work here because the asynchronous call might not be yet processed
-                // publicKey = communicationLayerManager.getNetworkServiceChannelPublicKey(NetworkServices.INTRA_USER);
 
                 /*
                  * Its all ok, set the new status
@@ -434,7 +442,7 @@ public class IntraUserNetworkServicePluginRoot  implements IntraUserManager, Ser
         /*
          * Create a new instance
          */
-        IntraUserNetworkServiceManager manager = new IntraUserNetworkServiceManager(communicationLayerManager, dataBase, errorManager, eventManager);
+        IntraUserNetworkServiceManager manager = new IntraUserNetworkServiceManager(eccKeyPair, communicationLayerManager, dataBase, errorManager, eventManager);
 
         /*
          * Initialize the manager to listener the events

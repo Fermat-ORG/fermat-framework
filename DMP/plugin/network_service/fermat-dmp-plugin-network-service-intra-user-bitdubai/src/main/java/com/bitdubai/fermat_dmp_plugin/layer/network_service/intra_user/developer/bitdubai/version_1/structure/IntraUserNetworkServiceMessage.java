@@ -75,6 +75,12 @@ public class IntraUserNetworkServiceMessage implements Message, Serializable {
 
 
     /**
+     * Represent the signature
+     */
+    private String signature;
+
+
+    /**
      * Constructor
      */
     public IntraUserNetworkServiceMessage(){
@@ -248,5 +254,23 @@ public class IntraUserNetworkServiceMessage implements Message, Serializable {
      */
     public void setMessageType(MessagesTypes messageType) {
         this.messageType = messageType;
+    }
+
+
+    /**
+     * Get the signature
+     *
+     * @return String the signature
+     */
+    public String getSignature() {
+        return signature;
+    }
+
+    /**
+     * Set the signature message
+     * @param signature of the message
+     */
+    public void setSignature(String signature) {
+        this.signature = signature;
     }
 }

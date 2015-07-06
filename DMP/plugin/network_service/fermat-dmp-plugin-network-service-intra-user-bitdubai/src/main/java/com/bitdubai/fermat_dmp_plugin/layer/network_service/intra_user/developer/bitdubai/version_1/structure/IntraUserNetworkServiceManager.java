@@ -7,6 +7,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure;
 
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.dmp_network_service.intra_user.IntraUserManager;
@@ -71,6 +72,11 @@ public class IntraUserNetworkServiceManager implements IntraUserManager {
      */
     private OutgoingMessageDataAccessObject outgoingMessageDataAccessObject;
 
+    /**
+     * Represent the eccKeyPair
+     */
+    private ECCKeyPair eccKeyPair;
+
 
     /**
      * Constructor with parameters
@@ -78,8 +84,9 @@ public class IntraUserNetworkServiceManager implements IntraUserManager {
      * @param communicationLayerManager a communicationLayerManager instance
      * @param errorManager a errorManager instance
      */
-    public IntraUserNetworkServiceManager(CommunicationLayerManager communicationLayerManager, Database dataBase, ErrorManager errorManager, EventManager eventManager) {
+    public IntraUserNetworkServiceManager(ECCKeyPair eccKeyPair, CommunicationLayerManager communicationLayerManager, Database dataBase, ErrorManager errorManager, EventManager eventManager) {
         super();
+        this.eccKeyPair                               = eccKeyPair;
         this.communicationLayerManager                = communicationLayerManager;
         this.errorManager                             = errorManager;
         this.eventManager                             = eventManager;
@@ -169,7 +176,7 @@ public class IntraUserNetworkServiceManager implements IntraUserManager {
                 /*
                  * Instantiate the remote reference
                  */
-                IntraUserNetworkServiceRemoteAgent intraUserNetworkServiceRemoteAgent = new IntraUserNetworkServiceRemoteAgent(serviceToServiceOnlineConnection, errorManager, incomingMessageDataAccessObject, outgoingMessageDataAccessObject);
+                IntraUserNetworkServiceRemoteAgent intraUserNetworkServiceRemoteAgent = new IntraUserNetworkServiceRemoteAgent(eccKeyPair, remoteNetworkServicePublicKey, serviceToServiceOnlineConnection, errorManager, incomingMessageDataAccessObject, outgoingMessageDataAccessObject);
 
                 /*
                  * Register the observer to the observable agent
@@ -223,7 +230,7 @@ public class IntraUserNetworkServiceManager implements IntraUserManager {
                 /*
                  * Instantiate the remote reference
                  */
-                IntraUserNetworkServiceRemoteAgent intraUserNetworkServiceRemoteAgent = new IntraUserNetworkServiceRemoteAgent(serviceToServiceOnlineConnection, errorManager, incomingMessageDataAccessObject, outgoingMessageDataAccessObject);
+                IntraUserNetworkServiceRemoteAgent intraUserNetworkServiceRemoteAgent = new IntraUserNetworkServiceRemoteAgent(eccKeyPair, remoteNetworkServicePublicKey, serviceToServiceOnlineConnection, errorManager, incomingMessageDataAccessObject, outgoingMessageDataAccessObject);
 
                 /*
                  * Register the observer to the observable agent
