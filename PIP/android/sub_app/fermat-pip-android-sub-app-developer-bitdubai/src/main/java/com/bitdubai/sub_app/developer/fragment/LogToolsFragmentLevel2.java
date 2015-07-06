@@ -123,6 +123,8 @@ public class LogToolsFragmentLevel2 extends Fragment {
         String selectedWord = ((TextView)relativeLayout.findViewById(R.id.company_text_view)).getText().toString();
         //String selectedWord = ((TextView) info.targetView).getText().toString();
         //selectedWord = info.targetView.get
+
+        int i= info.position;
         Loggers logger=lstLoggers.get(info.position);
 
         switch  (item.getItemId()) {
