@@ -346,6 +346,7 @@ public class LogToolsFragmentLevel2 extends Fragment {
                 }
                 case ArrayListLoggers.LEVEL_3:{
                     stringToShowLevel=item.level3;
+                    item.picture="java_class";
                     break;
                 }
 
@@ -365,9 +366,13 @@ public class LogToolsFragmentLevel2 extends Fragment {
                     holder.imageView.setImageResource(R.drawable.folder);
                     holder.imageView.setTag("CPWWRWAKAV1M|2");
                     break;
+                case "java_class":
+                    holder.imageView.setImageResource(R.drawable.java_class);
+                    holder.imageView.setTag("CPWWRWAKAV1M|3");
+                    break;
                 default:
                     holder.imageView.setImageResource(R.drawable.fermat);
-                    holder.imageView.setTag("CPWWRWAKAV1M|3");
+                    holder.imageView.setTag("CPWWRWAKAV1M|4");
                     break;
             }
 
