@@ -23,7 +23,6 @@ import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfa
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomAdapter;
 
 
 import java.util.ArrayList;
