@@ -216,7 +216,7 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
         bitcoinTransaction.setAddressTo(addressTo);
         bitcoinTransaction.setAmount(amount);
         bitcoinTransaction.setType(type);
-        bitcoinTransaction.setState(state);
+      //  bitcoinTransaction.setState(state);
         bitcoinTransaction.setTimestamp(timestamp);
         bitcoinTransaction.setMemo(memo);
 
