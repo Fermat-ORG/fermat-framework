@@ -4,11 +4,20 @@ package com.bitdubai.fermat_api.layer.pip_actor.developer;
  * Created by rodrigo on 2015.07.01..
  */
 public class ClassHierarchyLevels {
+    String level0;
     String level1;
     String level2;
     String level3;
     String fullPath;
 
+
+    public String getLevel0() {
+        return level0;
+    }
+
+    public void setLevel0(String level0) {
+        this.level0 = level0;
+    }
 
     public String getLevel1() {
         return level1;

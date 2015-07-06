@@ -1,15 +1,11 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1;
 
-import com.bitdubai.fermat_api.Addon;
-import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
-import com.bitdubai.fermat_api.layer.all_definition.developer.DealsWithLogManagers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.dmp_world.wallet.exceptions.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
@@ -23,21 +19,13 @@ import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantC
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVault;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantCreateBlockStoreFileException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure.BitcoinCryptoNetworkMonitoringAgent;
+
 import org.bitcoinj.core.Wallet;
-import org.reflections.Reflections;
-import org.reflections.scanners.ResourcesScanner;
-import org.reflections.scanners.SubTypesScanner;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
-import org.reflections.util.FilterBuilder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -78,56 +66,17 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManag
      * DealsWithLogManager interface member variable
      */
     LogManager logManager;
-    LogLevel logLevel;
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
 
     @Override
-    public LogLevel getLoggingLevel() {
-        return logLevel;
-    }
-
-    @Override
-    public void changeLoggingLevel(LogLevel newLoggingLevel) {
-        logLevel = newLoggingLevel;
-    }
-
-    @Override
     public List<String> getClassesFullPath() {
-        /**
-         * I create the filters and loaders for reflection.
-         */
-        List<ClassLoader> classLoadersList = new LinkedList<ClassLoader>();
-        classLoadersList.add(ClasspathHelper.contextClassLoader());
-        classLoadersList.add(ClasspathHelper.staticClassLoader());
-
-        Reflections reflections = new Reflections(new ConfigurationBuilder()
-                .setScanners(new SubTypesScanner(false), new ResourcesScanner())
-                .setUrls(ClasspathHelper.forClassLoader(classLoadersList.toArray(new ClassLoader[0])))
-                        /**
-                         * I filter by the package name of the plug in Root.
-                         */
-                .filterInputsBy(new FilterBuilder().include(FilterBuilder.prefix(this.getClass().getName()))));
-
-        Set<Class<?>> classes = reflections.getSubTypesOf(Object.class);
-        Iterator<Class<?>> iterator = classes.iterator();
-
-        /**
-         * I insert the classes in the List and return it.
-         */
         List<String> returnedClasses = new ArrayList<String>();
-        while (iterator.hasNext()){
-            String fullClass = iterator.next().getName();
-            returnedClasses.add(fullClass);
-        }
-        if (returnedClasses.isEmpty()){
-            returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.BitcoinCryptoNetworkPluginRoot");
-            returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure.BitcoinCryptoNetworkMonitoringAgent");
-            returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure.BitcoinEventListeners");
-            returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure.StoredBlockChain");
-            returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure.BitcoinNetworkConfiguration");
-        }
-
+        returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.BitcoinCryptoNetworkPluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure.BitcoinCryptoNetworkMonitoringAgent");
+        returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure.BitcoinEventListeners");
+        returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure.StoredBlockChain");
+        returnedClasses.add("com.bitdubai.fermat_cry_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.structure.BitcoinNetworkConfiguration");
 
         /**
          * I return the values.
@@ -141,16 +90,15 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManag
          * I will check the current values and update the LogLevel in those which is different
          */
 
-        for (Map.Entry<String, LogLevel> pluginPair : BitcoinCryptoNetworkPluginRoot.newLoggingLevel.entrySet()){
+        for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
             /**
-             * if the incoming value is different from what I already have, then Ill updated it
+             * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
              */
-            if (newLoggingLevel.containsKey(pluginPair.getKey())){
-
-
-                if (pluginPair.getValue() != newLoggingLevel.get(pluginPair.getKey())){
-                    pluginPair.setValue(newLoggingLevel.get(pluginPair.getKey()));
-                }
+            if (BitcoinCryptoNetworkPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                BitcoinCryptoNetworkPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                BitcoinCryptoNetworkPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            } else {
+                BitcoinCryptoNetworkPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
             }
         }
 
@@ -177,9 +125,8 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManag
     }
 
     @Override
-    public void setLogManager(LogLevel logLevel, LogManager logManager) {
+    public void setLogManager(LogManager logManager) {
         this.logManager = logManager;
-        this.logLevel = logLevel;
     }
 
     /**
@@ -197,16 +144,6 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManag
 
     @Override
     public void start() {
-        /**
-         * I will initialize the Root map with all the classes in default state of Minimal logging
-         */
-        try{
-            for (String c : getClassesFullPath()){
-                BitcoinCryptoNetworkPluginRoot.newLoggingLevel.put(c, LogLevel.MINIMAL_LOGGING);
-            }
-        } catch (Exception e){
-            // no big deal if I coudln't fill the class now, we will do it later.
-        }
         this.serviceStatus = ServiceStatus.STARTED;
     }
 
@@ -253,7 +190,7 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManag
     public void connectToBitcoinNetwork() throws CantConnectToBitcoinNetwork {
         bitcoinCryptoNetworkMonitoringAgent = new BitcoinCryptoNetworkMonitoringAgent((Wallet) cryptoVault.getWallet(), cryptoVault.getUserId());
         bitcoinCryptoNetworkMonitoringAgent.setPluginFileSystem(pluginFileSystem);
-        bitcoinCryptoNetworkMonitoringAgent.setLogManager(null, this.logManager);
+        bitcoinCryptoNetworkMonitoringAgent.setLogManager(this.logManager);
         bitcoinCryptoNetworkMonitoringAgent.setErrorManager(errorManager);
         bitcoinCryptoNetworkMonitoringAgent.setPluginId(pluginId);
 
@@ -288,12 +225,18 @@ public class BitcoinCryptoNetworkPluginRoot implements BitcoinCryptoNetworkManag
     }
 
     public static LogLevel getLogLevelByClass(String className){
-    /**
-     * sometimes the classname may be passed dinamically with an $moretext
-     * I need to ignore whats after this.
-     */
-    String[] correctedClass = className.split((Pattern.quote("$")));
-    LogLevel logLevel = BitcoinCryptoNetworkPluginRoot.newLoggingLevel.get(correctedClass[0]);
-    return logLevel;
+        try{
+            /**
+             * sometimes the classname may be passed dinamically with an $moretext
+             * I need to ignore whats after this.
+             */
+            String[] correctedClass = className.split((Pattern.quote("$")));
+            return BitcoinCryptoNetworkPluginRoot.newLoggingLevel.get(correctedClass[0]);
+        } catch (Exception e){
+            /**
+             * If I couldn't get the correct loggin level, then I will set it to minimal.
+             */
+            return DEFAULT_LOG_LEVEL;
+        }
     }
 }

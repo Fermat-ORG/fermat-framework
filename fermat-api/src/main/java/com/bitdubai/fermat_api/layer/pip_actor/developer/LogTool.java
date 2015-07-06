@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.Addon;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.pip_actor.exception.CantGetClasessHierarchyAddons;
 import com.bitdubai.fermat_api.layer.pip_actor.exception.CantGetClasessHierarchyPlugins;
 
 import java.util.HashMap;
@@ -19,17 +20,11 @@ public interface LogTool {
 
     public List<Addons> getAvailableAddonList ();
 
-    public LogLevel getLogLevel(Plugins plugin);
-
-    public LogLevel getLogLevel(Addons addon);
-
-    public void setLogLevel(Plugins plugin, LogLevel newLogLevel);
-
-    public void setLogLevel(Addons addon, LogLevel newLogLevel);
-
     public List<ClassHierarchyLevels> getClassesHierarchyPlugins(Plugins plugin) throws CantGetClasessHierarchyPlugins;
 
-    public List<ClassHierarchyLevels> getClassesHierarchyAddons(Addons addon);
+    public List<ClassHierarchyLevels> getClassesHierarchyAddons(Addons addon) throws CantGetClasessHierarchyAddons;
 
     public void setNewLogLevelInClass(Plugins plugin, HashMap<String, LogLevel> newLogLevelInClass);
+
+
 }

@@ -1,0 +1,4 @@
+[[Platform-SubApps-TopUpPoint]]
+= Top Up Point
+
+The idea is to let actors provide the service of selling crypto currency in exchange of fiat currency. 

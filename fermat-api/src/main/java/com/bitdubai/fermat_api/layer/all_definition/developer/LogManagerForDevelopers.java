@@ -17,12 +17,11 @@ import java.util.Map;
 
 public interface LogManagerForDevelopers {
 
-    LogLevel getLoggingLevel();
-
-    void changeLoggingLevel(LogLevel newLoggingLevel);
-
+    //todo remove if new implementation works
     List<String> getClassesFullPath();
 
     void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel);
+
+    static final LogLevel DEFAULT_LOG_LEVEL = LogLevel.NOT_LOGGING;
 
 }
