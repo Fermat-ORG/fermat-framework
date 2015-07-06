@@ -1,18 +1,25 @@
 package com.bitdubai.fermat_core.layer.pip_user.extra_user;
 
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.layer.pip_actor.ActorSubsystem;
-import com.bitdubai.fermat_api.layer.pip_actor.CantStartSubsystemException;
+import com.bitdubai.fermat_api.Addon;
+import com.bitdubai.fermat_api.layer.pip_user.CantStartSubsystemException;
+import com.bitdubai.fermat_api.layer.pip_user.UserSubsystem;
 import com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by loui on 22/02/15.
  */
-public class ExtraUserSubsystem implements ActorSubsystem {
+public class ExtraUserSubsystem implements UserSubsystem {
 
-    Plugin plugin;
+    Addon addon;
 
 
+
+
+
+    @Override
+    public Addon getAddon() {
+        return addon;
+    }
 
 
 
@@ -27,18 +34,13 @@ public class ExtraUserSubsystem implements ActorSubsystem {
 
         try {
             DeveloperBitDubai developerBitDubai = new DeveloperBitDubai();
-            plugin =  developerBitDubai.getPlugin();
+            addon =  developerBitDubai.getAddon();
         }
         catch (Exception e)
         {
             System.err.println("Exception: " + e.getMessage());
             throw new CantStartSubsystemException();
         }
-    }
-
-    @Override
-    public Plugin getPlugin() {
-        return plugin;
     }
 
 
