@@ -2,11 +2,10 @@ package unit.com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.crypto_walle
 
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantLoadWalletException;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWallet;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsManager;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetBalanceException;
-import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookManager;
@@ -23,7 +22,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.UUID;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 
@@ -62,7 +60,7 @@ public class GetBalanceTest extends TestCase {
 
 
     @Mock
-    BitcoinWallet bitcoinWallet;
+    BitcoinWalletWallet bitcoinWalletWallet;
 
     UUID walletId;
 
@@ -82,7 +80,7 @@ public class GetBalanceTest extends TestCase {
 
     @Test
     public void testGetBalance_Success() throws Exception {
-        doReturn(bitcoinWallet).when(bitcoinWalletManager).loadWallet(any(UUID.class));
+        doReturn(bitcoinWalletWallet).when(bitcoinWalletManager).loadWallet(any(UUID.class));
         nicheWalletTypeCryptoWallet.getBalance(walletId);
     }
 
@@ -96,9 +94,9 @@ public class GetBalanceTest extends TestCase {
 
     @Test(expected=CantGetBalanceException.class)
     public void testGetBalance_CantCalculateBalanceException() throws Exception {
-        doReturn(bitcoinWallet).when(bitcoinWalletManager).loadWallet(any(UUID.class));
+        doReturn(bitcoinWalletWallet).when(bitcoinWalletManager).loadWallet(any(UUID.class));
         doThrow(new CantCalculateBalanceException("gasdil", null, null, null))
-        .when(bitcoinWallet).getBalance();
+        .when(bitcoinWalletWallet).getBalance();
 
         nicheWalletTypeCryptoWallet.getBalance(walletId);
     }
