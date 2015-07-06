@@ -22,4 +22,6 @@ public interface LogManagerForDevelopers {
 
     void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel);
 
+    static final LogLevel DEFAULT_LOG_LEVEL = LogLevel.NOT_LOGGING;
+
 }

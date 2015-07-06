@@ -27,9 +27,6 @@ public class GetClassesFullPathTest {
         List<Class<?>> classes = find(ActorAddressBookCryptoModulePluginRoot.class.getPackage().getName());
         ActorAddressBookCryptoModulePluginRoot root = new ActorAddressBookCryptoModulePluginRoot();
 
-        for (Class<?> c : classes){
-            System.out.println(c.getName());
-        }
 
         for (String myClass : root.getClassesFullPath()) {
             /**

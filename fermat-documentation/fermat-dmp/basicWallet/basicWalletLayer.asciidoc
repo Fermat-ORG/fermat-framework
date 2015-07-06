@@ -9,3 +9,5 @@
 :leveloffset: 2
 include::discountWallet/developersIndex.asciidoc[]
 
+:leveloffset: 2
+include::bitcoinWallet/developersIndex.asciidoc[]

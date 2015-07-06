@@ -5,6 +5,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -217,21 +218,16 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
                         dabaDatabaseToolsDatabaseTableListFragment.setResource(databases);
                         dabaDatabaseToolsDatabaseTableListFragment.setDeveloperDatabaseTable(developerDatabaseTableList.get(position));
                         dabaDatabaseToolsDatabaseTableListFragment.setDeveloperDatabase(developerDatabase);
-                        //dabaDatabaseToolsDatabaseTableListFragment.setResource();
 
-                        //falta pasar la database
                         FragmentTransaction FT = getFragmentManager().beginTransaction();
 
 
-                        //FT.add(dabaDatabaseToolsDatabaseTableListFragment, TAG_DATABASE_TABLES_TOOLS_FRAGMENT);
-
-                        //FT.replace(R.id.hola, dabaDatabaseToolsDatabaseTableListFragment, TAG_DATABASE_TABLES_TOOLS_FRAGMENT);
                         FT.replace(R.id.hola, dabaDatabaseToolsDatabaseTableListFragment);
-
+                        FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                         FT.commit();
                     }
                 });
-                holder.companyTextView = (TextView) convertView.findViewById(R.id.company_text_view);
+                //holder.companyTextView = (TextView) convertView.findViewById(R.id.company_text_view);
 
 
                 convertView.setTag(holder);
@@ -239,7 +235,10 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            holder.companyTextView.setText(item.databases);
+            TextView textView =(TextView) convertView.findViewById(R.id.company_text_view);
+            Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
+            textView.setTypeface(tf);
+            holder.companyTextView = textView;
             // holder.companyTextView.setTypeface(MyApplication.getDefaultTypeface());
 
 
