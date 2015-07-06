@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.actor.extra_user.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -7,18 +8,22 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataTyp
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlatformDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PlatformDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 
+import java.util.UUID;
+
 
 /**
  * Created by Natalia on 31/03/2015.
  */
-class ExtraUserDatabaseFactory implements DealsWithErrors,DealsWithPlatformDatabaseSystem {
+class ExtraUserDatabaseFactory implements DealsWithErrors,DealsWithPluginDatabaseSystem,DealsWithPluginIdentity {
 
     /**
      * DealsWithErrors Interface member variables.
@@ -28,7 +33,8 @@ class ExtraUserDatabaseFactory implements DealsWithErrors,DealsWithPlatformDatab
     /**
      * DealsWithPlatformDatabaseSystem Interface member variables.
      */
-    private PlatformDatabaseSystem platformDatabaseSystem;
+    private PluginDatabaseSystem pluginDatabaseSystem;
+    private UUID pluginId;
 
     /**
      *DealsWithErrors Interface implementation.
@@ -43,10 +49,7 @@ class ExtraUserDatabaseFactory implements DealsWithErrors,DealsWithPlatformDatab
     /**
      * DealsWithPluginDatabaseSystem Interface implementation.
      */
-    @Override
-    public void setPlatformDatabaseSystem(PlatformDatabaseSystem platformDatabaseSystem) {
-        this.platformDatabaseSystem = platformDatabaseSystem;
-    }
+
 
     /**
      * <p>Method that create a new database and her tables.
@@ -63,7 +66,7 @@ class ExtraUserDatabaseFactory implements DealsWithErrors,DealsWithPlatformDatab
          */
         try {
 
-            database = this.platformDatabaseSystem.createDatabase("ExtraUser");
+            database = this.pluginDatabaseSystem.createDatabase(pluginId,pluginId.toString());
 
         }
         catch (CantCreateDatabaseException cantCreateDatabaseException){
@@ -130,5 +133,14 @@ class ExtraUserDatabaseFactory implements DealsWithErrors,DealsWithPlatformDatab
 
 
         return database;
+    }
+
+    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
+    }
+
+    @Override
+    public void setPluginId(UUID pluginId) {
+        this.pluginId=pluginId;
     }
 }

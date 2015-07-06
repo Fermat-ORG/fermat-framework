@@ -330,7 +330,7 @@ public class LogToolsFragment extends Fragment {
             _adpatrer.notifyDataSetChanged();
             gridView.setAdapter(_adpatrer);
         }catch (Exception e){
-                showMessage("LogTools Fragment onCreateView Exception - " + e.getMessage());
+                    showMessage("LogTools Fragment onCreateView Exception - " + e.getMessage());
                 e.printStackTrace();
             }
         registerForContextMenu(gridView);
