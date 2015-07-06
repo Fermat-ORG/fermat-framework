@@ -101,7 +101,7 @@ public class TransactionConfidenceCalculator {
                  * if the height is equal or exceeds the threshold defined in DepthInBlocksThreshold.DEPTH, then changes to CONFIRMED
                  */
                 if (height >= TARGET_DEPTH)
-                    return CryptoStatus.IRREVERSABLE;
+                    return CryptoStatus.IRREVERSIBLE;
             case DEAD:
                 /**
                  * If DEAD, then it means the transaction won’t confirm unless there is another re-org, because some other transaction is spending one of its inputs.
@@ -119,9 +119,9 @@ public class TransactionConfidenceCalculator {
                 /**
                  * UNKNOWN is the default state. I'm translating it to IDENTIFIED in the Transaction Protocol
                  */
-                return CryptoStatus.ON_CRYPTO_NETWORK;
+                return CryptoStatus.PENDING_SUBMIT;
             default:
-                return CryptoStatus.ON_CRYPTO_NETWORK;
+                return CryptoStatus.PENDING_SUBMIT;
         }
 
     }
