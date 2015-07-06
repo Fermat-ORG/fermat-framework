@@ -349,11 +349,8 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
              * Already sent, this might be an error. I'm not going to send it again.
              */
                 throw new CouldNotSendMoneyException("This transaction has already been sent before.", null, "Transaction ID: " + FermatTxId.toString(), "An error in a previous module.");
-            else
-            /**
-             * new Transaction, I will persist it as a Fermat transaction.
-             */
-                db.persistnewFermatTransaction(FermatTxId.toString());
+
+
         } catch (CantExecuteQueryException e) {
             throw new CouldNotSendMoneyException("I coudln't persist the internal transaction Id.", e, "Transaction ID: " + FermatTxId.toString(), "An error in the Database plugin..");
         }
@@ -395,6 +392,11 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         txHash = tx.getHashAsString();
         try {
             db.persistNewTransaction(FermatTxId.toString(), txHash);
+            /**
+             * new Transaction, I will persist it as a Fermat transaction.
+             */
+            db.persistnewFermatTransaction(FermatTxId.toString());
+
             vault.commitTx(request.tx);
         } catch (CantExecuteQueryException e) {
             e.printStackTrace();
