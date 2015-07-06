@@ -504,7 +504,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
                 try{
                     cryptoStatus = transactionConfidenceCalculator.getCryptoStatus();
                 } catch (CantCalculateTransactionConfidenceException cantCalculateTransactionConfidenceException){
-                    cryptoStatus = CryptoStatus.IDENTIFIED;
+                    cryptoStatus = CryptoStatus.ON_CRYPTO_NETWORK;
                 }
 
                 CryptoTransaction cryptoTransaction = new CryptoTransaction(txHash, addressFrom, addressTo,CryptoCurrency.BITCOIN, amount, cryptoStatus);
