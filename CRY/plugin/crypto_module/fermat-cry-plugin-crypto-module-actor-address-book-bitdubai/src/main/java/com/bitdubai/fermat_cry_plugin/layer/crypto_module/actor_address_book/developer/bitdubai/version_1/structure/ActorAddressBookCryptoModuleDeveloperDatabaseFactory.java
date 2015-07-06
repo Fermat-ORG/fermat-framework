@@ -153,21 +153,22 @@ public class ActorAddressBookCryptoModuleDeveloperDatabaseFactory implements Dea
         }
 
         List<DatabaseTableRecord> records = selectedTable.getRecords();
-        List<String> developerRow = new ArrayList<String>();
-        for (DatabaseTableRecord row : records) {
+        for (DatabaseTableRecord row: records){
             /**
              * for each row in the table list
              */
-            for (DatabaseRecord field : row.getValues()) {
+            List<String> developerRow = new ArrayList<String>();
+            for (DatabaseRecord field : row.getValues()){
                 /**
                  * I get each row and save them into a List<String>
                  */
-                developerRow.add(field.getValue().toString());
+                developerRow.add(field.getValue());
             }
             /**
              * I create the Developer Database record
              */
             returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
+
         }
 
 
