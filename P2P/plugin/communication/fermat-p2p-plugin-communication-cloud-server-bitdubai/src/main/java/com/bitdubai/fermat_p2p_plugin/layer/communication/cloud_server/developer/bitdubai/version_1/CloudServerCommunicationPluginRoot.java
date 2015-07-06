@@ -8,10 +8,14 @@ package com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.develope
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
@@ -39,6 +43,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.regex.Pattern;
 
 
 /**
@@ -52,7 +57,7 @@ import java.util.concurrent.Executors;
  *
  * @version 1.0
  */
-public class CloudServerCommunicationPluginRoot implements Service, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem,Plugin {
+public class    CloudServerCommunicationPluginRoot implements Service, DealsWithEvents, DealsWithErrors, DealsWithLogger,LogManagerForDevelopers,  DealsWithPluginFileSystem,Plugin {
 
     /**
      * Represents the numbers of Thread that have the pool
@@ -78,6 +83,14 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
      * DealWithEvents Interface member variables.
      */
     private EventManager eventManager;
+
+
+    /**
+     * DealsWithLogger interface member variable
+     */
+    LogManager logManager;
+    static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
+
 
     /**
      * DealsWithPluginIdentity Interface member variables.
@@ -209,7 +222,67 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
      * Communication channels interface implementation.
      */
 
-   
+    /**
+     * DealsWithLogger interface implmentations
+     */
+    @Override
+    public void setLogManager(LogManager logManager) {
+        this.logManager = logManager;
+    }
+
+    @Override
+    public List<String> getClassesFullPath() {
+        List<String> returnedClasses = new ArrayList<String>();
+        returnedClasses.add("com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.CloudServerCommunicationPluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.CloudNetworkServiceManager");
+        returnedClasses.add("com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.CloudNetworkServiceVPN");
+        returnedClasses.add("com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.ECCKeyPair");
+        returnedClasses.add("com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.structure.CloudServiceManager");
+        /**
+         * I return the values.
+         */
+        return returnedClasses;
+    }
+
+    @Override
+    public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
+        /**
+         * I will check the current values and update the LogLevel in those which is different
+         */
+
+        for (Map.Entry<String, LogLevel> pluginPair : newLoggingLevel.entrySet()) {
+            /**
+             * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
+             */
+            if (CloudServerCommunicationPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                CloudServerCommunicationPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                CloudServerCommunicationPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            } else {
+                CloudServerCommunicationPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+            }
+        }
+    }
+
+    /**
+     * Static method to get the logging level from any class under root.
+     * @param className
+     * @return
+     */
+    public static LogLevel getLogLevelByClass(String className){
+        try{
+            /**
+             * sometimes the classname may be passed dinamically with an $moretext
+             * I need to ignore whats after this.
+             */
+            String[] correctedClass = className.split((Pattern.quote("$")));
+            return CloudServerCommunicationPluginRoot.newLoggingLevel.get(correctedClass[0]);
+        } catch (Exception e){
+            /**
+             * If I couldn't get the correct loggin level, then I will set it to minimal.
+             */
+            return DEFAULT_LOG_LEVEL;
+        }
+    }
 
     /**
      * UsesFileSystem Interface implementation.
