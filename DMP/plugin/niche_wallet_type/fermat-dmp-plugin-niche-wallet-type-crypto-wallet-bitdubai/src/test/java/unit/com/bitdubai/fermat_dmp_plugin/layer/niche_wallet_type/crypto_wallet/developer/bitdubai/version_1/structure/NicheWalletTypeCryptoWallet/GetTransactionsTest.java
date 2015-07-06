@@ -1,18 +1,10 @@
 package unit.com.bitdubai.fermat_dmp_plugin.layer.niche_wallet_type.crypto_wallet.developer.bitdubai.version_1.structure.NicheWalletTypeCryptoWallet;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
-import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantLoadWalletException;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWallet;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.interfaces.WalletContactsManager;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetTransactionsException;
-import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantSendCryptoException;
-import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.OutgoingExtraUserManager;
-import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.TransactionManager;
-import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.exceptions.CantGetTransactionManagerException;
-import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.exceptions.CantSendFundsException;
-import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.exceptions.InsufficientFundsException;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.actor_address_book.interfaces.ActorAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookManager;
@@ -30,7 +22,6 @@ import java.util.UUID;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 
@@ -69,7 +60,7 @@ public class GetTransactionsTest extends TestCase {
 
 
     @Mock
-    BitcoinWallet bitcoinWallet;
+    BitcoinWalletWallet bitcoinWalletWallet;
 
     UUID walletId;
 
@@ -89,7 +80,7 @@ public class GetTransactionsTest extends TestCase {
 
     @Test
     public void testGetTransactions_Success() throws Exception {
-        doReturn(bitcoinWallet).when(bitcoinWalletManager).loadWallet(any(UUID.class));
+        doReturn(bitcoinWalletWallet).when(bitcoinWalletManager).loadWallet(any(UUID.class));
         nicheWalletTypeCryptoWallet.getTransactions(1, 10, walletId);
     }
 
@@ -103,9 +94,9 @@ public class GetTransactionsTest extends TestCase {
 
     @Test(expected=CantGetTransactionsException.class)
     public void testGetTransactions_CantGetTransactionsException() throws Exception {
-        doReturn(bitcoinWallet).when(bitcoinWalletManager).loadWallet(any(UUID.class));
+        doReturn(bitcoinWalletWallet).when(bitcoinWalletManager).loadWallet(any(UUID.class));
         doThrow(new com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantGetTransactionsException("gasdil", null, null, null))
-        .when(bitcoinWallet).getTransactions(anyInt(), anyInt());
+        .when(bitcoinWalletWallet).getTransactions(anyInt(), anyInt());
 
         nicheWalletTypeCryptoWallet.getTransactions(1, 10, walletId);
     }

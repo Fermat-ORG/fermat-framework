@@ -21,12 +21,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
-                android:text="@string/swype_refresh"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:gravity="center"/>
         </ScrollView>
 
     </android.support.v4.widget.SwipeRefreshLayout>
@@ -71,13 +65,5 @@
         android:gravity="bottom"
         android:layout_alignParentBottom="true">
 
-        <Button
-            android:id="@+id/changeFormatBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:background="@color/green"
-            android:text="Show in BTC"
-            android:textColor="#FFFFFF"/>
     </RelativeLayout>
 </RelativeLayout>

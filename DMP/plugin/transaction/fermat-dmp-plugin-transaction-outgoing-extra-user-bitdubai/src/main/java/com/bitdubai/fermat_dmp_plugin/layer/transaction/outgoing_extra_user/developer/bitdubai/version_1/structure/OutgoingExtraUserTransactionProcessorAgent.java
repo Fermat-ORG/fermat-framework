@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantRegisterDebitDebitException;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWallet;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
 import com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.exceptions.InconsistentFundsException;
@@ -181,13 +181,13 @@ public class OutgoingExtraUserTransactionProcessorAgent implements DealsWithBitc
         private void doTheMainTask() {
 
 
-            BitcoinWallet bitcoinWallet = null;
+            BitcoinWalletWallet bitcoinWalletWallet = null;
 
             UUID temporalId = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
 
 
             try {
-                bitcoinWallet = this.bitcoinWalletManager.loadWallet(temporalId);
+                bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(temporalId);
             } catch (CantLoadWalletException e) {
                 this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 return;
@@ -214,7 +214,7 @@ public class OutgoingExtraUserTransactionProcessorAgent implements DealsWithBitc
             long funds;
             for(TransactionWrapper transaction : transactionList) {
                 try {
-                    funds = bitcoinWallet.getBalance();
+                    funds = bitcoinWalletWallet.getBalance();
                     if (funds < transaction.getAmount()) {
                         FermatException insufficientFundsException = new InsufficientFundsException("I don't have funds for this transaction",null,"Balance: "+ funds + "\ncryptoAmount: "+transaction.getAmount(),"");
                         this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,insufficientFundsException );
@@ -284,7 +284,7 @@ public class OutgoingExtraUserTransactionProcessorAgent implements DealsWithBitc
 
             for(TransactionWrapper transaction : transactionList){
                 try {
-                    bitcoinWallet.debit(transaction);
+                    bitcoinWalletWallet.debit(transaction);
                     dao.setToPIW(transaction);
                 } catch (CantRegisterDebitDebitException e) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);

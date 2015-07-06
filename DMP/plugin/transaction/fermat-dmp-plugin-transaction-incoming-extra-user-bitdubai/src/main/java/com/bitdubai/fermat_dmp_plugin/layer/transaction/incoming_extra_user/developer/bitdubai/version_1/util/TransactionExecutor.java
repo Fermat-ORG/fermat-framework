@@ -3,12 +3,12 @@ package com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.dev
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformWalletType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.BitcoinTransaction;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionState;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantRegisterCreditException;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWallet;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.exceptions.CantGetWalletAddressBookRegistryException;
@@ -61,7 +61,7 @@ public class TransactionExecutor implements DealsWithBitcoinWallet, DealsWithWal
 /*
         UUID temporalId = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
 
-        BitcoinWallet bitcoinWallet2 = bitcoinWalletManager.loadWallet(temporalId);
+        BitcoinWalletWallet bitcoinWallet2 = bitcoinWalletManager.loadWallet(temporalId);
         bitcoinWallet2.credit(generateBitcoinTransaction(transaction.getInformation()));
         if (true)
           return;
@@ -76,8 +76,8 @@ public class TransactionExecutor implements DealsWithBitcoinWallet, DealsWithWal
 
             switch (platformWalletType) {
                 case BASIC_WALLET_BITCOIN_WALLET:
-                    BitcoinWallet bitcoinWallet = bitcoinWalletManager.loadWallet(walletID);
-                    bitcoinWallet.credit(generateBitcoinTransaction(transaction.getInformation()));
+                    BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletID);
+                    bitcoinWalletWallet.credit(generateBitcoinTransaction(transaction.getInformation()));
                     System.out.println("TTF - Transaction applie by transaction executor");
                     return;
                 default:
@@ -91,20 +91,20 @@ public class TransactionExecutor implements DealsWithBitcoinWallet, DealsWithWal
     }
 
 
-    private BitcoinTransaction generateBitcoinTransaction(CryptoTransaction cryptoTransaction){
-        BitcoinTransaction bitcoinTransaction = new TransactionWrapper();
+    private BitcoinWalletTransactionRecord generateBitcoinTransaction(CryptoTransaction cryptoTransaction){
+        BitcoinWalletTransactionRecord bitcoinWalletTransactionRecord = new TransactionWrapper();
 
         long timestamp = System.currentTimeMillis() / 1000L;
 
-        bitcoinTransaction.setTramsactionHash(cryptoTransaction.getTransactionHash());
-        bitcoinTransaction.setAddressFrom(cryptoTransaction.getAddressFrom());
-        bitcoinTransaction.setAddressTo(cryptoTransaction.getAddressTo());
-        bitcoinTransaction.setAmount(cryptoTransaction.getCryptoAmount());
-        bitcoinTransaction.setType(TransactionType.CREDIT);
-        bitcoinTransaction.setState(TransactionState.RECEIVED);
-        bitcoinTransaction.setTimestamp(timestamp);
-        bitcoinTransaction.setMemo("No information");
+        bitcoinWalletTransactionRecord.setTramsactionHash(cryptoTransaction.getTransactionHash());
+        bitcoinWalletTransactionRecord.setAddressFrom(cryptoTransaction.getAddressFrom());
+        bitcoinWalletTransactionRecord.setAddressTo(cryptoTransaction.getAddressTo());
+        bitcoinWalletTransactionRecord.setAmount(cryptoTransaction.getCryptoAmount());
+        bitcoinWalletTransactionRecord.setType(TransactionType.CREDIT);
+        bitcoinWalletTransactionRecord.setState(TransactionState.RECEIVED);
+        bitcoinWalletTransactionRecord.setTimestamp(timestamp);
+        bitcoinWalletTransactionRecord.setMemo("No information");
 
-        return bitcoinTransaction;
+        return bitcoinWalletTransactionRecord;
     }
 }

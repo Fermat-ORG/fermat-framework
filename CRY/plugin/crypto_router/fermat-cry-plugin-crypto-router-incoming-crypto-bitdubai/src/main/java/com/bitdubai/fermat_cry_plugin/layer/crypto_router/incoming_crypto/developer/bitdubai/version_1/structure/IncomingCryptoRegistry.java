@@ -89,7 +89,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
                 CryptoCurrency.BITCOIN, 1, CryptoStatus.CONFIRMED
         );
         /*
-        Campos del BitcoinTransaction
+        Campos del BitcoinWalletTransactionRecord
         String transactionHash,
         CryptoAddress addressFrom,
         CryptoAddress addressTo,

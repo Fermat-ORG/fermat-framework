@@ -5,6 +5,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -215,8 +216,10 @@ public class DatabaseToolsDatabaseListFragment extends Fragment {
                         //FT.show(dabaDatabaseToolsDatabaseTableListFragment);
                     }
                 });
-                holder.companyTextView = (TextView) convertView.findViewById(R.id.company_text_view);
-
+                TextView textView =(TextView) convertView.findViewById(R.id.company_text_view);
+                Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
+                textView.setTypeface(tf);
+                holder.companyTextView = textView;
 
                 convertView.setTag(holder);
             } else {

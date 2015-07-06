@@ -210,7 +210,7 @@ public class ActorAddressBookCryptoModulePluginRoot implements ActorAddressBookM
             /**
              * If I couldn't get the correct loggin level, then I will set it to minimal.
              */
-            return LogLevel.MINIMAL_LOGGING;
+            return DEFAULT_LOG_LEVEL;
         }
     }
 
