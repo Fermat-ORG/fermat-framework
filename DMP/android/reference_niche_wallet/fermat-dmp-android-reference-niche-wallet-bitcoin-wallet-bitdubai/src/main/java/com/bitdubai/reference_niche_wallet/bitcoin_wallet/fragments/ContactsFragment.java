@@ -138,7 +138,6 @@ public class ContactsFragment extends Fragment {
                   R.layout.wallets_bitcoin_fragment_contacts_list,R.id.contact_name, lst);
 
 
-
                 // Assign adapter to ListView
             listView.setAdapter(adapter);
 

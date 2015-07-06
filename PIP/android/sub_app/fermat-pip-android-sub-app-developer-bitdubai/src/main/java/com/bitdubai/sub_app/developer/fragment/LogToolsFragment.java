@@ -158,7 +158,7 @@ public class LogToolsFragment extends Fragment {
             }
             case  Loggers.LOGGER_LEVEL_MINIMAL_LOGGING: {
                 //Toast.makeText(getActivity(), logger.level1, Toast.LENGTH_SHORT).show();
-                changeLogLevel(logger.level1, LogLevel.MINIMAL_LOGGING, selectedWord);
+                changeLogLevel(logger.level0, LogLevel.MINIMAL_LOGGING, selectedWord);
                 break;
             }
             case  Loggers.LOGGER_LEVEL_MODERATE_LOGGING: {
@@ -295,7 +295,7 @@ public class LogToolsFragment extends Fragment {
                     //loading de loggers class
 
                     Loggers log = new Loggers();
-                    //log.level0 = classes.
+                    log.level0 = classes.getLevel0();
                     log.level1 = classes.getLevel1();
                     log.level2 = classes.getLevel2();
                     log.level3 = classes.getLevel3();
@@ -405,15 +405,16 @@ public class LogToolsFragment extends Fragment {
                         FT.commit();
                     }
                 });
-                /*holder.imageView.setOnLongClickListener(new View.OnLongClickListener() {
+                holder.imageView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View view) {
                         Toast.makeText(getActivity(),"tocando",Toast.LENGTH_SHORT).show();
-
+                        //getActivity().openContextMenu(view);
                         return true;
                     }
                 });
-                */
+
+                registerForContextMenu(holder.imageView );
                 TextView textView =(TextView) convertView.findViewById(R.id.company_text_view);
                 Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
                 textView.setTypeface(tf);
