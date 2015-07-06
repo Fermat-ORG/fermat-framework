@@ -3,6 +3,7 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -22,6 +23,8 @@ import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfa
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.CustomAdapter;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +39,9 @@ public class ContactsFragment extends Fragment {
     private static final String ARG_PLATFORM = "platform";
     View rootView;
     UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
+
+
+    Typeface tf;
 
     /**
      * DealsWithNicheWalletTypeCryptoWallet Interface member variables.
@@ -66,6 +72,8 @@ public class ContactsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        tf= Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
 
         platform = (Platform) getArguments().getSerializable(ARG_PLATFORM);
         errorManager = platform.getErrorManager();
@@ -104,7 +112,6 @@ public class ContactsFragment extends Fragment {
             // Get ListView object from xml
             ListView listView = (ListView) rootView.findViewById(R.id.contactlist);
 
-
             // Defined Array values to show in ListView
             //String[] contacts = new String[]{"","Lucia Alarcon De Zamacona", "Juan Luis R. Pons", "Karina Rodríguez", "Simon Cushing","Céline Begnis","Taylor Backus","Stephanie Himonidis","Kimberly Brown" };
 
@@ -117,6 +124,10 @@ public class ContactsFragment extends Fragment {
             } else {
                 contacts = new String[0];
             }
+            List<String> lst= new ArrayList<String>();
+            for(int i=0;i<contacts.length;i++){
+                lst.add(contacts[i]);
+            }
 
             // Define a new Adapter
             // First parameter - Context
@@ -125,9 +136,11 @@ public class ContactsFragment extends Fragment {
             // Forth - the Array of data
 
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity().getApplicationContext(),
-                    R.layout.wallets_bitcoin_fragment_contacts_list, R.id.contact_name, contacts);
+                  R.layout.wallets_bitcoin_fragment_contacts_list,R.id.contact_name, lst);
 
-            // Assign adapter to ListView
+
+
+                // Assign adapter to ListView
             listView.setAdapter(adapter);
 
             // ListView Item Click Listener
