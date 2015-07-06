@@ -38,6 +38,7 @@ import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CouldNotSendMon
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantCalculateTransactionConfidenceException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantExecuteQueryException;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.google.common.util.concurrent.ListenableFuture;
 
 import org.bitcoinj.core.Address;
@@ -589,5 +590,11 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
          * I get the current timestamp
          */
         return tx.getLockTime();
+    }
+
+    public CryptoStatus getCryptoStatus(UUID transactionId) throws CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException {
+        CryptoVaultDatabaseActions db = new CryptoVaultDatabaseActions(database, errorManager, eventManager);
+        db.setVault(vault);
+        return db.getCryptoStatus(transactionId.toString());
     }
 }
