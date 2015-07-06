@@ -31,3 +31,7 @@ tasks.withType(FindBugs) {
         html.enabled = true
     }
 }
+
+jacocoTestReport.dependsOn clean, test
+test.mustRunAfter clean
+jacocoTestReport.mustRunAfter test
