@@ -737,7 +737,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
             this.pager = null;
             this.pagertabs = null;
             this.Title = "";
-            this.tabStrip=null;
+            //this.tabStrip=null;
 
             List<android.support.v4.app.Fragment> fragments = new Vector<android.support.v4.app.Fragment>();
 
