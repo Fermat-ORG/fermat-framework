@@ -14,22 +14,25 @@ import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.develo
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.interfaces.TransactionAgent;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_router.incoming_crypto.developer.bitdubai.version_1.exceptions.CantStartAgentException;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public class IncomingCryptoSampleAgent implements DealsWithErrors, TransactionAgent {
 
     /**
      * DealsWithEvents Interface member variables.
      */
-    ErrorManager errorManager;
+    private ErrorManager errorManager;
 
 
     /**
      * TransactionAgent Member Variables.
      */
-    Thread agentThread;
-    MonitorAgent monitorAgent;
+    private Thread agentThread;
+    private MonitorAgent monitorAgent;
 
-
-
+    public IncomingCryptoSampleAgent(final ErrorManager errorManager){
+        this.errorManager = errorManager;
+    }
 
     /**
      *DealsWithErrors Interface implementation.
@@ -66,30 +69,29 @@ public class IncomingCryptoSampleAgent implements DealsWithErrors, TransactionAg
 
     @Override
     public void stop() {
-
-        this.agentThread.interrupt();
+        if(monitorAgent != null)
+            monitorAgent.stop();
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     private static class MonitorAgent implements Runnable  {
 
         private static final int SLEEP_TIME = 5000;
 
+        private AtomicBoolean running;
+
+        public  MonitorAgent(){
+            running = new AtomicBoolean(false);
+        }
+
+        public boolean isRunning(){
+            return running.get();
+        }
+
+        public void stop(){
+            running.set(false);
+        }
 
         /**
          * MonitorAgent interface implementation.
@@ -114,7 +116,9 @@ public class IncomingCryptoSampleAgent implements DealsWithErrors, TransactionAg
             /**
              * Infinite loop.
              */
-            while (true) {
+            running.set(true);
+
+            while (running.get()) {
 
                 /**
                  * Sleep for a while.
@@ -122,8 +126,7 @@ public class IncomingCryptoSampleAgent implements DealsWithErrors, TransactionAg
                 try {
                     Thread.sleep(SLEEP_TIME);
                 } catch (InterruptedException interruptedException) {
-                    cleanResources();
-                    return;
+                    break;
                 }
 
                 /**
@@ -135,10 +138,10 @@ public class IncomingCryptoSampleAgent implements DealsWithErrors, TransactionAg
                  * Check if I have been Interrupted.
                  */
                 if (Thread.currentThread().isInterrupted()) {
-                    cleanResources();
-                    return;
+                    break;
                 }
             }
+            cleanResources();
         }
 
         private void doTheMainTask() {
