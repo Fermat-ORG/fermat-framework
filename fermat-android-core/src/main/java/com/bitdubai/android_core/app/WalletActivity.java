@@ -219,17 +219,17 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
 
 
 
-            String status_color=this.activity.getStatusBarColor();
-            if(this.activity.getStatusBarColor()!=null){
+            String status_color=activity.getStatusBarColor();
+            if(activity.getStatusBarColor()!=null){
                 setStatusBarColor(this.activity.getStatusBarColor());
 
             }
-            if (this.activity.getTabStrip().getTabsColor()!=null){
+            if (activity.getTabStrip().getTabsColor()!=null){
                 tabStrip.setBackgroundColor(Color.parseColor(this.activity.getTabStrip().getTabsColor()));
                 //tabStrip.setDividerColor(Color.TRANSPARENT);
 
             }
-            if(this.activity.getTabStrip().getTabsTextColor()!=null){
+            if(activity.getTabStrip().getTabsTextColor()!=null){
                 tabStrip.setTextColor(Color.parseColor(this.activity.getTabStrip().getTabsTextColor()));
             }
 
@@ -295,7 +295,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
                 // finally change the color
                 // window.setStatusBarColor(this.getResources().getColor(com.bitdubai.sub_app.developer.R.color.wallet_factory_orange));
                 Color color_status = new Color();
-                window.setStatusBarColor(color_status.parseColor("#b46a54"));
+                window.setStatusBarColor(color_status.parseColor(color));
             } catch (Exception e) {
                 Log.d("DatabaseToolsFragment", "Versión del sdk no compatible con el cambio de color del status bar");
             }
@@ -737,6 +737,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
             this.pager = null;
             this.pagertabs = null;
             this.Title = "";
+            this.tabStrip=null;
 
             List<android.support.v4.app.Fragment> fragments = new Vector<android.support.v4.app.Fragment>();
 
