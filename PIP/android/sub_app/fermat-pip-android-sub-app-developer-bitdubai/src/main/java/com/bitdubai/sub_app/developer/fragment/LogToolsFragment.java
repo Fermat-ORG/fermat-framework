@@ -12,12 +12,14 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -375,10 +377,10 @@ public class LogToolsFragment extends Fragment {
 
             final Loggers item = getItem(position);
 
-            ViewHolder holder;
+            final ViewHolder holder;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.grid_items, parent, false);
+                convertView = inflater.inflate(R.layout.grid_items_with_button, parent, false);
 
 
 
@@ -465,13 +467,27 @@ public class LogToolsFragment extends Fragment {
             }
             holder.btnLogger= (ImageView) convertView.findViewById(R.id.imageView_logger);
             holder.btnLogger.setImageResource(R.drawable.logger_button);
-            holder.btnLogger.setOnClickListener(new View.OnClickListener() {
+
+            holder.btnLogger.setOnTouchListener(new View.OnTouchListener() {
                 @Override
-                public void onClick(View view) {
-                    Toast.makeText(getActivity(),"Soy una estrella feliz",Toast.LENGTH_SHORT).show();
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    //Toast.makeText(getActivity(), "Soy una estrella feliz1", Toast.LENGTH_SHORT).show();
+                    String loggerText=holder.companyTextView.getText().toString();
+                    PopupMenu popupMenu = new PopupMenu(getActivity(), view);
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem menuItem) {
+                            Toast.makeText(getActivity(),"Hola jorge",Toast.LENGTH_SHORT).show();
+
+                            return false;
+                        }
+                    });
+
+                    popupMenu.inflate(R.menu.popup_menu);
+                    popupMenu.show();
+                    return true;
                 }
             });
-
             return convertView;
         }
 

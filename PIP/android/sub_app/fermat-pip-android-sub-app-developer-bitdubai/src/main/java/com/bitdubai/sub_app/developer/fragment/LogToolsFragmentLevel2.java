@@ -282,7 +282,7 @@ public class LogToolsFragmentLevel2 extends Fragment {
             ViewHolder holder;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.grid_items, parent, false);
+                convertView = inflater.inflate(R.layout.grid_items_with_button, parent, false);
 
 
                 holder = new ViewHolder();
