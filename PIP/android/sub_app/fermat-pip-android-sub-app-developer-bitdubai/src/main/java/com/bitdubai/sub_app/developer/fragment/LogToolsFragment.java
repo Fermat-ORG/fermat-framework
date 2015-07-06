@@ -5,6 +5,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -18,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,6 +49,7 @@ import java.util.Map;
  * @version 1.0
  */
 public class LogToolsFragment extends Fragment {
+
 
     private Map<String, List<ClassHierarchyLevels>> pluginClasses;
     //List<LoggerPluginClassHierarchy> loggerPluginClassHierarchy;
@@ -117,16 +120,16 @@ public class LogToolsFragment extends Fragment {
                                     ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
 
-        //getActivity().getMenuInflater().inflate(R.menu.logs_menu, menu);
         GridView gv = (GridView) v;
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
 
         //String selectedWord = ((TextView) info.targetView).getText().toString();
         //menu.setHeaderTitle(selectedWord);
-        menu.add(LogLevel.NOT_LOGGING.toString());
-        menu.add(LogLevel.MINIMAL_LOGGING.toString());
-        menu.add(LogLevel.MODERATE_LOGGING.toString());
-        menu.add(LogLevel.AGGRESSIVE_LOGGING.toString());
+        //menu.add(LogLevel.NOT_LOGGING.toString());
+        menu.add(5,Loggers.LOGGER_LEVEL_NOT_LOGGING,1,LogLevel.NOT_LOGGING.toString());
+        menu.add(5,Loggers.LOGGER_LEVEL_MINIMAL_LOGGING,1,LogLevel.MINIMAL_LOGGING.toString());
+        menu.add(5,Loggers.LOGGER_LEVEL_MODERATE_LOGGING,1,LogLevel.MODERATE_LOGGING.toString());
+        menu.add(5,Loggers.LOGGER_LEVEL_AGGRESSIVE_LOGGING,1,LogLevel.AGGRESSIVE_LOGGING.toString());
         int position = info.position;
         /*if(!(position==0 || position==2))
         {
@@ -136,27 +139,60 @@ public class LogToolsFragment extends Fragment {
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-       /* AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-        Object item = getListAdapter().getItem(info.position);*/
+
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        String selectedWord = ((TextView) info.targetView).getText().toString();
 
 
+        RelativeLayout relativeLayout = (RelativeLayout)info.targetView;
+        String selectedWord = ((TextView)relativeLayout.findViewById(R.id.company_text_view)).getText().toString();
+        Loggers logger=lstLoggers.get(info.position);
+
+        //TODO: MATI
+        //TODO: rodri fijate que ahí lo está haciendo
+
+        switch  (item.getItemId()) {
+            case  Loggers.LOGGER_LEVEL_NOT_LOGGING: {
+                Toast.makeText(getActivity(), selectedWord, Toast.LENGTH_SHORT).show();
+                changeLogLevel(logger.level0, LogLevel.NOT_LOGGING, selectedWord);
+                break;
+            }
+            case  Loggers.LOGGER_LEVEL_MINIMAL_LOGGING: {
+                //Toast.makeText(getActivity(), logger.level1, Toast.LENGTH_SHORT).show();
+                changeLogLevel(logger.level1, LogLevel.MINIMAL_LOGGING, selectedWord);
+                break;
+            }
+            case  Loggers.LOGGER_LEVEL_MODERATE_LOGGING: {
+                //Toast.makeText(getActivity(), logger.level2, Toast.LENGTH_SHORT).show();
+                changeLogLevel(logger.level0, LogLevel.MODERATE_LOGGING, selectedWord);
+                break;
+            }
+            case  Loggers.LOGGER_LEVEL_AGGRESSIVE_LOGGING: {
+                //Toast.makeText(getActivity(), logger.level3, Toast.LENGTH_SHORT).show();
+                changeLogLevel(logger.level0, LogLevel.AGGRESSIVE_LOGGING, selectedWord);
+                break;
+            }
+            default: {
+                Toast.makeText(getActivity(), "Nada seleccionado", Toast.LENGTH_SHORT).show();
+                break;
+            }
+        }
+        //preguntar que carajo es el resource
+        /*Loggers logger = lstLoggers.get(info.position);
         if (item.getTitle() == LogLevel.NOT_LOGGING.toString()) {
-            changeLogLevel(LogLevel.NOT_LOGGING, selectedWord);
+            changeLogLevel(logger.level0,LogLevel.NOT_LOGGING, selectedWord);
         } else if (item.getTitle() == LogLevel.MINIMAL_LOGGING.toString()) {
-            changeLogLevel(LogLevel.MINIMAL_LOGGING, selectedWord);
+            changeLogLevel(logger.level0,LogLevel.MINIMAL_LOGGING, selectedWord);
         } else if (item.getTitle() == LogLevel.MODERATE_LOGGING.toString()) {
-            changeLogLevel(LogLevel.MODERATE_LOGGING, selectedWord);
+            changeLogLevel(logger.level0,LogLevel.MODERATE_LOGGING, selectedWord);
         } else if (item.getTitle() == LogLevel.AGGRESSIVE_LOGGING.toString()) {
-            changeLogLevel(LogLevel.AGGRESSIVE_LOGGING, selectedWord);
+            changeLogLevel(logger.level0,LogLevel.AGGRESSIVE_LOGGING, selectedWord);
         } else {
             return false;
-        }
+        }*/
         return true;
     }
 
-    private void changeLogLevel(LogLevel logLevel, String resource) {
+    private void changeLogLevel(String pluginKey,LogLevel logLevel, String resource) {
         try {
             //String name = resource.split(" - ")[0];
            // String type = resource.split(" - ")[1];
@@ -165,7 +201,8 @@ public class LogToolsFragment extends Fragment {
            //     logTool.setLogLevel(addon, logLevel);
            // } else // por ahora no tengo como detectar si es un plug in o no.if (type.equals("Plugin"))
              //{
-                Plugins plugin = Plugins.getByKey("Bitcoin Crypto Network");
+                //Plugins plugin = Plugins.getByKey("Bitcoin Crypto Network");
+            Plugins plugin = Plugins.getByKey(pluginKey);
                 //logTool.setLogLevel(plugin, logLevel);
             /**
              * Now I must look in pluginClasses map the match of the selected class to pass the full path
@@ -239,10 +276,6 @@ public class LogToolsFragment extends Fragment {
                     log.type=Loggers.TYPE_PLUGIN;
                     log.picture="plugin";
                     lstLoggers.add(log);
-                    /**
-                     * I insert the modified class in a new map with the plug in and the classes.
-                     */
-                    //newList.add(classes);
                 }
 
             }
@@ -272,10 +305,6 @@ public class LogToolsFragment extends Fragment {
                     lstLoggers.add(log);
                 }
 
-                //listView.setAdapter(adapter);
-
-                //registerForContextMenu(listView)
-
 
             }
 
@@ -304,10 +333,6 @@ public class LogToolsFragment extends Fragment {
                 showMessage("LogTools Fragment onCreateView Exception - " + e.getMessage());
                 e.printStackTrace();
             }
-        /*} catch (Exception e) {
-            showMessage("LogTools Fragment onCreateView Exception - " + e.getMessage());
-            e.printStackTrace();
-        }*/
         registerForContextMenu(gridView);
         return rootView;
 
@@ -389,7 +414,10 @@ public class LogToolsFragment extends Fragment {
                     }
                 });
                 */
-                holder.companyTextView = (TextView) convertView.findViewById(R.id.company_text_view);
+                TextView textView =(TextView) convertView.findViewById(R.id.company_text_view);
+                Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
+                textView.setTypeface(tf);
+                holder.companyTextView = textView;
 
 
                 convertView.setTag(holder);
