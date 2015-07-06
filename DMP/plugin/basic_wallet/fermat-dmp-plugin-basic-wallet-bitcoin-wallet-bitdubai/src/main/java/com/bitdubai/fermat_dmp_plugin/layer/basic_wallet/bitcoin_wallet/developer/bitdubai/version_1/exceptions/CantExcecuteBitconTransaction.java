@@ -1,20 +1,11 @@
-package com.bitdubai.fermat_dmp_plugin.layer.middleware.app_runtime.developer.bitdubai.version_1.exceptions;
+package com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.exceptions;
 
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.exceptions.AppRuntimeExceptions;
-
+import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by natalia on 01/07/15.
+ * Created by natalia on 06/07/15.
  */
-public class CantFactoryReset extends AppRuntimeExceptions {
-
-    /**
-     *
-     */
-    private static final long serialVersionUID = 4841032427648911456L;
-
-    public static final String DEFAULT_MESSAGE = "CAN'T LOAD APP STRUCTURE";
-
+public class CantExcecuteBitconTransaction extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -23,12 +14,7 @@ public class CantFactoryReset extends AppRuntimeExceptions {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-
-
-    public CantFactoryReset(final String message, final Exception cause, final String context, final String possibleReason) {
+    public CantExcecuteBitconTransaction(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
-
-
-
 }
