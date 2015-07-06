@@ -52,7 +52,7 @@ import java.util.regex.Pattern;
  *
  * @version 1.0
  */
-public class CloudServerCommunicationPluginRoot implements Service, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem,Plugin {
+public class CloudServerCommunicationPluginRoot implements Service, DealsWithEvents,DealsWithLogger, LogManagerForDevelopers, DealsWithErrors, DealsWithPluginFileSystem,Plugin {
 
     /**
      * Represents the numbers of Thread that have the pool

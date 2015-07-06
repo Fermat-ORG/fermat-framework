@@ -96,7 +96,7 @@ public class GetBalanceTest extends TestCase {
     public void testGetBalance_CantCalculateBalanceException() throws Exception {
         doReturn(bitcoinWalletWallet).when(bitcoinWalletManager).loadWallet(any(UUID.class));
         doThrow(new CantCalculateBalanceException("gasdil", null, null, null))
-        .when(bitcoinWalletWallet).getBalance();
+        .when(bitcoinWalletWallet).getAvailableBalance();
 
         nicheWalletTypeCryptoWallet.getBalance(walletId);
     }

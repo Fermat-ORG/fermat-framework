@@ -1,6 +1,6 @@
-package unit.com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.WalletAddressBookCryptoModulePluginRoot;
+package test.com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.WalletContactsMiddlewarePluginRoot;
 
-import com.bitdubai.fermat_cry_plugin.layer.crypto_module.wallet_address_book.developer.bitdubai.version_1.WalletAddressBookCryptoModulePluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_contacts.developer.bitdubai.version_1.WalletContactsMiddlewarePluginRoot;
 
 import org.junit.Test;
 
@@ -9,10 +9,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertTrue;
+import static junit.framework.TestCase.assertTrue;
 
 /**
- * Created by rodrigo on 2015.07.04..
+ * Created by rodrigo on 2015.07.07..
  */
 public class getClassesFullPathTest {
     final char DOT = '.';
@@ -23,14 +23,11 @@ public class getClassesFullPathTest {
     @Test
     public void generateClassesTree() throws ClassNotFoundException {
 
-        String scannedPackage = WalletAddressBookCryptoModulePluginRoot.class.getPackage().getName();
-        List<Class<?>> classes = find(WalletAddressBookCryptoModulePluginRoot.class.getPackage().getName());
-        WalletAddressBookCryptoModulePluginRoot root = new WalletAddressBookCryptoModulePluginRoot();
+        String scannedPackage = WalletContactsMiddlewarePluginRoot.class.getPackage().getName();
+        List<Class<?>> classes = find(WalletContactsMiddlewarePluginRoot.class.getPackage().getName());
+        WalletContactsMiddlewarePluginRoot root = new WalletContactsMiddlewarePluginRoot();
 
 
-        /**
-         * search all classes to validate they exists.
-         */
         for (String myClass : root.getClassesFullPath()) {
             /**
              * True if it exists
