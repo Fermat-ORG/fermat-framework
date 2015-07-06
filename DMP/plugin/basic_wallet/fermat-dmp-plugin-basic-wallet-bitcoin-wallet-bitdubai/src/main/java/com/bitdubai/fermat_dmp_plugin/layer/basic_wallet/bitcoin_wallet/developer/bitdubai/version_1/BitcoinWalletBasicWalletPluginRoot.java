@@ -14,7 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantCreateWalletException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantInitializeBitcoinWalletBasicException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantLoadWalletException;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWallet;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
@@ -305,7 +305,7 @@ public class BitcoinWalletBasicWalletPluginRoot implements BitcoinWalletManager,
 
 
     @Override
-    public BitcoinWallet loadWallet(UUID walletId) throws CantLoadWalletException {
+    public BitcoinWalletWallet loadWallet(UUID walletId) throws CantLoadWalletException {
 
         BitcoinWalletBasicWallet bitcoinWallet = new BitcoinWalletBasicWallet(this.pluginId);
         bitcoinWallet.setErrorManager(this.errorManager);

@@ -13,7 +13,7 @@ import java.util.UUID;
 /**
  * Created by eze on 2015.06.17..
  */
-public interface BitcoinWallet {
+public interface BitcoinWalletWallet {
 
     /*
     * Get wallet Id
@@ -24,13 +24,18 @@ public interface BitcoinWallet {
      * Get the balance of the wallet, the result represents the
      * amount of satoshis the user has.
     */
+
+    //TODO: NATALIA este metodo pasa a la interfaz Wallet Balance
     public long getBalance() throws CantCalculateBalanceException;
 
-    public void debit(com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.BitcoinTransaction cryptoTransaction) throws CantRegisterDebitDebitException;
+    //TODO: NATALIA este metodo pasa a la interfaz Wallet Balance
+    public void debit(BitcoinWalletTransactionRecord cryptoTransaction) throws CantRegisterDebitDebitException;
 
-    public void credit(com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.BitcoinTransaction cryptoTransaction) throws CantRegisterCreditException;
+    //TODO: NATALIA este metodo pasa a la interfaz Wallet Balance
+    public void credit(BitcoinWalletTransactionRecord cryptoTransaction) throws CantRegisterCreditException;
 
-    public List<com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.BitcoinTransaction> getTransactions(int max, int offset) throws CantGetTransactionsException;
+    public List<BitcoinWalletTransactionRecord> getTransactions(int max, int offset) throws CantGetTransactionsException;
 
+    //TODO: NATALIA este metodo tiene que estar en BitcoinWalletTransactionRecord
     public void setDescription(UUID transactionID, String memo) throws CabtStoreMemoException, CantFindTransactionException;
 }

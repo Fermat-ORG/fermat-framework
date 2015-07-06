@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet;
+package com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionState;
@@ -9,7 +9,7 @@ import java.util.UUID;
 /**
  * Created by eze on 2015.06.17..
  */
-public interface BitcoinTransaction {
+public interface BitcoinWalletTransactionRecord {
 
     public CryptoAddress getAddressFrom();
 

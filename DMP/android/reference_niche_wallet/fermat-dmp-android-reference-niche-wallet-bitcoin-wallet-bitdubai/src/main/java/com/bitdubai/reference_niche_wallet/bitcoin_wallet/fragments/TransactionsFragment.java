@@ -13,11 +13,10 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.BitcoinTransaction;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetTransactionsException;
@@ -157,8 +156,8 @@ public class TransactionsFragment extends Fragment {
         if(lstTransactions.isEmpty())
             //Toast.makeText(getActivity(),"No transactions",Toast.LENGTH_SHORT).show();
             try {
-                List<BitcoinTransaction> lst =cryptoWallet.getTransactions(cantTransactions, pointerOffset, wallet_id);
-                for(BitcoinTransaction transaction: lst){
+                List<BitcoinWalletTransactionRecord> lst =cryptoWallet.getTransactions(cantTransactions, pointerOffset, wallet_id);
+                for(BitcoinWalletTransactionRecord transaction: lst){
                     lstTransactions.add(0, new Transactions(transaction.getAddressFrom().getAddress().toString(), String.valueOf(transaction.getTimestamp()), String.valueOf(transaction.getAmount()), transaction.getMemo(), transaction.getType().toString()));
                 }
 
@@ -173,8 +172,8 @@ public class TransactionsFragment extends Fragment {
             }
         else{
             try {
-                List<BitcoinTransaction> lst =cryptoWallet.getTransactions(cantTransactions,pointerOffset, wallet_id);
-                for(BitcoinTransaction transaction: lst){
+                List<BitcoinWalletTransactionRecord> lst =cryptoWallet.getTransactions(cantTransactions,pointerOffset, wallet_id);
+                for(BitcoinWalletTransactionRecord transaction: lst){
                     lstTransactions.add(0, new Transactions(transaction.getAddressFrom().getAddress().toString(), String.valueOf(transaction.getTimestamp()), String.valueOf(transaction.getAmount()), transaction.getMemo(), transaction.getType().toString()));
                 }
 
