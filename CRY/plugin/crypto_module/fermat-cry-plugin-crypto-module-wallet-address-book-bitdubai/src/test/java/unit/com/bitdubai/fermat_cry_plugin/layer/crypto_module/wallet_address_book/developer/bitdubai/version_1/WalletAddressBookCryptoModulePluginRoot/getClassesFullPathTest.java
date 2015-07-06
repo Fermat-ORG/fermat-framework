@@ -28,7 +28,9 @@ public class getClassesFullPathTest {
         WalletAddressBookCryptoModulePluginRoot root = new WalletAddressBookCryptoModulePluginRoot();
 
 
-
+        /**
+         * search all classes to validate they exists.
+         */
         for (String myClass : root.getClassesFullPath()) {
             /**
              * True if it exists
