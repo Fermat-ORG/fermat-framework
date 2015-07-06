@@ -9,7 +9,7 @@ public enum CryptoStatus {
     PENDING_SUBMIT ("PSB"),
     ON_CRYPTO_NETWORK ("OCN"),
     ON_BLOCKCHAIN ("OBC"),
-    IRREVERSABLE ("IRR"),
+    IRREVERSIBLE ("IRR"),
     REVERSED ("RVS");
 
     private final String code;
@@ -26,7 +26,7 @@ public enum CryptoStatus {
             case "PSB": return CryptoStatus.PENDING_SUBMIT;
             case "OCN": return CryptoStatus.ON_CRYPTO_NETWORK;
             case "OBC": return CryptoStatus.ON_BLOCKCHAIN;
-            case "IRR": return CryptoStatus.IRREVERSABLE;
+            case "IRR": return CryptoStatus.IRREVERSIBLE;
             case "RVS": return CryptoStatus.REVERSED;
         }
 

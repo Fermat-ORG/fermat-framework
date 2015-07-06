@@ -172,7 +172,7 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
                 eventManager.raiseEvent(new IncomingCryptoReceivedEvent(EventType.INCOMING_CRYPTO_RECEIVED));
             }
 
-            if (cryptoStatus == CryptoStatus.IRREVERSABLE)
+            if (cryptoStatus == CryptoStatus.IRREVERSIBLE)
                 eventManager.raiseEvent(new IncomingCryptoReceptionConfirmedEvent(EventType.INCOMING_CRYPTO_RECEPTION_CONFIRMED));
 
 

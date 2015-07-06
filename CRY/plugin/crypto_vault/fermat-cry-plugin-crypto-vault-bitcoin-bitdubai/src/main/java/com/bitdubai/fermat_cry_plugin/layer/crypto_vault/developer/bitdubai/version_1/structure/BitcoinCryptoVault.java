@@ -417,6 +417,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
              * I will persist it to inform it when the confidence level changes
              */
 
+
             /**
              * at this point the transaction is already created and in the network, if there are erros in any other plug in, I can't roll back anything.
              * I will deal with any DB error later when I control the transactions.
@@ -429,9 +430,8 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
             throw new CouldNotSendMoneyException("An error occured waiting for confirmation from the Bitcoin network.", e, null, "No peers connected at this time.");
         } catch (ExecutionException e) {
             throw new CouldNotSendMoneyException("Unknown error trying to send money", e, null, null);
-
-
         }
+
 
         /**
          * returns the created transaction id
