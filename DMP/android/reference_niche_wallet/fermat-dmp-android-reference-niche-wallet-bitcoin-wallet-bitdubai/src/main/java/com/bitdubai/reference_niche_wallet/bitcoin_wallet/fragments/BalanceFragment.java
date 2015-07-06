@@ -111,13 +111,21 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
         textViewBalance.setTypeface(tf);
         textViewBalance.setText(formatBalanceString());
 
+        textViewBalance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showBalanceBTC = !showBalanceBTC;
+                refreshBalance();
+            }
+        });
+
         swipeLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_container);
         swipeLayout.setOnRefreshListener(this);
 
-        final Button b = (Button) rootView.findViewById(R.id.changeFormatBtn);
-        b.setTypeface(tf);
+        //final Button b = (Button) rootView.findViewById(R.id.changeFormatBtn);
+        //b.setTypeface(tf);
 
-        b.setOnClickListener(new View.OnClickListener() {
+        /*b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (showBalanceBTC)
@@ -129,7 +137,7 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 refreshBalance();
             }
         });
-
+        */
         return rootView;
     }
 
