@@ -86,7 +86,7 @@ public class IncomingCryptoRegistry implements DealsWithErrors, DealsWithPluginD
         CryptoTransaction c = new CryptoTransaction("random",
                 new CryptoAddress("addFrom", CryptoCurrency.BITCOIN),
                 new CryptoAddress("addTo", CryptoCurrency.BITCOIN),
-                CryptoCurrency.BITCOIN, 1, CryptoStatus.IRREVERSABLE
+                CryptoCurrency.BITCOIN, 1, CryptoStatus.IRREVERSIBLE
         );
         /*
         Campos del BitcoinWalletTransactionRecord
