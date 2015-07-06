@@ -9,6 +9,7 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.internal.widget.AdapterViewCompat;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -120,10 +121,7 @@ public class LogToolsFragment extends Fragment {
                                     ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
 
-        if (v instanceof GridView) {
-            GridView gv = (GridView) v;
-
-        }
+        GridView gv = (GridView) v;
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
 
         //String selectedWord = ((TextView) info.targetView).getText().toString();
@@ -133,7 +131,7 @@ public class LogToolsFragment extends Fragment {
         menu.add(5,Loggers.LOGGER_LEVEL_MINIMAL_LOGGING,1,LogLevel.MINIMAL_LOGGING.toString());
         menu.add(5,Loggers.LOGGER_LEVEL_MODERATE_LOGGING,1,LogLevel.MODERATE_LOGGING.toString());
         menu.add(5,Loggers.LOGGER_LEVEL_AGGRESSIVE_LOGGING,1,LogLevel.AGGRESSIVE_LOGGING.toString());
-
+        int position = info.position;
         /*if(!(position==0 || position==2))
         {
             menu.close();
@@ -332,14 +330,13 @@ public class LogToolsFragment extends Fragment {
 
 
 
-            AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.grid_items, lstLoggersToShow);
+            AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.shell_wallet_desktop_front_grid_item, lstLoggersToShow);
             _adpatrer.notifyDataSetChanged();
             gridView.setAdapter(_adpatrer);
         }catch (Exception e){
                 showMessage("LogTools Fragment onCreateView Exception - " + e.getMessage());
                 e.printStackTrace();
             }
-
         registerForContextMenu(gridView);
         return rootView;
 
@@ -378,7 +375,7 @@ public class LogToolsFragment extends Fragment {
             ViewHolder holder;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.grid_items, parent, false);
+                convertView = inflater.inflate(R.layout.shell_wallet_desktop_front_grid_item, parent, false);
 
 
 
@@ -412,28 +409,16 @@ public class LogToolsFragment extends Fragment {
                         FT.commit();
                     }
                 });
-                /*holder.imageView.setOnLongClickListener(new View.OnLongClickListener() {
+                holder.imageView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View view) {
                         Toast.makeText(getActivity(),"tocando",Toast.LENGTH_SHORT).show();
                         //getActivity().openContextMenu(view);
-                        PopupMenu popupMenu = new PopupMenu(getActivity(), view);
-                        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                            @Override
-                            public boolean onMenuItemClick(MenuItem menuItem) {
-                                Toast.makeText(getActivity(),"Hola jorge",Toast.LENGTH_SHORT).show();
-
-                                return false;
-                            }
-                        });
-                        popupMenu.inflate(R.menu.popup_menu);
-                        popupMenu.show();
-
                         return true;
                     }
                 });
-                */
-                //registerForContextMenu(holder.imageView );
+
+                registerForContextMenu(holder.imageView );
                 TextView textView =(TextView) convertView.findViewById(R.id.company_text_view);
                 Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
                 textView.setTypeface(tf);
@@ -463,14 +448,7 @@ public class LogToolsFragment extends Fragment {
                     holder.imageView.setTag("CPWWRWAKAV1M|3");
                     break;
             }
-            holder.btnLogger= (ImageView) convertView.findViewById(R.id.imageView_logger);
-            holder.btnLogger.setImageResource(R.drawable.logger_button);
-            holder.btnLogger.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    Toast.makeText(getActivity(),"Soy una estrella feliz",Toast.LENGTH_SHORT).show();
-                }
-            });
+
 
             return convertView;
         }
@@ -485,7 +463,6 @@ public class LogToolsFragment extends Fragment {
 
         public ImageView imageView;
         public TextView companyTextView;
-        public ImageView btnLogger;
 
 
     }
