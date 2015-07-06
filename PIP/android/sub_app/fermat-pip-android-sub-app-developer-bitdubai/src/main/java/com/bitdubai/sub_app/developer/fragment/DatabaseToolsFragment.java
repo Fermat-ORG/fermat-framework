@@ -6,6 +6,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Configuration;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -90,29 +91,8 @@ public class DatabaseToolsFragment extends Fragment{
         }
 
 
-
-        //setStatusBarColor();
-
     }
 
-    /*@TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void setStatusBarColor(){
-        try {
-
-            Window window = getActivity().getWindow();
-
-            // clear FLAG_TRANSLUCENT_STATUS flag:
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
-            // add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-
-            // finally change the color
-            window.setStatusBarColor(getActivity().getResources().getColor(R.color.wallet_factory_orange ));
-        }catch (Exception e){
-            Log.d("DatabaseToolsFragment","Versión del sdk no compatible con el cambio de color del status bar");
-        }
-    }*/
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -121,8 +101,6 @@ public class DatabaseToolsFragment extends Fragment{
         rootView.setTag(1);
         gridView=(GridView) rootView.findViewById(R.id.gridView);
         try {
-            // Get ListView object from xml
-            //final ListView listView = (ListView) rootView.findViewById(R.id.lista1);
 
             List<Plugins> plugins = databaseTools.getAvailablePluginList();
             List<Addons> addons = databaseTools.getAvailableAddonList();
@@ -136,7 +114,6 @@ public class DatabaseToolsFragment extends Fragment{
 
                     item.picture = "plugin";
                     item.resource = plugins.get(i).getKey();
-                    //item.developer = plugins.get(i).getDeveloper().toString();
                     item.type=Resource.TYPE_PLUGIN;
                     mlist.add(item);
                 //}
@@ -146,7 +123,6 @@ public class DatabaseToolsFragment extends Fragment{
 
                 item.picture = "addon";
                 item.resource = addons.get(i).getKey();
-                //item.developer = plugins.get(i).getDeveloper().toString();
                 item.type=Resource.TYPE_ADDON;
                 mlist.add(item);
                 //}
@@ -157,10 +133,9 @@ public class DatabaseToolsFragment extends Fragment{
             if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
                 gridView.setNumColumns(6);
             } else {
-                gridView.setNumColumns(4);
+                gridView.setNumColumns(3);
             }
             //@SuppressWarnings("unchecked")
-            //ArrayList<App> list = (ArrayList<App>) getArguments().get("list");
             AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.shell_wallet_desktop_front_grid_item, mlist);
             _adpatrer.notifyDataSetChanged();
             gridView.setAdapter(_adpatrer);
@@ -224,7 +199,6 @@ public class DatabaseToolsFragment extends Fragment{
                     public void onClick(View view) {
 
                         Resource item=(Resource) gridView.getItemAtPosition(position);
-                        Toast.makeText(getActivity(),item.resource,Toast.LENGTH_SHORT).show();
                         DatabaseToolsDatabaseListFragment databaseToolsDatabaseListFragment = new DatabaseToolsDatabaseListFragment();
 
                         databaseToolsDatabaseListFragment.setResource(item);
@@ -234,11 +208,15 @@ public class DatabaseToolsFragment extends Fragment{
 
                         //FT.add(databaseToolsDatabaseListFragment, TAG_DATABASE_TOOLS_FRAGMENT);
                         FT.replace(R.id.hola, databaseToolsDatabaseListFragment);
-
+                        FT.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                         FT.commit();
                     }
                 });
-                holder.companyTextView = (TextView) convertView.findViewById(R.id.company_text_view);
+
+                TextView textView =(TextView) convertView.findViewById(R.id.company_text_view);
+                Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
+                textView.setTypeface(tf);
+                holder.companyTextView = textView;
 
 
                 convertView.setTag(holder);
@@ -265,10 +243,6 @@ public class DatabaseToolsFragment extends Fragment{
                     break;
             }
 
-            Window window = getActivity().getWindow();
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-//            window.setStatusBarColor(getActivity().getResources().getColor(R.color.material_blue_grey_800));
 
 
             return convertView;

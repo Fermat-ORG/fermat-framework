@@ -41,6 +41,8 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventMan
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_api.layer.pip_user.device_user.DealsWithDeviceUsers;
+import com.bitdubai.fermat_api.layer.pip_user.device_user.DeviceUserManager;
 import com.bitdubai.fermat_api.layer.pip_user.extra_user.DealsWithExtraUsers;
 import com.bitdubai.fermat_api.layer.pip_user.extra_user.ExtraUserManager;
 import com.bitdubai.fermat_core.layer.cry_crypto_router.CryptoRouterLayer;
@@ -823,6 +825,9 @@ public class Platform  {
             if (plugin instanceof DealsWithCryptoVault)
                 ((DealsWithCryptoVault) plugin).setCryptoVaultManager((CryptoVaultManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT));
 
+            if (plugin instanceof DealsWithDeviceUsers)
+                ((DealsWithDeviceUsers) plugin).setDeviceUserManager((DeviceUserManager) corePlatformContext.getAddon(Addons.DEVICE_USER));
+
             if (plugin instanceof DealsWithErrors)
                 ((DealsWithErrors) plugin).setErrorManager(errorManager);
 
@@ -833,7 +838,7 @@ public class Platform  {
                 ((DealsWithExtraUsers) plugin).setExtraUserManager((ExtraUserManager) corePlatformContext.getAddon(Addons.EXTRA_USER));
 
             if (plugin instanceof DealsWithLogger)
-                ((DealsWithLogger) plugin).setLogManager(LogLevel.NOT_LOGGING, loggerSystemOs.getLoggerManager());
+                ((DealsWithLogger) plugin).setLogManager(loggerSystemOs.getLoggerManager());
 
             if (plugin instanceof DealsWithNicheWalletTypeCryptoWallet)
                 ((DealsWithNicheWalletTypeCryptoWallet) plugin).setNicheWalletTypeCryptoWalletManager((CryptoWalletManager) corePlatformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE));

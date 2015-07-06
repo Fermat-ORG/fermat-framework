@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
@@ -8,6 +9,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
+import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventType;
@@ -18,6 +20,7 @@ import com.bitdubai.fermat_cry_api.layer.definition.DepthInBlocksThreshold;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantCalculateTransactionConfidenceException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantExecuteQueryException;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.UnexpectedResultReturnedFromDatabaseException;
 
 import org.bitcoinj.core.AbstractWalletEventListener;
 import org.bitcoinj.core.Block;
@@ -82,13 +85,11 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
 
     /**
      * DealsWithLogger interface implementation
-     * @param logLevel
      * @param logManager
      */
     @Override
-    public void setLogManager(LogLevel logLevel, LogManager logManager) {
+    public void setLogManager(LogManager logManager) {
         this.logManager = logManager;
-        this.logLevel = logLevel;
     }
 
     /**
@@ -106,7 +107,7 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
 
     @Override
     public void onCoinsReceived(Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance) {
-        System.out.println("CryptoVault information: Ney money received!!! Incoming transaction with " + tx.getValueSentToMe(wallet).getValue() + ". New balance: " + newBalance.getValue());
+//        System.out.println("CryptoVault information: Ney money received!!! Incoming transaction with " + tx.getValueSentToMe(wallet).getValue() + ". New balance: " + newBalance.getValue());
         /**
          * I save this transaction in the database
          */
@@ -123,16 +124,16 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
             try {
                 cryptoStatus = transactionConfidenceCalculator.getCryptoStatus();
             } catch (CantCalculateTransactionConfidenceException e) {
-                cryptoStatus = CryptoStatus.IDENTIFIED;
+                cryptoStatus = CryptoStatus.ON_CRYPTO_NETWORK;
             }
 
             dbActions.updateCryptoTransactionStatus(tx.getHashAsString(), cryptoStatus);
         } catch (CantExecuteQueryException e) {
-            //todo better handle this
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantLoadTableToMemoryException e) {
-            //todo better handle this
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (UnexpectedResultReturnedFromDatabaseException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
 
     }
@@ -145,14 +146,13 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
     @Override
     public void onTransactionConfidenceChanged(Wallet wallet, Transaction tx) {
         //logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(fullPath), "Transaction confidence change detected!", "Transaction confidence changed. Transaction: " + tx , "Transaction confidence changed. Transaction: " + tx);
-        System.out.println("Transaction confidence change. " + tx.toString());
+        //System.out.println("Transaction confidence change. " + tx.toString());
         TransactionConfidenceCalculator transactionConfidenceCalculator = new TransactionConfidenceCalculator(tx, wallet);
         CryptoStatus cryptoStatus;
         try {
             cryptoStatus = transactionConfidenceCalculator.getCryptoStatus();
         } catch (CantCalculateTransactionConfidenceException e) {
-            //todo need to check this, because the transaction doesn't seems to change the confidence from IDENTIFIED.
-            cryptoStatus = CryptoStatus.IDENTIFIED;
+            cryptoStatus = CryptoStatus.ON_CRYPTO_NETWORK;
         }
 
         try {
@@ -164,12 +164,17 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
             /**
              * now I raise the event
              */
-            //if (cryptoStatus == CryptoStatus.RECEIVED) {
-            //    eventManager.raiseEvent(new IncomingCryptoReceivedEvent(EventType.INCOMING_CRYPTO_RECEIVED));
-            //}
+            if (cryptoStatus == CryptoStatus.ON_CRYPTO_NETWORK) {
+                eventManager.raiseEvent(new IncomingCryptoReceivedEvent(EventType.INCOMING_CRYPTO_IDENTIFIED));
+            }
 
-            if (cryptoStatus == CryptoStatus.CONFIRMED)
+            if (cryptoStatus == CryptoStatus.ON_BLOCKCHAIN) {
+                eventManager.raiseEvent(new IncomingCryptoReceivedEvent(EventType.INCOMING_CRYPTO_RECEIVED));
+            }
+
+            if (cryptoStatus == CryptoStatus.IRREVERSABLE)
                 eventManager.raiseEvent(new IncomingCryptoReceptionConfirmedEvent(EventType.INCOMING_CRYPTO_RECEPTION_CONFIRMED));
+
 
             if (cryptoStatus == CryptoStatus.REVERSED)
                 eventManager.raiseEvent(new IncomingCryptoReversedEvent(EventType.INCOMING_CRYPTO_REVERSED));
@@ -177,7 +182,9 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
 
 
         } catch (CantExecuteQueryException e) {
-            System.err.println("CryptoVault Error: new cryptoStatus " + cryptoStatus.getCode() + " could not be saved for transaction " + tx.getHash().toString());
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (UnexpectedResultReturnedFromDatabaseException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
 
     }

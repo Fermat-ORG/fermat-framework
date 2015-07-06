@@ -12,6 +12,6 @@ package com.bitdubai.fermat_api.layer.osa_android.logger_system;
  */
 public interface DealsWithLogger {
 
-    void setLogManager(LogLevel logLevel, LogManager logManager);
+    void setLogManager(LogManager logManager);
 
 }

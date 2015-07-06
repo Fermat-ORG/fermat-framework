@@ -1,0 +1,19 @@
+= Wallet Store
+
+== Wallet Store SubApp
+
+La sub app Wallet Store es la encargada de mostrarle al usuario las wallets que tiene disponibles para instalar. +
+También debería mostrar las que podría instalar si actualizara su versión de la plataforma. +
+La idea es que no se muestre el catálogo de todas las wallets que hay, sino que mostrmos un subconjunto de interés para el usuario. +
+
+Una forma inicial de determinar este conjunto es colocar las wallets más descargadas en la región del usuario, podemos añadir otros factores de filtros como edad, género, etc. +
+A medida que agregamos contactos a la wallet también podríamos hacer que los network services de la Wallet Store intercambien información para obtener más wallets en sus carálogos. +
+
+Sería interesante permitir al usuario buscar wallets que no están en el catálogo del dispositivo.
+
+== Wallet Store plugin - Module Layer
+
+
+== Wallet Store plugin - Middleware Layer
+
+Gran parte de este módulo consistirá en generar la información que se mostrará al usuario. Este plug-in tomará la información del catálogo del network service de la wallet store y aplicará los filtros necesarios. +

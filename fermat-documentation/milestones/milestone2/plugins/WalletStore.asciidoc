@@ -1,0 +1,23 @@
+= Wallet Store - Network Service Layer
+
+Este network service es un nodo de la DAPP Wallet Store. +
+Su misión es encontrar billeteras que no tenga registradas localmente para mostrar al usuario a través del Wallet Store (Sub App), también debe comunicar a otros nodos que posee una billetera nueva cuando el usuario publica una a través de la Sub App Wallet Publisher.
+
+Debemos definir la política de comunicación de este network service, es decir: 
+
+* ¿a quién le envía la información de una nueva wallet?
+* ¿cómo pide información de una wallet que no tiene en su catálogo?
+
+Dentro de la información relevante a las wallets debemos comunicar:
+
+* Id de la wallet en el Wallet Store
+* Nombre de la Wallet
+* Id y nombre del Desarrollador
+* Versión de la wallet
+
+Otros datos como calificación de la wallet hecha por usuarios de la red, o la información de si ya está instalada o no en la plataforma será consultado a otros plugins por el wallet store de middleware y no se almacenará en el catálogo.
+
+Debemos pensar cómo manejar las múltiples versiones de una wallet a nivel del catálogo. +
+La plataforma posee el código de las diferentes versiones de cada wallet. En principio podríamos permitir al usuario descargar la versión que prefiera. Para esto tendríamos que almacenar una lista de versiones en lugar de una sola versión-
+
+A futuro debemos incorporar que se coloque un campo que hable de la lisencia de la wallet (precio de descarga y/o uso)

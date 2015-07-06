@@ -67,7 +67,7 @@ public class TransactionConfidenceCalculator {
         try {
             dbHash = getTransactionHash();
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            throw new CantCalculateTransactionConfidenceException();
+            throw new CantCalculateTransactionConfidenceException("Error calculating the confidence of transaction.", cantLoadTableToMemory, null, "error in database plugin");
         }
 
         Sha256Hash txHash = new Sha256Hash(dbHash);
@@ -95,13 +95,13 @@ public class TransactionConfidenceCalculator {
                  * if the depth is one block, then the status is RECEIVED
                  */
                 if (height == 1)
-                    return CryptoStatus.RECEIVED;
+                    return CryptoStatus.ON_BLOCKCHAIN;
 
                 /**
                  * if the height is equal or exceeds the threshold defined in DepthInBlocksThreshold.DEPTH, then changes to CONFIRMED
                  */
                 if (height >= TARGET_DEPTH)
-                    return CryptoStatus.CONFIRMED;
+                    return CryptoStatus.IRREVERSABLE;
             case DEAD:
                 /**
                  * If DEAD, then it means the transaction won’t confirm unless there is another re-org, because some other transaction is spending one of its inputs.
@@ -114,14 +114,14 @@ public class TransactionConfidenceCalculator {
                  * being broadcast from time to time and is considered valid by the network.
                  * This is IDENTIFIED in the protocol.
                  */
-                return CryptoStatus.IDENTIFIED;
+                return CryptoStatus.ON_CRYPTO_NETWORK;
             case UNKNOWN:
                 /**
                  * UNKNOWN is the default state. I'm translating it to IDENTIFIED in the Transaction Protocol
                  */
-                return CryptoStatus.IDENTIFIED;
+                return CryptoStatus.ON_CRYPTO_NETWORK;
             default:
-                return CryptoStatus.IDENTIFIED;
+                return CryptoStatus.ON_CRYPTO_NETWORK;
         }
 
     }

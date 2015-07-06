@@ -403,12 +403,15 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
             runtimeTitleBar = new RuntimeTitleBar();
             runtimeTitleBar.setLabel("Fermat Bitcoin Wallet");
             runtimeActivity.setTitleBar(runtimeTitleBar);
-            //runtimeActivity.setColor("#8bba9e");
-            runtimeActivity.setColor("#d07b62");
+            runtimeActivity.setColor("#72af9c");
+            //runtimeActivity.setColor("#d07b62");
 
+            runtimeActivity.setStatusBarColor("#72af9c");
 
 
             runtimeTabStrip = new RuntimeTabStrip();
+
+            runtimeTabStrip.setTabsColor("#8bba9e");
 
             runtimeTab = new RuntimeTab();
             runtimeTab.setLabel("Balance");
@@ -488,7 +491,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
             //acá estoy seteando los colores y toda la vaina esa
             runtimeActivity= new RuntimeActivity();
             runtimeActivity.setType(Activities.CWP_SUP_APP_ALL_DEVELOPER);
-            runtimeActivity.setColor("#d07b62");
+            runtimeActivity.setColor("#b46a54");
             runtimeActivity.setStatusBarColor("#b46a54");
             runtimeWallet.addActivity(runtimeActivity);
             listActivities.put(Activities.CWP_SUP_APP_ALL_DEVELOPER, runtimeActivity);
