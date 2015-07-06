@@ -19,6 +19,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -57,6 +58,8 @@ public class LogToolsFragmentLevel2 extends Fragment {
 
     private ArrayListLoggers lstLoggers;
     private GridView gridView;
+
+    private int loggerLevel=1;
 
     public static LogToolsFragmentLevel2 newInstance(int position) {
         LogToolsFragmentLevel2 f = new LogToolsFragmentLevel2();
@@ -130,6 +133,8 @@ public class LogToolsFragmentLevel2 extends Fragment {
            //     logTool.setLogLevel(addon, logLevel);
            // } else // por ahora no tengo como detectar si es un plug in o no.if (type.equals("Plugin"))
              //{
+
+            //TODO ACA AGARRAR EL LEVEL 0 Y BUSCAR EL PLUGIN
                 Plugins plugin = Plugins.getByKey("Bitcoin Crypto Vault");
                 //logTool.setLogLevel(plugin, logLevel);
             /**
@@ -196,6 +201,7 @@ public class LogToolsFragmentLevel2 extends Fragment {
         return rootView;
     }
 
+
     //show alert
     private void showMessage(String text) {
         AlertDialog alertDialog = new AlertDialog.Builder(this.getActivity()).create();
@@ -208,6 +214,12 @@ public class LogToolsFragmentLevel2 extends Fragment {
         });
         //alertDialog.setIcon(R.drawable.icon);
         alertDialog.show();
+    }
+    public void setLoggerLevel(int level){
+        loggerLevel=level;
+    }
+    public int getLoggerLevel(){
+        return loggerLevel;
     }
 
     public void setLoggers(ArrayListLoggers lstLoggers){
@@ -249,7 +261,7 @@ public class LogToolsFragmentLevel2 extends Fragment {
 
                         //LogToolsFragmentLevel2 logToolsFragmentLevel2 = new LogToolsFragmentLevel2();
 
-                        setLoggers(lstLoggers.getListFromLevel(item, ArrayListLoggers.LEVEL_2));
+                        //setLoggers(lstLoggers.getListFromLevel(item, ArrayListLoggers.LEVEL_2));
                         //DatabaseToolsDatabaseListFragment databaseToolsDatabaseListFragment = new DatabaseToolsDatabaseListFragment();
 
                         //databaseToolsDatabaseListFragment.setResource(item);
@@ -266,7 +278,16 @@ public class LogToolsFragmentLevel2 extends Fragment {
                         // Reload current fragment
                         LogToolsFragmentLevel2 frg = null;
                         frg =(LogToolsFragmentLevel2) getFragmentManager().findFragmentByTag("fragmento2");
-                        frg.setLoggers(lstLoggers.getListFromLevel(item, ArrayListLoggers.LEVEL_2));
+
+                        if(loggerLevel==ArrayListLoggers.LEVEL_1){
+                            frg.setLoggers(lstLoggers.getListFromLevel(item, ArrayListLoggers.LEVEL_2));
+                            frg.setLoggerLevel(ArrayListLoggers.LEVEL_2);
+                        }else if(loggerLevel==ArrayListLoggers.LEVEL_2){
+                            frg.setLoggerLevel(ArrayListLoggers.LEVEL_3);
+                            frg.setLoggers(lstLoggers.getListFromLevel(item, ArrayListLoggers.LEVEL_3));
+
+                        }
+
                         final FragmentTransaction ft = getFragmentManager().beginTransaction();
                         ft.detach(frg);
                         ft.attach(frg);
@@ -282,7 +303,28 @@ public class LogToolsFragmentLevel2 extends Fragment {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            holder.companyTextView.setText(item.level1);
+            String stringToShowLevel="Nada cargado";
+            switch (loggerLevel){
+                case ArrayListLoggers.LEVEL_1:{
+                    //String[] level1_splitted=item.level1.split(".");
+                    //tringToShowLevel=level1_splitted[level1_splitted.length-1];
+                    //Toast.makeText(getActivity(),item.level1,Toast.LENGTH_SHORT);
+                    stringToShowLevel=item.level1;
+                    break;
+                }
+                case ArrayListLoggers.LEVEL_2:{
+                    stringToShowLevel=item.level2;
+                    break;
+                }
+                case ArrayListLoggers.LEVEL_3:{
+                    stringToShowLevel=item.level3;
+                    break;
+                }
+
+            }
+
+
+            holder.companyTextView.setText(stringToShowLevel);
             // holder.companyTextView.setTypeface(MyApplication.getDefaultTypeface());
 
 
@@ -304,6 +346,7 @@ public class LogToolsFragmentLevel2 extends Fragment {
 
             return convertView;
         }
+
 
     }
     /**
