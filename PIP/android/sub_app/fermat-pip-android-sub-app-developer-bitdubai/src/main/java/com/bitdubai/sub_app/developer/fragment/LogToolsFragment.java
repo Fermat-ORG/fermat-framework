@@ -295,7 +295,7 @@ public class LogToolsFragment extends Fragment {
                     //loading de loggers class
 
                     Loggers log = new Loggers();
-                    //log.level0 = classes.
+                    log.level0 = classes.getLevel0();
                     log.level1 = classes.getLevel1();
                     log.level2 = classes.getLevel2();
                     log.level3 = classes.getLevel3();
