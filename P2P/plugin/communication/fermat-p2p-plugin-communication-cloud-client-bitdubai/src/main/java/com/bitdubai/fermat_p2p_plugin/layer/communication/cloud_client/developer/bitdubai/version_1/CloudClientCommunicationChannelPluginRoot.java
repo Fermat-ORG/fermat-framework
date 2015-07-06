@@ -110,9 +110,9 @@ public class CloudClientCommunicationChannelPluginRoot implements CommunicationC
 	}
 
 	@Override
-	public void registerNetworkService(final NetworkServices networkService) {
+	public void registerNetworkService(final NetworkServices networkService, String networkServicePublicKey) {
 		try {
-			cloudClient.registerNetworkService(networkService);
+			cloudClient.registerNetworkService(networkService, networkServicePublicKey);
 		} catch (CloudCommunicationException e) {
 			System.out.println(errorManager.hashCode());
 		}

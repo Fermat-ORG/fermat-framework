@@ -8,6 +8,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.develope
 
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -55,7 +56,7 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
     /**
      * Represents the numbers of the port that the services is listening
      */
-    private static final int LISTENING_PORT = 8181;
+    private static final int LISTENING_PORT = 9090;
 
     /**
      * Represent the status of this service
@@ -112,13 +113,10 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
 
                 NetworkInterface networkInterface = interfaces.nextElement();
 
-                networkInterface.getName();
-
                 /**
                  * If not a loopback interfaces (127.0.0.1) and is active
                  */
                 if (!networkInterface.isLoopback() && networkInterface.isUp()){
-
 
                     /*
                      * Get his inet addresses
@@ -133,22 +131,20 @@ public class CloudServerCommunicationPluginRoot implements Service, DealsWithEve
                         /*
                          * Create a new key pair
                          */
-                        ECCKeyPair keyPair = null;
+                        ECCKeyPair keyPair = new ECCKeyPair();
 
                         /*
                          * Create the communication chanel address
                          */
                         CommunicationChannelAddress communicationChannelAddress = CommunicationChannelAddressFactory.constructCloudAddress(addresses.nextElement().getHostAddress(), CloudServerCommunicationPluginRoot.LISTENING_PORT);
 
-                        /*
-                         * Create the new cloud service manager
-                         */
-                        CloudServiceManager cloudServiceManager = new CloudServiceManager(communicationChannelAddress, executorService, keyPair);
+
+                        String name = networkInterface.getName();
 
                         /*
-                         * Put into the cache
+                         * Create the new cloud service manager and Put into the cache
                          */
-                        cloudServiceManagersCache.put(networkInterface.getName(), cloudServiceManager);
+                        cloudServiceManagersCache.put(name, new CloudServiceManager(communicationChannelAddress, executorService, keyPair));
 
                     }
 

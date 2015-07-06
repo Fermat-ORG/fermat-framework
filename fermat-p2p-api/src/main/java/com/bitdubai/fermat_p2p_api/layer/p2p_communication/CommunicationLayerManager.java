@@ -10,7 +10,7 @@ import java.util.Collection;
  */
 public interface CommunicationLayerManager {
     
-    public void registerNetworkService (NetworkServices networkService) throws CommunicationException;
+    public void registerNetworkService (NetworkServices networkService, String networkServicePublicKey) throws CommunicationException;
 
     public void unregisterNetworkService (NetworkServices networkService) throws CommunicationException;
 
