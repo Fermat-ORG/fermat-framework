@@ -265,8 +265,14 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
 
     @Override
     public void closeDatabase(){
-        if(database.isOpen())
+        if(isOpen())
             database.close();
+    }
+
+    public boolean isOpen(){
+        if(database == null)
+            return false;
+        return database.isOpen();
     }
 
     /**
