@@ -57,7 +57,6 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.Tab;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.TabStrip;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.TitleBar;
-import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.Wallet;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Fragments;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime.WalletRuntimeManager;
@@ -74,10 +73,10 @@ import com.bitdubai.reference_niche_wallet.age.kids.boys.fragments.ProfileCardFr
 import com.bitdubai.reference_niche_wallet.age.kids.boys.fragments.UsdBalanceFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.BalanceFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ContactsFragment;
+import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.SendContactsFragment;
 import com.bitdubai.sub_app.developer.fragment.DatabaseToolsFragment;
 import com.bitdubai.sub_app.developer.fragment.LogToolsFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ReceiveFragment;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.SendFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.TransactionsFragment;
 import com.bitdubai.sub_app.shop_manager.fragment.ShopDesktopFragment;
 import com.bitdubai.sub_app.wallet_manager.fragment.WalletDesktopFragment;
@@ -662,7 +661,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
 
             if (wallet.getType() == Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN)
             {
-                android.support.v4.app.Fragment currentFragment =  SendFragment.newInstance(0);
+                android.support.v4.app.Fragment currentFragment =  SendContactsFragment.newInstance(0);
                 currentFragment.onActivityResult(mRequestCode, mResultCode, mData);
             }
 
@@ -882,7 +881,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
                         bitcoinPlatform = new com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform();
                         bitcoinPlatform.setNicheWalletTypeCryptoWalletManager((CryptoWalletManager) platformContext.getPlugin(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE));
                         bitcoinPlatform.setErrorManager((ErrorManager) platformContext.getAddon(Addons.ERROR_MANAGER));
-                        currentFragment =  SendFragment.newInstance(0);
+                        currentFragment =  SendContactsFragment.newInstance(0);
                         break;
 
                     case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS:
