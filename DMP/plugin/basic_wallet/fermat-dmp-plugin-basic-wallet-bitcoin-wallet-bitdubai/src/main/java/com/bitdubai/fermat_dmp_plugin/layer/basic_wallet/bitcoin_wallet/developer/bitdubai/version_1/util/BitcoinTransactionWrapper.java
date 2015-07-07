@@ -12,6 +12,9 @@ import java.util.UUID;
  * Created by eze on 2015.06.25..
  */
 public class BitcoinTransactionWrapper implements BitcoinWalletTransactionRecord {
+
+    private UUID transactionId;
+
     private String transactionHash;
 
     private CryptoAddress addressFrom;
@@ -28,8 +31,6 @@ public class BitcoinTransactionWrapper implements BitcoinWalletTransactionRecord
 
     private String memo;
 
-    private UUID id;
-
     private BalanceType balanceType;
 
     @Override
@@ -40,6 +41,16 @@ public class BitcoinTransactionWrapper implements BitcoinWalletTransactionRecord
     @Override
     public void setAddressFrom(CryptoAddress addressFrom) {
         this.addressFrom = addressFrom;
+    }
+
+    @Override
+    public UUID getIdTransaction() {
+        return this.transactionId;
+    }
+
+    @Override
+    public void setIdTransaction(UUID id) {
+        this.transactionId = id;
     }
 
     @Override
@@ -63,24 +74,13 @@ public class BitcoinTransactionWrapper implements BitcoinWalletTransactionRecord
     }
 
     @Override
-    public UUID getIdTransaction(){
-        return this.id;
+    public BalanceType getBalanceType() {
+        return balanceType;
     }
 
     @Override
-    public void setIdTransaction(UUID id){
-        this.id = id;
-    }
-
-    @Override
-    public BalanceType getBalanceType(){
-        return this.balanceType;
-    }
-
-
-    @Override
-    public void setBalanceType(BalanceType type){
-        this.balanceType = balanceType;
+    public void setBalanceType(BalanceType type) {
+        this.balanceType = type;
     }
 
     @Override
@@ -93,6 +93,13 @@ public class BitcoinTransactionWrapper implements BitcoinWalletTransactionRecord
         this.type = type;
     }
 
+    public TransactionState getState() {
+        return state;
+    }
+
+    public void setState(TransactionState state) {
+        this.state = state;
+    }
 
     @Override
     public long getTimestamp() {

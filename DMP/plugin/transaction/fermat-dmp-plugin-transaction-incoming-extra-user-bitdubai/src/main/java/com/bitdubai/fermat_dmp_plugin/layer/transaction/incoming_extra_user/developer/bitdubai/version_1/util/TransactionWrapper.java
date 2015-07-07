@@ -16,6 +16,10 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
     /*
      * BitcoinWalletTransactionRecord Interface member variables
      */
+    private BalanceType balanceType;
+
+    private UUID id;
+
     private String transactionHash;
 
     private CryptoAddress addressFrom;
@@ -32,10 +36,6 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
 
     private String memo;
 
-    private UUID id;
-
-    private BalanceType balanceType;
-
     /*
      * BitcoinWalletTransactionRecord Interface method implementation
      */
@@ -47,6 +47,16 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
     @Override
     public void setAddressFrom(CryptoAddress addressFrom) {
         this.addressFrom = addressFrom;
+    }
+
+    @Override
+    public UUID getIdTransaction() {
+        return this.id;
+    }
+
+    @Override
+    public void setIdTransaction(UUID id) {
+        this.id = id;
     }
 
     @Override
@@ -70,6 +80,16 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
     }
 
     @Override
+    public BalanceType getBalanceType() {
+        return this.balanceType;
+    }
+
+    @Override
+    public void setBalanceType(BalanceType type) {
+        this.balanceType = type;
+    }
+
+    @Override
     public TransactionType getType() {
         return type;
     }
@@ -77,27 +97,6 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
     @Override
     public void setType(TransactionType type) {
         this.type = type;
-    }
-
-
-    @Override
-    public UUID getIdTransaction(){
-       return this.id;
-    }
-
-    @Override
-    public void setIdTransaction(UUID id){
-        this.id = id;
-    }
-
-    @Override
-    public BalanceType getBalanceType(){
-        return balanceType;
-    }
-
-    @Override
-    public void setBalanceType(BalanceType type){
-        this.balanceType = type;
     }
 
     @Override

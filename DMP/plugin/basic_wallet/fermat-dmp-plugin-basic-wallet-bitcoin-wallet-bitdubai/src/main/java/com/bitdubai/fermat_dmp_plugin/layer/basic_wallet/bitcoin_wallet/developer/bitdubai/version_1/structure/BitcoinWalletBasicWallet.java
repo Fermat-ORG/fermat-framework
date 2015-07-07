@@ -245,7 +245,7 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet,DealsWithEr
     @Override
     public UUID getWalletId() {
 
-       // return this.internalWalletId;
+        // return this.internalWalletId;
         return UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
 
     }
@@ -272,15 +272,15 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet,DealsWithEr
     }
 
     @Override
-    public BitcoinWalletBalance getAvailableBalance() throws CantCalculateBalanceException{
+    public BitcoinWalletBalance getAvailableBalance() {
 
         return new BitcoinWalletBasicWalletAvailableBalance(this.errorManager,this.pluginDatabaseSystem, this.database);
     }
 
 
     @Override
-    public BitcoinWalletBalance getBookBalance() throws CantCalculateBalanceException{
-        return new BitcoinWalletBasicWalletBookBalance(this.errorManager,this.pluginDatabaseSystem, this.database);
+    public BitcoinWalletBalance getBookBalance() {
+        return new BitcoinWalletBasicWalletBookBalance(this.errorManager, this.pluginDatabaseSystem, this.database);
     }
 
     /**
