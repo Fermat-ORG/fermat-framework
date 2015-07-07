@@ -258,8 +258,42 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
         }
     }
 
-    @Override
+    /*@Override
     public long getBalance(UUID walletId) throws CantGetBalanceException {
+        try {
+            BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletId);
+            try {
+                return bitcoinWalletWallet.getBalance();
+            } catch (CantCalculateBalanceException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantGetBalanceException(CantGetBalanceException.DEFAULT_MESSAGE, e);
+            }
+        } catch (CantLoadWalletException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetBalanceException(CantGetBalanceException.DEFAULT_MESSAGE, e);
+        }
+    }
+    */
+
+    // TODO:  ESTOS DOS METODOS SON LOS QUE NATALIA/EZE ME TIENEN QUE PASAR PARA YO HACER CORRER LA APP
+    @Override
+    public long getAvailableBalance(UUID walletId) throws CantGetBalanceException {
+        try {
+            BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletId);
+            try {
+                return bitcoinWalletWallet.getBalance();
+            } catch (CantCalculateBalanceException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantGetBalanceException(CantGetBalanceException.DEFAULT_MESSAGE, e);
+            }
+        } catch (CantLoadWalletException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetBalanceException(CantGetBalanceException.DEFAULT_MESSAGE, e);
+        }
+    }
+
+    @Override
+    public long getBookBalance(UUID walletId)  {
         try {
             BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletId);
             try {

@@ -472,12 +472,24 @@ public class LogToolsFragment extends Fragment {
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent) {
                     //Toast.makeText(getActivity(), "Soy una estrella feliz1", Toast.LENGTH_SHORT).show();
-                    String loggerText=holder.companyTextView.getText().toString();
+                    String loggerText = holder.companyTextView.getText().toString();
                     PopupMenu popupMenu = new PopupMenu(getActivity(), view);
                     popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         @Override
                         public boolean onMenuItemClick(MenuItem menuItem) {
-                            Toast.makeText(getActivity(),"Hola jorge",Toast.LENGTH_SHORT).show();
+                            int itemId = menuItem.getItemId();
+                            if (itemId == R.id.menu_no_logging) {
+                                //TODO: HAcer el cambio acá para que haga el changelevel
+
+                                //changeLogLevel();
+                                return true;
+                            } else if (itemId == R.id.menu_minimal) {
+                                return true;
+                            } else if (itemId == R.id.menu_moderate) {
+                                return true;
+                            } else if (itemId == R.id.menu_aggresive) {
+                                return true;
+                            }
 
                             return false;
                         }

@@ -38,7 +38,9 @@ public interface CryptoWallet {
     /**
      * Balance Fragment methods
      */
-    long getBalance(UUID walletId) throws CantGetBalanceException;
+    long getAvailableBalance(UUID walletId) throws CantGetBalanceException;
+
+    long getBookBalance(UUID walletId) ;
 
     /**
      * Transactions Fragment methods
