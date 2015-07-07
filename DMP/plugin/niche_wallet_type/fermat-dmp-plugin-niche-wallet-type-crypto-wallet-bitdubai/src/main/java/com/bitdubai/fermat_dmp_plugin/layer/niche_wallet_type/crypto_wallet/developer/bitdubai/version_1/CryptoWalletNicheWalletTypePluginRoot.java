@@ -98,6 +98,7 @@ public class CryptoWalletNicheWalletTypePluginRoot implements CryptoWalletManage
      * DealsWithWalletContacts Interface member variables.
      */
     WalletContactsManager walletContactsManager;
+    private UUID pluginId;
 
     /**
      * Plugin Interface member variables.
@@ -257,6 +258,6 @@ public class CryptoWalletNicheWalletTypePluginRoot implements CryptoWalletManage
 
     @Override
     public void setId(UUID pluginId) {
-        //this.pluginId = pluginId;
+        this.pluginId = pluginId;
     }
 }
