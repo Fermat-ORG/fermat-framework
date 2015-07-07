@@ -234,27 +234,6 @@ public class ApplicationSession extends android.support.multidex.MultiDexApplica
             s = new SpannableString(mTitle);
 
             switch (getWalletId()) {
-                case 1:
-
-                    color = "#FFC2F1";
-                    actionBar.setIcon(context.getDrawable(R.drawable.icono_piggy_pink));
-                    bg = context.getDrawable(R.drawable.wallet_wallpaper_pink);
-                    bg.setVisible(true, false);
-                    wallpaper = context.getDrawable(R.drawable.wallet_wallpaper_pink);
-                    abTitle.setTextColor(Color.BLACK);
-                    walletStyle = "Kids";
-                    break;
-
-                case 2:
-                    color = "#84DCF5";
-                    actionBar.setIcon(context.getDrawable(R.drawable.icono_piggy_yellow));
-                    bg = context.getDrawable(R.drawable.banner_kid_yellow_blue);
-                    bg.setVisible(true, false);
-                    wallpaper = context.getDrawable(R.drawable.wallet_wallpaper_yellow);
-
-                    abTitle.setTextColor(Color.BLACK);
-                    walletStyle = "Kids";
-                    break;
 
                 case 3:
                     color = "#F0E173";
@@ -326,24 +305,7 @@ public class ApplicationSession extends android.support.multidex.MultiDexApplica
                     walletStyle = "Club";
                     break;
 
-                case 11:
 
-                    color = "#DE186B";
-                    actionBar.setIcon(context.getDrawable(R.drawable.icono_club_2));
-                    abTitle.setTextColor(Color.WHITE);
-                    wallpaper = context.getDrawable(R.drawable.wallet_wallpaper_club_2);
-                    bg = context.getDrawable(R.drawable.banner_club_2);
-                    bg.setVisible(true, false);
-                    walletStyle = "Club";
-                    break;
-
-                case 12:
-
-                    //bg = context.getDrawable(R.drawable.banner_club_2);
-                    //bg.setVisible(true,false);
-                    //mTitle="Developer";
-                    //pTabs.setIndicatorColor(Color.GREEN);
-                    break;
             }
 
 

@@ -27,18 +27,7 @@ android {
     sourceSets {
         main {
             res.srcDirs = ['src/main/structured_res/app/shell/version_1',
-                           'src/main/structured_res/app/subapp/shop/version_1',
-                           'src/main/structured_res/app/subapp/shop_manager/version_1',
-                           'src/main/structured_res/app/subapp/wallet_factory/version_1',
-                           'src/main/structured_res/app/subapp/wallet_factory/version_2',
-                           'src/main/structured_res/app/subapp/wallet_store/version_1',
-                           'src/main/structured_res/app/subapp/publisher/version_1',
-                           'src/main/structured_res/app/subapp/wallet_manager/version_1',
-                           'src/main/structured_res/app/subapp/wallet_runtime/wallet_framework/version_1',
-                           'src/main/structured_res/app/subapp/wallet_runtime/version_1',
-                           'src/main/structured_res/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/teens/sub_segment/all/developer/bitdubai/version_1',
-                           'src/main/structured_res/app/subapp/wallet_runtime/wallet_segment/age/sub_segment/kids/sub_segment/all/developer/bitdubai/version_1',
-                           'src/main/res']
+                             'src/main/res']
         }
     }
     buildTypes {
@@ -70,7 +59,7 @@ dependencies {
     // DMP Projects (Wallets)
 
     compile project(':fermat-dmp-android-reference-niche-wallet-bitcoin-wallet-bitdubai')
-    compile project(':fermat-dmp-android-reference-niche-wallet-age-kids-boys-bitdubai')
+
 
     /*
 
@@ -95,10 +84,6 @@ dependencies {
     */
 
     compile project(':fermat-dmp-android-sub-app-wallet-manager-bitdubai')
-    compile project(':fermat-dmp-android-sub-app-wallet-factory-bitdubai')
-    compile project(':fermat-dmp-android-sub-app-wallet-store-bitdubai')
-    compile project(':fermat-dmp-android-sub-app-wallet-publisher-bitdubai')
-    compile project(':fermat-dmp-android-sub-app-shop-manager-bitdubai')
     compile project(':fermat-pip-android-sub-app-sub-app-manager-bitdubai')
 
 

@@ -33,9 +33,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_core.CorePlatformContext;
 import com.bitdubai.fermat_core.Platform;
 import com.bitdubai.fermat.R;
-import com.bitdubai.sub_app.wallet_factory.fragment.version_3.activity.FactoryActivity;
-import com.bitdubai.sub_app.wallet_publisher.activity.PublisherActivity;
-import com.bitdubai.sub_app.wallet_publisher.activity.ShopsActivity;
+
 
 
 import java.util.List;
@@ -271,76 +269,36 @@ public class NavigationDrawerFragment extends Fragment {
 
     private void selectItem(int position) {
 
-        try{
+        try {
 
 
-        mCurrentSelectedPosition = position;
-        if (mDrawerListView != null) {
-            mDrawerListView.setItemChecked(position, true);
-        }
-        if (mDrawerLayout != null) {
-            mDrawerLayout.closeDrawer(mFragmentContainerView);
-        }
-        if (mCallbacks != null) {
-            mCallbacks.onNavigationDrawerItemSelected(position);
-        }
-        if(ApplicationSession.getActivityId()=="DesktopActivity") {
-
-            //Factory projects
-            if (position == 3) {
-                Intent intent;
-                intent = new Intent(super.getActivity(), FactoryActivity.class);
-                startActivity(intent);
+            mCurrentSelectedPosition = position;
+            if (mDrawerListView != null) {
+                mDrawerListView.setItemChecked(position, true);
             }
-            //Shop MANAGER
-            if (position == 1) {
-
+            if (mDrawerLayout != null) {
+                mDrawerLayout.closeDrawer(mFragmentContainerView);
             }
-            //Publisher Wallets
-            if (position == 4){
-                Intent intent;
-                intent = new Intent(super.getActivity(), PublisherActivity.class);
-               startActivity(intent);
+            if (mCallbacks != null) {
+                mCallbacks.onNavigationDrawerItemSelected(position);
             }
-
-            //wallet store
-            if (position == 5){
-                AppRuntimeManager appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
-                appRuntimeMiddleware =  (AppRuntimeManager)platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
-                Intent intent;
-                appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_STORE_MAIN);
-                intent = new Intent(getActivity(), SubAppActivity.class);
-                intent.putExtra("executeStart","1");
-                startActivity(intent);
+            if (ApplicationSession.getActivityId() == "DesktopActivity") {
 
 
-            }
-
-        }else if(ApplicationSession.getActivityId()=="PublisherActivity") {
-            if (position == 1)
-            {
-                Intent intent;
-                intent = new Intent(super.getActivity(), ShopsActivity.class);
-                startActivity(intent);
-            }
-        }else {
-            if(ApplicationSession.getActivityId()=="FactoryActivity") {
-
-                if (position == 3) {
+                //wallet store
+                if (position == 5) {
+                    AppRuntimeManager appRuntimeMiddleware = (AppRuntimeManager) platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
+                    appRuntimeMiddleware = (AppRuntimeManager) platformContext.getPlugin(Plugins.BITDUBAI_APP_RUNTIME_MIDDLEWARE);
                     Intent intent;
-                    intent = new Intent(super.getActivity(), FactoryActivity.class);
+                    appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_STORE_MAIN);
+                    intent = new Intent(getActivity(), SubAppActivity.class);
+                    intent.putExtra("executeStart", "1");
                     startActivity(intent);
-                }
-            }else
-            {
-                if (position == 1) {
-                    Intent intent;
-                    //  intent = new Intent(super.getActivity(), ContactsActivity.class);
-                    //startActivity(intent);
-                }
-            }
 
-        }
+
+                }
+
+            }
         }
         catch (Exception e)
         {

@@ -11,15 +11,6 @@ import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSlidingTabStrip;
 
-import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.AvailableBalanceFragment;
-import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ChatOverTransactionFragment;
-import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ChatWithContactFragment;
-import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ContactsFragment;
-import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.DailyDiscountsFragment;
-import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ReceiveAllFragment;
-import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ReceiveFromNewContactFragment;
-import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.SendAllFragment;
-import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.SendToNewContactFragment;
 
 
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.App;
@@ -114,85 +105,9 @@ public class FragmentActivity  extends Activity {
                     Fragments type = fragment.getType();
                     switch (type) {
 
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS:
-                            if (savedInstanceState == null) {
-                                getFragmentManager().beginTransaction()
-                                        .add(R.id.container, new ContactsFragment())
-                                        .commit();
-                            }
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_CHAT:
-                            if (savedInstanceState == null) {
-                                getFragmentManager().beginTransaction()
-                                        .add(R.id.container, new ChatWithContactFragment())
-                                        .commit();
-                            }
-                            break;
-                        case CWP_WALLET_RUNTIME_ADULTS_ALL_AVAILABLE_BALANCE:
-                            if (savedInstanceState == null) {
-                                getFragmentManager().beginTransaction()
-                                        .add(R.id.container, new AvailableBalanceFragment())
-                                        .commit();
-                            }
-                            break;
-                        case  CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_NEW_SEND:
-                            if (savedInstanceState == null) {
-                                getFragmentManager().beginTransaction()
-                                        .add(R.id.container, new SendToNewContactFragment())
-                                        .commit();
-                            }
-                            break;
-                        case  CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_NEW_RECEIVE:
-                            if (savedInstanceState == null) {
-                                getFragmentManager().beginTransaction()
-                                        .add(R.id.container, new ReceiveFromNewContactFragment())
-                                        .commit();
-                            }
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_SEND :
-                            getFragmentManager().beginTransaction()
-                                    .add(R.id.container, new com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.SendToContactFragment())
-                                    .commit();
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CONTACTS_RECEIVE:
-                            getFragmentManager().beginTransaction()
-                                    .add(R.id.container, new com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ReceiveFromContactFragment())
-                                    .commit();
-                            break;
                         case CWP_SHOP_MANAGER_MAIN:
                             break;
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_DEBITS:
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNT_CREDITS:
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_ALL:
-                            break;
-                        case CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED:
-                            break;
-                        case CWP_WALLET_ADULTS_ALL_REQUEST_SEND:
-                            break;
-                        case CWP_WALLET_ADULTS_ALL_SEND_HISTORY:
-                            getFragmentManager().beginTransaction()
-                                    .add(R.id.container, new SendAllFragment())
-                                    .commit();
 
-                            break;
-                        case CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED_HISTORY:
-                            getFragmentManager().beginTransaction()
-                                    .add(R.id.container, new ReceiveAllFragment())
-                                    .commit();
-
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_CHAT_TRX:
-                            getFragmentManager().beginTransaction()
-                                    .add(R.id.container, new ChatOverTransactionFragment())
-                                    .commit();
-                            break;
-                        case CWP_WALLET_ADULTS_ALL_DAILY_DISCOUNT:
-                            getFragmentManager().beginTransaction()
-                                    .add(R.id.container, new DailyDiscountsFragment())
-                                    .commit();
-                            break;
                         case CWP_WALLET_STORE_MAIN:
                             break;
                         case CWP_WALLET_FACTORY_MAIN:
@@ -233,53 +148,7 @@ public class FragmentActivity  extends Activity {
             case CWP_SHOP_MANAGER_MAIN:
 
                 break;
-            case CWP_WALLET_MANAGER_MAIN:
-                break;
-            case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_VERSION_1_MAIN:
 
-                break;
-
-            case CWP_WALLET_RUNTIME_STORE_MAIN:
-                break;
-            case CWP_WALLET_RUNTIME_ADULTS_ALL_AVAILABLE_BALANCE:
-                getMenuInflater().inflate(R.menu.wallet_framework_activity_available_balance_menu, menu);
-
-            case CWP_WALLET_RUNTIME_ADULTS_ALL_MAIN:
-                break;
-            case CWP_WALLET_RUNTIME_ADULTS_ALL_ACCOUNTS:
-                break;
-            case CWP_WALLET_RUNTIME_ADULTS_ALL_BANKS:
-                break;
-            case CWP_WALLET_RUNTIME_ADULTS_ALL_COUPONS:
-                break;
-            case CWP_WALLET_RUNTIME_ADULTS_ALL_DISCOUNTS:
-                break;
-            case CWP_WALLET_RUNTIME_ADULTS_ALL_VOUCHERS:
-                break;
-            case CWP_WALLET_RUNTIME_ADULTS_ALL_GIFT_CARDS:
-                break;
-            case CWP_WALLET_RUNTIME_ADULTS_ALL_CLONES:
-                break;
-            case CWP_WALLET_RUNTIME_ADULTS_ALL_CHILDS:
-                break;
-            case CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS:
-                getMenuInflater().inflate(R.menu.wallet_framework_activity_contacts_menu, menu);
-                break;
-            case CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_CHAT:
-                getMenuInflater().inflate(R.menu.wallet_framework_activity_sent_all_menu, menu);
-
-            case CWP_WALLET_ADULTS_ALL_SHOPS:
-
-                break;
-            case CWP_WALLET_ADULTS_ALL_REFFILS:
-                break;
-            case CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED:
-                break;
-            case CWP_WALLET_ADULTS_ALL_REQUEST_SEND:
-                break;
-            case CWP_WALLET_FACTORY_MAIN:
-
-                break;
         }
 
         return true;
