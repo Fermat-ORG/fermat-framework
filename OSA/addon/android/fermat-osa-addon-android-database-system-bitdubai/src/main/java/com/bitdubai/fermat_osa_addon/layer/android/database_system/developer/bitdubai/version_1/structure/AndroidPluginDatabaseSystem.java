@@ -54,7 +54,6 @@ public class AndroidPluginDatabaseSystem  implements PluginDatabaseSystem{
             String hasDBName = hashDataBaseName(databaseName);
             database = new AndroidDatabase(this.Context, ownerId, hasDBName);
             database.openDatabase();
-
             return database;
         } catch (NoSuchAlgorithmException e) {
             String message = CantOpenDatabaseException.DEFAULT_MESSAGE;
@@ -80,7 +79,7 @@ public class AndroidPluginDatabaseSystem  implements PluginDatabaseSystem{
         try{
             String hasDBName = hashDataBaseName(databaseName);
             AndroidDatabase database = new AndroidDatabase(this.Context, ownerId, hasDBName);
-            database.deleteDatabase(hasDBName);
+            database.deleteDatabase();
         } catch (NoSuchAlgorithmException e){
             String message = CantOpenDatabaseException.DEFAULT_MESSAGE;
             FermatException cause = FermatException.wrapException(e);

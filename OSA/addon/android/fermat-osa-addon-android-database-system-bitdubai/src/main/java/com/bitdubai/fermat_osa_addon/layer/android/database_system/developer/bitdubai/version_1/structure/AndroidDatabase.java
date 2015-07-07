@@ -205,11 +205,7 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
         }
     }
 
-    @Override
-    public void closeDatabase(){
-        if(database.isOpen())
-            database.close();
-    }
+
 
     /**
      * Private methods implementation.
@@ -222,7 +218,10 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
      * @throws CantOpenDatabaseException
      * @throws DatabaseNotFoundException
      */
+    @Override
     public void openDatabase() throws CantOpenDatabaseException, DatabaseNotFoundException {
+        if(database != null && database.isOpen())
+            return;
         /**
          * First I try to open the database.
          */
@@ -264,18 +263,21 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
 
     }
 
+    @Override
+    public void closeDatabase(){
+        if(database.isOpen())
+            database.close();
+    }
+
     /**
      *
      te a specific database file
      * if used by a plugin, It use plugin id to define directory path name
      *
-     * @param databaseName name of database to deleted
      * @throws CantOpenDatabaseException
      * @throws DatabaseNotFoundException
      */
-
-
-    public void deleteDatabase(String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException {
+    public void deleteDatabase() throws CantOpenDatabaseException, DatabaseNotFoundException {
 
         // determine directry path name
         String databasePath ="";

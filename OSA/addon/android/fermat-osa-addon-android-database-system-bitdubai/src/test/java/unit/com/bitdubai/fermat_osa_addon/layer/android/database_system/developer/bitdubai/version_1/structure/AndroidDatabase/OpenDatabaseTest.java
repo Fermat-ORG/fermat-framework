@@ -51,6 +51,15 @@ public class OpenDatabaseTest {
     }
 
     @Test
+    public void OpenDatabase_DatabaseInAlreadyOpen_InvokedSuccesfully() throws Exception{
+        testDatabase = new AndroidDatabase(mockContext, UUID.randomUUID(), testDatabaseName);
+        testDatabase.createDatabase(testDatabaseName);
+        testDatabase.openDatabase();
+        catchException(testDatabase).openDatabase();
+        assertThat(caughtException()).isNull();
+    }
+
+    @Test
     public void OpenDatabase_NoDatabaseInPath_ThrowException() throws Exception{
         testDatabase = new AndroidDatabase(mockContext, UUID.randomUUID(), testDatabaseName);
         catchException(testDatabase).openDatabase();

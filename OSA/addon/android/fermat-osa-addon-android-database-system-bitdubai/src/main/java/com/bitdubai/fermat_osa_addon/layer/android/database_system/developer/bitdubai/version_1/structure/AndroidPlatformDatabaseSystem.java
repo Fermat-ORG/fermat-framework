@@ -78,8 +78,7 @@ public class AndroidPlatformDatabaseSystem implements PlatformDatabaseSystem {
             AndroidDatabase database;
             String hasDBName = hashDataBaseName(databaseName);
             database = new AndroidDatabase(this.context, hasDBName);
-            database.createDatabase(hasDBName);
-
+            database.createDatabase(hasDBName       );
             return database;
         }
         catch (NoSuchAlgorithmException e){
@@ -103,7 +102,7 @@ public class AndroidPlatformDatabaseSystem implements PlatformDatabaseSystem {
     public void deleteDatabase(String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException {
         AndroidDatabase database;
         database = new AndroidDatabase(this.context, databaseName);
-        database.deleteDatabase(databaseName);
+        database.deleteDatabase();
     }
 
     /**
