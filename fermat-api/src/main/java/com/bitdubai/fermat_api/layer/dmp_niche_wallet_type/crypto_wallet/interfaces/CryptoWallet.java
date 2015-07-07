@@ -35,6 +35,8 @@ public interface CryptoWallet {
 
     List<WalletContactRecord> getWalletContactByNameContainsAndWalletId(String actorName, UUID walletId) throws CantGetWalletContactException;
 
+    boolean isValidAddress(CryptoAddress cryptoAddress);
+
     /**
      * Balance Fragment methods
      */
@@ -53,5 +55,5 @@ public interface CryptoWallet {
     /**
      * Send money methods
      */
-    void send(long cryptoAmount, CryptoAddress destinationAddress, UUID walletID) throws CantSendCryptoException;
+    void send(long cryptoAmount, CryptoAddress destinationAddress, UUID walletID) throws CantSendCryptoException, InsufficientFundsException;
 }
