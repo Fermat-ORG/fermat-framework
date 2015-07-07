@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.DealsWithBitcoinWallet;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
@@ -290,9 +291,10 @@ public class IncomingExtraUserRelayAgent implements DealsWithBitcoinWallet, Deal
             // y luego pasa la transacción al estado (RESPONSIBLE,APPLIED)
 
             for(Transaction<CryptoTransaction> transaction : responsibleTransactionList){
-                //TODO: INVOCAR AL TRANSACTION EXECUTOR. SI DA EXEPCION RETORNAR SIN CONFIRMAR O HACER UN CONTINUE
+                // TODO: INVOCAR AL TRANSACTION EXECUTOR. SI DA EXEPCION RETORNAR SIN CONFIRMAR O HACER UN CONTINUE
+                // TODO: CORREGIR LA LÓGICA DE LLAMAR AL BOOK Y AVAILABLE BALANCE
                 try {
-                    this.transactionExecutor.executeTransaction(transaction);
+                    this.transactionExecutor.executeTransaction(transaction, BalanceType.AVILABLE);
                     this.registry.setToApplied(transaction.getTransactionID());
                     System.out.println("TTF - EXTRA USER RELAY: TRANSACTION APPLIED");
 
