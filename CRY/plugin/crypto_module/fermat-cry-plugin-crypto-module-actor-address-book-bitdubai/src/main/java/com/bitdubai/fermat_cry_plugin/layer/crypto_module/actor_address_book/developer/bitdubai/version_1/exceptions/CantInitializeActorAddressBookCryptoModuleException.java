@@ -16,16 +16,4 @@ public class CantInitializeActorAddressBookCryptoModuleException extends ActorAd
     public CantInitializeActorAddressBookCryptoModuleException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
     }
-
-    public CantInitializeActorAddressBookCryptoModuleException(final String message, final Exception cause) {
-        this(message, cause, "", "");
-    }
-
-    public CantInitializeActorAddressBookCryptoModuleException(final String message) {
-        this(message, null);
-    }
-
-    public CantInitializeActorAddressBookCryptoModuleException() {
-        this(DEFAULT_MESSAGE);
-    }
 }
