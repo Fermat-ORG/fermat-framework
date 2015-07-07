@@ -321,9 +321,9 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
     }
 
     @Override
-    public void send(long cryptoAmount, CryptoAddress destinationAddress, UUID walletID) throws CantSendCryptoException {
+    public void send(long cryptoAmount, CryptoAddress destinationAddress, UUID walletID,String notes) throws CantSendCryptoException {
         try {
-            outgoingExtraUserManager.getTransactionManager().send(walletID, destinationAddress, cryptoAmount);
+            outgoingExtraUserManager.getTransactionManager().send(walletID, destinationAddress, cryptoAmount,notes);
         } catch (InsufficientFundsException e) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
             throw new CantSendCryptoException(CantSendCryptoException.DEFAULT_MESSAGE, e);

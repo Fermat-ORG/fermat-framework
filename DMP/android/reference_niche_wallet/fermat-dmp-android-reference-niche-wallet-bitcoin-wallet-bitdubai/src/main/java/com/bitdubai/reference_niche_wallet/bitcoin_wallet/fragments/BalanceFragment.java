@@ -74,8 +74,6 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private TextView labelBalance;
     private TextView textViewBalance;
 
-    private FloatingActionButton fab_change_balance;
-
     public static BalanceFragment newInstance(int position) {
         BalanceFragment f = new BalanceFragment();
         Bundle b = new Bundle();
@@ -125,7 +123,24 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
         rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_balance, container, false);
 
         labelBalance =(TextView) rootView.findViewById(R.id.labelbalance);
-
+        labelBalance.setTypeface(tf);
+        labelBalance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                refreshBalance();
+                if (showTypeBalance==TYPE_BALANCE_AVAILABLE) {
+                    labelBalance.setText("Available balance");
+                    showTypeBalance=TYPE_BALANCE_BOOK;
+                    //fab_change_balance.setImageResource(R.drawable.wallet);
+                    //labelBalance.setText();
+                }else if (showTypeBalance==TYPE_BALANCE_BOOK){
+                    labelBalance.setText("Book Balance");
+                    showTypeBalance=TYPE_BALANCE_AVAILABLE;
+                    //fab_change_balance.setImageResource(R.drawable.ic_action_about);
+                    //labelBalance.setText();
+                }
+            }
+        });
         showTypeBalance=TYPE_BALANCE_AVAILABLE;
         
         if (showTypeBalance==TYPE_BALANCE_AVAILABLE) {
@@ -165,25 +180,6 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
         });
         */
 
-        fab_change_balance = (com.melnykov.fab.FloatingActionButton) rootView.findViewById(R.id.fab_change_balance);
-
-        fab_change_balance.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                refreshBalance();
-                if (showTypeBalance==TYPE_BALANCE_AVAILABLE) {
-                    labelBalance.setText("Available balance");
-                    showTypeBalance=TYPE_BALANCE_BOOK;
-                    fab_change_balance.setImageResource(R.drawable.wallet);
-                    //labelBalance.setText();
-                }else if (showTypeBalance==TYPE_BALANCE_BOOK){
-                    labelBalance.setText("Book Balance");
-                    showTypeBalance=TYPE_BALANCE_AVAILABLE;
-                    fab_change_balance.setImageResource(R.drawable.ic_action_about);
-                    //labelBalance.setText();
-                }
-            }
-        });
 
         return rootView;
     }

@@ -44,7 +44,7 @@
             android:textColor="#FF666666"
             android:textSize="30sp"
             android:text="Available balance"
-            android:layout_weight="0.5"/>
+            />
             <TextView
                 android:id="@+id/balance"
                 android:layout_width="match_parent"
@@ -58,19 +58,8 @@
                 android:textSize="45sp"
                 android:textStyle="bold"
                 android:text="mBTC     0"
-                android:layout_weight="1"/>
+                />
 
-
-        <com.melnykov.fab.FloatingActionButton
-            android:id="@+id/fab_change_balance"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
-            android:layout_margin="16dp"
-            android:src="@drawable/ic_action_about"
-            fab:fab_colorNormal="@color/green"
-            fab:fab_colorPressed="@color/material_blue_grey_800"
-            fab:fab_colorRipple="@color/ripple_material_dark" />
 
     </LinearLayout>
 
