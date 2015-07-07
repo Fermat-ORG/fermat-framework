@@ -42,11 +42,15 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
     View rootView;
     SwipeRefreshLayout swipeLayout;
 
-    long balance;
+    long balanceAvailable;
+
+    long bookBalance;
 
     boolean showBalanceBTC = false;
 
     private static final String ARG_POSITION = "position";
+
+
 
     UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
 
@@ -75,7 +79,8 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
         errorManager = platform.getErrorManager();
         try {
-            balance = 0;
+            balanceAvailable = 0;
+            bookBalance=0;
             cryptoWalletManager = platform.getCryptoWalletManager();
 
             try {
@@ -87,7 +92,9 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
             }
             try {
-                balance = cryptoWallet.getBalance(wallet_id);
+                balanceAvailable = cryptoWallet.getAvailableBalance(wallet_id);
+
+                bookBalance= cryptoWallet.getBookBalance(wallet_id);
             } catch (CantGetBalanceException e)
             {
                 errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
