@@ -19,16 +19,4 @@ public class CantRequestOrRegisterCryptoAddressException extends CryptoWalletExc
     public CantRequestOrRegisterCryptoAddressException(final String message, final Exception cause, final String context, final String possibleReason) {
         super(message, cause, context, possibleReason);
     }
-
-    public CantRequestOrRegisterCryptoAddressException(final String message, final Exception cause) {
-        this(message, cause, "", "");
-    }
-
-    public CantRequestOrRegisterCryptoAddressException(final String message) {
-        this(message, null);
-    }
-
-    public CantRequestOrRegisterCryptoAddressException() {
-        this(DEFAULT_MESSAGE);
-    }
 }
