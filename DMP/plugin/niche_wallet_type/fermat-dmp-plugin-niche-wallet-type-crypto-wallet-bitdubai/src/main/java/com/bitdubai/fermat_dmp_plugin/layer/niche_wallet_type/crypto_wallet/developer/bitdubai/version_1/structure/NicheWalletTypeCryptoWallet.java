@@ -264,13 +264,29 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
             throw new CantGetWalletContactException(CantGetWalletContactException.DEFAULT_MESSAGE, e);
         }
     }
-
+    // TODO:  ESTOS DOS METODOS SON LOS QUE NATALIA/EZE ME TIENEN QUE PASAR PARA YO HACER CORRER LA APP
     @Override
-    public long getBalance(UUID walletId) throws CantGetBalanceException {
+    public long getAvailableBalance(UUID walletId) throws CantGetBalanceException {
         try {
             BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletId);
             try {
-                return bitcoinWalletWallet.getBalance();
+                return bitcoinWalletWallet.getAvailableBalance().getBalance();
+            } catch (CantCalculateBalanceException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantGetBalanceException(CantGetBalanceException.DEFAULT_MESSAGE, e);
+            }
+        } catch (CantLoadWalletException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetBalanceException(CantGetBalanceException.DEFAULT_MESSAGE, e);
+        }
+    }
+
+    @Override
+    public long getBookBalance(UUID walletId) throws CantGetBalanceException {
+        try {
+            BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletId);
+            try {
+                return bitcoinWalletWallet.getBookBalance().getBalance();
             } catch (CantCalculateBalanceException e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantGetBalanceException(CantGetBalanceException.DEFAULT_MESSAGE, e);
@@ -293,9 +309,9 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
     }
 
     @Override
-    public void send(long cryptoAmount, CryptoAddress destinationAddress, UUID walletID) throws CantSendCryptoException, InsufficientFundsException {
+    public void send(long cryptoAmount, CryptoAddress destinationAddress, String notes, UUID walletID) throws CantSendCryptoException, InsufficientFundsException {
         try {
-            outgoingExtraUserManager.getTransactionManager().send(walletID, destinationAddress, cryptoAmount);
+            outgoingExtraUserManager.getTransactionManager().send(walletID, destinationAddress, cryptoAmount, notes);
         } catch (com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.exceptions.InsufficientFundsException e) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
             throw new InsufficientFundsException(InsufficientFundsException.DEFAULT_MESSAGE, e);
