@@ -404,7 +404,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                     //execute NavigateWallet to go wallet activity
                     intent = new Intent(this, com.bitdubai.android_core.app.WalletActivity.class);
                     startActivity(intent);
-
+                    break;
                 case CWP_WALLET_BASIC_ALL_MAIN: //basic Wallet
                     //go to wallet basic definition
                     ApplicationSession.setWalletId(4);
