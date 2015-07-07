@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletBalance;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CabtStoreMemoException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantCalculateBalanceException;
@@ -244,50 +245,19 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet,DealsWithEr
     @Override
     public UUID getWalletId() {
 
-       // return this.internalWalletId;
+        // return this.internalWalletId;
         return UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
 
     }
 
-    @Override
-    public long getBalance() throws CantCalculateBalanceException {
-        //suma los debitos y los creditos los resta
-        long balance;
-        bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(errorManager,this.database);
-
-        balance = bitcoinWalletBasicWalletDao.getBalance();
-
-        return balance;
-    }
 
 
 
-    /*
-     * NOTA:
-     *  El debit y el credit debería mirar primero si la tramsacción que
-     *  se quiere aplicar existe. Si no existe aplica los cambios normalmente, pero si existe
-     *  debería ignorar la transacción.
-     */
-    @Override
-    public void debit(BitcoinWalletTransactionRecord cryptoTransaction) throws CantRegisterDebitDebitException {
-
-        bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(errorManager,this.database);
-
-        bitcoinWalletBasicWalletDao.addDebit(cryptoTransaction);
-    }
-
-    @Override
-    public void credit(BitcoinWalletTransactionRecord cryptoTransaction) throws CantRegisterCreditException {
-
-        bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(errorManager,this.database);
-
-        bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction);
-    }
 
     @Override
     public List<BitcoinWalletTransactionRecord> getTransactions(int max, int offset) throws CantGetTransactionsException {
 
-        bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(errorManager, this.database);
+        bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(this.database);
 
         return bitcoinWalletBasicWalletDao.getTransactions(max, offset);
     }
@@ -296,9 +266,21 @@ public class BitcoinWalletBasicWallet implements BitcoinWalletWallet,DealsWithEr
     public void setDescription(UUID transactionID, String memo) throws CabtStoreMemoException, CantFindTransactionException {
         //update memo field
 
-        bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(errorManager, this.database);
+        bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(this.database);
 
         bitcoinWalletBasicWalletDao.updateMemoFiled(transactionID, memo);
+    }
+
+    @Override
+    public BitcoinWalletBalance getAvailableBalance() throws CantCalculateBalanceException{
+
+        return new BitcoinWalletBasicWalletAvailableBalance(this.errorManager,this.pluginDatabaseSystem, this.database);
+    }
+
+
+    @Override
+    public BitcoinWalletBalance getBookBalance() throws CantCalculateBalanceException{
+        return new BitcoinWalletBasicWalletBookBalance(this.errorManager, this.pluginDatabaseSystem, this.database);
     }
 
     /**

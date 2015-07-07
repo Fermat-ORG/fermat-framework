@@ -284,7 +284,9 @@ public class OutgoingExtraUserTransactionProcessorAgent implements DealsWithBitc
 
             for(TransactionWrapper transaction : transactionList){
                 try {
-                    bitcoinWalletWallet.debit(transaction);
+                    //TODO: revisar por el cambio en la interface
+                        bitcoinWalletWallet.debit(transaction);
+
                     dao.setToPIW(transaction);
                 } catch (CantRegisterDebitDebitException e) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);

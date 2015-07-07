@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.dev
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformWalletType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionState;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
@@ -77,7 +78,12 @@ public class TransactionExecutor implements DealsWithBitcoinWallet, DealsWithWal
             switch (platformWalletType) {
                 case BASIC_WALLET_BITCOIN_WALLET:
                     BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletID);
-                    bitcoinWalletWallet.credit(generateBitcoinTransaction(transaction.getInformation()));
+                    try {
+
+                        bitcoinWalletWallet.credit(generateBitcoinTransaction(transaction.getInformation()));
+                    } catch (CantRegisterCreditException e) {
+                        e.printStackTrace();
+                    }
                     System.out.println("TTF - Transaction applie by transaction executor");
                     return;
                 default:
@@ -101,7 +107,7 @@ public class TransactionExecutor implements DealsWithBitcoinWallet, DealsWithWal
         bitcoinWalletTransactionRecord.setAddressTo(cryptoTransaction.getAddressTo());
         bitcoinWalletTransactionRecord.setAmount(cryptoTransaction.getCryptoAmount());
         bitcoinWalletTransactionRecord.setType(TransactionType.CREDIT);
-        bitcoinWalletTransactionRecord.setState(TransactionState.RECEIVED);
+      //  bitcoinWalletTransactionRecord.setState(TransactionState.RECEIVED);
         bitcoinWalletTransactionRecord.setTimestamp(timestamp);
         bitcoinWalletTransactionRecord.setMemo("No information");
 

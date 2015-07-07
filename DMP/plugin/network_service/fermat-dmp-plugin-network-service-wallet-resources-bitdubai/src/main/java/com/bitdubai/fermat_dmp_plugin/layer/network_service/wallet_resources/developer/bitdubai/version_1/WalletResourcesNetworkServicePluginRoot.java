@@ -208,7 +208,7 @@ public class WalletResourcesNetworkServicePluginRoot implements Service, Network
 
         }catch(IOException e){
 
-            throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES",e,"Error load manifest file ", "");
+            throw new CantCheckResourcesException("CAN'T CHECK WALLET RESOURCES",e,"Error load manifest file ","Repository not exist or manifest file not exist");
 
         }
         //get list of wallet image, split by ,
