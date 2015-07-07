@@ -35,7 +35,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
  * *
  */
 
-public class AndroidDatabase  implements Database, DatabaseFactory {
+public class AndroidDatabase implements Database, DatabaseFactory {
 
     /**
      * database Interface member variables.
@@ -220,7 +220,7 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
      */
     @Override
     public void openDatabase() throws CantOpenDatabaseException, DatabaseNotFoundException {
-        if(database != null && database.isOpen())
+        if(isOpen())
             return;
         /**
          * First I try to open the database.
@@ -517,6 +517,5 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
     public DatabaseTableFactory newTableFactory(String tableName) {
         return new AndroidDatabaseTableFactory(tableName);
     }
-
 
 }
