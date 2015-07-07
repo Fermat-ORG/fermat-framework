@@ -28,6 +28,9 @@ public class GetClassesFullPathTest {
         ActorAddressBookCryptoModulePluginRoot root = new ActorAddressBookCryptoModulePluginRoot();
 
 
+        /**
+         * Validate the classes exists.
+         */
         for (String myClass : root.getClassesFullPath()) {
             /**
              * True if it exists

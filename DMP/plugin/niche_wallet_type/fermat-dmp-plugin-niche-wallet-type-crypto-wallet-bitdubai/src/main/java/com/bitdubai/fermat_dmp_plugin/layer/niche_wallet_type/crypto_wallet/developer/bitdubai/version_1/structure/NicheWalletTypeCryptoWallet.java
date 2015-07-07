@@ -263,7 +263,8 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
         try {
             BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletId);
             try {
-                return bitcoinWalletWallet.getBalance();
+                //TODO: revisar por el cambio en la interface
+                return bitcoinWalletWallet.getAvailableBalance().getBalance();
             } catch (CantCalculateBalanceException e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantGetBalanceException(CantGetBalanceException.DEFAULT_MESSAGE, e);

@@ -1,9 +1,12 @@
 package com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.util;
 
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionState;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
+
+import java.util.UUID;
 
 /**
  * Created by eze on 2015.06.25..
@@ -28,6 +31,10 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
     private long timestamp;
 
     private String memo;
+
+    private UUID id;
+
+    private BalanceType balanceType;
 
     /*
      * BitcoinWalletTransactionRecord Interface method implementation
@@ -72,14 +79,25 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
         this.type = type;
     }
 
+
     @Override
-    public TransactionState getState() {
-        return state;
+    public UUID getIdTransaction(){
+       return this.id;
     }
 
     @Override
-    public void setState(TransactionState state) {
-        this.state = state;
+    public void setIdTransaction(UUID id){
+        this.id = id;
+    }
+
+    @Override
+    public BalanceType getBalanceType(){
+        return balanceType;
+    }
+
+    @Override
+    public void setBalanceType(BalanceType type){
+        this.balanceType = type;
     }
 
     @Override

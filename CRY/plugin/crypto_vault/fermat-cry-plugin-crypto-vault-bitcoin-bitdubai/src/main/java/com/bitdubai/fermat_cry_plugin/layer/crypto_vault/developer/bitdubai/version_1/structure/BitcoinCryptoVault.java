@@ -385,11 +385,18 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
 
 
         /**
+         * I will check that it is not an address that belongs to my wallet
+         */
+        Transaction tx = request.tx;
+        String txHash = null;
+        txHash = tx.getHashAsString();
+
+
+        /**
          * I commit the transaction locally and save the vault
          */
-        String txHash = null;
-        Transaction tx = request.tx;
-        txHash = tx.getHashAsString();
+
+
         try {
             db.persistNewTransaction(FermatTxId.toString(), txHash);
             /**

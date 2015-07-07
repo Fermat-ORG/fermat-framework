@@ -11,6 +11,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.*;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.exceptions.CloudCommunicationException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
@@ -19,11 +20,9 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket.FMPPack
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.CommunicationChannelAddressFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.FMPPacketFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CloudFMPConnectionManager;
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.exceptions.IncorrectFMPPacketDestinationException;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.exceptions.RegisteringAddressHasNotRequestedConnectionException;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.WrongFMPPacketEncryptionException;
 
 
 public class CloudNetworkServiceManager extends CloudFMPConnectionManager {
@@ -169,7 +168,7 @@ public class CloudNetworkServiceManager extends CloudFMPConnectionManager {
 			messageBuilder.append(participant + FMPPacket.MESSAGE_SEPARATOR);
 		String message = messageBuilder.toString().trim();
 		
-		CloudNetworkServiceVPN vpn = new CloudNetworkServiceVPN(vpnAddress, Executors.newFixedThreadPool(4), new ECCKeyPair(), networkService, vpnParticipants);
+		CloudNetworkServiceVPN vpn = new CloudNetworkServiceVPN(vpnAddress, Executors.newFixedThreadPool(4), new com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair(), networkService, vpnParticipants);
 		vpn.start();
 		String vpnKey = packet.getSender() + packet.getDestination();
 		activeVPNConnections.put(vpnKey, vpn);
