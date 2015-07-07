@@ -202,7 +202,7 @@ public class BitcoinWalletBasicWalletDao {
             debitRecord.setUUIDValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ID_COLUMN_NAME, debitRecordId);
             debitRecord.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME, cryptoTransaction.getType().getCode());
             debitRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_AMOUNT_COLUMN_NAME, cryptoTransaction.getAmount());
-             debitRecord.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_MEMO_COLUMN_NAME, cryptoTransaction.getMemo());
+            debitRecord.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_MEMO_COLUMN_NAME, cryptoTransaction.getMemo());
             debitRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, cryptoTransaction.getTimestamp());
             debitRecord.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TRANSACTION_HASH_COLUMN_NAME, cryptoTransaction.getTramsactionHash());
             debitRecord.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ADDRESS_FROM_COLUMN_NAME, cryptoTransaction.getAddressFrom().getAddress());
@@ -241,27 +241,27 @@ public class BitcoinWalletBasicWalletDao {
 
             try {
                 BitcoinWalletBasicWalletDaoTransaction bitcoinWalletBasicWalletDaoTransaction = new BitcoinWalletBasicWalletDaoTransaction(this.database);
-               try
-               {
-                   balanceRecord = getBalancesRecord();
+                try
+                {
+                    balanceRecord = getBalancesRecord();
 
-                   //set total balances to update
-                   if(cryptoTransaction.getBalanceType() == BalanceType.AVILABLE)
-                   {
-                       balanceRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_AVILABLE_BALANCE_COLUMN_NAME, balance);
+                    //set total balances to update
+                    if(cryptoTransaction.getBalanceType() == BalanceType.AVILABLE)
+                    {
+                        balanceRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_AVILABLE_BALANCE_COLUMN_NAME, balance);
 
-                   }
-                   else
-                   {
-                       balanceRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME, balance);
+                    }
+                    else
+                    {
+                        balanceRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME, balance);
 
-                   }
-             }
-               catch (CantGetBalanceRecordException e)
-               {
-                   throw new CantRegisterDebitDebitException("Error to add debit transaction to wallet",e,"Error to execute balance transaction insert and update" , "");
+                    }
+                }
+                catch (CantGetBalanceRecordException e)
+                {
+                    throw new CantRegisterDebitDebitException("Error to add debit transaction to wallet",e,"Error to execute balance transaction insert and update" , "");
 
-               }
+                }
 
                 bitcoinWalletBasicWalletDaoTransaction.executeTransaction(bitcoinwalletTable, debitRecord, bitcoinwalletBalanceTable, balanceRecord);
 
@@ -328,7 +328,7 @@ public class BitcoinWalletBasicWalletDao {
             debitRecord.setUUIDValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ID_COLUMN_NAME, debitRecordId);
             debitRecord.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME, cryptoTransaction.getType().getCode());
             debitRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_AMOUNT_COLUMN_NAME, cryptoTransaction.getAmount());
-          //  debitRecord.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_STATE_COLUMN_NAME, cryptoTransaction.getState().getCode());
+            //  debitRecord.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_STATE_COLUMN_NAME, cryptoTransaction.getState().getCode());
             debitRecord.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_MEMO_COLUMN_NAME, cryptoTransaction.getMemo());
             debitRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, cryptoTransaction.getTimestamp());
             debitRecord.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TRANSACTION_HASH_COLUMN_NAME, cryptoTransaction.getTramsactionHash());
@@ -431,44 +431,44 @@ public class BitcoinWalletBasicWalletDao {
         List<BitcoinWalletTransactionRecord> bitcoinWalletTransactionRecordList = new ArrayList<>();
 
 
-            // Read record data and create transactions list
+        // Read record data and create transactions list
 
-            for(DatabaseTableRecord record : bitcoinwalletTable.getRecords())
-            {
-                record.getLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_AMOUNT_COLUMN_NAME);
+        for(DatabaseTableRecord record : bitcoinwalletTable.getRecords())
+        {
+            record.getLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_AMOUNT_COLUMN_NAME);
 
-                BitcoinWalletTransactionRecord bitcoinWalletTransactionRecord = new BitcoinTransactionWrapper();
+            BitcoinWalletTransactionRecord bitcoinWalletTransactionRecord = new BitcoinTransactionWrapper();
 
-                CryptoAddress crypoAddressTo = new CryptoAddress();
+            CryptoAddress crypoAddressTo = new CryptoAddress();
 
 
-                crypoAddressTo.setAddress(record.getStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ADDRESS_TO_COLUMN_NAME));
-                crypoAddressTo.setCryptoCurrency(CryptoCurrency.BITCOIN);
-                bitcoinWalletTransactionRecord.setAddressFrom(crypoAddressTo);
+            crypoAddressTo.setAddress(record.getStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ADDRESS_TO_COLUMN_NAME));
+            crypoAddressTo.setCryptoCurrency(CryptoCurrency.BITCOIN);
+            bitcoinWalletTransactionRecord.setAddressFrom(crypoAddressTo);
 
-                CryptoAddress crypoAddressFrom = new CryptoAddress();
-                crypoAddressFrom.setAddress(record.getStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ADDRESS_FROM_COLUMN_NAME));
+            CryptoAddress crypoAddressFrom = new CryptoAddress();
+            crypoAddressFrom.setAddress(record.getStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ADDRESS_FROM_COLUMN_NAME));
 
-                bitcoinWalletTransactionRecord.setAddressTo(crypoAddressFrom);
-                bitcoinWalletTransactionRecord.setAmount(record.getLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_AMOUNT_COLUMN_NAME));
-                bitcoinWalletTransactionRecord.setMemo(record.getStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_MEMO_COLUMN_NAME));
+            bitcoinWalletTransactionRecord.setAddressTo(crypoAddressFrom);
+            bitcoinWalletTransactionRecord.setAmount(record.getLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_AMOUNT_COLUMN_NAME));
+            bitcoinWalletTransactionRecord.setMemo(record.getStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_MEMO_COLUMN_NAME));
             //    try {
-                //    bitcoinWalletTransactionRecord.setState(TransactionState.getByCode(record.getStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_STATE_COLUMN_NAME)));
-               // } catch (InvalidParameterException e) {
-                   // throw new CantGetTransactionsException("Get List of Transactions",e,"Error set State ", "");
+            //    bitcoinWalletTransactionRecord.setState(TransactionState.getByCode(record.getStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_STATE_COLUMN_NAME)));
+            // } catch (InvalidParameterException e) {
+            // throw new CantGetTransactionsException("Get List of Transactions",e,"Error set State ", "");
 
 
-                //}
-                bitcoinWalletTransactionRecord.setTimestamp(record.getLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME));
-                bitcoinWalletTransactionRecord.setTramsactionHash(record.getStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TRANSACTION_HASH_COLUMN_NAME));
-                bitcoinWalletTransactionRecord.setType(TransactionType.getByCode(record.getStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME)));
+            //}
+            bitcoinWalletTransactionRecord.setTimestamp(record.getLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME));
+            bitcoinWalletTransactionRecord.setTramsactionHash(record.getStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TRANSACTION_HASH_COLUMN_NAME));
+            bitcoinWalletTransactionRecord.setType(TransactionType.getByCode(record.getStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME)));
 
-                bitcoinWalletTransactionRecordList.add(bitcoinWalletTransactionRecord);
-            }
+            bitcoinWalletTransactionRecordList.add(bitcoinWalletTransactionRecord);
+        }
 
 
 
-    // Now we return BitcoinWalletTransactionRecord list
+        // Now we return BitcoinWalletTransactionRecord list
         return bitcoinWalletTransactionRecordList;
     }
 
@@ -577,7 +577,7 @@ public class BitcoinWalletBasicWalletDao {
             throw new CantGetBalanceRecordException("Error to get balances record",cantLoadTableToMemory,"Can't load balance table" , "");
 
         }
-            return bitcoinwalletTable.getRecords().get(0);
+        return bitcoinwalletTable.getRecords().get(0);
 
 
     }

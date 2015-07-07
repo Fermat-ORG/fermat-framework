@@ -79,9 +79,9 @@ public class TransactionExecutor implements DealsWithBitcoinWallet, DealsWithWal
                 case BASIC_WALLET_BITCOIN_WALLET:
                     BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletID);
                     try {
-                        //TODO: revisar por el cambio en la interface
-                        bitcoinWalletWallet.getAvailableBalance().credit(generateBitcoinTransaction(transaction.getInformation()));
-                    } catch (CantCalculateBalanceException e) {
+
+                        bitcoinWalletWallet.credit(generateBitcoinTransaction(transaction.getInformation()));
+                    } catch (CantRegisterCreditException e) {
                         e.printStackTrace();
                     }
                     System.out.println("TTF - Transaction applie by transaction executor");

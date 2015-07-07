@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPlugin
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerIdException;
 
 import java.util.UUID;
@@ -22,8 +23,8 @@ import java.util.UUID;
 public class BitcoinWalletDatabaseFactory implements DealsWithPluginDatabaseSystem {
 
     /**
-    * DealsWithPluginDatabaseSystem Interface member variables.
-    */
+     * DealsWithPluginDatabaseSystem Interface member variables.
+     */
     private PluginDatabaseSystem pluginDatabaseSystem;
 
     /**
@@ -41,7 +42,7 @@ public class BitcoinWalletDatabaseFactory implements DealsWithPluginDatabaseSyst
         /**
          * I will create the database where I am going to store the information of this wallet.
          */
-         database = this.pluginDatabaseSystem.createDatabase(ownerId, walletId.toString());
+        database = this.pluginDatabaseSystem.createDatabase(ownerId, walletId.toString());
 
         /**
          * Next, I will add the needed tables.
@@ -58,9 +59,9 @@ public class BitcoinWalletDatabaseFactory implements DealsWithPluginDatabaseSyst
             table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ADDRESS_FROM_COLUMN_NAME, DatabaseDataType.STRING, 36,false);
             table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ADDRESS_TO_COLUMN_NAME, DatabaseDataType.STRING, 36,false);
             table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
-            table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20,false);
-            table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20,false);
-            table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_STATE_COLUMN_NAME, DatabaseDataType.STRING, 20,false);
+            table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
+            table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
+            table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_STATE_COLUMN_NAME, DatabaseDataType.STRING, 20, false);
             table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0,false);
             table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_MEMO_COLUMN_NAME, DatabaseDataType.STRING, 200,false);
             table.addColumn(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TRANSACTION_HASH_COLUMN_NAME, DatabaseDataType.STRING, 100,true);
@@ -86,10 +87,6 @@ public class BitcoinWalletDatabaseFactory implements DealsWithPluginDatabaseSyst
         }
 
 
-        /**
-         * I will create the database where I am going to store the information of total book blance and total avilable balance.
-         */
-        database = this.pluginDatabaseSystem.createDatabase(ownerId, walletId.toString());
 
         /**
          * Next, I will add the needed tables.
@@ -127,6 +124,13 @@ public class BitcoinWalletDatabaseFactory implements DealsWithPluginDatabaseSyst
             balancesRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_AVILABLE_BALANCE_COLUMN_NAME, 0);
             balancesRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME, 0);
 
+
+            try {
+                bitcoinbalancewalletTable.insertRecord(balancesRecord);
+
+            } catch (CantInsertRecordException e) {
+                throw new CantCreateDatabaseException("I COUNLDN'T CREATE THE DATABASE",e,"Can't insert first empty balance record","");
+            }
 
         }
         catch (InvalidOwnerIdException invalidOwnerId) {
