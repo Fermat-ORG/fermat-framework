@@ -134,6 +134,7 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
         textViewBalance.setTypeface(tf);
         textViewBalance.setText(formatBalanceString(balanceAvailable));
 
+
         textViewBalance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
