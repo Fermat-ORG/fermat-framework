@@ -390,14 +390,16 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         Transaction tx = request.tx;
         String txHash = null;
         txHash = tx.getHashAsString();
+        if (isSendingMoneyToMyself(tx))
+            throw new InvalidSendToAddressException("Error trying to send money. The destination Address is an address of our vault.", null, "Address to:" + addressTo.getAddress(), "The user entered an address given by this vault." );
 
 
-        /**
-         * I commit the transaction locally and save the vault
-         */
 
 
         try {
+            /**
+             * I'm good to go. I'm saving the transaction and comitting it.
+             */
             db.persistNewTransaction(FermatTxId.toString(), txHash);
             /**
              * new Transaction, I will persist it as a Fermat transaction.
@@ -406,7 +408,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
 
             vault.commitTx(request.tx);
         } catch (CantExecuteQueryException e) {
-            e.printStackTrace();
+            throw new CouldNotSendMoneyException("Error trying to persist into database the Transaction Id.", e, "Address to:" + addressTo.getAddress() + ", transaction Id:" + FermatTxId.toString(), "Error in the database plugin." );
         }
 
         PeerGroup peers = (PeerGroup) bitcoinCryptoNetworkManager.getBroadcasters();
@@ -445,6 +447,39 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
          */
         System.out.println("CryptoVault information: bitcoin sent!!!");
         return txHash;
+    }
+
+    /**
+     * Validates if this transaction is to send money to ourselves.
+     * This is not allowed.
+     * @param transaction
+     * @return
+     */
+    private boolean isSendingMoneyToMyself(Transaction transaction) {
+        int size = transaction.getOutputs().size();
+        boolean[] confirmaciones = new boolean[size];
+        int i=0;
+        for (TransactionOutput output : transaction.getOutputs()){
+            /**
+             * will save the confirmations for every address in the output.
+             * If I get all trues, then I'm sending money to myself.
+             */
+            confirmaciones[i] = output.isMine(vault);
+            i++;
+        }
+
+        /**
+         * I will loop the array, If I get a false, then I return false.
+         */
+        for (int x=0; x<size-1; x++){
+            if (!confirmaciones[x])
+                return false;
+        }
+
+        /**
+         * All address returned true, so I'm returning true.
+         */
+        return true;
     }
 
     /**
