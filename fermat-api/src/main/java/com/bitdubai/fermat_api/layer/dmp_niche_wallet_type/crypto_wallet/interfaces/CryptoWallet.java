@@ -57,9 +57,5 @@ public interface CryptoWallet {
     /**
      * Send money methods
      */
-<<<<<<< HEAD
     void send(long cryptoAmount, CryptoAddress destinationAddress, String notes, UUID walletID) throws CantSendCryptoException, InsufficientFundsException;
-=======
-    void send(long cryptoAmount, CryptoAddress destinationAddress, UUID walletID,String notes) throws CantSendCryptoException;
->>>>>>> upstream/master
 }
