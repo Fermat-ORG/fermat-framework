@@ -125,6 +125,8 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
         rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_balance, container, false);
 
         labelBalance =(TextView) rootView.findViewById(R.id.labelbalance);
+
+        showTypeBalance=TYPE_BALANCE_AVAILABLE;
         
         if (showTypeBalance==TYPE_BALANCE_AVAILABLE) {
             //labelBalance.setText();
@@ -172,10 +174,12 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 if (showTypeBalance==TYPE_BALANCE_AVAILABLE) {
                     labelBalance.setText("Available balance");
                     showTypeBalance=TYPE_BALANCE_BOOK;
+                    fab_change_balance.setImageResource(R.drawable.wallet);
                     //labelBalance.setText();
                 }else if (showTypeBalance==TYPE_BALANCE_BOOK){
                     labelBalance.setText("Book Balance");
                     showTypeBalance=TYPE_BALANCE_AVAILABLE;
+                    fab_change_balance.setImageResource(R.drawable.ic_action_about);
                     //labelBalance.setText();
                 }
             }
