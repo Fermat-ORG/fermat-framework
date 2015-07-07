@@ -244,6 +244,9 @@ public class SendFragment extends Fragment implements View.OnClickListener {
 
         EditText editAddress = (EditText) rootView.findViewById(R.id.address);
 
+        EditText editNotes = (EditText) rootView.findViewById(R.id.notes);
+
+
         CryptoAddress validAddress = validateAddress(editAddress.getText().toString());
         if (validAddress != null) {
             EditText amount = (EditText) rootView.findViewById(R.id.amount);
@@ -255,7 +258,7 @@ public class SendFragment extends Fragment implements View.OnClickListener {
             }
             try {
 
-                cryptoWallet.send(Long.parseLong(amount.getText().toString()), validAddress, wallet_id);
+                cryptoWallet.send(Long.parseLong(amount.getText().toString()), validAddress, editNotes.getText().toString(), wallet_id);
 
                 Toast.makeText(this.getActivity(), "Send OK", Toast.LENGTH_LONG).show();
 
