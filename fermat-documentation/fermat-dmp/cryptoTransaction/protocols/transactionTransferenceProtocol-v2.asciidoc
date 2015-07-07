@@ -19,15 +19,12 @@ Author: Ezequiel Postan <ezequiel_postan@hotmail.com>
 Agente:: Thread que realiza un trabajo en paralelo.
 Transacción crypto:: Mecanismo por el cual una red de crypto currencies registra el traspaso de valor de un usuario a otro.
 Transacción:: Tarea de modificar los estados de las wallets y crypto volt de manera transaccional
-Action:: Enum que lista qué debe hacerse con la transacción crypto que se traspasa. Los valores son:
-** APPLY: Para que se aplique la transacción
-** REVERT: Para revertir la transacción
 
-CryptoStatus:: Enum que lista los cuatro posbles estados de una transacción crypto. Estos son:
- ** PENDING_SUBMIT: Cuando la transacciòn se creò internamente, pero aun no fue distribuida en la red de Bitcoin.
+CryptoStatus:: Enum que lista los posbles estados de una transacción crypto. Estos son:
+ ** PENDING_SUBMIT: Cuando la transacciòn se creó internamente, pero aún no fue distribuida en la red de Bitcoin. Este estado es importante sólo para las transacciones salientes.
  ** ON_CRYPTO_NETWORK: Cuando se ve la transacción crypto en la red pero sin ninguna confirmación
  ** ON_BLOCKCHAIN: Cuando la transacción crypto obtiene la primer confirmación.
- ** IRREVERSABLE: Cuando la tramsacción crypto obtiene suficientes confrmaciones para considerar la transacción irreversble.
+ ** IRREVERSIBLE: Cuando la tramsacción crypto obtiene suficientes confrmaciones para considerar la transacción irreversble.
  ** REVERSED: Cuando se reverte la transacción.
 
 Specialist:: Enum que lista qué tipo de plug-in debe tomar poseción de la transacción a traspazar. Este enum es necesario dado que este plug-in debe dar distintas transacciones a distintos plug-ins, por ende cuando un plug-in venga a tomar posesión de una transacción debe indicar qué tipo de transacciones maneja.
@@ -74,8 +71,15 @@ NOTE: Por cuestiones de concurrencia y reutilización de código la interfaz cam
 
 == Convensiones
 
-* Escribiremos que una transacción tiene un estado (A,TS,PS) para describir que su Action es A, su TransactionStatus es TS y el ProtocolStatus es PS.
-* Dada una transacción crypto, una transacción asociada es una transacción que tiene como CryptoTransaction un contenedor con los datos de la transacción crypto. Notar que una misma transacción crypto puede tener más de una transacción asociada. Esto se da por ejemplo cuando, al detectar que una transacción es confrmada por primera vez se genera un objeto Transaction con valor de Action `Apply`, y si esta transacción crypto se reversa generará un nuevo objeto transaction pero este tendrá como Action el valor `Revert`
+* Escribiremos que una transacción tiene un estado (TS,PS) para describir que su TransactionStatus
+es TS y el ProtocolStatus es PS.
+* Dada una transacción crypto, una transacción asociada es una transacción que tiene como
+CryptoTransaction un contenedor con los datos de la transacción crypto. Notar que una misma
+transacción crypto puede tener más de una transacción asociada. Esto se da por ejemplo cuando,
+al detectar que una transacción es confirmada por primera vez se genera un objeto Transaction, y si
+esta transacción crypto se reversa generará un nuevo objeto transaction. La duferencia entre ambos
+objetos será primero el identificador de la transacción y por otro lado la transacción crypto que
+contiene el objeto tendrá un crypto estado distinto.
 
 == Protocolo
 
@@ -84,10 +88,11 @@ Para simplificar la explicación supondemos que el receptor de las transacciones
 Analicemos los pasos del protocolo de traspaso de transacciones en estos componentes.
 
 . Cuando la red bitcoin despierta, revisa las transacciones *nuevas* que han llegado por la red. Al analizar el crypto estado de cada transacción crypto se tendrá varias opciones:
-.. Si el crypto estado es RECEIVED o CONFIRMED, almacena una transacción asociada con estado (APPLY,RESPONSIBLE,TO_BE_NOTIFIED)
-.. Si el crypto estado es REVERCED, almacena una transacción asociada con estado (REVERT,RESPONSIBLE,TO_BE_NOTIFIED). <<Transaction-Transference-Protocol-v2-Note1,VER NOTA>>
-.. Si el crypto estado es IDENTIFIED, no almacena una transacción asociada ya que no debe aplicarse aún.
-. Un agente de la red bitcoin detecta que hay transacciones crypto con ProtocolStatus TO_BE_NOTIFIED o SENDING_NOTIFIED, entonces envía el evento IncomingCryptoTransactionsWaitingTransferenceEvent. Luego de lanzar el evento marca las transacciones que tenía en TO_BE_NOTIFIED como SENDING_NOTIFIED. <<Transaction-Transference-Protocol-v2-Note2,VER NOTA>>
+.. Si el crypto estado es ON_CRYPTO_NETWORK, almacena una transacción asociada con estado (APPLY,RESPONSIBLE,TO_BE_NOTIFIED)
+.. Si el crypto estado es ON_BLOCKCHAIN, almacena una transacción asociada con estado (APPLY,RESPONSIBLE,TO_BE_NOTIFIED)
+.. Si el crypto estado es REVERSED, almacena una transacción asociada con estado (REVERT,RESPONSIBLE,TO_BE_NOTIFIED). <<Transaction-Transference-Protocol-v2-Note1,VER NOTA>>
+. Un agente de la red bitcoin detecta que hay transacciones crypto con ProtocolStatus TO_BE_NOTIFIED o SENDING_NOTIFIED, entonces envía el evento IncomingCryptoTransactionsWaitingTransferenceEvent.
+Luego de lanzar el evento marca las transacciones que tenía en TO_BE_NOTIFIED como SENDING_NOTIFIED. <<Transaction-Transference-Protocol-v2-Note2,VER NOTA>>
 . El IncomngCrypto regstra el evento.
 . El MonitorAgent (un agente) del IncomingCrypto ve que hay transacciones pendientes y llama al método `getPendingTransactions(CRYPTO_ROUTER)` de la fuente que emitió el evento, luego recorre la lista que devuelve y *primero guarda en su base de datos* a todas las transacciones colocándoles el estado (ACKNOWLEDGE,TO_BE_NOTIFIED). *Luego*, por cada transacción en la base de datos con estado (ACKNOWLEDGE,TO_BE_NOTIFIED) (que pueden ser más que las que guardó recién) ejecuta los siguientes pasos *en ese orden*:
 .. Llama al método `confirmReception` con el TransactionId de la transacción como parámetro.

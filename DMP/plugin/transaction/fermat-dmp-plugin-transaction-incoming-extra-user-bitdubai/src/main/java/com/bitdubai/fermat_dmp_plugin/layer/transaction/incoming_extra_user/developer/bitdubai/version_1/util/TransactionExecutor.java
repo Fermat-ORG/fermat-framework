@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.util;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformWalletType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
@@ -20,6 +21,7 @@ import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.inter
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookRecord;
 import com.bitdubai.fermat_cry_api.layer.crypto_module.wallet_address_book.interfaces.WalletAddressBookRegistry;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.incoming_extra_user.developer.bitdubai.version_1.exceptions.UnexpectedTransactionException;
 
 import java.util.UUID;
 
@@ -58,7 +60,7 @@ public class TransactionExecutor implements DealsWithBitcoinWallet, DealsWithWal
     }
 
 
-    public void executeTransaction(Transaction<CryptoTransaction> transaction,BalanceType balanceType) throws CantGetWalletAddressBookRegistryException, CantGetWalletAddressBookException, CantLoadWalletException, CantRegisterCreditException {
+    public void executeTransaction(Transaction<CryptoTransaction> transaction) throws CantGetWalletAddressBookRegistryException, CantGetWalletAddressBookException, CantLoadWalletException, CantRegisterCreditException, UnexpectedTransactionException {
 
 /*
         UUID temporalId = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
@@ -79,6 +81,23 @@ public class TransactionExecutor implements DealsWithBitcoinWallet, DealsWithWal
             switch (platformWalletType) {
                 case BASIC_WALLET_BITCOIN_WALLET:
                     BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletID);
+
+                    /*
+                     * Now we need to decide if this transaction should be applied to the book or available balance
+                     */
+                    BalanceType balanceType = null;
+                    switch (transaction.getInformation().getCryptoStatus()){
+                        case ON_CRYPTO_NETWORK:
+                            break;
+                        case ON_BLOCKCHAIN:
+                            break;
+                        case REVERSED:
+                            break;
+                        default:
+                            throw new UnexpectedTransactionException("El crypto status no es esperado",null,"El cryptoStatus es: "+ transaction.getInformation().getCryptoStatus().getCode(),"");
+                    }
+
+
                     switch (balanceType) {
                         case BOOK:
                             try {
@@ -86,7 +105,7 @@ public class TransactionExecutor implements DealsWithBitcoinWallet, DealsWithWal
                             } catch (CantRegisterCreditException e) {
                                 e.printStackTrace();
                             }
-                            System.out.println("TTF - Transaction applie by transaction executor");
+                            System.out.println("TTF - Transaction applied by transaction executor");
                             return;
                         case AVILABLE:
                             try {
@@ -94,7 +113,7 @@ public class TransactionExecutor implements DealsWithBitcoinWallet, DealsWithWal
                             } catch (CantRegisterCreditException e) {
                                 e.printStackTrace();
                             }
-                            System.out.println("TTF - Transaction applie by transaction executor");
+                            System.out.println("TTF - Transaction applied by transaction executor");
                             return;
                         default:
                             break; // TODO: colocar otra excepción
