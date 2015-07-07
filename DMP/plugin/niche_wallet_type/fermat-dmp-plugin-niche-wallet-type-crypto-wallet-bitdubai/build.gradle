@@ -3,6 +3,8 @@ apply plugin: 'maven'
 apply plugin: 'findbugs'
 apply plugin: 'checkstyle'
 apply plugin: 'pmd'
+apply plugin: 'jacoco'
+
 
 group = "com.bitdubai.fermat.dmp"
 version = '1.0.0'

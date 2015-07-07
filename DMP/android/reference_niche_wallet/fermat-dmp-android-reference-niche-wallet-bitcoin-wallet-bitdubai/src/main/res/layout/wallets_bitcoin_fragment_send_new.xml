@@ -5,15 +5,15 @@
     android:orientation="vertical"
     android:background="#fbf7ed"
     android:textColor="#000000"
-    android:id="@+id/contacts_container">
+    android:id="@+id/send_contacts_container">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
         android:layout_alignParentBottom="true"
-        android:id="@+id/contacts_container2">
+        android:id="@+id/send_contacts_container2">
 
-        <EditText android:id="@+id/inputSearch"
+        <EditText android:id="@+id/send_inputSearch"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:hint="@string/search_contacts_hint"
@@ -26,7 +26,7 @@
             android:textColor="#0B3B0B"/>
 
         <Button
-            android:id="@+id/add_contact_btn"
+            android:id="@+id/send_add_contact_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Add"
@@ -37,7 +37,7 @@
     </LinearLayout>
 
     <ListView
-        android:id="@+id/contactlist"
+        android:id="@+id/send_contactlist"
         android:layout_height="0dp"
         android:layout_width="match_parent"
         android:layout_weight="0.14"
