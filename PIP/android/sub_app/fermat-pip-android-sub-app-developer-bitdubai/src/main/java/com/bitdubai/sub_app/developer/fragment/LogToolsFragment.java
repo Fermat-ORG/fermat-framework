@@ -46,7 +46,7 @@ import java.util.Map;
  * haves all methods for the log tools activity of a developer
  * <p/>
  * <p/>
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 25/06/15.
+ * Created by Matias Furszyfer
  *
  * @version 1.0
  */
@@ -155,7 +155,7 @@ public class LogToolsFragment extends Fragment {
         //TODO: MATI
         //TODO: rodri fijate que ahí lo está haciendo
 
-        switch  (item.getItemId()) {
+        /*switch  (item.getItemId()) {
             case  Loggers.LOGGER_LEVEL_NOT_LOGGING: {
                 Toast.makeText(getActivity(), selectedWord, Toast.LENGTH_SHORT).show();
                 changeLogLevel(logger.level0, LogLevel.NOT_LOGGING, selectedWord);
@@ -180,7 +180,7 @@ public class LogToolsFragment extends Fragment {
                 Toast.makeText(getActivity(), "Nada seleccionado", Toast.LENGTH_SHORT).show();
                 break;
             }
-        }
+        }*/
         //preguntar que carajo es el resource
         /*Loggers logger = lstLoggers.get(info.position);
         if (item.getTitle() == LogLevel.NOT_LOGGING.toString()) {
@@ -198,14 +198,14 @@ public class LogToolsFragment extends Fragment {
     }
 
     private void changeLogLevel(String pluginKey,LogLevel logLevel, String resource) {
-        try {
+        //try {
             HashMap<String, LogLevel> data = new HashMap<String, LogLevel>();
-            Plugins plugin = Plugins.getByKey(pluginKey);
+            /*Plugins plugin = Plugins.getByKey(pluginKey);
 
             /**
              * I will get all the PullPath matches with resource
              */
-            for (Loggers logger : lstLoggers){
+            /*for (Loggers logger : lstLoggers){
                 if (logger.level0 == resource)
                     data.put(logger.fullPath,logLevel);
                 if (logger.level1 == resource)
@@ -239,6 +239,7 @@ public class LogToolsFragment extends Fragment {
         } catch (Exception e) {
             System.out.println("*********** soy un error " + e.getMessage());
         }
+        */
     }
 
 
@@ -275,13 +276,16 @@ public class LogToolsFragment extends Fragment {
 
 
                     Loggers log = new Loggers();
-                    log.level0=classes.getLevel0();
+                    /*log.level0=classes.getLevel0();
                     log.level1=classes.getLevel1();
                     log.level2=classes.getLevel2();
                     log.level3=classes.getLevel3();
                     log.fullPath=classes.getFullPath();
+                    */
                     log.type=Loggers.TYPE_PLUGIN;
+                    log.classHierarchyLevels=classes;
                     log.picture="plugin";
+                    log.pluginKey=plugin.getKey();
                     lstLoggers.add(log);
                 }
 
@@ -302,13 +306,16 @@ public class LogToolsFragment extends Fragment {
                     //loading de loggers class
 
                     Loggers log = new Loggers();
-                    log.level0 = classes.getLevel0();
+                    /*log.level0 = classes.getLevel0();
                     log.level1 = classes.getLevel1();
                     log.level2 = classes.getLevel2();
                     log.level3 = classes.getLevel3();
                     log.fullPath = classes.getFullPath();
+                    */
                     log.type = Loggers.TYPE_ADDON;
                     log.picture = "addon";
+                    log.pluginKey=addon.getKey();
+                    log.classHierarchyLevels=classes;
                     lstLoggers.add(log);
                 }
 
@@ -399,8 +406,8 @@ public class LogToolsFragment extends Fragment {
 
 
                         LogToolsFragmentLevel2 logToolsFragmentLevel2 = new LogToolsFragmentLevel2();
-
-                        logToolsFragmentLevel2.setLoggers(lstLoggers.getListFromLevel(item, ArrayListLoggers.LEVEL_0));
+                        ArrayListLoggers lst = lstLoggers.getListFromLevel(item, ArrayListLoggers.LEVEL_0);
+                        logToolsFragmentLevel2.setLoggers(lst);
                         //DatabaseToolsDatabaseListFragment databaseToolsDatabaseListFragment = new DatabaseToolsDatabaseListFragment();
 
                         //databaseToolsDatabaseListFragment.setResource(item);
@@ -414,28 +421,6 @@ public class LogToolsFragment extends Fragment {
                         FT.commit();
                     }
                 });
-                /*holder.imageView.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View view) {
-                        Toast.makeText(getActivity(),"tocando",Toast.LENGTH_SHORT).show();
-                        //getActivity().openContextMenu(view);
-                        PopupMenu popupMenu = new PopupMenu(getActivity(), view);
-                        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                            @Override
-                            public boolean onMenuItemClick(MenuItem menuItem) {
-                                Toast.makeText(getActivity(),"Hola jorge",Toast.LENGTH_SHORT).show();
-
-                                return false;
-                            }
-                        });
-                        popupMenu.inflate(R.menu.popup_menu);
-                        popupMenu.show();
-
-                        return true;
-                    }
-                });
-                */
-                //registerForContextMenu(holder.imageView );
                 TextView textView =(TextView) convertView.findViewById(R.id.company_text_view);
                 Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
                 textView.setTypeface(tf);
@@ -447,8 +432,7 @@ public class LogToolsFragment extends Fragment {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            holder.companyTextView.setText(item.level0);
-            // holder.companyTextView.setTypeface(MyApplication.getDefaultTypeface());
+            holder.companyTextView.setText(item.classHierarchyLevels.getLevel0());
 
 
             switch (item.picture) {
@@ -466,7 +450,7 @@ public class LogToolsFragment extends Fragment {
                     break;
             }
             holder.btnLogger= (ImageView) convertView.findViewById(R.id.imageView_logger);
-            holder.btnLogger.setImageResource(R.drawable.loggers_button);
+            holder.btnLogger.setImageResource(R.drawable.ic_menu_drawer);
 
             holder.btnLogger.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -480,15 +464,19 @@ public class LogToolsFragment extends Fragment {
                             int itemId = menuItem.getItemId();
                             if (itemId == R.id.menu_no_logging) {
                                 //TODO: HAcer el cambio acá para que haga el changelevel
-
+                                changeLogLevel(item.pluginKey,LogLevel.NOT_LOGGING,item.classHierarchyLevels.getFullPath());
                                 //changeLogLevel();
                                 return true;
                             } else if (itemId == R.id.menu_minimal) {
+                                changeLogLevel(item.pluginKey,LogLevel.MINIMAL_LOGGING,item.classHierarchyLevels.getFullPath());
                                 return true;
                             } else if (itemId == R.id.menu_moderate) {
+                                changeLogLevel(item.pluginKey,LogLevel.MODERATE_LOGGING,item.classHierarchyLevels.getFullPath());
                                 return true;
                             } else if (itemId == R.id.menu_aggresive) {
+                                changeLogLevel(item.pluginKey,LogLevel.AGGRESSIVE_LOGGING,item.classHierarchyLevels.getFullPath());
                                 return true;
+
                             }
 
                             return false;

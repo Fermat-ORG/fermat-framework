@@ -236,6 +236,7 @@ public class DatabaseToolsDatabaseTableListFragment extends Fragment {
             }
 
             TextView textView =(TextView) convertView.findViewById(R.id.company_text_view);
+            textView.setText(item.databases);
             Typeface tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
             textView.setTypeface(tf);
             holder.companyTextView = textView;
