@@ -206,7 +206,7 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 swipeLayout.setRefreshing(false);
                 refreshBalance();
             }
-        }, 3000);
+        }, 5000);
     }
 
     private void refreshBalance() {
