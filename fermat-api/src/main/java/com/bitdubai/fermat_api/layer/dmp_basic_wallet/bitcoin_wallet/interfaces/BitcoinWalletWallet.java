@@ -20,9 +20,9 @@ public interface BitcoinWalletWallet {
    */
     public UUID getWalletId();
 
-    public BitcoinWalletBalance getAvailableBalance() throws CantCalculateBalanceException;
+    public BitcoinWalletBalance getAvailableBalance();
 
-    public BitcoinWalletBalance getBookBalance() throws CantCalculateBalanceException;
+    public BitcoinWalletBalance getBookBalance();
 
     public List<BitcoinWalletTransactionRecord> getTransactions(int max, int offset) throws CantGetTransactionsException;
 

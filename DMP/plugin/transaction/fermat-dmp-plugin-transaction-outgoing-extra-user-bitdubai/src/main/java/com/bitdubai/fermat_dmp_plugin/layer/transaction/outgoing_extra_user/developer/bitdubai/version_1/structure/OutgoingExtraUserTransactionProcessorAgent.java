@@ -183,8 +183,11 @@ public class OutgoingExtraUserTransactionProcessorAgent implements DealsWithBitc
 
             BitcoinWalletWallet bitcoinWalletWallet = null;
 
+            /* TODO: Reemplazar por el que se lee de la transacción
+             *       Esto se va a poder hacer cuando nos pasen todos los parámetros
+             *       necesarios.
+             */
             UUID temporalId = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
-
 
             try {
                 bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(temporalId);
@@ -214,8 +217,9 @@ public class OutgoingExtraUserTransactionProcessorAgent implements DealsWithBitc
             long funds;
             for(TransactionWrapper transaction : transactionList) {
                 try {
-                    funds = bitcoinWalletWallet.getBalance();
+                    funds = bitcoinWalletWallet.getAvailableBalance().getBalance();
                     if (funds < transaction.getAmount()) {
+                        dao.cancelTransaction(transaction);
                         FermatException insufficientFundsException = new InsufficientFundsException("I don't have funds for this transaction",null,"Balance: "+ funds + "\ncryptoAmount: "+transaction.getAmount(),"");
                         this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,insufficientFundsException );
                         return;
@@ -223,7 +227,24 @@ public class OutgoingExtraUserTransactionProcessorAgent implements DealsWithBitc
                 } catch (CantCalculateBalanceException e) {
                     this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                     return;
+                } catch (CantUpdateRecordException e) {
+                    this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    return;
+                } catch (CantLoadTableToMemoryException e) {
+                    this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    return;
+                } catch (InconsistentTableStateException e) {
+                    this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    return;
                 }
+
+                try {
+                    bitcoinWalletWallet.getAvailableBalance().debit(transaction);
+                } catch (CantRegisterDebitDebitException e) {
+                    this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    return;
+                }
+
 
                 // Now we apply it in the vault
                 try {
@@ -285,7 +306,7 @@ public class OutgoingExtraUserTransactionProcessorAgent implements DealsWithBitc
             for(TransactionWrapper transaction : transactionList){
                 try {
                     //TODO: revisar por el cambio en la interface
-                        bitcoinWalletWallet.debit(transaction);
+                        bitcoinWalletWallet.getBookBalance().debit(transaction);
 
                     dao.setToPIW(transaction);
                 } catch (CantRegisterDebitDebitException e) {
