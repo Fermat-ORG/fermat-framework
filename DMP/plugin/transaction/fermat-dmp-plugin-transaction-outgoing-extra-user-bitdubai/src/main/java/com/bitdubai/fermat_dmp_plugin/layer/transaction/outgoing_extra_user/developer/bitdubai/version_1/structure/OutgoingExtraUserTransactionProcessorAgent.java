@@ -214,7 +214,7 @@ public class OutgoingExtraUserTransactionProcessorAgent implements DealsWithBitc
             long funds;
             for(TransactionWrapper transaction : transactionList) {
                 try {
-                    funds = bitcoinWalletWallet.getAvailableBalance().getBalance();
+                    funds = bitcoinWalletWallet.getBalance();
                     if (funds < transaction.getAmount()) {
                         FermatException insufficientFundsException = new InsufficientFundsException("I don't have funds for this transaction",null,"Balance: "+ funds + "\ncryptoAmount: "+transaction.getAmount(),"");
                         this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,insufficientFundsException );
@@ -285,10 +285,10 @@ public class OutgoingExtraUserTransactionProcessorAgent implements DealsWithBitc
             for(TransactionWrapper transaction : transactionList){
                 try {
                     //TODO: revisar por el cambio en la interface
-                        bitcoinWalletWallet.getAvailableBalance().debit(transaction);
+                        bitcoinWalletWallet.debit(transaction);
 
                     dao.setToPIW(transaction);
-                } catch (CantCalculateBalanceException |CantRegisterDebitDebitException e) {
+                } catch (CantRegisterDebitDebitException e) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
                     return;
                 } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {

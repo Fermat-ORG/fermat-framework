@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionState;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
 
@@ -12,14 +11,14 @@ import java.util.UUID;
  */
 public interface BitcoinWalletTransactionRecord {
 
+    /*
+     * TODO: Natalia - Agregar un UUID a esta interfaz. Va a ser necesario para
+     *       registrar las transacciones.
+     */
 
     public CryptoAddress getAddressFrom();
 
     public void setAddressFrom(CryptoAddress addressFrom);
-
-    public UUID getIdTransaction();
-
-    public void setIdTransaction(UUID id);
 
     public CryptoAddress getAddressTo();
 
@@ -29,14 +28,17 @@ public interface BitcoinWalletTransactionRecord {
 
     public void setAmount(long amount);
 
-    public BalanceType getBalanceType();
-
-    public void setBalanceType(BalanceType type);
-
     public TransactionType getType();
 
     public void setType(TransactionType type);
 
+    /*
+     * TODO: Natalia - borrar los métodos getState y setState de esta interfaz
+     *       (el enum TransactionState queda como está)
+     */
+    public TransactionState getState();
+
+    public void setState(TransactionState state);
 
     public long getTimestamp();
 

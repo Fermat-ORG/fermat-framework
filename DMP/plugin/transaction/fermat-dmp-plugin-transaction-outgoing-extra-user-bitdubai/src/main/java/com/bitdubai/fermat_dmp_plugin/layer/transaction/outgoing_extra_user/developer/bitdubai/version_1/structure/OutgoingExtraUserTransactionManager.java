@@ -130,7 +130,7 @@ public class OutgoingExtraUserTransactionManager implements DealsWithBitcoinWall
         try {
             //TODO: revisar por el cambio en la interface
 
-            funds = bitcoinWalletWallet.getAvailableBalance().getBalance();
+            funds = bitcoinWalletWallet.getBalance();
         } catch (CantCalculateBalanceException e) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantSendFundsException("I couldn't calculate balance",e,"","");
