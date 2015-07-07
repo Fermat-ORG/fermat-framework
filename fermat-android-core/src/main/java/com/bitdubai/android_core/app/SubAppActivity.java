@@ -23,41 +23,23 @@ import com.bitdubai.android_core.app.common.version_1.tabbed_dialog.PagerSliding
 import com.bitdubai.android_core.app.common.version_1.navigation_drawer.NavigationDrawerFragment;
 
 import com.bitdubai.android_core.app.common.PagerAdapter;
-import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopChatFragment;
-import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopHistoryFragment;
-import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopMapFragment;
-import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopProductsFragment;
-import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopReviewsFragment;
-import com.bitdubai.android_core.app.subapp.shop.version_1.fragment.ShopShopFragment;
+
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
-import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
-import com.bitdubai.fermat_api.layer.pip_actor.developer.ToolManager;
+
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPlatformExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ReceiveFragment;
 
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.*;
-import com.bitdubai.sub_app.developer.fragment.DatabaseToolsFragment;
 import com.bitdubai.sub_app.manager.fragment.SubAppDesktopFragment;
-import com.bitdubai.sub_app.shop_manager.fragment.ShopDesktopFragment;
 
-import com.bitdubai.sub_app.wallet_store.fragment.AllFragment;
-import com.bitdubai.sub_app.wallet_store.fragment.FreeFragment;
 
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime.WalletRuntimeManager;
 
 import com.bitdubai.sub_app.wallet_manager.fragment.WalletDesktopFragment;
 
 import com.bitdubai.fermat_dmp_plugin.layer.middleware.app_runtime.developer.bitdubai.version_1.structure.RuntimeFragment;
-import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.BalanceFragment;
-import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.DiscountsFragment;
-import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.HomeFragment;
-import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.RefillFragment;
-import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.SendFragment;
-import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ShopFragment;
-import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.AccountDetailAllFragment;
-import com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.AccountDetailCreditsFragment;
 
 import android.view.View;
 import android.widget.TextView;
@@ -174,8 +156,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                         }
                         break;
                     case CWP_WALLET_MANAGER_SHOP:
-                        fragments.add(android.support.v4.app.Fragment.instantiate(this, ShopDesktopFragment.class.getName()));
-                        break;
+                         break;
                     case CWP_SUB_APP_DEVELOPER:
                         fragments.add(android.support.v4.app.Fragment.instantiate(this, com.bitdubai.sub_app.manager.fragment.SubAppDesktopFragment.class.getName()));
                         break;
@@ -183,54 +164,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                     case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE:
                         fragments.add(android.support.v4.app.Fragment.instantiate(this, ReceiveFragment.class.getName()));
                         break;
-                    case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_PROFILE:
-                        break;
-                    case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_DESKTOP:
-                        break;
-                    case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_CONTACTS:
-                        break;
-                    case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_COMMUNITY:
-                        break;
-                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_HOME:
-                        break;
-                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_BALANCE:
-                        break;
-                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SEND:
-                        break;
-                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_RECEIVE:
-                        break;
-                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOPS:
-                        break;
-                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_REFFIL:
-                        break;
-                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_DISCOUNTS:
-                        break;
-                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_SHOP:
-                        break;
-                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_PRODUCTS:
-                        break;
-                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_REVIEWS:
-                        break;
-                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_CHAT:
-                        break;
-                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_HISTORY:
-                        break;
-                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_MAP:
-                        break;
-                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_DEBITS:
-                        break;
-                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNT_CREDITS:
-                        break;
-                    case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_ALL:
-                        break;
-                    case CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED:
-                        break;
-                    case CWP_WALLET_ADULTS_ALL_REQUEST_SEND:
-                        break;
-                    case CWP_WALLET_STORE_MAIN:
-                        break;
-                    case CWP_WALLET_FACTORY_MAIN:
-                        break;
+
                 }
 
             }
@@ -239,11 +173,13 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
             ViewPager pager = (ViewPager) super.findViewById(R.id.viewpager);
             pager.setVisibility(View.VISIBLE);
 
+            //set default page to show
+            pager.setCurrentItem(0);
+
             pager.setAdapter(this.PagerAdapter);
 
             pager.setBackgroundResource(R.drawable.background_tiled_diagonal_light);
-            //set default page to show
-            pager.setCurrentItem(0);
+
 
         } catch (Exception ex) {
             this.errorManager.reportUnexpectedPlatformException(PlatformComponents.PLATFORM, UnexpectedPlatformExceptionSeverity.DISABLES_ONE_PLUGIN, ex);
@@ -361,54 +297,14 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                 case CWP_SHELL_LOGIN:
                     break;
                 case CWP_SHOP_MANAGER_MAIN:
-                    MenuItem searchItem = menu.findItem(com.wallet_store.bitdubai.R.id.action_search);
-                    searchItem.setVisible(true);
-                    MenuItemCompat.setShowAsAction(searchItem, MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItem.SHOW_AS_ACTION_ALWAYS);
-                    break;
+                         break;
                 case CWP_WALLET_MANAGER_MAIN:
                     break;
 
                 case CWP_WALLET_STORE_MAIN:
                     break;
 
-                case CWP_WALLET_RUNTIME_STORE_MAIN:
-                    break;
-                case CWP_WALLET_RUNTIME_WALLET_AGE_ADULTS_ALL_BITDUBAI_VERSION_1_MAIN:
-                    break;
-                case CWP_WALLET_RUNTIME_ADULTS_ALL_MAIN:
-                    break;
-                case CWP_WALLET_RUNTIME_ADULTS_ALL_ACCOUNTS:
-                    break;
-                case CWP_WALLET_RUNTIME_ADULTS_ALL_BANKS:
-                    break;
-                case CWP_WALLET_RUNTIME_ADULTS_ALL_COUPONS:
-                    break;
-                case CWP_WALLET_RUNTIME_ADULTS_ALL_DISCOUNTS:
-                    break;
-                case CWP_WALLET_RUNTIME_ADULTS_ALL_VOUCHERS:
-                    break;
-                case CWP_WALLET_RUNTIME_ADULTS_ALL_GIFT_CARDS:
-                    break;
-                case CWP_WALLET_RUNTIME_ADULTS_ALL_CLONES:
-                    break;
-                case CWP_WALLET_RUNTIME_ADULTS_ALL_CHILDS:
-                    break;
-                case CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS:
-                    break;
-                case CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_CHAT:
-                    getMenuInflater().inflate(R.menu.wallet_framework_activity_sent_all_menu, menu);
-                    return true;
-                case CWP_WALLET_ADULTS_ALL_SHOPS:
-                    inflater.inflate(R.menu.wallet_shop_activity_account_detail_menu, menu);
-                    break;
-                case CWP_WALLET_ADULTS_ALL_REFFILS:
-                    break;
-                case CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED:
-                    break;
-                case CWP_WALLET_ADULTS_ALL_REQUEST_SEND:
-                    break;
-                case CWP_WALLET_FACTORY_MAIN:
-                    break;
+
             }
 
         } catch (Exception e) {
@@ -442,30 +338,14 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
 
                 return true;
             }
-            if (id == R.id.action_search) {
-                return true;
-            }
+
+
             if (id == R.id.action_file) {
                 return true;
             }
 
-            if (id == R.id.action_requests_sent) {
-                Intent intent;
-                ApplicationSession.setChildId("1|1");
-                activity = this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_ADULTS_ALL_CHAT_TRX);
-                intent = new Intent(this, com.bitdubai.android_core.app.FragmentActivity.class);
-                startActivity(intent);
-                return true;
-            }
 
-            if (id == R.id.action_requests_received) {
-                Intent intent;
-                ApplicationSession.setChildId("1|1");
-                activity = this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_ADULTS_ALL_CHAT_TRX);
-                intent = new Intent(this, com.bitdubai.android_core.app.FragmentActivity.class);
-                startActivity(intent);
-                return true;
-            }
+
 
 
         } catch (Exception e) {
@@ -517,9 +397,6 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
             cleanWindows();
             switch (activityType) {
 
-                case CWP_SHOP_MANAGER_MAIN:
-
-                    break;
                 case CWP_SUP_APP_ALL_DEVELOPER: //Developer manager
                     ((ApplicationSession) this.getApplication()).setWalletId(0);
 
@@ -527,23 +404,6 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                     //execute NavigateWallet to go wallet activity
                     intent = new Intent(this, com.bitdubai.android_core.app.WalletActivity.class);
                     startActivity(intent);
-
-
-                case CWP_WALLET_MANAGER_MAIN:
-
-
-                    break;
-                case CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_VERSION_1_MAIN:
-                    //si navego a una wallet tengo que usar el wallet runtime
-
-                    ((ApplicationSession) this.getApplication()).setWalletId(Integer.parseInt(paramId));
-                    ApplicationSession.setWalletId(2);
-                    this.activity = this.walletRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_WALLET_AGE_KIDS_ALL_BITDUBAI_VERSION_1_MAIN);
-                    //execute NavigateWallet to go wallet activity
-                    intent = new Intent(this, com.bitdubai.android_core.app.WalletActivity.class);
-                    startActivity(intent);
-                    break;
-                case CWP_WALLET_STORE_MAIN:
                     break;
                 case CWP_WALLET_BASIC_ALL_MAIN: //basic Wallet
                     //go to wallet basic definition
@@ -561,103 +421,6 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                     startActivity(intent);
 
                     break;
-                case CWP_WALLET_ADULTS_ALL_MAIN:
-
-                    if (Integer.parseInt(paramId) > 4) {
-                        Toast.makeText(getApplicationContext(), "This part of the prototype is not ready yet", Toast.LENGTH_LONG).show();
-                    } else {
-                        ((ApplicationSession) this.getApplication()).setWalletId(Integer.parseInt(paramId));
-                        this.walletRuntimeMiddleware.getActivity(Activities.CWP_WALLET_ADULTS_ALL_MAIN);
-                        intent = new Intent(this, com.bitdubai.android_core.app.WalletActivity.class);
-                        startActivity(intent);
-                    }
-                    break;
-                case CWP_WALLET_RUNTIME_STORE_MAIN:
-                    break;
-                case CWP_WALLET_RUNTIME_ADULTS_ALL_MAIN:
-                    break;
-                case CWP_WALLET_RUNTIME_ADULTS_ALL_ACCOUNTS:
-                    break;
-                case CWP_WALLET_RUNTIME_ADULTS_ALL_AVAILABLE_BALANCE:
-                    this.walletRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_AVAILABLE_BALANCE);
-                    intent = new Intent(this, com.bitdubai.android_core.app.FragmentActivity.class);
-
-                    startActivity(intent);
-                    break;
-                case CWP_WALLET_RUNTIME_ADULTS_ALL_BANKS:
-                    break;
-                case CWP_WALLET_RUNTIME_ADULTS_ALL_COUPONS:
-                    break;
-                case CWP_WALLET_RUNTIME_ADULTS_ALL_DISCOUNTS:
-                    break;
-                case CWP_WALLET_RUNTIME_ADULTS_ALL_VOUCHERS:
-                    break;
-                case CWP_WALLET_RUNTIME_ADULTS_ALL_GIFT_CARDS:
-                    break;
-                case CWP_WALLET_RUNTIME_ADULTS_ALL_CLONES:
-                    break;
-                case CWP_WALLET_RUNTIME_ADULTS_ALL_CHILDS:
-                    break;
-                case CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS:
-                    break;
-                case CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_CHAT:
-                    ApplicationSession.setContact(paramId);
-                    this.walletRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_CHAT);
-                    intent = new Intent(this, com.bitdubai.android_core.app.FragmentActivity.class);
-                    startActivity(intent);
-                    break;
-                case CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_SEND:
-                    ApplicationSession.setChildId(paramId);
-                    this.walletRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_SEND);
-                    intent = new Intent(this, com.bitdubai.android_core.app.FragmentActivity.class);
-                    startActivity(intent);
-                    break;
-                case CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_RECEIVE:
-                    ApplicationSession.setChildId(paramId);
-                    this.walletRuntimeMiddleware.getActivity(Activities.CWP_WALLET_RUNTIME_ADULTS_ALL_CONTACTS_RECEIVE);
-                    intent = new Intent(this, com.bitdubai.android_core.app.FragmentActivity.class);
-                    startActivity(intent);
-
-
-                    break;
-                case CWP_WALLET_ADULTS_ALL_SHOPS:
-                    ((ApplicationSession) this.getApplication()).setWalletId(0);
-
-                    activity = this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_ADULTS_ALL_SHOPS);
-                    NavigateActivity();
-
-                    break;
-                case CWP_WALLET_ADULTS_ALL_CHAT_TRX:
-                    ApplicationSession.setChildId(paramId);
-                    this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_ADULTS_ALL_CHAT_TRX);
-                    intent = new Intent(this, com.bitdubai.android_core.app.FragmentActivity.class);
-                    startActivity(intent);
-                    break;
-                case CWP_WALLET_ADULTS_ALL_REFFILS:
-                    break;
-                case CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED:
-                    break;
-                case CWP_WALLET_ADULTS_ALL_REQUEST_SEND:
-                    break;
-                case CWP_WALLET_ADULTS_ALL_SEND_HISTORY:
-                    ApplicationSession.setTagId(Integer.parseInt(paramId));
-
-                    this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_ADULTS_ALL_SEND_HISTORY);
-                    intent = new Intent(this, com.bitdubai.android_core.app.FragmentActivity.class);
-                    startActivity(intent);
-                    break;
-                case CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED_HISTORY:
-                    ApplicationSession.setTagId(Integer.parseInt(paramId));
-
-                    this.walletRuntimeMiddleware.getActivity(Activities.CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED_HISTORY);
-                    intent = new Intent(this, com.bitdubai.android_core.app.FragmentActivity.class);
-                    startActivity(intent);
-                    break;
-                case CWP_WALLET_FACTORY_MAIN:
-                    cleanWindows();
-                    this.appRuntimeMiddleware.getActivity(Activities.CWP_WALLET_FACTORY_MAIN);
-                    NavigateActivity();
-                    break;
             }
 
         } catch (Exception e) {
@@ -670,6 +433,7 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
     @Override
     public void onResume() {
         super.onResume();
+
     }
 
     @Override
@@ -807,89 +571,17 @@ public class SubAppActivity extends FragmentActivity implements NavigationDrawer
                 //execute current activity fragments
                 try {
                     switch (fragmentType) {
-                        case CWP_SHELL_LOGIN:
 
-                            break;
                         case CWP_WALLET_MANAGER_MAIN:
                             currentFragment = WalletDesktopFragment.newInstance(position);
-                            break;
-                        case CWP_WALLET_MANAGER_SHOP:
-                            currentFragment = ShopDesktopFragment.newInstance(position);
                             break;
 
                         case CWP_SUB_APP_DEVELOPER:
                             currentFragment = SubAppDesktopFragment.newInstance(position);
                             break;
 
-                        case CWP_SHOP_MANAGER_MAIN:
-                            currentFragment = AllFragment.newInstance(0);
-                            break;
-                        case CWP_SHOP_MANAGER_FREE:
-                            currentFragment = FreeFragment.newInstance(1);
-                            break;
-                        case CWP_SHOP_MANAGER_PAID:
-                            currentFragment = AllFragment.newInstance(2);
-                            break;
-                        case CWP_SHOP_MANAGER_ACCEPTED_NEARBY:
-                            currentFragment = AllFragment.newInstance(3);
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_HOME:
-                            currentFragment = HomeFragment.newInstance(position);
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_BALANCE:
-                            currentFragment = BalanceFragment.newInstance(position);
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SEND:
-                            currentFragment = SendFragment.newInstance(position);
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_RECEIVE:
-                            currentFragment = com.bitdubai.android_core.app.subapp.wallet_runtime.wallet_segment.age.sub_segment.teens.sub_segment.all.developer.bitdubai.version_1.fragment.ReceiveFragment.newInstance(position);
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOPS:
-                            currentFragment = ShopFragment.newInstance(position);
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_REFFIL:
-                            currentFragment = RefillFragment.newInstance(position);
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_DISCOUNTS:
-                            currentFragment = DiscountsFragment.newInstance(position);
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_SHOP:
-                            currentFragment = ShopShopFragment.newInstance(position);
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_PRODUCTS:
-                            currentFragment = ShopProductsFragment.newInstance(position);
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_REVIEWS:
-                            currentFragment = ShopReviewsFragment.newInstance(position);
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_CHAT:
-                            currentFragment = ShopChatFragment.newInstance(position);
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_HISTORY:
-                            currentFragment = ShopHistoryFragment.newInstance(position);
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_SHOP_MAP:
-                            currentFragment = ShopMapFragment.newInstance(position);
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_DEBITS:
-                            currentFragment = AccountDetailAllFragment.newInstance(2);
 
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNT_CREDITS:
-                            currentFragment = AccountDetailCreditsFragment.newInstance(1);
-                            break;
-                        case CWP_WALLET_RUNTIME_WALLET_ADULTS_ALL_BITDUBAI_ACCOUNTS_ALL:
-                            currentFragment = AccountDetailAllFragment.newInstance(0);
-                            break;
-                        case CWP_WALLET_ADULTS_ALL_REQUESTS_RECEIVED:
-                            break;
-                        case CWP_WALLET_ADULTS_ALL_REQUEST_SEND:
-                            break;
-                        case CWP_WALLET_STORE_MAIN:
-                            break;
-                        case CWP_WALLET_FACTORY_MAIN:
-                            break;
+
                     }
 
                 } catch (Exception ex) {

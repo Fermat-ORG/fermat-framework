@@ -413,6 +413,10 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
 
             runtimeTabStrip.setTabsColor("#8bba9e");
 
+            runtimeTabStrip.setTabsTextColor("#FFFFFF");
+
+            runtimeTabStrip.setTabsIndicateColor("#72af9c");
+
             runtimeTab = new RuntimeTab();
             runtimeTab.setLabel("Balance");
             runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_BALANCE);

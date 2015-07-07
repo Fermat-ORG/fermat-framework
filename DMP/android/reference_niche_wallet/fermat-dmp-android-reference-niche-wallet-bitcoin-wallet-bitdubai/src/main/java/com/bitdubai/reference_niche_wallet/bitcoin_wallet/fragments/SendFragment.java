@@ -228,7 +228,10 @@ public class SendFragment extends Fragment implements View.OnClickListener {
             EditText contact_name = (EditText) rootView.findViewById(R.id.contact_name);
             EditText amount = (EditText) rootView.findViewById(R.id.amount);
             EditText address = (EditText) rootView.findViewById(R.id.address);
+            EditText notes = (EditText) rootView.findViewById(R.id.notes);
             CryptoAddress cryptoAddress = new CryptoAddress();
+
+
 
             try {
 
@@ -238,7 +241,7 @@ public class SendFragment extends Fragment implements View.OnClickListener {
                 // first i add the contact
                 cryptoWallet.createWalletContact(cryptoAddress, contact_name.getText().toString(), Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
 
-                cryptoWallet.send(Long.parseLong(amount.getText().toString()), cryptoAddress, wallet_id);
+                cryptoWallet.send(Long.parseLong(amount.getText().toString()), cryptoAddress, wallet_id,notes.getText().toString());
 
                 showMessage("Send OK");
             } catch (CantCreateWalletContactException e)
