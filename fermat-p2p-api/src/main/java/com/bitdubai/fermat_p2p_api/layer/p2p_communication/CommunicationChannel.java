@@ -14,7 +14,7 @@ public interface CommunicationChannel {
     
     public String getChannelPublicKey();
     
-    public void registerNetworkService (NetworkServices networkService) throws NetworkServiceNotSupportedException;
+    public void registerNetworkService (NetworkServices networkService, String networkServicePublicKey) throws NetworkServiceNotSupportedException;
     
     public void unregisterNetworkService (NetworkServices networkService) throws NetworkServiceNotRegisteredException;
     

@@ -466,7 +466,7 @@ public class LogToolsFragment extends Fragment {
                     break;
             }
             holder.btnLogger= (ImageView) convertView.findViewById(R.id.imageView_logger);
-            holder.btnLogger.setImageResource(R.drawable.logger_button);
+            holder.btnLogger.setImageResource(R.drawable.loggers_button);
 
             holder.btnLogger.setOnTouchListener(new View.OnTouchListener() {
                 @Override

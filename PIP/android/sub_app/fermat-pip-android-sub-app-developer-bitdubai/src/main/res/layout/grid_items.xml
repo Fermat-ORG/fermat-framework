@@ -44,6 +44,17 @@
                 android:textStyle="bold"
                 android:layout_weight="0.7"
                 android:textSize="8sp"/>
+            <ImageView
+                android:id="@+id/imageView_logger"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
+                android:gravity="right"
+                android:layout_weight="0.5"
+                android:textColor="@color/black_overlay"
+                android:layout_alignParentTop="true"
+                android:layout_column="2"
+                android:layout_gravity="right" />
         </LinearLayout>
     </RelativeLayout>
 </RelativeLayout>

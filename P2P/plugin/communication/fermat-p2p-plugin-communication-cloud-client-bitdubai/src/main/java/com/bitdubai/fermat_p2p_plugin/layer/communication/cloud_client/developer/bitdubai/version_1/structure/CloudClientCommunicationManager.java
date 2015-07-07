@@ -12,7 +12,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutorService;
 
-import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.CommunicationChannelAddress;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.cloud.exceptions.CloudCommunicationException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
@@ -191,8 +190,8 @@ public class CloudClientCommunicationManager extends CloudFMPConnectionManager {
 		}
 	}
 	
-	public void registerNetworkService(final NetworkServices networkService) throws CloudCommunicationException {
-		String sender = eccPublicKey;
+	public void registerNetworkService(final NetworkServices networkService, String networkServicePublicKey) throws CloudCommunicationException {
+		String sender = networkServicePublicKey;
 		String destination = serverPublicKey;
 		FMPPacketType type = FMPPacketType.CONNECTION_REQUEST;
 		String messageHash = AsymmectricCryptography.encryptMessagePublicKey(networkService.toString(), serverPublicKey);

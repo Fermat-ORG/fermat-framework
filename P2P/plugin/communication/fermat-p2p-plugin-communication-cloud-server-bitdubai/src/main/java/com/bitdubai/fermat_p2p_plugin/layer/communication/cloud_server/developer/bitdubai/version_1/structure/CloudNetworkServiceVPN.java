@@ -6,7 +6,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.ExecutorService;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmectricCryptography;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.*;
 import com.bitdubai.fermat_api.layer.all_definition.enums.NetworkServices;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.FMPPacketFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.cloud.CloudFMPConnectionManager;
@@ -15,7 +15,6 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.FMPPacket.FMPPacketType;
 import com.bitdubai.fermat_p2p_plugin.layer.communication.cloud_server.developer.bitdubai.version_1.exceptions.RegisteringAddressHasNotRequestedConnectionException;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.fmp.WrongFMPPacketEncryptionException;
 
 public class CloudNetworkServiceVPN extends CloudFMPConnectionManager {
 
@@ -25,7 +24,7 @@ public class CloudNetworkServiceVPN extends CloudFMPConnectionManager {
 	private NetworkServices networkService;
 	private Set<String> participants = new ConcurrentSkipListSet<String>();
 	
-	public CloudNetworkServiceVPN(final CommunicationChannelAddress address, final ExecutorService executor, final ECCKeyPair keyPair, final NetworkServices networkService, final Collection<String> participants) throws IllegalArgumentException{
+	public CloudNetworkServiceVPN(final CommunicationChannelAddress address, final ExecutorService executor, final com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair keyPair, final NetworkServices networkService, final Collection<String> participants) throws IllegalArgumentException{
 		super(address, executor, keyPair.getPrivateKey(), keyPair.getPublicKey(), CloudFMPConnectionManagerMode.FMP_SERVER);
 		if(networkService == null)
 			throw new IllegalArgumentException();

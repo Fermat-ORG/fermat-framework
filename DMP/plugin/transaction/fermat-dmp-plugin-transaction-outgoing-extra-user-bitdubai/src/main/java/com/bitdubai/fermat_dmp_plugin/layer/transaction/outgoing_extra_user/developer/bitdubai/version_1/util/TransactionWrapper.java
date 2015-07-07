@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.developer.bitdubai.version_1.util;
 
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionState;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.TransactionType;
@@ -15,6 +16,10 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
     /*
      * BitcoinWalletTransactionRecord Interface member variables
      */
+    private UUID id;
+
+    private BalanceType balanceType;
+
     private String transactionHash;
 
     private CryptoAddress addressFrom;
@@ -52,6 +57,16 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
     }
 
     @Override
+    public UUID getIdTransaction() {
+        return this.id;
+    }
+
+    @Override
+    public void setIdTransaction(UUID id) {
+        this.id = id;
+    }
+
+    @Override
     public CryptoAddress getAddressTo() {
         return addressTo;
     }
@@ -72,6 +87,16 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
     }
 
     @Override
+    public BalanceType getBalanceType() {
+        return this.balanceType;
+    }
+
+    @Override
+    public void setBalanceType(BalanceType type) {
+        this.balanceType = type;
+    }
+
+    @Override
     public TransactionType getType() {
         return type;
     }
@@ -81,15 +106,6 @@ public class TransactionWrapper implements BitcoinWalletTransactionRecord {
         this.type = type;
     }
 
-    @Override
-    public TransactionState getState() {
-        return state;
-    }
-
-    @Override
-    public void setState(TransactionState state) {
-        this.state = state;
-    }
 
     @Override
     public long getTimestamp() {
