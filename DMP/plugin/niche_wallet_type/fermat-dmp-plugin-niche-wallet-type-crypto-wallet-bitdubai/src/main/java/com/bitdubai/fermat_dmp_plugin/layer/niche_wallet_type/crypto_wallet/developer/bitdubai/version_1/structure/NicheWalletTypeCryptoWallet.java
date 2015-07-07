@@ -281,11 +281,54 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
         }
     }
 
+<<<<<<< HEAD
     @Override
     public long getBookBalance(UUID walletId) throws CantGetBalanceException {
         try {
             BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletId);
             try {
+=======
+    /*@Override
+    public long getBalance(UUID walletId) throws CantGetBalanceException {
+        try {
+            BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletId);
+            try {
+                //TODO: revisar por el cambio en la interface
+                return bitcoinWalletWallet.getAvailableBalance().getBalance();
+            } catch (CantCalculateBalanceException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantGetBalanceException(CantGetBalanceException.DEFAULT_MESSAGE, e);
+            }
+        } catch (CantLoadWalletException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetBalanceException(CantGetBalanceException.DEFAULT_MESSAGE, e);
+        }
+    }
+    */
+
+    // TODO:  ESTOS DOS METODOS SON LOS QUE NATALIA/EZE ME TIENEN QUE PASAR PARA YO HACER CORRER LA APP
+    @Override
+    public long getAvailableBalance(UUID walletId) throws CantGetBalanceException {
+        try {
+            BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletId);
+            try {
+                return bitcoinWalletWallet.getAvailableBalance().getBalance();
+            } catch (CantCalculateBalanceException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantGetBalanceException(CantGetBalanceException.DEFAULT_MESSAGE, e);
+            }
+        } catch (CantLoadWalletException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetBalanceException(CantGetBalanceException.DEFAULT_MESSAGE, e);
+        }
+    }
+
+    @Override
+    public long getBookBalance(UUID walletId) throws CantGetBalanceException {
+        try {
+            BitcoinWalletWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletId);
+            try {
+>>>>>>> upstream/master
                 return bitcoinWalletWallet.getBookBalance().getBalance();
             } catch (CantCalculateBalanceException e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -309,10 +352,17 @@ public class NicheWalletTypeCryptoWallet implements CryptoWallet, DealsWithActor
     }
 
     @Override
+<<<<<<< HEAD
     public void send(long cryptoAmount, CryptoAddress destinationAddress, String notes, UUID walletID) throws CantSendCryptoException, InsufficientFundsException {
         try {
             outgoingExtraUserManager.getTransactionManager().send(walletID, destinationAddress, cryptoAmount, notes);
         } catch (com.bitdubai.fermat_api.layer.dmp_transaction.outgoing_extrauser.exceptions.InsufficientFundsException e) {
+=======
+    public void send(long cryptoAmount, CryptoAddress destinationAddress, UUID walletID,String notes) throws CantSendCryptoException {
+        try {
+            outgoingExtraUserManager.getTransactionManager().send(walletID, destinationAddress, cryptoAmount,notes);
+        } catch (InsufficientFundsException e) {
+>>>>>>> upstream/master
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_NICHE_WALLET_TYPE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
             throw new InsufficientFundsException(InsufficientFundsException.DEFAULT_MESSAGE, e);
         } catch (CantSendFundsException e) {

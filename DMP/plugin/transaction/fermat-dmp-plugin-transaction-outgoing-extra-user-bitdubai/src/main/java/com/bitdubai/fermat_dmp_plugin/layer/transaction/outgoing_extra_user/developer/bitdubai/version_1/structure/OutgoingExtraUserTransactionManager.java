@@ -98,8 +98,10 @@ public class OutgoingExtraUserTransactionManager implements DealsWithBitcoinWall
      * TransactionManager Interface methods implementation
      */
 
+    // TODO: Agregar un parámetro que indique una descripción del pago,
+    // TODO: Parametro agregado MATI ;)
     @Override
-    public void send(UUID walletID, CryptoAddress destinationAddress, long cryptoAmount) throws InsufficientFundsException, CantSendFundsException {
+    public void send(UUID walletID, CryptoAddress destinationAddress, long cryptoAmount,String notes) throws InsufficientFundsException, CantSendFundsException {
         OutgoingExtraUserDao dao = new OutgoingExtraUserDao();
         dao.setErrorManager(this.errorManager);
         dao.setPluginDatabaseSystem(this.pluginDatabaseSystem);
@@ -128,7 +130,9 @@ public class OutgoingExtraUserTransactionManager implements DealsWithBitcoinWall
 
         long funds;
         try {
-            funds = bitcoinWalletWallet.getBalance();
+            //TODO: revisar por el cambio en la interface
+
+            funds = bitcoinWalletWallet.getAvailableBalance().getBalance();
         } catch (CantCalculateBalanceException e) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantSendFundsException("I couldn't calculate balance",e,"","");
@@ -139,6 +143,7 @@ public class OutgoingExtraUserTransactionManager implements DealsWithBitcoinWall
         }
 
         try {
+            //bitcoinWalletWallet.getBookBalance().debit();
             dao.registerNewTransaction(walletID, destinationAddress, cryptoAmount);
         } catch (CantInsertRecordException e) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);

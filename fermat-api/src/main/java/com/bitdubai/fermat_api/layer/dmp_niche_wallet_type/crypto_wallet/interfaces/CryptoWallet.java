@@ -40,7 +40,9 @@ public interface CryptoWallet {
     /**
      * Balance Fragment methods
      */
-    long getBalance(UUID walletId) throws CantGetBalanceException;
+    long getAvailableBalance(UUID walletId) throws CantGetBalanceException;
+
+    long getBookBalance(UUID walletId)throws CantGetBalanceException; ;
 
     /**
      * Transactions Fragment methods
@@ -55,5 +57,9 @@ public interface CryptoWallet {
     /**
      * Send money methods
      */
+<<<<<<< HEAD
     void send(long cryptoAmount, CryptoAddress destinationAddress, String notes, UUID walletID) throws CantSendCryptoException, InsufficientFundsException;
+=======
+    void send(long cryptoAmount, CryptoAddress destinationAddress, UUID walletID,String notes) throws CantSendCryptoException;
+>>>>>>> upstream/master
 }

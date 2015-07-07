@@ -12,18 +12,19 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.ClassHierarchyLevels;
@@ -33,7 +34,6 @@ import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.sub_app.developer.common.ArrayListLoggers;
 import com.bitdubai.sub_app.developer.common.Loggers;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,7 +43,7 @@ import java.util.Map;
  * haves all methods for the log tools activity of a developer
  * <p/>
  * <p/>
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 25/06/15.
+ * Created by Matias Furszyfer
  *
  * @version 1.0
  */
@@ -127,7 +127,7 @@ public class LogToolsFragmentLevel2 extends Fragment {
         int i= info.position;
         Loggers logger=lstLoggers.get(info.position);
 
-        switch  (item.getItemId()) {
+        /*switch  (item.getItemId()) {
             case  Loggers.LOGGER_LEVEL_NOT_LOGGING: {
                 Toast.makeText(getActivity(), logger.level0, Toast.LENGTH_SHORT).show();
                 break;
@@ -230,7 +230,7 @@ public class LogToolsFragmentLevel2 extends Fragment {
                 }
             }
 
-            AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.shell_wallet_desktop_front_grid_item, lstLoggersToShow);
+            AppListAdapter _adpatrer = new AppListAdapter(getActivity(), R.layout.grid_items, lstLoggersToShow);
             _adpatrer.notifyDataSetChanged();
             gridView.setAdapter(_adpatrer);
 
@@ -242,6 +242,8 @@ public class LogToolsFragmentLevel2 extends Fragment {
         registerForContextMenu(gridView);
         return rootView;
     }
+
+
 
 
     //show alert
@@ -280,10 +282,10 @@ public class LogToolsFragmentLevel2 extends Fragment {
 
             final Loggers item = getItem(position);
 
-            ViewHolder holder;
+            final ViewHolder holder;
             if (convertView == null) {
                 LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Service.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.shell_wallet_desktop_front_grid_item, parent, false);
+                convertView = inflater.inflate(R.layout.grid_items_with_button, parent, false);
 
 
                 holder = new ViewHolder();
@@ -304,7 +306,8 @@ public class LogToolsFragmentLevel2 extends Fragment {
                         frg =(LogToolsFragmentLevel2) getFragmentManager().findFragmentByTag("fragmento2");
 
                         if(loggerLevel==ArrayListLoggers.LEVEL_1){
-                            frg.setLoggers(lstLoggers.getListFromLevel(item, ArrayListLoggers.LEVEL_2));
+                            ArrayListLoggers lst = lstLoggers.getListFromLevel(item, ArrayListLoggers.LEVEL_2);
+                            frg.setLoggers(lst);
                             frg.setLoggerLevel(ArrayListLoggers.LEVEL_2);
                         }else if(loggerLevel==ArrayListLoggers.LEVEL_2){
                             frg.setLoggerLevel(ArrayListLoggers.LEVEL_3);
@@ -332,23 +335,34 @@ public class LogToolsFragmentLevel2 extends Fragment {
                 holder = (ViewHolder) convertView.getTag();
             }
 
+
+
             String stringToShowLevel="Nada cargado";
             switch (loggerLevel){
                 case ArrayListLoggers.LEVEL_1:{
                     //String[] level1_splitted=item.level1.split(".");
                     //tringToShowLevel=level1_splitted[level1_splitted.length-1];
                     //Toast.makeText(getActivity(),item.level1,Toast.LENGTH_SHORT);
-                    stringToShowLevel=item.level1.substring(item.level1.length()-20,item.level1.length());
+                    stringToShowLevel=item.classHierarchyLevels.getLevel1().substring(item.classHierarchyLevels.getLevel1().length() - 20, item.classHierarchyLevels.getLevel1().length());
+                    if(item.classHierarchyLevels.getLevel2()==null){
+                        item.picture="java_class";
+                        holder.imageView.setOnClickListener(null);
+                    }
                     //stringToShowLevel=item.level1;
                     break;
                 }
                 case ArrayListLoggers.LEVEL_2:{
-                    stringToShowLevel=item.level2;
+                    stringToShowLevel=item.classHierarchyLevels.getLevel2();
+                    if(item.classHierarchyLevels.getLevel3()==null){
+                        item.picture="java_class";
+                        holder.imageView.setOnClickListener(null);
+                    }
                     break;
                 }
                 case ArrayListLoggers.LEVEL_3:{
-                    stringToShowLevel=item.level3;
+                    stringToShowLevel=item.classHierarchyLevels.getLevel3();
                     item.picture="java_class";
+                    holder.imageView.setOnClickListener(null);
                     break;
                 }
 
@@ -357,6 +371,8 @@ public class LogToolsFragmentLevel2 extends Fragment {
 
             holder.companyTextView.setText(stringToShowLevel);
             // holder.companyTextView.setTypeface(MyApplication.getDefaultTypeface());
+
+
 
 
             switch (item.picture) {
@@ -378,6 +394,45 @@ public class LogToolsFragmentLevel2 extends Fragment {
                     break;
             }
 
+            holder.btnLogger= (ImageView) convertView.findViewById(R.id.imageView_logger);
+            holder.btnLogger.setImageResource(R.drawable.ic_menu_drawer);
+
+            holder.btnLogger.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    //Toast.makeText(getActivity(), "Soy una estrella feliz1", Toast.LENGTH_SHORT).show();
+                    String loggerText = holder.companyTextView.getText().toString();
+                    PopupMenu popupMenu = new PopupMenu(getActivity(), view);
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem menuItem) {
+                            int itemId = menuItem.getItemId();
+                            if (itemId == R.id.menu_no_logging) {
+                                //TODO: HAcer el cambio acá para que haga el changelevel
+                                changeLogLevel(item.pluginKey,LogLevel.NOT_LOGGING,item.classHierarchyLevels.getFullPath());
+                                //changeLogLevel();
+                                return true;
+                            } else if (itemId == R.id.menu_minimal) {
+                                changeLogLevel(item.pluginKey,LogLevel.MINIMAL_LOGGING,item.classHierarchyLevels.getFullPath());
+                                return true;
+                            } else if (itemId == R.id.menu_moderate) {
+                                changeLogLevel(item.pluginKey,LogLevel.MODERATE_LOGGING,item.classHierarchyLevels.getFullPath());
+                                return true;
+                            } else if (itemId == R.id.menu_aggresive) {
+                                changeLogLevel(item.pluginKey,LogLevel.AGGRESSIVE_LOGGING,item.classHierarchyLevels.getFullPath());
+                                return true;
+
+                            }
+
+                            return false;
+                        }
+                    });
+
+                    popupMenu.inflate(R.menu.popup_menu);
+                    popupMenu.show();
+                    return true;
+                }
+            });
 
             return convertView;
         }
@@ -393,7 +448,7 @@ public class LogToolsFragmentLevel2 extends Fragment {
 
         public ImageView imageView;
         public TextView companyTextView;
-
+        public ImageView btnLogger;
 
     }
 }

@@ -94,62 +94,39 @@ public class DeveloperActorLogTool implements LogTool {
              */
             List<ClassHierarchyLevels> returnedClasses = new ArrayList<ClassHierarchyLevels>();
 
-            if (minPackages >=  4){
-                for (String myClass : classes){
-                    String[] packages = myClass.split(Pattern.quote("."));
+
+            for (String myClass : classes) {
+                String[] packages = myClass.split(Pattern.quote("."));
+                ClassHierarchyLevels classesAndPackages = new ClassHierarchyLevels();
+                classesAndPackages.setLevel0(plugin.getKey());
+                classesAndPackages.setFullPath(myClass);
+                if (packages.length == minPackages) {
+                    /**
+                     * if this is the root, then I will add it to level2 and nothing else.
+                     */
+                    classesAndPackages.setLevel1(packages[packages.length - 1]);
+
+                } else {
+                    /**
+                     * si no es el root, I will add the other levels.
+                     */
                     StringBuilder splitedPackages = new StringBuilder();
-                    for (int i=0; i<packages.length-2;i++){
+                    for (int i = 0; i < packages.length - 1; i++) {
                         splitedPackages.append(packages[i]);
                         splitedPackages.append(".");
                     }
                     /**
                      * I remove the last dot of the package.
                      */
-                    splitedPackages.substring(0, splitedPackages.length() -1);
+                    splitedPackages.substring(0, splitedPackages.length() - 1);
 
-                    /**
-                     * I add the packages to each level.
-                     */
-                    ClassHierarchyLevels classesAndPackages = new ClassHierarchyLevels();
-                    classesAndPackages.setLevel0(plugin.getKey());
                     classesAndPackages.setLevel1(splitedPackages.toString());
-                    classesAndPackages.setLevel2(packages[packages.length - 2]);
-                    classesAndPackages.setLevel3(packages[packages.length - 1]);
-                    classesAndPackages.setFullPath(myClass);
-                    /**
-                     * I add the full path for future reference.
-                     */
-                    returnedClasses.add(classesAndPackages);
-                    splitedPackages.delete(0,splitedPackages.length()-1 );
+                    classesAndPackages.setLevel2(packages[packages.length-1]);
                 }
-            } else
-            /**
-             * If there are less four I add the levels I have.
-             */
-            {
-                for (String myClass : classes) {
-                    String[] packages = myClass.split(Pattern.quote("."));
-                    ClassHierarchyLevels classesAndPackages = new ClassHierarchyLevels();
-                    classesAndPackages.setLevel0(plugin.getKey());
-                    classesAndPackages.setLevel1(packages[0]);
+                returnedClasses.add(classesAndPackages);
 
-                    /**
-                     * If I had one more level, I will add it
-                     */
-                    if (packages.length > 1)
-                        classesAndPackages.setLevel2(packages[1]);
 
-                    if (packages.length > 2)
-                        classesAndPackages.setLevel3(packages[2]);
-
-                    classesAndPackages.setFullPath(myClass);
-                    /**
-                     * I add the class to the returning object
-                     */
-                    returnedClasses.add(classesAndPackages);
-                }
             }
-
             /**
              * I return the object
              */
@@ -175,6 +152,7 @@ public class DeveloperActorLogTool implements LogTool {
              * I get the class full patch from the plug in.
              */
             List<String> classes = ((LogManagerForDevelopers)this.LoggingLstAddons.get(addon)).getClassesFullPath();
+            //List<Class<?>> javaClasses = ClassFinder.find(((LogManagerForDevelopers) this.LoggingLstPlugins.get(plugin)).getClass().getPackage().getName());
 
 
             /**
@@ -200,62 +178,39 @@ public class DeveloperActorLogTool implements LogTool {
              */
             List<ClassHierarchyLevels> returnedClasses = new ArrayList<ClassHierarchyLevels>();
 
-            if (minPackages >=  4){
-                for (String myClass : classes){
-                    String[] packages = myClass.split(Pattern.quote("."));
+
+            for (String myClass : classes) {
+                String[] packages = myClass.split(Pattern.quote("."));
+                ClassHierarchyLevels classesAndPackages = new ClassHierarchyLevels();
+                classesAndPackages.setLevel0(addon.getKey());
+                classesAndPackages.setFullPath(myClass);
+                if (packages.length == minPackages) {
+                    /**
+                     * if this is the root, then I will add it to level2 and nothing else.
+                     */
+                    classesAndPackages.setLevel1(packages[packages.length - 1]);
+
+                } else {
+                    /**
+                     * si no es el root, I will add the other levels.
+                     */
                     StringBuilder splitedPackages = new StringBuilder();
-                    for (int i=0; i<packages.length-2;i++){
+                    for (int i = 0; i < packages.length - 1; i++) {
                         splitedPackages.append(packages[i]);
                         splitedPackages.append(".");
                     }
                     /**
                      * I remove the last dot of the package.
                      */
-                    splitedPackages.substring(0, splitedPackages.length() -1);
+                    splitedPackages.substring(0, splitedPackages.length() - 1);
 
-                    /**
-                     * I add the packages to each level.
-                     */
-                    ClassHierarchyLevels classesAndPackages = new ClassHierarchyLevels();
-                    classesAndPackages.setLevel0(addon.getKey());
                     classesAndPackages.setLevel1(splitedPackages.toString());
-                    classesAndPackages.setLevel2(packages[packages.length - 2]);
-                    classesAndPackages.setLevel3(packages[packages.length - 1]);
-                    classesAndPackages.setFullPath(myClass);
-                    /**
-                     * I add the full path for future reference.
-                     */
-                    returnedClasses.add(classesAndPackages);
-                    splitedPackages.delete(0,splitedPackages.length()-1 );
+                    classesAndPackages.setLevel2(packages[packages.length-1]);
                 }
-            } else
-            /**
-             * If there are less four I add the levels I have.
-             */
-            {
-                for (String myClass : classes) {
-                    String[] packages = myClass.split(Pattern.quote("."));
-                    ClassHierarchyLevels classesAndPackages = new ClassHierarchyLevels();
-                    classesAndPackages.setLevel0(addon.getKey());
-                    classesAndPackages.setLevel1(packages[0]);
+                returnedClasses.add(classesAndPackages);
 
-                    /**
-                     * If I had one more level, I will add it
-                     */
-                    if (packages.length > 1)
-                        classesAndPackages.setLevel2(packages[1]);
 
-                    if (packages.length > 2)
-                        classesAndPackages.setLevel3(packages[2]);
-
-                    classesAndPackages.setFullPath(myClass);
-                    /**
-                     * I add the class to the returning object
-                     */
-                    returnedClasses.add(classesAndPackages);
-                }
             }
-
             /**
              * I return the object
              */
@@ -263,7 +218,7 @@ public class DeveloperActorLogTool implements LogTool {
         }
         catch(Exception e)
         {
-            throw new CantGetClasessHierarchyAddons(CantGetClasessHierarchyAddons.DEFAULT_MESSAGE,e,"Error to get from the plugin the list of classes with their full paths. Addon: " + addon.getKey(),"");
+            throw new CantGetClasessHierarchyAddons(CantGetClasessHierarchyPlugins.DEFAULT_MESSAGE,e,"Error to get from the plugin the list of classes with their full paths","");
 
         }
     }

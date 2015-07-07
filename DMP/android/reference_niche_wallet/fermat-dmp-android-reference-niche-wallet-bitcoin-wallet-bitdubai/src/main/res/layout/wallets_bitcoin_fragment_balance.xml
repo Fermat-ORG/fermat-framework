@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,6 +11,7 @@
     android:paddingBottom="7dip"
     android:paddingTop="7dip"
     android:gravity="center">
+
 
     <android.support.v4.widget.SwipeRefreshLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -41,29 +43,25 @@
             android:paddingBottom="3dip"
             android:textColor="#FF666666"
             android:textSize="30sp"
-            android:text="balance"/>
+            android:text="Available balance"
+            />
             <TextView
                 android:id="@+id/balance"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:paddingLeft="7dip"
-                android:paddingRight="7dip"
+                android:paddingLeft="2dip"
+                android:paddingRight="2dip"
                 android:paddingTop="3dip"
                 android:paddingBottom="3dip"
                 android:textColor="#FF666666"
                 android:textSize="45sp"
                 android:textStyle="bold"
-                android:text="mBTC     0"/>
+                android:text="mBTC     0"
+                />
+
 
     </LinearLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="bottom"
-        android:layout_alignParentBottom="true">
 
-    </RelativeLayout>
 </RelativeLayout>

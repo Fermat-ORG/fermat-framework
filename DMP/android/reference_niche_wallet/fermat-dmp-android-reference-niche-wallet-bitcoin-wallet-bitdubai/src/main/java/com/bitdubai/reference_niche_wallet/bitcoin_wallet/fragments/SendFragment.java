@@ -240,6 +240,7 @@ public class SendFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
+<<<<<<< HEAD
         EditText contact_name = (EditText) rootView.findViewById(R.id.contact_name);
 
         EditText editAddress = (EditText) rootView.findViewById(R.id.address);
@@ -256,14 +257,29 @@ public class SendFragment extends Fragment implements View.OnClickListener {
                 // TODO que hacer si no puedo crear el contacto? igual envio el dinero
                 //Toast.makeText(this.getActivity(), "Can't create new contact", Toast.LENGTH_LONG).show();
             }
+=======
+        try {
+            EditText contact_name = (EditText) rootView.findViewById(R.id.contact_name);
+            EditText amount = (EditText) rootView.findViewById(R.id.amount);
+            EditText address = (EditText) rootView.findViewById(R.id.address);
+            EditText notes = (EditText) rootView.findViewById(R.id.notes);
+            CryptoAddress cryptoAddress = new CryptoAddress();
+
+
+
+>>>>>>> upstream/master
             try {
 
                 cryptoWallet.send(Long.parseLong(amount.getText().toString()), validAddress, editNotes.getText().toString(), wallet_id);
 
                 Toast.makeText(this.getActivity(), "Send OK", Toast.LENGTH_LONG).show();
 
+<<<<<<< HEAD
             } catch (InsufficientFundsException e) {
                 Toast.makeText(this.getActivity(), "Insufficient funds", Toast.LENGTH_LONG).show();
+=======
+                cryptoWallet.send(Long.parseLong(amount.getText().toString()), cryptoAddress, wallet_id,notes.getText().toString());
+>>>>>>> upstream/master
 
             } catch (CantSendCryptoException e) {
                 errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
