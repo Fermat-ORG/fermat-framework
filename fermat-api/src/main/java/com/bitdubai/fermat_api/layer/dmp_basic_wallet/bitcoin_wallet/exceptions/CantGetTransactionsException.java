@@ -6,6 +6,9 @@ import com.bitdubai.fermat_api.FermatException;
  * Created by eze on 2015.06.17..
  */
 public class CantGetTransactionsException extends FermatException {
+
+    public static final String DEFAULT_MESSAGE = "CAN'T GET TRANSACTIONS";
+
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -16,5 +19,22 @@ public class CantGetTransactionsException extends FermatException {
      */
     public CantGetTransactionsException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
+    }
+
+    public CantGetTransactionsException(final String message, final Exception cause) {
+        this(message, cause, "", "");
+    }
+
+    public CantGetTransactionsException(final String message) {
+        this(message, null);
+    }
+
+    public CantGetTransactionsException(final Exception exception) {
+        this(exception.getMessage());
+        setStackTrace(exception.getStackTrace());
+    }
+
+    public CantGetTransactionsException() {
+        this(DEFAULT_MESSAGE);
     }
 }
