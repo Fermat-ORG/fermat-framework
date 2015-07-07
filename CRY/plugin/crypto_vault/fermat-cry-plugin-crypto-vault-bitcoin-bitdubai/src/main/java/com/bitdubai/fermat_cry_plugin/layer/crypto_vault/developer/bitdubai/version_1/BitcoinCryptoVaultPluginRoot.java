@@ -285,8 +285,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
 
     @Override
     public void start() throws CantStartPluginException {
-        //logManager.log(logLevel, "CryptoVault7 Starting...", "CryptoVault Starting...", "CryptoVault Starting...");
-        System.out.println("Crypto Vault Starting....");
+        logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoVault7 Starting...", null, null);
 
 
         /**
@@ -344,6 +343,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
              */
             try {
                 vault = new BitcoinCryptoVault(this.userId);
+                vault.setLogManager(logManager);
                 vault.setErrorManager(errorManager);
                 vault.setPluginDatabaseSystem(pluginDatabaseSystem);
                 vault.setDatabase(this.database);
@@ -393,7 +393,7 @@ public class BitcoinCryptoVaultPluginRoot implements CryptoVaultManager, Databas
              * the service is started.
              */
             this.serviceStatus = ServiceStatus.STARTED;
-            System.out.println("CryptoVault started.");
+            logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoVault started.", null, null);
     }
 
     /**

@@ -23,6 +23,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
+import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
@@ -36,6 +38,7 @@ import com.bitdubai.fermat_cry_api.layer.crypto_network.bitcoin.exceptions.CantC
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVault;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
+import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantCalculateTransactionConfidenceException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.UnexpectedResultReturnedFromDatabaseException;
@@ -67,7 +70,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by rodrigo on 09/06/15.
  */
-public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWithBitcoinCryptoNetwork, DealsWithEvents,DealsWithErrors, DealsWithPluginIdentity, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem, TransactionProtocolManager{
+public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWithBitcoinCryptoNetwork, DealsWithEvents,DealsWithErrors, DealsWithPluginIdentity, DealsWithPluginDatabaseSystem, DealsWithLogger, DealsWithPluginFileSystem, TransactionProtocolManager{
 
     /**
      * BitcoinCryptoVault member variables
@@ -100,6 +103,10 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
      */
     ErrorManager errorManager;
 
+    /**
+     * DealsWithLoggers interface member variable
+     */
+    LogManager logManager;
     /**
      * DealsWithPluginIdentity interface member variable
      */
@@ -161,6 +168,14 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
     @Override
     public void setEventManager(EventManager eventManager) {
         this.eventManager = eventManager;
+    }
+
+    /**
+     * DealsWithLogger interface implementation
+     */
+    @Override
+    public void setLogManager(LogManager logManager) {
+        this.logManager = logManager;
     }
 
     /**
@@ -235,7 +250,8 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         try {
             PluginTextFile vaultFile = pluginFileSystem.createTextFile(pluginId, userId.toString(), vaultFileName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             vaultFile.persistToMedia();
-            System.out.println("Vault created into file " + vaultFileName);
+
+            logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Vault created into file " + vaultFileName, null, null);
             /**
              * If I couldn't create it I can't go on
              */
@@ -253,9 +269,8 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
     private void loadExistingVaultFromFile() throws CantCreateCryptoWalletException {
         try {
             vault = Wallet.loadFromFile(vaultFile);
-            System.out.println("Vault loaded from file " + vaultFile.getAbsoluteFile().toString());
-            System.out.println("CryptoVault current balance: " + vault.getBalance().getValue());
-            System.out.println("CryptoVault estimated current balance: " + vault.getBalance(Wallet.BalanceType.ESTIMATED).value);
+
+            logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Vault loaded from file " + vaultFile.getAbsoluteFile().toString(), "CryptoVault current balance: " + vault.getBalance().getValue(), "CryptoVault estimated current balance: " + vault.getBalance(Wallet.BalanceType.ESTIMATED).toFriendlyString());
 
             /**
              * If I couldn't load it I can't go on.
@@ -445,7 +460,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
         /**
          * returns the created transaction id
          */
-        System.out.println("CryptoVault information: bitcoin sent!!!");
+        logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoVault information: bitcoin sent!!!", "Address to: " + addressTo.getAddress(), "Amount: " + amount);
         return txHash;
     }
 
