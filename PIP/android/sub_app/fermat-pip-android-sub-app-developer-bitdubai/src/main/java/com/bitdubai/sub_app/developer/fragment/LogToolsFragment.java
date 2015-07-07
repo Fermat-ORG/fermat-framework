@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 
 import com.bitdubai.fermat_api.Plugin;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.pip_actor.developer.ClassHierarchyLevels;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -199,47 +200,18 @@ public class LogToolsFragment extends Fragment {
 
     private void changeLogLevel(String pluginKey,LogLevel logLevel, String resource) {
         //try {
-            HashMap<String, LogLevel> data = new HashMap<String, LogLevel>();
-            /*Plugins plugin = Plugins.getByKey(pluginKey);
 
-            /**
-             * I will get all the PullPath matches with resource
-             */
-            /*for (Loggers logger : lstLoggers){
-                if (logger.level0 == resource)
-                    data.put(logger.fullPath,logLevel);
-                if (logger.level1 == resource)
-                    data.put(logger.fullPath,logLevel);
-                if (logger.level2 == resource)
-                    data.put(logger.fullPath,logLevel);
-                if (logger.level3 == resource)
-                    data.put(logger.fullPath,logLevel);
-            }
-            for (ClassHierarchyLevels classes : logTool.getClassesHierarchyPlugins(plugin)){
-                if (classes.getLevel0() == resource)
-                    data.put(classes.getFullPath(),logLevel);
-                if (classes.getLevel1() == resource)
-                    data.put(classes.getFullPath(),logLevel);
-                if (classes.getLevel2() == resource)
-                data.put(classes.getFullPath(),logLevel);
-                if (classes.getLevel3() == resource)
-                data.put(classes.getFullPath(),logLevel);
-            }
-
-            logTool.setNewLogLevelInClass(plugin, data);
-
-
-            LogToolsFragment logToolsFragment = new LogToolsFragment();
-
-            FragmentTransaction FT = getFragmentManager().beginTransaction();
-
-            FT.replace(R.id.logContainer, logToolsFragment);
-
-            FT.commit();
-        } catch (Exception e) {
-            System.out.println("*********** soy un error " + e.getMessage());
+        Plugins plugin = null;
+        try {
+            plugin = Plugins.getByKey(pluginKey);
+        } catch (InvalidParameterException e) {
+            e.printStackTrace();
         }
-        */
+
+        HashMap<String, LogLevel> data = new HashMap<String, LogLevel>();
+        data.put(resource, logLevel);
+        logTool.setNewLogLevelInClass(plugin, data);
+
     }
 
 
