@@ -33,6 +33,7 @@ class IncomingExtraUserDataBaseFactory implements DealsWithPluginDatabaseSystem 
      */
     protected Database createDatabase (UUID ownerId, String databaseName) throws CantCreateDatabaseException {
         Database database = this.pluginDatabaseSystem.createDatabase(ownerId, databaseName);
+        DatabaseFactory databaseFactory = database.getDatabaseFactory();
         DatabaseTableFactory table;
         HashMap<String, List<IncomingExtraUserDataBaseConstants.ColumnDefinition>> tablesDefinitions = new HashMap<>();
 
@@ -67,14 +68,14 @@ class IncomingExtraUserDataBaseFactory implements DealsWithPluginDatabaseSystem 
 
         try {
             for(Map.Entry<String, List<IncomingExtraUserDataBaseConstants.ColumnDefinition>> tableDefinition: tablesDefinitions.entrySet()){
-                table = ((DatabaseFactory) database).newTableFactory(ownerId, tableDefinition.getKey());
+                table = databaseFactory.newTableFactory(ownerId, tableDefinition.getKey());
                 System.err.println("INCOMING EXTRA USER REGISTRY: " + tableDefinition.getKey() + " TABLE CREATED");
                 for(IncomingExtraUserDataBaseConstants.ColumnDefinition columnDefinition: tableDefinition.getValue()){
-                    table.addColumn(columnDefinition.columnName, columnDefinition.columnDataType, columnDefinition.columnDataTypeSize, columnDefinition.columnIsPrimaryKey);
                     System.err.println("INCOMING EXTRA USER REGISTRY: " + tableDefinition.getKey() + " - " + columnDefinition.columnName + " COLUMN ADDED");
+                    table.addColumn(columnDefinition.columnName, columnDefinition.columnDataType, columnDefinition.columnDataTypeSize, columnDefinition.columnIsPrimaryKey);
+
                 }
-                //TODO FIX THIS LOGIC! THIS IS SO WRONG!!!!!!
-                ((DatabaseFactory) database).createTable(table);
+                databaseFactory.createTable(table);
             }
 
         } catch (InvalidOwnerIdException exception) {
