@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  */
 public enum TransactionState {
     NEW("NEW"),
+    PERSISTED_IN_AVAILABLE ("PIA"),
     PERSISTED_IN_WALLET ("PIW"),
     SENT_TO_CRYPTO_VOULT("STCV"),
     SUCCESSFUL_SENT("SS"),
@@ -24,13 +25,16 @@ public enum TransactionState {
     public static TransactionState getByCode(String code) throws InvalidParameterException {
         switch (code){
             case "NEW": return TransactionState.NEW;
+            case "PIA": return TransactionState.PERSISTED_IN_AVAILABLE;
             case "PIW": return TransactionState.PERSISTED_IN_WALLET;
             case "STCV": return TransactionState.SENT_TO_CRYPTO_VOULT;
             case "SS": return TransactionState.SUCCESSFUL_SENT;
             case "RCV": return TransactionState.RECEIVED;
+            default:
+                /**
+                 * If we try to cpmvert am invalid string.
+                 */
+                throw new InvalidParameterException(code);
         }
-        /**
-         * If we try to cpmvert am invalid string.
-         */
-        throw new InvalidParameterException(code);
-    }}
+    }
+}

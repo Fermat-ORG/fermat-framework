@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.basic_wallet.bitcoin_wallet.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.enums.BalanceType;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantRegisterDebitDebitException;
@@ -70,7 +71,7 @@ public class BitcoinWalletBasicWalletBookBalance implements BitcoinWalletBalance
         try {
             database.openDatabase();
             bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(this.database);
-            bitcoinWalletBasicWalletDao.addDebit(cryptoTransaction);
+            bitcoinWalletBasicWalletDao.addDebit(cryptoTransaction, BalanceType.BOOK);
             database.closeDatabase();
         } catch (CantOpenDatabaseException | DatabaseNotFoundException e) {
             throw new CantRegisterDebitDebitException(CantRegisterDebitDebitException.DEFAULT_MESSAGE, e, "", "Check the cause");
@@ -85,7 +86,7 @@ public class BitcoinWalletBasicWalletBookBalance implements BitcoinWalletBalance
         try {
             database.openDatabase();
             bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(this.database);
-            bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction);
+            bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction, BalanceType.BOOK);
             database.closeDatabase();
         } catch (CantOpenDatabaseException | DatabaseNotFoundException e) {
             throw new CantRegisterCreditException(CantRegisterCreditException.DEFAULT_MESSAGE, e, "", "Check the cause");

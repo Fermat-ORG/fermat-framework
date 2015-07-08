@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_extra_user.dev
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.exceptions.CantRegisterDebitDebitException;
@@ -18,6 +19,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorMan
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.CryptoVaultManager;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.DealsWithCryptoVault;
+import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CouldNotGetCryptoStatusException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.CouldNotSendMoneyException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InsufficientMoneyException;
 import com.bitdubai.fermat_cry_api.layer.crypto_vault.exceptions.InvalidSendToAddressException;
@@ -187,68 +189,78 @@ public class OutgoingExtraUserTransactionProcessorAgent implements DealsWithBitc
              *       Esto se va a poder hacer cuando nos pasen todos los parámetros
              *       necesarios.
              */
-            UUID temporalId = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
-
-            try {
-                bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(temporalId);
-            } catch (CantLoadWalletException e) {
-                this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                return;
-            }
-
             List<TransactionWrapper> transactionList;
 
-            // We first check for the new transactions registered
+            // We first check for the new transactions to apply
             try {
                 transactionList = dao.getNewTransactions();
-            } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-                this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,cantLoadTableToMemory);
-                return;
-            } catch (InvalidParameterException e) {
+            } catch (InvalidParameterException | CantLoadTableToMemoryException e) {
                 this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 return;
             }
 
             /* For each transaction:
              1. We check that we can apply it
-             2. We apply it in the bitcoin network
+             2. We apply it in the bitcoin wallet available balance
             */
 
             long funds;
             for(TransactionWrapper transaction : transactionList) {
+
                 try {
-                    funds = bitcoinWalletWallet.getAvailableBalance().getBalance();
-                    if (funds < transaction.getAmount()) {
-                        dao.cancelTransaction(transaction);
-                        FermatException insufficientFundsException = new InsufficientFundsException("I don't have funds for this transaction",null,"Balance: "+ funds + "\ncryptoAmount: "+transaction.getAmount(),"");
-                        this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,insufficientFundsException );
-                        return;
-                    }
-                } catch (CantCalculateBalanceException e) {
-                    this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                    return;
-                } catch (CantUpdateRecordException e) {
-                    this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                    return;
-                } catch (CantLoadTableToMemoryException e) {
-                    this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                    return;
-                } catch (InconsistentTableStateException e) {
-                    this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                    return;
+                    bitcoinWalletWallet = bitcoinWalletManager.loadWallet(transaction.getWalletId());
+                } catch (CantLoadWalletException e) {
+                    this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+                    continue;
                 }
 
+                try {
+                    funds = bitcoinWalletWallet.getAvailableBalance().getBalance();
+                } catch (CantCalculateBalanceException e) {
+                    this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+                    continue;
+                }
+
+                if (funds < transaction.getAmount()) {
+                    try {
+                        dao.cancelTransaction(transaction);
+                    } catch (CantUpdateRecordException | InconsistentTableStateException | CantLoadTableToMemoryException e) {
+                        this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+                        continue;
+                    }
+                    // TODO: Lanzar un evento de fondos insuficientes
+                }
+
+                // If we have enough funds we debit them from the available balance
                 try {
                     bitcoinWalletWallet.getAvailableBalance().debit(transaction);
                 } catch (CantRegisterDebitDebitException e) {
                     this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                    return;
+                    continue;
                 }
+                // The we set that we register that we have executed the debit
+                try {
+                    dao.setToPIA(transaction);
+                } catch (CantUpdateRecordException | InconsistentTableStateException | CantLoadTableToMemoryException e) {
+                    this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+                    continue;
+                }
+            }
 
+            // Now we check for all the transactions that have been discounted from the available amount
+            // but bot applied to vault
+            try {
+                transactionList = dao.getPersistedInAvailable();
+            } catch (CantLoadTableToMemoryException | InvalidParameterException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                return;
+            }
 
+            for(TransactionWrapper transaction : transactionList) {
                 // Now we apply it in the vault
                 try {
-                    this.cryptoVaultManager.sendBitcoins(transaction.getWalletId(), transaction.getTransactionId(), transaction.getAddressTo(), transaction.getAmount());
+                    String hash = this.cryptoVaultManager.sendBitcoins(transaction.getWalletId(), transaction.getIdTransaction(), transaction.getAddressTo(), transaction.getAmount());
+                    dao.setTransactionHash(transaction,hash);
                     dao.setToSTCV(transaction);
                 } catch (InsufficientMoneyException e) {
                     /*
@@ -256,14 +268,8 @@ public class OutgoingExtraUserTransactionProcessorAgent implements DealsWithBitc
                      */
                     try {
                         dao.cancelTransaction(transaction);
-                    } catch (CantUpdateRecordException cantUpdateRecord) {
-                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantUpdateRecord);
-                        return;
-                    } catch (InconsistentTableStateException e1) {
-                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                        return;
-                    } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
+                    } catch (CantUpdateRecordException | InconsistentTableStateException | CantLoadTableToMemoryException e2) {
+                        errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e2);
                         return;
                     }
                     // And we filally report the error
@@ -289,38 +295,50 @@ public class OutgoingExtraUserTransactionProcessorAgent implements DealsWithBitc
                 }
             }
 
-            /*
-             * Now we proceed to apply the transactions sent to the bitcoin network to the wallet balance
-             */
 
+            /*
+             * Now we proceed to apply the transactions sent to the bitcoin network to the wallet book
+             * balance. We need to check the state of the transaction to the crypto vault before
+             * discounting it
+             */
             try {
                 transactionList = dao.getSentToCryptoVaultTransactions();
-            } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadTableToMemory);
-                return;
-            } catch (InvalidParameterException e) {
+            } catch (CantLoadTableToMemoryException | InvalidParameterException e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 return;
             }
 
             for(TransactionWrapper transaction : transactionList){
-                try {
-                    //TODO: revisar por el cambio en la interface
-                        bitcoinWalletWallet.getBookBalance().debit(transaction);
 
-                    dao.setToPIW(transaction);
-                } catch (CantRegisterDebitDebitException e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
-                    return;
-                } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-                    cantLoadTableToMemory.printStackTrace();
-                } catch (CantUpdateRecordException cantUpdateRecord) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantUpdateRecord);
-                    return;
-                } catch (InconsistentTableStateException e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                    return;
+                CryptoStatus cryptoStatus;
+                try {
+                    cryptoStatus = this.cryptoVaultManager.getCryptoStatus(transaction.getIdTransaction());
+                } catch (CouldNotGetCryptoStatusException e) {
+                    this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+                    continue;
                 }
+
+                try {
+                    bitcoinWalletWallet = bitcoinWalletManager.loadWallet(transaction.getWalletId());
+                } catch (CantLoadWalletException e) {
+                    this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
+                    continue;
+                }
+
+                try {
+                    bitcoinWalletWallet.getBookBalance().debit(transaction);
+                } catch (CantRegisterDebitDebitException e) {
+                    this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    continue;
+                }
+
+                try {
+                    dao.setToPIW(transaction);
+                } catch (CantUpdateRecordException | InconsistentTableStateException | CantLoadTableToMemoryException e) {
+                    this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                    continue;
+                }
+
             }
         }
 

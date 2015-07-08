@@ -73,12 +73,15 @@ public class BitcoinTransactionWrapper implements BitcoinWalletTransactionRecord
         this.amount = amount;
     }
 
-    @Override
+    /* TODO: NATALIA - Borrar estos dos métodos
+     *       No se debería esperar este dato de otro módulo, cuando llaman a operaciones del book
+     *       balance van a ser de tipo book y cuando llaman a las de Available balance van a ser del
+     *       tipo available. Eso lo podés decidir internamente por lo que no deberías esperarlo de aguera
+     */
     public BalanceType getBalanceType() {
         return balanceType;
     }
 
-    @Override
     public void setBalanceType(BalanceType type) {
         this.balanceType = type;
     }

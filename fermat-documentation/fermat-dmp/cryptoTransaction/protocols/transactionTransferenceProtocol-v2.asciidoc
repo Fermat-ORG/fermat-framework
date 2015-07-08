@@ -39,8 +39,7 @@ CryptoTransaction:: Contenedor de datos con la información de una transacción.
 Transaction:: Contenedor de datos con la información de una transacción. Estos datos son:
 ** Un identificador distintivo (TransactionId)
 ** Un elemento de tipo CryptoTransaction
-** Un valor de Action (Apply, Revert)
-** Un valor de Specialist (en principio los receptores de transacciones crypto pueden ignorar este campo, en cualquier caso para mencionar al incomingcrypto se usa el valor CRYPTO_ROUTER)
+** Un valor de Specialist (los receptores de transacciones crypto pueden colocar en este campo el valor CRYPTO_ROUTER para mencionar al incomingcrypto)
 ** Un timestamp que coloca quien genera la transaccón. (En este caso la red bitcoin)
 
 TransactionStatus:: Estado interno que guarda un plug-in sobre cadaa transacción que describe su relación con la misma. El estado puede ser:
