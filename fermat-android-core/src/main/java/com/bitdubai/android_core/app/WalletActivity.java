@@ -223,6 +223,7 @@ public class WalletActivity extends FragmentActivity implements com.bitdubai.and
                 tabStrip.setTypeface(tf,1 );
             }
 
+
             //TODO por ahora le estoy pasando un null al tabstrip porque ahí adentro lo está cargando mal, porque hace un clean de la pantalla y borra el color de los tabs
             // que yo puse acá
             ApplicationSession.setActivityProperties(this, getWindow(), getResources(), null, getActionBar(), titleBar, abTitle, Title);
