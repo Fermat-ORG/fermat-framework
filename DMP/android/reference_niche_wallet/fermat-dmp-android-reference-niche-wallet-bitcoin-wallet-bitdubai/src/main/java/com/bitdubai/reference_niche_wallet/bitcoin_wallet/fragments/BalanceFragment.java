@@ -129,12 +129,14 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
             public void onClick(View view) {
                 refreshBalance();
                 if (showTypeBalance==TYPE_BALANCE_AVAILABLE) {
-                    labelBalance.setText("Available balance");
+                    labelBalance.setText("available balance");
+                    textViewBalance.setText(String.valueOf(balanceAvailable));
                     showTypeBalance=TYPE_BALANCE_BOOK;
                     //fab_change_balance.setImageResource(R.drawable.wallet);
                     //labelBalance.setText();
                 }else if (showTypeBalance==TYPE_BALANCE_BOOK){
-                    labelBalance.setText("Book Balance");
+                    labelBalance.setText("book Balance");
+                    textViewBalance.setText(String.valueOf(bookBalance));
                     showTypeBalance=TYPE_BALANCE_AVAILABLE;
                     //fab_change_balance.setImageResource(R.drawable.ic_action_about);
                     //labelBalance.setText();
