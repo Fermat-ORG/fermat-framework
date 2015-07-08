@@ -156,10 +156,12 @@ public class LogToolsFragment extends Fragment {
                     log.level3=classes.getLevel3();
                     log.fullPath=classes.getFullPath();
                     */
+
                     log.type=Loggers.TYPE_PLUGIN;
                     log.classHierarchyLevels=classes;
                     log.picture="plugin";
                     log.pluginKey=plugin.getKey();
+                    //log.logLevel=classes.
                     lstLoggers.add(log);
                 }
 
