@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by mati on 2015.07.04..
+ *  Created by Matias Furszyfer on 2015.07.04..
  */
 public class ArrayListLoggers extends ArrayList<Loggers> implements List<Loggers>{
 
@@ -29,7 +29,7 @@ public class ArrayListLoggers extends ArrayList<Loggers> implements List<Loggers
             while(!result && i<this.size()){
                 Loggers logger=this.get(i);
 
-                if(logger.level0.compareTo(log.level0)==0){
+                if(logger.classHierarchyLevels.getLevel0().compareTo(log.classHierarchyLevels.getLevel0())==0){
                     result= true;
                 }
                 i++;
@@ -43,7 +43,7 @@ public class ArrayListLoggers extends ArrayList<Loggers> implements List<Loggers
         while(!result && i<this.size()){
             Loggers logger=this.get(i);
 
-            if(logger.level1.compareTo(log.level1)==0){
+            if(logger.classHierarchyLevels.getLevel1().compareTo(log.classHierarchyLevels.getLevel1())==0){
                 result= true;
             }
             i++;
@@ -57,7 +57,7 @@ public class ArrayListLoggers extends ArrayList<Loggers> implements List<Loggers
         while(!result && i<this.size()){
             Loggers logger=this.get(i);
 
-            if(logger.level2.compareTo(log.level2)==0){
+            if(logger.classHierarchyLevels.getLevel2().compareTo(log.classHierarchyLevels.getLevel2())==0){
                 result= true;
             }
             i++;
@@ -71,7 +71,7 @@ public class ArrayListLoggers extends ArrayList<Loggers> implements List<Loggers
         while(!result && i<this.size()){
             Loggers logger=this.get(i);
 
-            if(logger.level3.compareTo(log.level3)==0){
+            if(logger.classHierarchyLevels.getLevel3().compareTo(log.classHierarchyLevels.getLevel3())==0){
                 result= true;
             }
             i++;
@@ -86,7 +86,7 @@ public class ArrayListLoggers extends ArrayList<Loggers> implements List<Loggers
             case LEVEL_0:{
 
                 for (Loggers log:this){
-                    if(log.level0.compareTo(logger.level0)==0){
+                    if(log.classHierarchyLevels.getLevel0().compareTo(logger.classHierarchyLevels.getLevel0())==0){
                         lstLoggers.add(log);
                     }
                 }
@@ -95,7 +95,7 @@ public class ArrayListLoggers extends ArrayList<Loggers> implements List<Loggers
             }
             case LEVEL_1:{
                 for (Loggers log:this){
-                    if(log.level1.compareTo(logger.level1)==0){
+                    if(log.classHierarchyLevels.getLevel1().compareTo(logger.classHierarchyLevels.getLevel1())==0){
                         lstLoggers.add(log);
                     }
                 }
@@ -103,16 +103,20 @@ public class ArrayListLoggers extends ArrayList<Loggers> implements List<Loggers
             }
             case LEVEL_2:{
                 for (Loggers log:this){
-                    if(log.level2.compareTo(logger.level2)==0){
-                        lstLoggers.add(log);
+                    if(log.classHierarchyLevels.getLevel2()!=null) {
+                        if (log.classHierarchyLevels.getLevel2().compareTo(logger.classHierarchyLevels.getLevel2()) == 0) {
+                            lstLoggers.add(log);
+                        }
                     }
                 }
                 break;
             }
             case LEVEL_3:{
                 for (Loggers log:this){
-                    if(log.level3.compareTo(logger.level3)==0){
-                        lstLoggers.add(log);
+                    if(log.classHierarchyLevels.getLevel3()!=null) {
+                        if (log.classHierarchyLevels.getLevel3().compareTo(logger.classHierarchyLevels.getLevel3()) == 0) {
+                            lstLoggers.add(log);
+                        }
                     }
                 }
                 break;

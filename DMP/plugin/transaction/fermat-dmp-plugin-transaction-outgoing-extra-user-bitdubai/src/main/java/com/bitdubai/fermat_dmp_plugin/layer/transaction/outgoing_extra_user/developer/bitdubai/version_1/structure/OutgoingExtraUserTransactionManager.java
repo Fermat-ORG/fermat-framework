@@ -98,9 +98,10 @@ public class OutgoingExtraUserTransactionManager implements DealsWithBitcoinWall
      * TransactionManager Interface methods implementation
      */
 
-    // TODO: Agregar un parámetro que indique una descripción del pago
+    // TODO: Agregar un parámetro que indique una descripción del pago,
+    // TODO: Parametro agregado MATI ;)
     @Override
-    public void send(UUID walletID, CryptoAddress destinationAddress, long cryptoAmount) throws InsufficientFundsException, CantSendFundsException {
+    public void send(UUID walletID, CryptoAddress destinationAddress, long cryptoAmount,String notes) throws InsufficientFundsException, CantSendFundsException {
         OutgoingExtraUserDao dao = new OutgoingExtraUserDao();
         dao.setErrorManager(this.errorManager);
         dao.setPluginDatabaseSystem(this.pluginDatabaseSystem);

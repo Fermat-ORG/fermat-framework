@@ -130,6 +130,14 @@ public class CreateWalletContactTest extends TestCase {
         assertNotNull(walletContactRecord);
     }
 
+    // CONTACTS ALREADY EXISTS TEST
+    @Test
+    public void testCreateWalletContact_ContactAlreadyExists() throws Exception {
+        doReturn(walletContactRecord).when(walletContactsRegistry).getWalletContactByNameAndWalletId(anyString(), any(UUID.class));
+
+        nicheWalletTypeCryptoWallet.createWalletContact(deliveredCryptoAddress, actressName, actorType, platformWalletType, walletId);
+    }
+
     // TYPE OF ACTOR NOT RECOGNIZED BY THE PLUGIN
     @Test(expected=CantCreateWalletContactException.class)
     public void testCreateWalletContact_ActorTypeNotRecognized() throws Exception {
@@ -148,6 +156,15 @@ public class CreateWalletContactTest extends TestCase {
     public void testCreateWalletContact_CantRegisterActorAddressBookException() throws Exception {
         doThrow(new com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantCreateWalletContactException("gasdil", null, null, null))
                 .when(walletContactsRegistry).createWalletContact(any(UUID.class), anyString(), any(Actors.class), any(CryptoAddress.class), any(UUID.class));
+
+        nicheWalletTypeCryptoWallet.createWalletContact(deliveredCryptoAddress, actressName, actorType, platformWalletType, walletId);
+    }
+
+    // CANT GET WALLET CONTACT TO KNOW IF ALREADY EXISTS TEST
+    @Test(expected=CantCreateWalletContactException.class)
+    public void testCreateWalletContact_CantGetWalletContactException() throws Exception {
+        doThrow(new com.bitdubai.fermat_api.layer.dmp_middleware.wallet_contacts.exceptions.CantGetWalletContactException("gasdil", null, null, null))
+            .when(walletContactsRegistry).getWalletContactByNameAndWalletId(anyString(), any(UUID.class));
 
         nicheWalletTypeCryptoWallet.createWalletContact(deliveredCryptoAddress, actressName, actorType, platformWalletType, walletId);
     }

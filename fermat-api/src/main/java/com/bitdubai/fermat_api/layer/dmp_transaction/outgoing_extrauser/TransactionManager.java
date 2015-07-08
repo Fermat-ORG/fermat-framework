@@ -10,5 +10,5 @@ import java.util.UUID;
  * Created by eze on 2015.06.17..
  */
 public interface TransactionManager {
-    public void send(UUID walletID, CryptoAddress destinationAddress, long cryptoAmount) throws InsufficientFundsException, CantSendFundsException ;
+    public void send(UUID walletID, CryptoAddress destinationAddress, long cryptoAmount,String notes) throws InsufficientFundsException, CantSendFundsException ;
 }

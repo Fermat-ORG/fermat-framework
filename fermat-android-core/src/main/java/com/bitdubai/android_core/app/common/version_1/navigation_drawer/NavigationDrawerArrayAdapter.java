@@ -50,13 +50,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                     case "DesktopActivity":
                         rowView = inflater.inflate(R.layout.wallet_manager_desktop_activity_navigation_drawer_first_row, parent, false);
                         break;
-                    case "AdultsActivity":
-                        rowView = inflater.inflate(R.layout.wallet_framework_activity_framework_navigation_drawer_first_row, parent, false);
-                        break;
-                    case "ShopActivity":
-                        rowView = inflater.inflate(R.layout.shell_shop_desktop_activity_navigation_drawer_first_row, parent, false);
-                        break;
-                    default:
+                      default:
                         rowView = inflater.inflate(R.layout.wallet_manager_main_activity_navigation_drawer_first_row_empty, parent, false);
 
                 }
@@ -91,16 +85,7 @@ public class NavigationDrawerArrayAdapter extends ArrayAdapter<String>  {
                     case "DesktopActivity":
                         rowView = inflater.inflate(R.layout.wallet_manager_desktop_activity_framework_navigation_drawer_row_layout, parent, false);
                         break;
-                    case "AdultsActivity":
-                        rowView = inflater.inflate(R.layout.wallet_framework_activity_framework_navigation_drawer_row_layout, parent, false);
-                        break;
-                    case "ShopActivity":
-                        rowView = inflater.inflate(R.layout.shell_shop_desktop_activity_navigation_drawer_row_layout, parent, false);
-                        break;
-                    case "PublisherActivity":
-                        rowView = inflater.inflate(R.layout.wallet_framework_activity_framework_navigation_drawer_row_layout, parent, false);
-                        break;
-                    default:
+                      default:
                         rowView = inflater.inflate(R.layout.wallet_framework_activity_main_navigation_drawer_row_layout_empty, parent, false);
                         break;
 

@@ -1,11 +1,14 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.ClipDescription;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -27,6 +30,7 @@ import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantCreateWalletContactException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantSendCryptoException;
+import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.InsufficientFundsException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
@@ -35,7 +39,6 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.IntentIntegrator;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.IntentResult;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.Platform;
 
-import java.io.Serializable;
 import java.util.UUID;
 
 /**
@@ -47,6 +50,9 @@ public class SendFragment extends Fragment implements View.OnClickListener {
     View rootView;
     UUID wallet_id = UUID.fromString("25428311-deb3-4064-93b2-69093e859871");
 
+    String name;
+    CryptoAddress cryptoAddress;
+
     Bundle savedInstanceState;
     /**
      * DealsWithNicheWalletTypeCryptoWallet Interface member variables.
@@ -55,8 +61,6 @@ public class SendFragment extends Fragment implements View.OnClickListener {
     private static Platform platform = new Platform();
     CryptoWallet cryptoWallet;
     private ErrorManager errorManager;
-
-    private TextView txtAddress;
 
     public static SendFragment newInstance(int position) {
         SendFragment f = new SendFragment();
@@ -75,15 +79,11 @@ public class SendFragment extends Fragment implements View.OnClickListener {
 
         try {
             cryptoWallet = cryptoWalletManager.getCryptoWallet();
-        }
-        catch (CantGetCryptoWalletException e)
-        {
+        } catch (CantGetCryptoWalletException e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage("CantGetCryptoWalletException- " + e.getMessage());
             ;
         }
-
-
     }
 
     @Override
@@ -92,82 +92,77 @@ public class SendFragment extends Fragment implements View.OnClickListener {
         rootView = inflater.inflate(R.layout.wallets_bitcoin_fragment_send, container, false);
 
         try {
-            TextView tv;
-            final EditText contact_name = (EditText) rootView.findViewById(R.id.contact_name);
+
+            EditText contact_name = (EditText) rootView.findViewById(R.id.contact_name);
             final EditText editAddress = (EditText) rootView.findViewById(R.id.address);
             final EditText editAmount = (EditText) rootView.findViewById(R.id.amount);
-            final LinearLayout linear_address = (LinearLayout) rootView.findViewById(R.id.linear_address);
-            final LinearLayout linear_amount = (LinearLayout) rootView.findViewById(R.id.linear_amount);
             final LinearLayout linear_notes = (LinearLayout) rootView.findViewById(R.id.linear_notes);
             final LinearLayout linear_send = (LinearLayout) rootView.findViewById(R.id.linear_send);
+
+            contact_name.setText(name);
+            if (cryptoAddress.getAddress() != null)
+                editAddress.setText(cryptoAddress.getAddress());
 
             ImageView b = (ImageView) rootView.findViewById(R.id.send_button);
             b.setOnClickListener(this);
 
-            //add event finish type
-
-            contact_name.addTextChangedListener(new TextWatcher() {
+            editAddress.addTextChangedListener(new TextWatcher() {
                 public void afterTextChanged(Editable s) {
-                    if (contact_name != null && contact_name.getText() != null && !contact_name.getText().toString().equals("")) {
-                        linear_address.setVisibility(View.VISIBLE);
+                    if (validateAddress(editAddress.getText().toString()) != null) {
+                        editAddress.setTextColor(Color.parseColor("#72af9c"));
                     } else {
-                        linear_address.setVisibility(View.GONE);
-                        linear_amount.setVisibility(View.GONE);
-                        linear_notes.setVisibility(View.GONE);
-                        linear_send.setVisibility(View.GONE);
+                        editAddress.setTextColor(Color.parseColor("#b46a54"));
                     }
                 }
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
                 public void onTextChanged(CharSequence s, int start, int before, int count) {}
             });
 
-            editAddress.addTextChangedListener(new TextWatcher() {
-                public void afterTextChanged(Editable s) {
-                    if (editAddress != null && editAddress.getText() != null && !editAddress.getText().toString().equals("")) {
-                        linear_amount.setVisibility(View.VISIBLE);
-                    } else {
-                        linear_amount.setVisibility(View.GONE);
-                        linear_notes.setVisibility(View.GONE);
-                        linear_send.setVisibility(View.GONE);
-                    }
+            // add_contact button definition
+            ImageView pasteFromClipboardButton = (ImageView) rootView.findViewById(R.id.paste_from_clipboard_btn);
+            pasteFromClipboardButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    pasteFromClipboard(rootView);
                 }
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-                public void onTextChanged(CharSequence s, int start, int before, int count) {}
             });
 
             editAmount.addTextChangedListener(new TextWatcher() {
                 public void afterTextChanged(Editable s) {
-                    if (editAmount != null && editAmount.getText() != null && !editAmount.getText().toString().equals("")) {
-                        linear_notes.setVisibility(View.VISIBLE);
-                        linear_send.setVisibility(View.VISIBLE);
-                    } else {
+                    try {
+                        Long amount = Long.parseLong(editAmount.getText().toString());
+                        if (amount > 0) {
+                            linear_notes.setVisibility(View.VISIBLE);
+                            linear_send.setVisibility(View.VISIBLE);
+                        }
+                    } catch (Exception e) {
+                        try {
+                            long actualBalance = cryptoWallet.getAvailableBalance(wallet_id);
+                            editAmount.setHint("Available amount: "+actualBalance+ " bits");
+                        } catch (Exception ex) {
+
+                        }
+
                         linear_notes.setVisibility(View.GONE);
                         linear_send.setVisibility(View.GONE);
                     }
                 }
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-                public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                }
             });
 
-
-
-            txtAddress = (EditText) rootView.findViewById(R.id.address);
-
-            //define icon event to scan Qr code - wallet address
             ImageView scanImage = (ImageView) rootView.findViewById(R.id.scan_qr);
 
             scanImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
-                //pass reference to edit text control to show scan result and main activity
-                   IntentIntegrator integrator = new IntentIntegrator(getActivity(),(EditText) rootView.findViewById(R.id.address));
-
+                    IntentIntegrator integrator = new IntentIntegrator(getActivity(), (EditText) rootView.findViewById(R.id.address));
                     integrator.initiateScan();
-
                 }
             });
-
 
         } catch (Exception e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -177,88 +172,121 @@ public class SendFragment extends Fragment implements View.OnClickListener {
         return rootView;
     }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    private void pasteFromClipboard(View rootView) {
+        ClipboardManager clipboard = (ClipboardManager) rootView.getContext().getSystemService(Context.CLIPBOARD_SERVICE);
+
+        // Gets the ID of the "paste" menu item
+        ImageView mPasteItem = (ImageView) rootView.findViewById(R.id.paste_from_clipboard_btn);
+        if (clipboard.hasPrimaryClip() && clipboard.getPrimaryClipDescription().hasMimeType(ClipDescription.MIMETYPE_TEXT_PLAIN)) {
+            mPasteItem.setEnabled(true);
+            ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
+            EditText editText = (EditText) rootView.findViewById(R.id.address);
+            CryptoAddress validAddress = validateAddress(item.getText().toString());
+            if (validAddress != null) {
+                editText.setText(validAddress.getAddress());
+            } else {
+                Toast.makeText(getActivity().getApplicationContext(), "Cannot find an address in the clipboard text.\n\n"+item.getText().toString(), Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            // This enables the paste menu item, since the clipboard contains plain text.
+            mPasteItem.setEnabled(false);
+        }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        try
-        {
-
-
+        try {
             if (data != null) {
-
-
                 IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
 
                 //get references to edit text control to show scand result
-                EditText textResult =  IntentIntegrator.getTextResult();
+                EditText textResult = IntentIntegrator.getTextResult();
                 if (scanResult != null) {
 
                     // handle scan result
-                    String contantsString =  scanResult.getContents()==null?"0":scanResult.getContents();
+                    String contantsString = scanResult.getContents() == null ? "0" : scanResult.getContents();
                     if (contantsString.equalsIgnoreCase("0")) {
-                        Toast.makeText(this.getActivity(), "Problem to get the  contant Number", Toast.LENGTH_LONG).show();
+                        Toast.makeText(this.getActivity(), "Problem to get contact address", Toast.LENGTH_LONG).show();
 
-                    }else {
+                    } else {
                         //load into text address
-
-                       textResult.setText(contantsString);
+                        textResult.setText(contantsString);
                     }
-
-                }
-                else{
+                } else {
                     Toast.makeText(this.getActivity(), "Problem to scan the barcode.", Toast.LENGTH_LONG).show();
                 }
-
             }
-    }
-    catch (Exception e) {
-        errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        showMessage(" Load address Exception- " + e.getMessage());
+        } catch (Exception e) {
+            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            showMessage(" Load address Exception- " + e.getMessage());
+        }
     }
 
+    private CryptoAddress validateAddress(String strToValidate) {
+        String[] tokens = strToValidate.split("-|\\.|:|,|;| ");
+
+        CryptoAddress cryptoAddress = new CryptoAddress(null, CryptoCurrency.BITCOIN);
+        for (String token : tokens) {
+            token = token.trim();
+            if (token.length() > 25 && token.length() < 40) {
+                cryptoAddress.setAddress(token);
+                if (cryptoWallet.isValidAddress(cryptoAddress)) {
+                    return cryptoAddress;
+                }
+            }
+        }
+        return null;
     }
 
     @Override
     public void onClick(View v) {
-        try {
-            EditText contact_name = (EditText) rootView.findViewById(R.id.contact_name);
+
+        EditText contact_name = (EditText) rootView.findViewById(R.id.contact_name);
+
+        EditText editAddress = (EditText) rootView.findViewById(R.id.address);
+
+        EditText editNotes = (EditText) rootView.findViewById(R.id.notes);
+
+        CryptoAddress validAddress = validateAddress(editAddress.getText().toString());
+        if (validAddress != null) {
             EditText amount = (EditText) rootView.findViewById(R.id.amount);
-            EditText address = (EditText) rootView.findViewById(R.id.address);
-            CryptoAddress cryptoAddress = new CryptoAddress();
+            try {
+                cryptoWallet.createWalletContact(validAddress, contact_name.getText().toString(), Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
+            } catch (CantCreateWalletContactException e) {
+                // TODO que hacer si no puedo crear el contacto? igual envio el dinero
+                //Toast.makeText(this.getActivity(), "Can't create new contact", Toast.LENGTH_LONG).show();
+            }
 
             try {
 
-                cryptoAddress.setAddress(address.getText().toString());
-                cryptoAddress.setCryptoCurrency(CryptoCurrency.BITCOIN);
+                cryptoWallet.send(Long.parseLong(amount.getText().toString()), validAddress, editNotes.getText().toString(), wallet_id);
 
-                // first i add the contact
-                cryptoWallet.createWalletContact(cryptoAddress, contact_name.getText().toString(), Actors.EXTRA_USER, PlatformWalletType.BASIC_WALLET_BITCOIN_WALLET, wallet_id);
+                Toast.makeText(this.getActivity(), "Send OK", Toast.LENGTH_LONG).show();
+            } catch (InsufficientFundsException e) {
+                Toast.makeText(this.getActivity(), "Insufficient funds", Toast.LENGTH_LONG).show();
 
-                cryptoWallet.send(Long.parseLong(amount.getText().toString()), cryptoAddress, wallet_id);
-
-                showMessage("Send OK");
-            } catch (CantCreateWalletContactException e)
-            {
-                errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                showMessage("Error creating wallet contact - " + e.getMessage());
-            }
-            catch (CantSendCryptoException e)
-            {
+            } catch (CantSendCryptoException e) {
                 errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 showMessage("Error send satoshis - " + e.getMessage());
             }
-        } catch (Exception e)
-        {
-            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            showMessage("Error send satoshis - " + e.getMessage());
-        }
+        } else {
+            Toast.makeText(this.getActivity(), "Invalid Address", Toast.LENGTH_LONG).show();
 
+        }
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setCryptoAddress(CryptoAddress cryptoAddress) {
+        this.cryptoAddress = cryptoAddress;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
 
     //show alert
     private void showMessage(String text) {
@@ -273,7 +301,4 @@ public class SendFragment extends Fragment implements View.OnClickListener {
         //alertDialog.setIcon(R.drawable.icon);
         alertDialog.show();
     }
-
-
-
 }
