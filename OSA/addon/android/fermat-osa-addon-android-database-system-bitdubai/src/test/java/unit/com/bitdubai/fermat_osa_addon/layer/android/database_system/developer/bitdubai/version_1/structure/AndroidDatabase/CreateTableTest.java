@@ -84,12 +84,4 @@ public class CreateTableTest {
         assertThat(caughtException()).isInstanceOf(CantCreateTableException.class);
         caughtException().printStackTrace();
     }
-
-    @Test
-    public void CreateTable_TableAlreadyExists_ThrowCantCreateTableException() throws Exception{
-        testDatabase.createTable(testOwnerId, testTableFactory);
-        catchException(testDatabase).createTable(testOwnerId, testTableFactory);
-        assertThat(caughtException()).isInstanceOf(CantCreateTableException.class);
-        caughtException().printStackTrace();
-    }
 }
