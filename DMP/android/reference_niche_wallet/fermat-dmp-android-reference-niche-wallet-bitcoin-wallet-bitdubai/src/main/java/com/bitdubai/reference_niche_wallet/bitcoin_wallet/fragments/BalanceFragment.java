@@ -2,10 +2,14 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
@@ -18,10 +22,18 @@ import android.os.SystemClock;
 
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bitdubai.android_fermat_dmp_wallet_bitcoin.R;
+import com.bitdubai.fermat_api.CantReportCriticalStartingProblemException;
+import com.bitdubai.fermat_api.CantStartPlatformException;
+import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.AppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_middleware.app_runtime.enums.Wallets;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_runtime.WalletRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetAllWalletContactsException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetBalanceException;
 import com.bitdubai.fermat_api.layer.dmp_niche_wallet_type.crypto_wallet.exceptions.CantGetCryptoWalletException;
@@ -56,9 +68,6 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
     int showTypeBalance=TYPE_BALANCE_AVAILABLE;
 
     private static final String ARG_POSITION = "position";
-
-    // Check if a click was executed.
-    private long mLastClickTime = 0;
 
 
 
@@ -132,14 +141,12 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
             public void onClick(View view) {
                 refreshBalance();
                 if (showTypeBalance==TYPE_BALANCE_AVAILABLE) {
-                    labelBalance.setText("available balance");
-                    textViewBalance.setText(formatBalanceString(balanceAvailable));
+                    labelBalance.setText("Available balance");
                     showTypeBalance=TYPE_BALANCE_BOOK;
                     //fab_change_balance.setImageResource(R.drawable.wallet);
                     //labelBalance.setText();
                 }else if (showTypeBalance==TYPE_BALANCE_BOOK){
-                    labelBalance.setText("book Balance");
-                    textViewBalance.setText(formatBalanceString(bookBalance));
+                    labelBalance.setText("Book Balance");
                     showTypeBalance=TYPE_BALANCE_AVAILABLE;
                     //fab_change_balance.setImageResource(R.drawable.ic_action_about);
                     //labelBalance.setText();
@@ -161,14 +168,7 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
             @Override
             public void onClick(View view) {
 
-                // mis-clicking prevention, using threshold of 6000 ms
-                if (SystemClock.elapsedRealtime() - mLastClickTime < 6000){
-                    return;
-                }
-                mLastClickTime = SystemClock.elapsedRealtime();
-
-                showBalanceBTC = !showBalanceBTC;
-                refreshBalance();
+                new GetTask(view.getContext ()).execute();
             }
         });
 
@@ -218,7 +218,7 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 swipeLayout.setRefreshing(false);
                 refreshBalance();
             }
-        }, 3000);
+        }, 5000);
     }
 
     private void refreshBalance() {
@@ -262,6 +262,47 @@ public class BalanceFragment extends Fragment implements SwipeRefreshLayout.OnRe
         });
         // alertDialog.setIcon(R.drawable.icon);
         alertDialog.show();
+    }
+
+
+    class GetTask extends AsyncTask<Object, Void, Boolean> {
+
+        private Context context;
+
+        public GetTask(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        protected void onPreExecute () {
+            super.onPreExecute();
+
+            textViewBalance.setEnabled (false);
+        }
+
+        @Override
+        protected Boolean doInBackground(Object... params) {
+
+            try {
+
+                showBalanceBTC = !showBalanceBTC;
+                refreshBalance ();
+
+            } catch (Exception e) {
+
+                textViewBalance.setEnabled (true);
+            }
+
+
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean result) {
+
+            super.onPostExecute(result);
+            textViewBalance.setEnabled (true);
+        }
     }
 }
 

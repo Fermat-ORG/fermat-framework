@@ -39,6 +39,7 @@ import org.bitcoinj.core.TransactionConfidence;
 import org.bitcoinj.core.Wallet;
 
 import java.util.List;
+import java.util.UUID;
 
 import javax.annotation.Nullable;
 
@@ -119,7 +120,8 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
          */
         try {
             dbActions.setVault(wallet);
-            dbActions.saveIncomingTransaction(tx.getHashAsString());
+            UUID txId = UUID.randomUUID();
+            dbActions.saveIncomingTransaction(txId.toString(), tx.getHashAsString());
 
             /**
              * once I save it I will check the confidence level of the transaction.
@@ -133,7 +135,7 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
                 cryptoStatus = CryptoStatus.ON_CRYPTO_NETWORK;
             }
 
-            dbActions.updateCryptoTransactionStatus(tx.getHashAsString(), cryptoStatus);
+            dbActions.updateCryptoTransactionStatus(txId.toString(), tx.getHashAsString(), cryptoStatus);
         } catch (CantExecuteQueryException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantLoadTableToMemoryException e) {

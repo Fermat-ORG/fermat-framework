@@ -29,11 +29,9 @@ public interface BitcoinWalletTransactionRecord {
 
     public void setAmount(long amount);
 
-    /*
     public BalanceType getBalanceType();
 
     public void setBalanceType(BalanceType type);
-    */
 
     public TransactionType getType();
 

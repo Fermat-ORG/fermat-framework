@@ -29,6 +29,9 @@ public class AndroidDatabaseTransaction implements DatabaseTransaction {
     private List<DatabaseTable> insertTables;
     private List<DatabaseTableRecord>  insertRecords;
 
+    private List<DatabaseTable> selectTables;
+    private List<DatabaseTableRecord>  selectRecords;
+
     /**
      * DatabaseTransaction interface implementation.
      */
@@ -70,6 +73,19 @@ public class AndroidDatabaseTransaction implements DatabaseTransaction {
         insertRecords.add(record);
     }
 
+    @Override
+    public void addRecordToSelect(DatabaseTable selectTable, DatabaseTableRecord selectRecord){
+
+        if(selectTables == null)
+            selectTables = new ArrayList<DatabaseTable>();
+
+        if(selectRecords == null)
+            selectRecords = new ArrayList<DatabaseTableRecord>();
+
+        selectTables.add(selectTable);
+        selectRecords.add(selectRecord);
+
+    }
     /**
      * <p>This method gets list of DatabaseTableRecord object that will be modified
      *
@@ -91,6 +107,10 @@ public class AndroidDatabaseTransaction implements DatabaseTransaction {
         return insertRecords;
     }
 
+    @Override
+    public List<DatabaseTableRecord> getRecordsToSelect(){
+        return  this.selectRecords;
+    }
     /**
      *<p>This method gets list of DatabaseTable object that will be updated
      *
@@ -98,7 +118,7 @@ public class AndroidDatabaseTransaction implements DatabaseTransaction {
      */
     @Override
     public List<DatabaseTable> getTablesToUpdate(){
-        return updateTables;
+        return this.updateTables;
     }
 
     /**
@@ -113,8 +133,27 @@ public class AndroidDatabaseTransaction implements DatabaseTransaction {
     }
 
     @Override
+    public List<DatabaseTable> getTablesToSelect(){
+        return this.selectTables;
+    }
+
+    @Override
     public String toString(){
+
+        //los select van a ser asignados a una variable y
+        // esa variable va a ser usada en un insert o update para asignarla a un campo
         StringBuffer buffer = new StringBuffer();
+
+        buffer.append("SELECT TABLES:");
+        for(DatabaseTable table : selectTables)
+            buffer.append(" " + table.toString());
+        buffer.append("\n");
+
+        buffer.append("SELECT RECORDS:");
+        for(DatabaseTableRecord record : selectRecords)
+            buffer.append(" " + record.toString());
+        buffer.append("\n");
+
         buffer.append("INSERT TABLES:");
         for(DatabaseTable table : insertTables)
             buffer.append(" " + table.toString());
