@@ -129,8 +129,6 @@ public class OutgoingExtraUserTransactionManager implements DealsWithBitcoinWall
 
         long funds;
         try {
-            //TODO: revisar por el cambio en la interface
-
             funds = bitcoinWalletWallet.getAvailableBalance().getBalance();
         } catch (CantCalculateBalanceException e) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_OUTGOING_EXTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);

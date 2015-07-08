@@ -103,6 +103,10 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
         return getAllInState(TransactionStatus.NEW);
     }
 
+    public List<TransactionWrapper> getPersistedInAvailable() throws CantLoadTableToMemoryException, InvalidParameterException {
+        return getAllInState(TransactionStatus.PERSISTED_IN_AVAILABLE);
+    }
+
     public List<TransactionWrapper> getDiscountedAvailableBalance() throws CantLoadTableToMemoryException, InvalidParameterException {
         return getAllInState(TransactionStatus.SENT_TO_CRYPTO_VOULT);
     }
@@ -151,7 +155,7 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
         databaseTableRecord.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ADDRESS_TO_COLUMN_NAME, destinationAddress.getAddress());
         databaseTableRecord.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_CRYPTO_CURRENY_COLUMN_NAME, destinationAddress.getCryptoCurrency().getCode());
         databaseTableRecord.setLongValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_CRYPTO_AMOUNT_COLUMN_NAME, cryptoAmount);
-        databaseTableRecord.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_STATUS_COLUMN_NAME, TransactionState.NEW.getCode());
+        databaseTableRecord.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_STATUS_COLUMN_NAME, TransactionState.PERSISTED_IN_AVAILABLE.getCode());
 
         // TODO: This have to be changed for the tinestamp when the network recognize the transaction
         databaseTableRecord.setLongValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TIMESTAMP_COLUMN_NAME, System.currentTimeMillis()/1000L);
