@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.v13.BuildConfig;
 
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidDatabase;
 
 import org.junit.Before;
@@ -22,11 +21,11 @@ import static org.fest.assertions.api.Assertions.assertThat;
 import static org.robolectric.Shadows.shadowOf;
 
 /**
- * Created by jorgegonzalez on 2015.06.27..
+ * Created by jorgegonzalez on 2015.07.06..
  */
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class)
-public class DeleteDatabaseTest {
+public class CloseDatabaseTest {
 
     private Activity mockActivity;
     private Context mockContext;
@@ -41,19 +40,11 @@ public class DeleteDatabaseTest {
     }
 
     @Test
-    public void DeleteDatabase_DatabaseInPath_InvokedSuccesfully() throws Exception{
+    public void OpenDatabase_DatabaseInPath_InvokedSuccesfully() throws Exception{
         testDatabase = new AndroidDatabase(mockContext, UUID.randomUUID(), testDatabaseName);
         testDatabase.createDatabase(testDatabaseName);
-        catchException(testDatabase).deleteDatabase();
+        testDatabase.closeDatabase();
+        catchException(testDatabase).openDatabase();
         assertThat(caughtException()).isNull();
     }
-
-    @Test
-    public void DeleteDatabase_NoDatabaseInPath_ThrowException() throws Exception{
-        testDatabase = new AndroidDatabase(mockContext, UUID.randomUUID(), testDatabaseName);
-        catchException(testDatabase).deleteDatabase();
-        caughtException().printStackTrace();
-        assertThat(caughtException()).isInstanceOf(DatabaseNotFoundException.class);
-    }
-
 }

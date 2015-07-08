@@ -176,19 +176,14 @@ public class LogToolsFragmentLevel2 extends Fragment {
             //{
             //Plugins plugin = Plugins.getByKey("Bitcoin Crypto Network");
             Plugins plugin = Plugins.getByKey(pluginKey);
+
+
             //logTool.setLogLevel(plugin, logLevel);
             /**
              * Now I must look in pluginClasses map the match of the selected class to pass the full path
              */
             HashMap<String, LogLevel> data = new HashMap<String, LogLevel>();
-            for (ClassHierarchyLevels c : pluginClasses.get(plugin.getKey())){
-                if (c.getLevel3().equals(resource))
-                    data.put(c.getFullPath(), logLevel);
-                if (c.getLevel2().equals(resource))
-                    data.put(c.getFullPath(), logLevel);
-                if (c.getLevel1().equals(resource))
-                    data.put(c.getFullPath(), logLevel);
-            }
+            data.put(resource, logLevel);
             logTool.setNewLogLevelInClass(plugin, data);
 
             //}
@@ -206,6 +201,7 @@ public class LogToolsFragmentLevel2 extends Fragment {
         } catch (Exception e) {
             System.out.println("*********** soy un error " + e.getMessage());
         }
+
     }
 
     @Override

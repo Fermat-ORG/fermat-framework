@@ -29,42 +29,25 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
  * Created by ciencias on 23.12.14.
  */
 /**
- * This class define methods to execute query and transactions on Database
- * And method to get a Database table definition
+ * This class define methods to execute query and transactions on database
+ * And method to get a database table definition
  *
  * *
  */
 
-public class AndroidDatabase  implements Database, DatabaseFactory {
+public class AndroidDatabase implements Database, DatabaseFactory {
 
     /**
-     * Database Interface member variables.
+     * database Interface member variables.
      */
 
     private Context context;
-    public String getDatabaseName() {
-        return databaseName;
-    }
-
-    public void setDatabaseName(String databaseName) {
-        this.databaseName = databaseName;
-    }
-
-    public DatabaseTransaction getDatabaseTransaction() {
-        return databaseTransaction;
-    }
-
-    public void setDatabaseTransaction(DatabaseTransaction databaseTransaction) {
-        this.databaseTransaction = databaseTransaction;
-    }
-
     private String databaseName;
     private UUID ownerId;
     private String query;
-    private SQLiteDatabase Database;
+    private SQLiteDatabase database;
     private DatabaseTransaction databaseTransaction;
     private DatabaseTable databaseTable;
-
 
     public AndroidDatabase(){
     }
@@ -94,16 +77,36 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
         this.databaseName = databaseName;
     }
 
+    public String getDatabaseName() {
+        return databaseName;
+    }
+
+    public void setDatabaseName(String databaseName) {
+        this.databaseName = databaseName;
+    }
+
+    public DatabaseTransaction getDatabaseTransaction() {
+        return databaseTransaction;
+    }
+
+    public void setDatabaseTransaction(DatabaseTransaction databaseTransaction) {
+        this.databaseTransaction = databaseTransaction;
+    }
+
     /**
-     * Database interface implementation.
+     * database interface implementation.
      */
+    @Override
+    public DatabaseFactory getDatabaseFactory(){
+        return this;
+    }
 
     /**
      * <p> This method execute a string query command in database
      */
     @Override
     public void executeQuery() {
-        Database.execSQL(query);
+        database.execSQL(query);
     }
 
 
@@ -126,10 +129,19 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
      */
     @Override
     public DatabaseTable getTable(String tableName){
-
-        databaseTable = new AndroidDatabaseTable(this.context,this.Database, tableName);
-
-        return databaseTable;
+        try{
+            if(!database.isOpen())
+                openDatabase();
+            databaseTable = new AndroidDatabaseTable(context,database, tableName);
+            return databaseTable;
+        } catch( CantOpenDatabaseException | DatabaseNotFoundException exception){
+            String message = CantCreateTableException.DEFAULT_MESSAGE;
+            FermatException cause = exception;
+            String context = "";
+            String possibleReason = "We couldn't open the Database, you should checkout the cause";
+            System.err.println(new CantCreateTableException(message, cause, context, possibleReason).toString());
+        }
+        return null;
     }
 
     /**
@@ -158,10 +170,10 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
         List<DatabaseTableRecord> updateRecords = transaction.getRecordsToUpdate();
         List<DatabaseTableRecord> insertRecords = transaction.getRecordsToInsert();
         try{
-            if(!this.Database.isOpen())
-                openDatabase(databaseName);
+            if(!database.isOpen())
+                openDatabase();
 
-            this.Database.beginTransaction(); // EXCLUSIVE
+            database.beginTransaction(); // EXCLUSIVE
 
             //update
             if(updateTables != null)
@@ -175,8 +187,8 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
                     insertTables.get(i).insertRecord(insertRecords.get(i));
                 }
 
-            this.Database.setTransactionSuccessful();
-            this.Database.endTransaction();
+            database.setTransactionSuccessful();
+            database.endTransaction();
         }catch(Exception exception) {
 
             /**
@@ -194,6 +206,7 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
     }
 
 
+
     /**
      * Private methods implementation.
      */
@@ -202,12 +215,13 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
      * Open specific database file
      * if used by a plugin, method use plugin id to define directory path name
      *
-     * @param databaseName name of database to open
      * @throws CantOpenDatabaseException
      * @throws DatabaseNotFoundException
      */
-
-    public void openDatabase(String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException {
+    @Override
+    public void openDatabase() throws CantOpenDatabaseException, DatabaseNotFoundException {
+        if(isOpen())
+            return;
         /**
          * First I try to open the database.
          */
@@ -217,22 +231,22 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
          * because it comes from platformdatabase
          */
         if(ownerId != null)
-            databasePath =  this.context.getFilesDir().getPath() +  "/databases/" +  ownerId.toString();
+            databasePath =  context.getFilesDir().getPath() +  "/databases/" +  ownerId.toString();
         else
-            databasePath =  this.context.getFilesDir().getPath() + "/databases/";
+            databasePath =  context.getFilesDir().getPath() + "/databases/";
 
         databasePath += "/" + databaseName.replace("-","") + ".db";
 
         if(!(new File(databasePath)).exists()){
             String message = DatabaseNotFoundException.DEFAULT_MESSAGE;
             FermatException cause = null;
-            String context = "Database Constructed Path: " + databasePath;
+            String context = "database Constructed Path: " + databasePath;
             String possibleReason = "Check if the constructed path is valid";
             throw new DatabaseNotFoundException(message, cause, context, possibleReason);
         }
 
         try {
-            this.Database = SQLiteDatabase.openDatabase(databasePath,null,0,null);
+            database = SQLiteDatabase.openDatabase(databasePath,null, SQLiteDatabase.OPEN_READWRITE,null);
         } catch (SQLiteException exception) {
 
             /**
@@ -242,11 +256,23 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
              */
             String message = CantOpenDatabaseException.DEFAULT_MESSAGE;
             FermatException cause = FermatException.wrapException(exception);
-            String context = "Database Constructed Path: " + databasePath;
+            String context = "database Constructed Path: " + databasePath;
             String possibleReason = "Check the cause for this error as we have already checked that the database exists";
             throw new CantOpenDatabaseException(message, cause, context, possibleReason);
         }
 
+    }
+
+    @Override
+    public void closeDatabase(){
+        if(isOpen())
+            database.close();
+    }
+
+    public boolean isOpen(){
+        if(database == null)
+            return false;
+        return database.isOpen();
     }
 
     /**
@@ -254,21 +280,18 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
      te a specific database file
      * if used by a plugin, It use plugin id to define directory path name
      *
-     * @param databaseName name of database to deleted
      * @throws CantOpenDatabaseException
      * @throws DatabaseNotFoundException
      */
-
-
-    public void deleteDatabase(String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException {
+    public void deleteDatabase() throws CantOpenDatabaseException, DatabaseNotFoundException {
 
         // determine directry path name
         String databasePath ="";
 
         if(ownerId != null)
-            databasePath =  this.context.getFilesDir().getPath() +  "/databases/" +  ownerId.toString();
+            databasePath =  context.getFilesDir().getPath() +  "/databases/" +  ownerId.toString();
         else
-            databasePath =  this.context.getFilesDir().getPath() + "/databases/";
+            databasePath =  context.getFilesDir().getPath() + "/databases/";
 
         databasePath += "/" + databaseName.replace("-","") + ".db";
 
@@ -288,15 +311,12 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
          */
         String message = "SOMETHING UNEXPECTED HAS HAPPENED";
         FermatException cause = null;
-        String context = "Constructed Database Path: " + databasePath;
+        String context = "Constructed database Path: " + databasePath;
         String possibleCause = "The most probable reason is that the database path could not be found";
         throw new DatabaseNotFoundException(message, cause, context, possibleCause);
 
     }
 
-    public void closeDatabase(){
-        this.Database.close();
-    }
 
     /**
      * DatabaseFactory interface implementation.
@@ -318,9 +338,9 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
          * because it comes from platformdatabase
          */
         if(ownerId != null)
-            databasePath =  this.context.getFilesDir().getPath() +   "/databases/" +   ownerId.toString();
+            databasePath =  context.getFilesDir().getPath() +   "/databases/" +   ownerId.toString();
         else
-            databasePath =  this.context.getFilesDir().getPath() +  "/databases/" ;
+            databasePath =  context.getFilesDir().getPath() +  "/databases/" ;
 
         File storagePath = new File(databasePath);
         if (!storagePath.exists())
@@ -334,22 +354,22 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
         if(databaseFile.exists()){
             String message = CantCreateDatabaseException.DEFAULT_MESSAGE;
             FermatException cause = null;
-            String context = "Database File: " + databaseFile.getPath();
-            String possibleReasons = "This happens if the Database has already been created";
+            String context = "database File: " + databaseFile.getPath();
+            String possibleReasons = "This happens if the database has already been created";
             throw new CantCreateDatabaseException(message, cause, context, possibleReasons);
         }
         /**
-         * This call opens or creates the Database, it doesn't throw a determined exception, but we'll try to emulate one in the tests
+         * This call opens or creates the database, it doesn't throw a determined exception, but we'll try to emulate one in the tests
          */
         try{
-            this.Database = SQLiteDatabase.openOrCreateDatabase(databaseFile,null);
+            database = SQLiteDatabase.openOrCreateDatabase(databaseFile,null);
         } catch (SQLiteException ex){
             String message = CantCreateDatabaseException.DEFAULT_MESSAGE;
             FermatException cause = FermatException.wrapException(ex);
             String context = "Storage Path: " + storagePath.getPath();
             context += CantCreateDatabaseException.CONTEXT_CONTENT_SEPARATOR;
-            context += "Database Name: " + databaseName;
-            String possibleReasons = "This can happen if the Database File where we wanted to create the Database can't be created";
+            context += "database Name: " + databaseName;
+            String possibleReasons = "This can happen if the database File where we wanted to create the database can't be created";
             throw new CantCreateDatabaseException(message, cause, context, possibleReasons);
         }
     }
@@ -365,17 +385,27 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
      */
     @Override
     public void createTable(UUID ownerId, DatabaseTableFactory table) throws InvalidOwnerIdException, CantCreateTableException {
+        try{
+            if(!database.isOpen())
+                openDatabase();
+        } catch( CantOpenDatabaseException | DatabaseNotFoundException exception){
+            String message = CantCreateTableException.DEFAULT_MESSAGE;
+            FermatException cause = exception;
+            String context = "";
+            String possibleReason = "We couldn't open the Database, you should checkout the cause";
+            throw new CantCreateTableException(message, cause, context, possibleReason);
+        }
 
         /**
          * I check that the owner id is the same I currently have..
          */
         if (this.ownerId != ownerId) {
             String message = InvalidOwnerIdException.DEFAULT_MESSAGE;
-            String context = "Database Owner Id: " + this.ownerId;
+            String context = "database Owner Id: " + ownerId;
             FermatException cause = null;
             context += InvalidOwnerIdException.CONTEXT_CONTENT_SEPARATOR;
             context += "Owner Id in the method invocation: " + ownerId;
-            String possibleReason = "The owner Id passed in the Invocation doesn't belong to the Android Database Owner, maybe this was a passed object";
+            String possibleReason = "The owner Id passed in the Invocation doesn't belong to the Android database Owner, maybe this was a passed object";
             throw new InvalidOwnerIdException(message, cause, context, possibleReason);
         }
 
@@ -387,38 +417,25 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
             throw new CantCreateTableException(message, cause, context, possibleReason);
         }
 
-        if(getTable(table.getTableName()).isTableExists()){
-            String message = CantCreateTableException.DEFAULT_MESSAGE;
-            FermatException cause =null;
-            String context = "Owner Id : " + ownerId.toString();
-            context += CantCreateTableException.CONTEXT_CONTENT_SEPARATOR;
-            context += "DatabaseTableFactory Info: " + table.toString();
-            String possibleReason = "The table already exists.";
-            throw new CantCreateTableException(message, cause, context, possibleReason);
-        }
-
         /**
          * Get the columns of the table and write the query to create it
          */
         try
         {
-            this.query ="CREATE TABLE IF NOT EXISTS " + table.getTableName() + "(";
+            query ="CREATE TABLE IF NOT EXISTS " + table.getTableName() + "(";
             ArrayList<DatabaseTableColumn> tableColumns = table.getColumns();
 
             for (int i = 0; i < tableColumns.size(); i++) {
 
-                this.query += tableColumns.get(i).getName() +" " +  tableColumns.get(i).getType().name();
+                query += tableColumns.get(i).getName() +" " +  tableColumns.get(i).getType().name();
                 if(tableColumns.get(i).getType() == DatabaseDataType.STRING)
-                    this.query +="("+ String.valueOf(tableColumns.get(i).getDataTypeSize()) + ")";
+                    query +="("+ String.valueOf(tableColumns.get(i).getDataTypeSize()) + ")";
 
                 if(i < tableColumns.size()-1)
-                    this.query +=",";
+                    query +=",";
             }
 
-            this.query += ")";
-
-            if(!Database.isOpen())
-                openDatabase(databaseName);
+            query += ")";
 
             executeQuery();
 
@@ -426,10 +443,9 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
              * get index column
              */
             if(table.getIndex() != null && !table.getIndex().isEmpty ()) {
-                this.query = " CREATE INDEX IF NOT EXISTS " + table.getIndex() + "_idx ON " + table.getTableName() + " (" + table.getIndex() + ")";
+                query = " CREATE INDEX IF NOT EXISTS " + table.getIndex() + "_idx ON " + table.getTableName() + " (" + table.getIndex() + ")";
                 executeQuery();
             }
-
         }catch (Exception ex) {
             String message = CantCreateTableException.DEFAULT_MESSAGE;
             FermatException cause = ex instanceof FermatException ? (FermatException) ex : FermatException.wrapException(ex);
@@ -453,9 +469,17 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
     @Override
     public void createTable(DatabaseTableFactory table) throws CantCreateTableException {
         try{
+            if(!database.isOpen())
+                openDatabase();
             createTable(ownerId, table);
         } catch (InvalidOwnerIdException ex){
-            throw new CantCreateTableException(CantCreateDatabaseException.DEFAULT_MESSAGE, ex, "Database Owner Id: " + this.ownerId, "This error is strange and shouldn't ever happen");
+            throw new CantCreateTableException(CantCreateTableException.DEFAULT_MESSAGE, ex, "database Owner Id: " + ownerId, "This error is strange and shouldn't ever happen");
+        } catch( CantOpenDatabaseException | DatabaseNotFoundException exception){
+            String message = CantCreateTableException.DEFAULT_MESSAGE;
+            FermatException cause = exception;
+            String context = "";
+            String possibleReason = "We couldn't open the Database, you should checkout the cause";
+            throw new CantCreateTableException(message, cause, context, possibleReason);
         }
     }
 
@@ -493,6 +517,5 @@ public class AndroidDatabase  implements Database, DatabaseFactory {
     public DatabaseTableFactory newTableFactory(String tableName) {
         return new AndroidDatabaseTableFactory(tableName);
     }
-
 
 }
