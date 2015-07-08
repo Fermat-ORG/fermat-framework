@@ -162,30 +162,43 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
 
         try {
             /**
-             * I will insert a new transaction with the same tx_hash to let other plugins to get it.
-             */
-            //dbActions.updateCryptoTransactionStatus(tx.getHashAsString(), cryptoStatus);
-            dbActions.insertNewTransactionWithNewConfidence(tx.getHashAsString(), cryptoStatus);
-
-            /**
              * now I raise the event
              */
             if (cryptoStatus == CryptoStatus.ON_CRYPTO_NETWORK) {
+                /**
+                 * I create the transaction in the DB and raise the event
+                 */
+                dbActions.insertNewTransactionWithNewConfidence(tx.getHashAsString(), cryptoStatus);
                 eventManager.raiseEvent(new IncomingCryptoOnCryptoNetworkEvent(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK));
             }
 
             if (cryptoStatus == CryptoStatus.ON_BLOCKCHAIN) {
+                /**
+                 * I create the transaction in the DB and raise the event
+                 */
+                dbActions.insertNewTransactionWithNewConfidence(tx.getHashAsString(), cryptoStatus);
                 eventManager.raiseEvent(new IncomingCryptoOnBlockchainEvent(EventType.INCOMING_CRYPTO_ON_BLOCKCHAIN));
             }
 
             if (cryptoStatus == CryptoStatus.IRREVERSIBLE)
+            /**
+             * I don't create a new transaction for this CryptoStatus
+             */
                 eventManager.raiseEvent(new IncomingCryptoIrreversibleEvent(EventType.INCOMING_CRYPTO_IRREVERSIBLE));
 
 
             if (cryptoStatus == CryptoStatus.REVERSED_ON_CRYPTO_NETWORK)
+            /**
+             * I create the transaction in the DB and raise the event
+             */
+                dbActions.insertNewTransactionWithNewConfidence(tx.getHashAsString(), cryptoStatus);
                 eventManager.raiseEvent(new IncomingCryptoReversedOnCryptoNetworkEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK));
 
             if (cryptoStatus == CryptoStatus.REVERSED_ON_BLOCKCHAIN)
+            /**
+             * I create the transaction in the DB and raise the event
+             */
+                dbActions.insertNewTransactionWithNewConfidence(tx.getHashAsString(), cryptoStatus);
                 eventManager.raiseEvent(new IncomingCryptoReversedOnBlockchainEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN));
 
 
