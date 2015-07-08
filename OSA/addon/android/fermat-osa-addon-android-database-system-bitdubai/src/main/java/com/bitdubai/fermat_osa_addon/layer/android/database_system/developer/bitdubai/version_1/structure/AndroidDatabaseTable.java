@@ -1,23 +1,26 @@
 package com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DataBaseSelectOperatorType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DataBaseTableOrder;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseSelectOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableColumn;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilterGroup;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseVariable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantSelectRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 
 import java.util.ArrayList;
@@ -51,6 +54,10 @@ public class AndroidDatabaseTable implements  DatabaseTable {
     private String top = "";
     private String offset = "";
     private DatabaseTableFilterGroup tableFilterGroup;
+
+    private List<DatabaseVariable> variablesResult;
+
+    private List<DatabaseSelectOperator> tableSelectOperator;
 
     // Public constructor declarations.
 
@@ -123,6 +130,22 @@ public class AndroidDatabaseTable implements  DatabaseTable {
     }
 
     /**
+     *
+     * @return
+     */
+
+    @Override
+    public List<DatabaseVariable> getVarialbesResult(){
+        return this.variablesResult;
+    }
+
+
+    @Override
+    public void setVarialbesResult(List<DatabaseVariable> variables){
+        this.variablesResult = variables;
+    }
+
+    /**
      *  <p>This method return a new empty instance of DatabaseTableRecord object
      *
      * @return DatabaseTableRecord object
@@ -180,7 +203,99 @@ public class AndroidDatabaseTable implements  DatabaseTable {
         return this.tableFilterGroup;
     }
 
+    /**
+     * <p>This method selects one or more fields in a table .
+     * <p>Accepts the use of operators on select as SUM or COUNT.
+     * <p>saves each field with its value in an array of variables to be used in other querys.
+     *
+     * @param record
+     * @throws CantSelectRecordException
+     */
 
+    @Override
+    public void selectRecord (DatabaseTableRecord record) throws CantSelectRecordException {
+        /**
+         * First I get the table records with values.
+         * and construct de ContentValues array for SqlLite
+         */
+        try{
+            StringBuffer strRecords = new StringBuffer ("");
+            StringBuffer strValues  = new StringBuffer ("");
+
+            List<DatabaseRecord> records =  record.getValues();
+
+            //check if declared operators to apply on select or only define some fields
+
+            if(this.tableSelectOperator != null) {
+
+
+                for (int i = 0; i < tableSelectOperator.size(); ++i) {
+
+                    if (strRecords.length() > 0)
+                        strRecords.append(",");
+
+
+                    switch (tableSelectOperator.get(i).getType()) {
+                        case SUM:
+                            strRecords.append(" SUM (" + tableSelectOperator.get(i).getColumn() +") AS " + tableSelectOperator.get(i).getAliasColumn() );
+                            break;
+                        case COUNT:
+                            strRecords.append(" COUNT (" + tableSelectOperator.get(i).getColumn() +") AS " + tableSelectOperator.get(i).getAliasColumn());
+                            break;
+
+
+                        default:
+                            strRecords.append(" ");
+                            break;
+                    }
+
+
+                }
+            }
+            else
+            {
+                for (int i = 0; i < records.size(); ++i) {
+
+                    if(strRecords.length() > 0 )
+                        strRecords.append (",");
+                    strRecords.append(records.get(i).getName ());
+
+                }
+            }
+
+
+
+
+
+            Cursor c = this.database.rawQuery("SELECT " + strRecords + " FROM " + tableName + " " + makeFilter(),null);
+
+            List<String> columns = getColumns();
+            int columnsCant =0;
+
+            this.variablesResult =  new ArrayList<>();
+            if (c.moveToFirst()) {
+                do {
+                    /**
+                     * Get columns name to read values of files
+                     *
+                     */
+                   DatabaseVariable variable = new AndroidVariable();
+
+                    variable.setName("@" + c.getColumnName(columnsCant));
+                    variable.setValue(c.getString(columnsCant));
+
+                    this.variablesResult.add(variable);
+                    columnsCant++;
+                } while (c.moveToNext());
+            }
+        }
+        catch (Exception exception)
+        {
+            throw new CantSelectRecordException();
+        }
+
+
+        }
     /**
      * <p>This method update a table record in the database
      *
@@ -194,8 +309,8 @@ public class AndroidDatabaseTable implements  DatabaseTable {
         try
         {
              List<DatabaseRecord> records =  record.getValues();
-
-            ContentValues recordUpdateList = new ContentValues();
+            StringBuffer strRecords = new StringBuffer ("");
+           // ContentValues recordUpdateList = new ContentValues();
 
             /**
              * I update only the fields marked as modified
@@ -205,11 +320,36 @@ public class AndroidDatabaseTable implements  DatabaseTable {
         for (int i = 0; i < records.size(); ++i) {
 
             if(records.get(i).getChange())
-                recordUpdateList.put(records.get(i).getName(), records.get(i).getValue());
+            {
+
+                   // recordUpdateList.put(records.get(i).getName(), records.get(i).getValue());
+                if(strRecords.length() > 0 )
+                    strRecords.append (",");
+
+                //I check if the value to change what I have to take a variable,
+                // and look that at the result of the select
+
+                if(records.get(i).getUseValueofVariable())
+                {
+                    for (int j = 0; j < variablesResult.size(); ++j) {
+
+                        if(variablesResult.get(j).getName().equals(records.get(i).getValue()))
+                            strRecords.append(records.get(i).getName() + " = '" + variablesResult.get(j).getValue() + "'");
+                    }
+
+                }
+                else
+                {
+                    strRecords.append(records.get(i).getName() +" = '" + records.get(i).getValue() + "'");
+                }
+
+            }
+
         }
 
+            this.database.execSQL("UPDATE " + tableName + " SET " + strRecords + " " + makeFilter());
 
-        this.database.update(tableName, recordUpdateList, makeFilter().replace("WHERE", ""), null);
+      //  this.database.update(tableName, recordUpdateList, makeFilter().replace("WHERE", ""), null);
 
        }
         catch (Exception exception)
@@ -238,10 +378,9 @@ public class AndroidDatabaseTable implements  DatabaseTable {
              List<DatabaseRecord> records =  record.getValues();
 
 
-            ContentValues initialValues = new ContentValues();
 
             for (int i = 0; i < records.size(); ++i) {
-                initialValues.put(records.get(i).getName(),records.get(i).getValue());
+                //initialValues.put(records.get(i).getName(),records.get(i).getValue());
 
                 if(strRecords.length() > 0 )
                     strRecords.append (",");
@@ -250,7 +389,22 @@ public class AndroidDatabaseTable implements  DatabaseTable {
                 if(strValues.length() > 0 )
                     strValues.append (",");
 
-                strValues.append ("'" + records.get(i).getValue() + "'");
+                //I check if the value to insert what I have to take a variable,
+                // and look that at the result of the select
+
+                if(records.get(i).getUseValueofVariable())
+                {
+                    for (int j = 0; j < variablesResult.size(); ++j) {
+
+                        if(variablesResult.get(j).getName().equals(records.get(i).getValue()))
+                            strValues.append("'" + variablesResult.get(j).getValue() + "'");
+                    }
+                }
+                else
+                {
+                    strValues.append ("'" + records.get(i).getValue() + "'");
+                }
+
             }
 
            // this.database.insert(tableName, null, initialValues);
@@ -305,6 +459,7 @@ public class AndroidDatabaseTable implements  DatabaseTable {
                         recordValue.setName(columns.get(i).toString());
                         recordValue.setValue(c.getString(c.getColumnIndex(columns.get(i).toString())));
                         recordValue.setChange(false);
+                        recordValue.setUseValueofVariable(false);
                         recordValues.add(recordValue);
                     }
                     tableRecord1.setValues(recordValues);
@@ -403,6 +558,29 @@ public class AndroidDatabaseTable implements  DatabaseTable {
 
         this.tableOrder.add(order);
     }
+
+    /**
+     * <p>Sets the operator to apply on select statement
+     *
+     * @param columnName Name of the column to apply operator
+     * @param operator  DataBaseSelectOperatorType type
+     */
+    @Override
+    public void setSelectOperator(String columnName, DataBaseSelectOperatorType operator, String alias){
+
+        if(this.tableSelectOperator == null)
+            this.tableSelectOperator = new ArrayList<DatabaseSelectOperator>();
+
+        DatabaseSelectOperator selectOperator = new AndroidDatabaseSelectOperator();
+
+        selectOperator.setColumn(columnName);
+            selectOperator.setType(operator);
+        selectOperator.setAliasColumn(alias);
+
+
+        this.tableSelectOperator.add(selectOperator);
+    }
+
 
     /**
      *<p>Sets the number of records to be selected in query
