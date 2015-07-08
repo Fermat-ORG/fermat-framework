@@ -28,6 +28,8 @@ import java.util.UUID;
     public float getFloatValue(String columnName);
 
     public double getDoubleValue(String columnName);
+
+   public String getVariableName(String columnName);
     
     public void setStringValue (String columnName, String value);
 
@@ -40,6 +42,10 @@ import java.util.UUID;
     public void setFloatValue(String columnName, float value);
 
     public void setDoubleValue(String columnName, double value);
+
+   public void setVariableValue (String columnName, String variableName);
+
+    public void setSelectField (String columnName);
 
     public List<DatabaseRecord> getValues();
 

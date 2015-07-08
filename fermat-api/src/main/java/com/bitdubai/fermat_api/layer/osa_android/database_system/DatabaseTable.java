@@ -7,6 +7,7 @@ import java.util.UUID;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantSelectRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 
 /**
@@ -28,6 +29,8 @@ public interface DatabaseTable {
 
     public List<DatabaseTableRecord> getRecords();
 
+    public List<DatabaseVariable> getVarialbesResult();
+
     public DatabaseTableRecord getEmptyRecord();
 
     public void clearAllFilters();
@@ -40,6 +43,7 @@ public interface DatabaseTable {
 
     public DatabaseTableFilterGroup getEmptyTableFilterGroup();
 
+    public void selectRecord (DatabaseTableRecord record) throws CantSelectRecordException;
 
     public void updateRecord (DatabaseTableRecord record) throws CantUpdateRecordException;
 
@@ -60,6 +64,10 @@ public interface DatabaseTable {
     public void setFilterTop(String top);
 
     public void setFilterOffSet(String offset);
+
+    public void setVarialbesResult(List<DatabaseVariable> variables);
+
+    public void setSelectOperator(String columnName, DataBaseSelectOperatorType operator, String alias);
 
     public void deleteRecord(DatabaseTableRecord record) throws CantDeleteRecordException;
 
