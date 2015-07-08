@@ -42,15 +42,9 @@ public class WalletContactListAdapter extends ArrayAdapter<WalletContact> {
 
         if (p != null) {
             TextView tt1 = (TextView) v.findViewById(R.id.contact_name);
-            TextView tt2 = (TextView) v.findViewById(R.id.contact_address);
 
             if (tt1 != null) {
                 tt1.setText(p.name);
-            }
-
-            if (tt2 != null) {
-                tt2.setText(p.address);
-                tt2.setVisibility(View.GONE);
             }
         }
 
@@ -75,7 +69,10 @@ public class WalletContactListAdapter extends ArrayAdapter<WalletContact> {
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
 
-                String filterString = constraint.toString().toLowerCase();
+                String filterString = "";
+
+                if (constraint !=null)
+                    filterString = constraint.toString().toLowerCase();
 
                 FilterResults results = new FilterResults();
 
