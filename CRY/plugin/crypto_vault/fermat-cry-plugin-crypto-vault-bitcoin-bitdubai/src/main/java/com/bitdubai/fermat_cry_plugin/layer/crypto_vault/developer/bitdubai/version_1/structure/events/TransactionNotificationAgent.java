@@ -294,6 +294,7 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
          * Implements the agent
          */
         private void doTheMainTask() throws CantExecuteQueryException, TransactionProtocolAgentMaxIterationsReachedException {
+            boolean found = false;
             /**
              * I search for transactions not yet notified. If I found something, Ill raise an event
              */
@@ -303,8 +304,10 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
              * If I found transactions on Crypto_Statuts  ON_CryptoNetwork and Protocol_Status PENDING_NOTIFIED, lanzo el evento
              */
             if (isTransactionToBeNotified(CryptoStatus.ON_CRYPTO_NETWORK)){
+                found = true;
                 PlatformEvent event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK);
                 event.setSource(EventSource.CRYPTO_VAULT);
+
 
                 logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Found transactions pending to be notified in ON_CRYPTO_NETWORK Status! Raising INCOMING_CRYPTO_ON_CRYPTO_NETWORK event.", null, null);
                 eventManager.raiseEvent(event);
@@ -319,12 +322,13 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
                 if (ITERATIONS_THRESHOLD < iterations){
                     throw new TransactionProtocolAgentMaxIterationsReachedException("The max limit configured for the Transaction Protocol Agent has been reached.", null,"Iteration Limit: " + ITERATIONS_THRESHOLD, "Notify developer.");
                 }
-            } else
+            }
 
             /**
              * If I found transactions on Crypto_Statuts  ON_BLOCKCHAIN and Protocol_Status PENDING_NOTIFIED, lanzo el evento
              */
             if (isTransactionToBeNotified(CryptoStatus.ON_BLOCKCHAIN)){
+                found = true;
                 PlatformEvent event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_ON_BLOCKCHAIN);
                 event.setSource(EventSource.CRYPTO_VAULT);
 
@@ -341,12 +345,13 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
                 if (ITERATIONS_THRESHOLD < iterations){
                     throw new TransactionProtocolAgentMaxIterationsReachedException("The max limit configured for the Transaction Protocol Agent has been reached.", null,"Iteration Limit: " + ITERATIONS_THRESHOLD, "Notify developer.");
                 }
-            } else
+            }
 
             /**
              * If I found transactions on Crypto_Statuts  REVERSED_ON_CryptoNetwork and Protocol_Status PENDING_NOTIFIED, lanzo el evento
              */
             if (isTransactionToBeNotified(CryptoStatus.REVERSED_ON_CRYPTO_NETWORK)){
+                found = true;
                 PlatformEvent event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK);
                 event.setSource(EventSource.CRYPTO_VAULT);
 
@@ -363,12 +368,13 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
                 if (ITERATIONS_THRESHOLD < iterations){
                     throw new TransactionProtocolAgentMaxIterationsReachedException("The max limit configured for the Transaction Protocol Agent has been reached.", null,"Iteration Limit: " + ITERATIONS_THRESHOLD, "Notify developer.");
                 }
-            } else
+            }
 
             /**
              * If I found transactions on Crypto_Statuts  REVERSED_ON_BLOCKCHAIN and Protocol_Status PENDING_NOTIFIED, lanzo el evento
              */
             if (isTransactionToBeNotified(CryptoStatus.REVERSED_ON_BLOCKCHAIN)){
+                found = true;
                 PlatformEvent event = eventManager.getNewEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN);
                 event.setSource(EventSource.CRYPTO_VAULT);
 
@@ -385,12 +391,15 @@ public class TransactionNotificationAgent implements Agent,DealsWithLogger,Deals
                 if (ITERATIONS_THRESHOLD < iterations){
                     throw new TransactionProtocolAgentMaxIterationsReachedException("The max limit configured for the Transaction Protocol Agent has been reached.", null,"Iteration Limit: " + ITERATIONS_THRESHOLD, "Notify developer.");
                 }
-            } else{
-                /**
-                 * there are no transactions pending. I will reset the counter to 0.
-                 */
+            }
+            /**
+            * there are no transactions pending. I will reset the counter to 0.
+            */
+            if (!found){
                 db.updateTransactionProtocolStatus(false);
             }
+
+
         }
 
 

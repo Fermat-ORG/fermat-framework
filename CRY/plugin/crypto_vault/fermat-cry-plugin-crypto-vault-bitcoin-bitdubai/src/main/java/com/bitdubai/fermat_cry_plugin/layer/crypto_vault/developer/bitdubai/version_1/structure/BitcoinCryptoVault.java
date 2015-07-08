@@ -324,7 +324,7 @@ public class BitcoinCryptoVault implements BitcoinManager, CryptoVault, DealsWit
      */
     private void configureVault() throws CantCreateCryptoWalletException {
         vault.autosaveToFile(vaultFile, 0, TimeUnit.NANOSECONDS, null);
-        vaultEventListeners = new VaultEventListeners(database, errorManager, eventManager);
+        vaultEventListeners = new VaultEventListeners(database, errorManager, eventManager, logManager);
         vault.addEventListener(vaultEventListeners);
 
     }

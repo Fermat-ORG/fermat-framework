@@ -101,10 +101,11 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
      * Constructor
      * @param database
      */
-    VaultEventListeners (Database database, ErrorManager errorManager, EventManager eventManager){
+    VaultEventListeners (Database database, ErrorManager errorManager, EventManager eventManager, LogManager logManager){
         this.database = database;
         this.errorManager = errorManager;
         this.eventManager = eventManager;
+        this.logManager = logManager;
 
         dbActions = new CryptoVaultDatabaseActions(this.database, errorManager, eventManager);
     }
@@ -112,7 +113,7 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
 
     @Override
     public void onCoinsReceived(Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance) {
-        logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoVault information: Ney money received!!! Incoming transaction with " + tx.getValueSentToMe(wallet).getValue() + ". New balance: " + newBalance.getValue(), null, null);
+        logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoVault information: Ney money received!!! New balance: " + newBalance.getValue(), null, null);
         /**
          * I save this transaction in the database
          */
@@ -168,7 +169,6 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
                 /**
                  * I create the transaction in the DB and raise the event
                  */
-                dbActions.insertNewTransactionWithNewConfidence(tx.getHashAsString(), cryptoStatus);
                 eventManager.raiseEvent(new IncomingCryptoOnCryptoNetworkEvent(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK));
             }
 
