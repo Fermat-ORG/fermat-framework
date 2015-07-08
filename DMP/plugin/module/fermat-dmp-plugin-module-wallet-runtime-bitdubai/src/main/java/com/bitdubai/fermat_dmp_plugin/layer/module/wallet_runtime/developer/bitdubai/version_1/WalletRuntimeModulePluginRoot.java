@@ -372,7 +372,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
              * */
 
             /**
-             * Bitcoin Basic Wallet definition.
+             * Fermat Bitcoin Reference Wallet definition.
              *
              * Structure:
              *
@@ -401,7 +401,7 @@ public class WalletRuntimeModulePluginRoot implements Service, WalletRuntimeMana
             listActivities.put(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN, runtimeActivity);
 
             runtimeTitleBar = new RuntimeTitleBar();
-            runtimeTitleBar.setLabel("Fermat Bitcoin Wallet");
+            runtimeTitleBar.setLabel("Fermat Bitcoin Reference Wallet");
             runtimeActivity.setTitleBar(runtimeTitleBar);
             runtimeActivity.setColor("#72af9c");
             //runtimeActivity.setColor("#d07b62");
