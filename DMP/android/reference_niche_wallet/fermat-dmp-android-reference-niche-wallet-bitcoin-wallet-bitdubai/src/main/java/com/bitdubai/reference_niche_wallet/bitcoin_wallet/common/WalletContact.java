@@ -1,10 +1,10 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common;
 
-import java.io.Serializable;
+import java.util.UUID;
 
-public class WalletContact implements Serializable {
+public class WalletContact {
 
-    private static final long serialVersionUID = -8730067976543216758L;
+    public UUID actorId;
 
     public String name;
 
@@ -15,11 +15,14 @@ public class WalletContact implements Serializable {
         this.address = address;
     }
 
+    public WalletContact(String name, String address, UUID actorId) {
+        this.name = name;
+        this.address = address;
+        this.actorId = actorId;
+    }
+
     @Override
     public String toString() {
-        return "WalletContact{" +
-                "name='" + name + '\'' +
-                ", address='" + address +
-                '}';
+        return name;
     }
 }

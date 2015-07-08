@@ -7,9 +7,9 @@ import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.
 import com.bitdubai.fermat_api.layer.dmp_basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.ErrorManager;
-
-import java.util.UUID;
 
 /**
  * Created by ciencias on 7/6/15.
@@ -44,22 +44,20 @@ public class BitcoinWalletBasicWalletAvailableBalance implements BitcoinWalletBa
         this.database = database;
     }
     @Override
-    public long getBalance() throws CantCalculateBalanceException
-    {
-        long balance;
-        bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(this.database);
-
-        balance = bitcoinWalletBasicWalletDao.getAvilableBalance();
-
-        return balance;
+    public long getBalance() throws CantCalculateBalanceException{
+        try {
+            database.openDatabase();
+            bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(this.database);
+            long balance = bitcoinWalletBasicWalletDao.getAvailableBalance();
+            database.closeDatabase();
+            return balance;
+        } catch (CantOpenDatabaseException | DatabaseNotFoundException e) {
+           throw new CantCalculateBalanceException(CantCalculateBalanceException.DEFAULT_MESSAGE, e, "", "Check the cause");
+        } catch(CantCalculateBalanceException exception){
+            database.closeDatabase();
+            throw exception;
+        }
     }
-
-
-
-
-
-
-
 
     /*
     * NOTA:
@@ -69,17 +67,31 @@ public class BitcoinWalletBasicWalletAvailableBalance implements BitcoinWalletBa
     */
     @Override
     public void debit(BitcoinWalletTransactionRecord cryptoTransaction) throws CantRegisterDebitDebitException {
-
-        bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(this.database);
-
-        bitcoinWalletBasicWalletDao.addDebit(cryptoTransaction);
+        try {
+            database.openDatabase();
+            bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(this.database);
+            bitcoinWalletBasicWalletDao.addDebit(cryptoTransaction);
+            database.closeDatabase();
+        } catch (CantOpenDatabaseException | DatabaseNotFoundException e) {
+            throw new CantRegisterDebitDebitException(CantRegisterDebitDebitException.DEFAULT_MESSAGE, e, "", "Check the cause");
+        } catch(CantRegisterDebitDebitException exception){
+            database.closeDatabase();
+            throw exception;
+        }
     }
 
     @Override
     public void credit(BitcoinWalletTransactionRecord cryptoTransaction) throws CantRegisterCreditException {
-
-        bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(this.database);
-
-        bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction);
+        try {
+            database.openDatabase();
+            bitcoinWalletBasicWalletDao = new BitcoinWalletBasicWalletDao(this.database);
+            bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction);
+            database.closeDatabase();
+        } catch (CantOpenDatabaseException | DatabaseNotFoundException e) {
+            throw new CantRegisterCreditException(CantRegisterCreditException.DEFAULT_MESSAGE, e, "", "Check the cause");
+        } catch(CantRegisterCreditException exception){
+            database.closeDatabase();
+            throw exception;
+        }
     }
 }
