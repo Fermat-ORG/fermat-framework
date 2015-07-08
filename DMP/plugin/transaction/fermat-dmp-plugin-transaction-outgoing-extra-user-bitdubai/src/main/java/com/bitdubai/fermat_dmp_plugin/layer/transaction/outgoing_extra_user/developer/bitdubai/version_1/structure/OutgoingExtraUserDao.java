@@ -88,15 +88,14 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
         }
     }
 
-    public void registerNewTransaction(UUID walletID, CryptoAddress destinationAddress, long cryptoAmount) throws CantInsertRecordException {
+    public void registerNewTransaction(UUID walletID, CryptoAddress destinationAddress, long cryptoAmount,String notes) throws CantInsertRecordException {
         DatabaseTable transactionTable = this.database.getTable(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_NAME);
 
         DatabaseTableRecord recordToInsert = transactionTable.getEmptyRecord();
 
-        loadRecordAsNew(recordToInsert, walletID, destinationAddress, cryptoAmount);
+        loadRecordAsNew(recordToInsert, walletID, destinationAddress, cryptoAmount, notes);
 
         transactionTable.insertRecord(recordToInsert);
-
     }
 
     public List<TransactionWrapper> getNewTransactions() throws CantLoadTableToMemoryException, InvalidParameterException {
@@ -140,7 +139,19 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
     }
 
 
-    private  void loadRecordAsNew(DatabaseTableRecord databaseTableRecord, UUID walletId, CryptoAddress destinationAddress, long cryptoAmount){
+    public void setTransactionHash(TransactionWrapper bitcoinTransaction ,String hash) throws CantUpdateRecordException, InconsistentTableStateException, CantLoadTableToMemoryException {
+        DatabaseTable transactionTable = this.database.getTable(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_NAME);
+
+        DatabaseTableRecord recordToUpdate = getByPrimaryKey(bitcoinTransaction.getIdTransaction());
+
+        recordToUpdate.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_HASH_COLUMN_NAME,hash);
+
+        transactionTable.updateRecord(recordToUpdate);
+    }
+
+
+
+    private  void loadRecordAsNew(DatabaseTableRecord databaseTableRecord, UUID walletId, CryptoAddress destinationAddress, long cryptoAmount,String notes){
 
         UUID transactionId = UUID.randomUUID();
 
@@ -155,17 +166,18 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
         databaseTableRecord.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_ADDRESS_TO_COLUMN_NAME, destinationAddress.getAddress());
         databaseTableRecord.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_CRYPTO_CURRENY_COLUMN_NAME, destinationAddress.getCryptoCurrency().getCode());
         databaseTableRecord.setLongValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_CRYPTO_AMOUNT_COLUMN_NAME, cryptoAmount);
-        databaseTableRecord.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_STATUS_COLUMN_NAME, TransactionState.PERSISTED_IN_AVAILABLE.getCode());
+        databaseTableRecord.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_STATUS_COLUMN_NAME, TransactionState.NEW.getCode());
 
         // TODO: This have to be changed for the tinestamp when the network recognize the transaction
         databaseTableRecord.setLongValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TIMESTAMP_COLUMN_NAME, System.currentTimeMillis()/1000L);
+        databaseTableRecord.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_DESCRIPTION_COLUMN_NAME, notes);
     }
 
 
     private void setToState(TransactionWrapper bitcoinTransaction, TransactionStatus status) throws CantUpdateRecordException, InconsistentTableStateException, CantLoadTableToMemoryException {
         DatabaseTable transactionTable = this.database.getTable(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_NAME);
 
-        DatabaseTableRecord recordToUpdate = getByPrimaryKey(bitcoinTransaction.getTransactionId());
+        DatabaseTableRecord recordToUpdate = getByPrimaryKey(bitcoinTransaction.getIdTransaction());
 
         recordToUpdate.setStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_STATUS_COLUMN_NAME,status.getCode());
 
@@ -201,7 +213,7 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
 
     }
 
-    private TransactionWrapper convertToBT(DatabaseTableRecord record) throws InvalidParameterException {
+    public TransactionWrapper convertToBT(DatabaseTableRecord record) throws InvalidParameterException {
         TransactionWrapper bitcoinTransaction = new TransactionWrapper();
 
         UUID walletId = record.getUUIDValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_WALLET_ID_TO_DEBIT_COLUMN_NAME);
@@ -219,16 +231,16 @@ public class OutgoingExtraUserDao implements DealsWithErrors, DealsWithPluginDat
         TransactionType type = TransactionType.DEBIT;
         TransactionState state = TransactionState.getByCode(record.getStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TRANSACTION_STATUS_COLUMN_NAME));
         long timestamp = record.getLongValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_TIMESTAMP_COLUMN_NAME);
-        String memo = "";
+        String memo = record.getStringValue(OutgoingExtraUserDatabaseConstants.OUTGOING_EXTRA_USER_TABLE_DESCRIPTION_COLUMN_NAME);
 
         bitcoinTransaction.setWalletId(walletId);
-        bitcoinTransaction.setTransactionId(transactionId);
+        bitcoinTransaction.setIdTransaction(transactionId);
         bitcoinTransaction.setTramsactionHash(transactionHash);
         bitcoinTransaction.setAddressFrom(addressFrom);
         bitcoinTransaction.setAddressTo(addressTo);
         bitcoinTransaction.setAmount(amount);
         bitcoinTransaction.setType(type);
-      //  bitcoinTransaction.setState(state);
+        bitcoinTransaction.setState(state);
         bitcoinTransaction.setTimestamp(timestamp);
         bitcoinTransaction.setMemo(memo);
 

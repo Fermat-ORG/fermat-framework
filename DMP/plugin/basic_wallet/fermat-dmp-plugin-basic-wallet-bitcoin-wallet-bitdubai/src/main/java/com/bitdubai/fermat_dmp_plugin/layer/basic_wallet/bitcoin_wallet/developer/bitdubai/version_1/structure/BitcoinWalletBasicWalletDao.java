@@ -149,7 +149,7 @@ public class BitcoinWalletBasicWalletDao {
     /*
      * Add a new debit transaction.
      */
-    public void addDebit(BitcoinWalletTransactionRecord cryptoTransaction) throws CantRegisterDebitDebitException {
+    public void addDebit(BitcoinWalletTransactionRecord cryptoTransaction,BalanceType balanceType) throws CantRegisterDebitDebitException {
 
         long totalCredit = 0;
         long totalDebit = 0;
@@ -188,8 +188,8 @@ public class BitcoinWalletBasicWalletDao {
 
             //sum all debit record and sum all credit record, for this balance type
 
-            totalDebit = getTotalTransactions(cryptoTransaction.getBalanceType(), TransactionType.CREDIT);
-            totalCredit= getTotalTransactions(cryptoTransaction.getBalanceType(), TransactionType.DEBIT);
+            totalDebit = getTotalTransactions(balanceType, TransactionType.CREDIT);
+            totalCredit= getTotalTransactions(balanceType, TransactionType.DEBIT);
 
             balance = totalCredit - totalDebit;
 
@@ -207,11 +207,11 @@ public class BitcoinWalletBasicWalletDao {
             debitRecord.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TRANSACTION_HASH_COLUMN_NAME, cryptoTransaction.getTramsactionHash());
             debitRecord.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ADDRESS_FROM_COLUMN_NAME, cryptoTransaction.getAddressFrom().getAddress());
             debitRecord.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ADDRESS_TO_COLUMN_NAME, cryptoTransaction.getAddressTo().getAddress());
-            debitRecord.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, cryptoTransaction.getBalanceType().getCode());
+            debitRecord.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode());
 
             //check balance transaction type to insert running balance field
 
-            if(cryptoTransaction.getBalanceType() == BalanceType.AVILABLE)
+            if(balanceType == BalanceType.AVILABLE)
             {
                 //calculate running balances
                 if(cryptoTransaction.getType() == TransactionType.CREDIT)
@@ -246,7 +246,7 @@ public class BitcoinWalletBasicWalletDao {
                     balanceRecord = getBalancesRecord();
 
                     //set total balances to update
-                    if(cryptoTransaction.getBalanceType() == BalanceType.AVILABLE)
+                    if(balanceType == BalanceType.AVILABLE)
                     {
                         balanceRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_AVILABLE_BALANCE_COLUMN_NAME, balance);
 
@@ -284,7 +284,7 @@ public class BitcoinWalletBasicWalletDao {
     /*
      * Add a new Credit transaction.
      */
-    public void addCredit(BitcoinWalletTransactionRecord cryptoTransaction) throws CantRegisterCreditException {
+    public void addCredit(BitcoinWalletTransactionRecord cryptoTransaction,BalanceType balanceType) throws CantRegisterCreditException {
 
         long totalCredit = 0;
         long totalDebit = 0;
@@ -334,11 +334,11 @@ public class BitcoinWalletBasicWalletDao {
             debitRecord.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TRANSACTION_HASH_COLUMN_NAME, cryptoTransaction.getTramsactionHash());
             debitRecord.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ADDRESS_FROM_COLUMN_NAME, cryptoTransaction.getAddressFrom().getAddress());
             debitRecord.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_ADDRESS_TO_COLUMN_NAME, cryptoTransaction.getAddressTo().getAddress());
-            debitRecord.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, cryptoTransaction.getBalanceType().getCode());
+            debitRecord.setStringValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode());
 
             //check balance transaction type to insert running balance field
 
-            if(cryptoTransaction.getBalanceType() == BalanceType.AVILABLE)
+            if(balanceType == BalanceType.AVILABLE)
             {
                 //calculate running balances
                 if(cryptoTransaction.getType() == TransactionType.CREDIT)
@@ -372,7 +372,7 @@ public class BitcoinWalletBasicWalletDao {
                     balanceRecord = getBalancesRecord();
 
                     //set total balances to update
-                    if(cryptoTransaction.getBalanceType() == BalanceType.AVILABLE)
+                    if(balanceType == BalanceType.AVILABLE)
                     {
                         balanceRecord.setLongValue(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_BALANCE_TABLE_AVILABLE_BALANCE_COLUMN_NAME, balance);
 
