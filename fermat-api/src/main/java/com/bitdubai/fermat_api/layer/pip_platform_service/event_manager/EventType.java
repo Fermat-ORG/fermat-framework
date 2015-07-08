@@ -53,6 +53,17 @@ public enum EventType {
     INCOMING_CRYPTO_RECEPTION_CONFIRMED ("IIRC"),
     INCOMING_CRYPTO_REVERSED ("ICREV"),
     INCOMING_CRYPTO_IDENTIFIED ("ICI"),
+
+    /**
+     * New incoming crypto events
+     */
+    INCOMING_CRYPTO_ON_CRYPTO_NETWORK("ICOCN"),
+    INCOMING_CRYPTO_ON_BLOCKCHAIN("ICOBC"),
+    INCOMING_CRYPTO_IRREVERSIBLE("ICIRR"),
+    INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK("ICROCN"),
+    INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN("ICROBC"),
+
+
     INCOMING_CRYPTO_IDENTIFIED_FROM_EXTRA_USER ("ICIEU"),
     INCOMING_CRYPTO_IDENTIFIED_FROM_INTRA_USER ("ICIIU"),
     INCOMING_CRYPTO_IDENTIFIED_FROM_DEVICE_USER ("ICIDU"),
@@ -131,6 +142,19 @@ public enum EventType {
                 return EventType.ESTABLISHED_NETWORK_SERVICE_CONNECTION;
             case "NNSMR":
                 return EventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE;
+            /**
+             * Bitcoin incoming crypto events
+             */
+            case "ICOCN":
+                return EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK;
+            case "ICOBC":
+                return EventType.INCOMING_CRYPTO_ON_BLOCKCHAIN;
+            case "ICIRR":
+                return EventType.INCOMING_CRYPTO_IRREVERSIBLE;
+            case "ICROCN":
+                return EventType.INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK;
+            case "ICROBC":
+                return EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN;
 
             case "WC1":
                 return EventType.WALLET_CREATED;
