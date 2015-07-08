@@ -394,6 +394,14 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
             emptyRecord.setLongValue(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_TIMESTAMP_COLUMN_NAME, timestamp);
             emptyRecord.setIntegerValue(CryptoVaultDatabaseConstants.TRANSITION_PROTOCOL_STATUS_TABLE_ocurrences_COLUMN_NAME, 0);
 
+            DatabaseTransaction transaction = database.newTransaction();
+            transaction.addRecordToInsert(transactionProtocolStatusTable, emptyRecord);
+            try {
+                database.executeTransaction(transaction);
+            } catch (DatabaseTransactionFailedException e) {
+                throw new CantExecuteQueryException("Error trying to insert record in table Transtiion_Protocol_Status table", e, null, "error in Database plugin.");
+            }
+
             /**
              * returns 1
              */
