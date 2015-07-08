@@ -13,9 +13,14 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.error_manager.Unexpect
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWithEvents;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventType;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoIrreversibleEvent;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoOnBlockchainEvent;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoOnCryptoNetworkEvent;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoReceivedEvent;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoReceptionConfirmedEvent;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoReversedEvent;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoReversedOnBlockchainEvent;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoReversedOnCryptoNetworkEvent;
 import com.bitdubai.fermat_cry_api.layer.definition.DepthInBlocksThreshold;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.BitcoinCryptoVaultPluginRoot;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantCalculateTransactionConfidenceException;
@@ -140,7 +145,7 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
 
     @Override
     public void onCoinsSent(Wallet wallet, Transaction tx, Coin prevBalance, Coin newBalance) {
-//todo completar
+        logManager.log(BitcoinCryptoVaultPluginRoot.getLogLevelByClass(this.getClass().getName()), "Money sent.", "Prev Balance: " + prevBalance.getValue() + " New Balance:" + newBalance.getValue(), "Transaction: " + tx.toString());
     }
 
     @Override
@@ -157,33 +162,34 @@ class VaultEventListeners extends AbstractWalletEventListener implements DealsWi
 
         try {
             /**
-             * I update the record with the new cryptoStatus
+             * I will insert a new transaction with the same tx_hash to let other plugins to get it.
              */
-            dbActions.updateCryptoTransactionStatus(tx.getHashAsString(), cryptoStatus);
+            //dbActions.updateCryptoTransactionStatus(tx.getHashAsString(), cryptoStatus);
+            dbActions.insertNewTransactionWithNewConfidence(tx.getHashAsString(), cryptoStatus);
 
             /**
              * now I raise the event
              */
             if (cryptoStatus == CryptoStatus.ON_CRYPTO_NETWORK) {
-                eventManager.raiseEvent(new IncomingCryptoReceivedEvent(EventType.INCOMING_CRYPTO_IDENTIFIED));
+                eventManager.raiseEvent(new IncomingCryptoOnCryptoNetworkEvent(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK));
             }
 
             if (cryptoStatus == CryptoStatus.ON_BLOCKCHAIN) {
-                eventManager.raiseEvent(new IncomingCryptoReceivedEvent(EventType.INCOMING_CRYPTO_RECEIVED));
+                eventManager.raiseEvent(new IncomingCryptoOnBlockchainEvent(EventType.INCOMING_CRYPTO_ON_BLOCKCHAIN));
             }
 
             if (cryptoStatus == CryptoStatus.IRREVERSIBLE)
-                eventManager.raiseEvent(new IncomingCryptoReceptionConfirmedEvent(EventType.INCOMING_CRYPTO_RECEPTION_CONFIRMED));
+                eventManager.raiseEvent(new IncomingCryptoIrreversibleEvent(EventType.INCOMING_CRYPTO_IRREVERSIBLE));
 
 
-            if (cryptoStatus == CryptoStatus.REVERSED)
-                eventManager.raiseEvent(new IncomingCryptoReversedEvent(EventType.INCOMING_CRYPTO_REVERSED));
+            if (cryptoStatus == CryptoStatus.REVERSED_ON_CRYPTO_NETWORK)
+                eventManager.raiseEvent(new IncomingCryptoReversedOnCryptoNetworkEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK));
 
+            if (cryptoStatus == CryptoStatus.REVERSED_ON_BLOCKCHAIN)
+                eventManager.raiseEvent(new IncomingCryptoReversedOnBlockchainEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN));
 
 
         } catch (CantExecuteQueryException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        } catch (UnexpectedResultReturnedFromDatabaseException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
 
