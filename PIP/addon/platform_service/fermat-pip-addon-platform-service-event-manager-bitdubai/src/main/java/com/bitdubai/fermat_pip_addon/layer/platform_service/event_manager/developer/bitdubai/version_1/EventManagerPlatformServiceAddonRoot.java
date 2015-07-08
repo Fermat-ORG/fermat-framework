@@ -69,6 +69,14 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
     private List<EventListener> listenersTransactopnWaitingTransferenceExtraUserEvent = new ArrayList<>();
 
     /**
+     * Issue #522
+     */
+    private List<EventListener> listenersIncomingCryptoOnCryptoNetworkEvent = new ArrayList<>();
+    private List<EventListener> listenersIncomingCryptoOnBlockchainEvent = new ArrayList<>();
+    private List<EventListener> listenersIncomingCryptoReversedOnCryptoNetworkEvent = new ArrayList<>();
+    private List<EventListener> listenersIncomingCryptoReversedOnBlockchainEvent = new ArrayList<>();
+
+    /**
      * DealsWithEventMonitor member variables
      */
     EventMonitor eventMonitor;
@@ -130,6 +138,25 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
             
             case INCOMING_CRYPTO_RECEIVED:
                 return new IncomingCryptoReceivedEventListener(EventType.INCOMING_CRYPTO_RECEIVED, this.eventMonitor);
+
+            /**
+             * Incoming Crypto new event types issue #522
+             */
+            case INCOMING_CRYPTO_ON_CRYPTO_NETWORK:
+                return new IncomingCryptoOnCryptoNetworkEventListener(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK, this.eventMonitor);
+
+            case INCOMING_CRYPTO_ON_BLOCKCHAIN:
+                return new IncomingCryptoOnBlockchainEventListener(EventType.INCOMING_CRYPTO_ON_BLOCKCHAIN, this.eventMonitor);
+
+            case INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK:
+                return new IncomingCryptoReversedOnCryptoNetworkEventListener(EventType.INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK, this.eventMonitor);
+
+            case INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN:
+                return new IncomingCryptoReversedOnBlockchainEventListener(EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN, this.eventMonitor);
+            /**
+             * End incoming Crypto new event Types
+             */
+
             
             case INCOMING_CRYPTO_RECEPTION_CONFIRMED:
                 return new IncomingCryptoReceptionConfirmedEventListener(EventType.INCOMING_CRYPTO_RECEPTION_CONFIRMED, this.eventMonitor);
@@ -334,6 +361,17 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
             case NEW_NETWORK_SERVICE_MESSAGE_RECEIVE:
                 return new NewNetworkServiceMessageReceivedEvent(EventType.NEW_NETWORK_SERVICE_MESSAGE_RECEIVE);
 
+            /**
+             * #Issue 522
+             */
+            case INCOMING_CRYPTO_ON_CRYPTO_NETWORK:
+                return new IncomingCryptoOnCryptoNetworkEvent(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK);
+            case INCOMING_CRYPTO_ON_BLOCKCHAIN:
+                return new IncomingCryptoOnBlockchainEvent(EventType.INCOMING_CRYPTO_ON_BLOCKCHAIN);
+            case INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN:
+                return new IncomingCryptoReversedOnBlockchainEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN);
+            case INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK:
+                return new IncomingCryptoReversedOnCryptoNetworkEvent(EventType.INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK);
         }
         return null;
     }
@@ -504,7 +542,17 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
             case INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE_EXTRA_USER:
                 listenersTransactopnWaitingTransferenceExtraUserEvent.add(listener);
                 break;
-
+            /**
+             * #Issue 522
+             */
+            case INCOMING_CRYPTO_ON_CRYPTO_NETWORK:
+                listenersIncomingCryptoOnCryptoNetworkEvent.add(listener);
+            case INCOMING_CRYPTO_ON_BLOCKCHAIN:
+                listenersIncomingCryptoOnBlockchainEvent.add(listener);
+            case INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK:
+                listenersIncomingCryptoReversedOnCryptoNetworkEvent.add(listener);
+            case INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN:
+                listenersIncomingCryptoReversedOnBlockchainEvent.add(listener);
 
         }
     }
@@ -674,6 +722,22 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
 
             case INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE_EXTRA_USER:
                 listeners = listenersTransactopnWaitingTransferenceExtraUserEvent;
+                break;
+
+            /**
+             * #Issue 522
+             */
+            case INCOMING_CRYPTO_ON_CRYPTO_NETWORK:
+                listeners = listenersIncomingCryptoOnCryptoNetworkEvent;
+                break;
+            case INCOMING_CRYPTO_ON_BLOCKCHAIN:
+                listeners = listenersIncomingCryptoOnBlockchainEvent;
+                break;
+            case INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK:
+                listeners = listenersIncomingCryptoReversedOnCryptoNetworkEvent;
+                break;
+            case INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN:
+                listeners = listenersIncomingCryptoReversedOnBlockchainEvent;
                 break;
             
         }
@@ -850,6 +914,22 @@ public class EventManagerPlatformServiceAddonRoot implements Addon, EventManager
 
             case INCOMING_CRYPTO_TRANSACTIONS_WAITING_TRANSFERENCE_EXTRA_USER:
                 listeners = listenersTransactopnWaitingTransferenceExtraUserEvent;
+                break;
+
+            /**
+             * issue #522
+             */
+            case INCOMING_CRYPTO_ON_CRYPTO_NETWORK:
+                listeners = listenersIncomingCryptoOnCryptoNetworkEvent;
+                break;
+            case INCOMING_CRYPTO_ON_BLOCKCHAIN:
+                listeners = listenersIncomingCryptoOnBlockchainEvent;
+                break;
+            case INCOMING_CRYPTO_REVERSED_ON_CRYPTO_NETWORK:
+                listeners = listenersIncomingCryptoReversedOnCryptoNetworkEvent;
+                break;
+            case INCOMING_CRYPTO_REVERSED_ON_BLOCKCHAIN:
+                listeners = listenersIncomingCryptoReversedOnBlockchainEvent;
                 break;
         }
 
