@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.DealsWit
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventManager;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.EventType;
 import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoIdentifiedEvent;
+import com.bitdubai.fermat_api.layer.pip_platform_service.event_manager.events.IncomingCryptoOnCryptoNetworkEvent;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_cry_plugin.layer.crypto_vault.developer.bitdubai.version_1.exceptions.UnexpectedResultReturnedFromDatabaseException;
 
@@ -112,7 +113,7 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
              *
              */
 
-            PlatformEvent event = new IncomingCryptoIdentifiedEvent(EventType.INCOMING_CRYPTO_RECEIVED);
+            PlatformEvent event = new IncomingCryptoOnCryptoNetworkEvent(EventType.INCOMING_CRYPTO_ON_CRYPTO_NETWORK);
             eventManager.raiseEvent(event);
         }
     }
@@ -332,9 +333,10 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
         return cryptoStatus;
     }
     /**
-     * will return true if there are transactions in NO_BE_NOTIFIED status
+     * will return true if there are transactions in TO_BE_NOTIFIED status
      * @return
      */
+    @Deprecated
     public boolean isPendingTransactions() throws CantExecuteQueryException {
         DatabaseTable cryptoTxTable;
         cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
@@ -342,6 +344,25 @@ public class CryptoVaultDatabaseActions implements DealsWithEvents, DealsWithErr
         try {
             cryptoTxTable.loadToMemory();
            return !cryptoTxTable.getRecords().isEmpty();
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+            throw new CantExecuteQueryException("Error executing query in DB.", cantLoadTableToMemory, null, "Error in database plugin.");
+        }
+    }
+
+    /**
+     * Will search for pending transactions to be notified with the passed crypto:_Status
+     * @param cryptoStatus
+     * @return
+     * @throws CantExecuteQueryException
+     */
+    public boolean isPendingTransactions(CryptoStatus cryptoStatus) throws CantExecuteQueryException {
+        DatabaseTable cryptoTxTable;
+        cryptoTxTable = database.getTable(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_NAME);
+        cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_PROTOCOL_STS_COLUMN_NAME,ProtocolStatus.TO_BE_NOTIFIED.toString() ,DatabaseFilterType.EQUAL);
+        cryptoTxTable.setStringFilter(CryptoVaultDatabaseConstants.CRYPTO_TRANSACTIONS_TABLE_TRANSACTION_STS_COLUMN_NAME,cryptoStatus.toString() ,DatabaseFilterType.EQUAL);
+        try {
+            cryptoTxTable.loadToMemory();
+            return !cryptoTxTable.getRecords().isEmpty();
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             throw new CantExecuteQueryException("Error executing query in DB.", cantLoadTableToMemory, null, "Error in database plugin.");
         }
