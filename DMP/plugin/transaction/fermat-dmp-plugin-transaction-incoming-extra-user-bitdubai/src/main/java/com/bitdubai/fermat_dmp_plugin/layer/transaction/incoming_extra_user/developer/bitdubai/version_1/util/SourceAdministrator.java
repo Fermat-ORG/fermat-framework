@@ -20,13 +20,13 @@ public class SourceAdministrator implements DealsWithIncomingCrypto {
   private IncomingCryptoManager incomingCryptoManager;
 
 
-  public TransactionProtocolManager<CryptoTransaction> getSourceAdministrator(EventSource eventSource){
+  public TransactionProtocolManager<CryptoTransaction> getSourceAdministrator(final EventSource eventSource){
         // This method will select the correct sender according to the specified source,
         return incomingCryptoManager.getTransactionManager();
   }
 
   @Override
-  public void setIncomingCryptoManager(IncomingCryptoManager incomungCryptoManager) {
-    this.incomingCryptoManager = incomungCryptoManager;
+  public void setIncomingCryptoManager(final IncomingCryptoManager incomingCryptoManager) {
+    this.incomingCryptoManager = incomingCryptoManager;
   }
 }
