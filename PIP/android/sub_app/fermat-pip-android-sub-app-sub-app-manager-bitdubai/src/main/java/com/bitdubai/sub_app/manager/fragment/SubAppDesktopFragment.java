@@ -3,6 +3,7 @@ package com.bitdubai.sub_app.manager.fragment;
 import android.app.Service;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -32,7 +33,7 @@ public class SubAppDesktopFragment extends Fragment {
     private ArrayList<App> mlist;
     private static int tabId;
 
-    private int position;
+    private int position;  Typeface tf;
 
     public static SubAppDesktopFragment newInstance(int position) {
         SubAppDesktopFragment f = new SubAppDesktopFragment();
@@ -45,6 +46,8 @@ public class SubAppDesktopFragment extends Fragment {
    // @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
       //  setHasOptionsMenu(true);
+
+        tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
 
         String[] installed =
                 {  "true"
@@ -165,6 +168,8 @@ public class SubAppDesktopFragment extends Fragment {
             }
 
             holder.companyTextView.setText(item.company);
+            holder.companyTextView.setTypeface(tf, Typeface.BOLD);
+
             LinearLayout linearLayout = (LinearLayout)convertView.findViewById(R.id.wallet_3);
             switch (item.picture)
             {
